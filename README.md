@@ -1,24 +1,18 @@
-# README
+# Colenda Admin
+Administrative application that enables the ingestion and management of digital assets. 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## System Requirements
+- Ruby 2.7.5
+- Postgres
 
-Things you may want to cover:
+## Local Development and Test Environment
+WIP
 
-* Ruby version
+### Running Tests
+WIP
 
-* System dependencies
+## Code Linting
+WIP
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Staging/Production Deployment
+WIP
