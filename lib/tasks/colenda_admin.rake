@@ -51,22 +51,22 @@ namespace :colenda_admin do
       client.put_bucket_policy(
         bucket: config[:bucket],
         policy: {
-          "Version" => "2012-10-17",
-          "Statement" => [
+          'Version' => '2012-10-17',
+          'Statement' => [
             {
-              "Effect" => "Allow",
-              "Principal" => { "AWS" => ["*"] },
-              "Action" => [
-                "s3:GetBucketLocation",
-                "s3:ListBucket"
+              'Effect' => 'Allow',
+              'Principal' => { 'AWS' => ['*'] },
+              'Action' => [
+                's3:GetBucketLocation',
+                's3:ListBucket'
               ],
-              "Resource" => ["arn:aws:s3:::#{config[:bucket]}"]
+              'Resource' => ["arn:aws:s3:::#{config[:bucket]}"]
             },
             {
-              "Effect" => "Allow",
-              "Principal" => { "AWS" => ["*"] },
-              "Action" => ["s3:GetObject"],
-              "Resource" => ["arn:aws:s3:::#{config[:bucket]}/*"]
+              'Effect' => 'Allow',
+              'Principal' => { 'AWS' => ['*'] },
+              'Action' => ['s3:GetObject'],
+              'Resource' => ["arn:aws:s3:::#{config[:bucket]}/*"]
             }
           ]
         }.to_json
