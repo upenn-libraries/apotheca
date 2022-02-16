@@ -6,10 +6,42 @@ Administrative application that enables the ingestion and management of digital 
 - Postgres
 
 ## Local Development and Test Environment
+We are using docker-compose to run adjacent services required for the application to run. The application will run directly on your machine.
+
+### 1. Installing system requirements
+#### MacOS (with Homebrew)
+  - Install Ruby 2.7.5 via `rbenv` or `rvm`
+  - `brew install --cask docker` (to install Docker Desktop)
+  - `brew install libpq`
+#### Linux
 WIP
 
-### Running Tests
-WIP
+### 2. Install gems
+```shell
+bundle install
+```
+
+### 3a. Run application in development
+```shell
+rake colenda_admin:start
+rails s
+```
+
+### 3b. Run application tests
+```shell
+rake colenda_admin:start
+rspec
+```
+
+### 4. Stop running services
+```shell
+rake colenda_admin:stop
+```
+
+### 5. Destroy services (clears all data)
+```shell
+rake colenda_admin:destroy
+```
 
 ## Configuration/Settings
 Application-wide configuration is centralized in `config/settings` and `config/settings.yml`. Access to configuration is provided via the `Settings` object instantiated by the [config](https://github.com/rubyconfig/config) gem. For example, to retrieve the preservation storage configuration run:
