@@ -14,7 +14,8 @@ We are using docker-compose to run adjacent services required for the applicatio
   - `brew install --cask docker` (to install Docker Desktop)
   - `brew install libpq`
 #### Linux
-WIP
+sudo apt install libpq-dev
+rbenv install 2.7.5
 
 ### 2. Install gems
 ```shell
@@ -57,7 +58,7 @@ In production, configuration values that are secret should be set using docker s
 
 ## Code Linting and Formatting
 ### Rubocop
-Rubocop is used to in force style and formatting rules in our Ruby code. This application uses a custom set of rules contained within the [upennlib-rubocop](https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop) gem.
+Rubocop is used to enforce style and formatting rules in our Ruby code. This application uses a custom set of rules contained within the [upennlib-rubocop](https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop) gem.
 
 #### To check style and formatting run:
 ```ruby
