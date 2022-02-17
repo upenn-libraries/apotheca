@@ -10,12 +10,17 @@ We are using docker-compose to run adjacent services required for the applicatio
 
 ### 1. Installing system requirements
 #### MacOS (with Homebrew)
-  - Install Ruby 2.7.5 via `rbenv` or `rvm`
-  - `brew install --cask docker` (to install Docker Desktop)
-  - `brew install libpq`
+```shell
+rbenv install 2.7.5
+brew install --cask docker
+brew install libpq
+```
+
 #### Linux
+```shell
 sudo apt install libpq-dev
 rbenv install 2.7.5
+```
 
 ### 2. Install gems
 ```shell
@@ -43,6 +48,10 @@ rake colenda_admin:stop
 ```shell
 rake colenda_admin:destroy
 ```
+
+### Interacting directly with services
+#### Minio
+Visit http://localhost:9001/login and log-in with credentials in `config/settings/development.yml`
 
 ## Configuration/Settings
 Application-wide configuration is centralized in `config/settings` and `config/settings.yml`. Access to configuration is provided via the `Settings` object instantiated by the [config](https://github.com/rubyconfig/config) gem. For example, to retrieve the preservation storage configuration run:
