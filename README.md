@@ -52,6 +52,8 @@ rake colenda_admin:destroy
 ### Interacting directly with services
 #### Minio
 Visit http://localhost:9001/login and log-in with credentials in `config/settings/development.yml`
+#### Solr
+Is available at http://localhost:8983
 
 ## Configuration/Settings
 Application-wide configuration is centralized in `config/settings` and `config/settings.yml`. Access to configuration is provided via the `Settings` object instantiated by the [config](https://github.com/rubyconfig/config) gem. For example, to retrieve the preservation storage configuration run:
