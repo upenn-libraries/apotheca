@@ -193,5 +193,6 @@ title = "gitlab gitleaks config"
         '''AnsibleVaultPassword'''
     ]
     paths = [
-        '''config/settings/(development|test).yml'''
+        '''config/settings/(development|test).yml''',
+        '''solr/conf/schema.xml'''
     ]
