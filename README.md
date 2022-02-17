@@ -76,7 +76,7 @@ bundle exec rubocop
 
 #### To regenerate `.rubocop_todo.yml`:
 ```ruby
-rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
+bundle exec rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
 ```
 
 ## Staging/Production Deployment

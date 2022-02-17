@@ -192,3 +192,6 @@ title = "gitlab gitleaks config"
         # AWS Secrets Manager resource for vault password
         '''AnsibleVaultPassword'''
     ]
+    paths = [
+        '''config/settings/(development|test).yml'''
+    ]
