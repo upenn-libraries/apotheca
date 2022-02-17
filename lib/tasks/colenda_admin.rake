@@ -16,9 +16,9 @@ namespace :colenda_admin do
       system('RAILS_ENV=test rake db:migrate')
     end
 
-    # TODO: Create buckets, check minio is available first
-    # system('RAILS_ENV=development rake app:create_buckets')
-    # system('RAILS_ENV=test rake app:create_buckets')
+    # Create buckets
+    system('RAILS_ENV=development rake colenda_admin:create_buckets')
+    system('RAILS_ENV=test rake colenda_admin:create_buckets')
   end
 
   desc 'Destroys local development & test environments and any data'
@@ -29,5 +29,48 @@ namespace :colenda_admin do
   desc 'Stop local development & test environments'
   task stop: :environment do
     system('docker-compose stop')
+  end
+
+  desc 'Create preservation buckets for development and test environments'
+  task create_buckets: :environment do
+    config = Settings.preservation_storage
+    client = Aws::S3::Client.new(
+      credentials: Aws::Credentials.new(
+        config[:access_key_id], config[:secret_access_key]
+      ),
+      endpoint: config[:endpoint],
+      force_path_style: true,
+      region: 'us-east-1' # Default
+    )
+
+    # Create preservation bucket if it's not already present.
+    begin
+      client.head_bucket(bucket: config[:bucket])
+    rescue Aws::S3::Errors::NotFound
+      client.create_bucket(bucket: config[:bucket])
+      client.put_bucket_policy(
+        bucket: config[:bucket],
+        policy: {
+          'Version' => '2012-10-17',
+          'Statement' => [
+            {
+              'Effect' => 'Allow',
+              'Principal' => { 'AWS' => ['*'] },
+              'Action' => [
+                's3:GetBucketLocation',
+                's3:ListBucket'
+              ],
+              'Resource' => ["arn:aws:s3:::#{config[:bucket]}"]
+            },
+            {
+              'Effect' => 'Allow',
+              'Principal' => { 'AWS' => ['*'] },
+              'Action' => ['s3:GetObject'],
+              'Resource' => ["arn:aws:s3:::#{config[:bucket]}/*"]
+            }
+          ]
+        }.to_json
+      )
+    end
   end
 end
