@@ -37,7 +37,6 @@ class Item
   end
 
   def mint_ark
-    # TODO: check if ark is present already before minting
     return if ark
 
     ark = Ezid::Identifier.mint
