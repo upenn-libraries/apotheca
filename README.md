@@ -83,3 +83,13 @@ bundle exec rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 1
 
 ## Staging/Production Deployment
 WIP
+
+## Basic Operations
+### Creating Item and Asset with wrapper classes
+```ruby
+uploaded_file = ActionDispatch::Http::UploadedFile.new tempfile: File.new(Rails.root.join('spec', 'fixtures', 'files', 'front.jpg')), filename: 'front.jpg', type: 'image/jpg'
+asset = Asset.create(file: uploaded_file, original_filename: 'front.jpg')
+item = Item.create(human_readable_name: 'New Item', descriptive_metadata: { title: ['Best Item'] }, 
+                   structural_metadata: { arranged_asset_ids: [asset.id]}, asset_ids: [asset.id])
+
+```
