@@ -11,9 +11,6 @@ gem 'rails', '~> 7.0.1'
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
 
-# Use postgresql as the database for Active Record
-gem 'pg', '~> 1.1'
-
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 5.0'
 
@@ -46,11 +43,17 @@ gem 'bootsnap', require: false
 
 gem 'aws-sdk-s3'
 gem 'config'
+gem 'ezid-client'
+gem 'pg', '~> 1.1'
+gem 'rsolr'
 gem 'upennlib-rubocop', git: 'https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop', branch: :main, require: false
+gem 'valkyrie', git: 'https://github.com/samvera/valkyrie', branch: 'main'
+gem 'valkyrie-shrine'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mingw x64_mingw]
+  gem 'byebug'
   gem 'rspec-rails', '~> 5.0'
 end
 

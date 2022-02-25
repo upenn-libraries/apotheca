@@ -194,5 +194,6 @@ title = "gitlab gitleaks config"
     ]
     paths = [
         '''config/settings/(development|test).yml''',
-        '''solr/conf/schema.xml'''
+        '''solr/conf/schema.xml''',
+        '''config/initializers/ezid.rb'''
     ]
