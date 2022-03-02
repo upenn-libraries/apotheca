@@ -20,7 +20,6 @@ class ItemsController < ApplicationController
   end
 
   def load_assets
-    # @assets = @query_service.find_members resource: @item, model: AssetResource # TODO: doesn't work
-    @assets = @query_service.find_many_by_ids ids: @item.asset_ids
+    @assets = @query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
   end
 end

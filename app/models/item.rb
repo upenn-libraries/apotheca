@@ -60,7 +60,9 @@ class Item
   end
 
   def set_thumbnail_id
-    @resource.thumbnail_id = if @change_set.structural_metadata.arranged_asset_ids&.any?
+    return if @change_set.thumbnail_id.present?
+
+    @resource.thumbnail_id =  if @change_set.structural_metadata.arranged_asset_ids&.any?
                                @change_set.structural_metadata.arranged_asset_ids.first
                              elsif @change_set.asset_ids&.any?
                                @change_set.asset_ids.first
