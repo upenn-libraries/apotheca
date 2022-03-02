@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+# controller actions for Item stuff
+class ItemsController < ApplicationController
+  before_action :load_query_service
+
+  def index
+    @items = @query_service.find_all_of_model model: ItemResource
+  end
+
+  def show
+    @item = @query_service.find_by id: params[:id]
+    load_assets
+  end
+
+  private
+
+  def load_query_service
+    @query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
+  end
+
+  def load_assets
+    @assets = @query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
+  end
+end

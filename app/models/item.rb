@@ -33,7 +33,7 @@ class Item
     mint_ark
     update_ark_metadata
     # merge_marc_metadata
-    # set_thumbnail_id
+    set_thumbnail_id
   end
 
   def mint_ark
@@ -57,5 +57,17 @@ class Item
     arks = @change_set.alternate_ids.select { |i| i.starts_with('ark:/') } # TODO: Maybe should check for the whole shoulder
     raise "More than one ark defined" if arks.count > 1
     arks.count == 1 ? arks.first : nil
+  end
+
+  def set_thumbnail_id
+    return if @change_set.thumbnail_id.present?
+
+    @resource.thumbnail_id =  if @change_set.structural_metadata.arranged_asset_ids&.any?
+                               @change_set.structural_metadata.arranged_asset_ids.first
+                             elsif @change_set.asset_ids&.any?
+                               @change_set.asset_ids.first
+                             else
+                               nil
+                             end
   end
 end
