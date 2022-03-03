@@ -22,13 +22,6 @@ module MetadataExtractor
         response.body
       end
 
-
-    # def self.config
-    #   url = Settings&.marmite&.url
-    #   raise MissingConfiguration, 'Missing Marmite URL' unless url
-    #   { 'url' => url }
-    # end
-
       private
 
       # Combines host and path to create a a full URL.
