@@ -36,7 +36,8 @@ class Asset
 
   def before_save
     # TODO: Generate derivatives for assets, if file was added
-    # TODO: Characterize file and add technical metadata to resource, if file was added.
+    add_file_characterization
+    # TODO: generate sha256 checksum
   end
 
   def save
@@ -44,5 +45,23 @@ class Asset
 
     @resource = @change_set.sync
     @resource = Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.save(resource: @resource)
+  end
+
+  def add_file_characterization
+    return unless @change_set.changed?(:file_ids)
+    file_id = @change_set.file_ids.first
+
+    preservation_storage = Valkyrie::StorageAdapter.find(:preservation)
+    file = preservation_storage.find_by(id: file_id)
+
+    fits = FileCharacterization::Fits.new(url: Settings.fits.url)
+
+    tech_metadata = fits.examine(contents: file.read, filename: @change_set.original_filename)
+
+    @change_set.technical_metadata.raw       = tech_metadata.raw
+    @change_set.technical_metadata.mime_type = tech_metadata.mime_type
+    @change_set.technical_metadata.size      = tech_metadata.size
+    @change_set.technical_metadata.md5       = tech_metadata.md5
+    @change_set.technical_metadata.duration  = tech_metadata.duration
   end
 end

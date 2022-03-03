@@ -10,15 +10,24 @@ class AssetResource < Valkyrie::Resource
     attribute :table_of_contents, Valkyrie::Types::String
   end
 
+  class TechnicalMetadata < Valkyrie::Resource
+    attribute :raw, Valkyrie::Types::String
+    attribute :mime_type, Valkyrie::Types::String
+    attribute :size, Valkyrie::Types::Integer # Size in Bytes
+    attribute :duration, Valkyrie::Types::String
+    attribute :md5, Valkyrie::Types::String
+    attribute :sha256, Valkyrie::Types::String
+  end
+
   attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
   attribute :original_filename, Valkyrie::Types::String
   attribute :file_ids, Valkyrie::Types::Set # Link to where its stored in storage
   attribute :descriptive_metadata, DescriptiveMetadata
+  attribute :technical_metadata, TechnicalMetadata
 
   # attribute :derivatives, DerivativeResource # { type: 'thumbnail', file_id: '', generated_at: '' }
 
   # attribute :fulltext or :transcription { mime_type: '', contents: '' }
-  # attribute :technical_metadata # file characterization
   # attribute :preservation_metadata
   #
   # Potential way to group two preservation copies of file

@@ -8,4 +8,4 @@ preservation_storage:
 solr:
   url: http://127.0.0.1:8983/solr/colenda_admin_dev
 fits:
-  url: http://localhost:8080
+  url: http://localhost:8080/fits
