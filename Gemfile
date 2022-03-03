@@ -55,6 +55,7 @@ group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'byebug'
   gem 'rspec-rails', '~> 5.0'
+  gem 'webmock'
 end
 
 group :development do
