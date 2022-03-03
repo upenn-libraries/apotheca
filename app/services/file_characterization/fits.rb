@@ -61,7 +61,7 @@ module FileCharacterization
         xml = Nokogiri::XML.parse(output)
         xml.at_xpath('/xmlns:fits/xmlns:fileinfo/xmlns:filepath')&.remove
         xml.at_xpath('/xmlns:fits/xmlns:statistics')&.remove
-        xml.to_xml # TODO: make sure this has as least whitespace as possible
+        xml.to_xml
       end
     end
   end
