@@ -14,9 +14,6 @@ gem 'sprockets-rails'
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 5.0'
 
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem 'importmap-rails'
-
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'turbo-rails'
 
@@ -38,14 +35,14 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
 
-# Use Sass to process CSS
-# gem "sassc-rails"
-
 gem 'aws-sdk-s3'
+gem 'bootstrap', '~> 5.1.3'
 gem 'config'
 gem 'ezid-client'
+gem 'importmap-rails'
 gem 'pg', '~> 1.1'
 gem 'rsolr'
+gem "sassc-rails" # Use Sass to process CSS
 gem 'upennlib-rubocop', git: 'https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop', branch: :main, require: false
 gem 'valkyrie', git: 'https://github.com/samvera/valkyrie', branch: 'main'
 gem 'valkyrie-shrine'
