@@ -44,6 +44,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
   property :asset_ids, multiple: true, required: false
   property :descriptive_metadata, multiple: false, required: true, form: DescriptiveMetadataChangeSet
   property :structural_metadata, multiple: false, required: true, form: StructuralMetadataChangeSet
+  property :thumbnail_id, multiple: false, required: true
 
   # Validations
   # TODO: Validate that ark is present in alternate_ids
