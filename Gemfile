@@ -46,6 +46,7 @@ gem "sassc-rails" # Use Sass to process CSS
 gem 'upennlib-rubocop', git: 'https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop', branch: :main, require: false
 gem 'valkyrie', git: 'https://github.com/samvera/valkyrie', branch: 'main'
 gem 'valkyrie-shrine'
+gem 'view_component'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
