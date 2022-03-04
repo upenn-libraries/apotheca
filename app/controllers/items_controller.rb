@@ -26,7 +26,8 @@ class ItemsController < ApplicationController
   private
 
   def update_params
-    params.permit(item: { descriptive_metadata: { title: [] } })
+    metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.map { |f| [f, []] }.to_h
+    params.permit(item: { descriptive_metadata: metadata_fields })
   end
 
   def load_query_service

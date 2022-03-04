@@ -1,30 +1,8 @@
 class ItemChangeSet < Valkyrie::ChangeSet
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
-    property :abstract, multiple: true
-    property :bibnumber, multiple: true
-    property :call_number, multiple: true
-    property :collection, multiple: true
-    property :contributor, multiple: true
-    property :corporate_name, multiple: true
-    property :coverage, multiple: true
-    property :creator, multiple: true
-    property :date, multiple: true
-    property :description, multiple: true
-    property :format, multiple: true
-    property :geographic_subject, multiple: true
-    property :identifier, multiple: true
-    property :includes, multiple: true
-    property :item_type, multiple: true
-    property :language, multiple: true
-    property :notes, multiple: true
-    property :personal_name, multiple: true
-    property :provenance, multiple: true
-    property :publisher, multiple: true
-    property :relation, multiple: true
-    property :rights, multiple: true
-    property :source, multiple: true
-    property :subject, multiple: true
-    property :title, multiple: true,required: true
+    ItemResource::DescriptiveMetadata::FIELDS.each do |field|
+      property field, multiple: true
+    end
 
     validates :title, presence: true
   end
