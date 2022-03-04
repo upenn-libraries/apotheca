@@ -13,7 +13,21 @@ class ItemsController < ApplicationController
     load_assets
   end
 
+  def edit
+    @item = @query_service.find_by id: params[:id]
+  end
+
+  def update
+    @item = @query_service.find_by id: params[:id]
+    Item.new(@item).update(update_params[:item])
+    redirect_to item_path(@item)
+  end
+
   private
+
+  def update_params
+    params.permit(item: { descriptive_metadata: { title: [] } })
+  end
 
   def load_query_service
     @query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service

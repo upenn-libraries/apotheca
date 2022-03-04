@@ -1,10 +1,20 @@
-<h2>Descriptive Metadata</h2>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/items">Items</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @item.human_readable_name %></li>
+  </ol>
+</nav>
+
+<h3><%= @item.human_readable_name %></h3>
+
+<h4>Descriptive Metadata</h4>
 <p><%= @item.descriptive_metadata.as_json %></p>
 
-<h2>Structural Metadata</h2>
+<h4>Structural Metadata</h4>
 <p><%= @item.structural_metadata.as_json %></p>
 
-<h2>Assets (unarranged)</h2>
+<h4>Assets (unarranged)</h4>
 <% if @assets.any? %>
 <ul>
   <% @assets.each do |asset| %>
