@@ -41,11 +41,22 @@ Rails.application.config.to_prepare do
     public: true # Adds public-read acl to all objects
   )
 
+  derivatives_storage_config = Settings.derivative_storage.to_h.merge(
+    region: 'us-east-1', # using default region
+    force_path_style: true,
+    public: true # Adds public-read acl to all objects
+  )
+
   Shrine.storages = {
-    preservation: Shrine::Storage::S3.new(preservation_storage_config)
+    preservation: Shrine::Storage::S3.new(preservation_storage_config),
+    derivatives: Shrine::Storage::S3.new(derivatives_storage_config)
   }
 
   Valkyrie::StorageAdapter.register(
     Valkyrie::Storage::Shrine.new(Shrine.storages[:preservation]), :preservation
+  )
+
+  Valkyrie::StorageAdapter.register(
+    Valkyrie::Storage::Shrine.new(Shrine.storages[:derivatives], nil, DerivativePathGenerator), :derivatives
   )
 end
