@@ -2,10 +2,9 @@ class ItemResource < Valkyrie::Resource
   class DescriptiveMetadata < Valkyrie::Resource
     # All descriptive metadata fields
     FIELDS = [
-      :abstract, :bibnumber, :call_number, :collection, :contributor, :corporate_name, :coverage,
-      :creator, :date, :description, :format, :geographic_subject, :identifier, :includes, :item_type,
-      :language, :notes, :personal_name, :provenance, :publisher, :relation, :rights, :source, :subject,
-      :title
+      :title, :abstract,:description,  :call_number, :collection, :contributor, :personal_name, :corporate_name,
+      :coverage, :creator, :date,  :format, :geographic_subject, :subject, :identifier, :includes, :item_type,
+      :language, :notes,  :provenance, :publisher, :relation, :rights, :source, :bibnumber
     ]
 
     FIELDS.each do |field|

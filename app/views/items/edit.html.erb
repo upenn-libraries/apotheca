@@ -1,12 +1,12 @@
 <h4>Descriptive Metadata</h4>
 
 <%= form_tag item_path(@item), method: :patch do %>
-  <div class="row mb-3">
-    <label for="inputTitle" class="col-sm-2 col-form-label">Title</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" name="item[descriptive_metadata][title][]" value="<%= @item.descriptive_metadata.title[0] %>" id="inputTitle">
-    </div>
-  </div>
+  <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
+    <%= render(MultivaluedInputComponent.new(
+      label: field,
+      value: @item.descriptive_metadata.send(field),
+      field: "item[descriptive_metadata][#{field}][]" )) %>
+  <% end %>
 
   <input class="btn btn-primary" name="save" type="submit" value="Save">
 <% end %>
