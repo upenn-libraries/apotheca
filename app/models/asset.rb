@@ -78,6 +78,6 @@ class Asset
   end
 
   def generate_sha256_checksum
-    @change_set.technical_metadata.sha256 = Digest::SHA2.new(256).hexdigest(file.read)
+    @change_set.technical_metadata.sha256 = file.checksum digests: [Digest::SHA256.new]
   end
 end
