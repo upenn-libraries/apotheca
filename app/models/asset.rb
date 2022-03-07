@@ -37,7 +37,7 @@ class Asset
   private
 
   def before_save
-    if @file.present?
+    if file.present?
       # TODO: Generate derivatives for assets, if file was added
       add_file_characterization
       generate_sha256_checksum
@@ -45,9 +45,7 @@ class Asset
   end
 
   def save
-    if file_changed?
-      set_file
-    end
+    set_file if file_changed?
 
     before_save
 
@@ -70,7 +68,7 @@ class Asset
   def add_file_characterization
     fits = FileCharacterization::Fits.new(url: Settings.fits.url)
 
-    tech_metadata = fits.examine(contents: @file.read, filename: @change_set.original_filename)
+    tech_metadata = fits.examine(contents: file.read, filename: @change_set.original_filename)
 
     @change_set.technical_metadata.raw       = tech_metadata.raw
     @change_set.technical_metadata.mime_type = tech_metadata.mime_type
@@ -80,6 +78,6 @@ class Asset
   end
 
   def generate_sha256_checksum
-    @change_set.technical_metadata.sha256 = Digest::SHA2.new(256).hexdigest(@file.read)
+    @change_set.technical_metadata.sha256 = Digest::SHA2.new(256).hexdigest(file.read)
   end
 end
