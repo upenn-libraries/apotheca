@@ -34,7 +34,6 @@ class Item
     update_ark_metadata
     # merge_marc_metadata
     set_thumbnail_id
-
   end
 
   def mint_ark
