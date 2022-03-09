@@ -1,9 +1,7 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Items</li>
-  </ol>
-</nav>
+<%= render(BreadcrumbsComponent.new) do |component| %>
+  <% component.breadcrumb(href: "/") do %>Home<% end %>
+  <% component.breadcrumb(active: true) do %>Items<% end %>
+<% end %>
 
 <ul>
   <% @items.each do |item| %>
