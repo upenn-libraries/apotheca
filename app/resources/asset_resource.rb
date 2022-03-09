@@ -36,4 +36,3 @@ class AssetResource < Valkyrie::Resource
   #   attribute :deep_preservation_file_id # ID for deep storage copy, duplicate_file_id?, backup_file_id?
   # end
 end
-
