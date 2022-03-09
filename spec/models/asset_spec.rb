@@ -11,6 +11,10 @@ describe Asset do
       expect(asset.technical_metadata.size).to eql 42_421
       expect(asset.technical_metadata.md5).to eql 'a93d8dc6bc83cd51ad60a151a8ce11e4'
     end
+
+    it 'sets sha256 checksum' do
+      expect(asset.technical_metadata.sha256).to eql 'd58516c7d3ece4d79f0de3a649a090af2174e67b7658f336a027a42123a2da72'
+    end
   end
 
   describe '.update'
