@@ -17,9 +17,6 @@ gem 'puma', '~> 5.0'
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'turbo-rails'
 
-# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem 'stimulus-rails'
-
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
 
@@ -43,6 +40,7 @@ gem 'importmap-rails'
 gem 'pg', '~> 1.1'
 gem 'rsolr'
 gem "sassc-rails" # Use Sass to process CSS
+gem 'stimulus-rails'
 gem 'upennlib-rubocop', git: 'https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop', branch: :main, require: false
 gem 'valkyrie', git: 'https://github.com/samvera/valkyrie', branch: 'main'
 gem 'valkyrie-shrine'
