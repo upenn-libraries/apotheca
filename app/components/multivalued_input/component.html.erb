@@ -1,7 +1,7 @@
 <div class="row mb-3">
   <label for="<%= @id %>" class="col-sm-2 col-form-label col-form-label-sm"><%= @label %></label>
   <div class="col-sm-10" data-controller="multivalued-input--input-list">
-    <% @value.each do |v| %>
+    <% @values.each do |v| %>
       <div data-controller="multivalued-input--input" data-multivalued-input--input-list-target="input">
         <div class="row mb-1" data-multivalued-input--input-target="source">
           <div class="col-sm-10">

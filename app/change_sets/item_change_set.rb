@@ -2,6 +2,11 @@ class ItemChangeSet < Valkyrie::ChangeSet
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
     ItemResource::DescriptiveMetadata::FIELDS.each do |field|
       property field, multiple: true
+
+      # Remove blank values from array.
+      define_method "#{field}=" do |values|
+        super(values.compact_blank)
+      end
     end
 
     validates :title, presence: true

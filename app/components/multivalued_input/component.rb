@@ -7,7 +7,7 @@ module MultivaluedInput
     def initialize(label:, value:, field:)
       @label = label.to_s.titlecase
       @id = label.to_s.downcase.tr(' ', '-')
-      @value = value # this value should be an array
+      @values = value.empty? ? [nil] : value # this value should be an array; adding an blank value if array is empty
       @field = field
     end
   end
