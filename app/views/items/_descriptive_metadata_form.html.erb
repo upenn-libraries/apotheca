@@ -2,7 +2,7 @@
 
 <%= form_tag item_path(@item), method: :patch do %>
   <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
-    <%= render(MultivaluedInputComponent.new(
+    <%= render(MultivaluedInput::Component.new(
       label: field,
       value: @item.descriptive_metadata.send(field),
       field: "item[descriptive_metadata][#{field}][]" )) %>
