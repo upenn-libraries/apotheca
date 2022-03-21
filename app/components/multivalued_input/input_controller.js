@@ -1,8 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = [ "source" ]
-
     addInput(event) {
         var newInput = this.element.cloneNode(true)
         newInput.querySelectorAll('input').forEach( input => { input.value = null })
@@ -11,6 +9,7 @@ export default class extends Controller {
     }
 
     removeInput(event) {
+        console.log("removing input")
         this.element.remove()
     }
 }
