@@ -1,17 +1,17 @@
-<h4>Assets (unarranged) [<%= @assets.size %>]</h4>
+<h4>Assets (unarranged)</h4>
 <% if @assets.any? %>
   <table class="table table-sm">
     <thead>
     <tr>
-      <th>Original Filename</th>
-      <th>Created</th>
-      <th>Updated</th>
+      <th scope="col">Original Filename</th>
+      <th scope="col">Created</th>
+      <th scope="col">Updated</th>
     </tr>
     </thead>
     <tbody>
     <% @assets.each do |asset| %>
       <tr>
-        <td><%= asset.original_filename %></td>
+        <th scope="row"><%= asset.original_filename %></th>
         <td><%= asset.created_at %></td>
         <td><%= asset.updated_at %></td>
       </tr>
