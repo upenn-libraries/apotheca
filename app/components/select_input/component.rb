@@ -10,15 +10,15 @@ module SelectInput
     # @param options [Array<String>] options for select
     def initialize(id:, value:, field:, options:)
       @id = id
-      @values = value.empty? ? [nil] : value # adding an blank value if array is empty
+      @value = value
       @field = field
-      @options = options
+      @options = options.prepend(nil)
     end
 
     def call
       select_tag(@field,
                  options_for_select(@options, selected: @value),
-                 class: 'form-control', id: @id
+                 class: 'form-control form-select-sm form-select', id: @id
       )
     end
   end

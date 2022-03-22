@@ -8,26 +8,25 @@ class ItemsController < ApplicationController
     @items = @query_service.find_all_of_model model: ItemResource
   end
 
-  def show
-    @item = @query_service.find_by id: params[:id]
-    load_assets
-  end
-
   def edit
     @item = @query_service.find_by id: params[:id]
+    load_assets
   end
 
   def update
     @item = @query_service.find_by id: params[:id]
     Item.new(@item).update(update_params[:item])
-    redirect_to item_path(@item)
+    redirect_to edit_item_path(@item)
   end
 
   private
 
   def update_params
     metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.map { |f| [f, []] }.to_h
-    params.permit(item: { descriptive_metadata: metadata_fields })
+    params.permit(item: {
+      descriptive_metadata: metadata_fields,
+      structural_metadata: [:viewing_direction, :viewing_hint]
+    })
   end
 
   def load_query_service

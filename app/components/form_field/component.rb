@@ -11,7 +11,7 @@ module FormField
     # @param options [Array<String>] options for select
     def initialize(type:, label:, value:, field:, options: nil)
       @type = type.to_sym
-      @label = label
+      @label = label.to_s.titlecase
       @value = value
       @field = field
       @options = options

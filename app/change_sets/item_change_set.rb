@@ -13,8 +13,11 @@ class ItemChangeSet < Valkyrie::ChangeSet
   end
 
   class StructuralMetadataChangeSet < Valkyrie::ChangeSet
-    property :viewing_direction, multiple: false, required: false
-    property :viewing_hint, multiple: false, required: false
+    VIEWING_DIRECTIONS = ['right-to-left', 'left-to-right', 'top-to-bottom', 'bottom-to-top']
+    VIEWING_HINTS = ['individual', 'paged']
+
+    property :viewing_direction, multiple: false, required: false, validates: { inclusion: VIEWING_DIRECTIONS, allow_nil: true }
+    property :viewing_hint, multiple: false, required: false, validates: { inclusion: VIEWING_HINTS, allow_nil: true }
     property :arranged_asset_ids, multiple: true, required: true
 
     # TODO: validate at least one ordered asset id is present
