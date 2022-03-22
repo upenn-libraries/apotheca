@@ -1,0 +1,23 @@
+<h4>Assets (unarranged) [<%= @assets.size %>]</h4>
+<% if @assets.any? %>
+  <table class="table table-sm">
+    <thead>
+    <tr>
+      <th>Original Filename</th>
+      <th>Created</th>
+      <th>Updated</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @assets.each do |asset| %>
+      <tr>
+        <td><%= asset.original_filename %></td>
+        <td><%= asset.created_at %></td>
+        <td><%= asset.updated_at %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No assets</p>
+<% end %>

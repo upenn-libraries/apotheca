@@ -9,7 +9,6 @@
 <%= render Tabs::Component.new(id: 'item-tabs') do |component| %>
   <% component.tab(title: 'Descriptive Metadata', active: true) do %>
     <%= render partial: 'descriptive_metadata_form' %>
-    <p><%= @item.descriptive_metadata.as_json %></p>
   <% end %>
 
   <% component.tab(title: 'Structural Metadata') do %>
@@ -17,15 +16,6 @@
   <% end %>
 
   <% component.tab(title: 'Assets') do  %>
-    <h4>Assets (unarranged)</h4>
-     <% if @assets.any? %>
-       <ul>
-         <% @assets.each do |asset| %>
-           <li><%= asset.as_json %></li>
-          <% end %>
-          </ul>
-    <% else %>
-     <p>No assets</p>
-    <% end %>
+    <%= render partial: 'assets_list' %>
   <% end %>
 <% end %>
