@@ -1,0 +1,19 @@
+<h3>Structural Metadata</h3>
+
+<%= form_tag item_path(@item), method: :patch do %>
+  <%= render(FormField::Component.new(
+    type: :select,
+    label: 'Viewing Hint',
+    value: @item.structural_metadata.viewing_hint,
+    field: "item[structural_metadata][viewing_hint]",
+    options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS)) %>
+
+  <%= render(FormField::Component.new(
+    type: :select,
+    label: 'Viewing Direction',
+    value: @item.structural_metadata.viewing_direction,
+    field: "item[structural_metadata][viewing_direction]",
+    options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS)) %>
+
+  <input class="btn btn-primary" name="save" type="submit" value="Save">
+<% end %>

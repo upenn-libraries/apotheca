@@ -54,7 +54,7 @@ class Item
   end
 
   def ark
-    arks = @change_set.alternate_ids.select { |i| i.starts_with('ark:/') } # TODO: Maybe should check for the whole shoulder
+    arks = @change_set.alternate_ids.select { |i| i.to_s.starts_with?('ark:/') } # TODO: Maybe should check for the whole shoulder
     raise "More than one ark defined" if arks.count > 1
     arks.count == 1 ? arks.first : nil
   end

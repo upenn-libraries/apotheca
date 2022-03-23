@@ -1,37 +1,23 @@
 class ItemChangeSet < Valkyrie::ChangeSet
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
-    property :abstract
-    property :bibnumber
-    property :call_number
-    property :collection
-    property :contributor
-    property :corporate_name
-    property :coverage
-    property :creator
-    property :date
-    property :description
-    property :format
-    property :geographic_subject
-    property :identifier
-    property :includes
-    property :item_type
-    property :language
-    property :notes
-    property :personal_name
-    property :provenance
-    property :publisher
-    property :relation
-    property :rights
-    property :source
-    property :subject
-    property :title, required: true
+    ItemResource::DescriptiveMetadata::FIELDS.each do |field|
+      property field, multiple: true
+
+      # Remove blank values from array.
+      define_method "#{field}=" do |values|
+        super(values.compact_blank)
+      end
+    end
 
     validates :title, presence: true
   end
 
   class StructuralMetadataChangeSet < Valkyrie::ChangeSet
-    property :viewing_direction, multiple: false, required: false
-    property :viewing_hint, multiple: false, required: false
+    VIEWING_DIRECTIONS = ['right-to-left', 'left-to-right', 'top-to-bottom', 'bottom-to-top']
+    VIEWING_HINTS = ['individual', 'paged']
+
+    property :viewing_direction, multiple: false, required: false, validates: { inclusion: VIEWING_DIRECTIONS, allow_nil: true }
+    property :viewing_hint, multiple: false, required: false, validates: { inclusion: VIEWING_HINTS, allow_nil: true }
     property :arranged_asset_ids, multiple: true, required: true
 
     # TODO: validate at least one ordered asset id is present

@@ -1,0 +1,13 @@
+<h3>Descriptive Metadata</h3>
+
+<%= form_tag item_path(@item), method: :patch do %>
+  <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
+    <%= render(FormField::Component.new(
+      type: :text,
+      label: field,
+      value: @item.descriptive_metadata.send(field),
+      field: "item[descriptive_metadata][#{field}][]" )) %>
+  <% end %>
+
+  <input class="btn btn-primary" name="save" type="submit" value="Save">
+<% end %>

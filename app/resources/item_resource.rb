@@ -1,31 +1,15 @@
 class ItemResource < Valkyrie::Resource
   class DescriptiveMetadata < Valkyrie::Resource
-    # Current Colenda descriptive metadata fields
-    attribute :abstract, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :bibnumber, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :call_number, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :collection, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :contributor, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :corporate_name, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :coverage, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :creator, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :date, Valkyrie::Types::Array.of(Valkyrie::Types::String) # Might want to change this to Date
-    attribute :description, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :format, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :geographic_subject, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :identifier, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :includes, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :item_type, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :language, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :notes, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :personal_name, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :provenance, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :publisher, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :relation, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :rights, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :source, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :subject, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    attribute :title, Valkyrie::Types::Array.of(Valkyrie::Types::String)
+    # All descriptive metadata fields
+    FIELDS = [
+      :title, :abstract, :description,  :call_number, :collection, :contributor, :personal_name, :corporate_name,
+      :coverage, :creator, :date,  :format, :geographic_subject, :subject, :identifier, :includes, :item_type,
+      :language, :notes,  :provenance, :publisher, :relation, :rights, :source, :bibnumber
+    ]
+
+    FIELDS.each do |field|
+      attribute field, Valkyrie::Types::Array.of(Valkyrie::Types::String)
+    end
   end
 
   class StructuralMetadata < Valkyrie::Resource
