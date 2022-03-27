@@ -2,6 +2,7 @@
 
 # controller actions for Item stuff
 class ItemsController < ApplicationController
+  before_action :authenticate_user!
   before_action :load_query_service
 
   def index

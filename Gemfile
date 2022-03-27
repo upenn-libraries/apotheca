@@ -35,8 +35,11 @@ gem 'bootsnap', require: false
 gem 'aws-sdk-s3'
 gem 'bootstrap', '~> 5.1.3'
 gem 'config'
+gem 'devise'
 gem 'ezid-client'
 gem 'importmap-rails'
+gem 'omniauth'
+gem 'omniauth-rails_csrf_protection'
 gem 'pg', '~> 1.1'
 gem 'rsolr'
 gem "sassc-rails" # Use Sass to process CSS
