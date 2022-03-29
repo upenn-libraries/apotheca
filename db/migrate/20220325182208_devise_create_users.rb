@@ -6,8 +6,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.0]
     create_table :users do |t|
       t.string :first_name
       t.string :last_name
-      t.string :email
-      t.boolean :active
+      t.string :email, null: false, index: { unique: true }
+      t.boolean :active, null: false, default: true
       t.timestamps null: false
 
       # rememberable
@@ -17,7 +17,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.0]
       t.string :provider
       t.string :uid
 
-      t.index :email, unique: true
+      t.index %i[uid provider], unique: true
     end
   end
 end

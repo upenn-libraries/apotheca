@@ -9,11 +9,15 @@ class User < ApplicationRecord
     devise :omniauthable, omniauth_providers: []
   end
 
+  validates :email, presence: true, uniqueness: true
+  validates :uid, uniqueness: { scope: :provider }
+
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
       user.email = auth.info.email
-      user.first_name = auth.info.first_name
-      user.last_name = auth.info.last_name
+      user.first_name = 'A.'
+      user.last_name = 'Developer'
       user.active = true
     end
   end

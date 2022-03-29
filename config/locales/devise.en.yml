@@ -8,6 +8,7 @@ en:
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
       success: "Successfully authenticated from %{kind} account."
+      created: "Successfully created new user and authenticated from %{kind} account."
     sessions:
       signed_in: "Signed in successfully."
       signed_out: "Signed out successfully."
