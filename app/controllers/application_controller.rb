@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  def login
-
-  end
+  def login; end
 end
