@@ -8,6 +8,7 @@ require_relative '../config/environment'
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'valkyrie/specs/shared_specs'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -33,8 +34,8 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 RSpec.configure do |config|
-  # FactoryBot
   config.include FactoryBot::Syntax::Methods
+  config.include ActiveSupport::Testing::TimeHelpers
 
   # RSpec Devise helpers
   config.include Devise::Test::IntegrationHelpers, type: :request
@@ -71,4 +72,17 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # Clear out storage adapters after each test.
+  config.before(:each) do
+    Valkyrie::StorageAdapter.storage_adapters.each do |short_name, adapter|
+      adapter.shrine.clear! if adapter.is_a? Valkyrie::Storage::Shrine
+    end
+  end
+
+  # Clear out metadata adapters after each test
+  # FIXME: For some reason Solr is not being cleared.
+  config.before(:each) do
+    Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.wipe!
+  end
 end

@@ -1,14 +1,14 @@
 class AssetChangeSet < Valkyrie::ChangeSet
-  # class TableOfContentsChangeSet < Valkyrie::ChangeSet
-  #   property :text, multiple: false, required: true
-  #
-  #   validates :text, presence: true
-  # end
-  #
-  # class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
-  #   property :label, multiple: false
-  #   collection :table_of_contents, multiple: true, form: TableOfContentsChangeSet, populate_if_empty: AssetResource::TableOfContents
-  # end
+  class AnnotationChangeSet < Valkyrie::ChangeSet
+    property :text, multiple: false
+
+    validates :text, presence: true
+  end
+
+  class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
+    property :label, multiple: false
+    collection :annotations, multiple: true, form: AnnotationChangeSet, populate_if_empty: AssetResource::Annotation
+  end
 
   class TechnicalMetadataChangeSet < Valkyrie::ChangeSet
     property :raw, multiple: false
@@ -23,8 +23,10 @@ class AssetChangeSet < Valkyrie::ChangeSet
   property :alternate_ids, multiple: true, required: false
   property :original_filename, multiple: false, required: true
   property :file_ids, multiple: true, required: false
-  # property :descriptive_metadata, multiple: false, form: DescriptiveMetadataChangeSet
+  property :descriptive_metadata, multiple: false, form: DescriptiveMetadataChangeSet
   property :technical_metadata, multiple: false, form: TechnicalMetadataChangeSet
+
+  collection :derivatives, multiple: true, form: DerivativeChangeSet, populate_if_empty: DerivativeResource
 
   # Validations
   validates :original_filename, presence: true

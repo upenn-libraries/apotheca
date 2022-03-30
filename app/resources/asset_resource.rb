@@ -1,13 +1,12 @@
 class AssetResource < Valkyrie::Resource
-  # class Annotation < Valkyrie::Resource
-  #   attribute :text
-  #   attribute :type # 'table_of_contents'
-  #   attribute :location #x,y,w,h # optional
-  # end
-  #
+  class Annotation < Valkyrie::Resource
+    attribute :text, Valkyrie::Types::String
+    # attribute :location, Valkyrie::Types::String # x,y,w,h
+  end
+
   class DescriptiveMetadata < Valkyrie::Resource
     attribute :label, Valkyrie::Types::String
-    attribute :table_of_contents, Valkyrie::Types::String
+    attribute :annotations, Valkyrie::Types::Array.of(Annotation)
   end
 
   class TechnicalMetadata < Valkyrie::Resource
@@ -25,9 +24,9 @@ class AssetResource < Valkyrie::Resource
   attribute :descriptive_metadata, DescriptiveMetadata
   attribute :technical_metadata, TechnicalMetadata
 
-  # attribute :derivatives, DerivativeResource # { type: 'thumbnail', file_id: '', generated_at: '' }
+  attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
-  # attribute :fulltext or :transcription { mime_type: '', contents: '' }
+  # attribute :transcription { mime_type: '', contents: '' }
   # attribute :preservation_metadata
   #
   # Potential way to group two preservation copies of file
