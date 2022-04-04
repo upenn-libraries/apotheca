@@ -13,14 +13,8 @@
   <body>
     <%= render partial: 'shared/top_navbar' %>
 
-    <div class="container">
-      <% if notice %>
-        <p class="notice"><%= notice %></p>
-      <% end %>
-
-      <% if alert %>
-        <p class="alert"><%= alert %></p>
-      <% end %>
+    <div class="container mt-3">
+      <%= render partial: 'shared/flash_messages' %>
 
       <%= yield %>
     </div>
