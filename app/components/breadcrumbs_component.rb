@@ -9,7 +9,7 @@ class BreadcrumbsComponent < ViewComponent::Base
   end
 
   def call
-    content_tag :nav, class: 'my-3 bg-light text-dark rounded', 'aria-label': 'breadcrumb' do
+    content_tag :nav, class: 'mb-3 bg-light text-dark rounded', 'aria-label': 'breadcrumb' do
       content_tag :ol, class: 'breadcrumb py-2 px-3' do
         safe_join(breadcrumbs)
       end
