@@ -196,6 +196,13 @@ GEM
     ezid-client (1.9.1)
       hashie (~> 3.4, >= 3.4.3)
       nokogiri
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
+    faker (2.20.0)
+      i18n (>= 1.8.11, < 2)
     faraday (2.2.0)
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
@@ -448,6 +455,8 @@ DEPENDENCIES
   debug
   devise
   ezid-client
+  factory_bot_rails
+  faker
   importmap-rails
   jbuilder
   omniauth

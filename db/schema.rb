@@ -37,7 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_11_141414) do
     t.datetime "remember_created_at"
     t.string "provider"
     t.string "uid"
-    t.string "roles", array: true
+    t.string "roles", default: [], array: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["roles"], name: "index_users_on_roles"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true

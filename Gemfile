@@ -37,12 +37,14 @@ gem 'bootstrap', '~> 5.1.3'
 gem 'config'
 gem 'devise'
 gem 'ezid-client'
+gem 'factory_bot_rails'
+gem 'faker'
 gem 'importmap-rails'
 gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
 gem 'pg', '~> 1.1'
 gem 'rsolr'
-gem "sassc-rails" # Use Sass to process CSS
+gem 'sassc-rails' # Use Sass to process CSS
 gem 'stimulus-rails'
 gem 'upennlib-rubocop', git: 'https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop', branch: :main, require: false
 gem 'valkyrie', git: 'https://github.com/samvera/valkyrie', branch: 'main'
@@ -51,8 +53,8 @@ gem 'view_component'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'byebug'
+  gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails', '~> 5.0'
   gem 'webmock'
 end

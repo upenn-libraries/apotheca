@@ -4,8 +4,8 @@
 class User < ApplicationRecord
   ADMIN_ROLE = 'admin'
   EDITOR_ROLE = 'editor'
-  READONLY_ROLE = 'readonly'
-  ROLES = [ADMIN_ROLE, EDITOR_ROLE, READONLY_ROLE].freeze
+  VIEWER_ROLE = 'viewer'
+  ROLES = [ADMIN_ROLE, EDITOR_ROLE, VIEWER_ROLE].freeze
 
   devise :rememberable, :timeoutable
   if Rails.env.development?
@@ -13,6 +13,8 @@ class User < ApplicationRecord
   else
     devise :omniauthable, omniauth_providers: []
   end
+
+  before_validation :deduplicate_roles
 
   validate :require_only_one_role
   validates :roles, inclusion: ROLES
@@ -25,6 +27,7 @@ class User < ApplicationRecord
       user.first_name = 'A.'
       user.last_name = 'Developer'
       user.active = true
+      user.roles << ['admin']
     end
   end
 
@@ -39,17 +42,21 @@ class User < ApplicationRecord
   end
 
   # @return [TrueClass, FalseClass]
-  def readonly?
-    roles.include? READONLY_ROLE
+  def viewer?
+    roles.include? VIEWER_ROLE
   end
 
   private
 
+  def deduplicate_roles
+    roles.uniq!
+  end
+
   def require_only_one_role
     if roles.length > 1
-      errors.add(:roles, 'Invalid attempt to set more than one role on a User')
+      errors.add(:roles, 'cannot be multivalued')
     elsif roles.empty?
-      errors.add(:roles, 'One role must be set for a User')
+      errors.add(:roles, 'must be set for a User')
     end
   end
 end
