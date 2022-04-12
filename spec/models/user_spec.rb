@@ -30,6 +30,12 @@ describe User, type: :model do
     expect(user.errors['roles']).to include 'must be set for a User'
   end
 
+  it 'requires role names to be in the configured list' do
+    user = build :user, roles: ['unconfigured']
+    expect(user.valid?).to be false
+    expect(user.errors['roles']).to include 'is not included in the list'
+  end
+
   it 'requires role to be single-valued' do
     user = create :user, :editor
     user.roles << 'admin'
