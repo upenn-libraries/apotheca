@@ -8,7 +8,10 @@ describe 'Ability' do
   context 'with no user' do
     let(:user) { nil }
 
-    it { is_expected.not_to be_able_to(:view, :all) }
+    it { is_expected.not_to be_able_to(:view, :any) }
+    it { is_expected.not_to be_able_to(:view, ItemResource) }
+    it { is_expected.not_to be_able_to(:view, AssetResource) }
+    it { is_expected.not_to be_able_to(:view, User) }
   end
 
   context 'with a viewer user' do
