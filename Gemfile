@@ -34,6 +34,7 @@ gem 'bootsnap', require: false
 
 gem 'aws-sdk-s3'
 gem 'bootstrap', '~> 5.1.3'
+gem 'cancancan'
 gem 'config'
 gem 'devise'
 gem 'ezid-client'
