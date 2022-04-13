@@ -2,6 +2,11 @@
 
 # this is a User
 class User < ApplicationRecord
+  ADMIN_ROLE = 'admin'
+  EDITOR_ROLE = 'editor'
+  VIEWER_ROLE = 'viewer'
+  ROLES = [ADMIN_ROLE, EDITOR_ROLE, VIEWER_ROLE].freeze
+
   devise :rememberable, :timeoutable
   if Rails.env.development?
     devise :omniauthable, omniauth_providers: [:developer]
@@ -9,6 +14,10 @@ class User < ApplicationRecord
     devise :omniauthable, omniauth_providers: []
   end
 
+  before_validation :deduplicate_roles
+
+  validate :require_only_one_role
+  validates :roles, inclusion: ROLES
   validates :email, presence: true, uniqueness: true
   validates :uid, uniqueness: { scope: :provider }
 
@@ -18,6 +27,36 @@ class User < ApplicationRecord
       user.first_name = 'A.'
       user.last_name = 'Developer'
       user.active = true
+      user.roles << ['admin']
+    end
+  end
+
+  # @return [TrueClass, FalseClass]
+  def admin?
+    roles.include? ADMIN_ROLE
+  end
+
+  # @return [TrueClass, FalseClass]
+  def editor?
+    roles.include? EDITOR_ROLE
+  end
+
+  # @return [TrueClass, FalseClass]
+  def viewer?
+    roles.include? VIEWER_ROLE
+  end
+
+  private
+
+  def deduplicate_roles
+    roles.uniq!
+  end
+
+  def require_only_one_role
+    if roles.length > 1
+      errors.add(:roles, 'cannot be multivalued')
+    elsif roles.empty?
+      errors.add(:roles, 'must be set for a User')
     end
   end
 end

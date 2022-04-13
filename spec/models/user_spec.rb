@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+describe User, type: :model do
   it 'requires an email' do
     user = described_class.new email: nil
     expect(user.valid?).to be false
@@ -10,17 +10,43 @@ RSpec.describe User, type: :model do
   end
 
   it 'requires a unique email' do
-    described_class.create email: 'test@upenn.edu'
-    user = described_class.new email: 'test@upenn.edu'
+    create :user, :viewer, email: 'test@upenn.edu'
+    user = build :user, :viewer, email: 'test@upenn.edu'
     expect(user.valid?).to be false
     expect(user.errors['email']).to include 'has already been taken'
   end
 
   it 'requires a unique set of omniauth fields' do
-    described_class.create email: 'test@upenn.edu', provider: 'ldap', uid: 'test'
-    described_class.create email: 'another@upenn.edu', provider: 'saml', uid: 'test'
-    user = described_class.new email: 'more@upenn.edu', provider: 'ldap', uid: 'test'
+    create :user, :viewer, email: 'test@upenn.edu', provider: 'ldap', uid: 'test'
+    create :user, :admin, email: 'another@upenn.edu', provider: 'saml', uid: 'test'
+    user = build :user, :editor, email: 'more@upenn.edu', provider: 'ldap', uid: 'test'
     expect(user.valid?).to be false
     expect(user.errors['uid']).to include 'has already been taken'
+  end
+
+  it 'must have a role' do
+    user = build :user, roles: []
+    expect(user.valid?).to be false
+    expect(user.errors['roles']).to include 'must be set for a User'
+  end
+
+  it 'requires role names to be in the configured list' do
+    user = build :user, roles: ['unconfigured']
+    expect(user.valid?).to be false
+    expect(user.errors['roles']).to include 'is not included in the list'
+  end
+
+  it 'requires role to be single-valued' do
+    user = create :user, :editor
+    user.roles << 'admin'
+    expect(user.valid?).to be false
+    expect(user.errors['roles']).to include 'cannot be multivalued'
+  end
+
+  it 'de-duplicates roles on save' do
+    user = create :user, :admin
+    user.roles << 'admin'
+    user.save
+    expect(user.roles).to eq ['admin']
   end
 end
