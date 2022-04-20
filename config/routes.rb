@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     post 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
   end
 
+  resources :users, except: :destroy
   resources :items, only: %i[index edit update]
   get 'login', to: 'login#index'
 
