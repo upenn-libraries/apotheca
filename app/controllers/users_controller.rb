@@ -2,7 +2,7 @@
 
 # Controller actions for Users
 class UsersController < ApplicationController
-  before_action :set_user, except: [:index, :new, :create]
+  load_and_authorize_resource
 
   def index
     @users = User.active
@@ -10,9 +10,7 @@ class UsersController < ApplicationController
 
   def show; end
 
-  def new
-    @user = User.new
-  end
+  def new; end
 
   def create
     @user = User.new user_params
@@ -35,10 +33,6 @@ class UsersController < ApplicationController
   end
 
   private
-
-  def set_user
-    @user = User.find params[:id]
-  end
 
   def user_params
     safe_params = params.require(:user).permit(:first_name, :last_name, :email, :active, :roles)
