@@ -34,6 +34,7 @@ gem 'bootsnap', require: false
 
 gem 'aws-sdk-s3'
 gem 'bootstrap', '~> 5.1.3'
+gem "bootstrap_form", "~> 5.0"
 gem 'cancancan'
 gem 'config'
 gem 'devise'

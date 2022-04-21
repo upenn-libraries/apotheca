@@ -19,7 +19,10 @@ class User < ApplicationRecord
   validate :require_only_one_role
   validates :roles, inclusion: ROLES
   validates :email, presence: true, uniqueness: true
-  validates :uid, uniqueness: { scope: :provider }
+  validates :uid, uniqueness: { scope: :provider }, if: :provider_provided?
+
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
@@ -27,8 +30,13 @@ class User < ApplicationRecord
       user.first_name = 'A.'
       user.last_name = 'Developer'
       user.active = true
-      user.roles << ['admin']
+      user.roles << 'admin'
     end
+  end
+
+  # @return [String (frozen)]
+  def full_name
+    "#{first_name} #{last_name}"
   end
 
   # @return [TrueClass, FalseClass]
@@ -58,5 +66,10 @@ class User < ApplicationRecord
     elsif roles.empty?
       errors.add(:roles, 'must be set for a User')
     end
+  end
+
+  # @return [TrueClass, FalseClass]
+  def provider_provided?
+    provider.present?
   end
 end
