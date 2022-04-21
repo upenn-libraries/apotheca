@@ -18,20 +18,21 @@ class AssetResource < Valkyrie::Resource
     attribute :sha256, Valkyrie::Types::String
   end
 
+  class Transcription < Valkyrie::Resource
+    attribute :mime_type, Valkyrie::Types::String
+    attribute :contents, Valkyrie::Types::String
+  end
+
   attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
   attribute :original_filename, Valkyrie::Types::String
-  attribute :file_ids, Valkyrie::Types::Set # Link to where its stored in storage
+  attribute :preservation_file_id, Valkyrie::Types::ID
+  attribute :preservation_copies_ids, Valkyrie::Types::Set
   attribute :descriptive_metadata, DescriptiveMetadata
   attribute :technical_metadata, TechnicalMetadata
 
   attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
-  # attribute :transcription { mime_type: '', contents: '' }
+  attribute :transcriptions, Valkyrie::Types::Array.of(Transcription)
+
   # attribute :preservation_metadata
-  #
-  # Potential way to group two preservation copies of file
-  # class PreservationFile < Valkyrie::Resource
-  #   attribute :preservation_file_id
-  #   attribute :deep_preservation_file_id # ID for deep storage copy, duplicate_file_id?, backup_file_id?
-  # end
 end

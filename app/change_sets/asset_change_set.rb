@@ -19,14 +19,31 @@ class AssetChangeSet < Valkyrie::ChangeSet
     property :sha256, multiple: false
   end
 
+  class TranscriptionChangeSet < Valkyrie::ChangeSet
+    property :mime_type, multiple: false, required: true
+    property :contents, multiple: false, required: true
+
+    validates :mime_type, :contents, presence: true
+    # TODO: validate mime_type
+  end
+
+  class AssetDerivativeChangeSet < DerivativeChangeSet
+    TYPES = ['thumbnail', 'access']
+
+    validates :type, inclusion: TYPES
+  end
+
   # Defining Fields
   property :alternate_ids, multiple: true, required: false
   property :original_filename, multiple: false, required: true
-  property :file_ids, multiple: true, required: false
+  property :preservation_file_id, multiple: false, required: false
+  property :preservation_copies_ids, multiple: true, required: false
   property :descriptive_metadata, multiple: false, form: DescriptiveMetadataChangeSet
   property :technical_metadata, multiple: false, form: TechnicalMetadataChangeSet
 
-  collection :derivatives, multiple: true, form: DerivativeChangeSet, populate_if_empty: DerivativeResource
+  collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource
+
+  collection :transcriptions, multiple: true, form: TranscriptionChangeSet, populate_if_empty: AssetResource::Transcription
 
   # Validations
   validates :original_filename, presence: true

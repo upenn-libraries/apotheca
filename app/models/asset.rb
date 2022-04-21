@@ -28,7 +28,7 @@ class Asset
 
       # New change set.
       @change_set = AssetChangeSet.new(@resource)
-      @change_set.file_ids = [file_resource.id]
+      @change_set.preservation_file_id = file_resource.id
 
       save
     end
@@ -55,11 +55,11 @@ class Asset
 
   # @return [TrueClass, FalseClass]
   def file_changed?
-    @change_set.changed?(:file_ids)
+    @change_set.changed?(:preservation_file_id)
   end
 
   def set_file
-    file_id = @change_set.file_ids.first
+    file_id = @change_set.preservation_file_id
 
     preservation_storage = Valkyrie::StorageAdapter.find(:preservation)
     @file = preservation_storage.find_by(id: file_id)
