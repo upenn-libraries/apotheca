@@ -5,15 +5,22 @@ class ItemsController < ApplicationController
   before_action :load_query_service
 
   def index
+    authorize! :read, ItemResource
     @items = @query_service.find_all_of_model model: ItemResource
   end
 
+  # def show
+  #   authorize! :read, @item
+  # end
+
   def edit
+    authorize! :edit, ItemResource
     @item = @query_service.find_by id: params[:id]
     load_assets
   end
 
   def update
+    authorize! :edit, ItemResource
     @item = @query_service.find_by id: params[:id]
     Item.new(@item).update(update_params[:item])
     redirect_to edit_item_path(@item)
