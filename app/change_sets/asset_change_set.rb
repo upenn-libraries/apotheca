@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssetChangeSet < Valkyrie::ChangeSet
   class AnnotationChangeSet < Valkyrie::ChangeSet
     property :text, multiple: false
@@ -28,7 +30,7 @@ class AssetChangeSet < Valkyrie::ChangeSet
   end
 
   class AssetDerivativeChangeSet < DerivativeChangeSet
-    TYPES = ['thumbnail', 'access']
+    TYPES = %w[thumbnail access].freeze
 
     validates :type, inclusion: TYPES
   end

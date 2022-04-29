@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class ItemResource < Valkyrie::Resource
   class DescriptiveMetadata < Valkyrie::Resource
     # All descriptive metadata fields
-    FIELDS = [
-      :title, :abstract, :description,  :call_number, :collection, :contributor, :personal_name, :corporate_name,
-      :coverage, :creator, :date,  :format, :geographic_subject, :subject, :identifier, :includes, :item_type,
-      :language, :notes,  :provenance, :publisher, :relation, :rights, :source, :bibnumber
-    ]
+    FIELDS = %i[
+      title abstract description call_number collection contributor personal_name corporate_name
+      coverage creator date format geographic_subject subject identifier includes item_type
+      language notes provenance publisher relation rights source bibnumber
+    ].freeze
 
     FIELDS.each do |field|
       attribute field, Valkyrie::Types::Array.of(Valkyrie::Types::String)

@@ -14,6 +14,18 @@ describe ItemChangeSet do
     expect(change_set.errors[:human_readable_name]).to include 'can\'t be blank'
   end
 
+  it 'sets published to default' do
+    expect(change_set.published).to be false
+  end
+
+  it 'requires published' do
+    change_set.validate(published: nil)
+
+    expect(change_set.valid?).to be false
+    expect(change_set.errors.key?(:published)).to be true
+    expect(change_set.errors[:published]).to include 'is not included in the list'
+  end
+
   context 'when mass assigning structural metadata' do
     context 'with valid attributes' do
       before do
@@ -87,5 +99,4 @@ describe ItemChangeSet do
       expect(change_set.descriptive_metadata.date).to match_array '2022-02-02'
     end
   end
-
 end

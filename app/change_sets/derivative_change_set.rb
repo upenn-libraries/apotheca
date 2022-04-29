@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DerivativeChangeSet < Valkyrie::ChangeSet
   property :file_id, multiple: false
   property :mime_type, multiple: false

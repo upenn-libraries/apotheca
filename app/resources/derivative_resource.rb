@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DerivativeResource < Valkyrie::Resource
   attribute :type, Valkyrie::Types::String
   attribute :generated_at, Valkyrie::Types::DateTime

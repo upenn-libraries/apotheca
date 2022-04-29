@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ItemChangeSet < Valkyrie::ChangeSet
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
     ItemResource::DescriptiveMetadata::FIELDS.each do |field|
@@ -13,15 +15,17 @@ class ItemChangeSet < Valkyrie::ChangeSet
   end
 
   class StructuralMetadataChangeSet < Valkyrie::ChangeSet
-    VIEWING_DIRECTIONS = ['right-to-left', 'left-to-right', 'top-to-bottom', 'bottom-to-top']
-    VIEWING_HINTS = ['individual', 'paged']
+    VIEWING_DIRECTIONS = %w[right-to-left left-to-right top-to-bottom bottom-to-top].freeze
+    VIEWING_HINTS = %w[individual paged].freeze
 
-    property :viewing_direction, multiple: false, required: false, validates: { inclusion: VIEWING_DIRECTIONS, allow_nil: true }
-    property :viewing_hint, multiple: false, required: false, validates: { inclusion: VIEWING_HINTS, allow_nil: true }
+    property :viewing_direction, multiple: false, required: false
+    property :viewing_hint, multiple: false, required: false
     property :arranged_asset_ids, multiple: true, required: true
 
+    validates :viewing_direction, inclusion: VIEWING_DIRECTIONS, allow_nil: true
+    validates :viewing_hint, inclusion: VIEWING_HINTS, allow_nil: true
     # TODO: validate at least one ordered asset id is present
-    # TODO: validate that all ordered asset ids are listed as a member id
+    # TODO: validate that all arranged asset ids are listed as a member id
   end
 
   # Defining Fields
@@ -31,7 +35,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
   property :descriptive_metadata, multiple: false, required: true, form: DescriptiveMetadataChangeSet
   property :structural_metadata, multiple: false, required: true, form: StructuralMetadataChangeSet
 
-  property :published, multiple: false, required: false
+  property :published, multiple: false, required: false, default: false
   property :first_published_at, multiple: false, required: false
   property :last_published_at, multiple: false, required: false
 
@@ -39,5 +43,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
 
   # Validations
   # TODO: Validate that ark is present in alternate_ids
+  # TODO: Validate thumbnail_id is included in asset_ids
   validates :human_readable_name, presence: true
+  validates :published, inclusion: [true, false]
 end

@@ -16,7 +16,7 @@ describe AssetChangeSet do
     before do
       change_set.validate(
         original_filename: 'front.jpg',
-        technical_metadata: { mime_type: 'text/plain', size: 12345 }
+        technical_metadata: { mime_type: 'text/plain', size: 12_345 }
       )
     end
 
@@ -29,7 +29,7 @@ describe AssetChangeSet do
     end
 
     it 'sets size' do
-      expect(change_set.technical_metadata.size).to be 12345
+      expect(change_set.technical_metadata.size).to be 12_345
     end
   end
 
@@ -37,7 +37,7 @@ describe AssetChangeSet do
     before do
       change_set.validate(
         original_filename: 'front.jpg',
-        descriptive_metadata: { label: 'First Page', annotations: [ { text: 'Special Image' }] }
+        descriptive_metadata: { label: 'First Page', annotations: [{ text: 'Special Image' }] }
       )
     end
 
@@ -149,7 +149,7 @@ describe AssetChangeSet do
       end
 
       before { freeze_time }
-      after  { unfreeze_time}
+      after  { unfreeze_time }
 
       context 'with valid information' do
         before do

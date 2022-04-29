@@ -74,7 +74,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   # Clear out storage adapters after each test.
-  config.before(:each) do
+  config.before do
     Valkyrie::StorageAdapter.storage_adapters.each do |short_name, adapter|
       adapter.shrine.clear! if adapter.is_a? Valkyrie::Storage::Shrine
     end
@@ -82,7 +82,7 @@ RSpec.configure do |config|
 
   # Clear out metadata adapters after each test
   # FIXME: For some reason Solr is not being cleared.
-  config.before(:each) do
+  config.before do
     Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.wipe!
   end
 end

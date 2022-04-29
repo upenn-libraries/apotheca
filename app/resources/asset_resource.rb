@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssetResource < Valkyrie::Resource
   class Annotation < Valkyrie::Resource
     attribute :text, Valkyrie::Types::String
