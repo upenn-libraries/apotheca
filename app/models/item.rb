@@ -15,7 +15,7 @@ class Item
 
   def update(attributes)
     valid = @change_set.validate(attributes)
-    raise 'Error validating item' unless valid
+    raise 'Error validating item' unless valid # TODO: need to return the item so that we can access validation errors
 
     save
   end
