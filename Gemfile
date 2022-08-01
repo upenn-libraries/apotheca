@@ -48,7 +48,7 @@ gem 'pg', '~> 1.1'
 gem 'rsolr'
 gem 'sassc-rails' # Use Sass to process CSS
 gem 'stimulus-rails'
-gem 'upennlib-rubocop', git: 'https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop', branch: :main, require: false
+gem 'upennlib-rubocop', require: false
 gem 'valkyrie', git: 'https://github.com/samvera/valkyrie', branch: 'main'
 gem 'valkyrie-shrine'
 gem 'view_component'
