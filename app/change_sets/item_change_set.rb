@@ -24,8 +24,6 @@ class ItemChangeSet < Valkyrie::ChangeSet
 
     validates :viewing_direction, inclusion: VIEWING_DIRECTIONS, allow_nil: true
     validates :viewing_hint, inclusion: VIEWING_HINTS, allow_nil: true
-    # TODO: validate at least one ordered asset id is present
-    # TODO: validate that all arranged asset ids are listed as a member id
   end
 
   # Defining Fields
@@ -43,7 +41,15 @@ class ItemChangeSet < Valkyrie::ChangeSet
 
   # Validations
   # TODO: Validate that ark is present in alternate_ids
-  # TODO: Validate thumbnail_id is included in asset_ids
   validates :human_readable_name, presence: true
   validates :published, inclusion: [true, false]
+  validates :thumbnail_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }
+  validate :ensure_arranged_asset_ids_are_valid
+
+  # Ensuring arranged_asset_ids are also present in asset_ids.
+  def ensure_arranged_asset_ids_are_valid
+    return if structural_metadata.arranged_asset_ids.blank?
+    return if structural_metadata.arranged_asset_ids.all? { |a| asset_ids&.include?(a) }
+    errors.add(:'structural_metadata.arranged_asset_ids', "are not all included in asset_ids")
+  end
 end

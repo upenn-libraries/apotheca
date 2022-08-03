@@ -20,7 +20,7 @@ class AssetResource < Valkyrie::Resource
     attribute :sha256, Valkyrie::Types::String
   end
 
-  class Transcription < Valkyrie::Resource
+  class Transcription < Valkyrie::Resource # extracted text
     attribute :mime_type, Valkyrie::Types::String
     attribute :contents, Valkyrie::Types::String
   end
@@ -34,7 +34,7 @@ class AssetResource < Valkyrie::Resource
 
   attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
-  attribute :transcriptions, Valkyrie::Types::Array.of(Transcription)
+  attribute :transcriptions, Valkyrie::Types::Array.of(Transcription) # extracted_text
 
   # attribute :preservation_metadata
 end

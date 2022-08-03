@@ -27,11 +27,18 @@ describe ItemChangeSet do
   end
 
   context 'when mass assigning structural metadata' do
+    before do
+      change_set.validate(
+        descriptive_metadata: { title: ['New Item'] },
+        human_readable_name: 'New Item',
+        asset_ids: ['first-asset-id'],
+        thumbnail_id: 'first-asset-id'
+      )
+    end
+
     context 'with valid attributes' do
       before do
         change_set.validate(
-          descriptive_metadata: { title: ['New Item'] },
-          human_readable_name: 'New Item',
           structural_metadata: {
             viewing_direction: 'left-to-right',
             viewing_hint: 'paged',
@@ -55,10 +62,7 @@ describe ItemChangeSet do
 
     context 'with invalid viewing hint' do
       before do
-        change_set.validate(
-          human_readable_name: 'New Item',
-          structural_metadata: { viewing_hint: 'invalid' }
-        )
+        change_set.validate(structural_metadata: { viewing_hint: 'invalid' })
       end
 
       it 'is not valid' do
@@ -75,6 +79,17 @@ describe ItemChangeSet do
       it 'is not valid' do
         expect(change_set.valid?).to be false
         expect(change_set.errors[:'structural_metadata.viewing_direction']).to contain_exactly 'is not included in the list'
+      end
+    end
+
+    context 'with invalid arranged_asset_ids' do
+      before do
+        change_set.validate(structural_metadata: { arranged_asset_ids: ['random-invalid-id'] })
+      end
+
+      it 'is not valid' do
+        expect(change_set.valid?).to be false
+        expect(change_set.errors[:'structural_metadata.arranged_asset_ids']).to contain_exactly 'are not all included in asset_ids'
       end
     end
   end
@@ -98,5 +113,41 @@ describe ItemChangeSet do
     it 'sets date' do
       expect(change_set.descriptive_metadata.date).to match_array '2022-02-02'
     end
+  end
+
+  context 'with asset ids' do
+    let(:asset) do
+      asset_change_set = AssetChangeSet.new(AssetResource.new)
+      asset_change_set.validate(original_filename: 'front.jpg')
+      asset_change_set.sync
+    end
+
+    before do
+      change_set.validate(
+        human_readable_name: 'New Item',
+        asset_ids: [asset.id],
+        descriptive_metadata: { title: ['Some Great Item'] }
+      )
+    end
+
+    it 'requires a thumbnail id' do
+      expect(change_set.valid?).to be false
+      expect(change_set.errors.key?(:thumbnail_id)).to be true
+      expect(change_set.errors[:thumbnail_id]).to include 'can\'t be blank'
+    end
+
+    context 'when invalid thumbnail_id present' do
+      before do
+        change_set.validate(thumbnail_id: 'random-invalid-id')
+      end
+
+      it 'returns validation error' do
+        expect(change_set.valid?).to be false
+        expect(change_set.errors.key?(:thumbnail_id)).to be true
+        expect(change_set.errors[:thumbnail_id]).to include 'is not included in asset_ids'
+      end
+    end
+
+
   end
 end
