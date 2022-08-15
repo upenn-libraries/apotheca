@@ -9,7 +9,7 @@ class AlertMessagesController < ApplicationController
 
   def update
     @alert_message = AlertMessage.find params[:id]
-    if @alert_message.update alert_message_params
+    if @alert_message&.update alert_message_params
       redirect_to alert_messages_path, notice: t('.updated')
     else
       redirect_to alert_messages_path,

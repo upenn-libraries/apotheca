@@ -1,4 +1,4 @@
-<% if @header_alert.active? %>
+<% if @header_alert&.active? %>
   <div class="alert header-alert alert-<%= @header_alert.level %> sticky-top">
     <%= @header_alert.message %>
   </div>
