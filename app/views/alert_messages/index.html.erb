@@ -1,0 +1,17 @@
+<%= render(BreadcrumbsComponent.new) do |component| %>
+  <% component.breadcrumb(href: '/') do %>Home<% end %>
+  <% component.breadcrumb(active: true) do %>Alerts<% end %>
+<% end %>
+
+<h2>Alert Messages</h2>
+
+<h3>Site Header Alert</h3>
+<%= render 'form', alert_message: @header_alert %>
+
+<%# We don't have a homepage yet - when we do, we can activate this and include a partial for showing a 'homepage'
+    message %>
+
+<!--<hr>-->
+
+<!--<h3>Homepage Alert</h3>-->
+<%#= render 'form', alert_message: @home_alert %>

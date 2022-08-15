@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ColendaAdmin</title>
+    <title>Colenda Admin</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -12,6 +12,7 @@
 
   <body>
     <%= render partial: 'shared/top_navbar' %>
+    <%= render partial: 'shared/header_alert' %>
 
     <div class="container mt-3">
       <%= render partial: 'shared/flash_messages' %>
