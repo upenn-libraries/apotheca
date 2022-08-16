@@ -23,7 +23,7 @@ require 'valkyrie/specs/shared_specs'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -39,6 +39,9 @@ RSpec.configure do |config|
 
   # RSpec Devise helpers
   config.include Devise::Test::IntegrationHelpers, type: :request
+
+  # Adding Valkyrie persist strategy for FactoryBot
+  FactoryBot.register_strategy(:persist, ValkyriePersistStrategy)
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -75,7 +78,7 @@ RSpec.configure do |config|
 
   # Clear out storage adapters after each test.
   config.before do
-    Valkyrie::StorageAdapter.storage_adapters.each do |short_name, adapter|
+    Valkyrie::StorageAdapter.storage_adapters.each do |_short_name, adapter|
       adapter.shrine.clear! if adapter.is_a? Valkyrie::Storage::Shrine
     end
   end

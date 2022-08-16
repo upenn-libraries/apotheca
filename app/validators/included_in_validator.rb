@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Validates if values are included in specified field.
 #
 # This is to be used for validating values that should be present in another field before being used in this field.

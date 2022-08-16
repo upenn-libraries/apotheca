@@ -10,6 +10,8 @@ class Asset
   end
 
   def self.create(attributes)
+    attributes[:updated_by] = attributes[:created_by] if attributes[:updated_by].blank?
+
     asset = Asset.new(AssetResource.new)
     asset.update(attributes)
   end

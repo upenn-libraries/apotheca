@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ItemResource < Valkyrie::Resource
+  include ModificationDetails
+
   class DescriptiveMetadata < Valkyrie::Resource
     # All descriptive metadata fields
     FIELDS = %i[
@@ -24,15 +26,13 @@ class ItemResource < Valkyrie::Resource
 
   attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # Ark
   attribute :human_readable_name, Valkyrie::Types::String
-  attribute :thumbnail_id, Valkyrie::Types::ID # ID of asset that should be thumbnail
+  attribute :thumbnail_asset_id, Valkyrie::Types::ID # ID of asset that should be thumbnail
   attribute :descriptive_metadata, DescriptiveMetadata
   attribute :structural_metadata, StructuralMetadata
 
   attribute :published, Valkyrie::Types::Bool
   attribute :first_published_at, Valkyrie::Types::DateTime
   attribute :last_published_at, Valkyrie::Types::DateTime
-
-  # created_by, updated_by should be a User object
 
   # Asset IDs
   attribute :asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).optional

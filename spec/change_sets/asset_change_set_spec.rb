@@ -1,21 +1,43 @@
 # frozen_string_literal: true
 
+require_relative 'concerns/modification_details_change_set'
+
 describe AssetChangeSet do
-  let(:resource) { AssetResource.new }
+  let(:resource) { build(:asset_resource) }
   let(:change_set) { described_class.new(resource) }
 
-  # it_behaves_like "a Valkyrie::ChangeSet"
+  it_behaves_like 'a ModificationDetailsChangeSet'
+  # it_behaves_like 'a Valkyrie::ChangeSet'
 
   it 'requires original filename' do
+    change_set.validate(original_filename: nil)
+
     expect(change_set.valid?).to be false
-    expect(change_set.errors.key?(:original_filename)).to be true
     expect(change_set.errors[:original_filename]).to include 'can\'t be blank'
+  end
+
+  it 'sets label' do
+    change_set.validate(label: 'First Page')
+
+    expect(change_set.label).to eql 'First Page'
+  end
+
+  it 'sets annotations' do
+    change_set.validate(annotations: [{ text: 'Special Image' }])
+
+    expect(change_set.annotations[0].text).to eql 'Special Image'
+  end
+
+  it 'requires that a validation has text' do
+    change_set.validate(annotations: [{ text: nil}])
+
+    expect(change_set.valid?).to be false
+    expect(change_set.errors[:'annotations.text']).to include 'can\'t be blank'
   end
 
   context 'when mass assigning technical metadata' do
     before do
       change_set.validate(
-        original_filename: 'front.jpg',
         technical_metadata: { mime_type: 'text/plain', size: 12_345 }
       )
     end
@@ -33,32 +55,10 @@ describe AssetChangeSet do
     end
   end
 
-  context 'when mass assigning descriptive metadata' do
-    before do
-      change_set.validate(
-        original_filename: 'front.jpg',
-        descriptive_metadata: { label: 'First Page', annotations: [{ text: 'Special Image' }] }
-      )
-    end
-
-    it 'is valid' do
-      expect(change_set.valid?).to be true
-    end
-
-    it 'sets label' do
-      expect(change_set.descriptive_metadata.label).to eql 'First Page'
-    end
-
-    it 'sets annotation' do
-      expect(change_set.descriptive_metadata.annotations[0].text).to eql 'Special Image'
-    end
-  end
-
   context 'when assigning transcription' do
     context 'with all required fields' do
       before do
         change_set.validate(
-          original_filename: 'front.jpg',
           transcriptions: [{ mime_type: 'text/plain', contents: 'Importers' }]
         )
       end
@@ -79,7 +79,7 @@ describe AssetChangeSet do
     context 'with missing mime_type' do
       before do
         change_set.validate(
-          original_filename: 'front.jpg', transcriptions: [{ contents: 'Importers' }]
+          transcriptions: [{ contents: 'Importers' }]
         )
       end
 
@@ -89,11 +89,22 @@ describe AssetChangeSet do
       end
     end
 
-    context 'with missing contents' do
+    context 'when invalid mime type' do
       before do
         change_set.validate(
-          original_filename: 'front.jpg', transcriptions: [{ mime_type: 'text/plain' }]
+          transcriptions: [{ mime_type: 'text/html', contents: 'Importers' }]
         )
+      end
+
+      it 'is not valid' do
+        expect(change_set.valid?).to be false
+        expect(change_set.errors[:'transcriptions.mime_type']).to include 'is not included in the list'
+      end
+    end
+
+    context 'with missing contents' do
+      before do
+        change_set.validate(transcriptions: [{ mime_type: 'text/plain' }])
       end
 
       it 'is not valid' do
@@ -104,20 +115,16 @@ describe AssetChangeSet do
   end
 
   context 'when updating resource' do
-    let(:original_filename) { 'front.jpg' }
-    let(:metadata_adapter) { Valkyrie::MetadataAdapter.find(:postgres_solr_persister) }
-    let(:resource) do
-      metadata_adapter.persister.save(resource: AssetResource.new(original_filename: original_filename))
-    end
+    let(:resource) { persist(:asset_resource) }
 
-    # Note: Resource must already be created in order to add files.
+    # NOTE: Resource must already be created in order to add files.
     context 'when adding a preservation file' do
       let(:preservation_storage) { Valkyrie::StorageAdapter.find(:preservation) }
       let(:preservation_file) do
         preservation_storage.upload(
           file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
           resource: resource,
-          original_filename: original_filename
+          original_filename: resource.original_filename
         )
       end
 
@@ -134,10 +141,13 @@ describe AssetChangeSet do
       end
     end
 
-    # Note: Resource must already be created in order to add files.
-    context 'when adding a preservation copy'
+    # NOTE: Resource must already be created in order to add files.
+    context 'when adding a preservation copy' do
+      it 'is valid'
+      it 'sets file ids'
+    end
 
-    # Note: Resource must already be created in order to add files.
+    # NOTE: Resource must already be created in order to add files.
     context 'when adding a derivative' do
       let(:derivative_storage) { Valkyrie::StorageAdapter.find(:derivatives) }
       let(:derivative) do
@@ -149,6 +159,7 @@ describe AssetChangeSet do
       end
 
       before { freeze_time }
+
       after  { unfreeze_time }
 
       context 'with valid information' do

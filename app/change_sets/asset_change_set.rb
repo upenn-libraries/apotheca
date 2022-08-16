@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
 class AssetChangeSet < Valkyrie::ChangeSet
+  include ModificationDetailsChangeSet
+
   class AnnotationChangeSet < Valkyrie::ChangeSet
     property :text, multiple: false
 
     validates :text, presence: true
-  end
-
-  class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
-    property :label, multiple: false
-    collection :annotations, multiple: true, form: AnnotationChangeSet, populate_if_empty: AssetResource::Annotation
   end
 
   class TechnicalMetadataChangeSet < Valkyrie::ChangeSet
@@ -25,8 +22,8 @@ class AssetChangeSet < Valkyrie::ChangeSet
     property :mime_type, multiple: false, required: true
     property :contents, multiple: false, required: true
 
-    validates :mime_type, :contents, presence: true
-    # TODO: validate mime_type
+    validates :contents, presence: true
+    validates :mime_type, presence: true, inclusion: ['text/plain'] # For now only accepting plain text transcriptions
   end
 
   class AssetDerivativeChangeSet < DerivativeChangeSet
@@ -40,12 +37,14 @@ class AssetChangeSet < Valkyrie::ChangeSet
   property :original_filename, multiple: false, required: true
   property :preservation_file_id, multiple: false, required: false
   property :preservation_copies_ids, multiple: true, required: false
-  property :descriptive_metadata, multiple: false, form: DescriptiveMetadataChangeSet
   property :technical_metadata, multiple: false, form: TechnicalMetadataChangeSet
+  property :label, multiple: false
 
   collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource
 
   collection :transcriptions, multiple: true, form: TranscriptionChangeSet, populate_if_empty: AssetResource::Transcription
+
+  collection :annotations, multiple: true, form: AnnotationChangeSet, populate_if_empty: AssetResource::Annotation
 
   # Validations
   validates :original_filename, presence: true

@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class ItemChangeSet < Valkyrie::ChangeSet
+  include ModificationDetailsChangeSet
+
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
     ItemResource::DescriptiveMetadata::FIELDS.each do |field|
       property field, multiple: true
 
       # Remove blank values from array.
       define_method "#{field}=" do |values|
-        super(values.compact_blank)
+        super(values&.compact_blank)
       end
     end
 
@@ -29,7 +31,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
   # Defining Fields
   property :alternate_ids, multiple: true, required: false
   property :human_readable_name, multiple: false, required: true
-  property :thumbnail_id, multiple: false, required: true
+  property :thumbnail_asset_id, multiple: false, required: true
   property :descriptive_metadata, multiple: false, required: true, form: DescriptiveMetadataChangeSet
   property :structural_metadata, multiple: false, required: true, form: StructuralMetadataChangeSet
 
@@ -43,13 +45,14 @@ class ItemChangeSet < Valkyrie::ChangeSet
   # TODO: Validate that ark is present in alternate_ids
   validates :human_readable_name, presence: true
   validates :published, inclusion: [true, false]
-  validates :thumbnail_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }
+  validates :thumbnail_asset_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }
   validate :ensure_arranged_asset_ids_are_valid
 
   # Ensuring arranged_asset_ids are also present in asset_ids.
   def ensure_arranged_asset_ids_are_valid
     return if structural_metadata.arranged_asset_ids.blank?
     return if structural_metadata.arranged_asset_ids.all? { |a| asset_ids&.include?(a) }
-    errors.add(:'structural_metadata.arranged_asset_ids', "are not all included in asset_ids")
+
+    errors.add(:'structural_metadata.arranged_asset_ids', 'are not all included in asset_ids')
   end
 end

@@ -7,5 +7,4 @@ class DerivativeChangeSet < Valkyrie::ChangeSet
   property :generated_at, multiple: false
 
   validates :file_id, :mime_type, :type, :generated_at, presence: true
-  # TODO: validate mime_type
 end

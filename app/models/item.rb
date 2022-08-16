@@ -33,7 +33,7 @@ class Item
     mint_ark
     update_ark_metadata
     # merge_marc_metadata
-    set_thumbnail_id
+    set_thumbnail_asset_id
   end
 
   def mint_ark
@@ -59,15 +59,15 @@ class Item
     arks.count == 1 ? arks.first : nil
   end
 
-  def set_thumbnail_id
-    return if @change_set.thumbnail_id.present?
+  def set_thumbnail_asset_id
+    return if @change_set.thumbnail_asset_id.present?
 
-    @resource.thumbnail_id =  if @change_set.structural_metadata.arranged_asset_ids&.any?
-                               @change_set.structural_metadata.arranged_asset_ids.first
-                             elsif @change_set.asset_ids&.any?
-                               @change_set.asset_ids.first
-                             else
-                               nil
-                             end
+    @resource.thumbnail_asset_id = if @change_set.structural_metadata.arranged_asset_ids&.any?
+                                     @change_set.structural_metadata.arranged_asset_ids.first
+                                   elsif @change_set.asset_ids&.any?
+                                     @change_set.asset_ids.first
+                                   else
+                                     nil
+                                   end
   end
 end
