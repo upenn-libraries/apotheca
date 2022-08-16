@@ -17,21 +17,21 @@ class Item
     valid = @change_set.validate(attributes)
     raise 'Error validating item' unless valid # TODO: need to return the item so that we can access validation errors
 
-    save
+    save(do_ark_stuff: false)
   end
 
   private
 
-  def save
-    before_save
+  def save(do_ark_stuff: true)
+    before_save(do_ark_stuff: do_ark_stuff)
 
     @resource = @change_set.sync
     @resource = Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.save(resource: @resource)
   end
 
-  def before_save
-    mint_ark
-    update_ark_metadata
+  def before_save(do_ark_stuff: true)
+    mint_ark if do_ark_stuff
+    update_ark_metadata if do_ark_stuff
     # merge_marc_metadata
     set_thumbnail_id
   end

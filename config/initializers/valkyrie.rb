@@ -59,4 +59,11 @@ Rails.application.config.to_prepare do
   Valkyrie::StorageAdapter.register(
     Valkyrie::Storage::Shrine.new(Shrine.storages[:derivatives], nil, DerivativePathGenerator), :derivatives
   )
+
+  # Register custom queries for Solr
+  [ItemIndex].each do |solr_query_handler|
+    Valkyrie::MetadataAdapter.find(:index_solr)
+                             .query_service.custom_queries
+                             .register_query_handler(solr_query_handler)
+  end
 end

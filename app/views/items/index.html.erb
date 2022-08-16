@@ -3,8 +3,28 @@
   <% component.breadcrumb(active: true) do %>Items<% end %>
 <% end %>
 
-<ul>
+<%= bootstrap_form_tag(url: items_path, method: :get) do |f| %>
+  <%= f.text_field :keyword, value: params[:keyword], label: 'Search' %>
+  <%= f.select :sort_field, options_for_select([%w[Relevance score], %w[ID id], %w[Title title]], params[:sort_field]), label: 'Sort By' %>
+  <%= f.select :sort_direction, options_for_select([ %w[Descending desc], %w[Ascending asc]], params[:sort_direction]), label: 'Sort Direction' %>
+  <%= f.select :rows, options_for_select([50,100,250,500], params[:rows]), label: 'Rows' %>
+  <%= f.submit 'Submit' %>
+<% end %>
+
+<hr>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Title</th>
+      <th>Alt. ID</th>
+    </tr>
+  </thead>
   <% @items.each do |item| %>
-  <li><%= link_to pp(item), edit_item_path(item.id) %></li>
+  <tr>
+    <td>&nbsp;</td>
+    <td><%= link_to item.descriptive_metadata.title.first, edit_item_path(item.id) %></td>
+    <td><%= item.alternate_ids.first.to_s %></td>
   <% end %>
-</ul>
+</table>
