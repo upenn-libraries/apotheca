@@ -8,6 +8,9 @@ preservation_storage:
 derivative_storage:
   <<: *minio
   bucket: derivatives-test
+preservation_copy_storage:
+  <<: *minio
+  bucket: preservation-copy-test
 solr:
   url: http://127.0.0.1:8983/solr/colenda_admin_test
 fits:
