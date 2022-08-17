@@ -12,11 +12,13 @@ Rails.application.config.to_prepare do
     :postgres
   )
 
+  indexers = [TitleIndexer]
+
   # To use the solr adapter you must add gem 'rsolr' to your Gemfile
   Valkyrie::MetadataAdapter.register(
     Valkyrie::Persistence::Solr::MetadataAdapter.new(
       connection: RSolr.connect(url: Settings.solr.url),
-      # resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(DescriptiveMetadataIndexer, TechnicalMetadataIndexer),
+      resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(*indexers),
       write_only: true
     ),
     :index_solr
