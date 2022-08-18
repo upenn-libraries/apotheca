@@ -8,14 +8,17 @@ class Item
   end
 
   def self.create(attributes)
-    item = Item.new(ItemResource.new)
+    attributes[:updated_by] = attributes[:created_by] if attributes[:updated_by].blank?
 
+    item = Item.new(ItemResource.new)
     item.update(attributes)
   end
 
   def update(attributes)
-    valid = @change_set.validate(attributes)
-    raise 'Error validating item' unless valid # TODO: need to return the item so that we can access validation errors
+    # TODO: Should require `updated_by` to be set.
+    @change_set.validate(attributes) # Set values
+    before_validate
+    raise 'Error validating item' unless @change_set.valid? # TODO: need to return the item so that we can access validation errors
 
     save
   end
@@ -29,11 +32,14 @@ class Item
     @resource = Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.save(resource: @resource)
   end
 
-  def before_save
+  def before_validate
     mint_ark
+    set_thumbnail_asset_id
+  end
+
+  def before_save
     update_ark_metadata
     # merge_marc_metadata
-    set_thumbnail_asset_id
   end
 
   def mint_ark
@@ -62,12 +68,14 @@ class Item
   def set_thumbnail_asset_id
     return if @change_set.thumbnail_asset_id.present?
 
-    @resource.thumbnail_asset_id = if @change_set.structural_metadata.arranged_asset_ids&.any?
-                                     @change_set.structural_metadata.arranged_asset_ids.first
-                                   elsif @change_set.asset_ids&.any?
-                                     @change_set.asset_ids.first
-                                   else
-                                     nil
-                                   end
+    thumbnail_id = if @change_set.structural_metadata.arranged_asset_ids&.any?
+                     @change_set.structural_metadata.arranged_asset_ids.first
+                   elsif @change_set.asset_ids&.any?
+                     @change_set.asset_ids.first
+                   else
+                     nil
+                   end
+
+    @change_set.thumbnail_asset_id = thumbnail_id
   end
 end

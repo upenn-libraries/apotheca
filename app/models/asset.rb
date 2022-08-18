@@ -17,6 +17,7 @@ class Asset
   end
 
   def update(file: nil, **attributes)
+    # TODO: Should require `updated_by` to be set.
     valid = @change_set.validate(attributes)
     raise 'Error validating asset' unless valid
 
