@@ -18,7 +18,9 @@ class Item
     # TODO: Should require `updated_by` to be set.
     @change_set.validate(attributes) # Set values
     before_validate
-    raise 'Error validating item' unless @change_set.valid? # TODO: need to return the item so that we can access validation errors
+
+    # TODO: need to return the item so that we can access validation errors
+    raise 'Error validating item' unless @change_set.valid?
 
     save
   end
