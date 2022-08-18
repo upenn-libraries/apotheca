@@ -26,7 +26,7 @@ class AssetResource < Valkyrie::Resource
   attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
   attribute :original_filename, Valkyrie::Types::String
   attribute :preservation_file_id, Valkyrie::Types::ID
-  attribute :preservation_copies_ids, Valkyrie::Types::Set
+  attribute :preservation_copies_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)
   attribute :technical_metadata, TechnicalMetadata
   attribute :label, Valkyrie::Types::String
 

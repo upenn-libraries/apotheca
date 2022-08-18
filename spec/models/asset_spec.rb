@@ -2,7 +2,9 @@
 
 describe Asset do
   describe '.create' do
-    subject(:asset) { described_class.create(file: file, original_filename: 'front.jpg', created_by: 'admin@library.upenn.edu') }
+    subject(:asset) do
+      described_class.create(file: file, original_filename: 'front.jpg', created_by: 'admin@library.upenn.edu')
+    end
 
     let(:file) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/front.jpg')) }
 

@@ -48,6 +48,20 @@ describe ItemChangeSet do
     expect(change_set.errors[:'descriptive_metadata.title']).to include 'can\'t be blank'
   end
 
+  it 'requires an ARK' do
+    change_set.validate(alternate_ids: [])
+
+    expect(change_set.valid?).to be false
+    expect(change_set.errors[:alternate_ids]).to include 'must include an ARK'
+  end
+
+  it 'raises an error if more than one ARK is present' do
+    change_set.validate(alternate_ids: ['ark:/something', 'ark:/something_else'])
+
+    expect(change_set.valid?).to be false
+    expect(change_set.errors[:alternate_ids]).to include 'can only include one ARK'
+  end
+
   context 'when mass assigning structural metadata' do
     let(:resource) { build(:item_resource, :with_asset) }
 

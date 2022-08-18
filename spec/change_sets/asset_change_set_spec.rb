@@ -29,7 +29,7 @@ describe AssetChangeSet do
   end
 
   it 'requires that a validation has text' do
-    change_set.validate(annotations: [{ text: nil}])
+    change_set.validate(annotations: [{ text: nil }])
 
     expect(change_set.valid?).to be false
     expect(change_set.errors[:'annotations.text']).to include 'can\'t be blank'
@@ -114,97 +114,114 @@ describe AssetChangeSet do
     end
   end
 
-  context 'when updating resource' do
+  # NOTE: Resource must already be created in order to add files.
+  context 'when adding a preservation file' do
     let(:resource) { persist(:asset_resource) }
+    let(:preservation_storage) { Valkyrie::StorageAdapter.find(:preservation) }
+    let(:preservation_file) do
+      preservation_storage.upload(
+        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
+        resource: resource,
+        original_filename: resource.original_filename
+      )
+    end
 
-    # NOTE: Resource must already be created in order to add files.
-    context 'when adding a preservation file' do
-      let(:preservation_storage) { Valkyrie::StorageAdapter.find(:preservation) }
-      let(:preservation_file) do
-        preservation_storage.upload(
-          file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
-          resource: resource,
-          original_filename: resource.original_filename
-        )
-      end
+    before do
+      change_set.validate(preservation_file_id: preservation_file.id)
+    end
 
+    it 'is valid' do
+      expect(change_set.valid?).to be true
+    end
+
+    it 'sets file ids' do
+      expect(change_set.preservation_file_id).to eql preservation_file.id
+    end
+  end
+
+  # NOTE: Resource must already be created in order to add files.
+  context 'when adding a preservation copy' do
+    let(:resource) { persist(:asset_resource) }
+    let(:preservation_copy_storage) { Valkyrie::StorageAdapter.find(:preservation_copy) }
+    let(:preservation_copy_file) do
+      preservation_copy_storage.upload(
+        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
+        resource: resource,
+        original_filename: resource.original_filename
+      )
+    end
+
+    before do
+      change_set.validate(preservation_copies_ids: [preservation_copy_file.id])
+    end
+
+    it 'is valid' do
+      expect(change_set.valid?).to be true
+    end
+
+    it 'sets file ids' do
+      expect(change_set.preservation_copies_ids).to contain_exactly preservation_copy_file.id
+    end
+  end
+
+  # NOTE: Resource must already be created in order to add files.
+  context 'when adding a derivative' do
+    let(:resource) { persist(:asset_resource) }
+    let(:derivative_storage) { Valkyrie::StorageAdapter.find(:derivatives) }
+    let(:derivative) do
+      derivative_storage.upload(
+        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
+        resource: resource,
+        original_filename: 'thumbnail'
+      )
+    end
+
+    before { freeze_time }
+
+    after  { unfreeze_time }
+
+    context 'with valid information' do
       before do
-        change_set.validate(preservation_file_id: preservation_file.id)
+        change_set.validate(
+          derivatives: [
+            { file_id: derivative.id, mime_type: 'image/jpeg', generated_at: DateTime.current, type: 'thumbnail' }
+          ]
+        )
       end
 
       it 'is valid' do
         expect(change_set.valid?).to be true
       end
 
-      it 'sets file ids' do
-        expect(change_set.preservation_file_id).to eql preservation_file.id
+      it 'sets file_id' do
+        expect(change_set.derivatives[0].file_id).to eql derivative.id
+      end
+
+      it 'sets mime_type' do
+        expect(change_set.derivatives[0].mime_type).to eql 'image/jpeg'
+      end
+
+      it 'sets generated_at' do
+        expect(change_set.derivatives[0].generated_at).to eql DateTime.current
+      end
+
+      it 'sets type' do
+        expect(change_set.derivatives[0].type).to eql 'thumbnail'
       end
     end
 
-    # NOTE: Resource must already be created in order to add files.
-    context 'when adding a preservation copy' do
-      it 'is valid'
-      it 'sets file ids'
-    end
-
-    # NOTE: Resource must already be created in order to add files.
-    context 'when adding a derivative' do
-      let(:derivative_storage) { Valkyrie::StorageAdapter.find(:derivatives) }
-      let(:derivative) do
-        derivative_storage.upload(
-          file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
-          resource: resource,
-          original_filename: 'thumbnail'
+    context 'with invalid derivative type' do
+      before do
+        change_set.validate(
+          derivatives: [
+            { file_id: derivative.id, mime_type: 'image/jpeg', generated_at: DateTime.current, type: 'invalid' }
+          ]
         )
       end
 
-      before { freeze_time }
-
-      after  { unfreeze_time }
-
-      context 'with valid information' do
-        before do
-          change_set.validate(
-            derivatives: [
-              { file_id: derivative.id, mime_type: 'image/jpeg', generated_at: DateTime.current, type: 'thumbnail' }
-            ]
-          )
-        end
-
-        it 'is valid' do
-          expect(change_set.valid?).to be true
-        end
-
-        it 'sets file_id' do
-          expect(change_set.derivatives[0].file_id).to eql derivative.id
-        end
-
-        it 'sets mime_type' do
-          expect(change_set.derivatives[0].mime_type).to eql 'image/jpeg'
-        end
-
-        it 'sets generated_at' do
-          expect(change_set.derivatives[0].generated_at).to eql DateTime.current
-        end
-
-        it 'sets type' do
-          expect(change_set.derivatives[0].type).to eql 'thumbnail'
-        end
-      end
-
-      context 'with invalid derivative type' do
-        before do
-          change_set.validate(
-            derivatives: [
-              { file_id: derivative.id, mime_type: 'image/jpeg', generated_at: DateTime.current, type: 'invalid' }
-            ]
-          )
-        end
-
-        it 'is not valid' do
-          expect(change_set.valid?).to be false
-          expect(change_set.errors[:'derivatives.type']).to include 'is not included in the list'
-        end
+      it 'is not valid' do
+        expect(change_set.valid?).to be false
+        expect(change_set.errors[:'derivatives.type']).to include 'is not included in the list'
       end
     end
   end
