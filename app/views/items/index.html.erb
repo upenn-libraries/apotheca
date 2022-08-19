@@ -8,7 +8,8 @@
   <%= f.select :sort_field, options_for_select([%w[Relevance score], %w[ID id], %w[Title title_tsi]], params[:sort_field]), label: 'Sort By' %>
   <%= f.select :sort_direction, options_for_select([ %w[Descending desc], %w[Ascending asc]], params[:sort_direction]), label: 'Sort Direction' %>
   <%= f.select :rows, options_for_select([50,100,250,500], params[:rows]), label: 'Rows' %>
-  <%= f.submit 'Submit' %>
+  <%= f.select 'filters[collection_ssim]', options_for_select(@facets.collection_ssim, (params[:filters] ? params[:filters][:collection_ssim] : '')), include_blank: true, label: 'Collection'  %>
+  <%= f.submit 'Submit', class: 'btn btn-primary' %>
 <% end %>
 
 <hr>

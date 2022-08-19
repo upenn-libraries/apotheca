@@ -50,7 +50,7 @@ class Asset
     before_save
 
     @resource = @change_set.sync
-    @resource = Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.save(resource: @resource)
+    @resource = Valkyrie::MetadataAdapter.find(:postgres).persister.save(resource: @resource)
   end
 
   # @return [TrueClass, FalseClass]

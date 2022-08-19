@@ -83,10 +83,10 @@
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
        <str name="facet.limit">10</str>
-       <str name="facet.field">active_fedora_model_ssi</str>
-       <str name="facet.field">subject_ssim</str>
+       <str name="facet.field">collection_ssim</str>
+       <str name="facet.field">internal_resource_ssim</str>
 
-       <str name="spellcheck">true</str>
+       <str name="spellcheck">false</str>
        <str name="spellcheck.dictionary">default</str>
        <str name="spellcheck.onlyMorePopular">true</str>
        <str name="spellcheck.extendedResults">true</str>

@@ -31,7 +31,7 @@ class Item
 
   def before_save
     mint_ark
-    update_ark_metadata
+    # update_ark_metadata
     # merge_marc_metadata
     set_thumbnail_id
   end

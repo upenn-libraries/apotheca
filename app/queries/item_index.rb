@@ -3,6 +3,7 @@
 # query class for searching, filtering and sorting over ItemResources
 class ItemIndex
   DEFAULT_FQ = { internal_resource_tsim: ['ItemResource'] }.freeze # ensure we are returning only ItemResources
+  PERMITTED_FILTERS = ['collection_ssim'].freeze
 
   attr_reader :query_service
 
@@ -33,21 +34,21 @@ class ItemIndex
       rows: parameters[:rows],
       sort: solr_sort_from(sort_field: parameters[:sort_field].to_s,
                            sort_direction: parameters[:sort_direction].to_s),
-      fq: solr_fq_from(field: parameters[:filter_field].to_s,
-                       values: Array.wrap(parameters[:filter_values])) }
+      fq: solr_fq_from(filters: parameters[:filters]) }
   end
 
   # compose FilterQuery param
-  # @param [String] field
-  # @param [Array] values
-  # @return [Array]
-  def solr_fq_from(field:, values:)
-    filters = DEFAULT_FQ.merge field => values
-    filters.map do |fq, v|
-      v.map do |value|
-        "#{fq}: #{value}"
-      end.join(' OR ')
-    end
+  # @param [ActionController::Parameters] filters
+  # @return [String]
+  def solr_fq_from(filters:)
+    filters = filters&.to_unsafe_h || {}
+    filters = filters.delete_if { |k, v| !k.in?(PERMITTED_FILTERS) || v.blank? }
+    all_filters = DEFAULT_FQ.merge filters.to_h
+    all_filters.map do |fq, v|
+      Array.wrap(v).map do |value|
+        "#{fq}: \"#{value}\""
+      end.join(' OR ').insert(0, '(').insert(-1, ')') # use OR for particular field values (this OR that collection)
+    end.join(' AND ') # use AND for all field values (have this attribute AND that attribute)
   end
 
   # compose Sort param
@@ -68,6 +69,28 @@ class ItemIndex
   def resources_from(parameters:)
     response = response solr_query: solr_query(parameters: parameters)
     docs = response.dig('response', 'docs')
-    docs.map { |d| resource_factory.to_resource(object: d) }
+    items = docs.map { |d| resource_factory.to_resource(object: d) }
+    facets = response.dig('facet_counts', 'facet_fields')
+    ItemsContainer.new items: items, facet_data: facets
+  end
+
+  # Container for response
+  class ItemsContainer
+    attr_reader :items, :facets
+
+    def initialize(items:, facet_data:)
+      @items = items
+      @facets = OpenStruct.new facets_to_hash(facet_data: facet_data)
+    end
+
+    private
+
+    def facets_to_hash(facet_data:)
+      facet_data.transform_values do |v|
+        v.each_slice(2).map do |a, b|
+          ["#{a} (#{b})", a]
+        end
+      end
+    end
   end
 end

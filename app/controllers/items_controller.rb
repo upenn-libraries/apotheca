@@ -6,7 +6,9 @@ class ItemsController < ApplicationController
 
   def index
     authorize! :read, ItemResource
-    @items = solr_query_service.custom_queries.item_index parameters: params
+    items_container = solr_query_service.custom_queries.item_index parameters: search_params
+    @items = items_container.items
+    @facets = items_container.facets
   end
 
   # def show
@@ -46,5 +48,9 @@ class ItemsController < ApplicationController
 
   def load_assets
     @assets = @query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
+  end
+
+  def search_params
+    params.permit(:keyword, :sort_field, :sort_direction, :rows, filters: {})
   end
 end
