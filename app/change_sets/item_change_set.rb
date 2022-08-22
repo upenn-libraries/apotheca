@@ -42,7 +42,6 @@ class ItemChangeSet < Valkyrie::ChangeSet
   property :asset_ids, multiple: true, required: false
 
   # Validations
-  # TODO: Validate that ark is present in alternate_ids
   validates :human_readable_name, presence: true
   validates :published, inclusion: [true, false]
   validates :thumbnail_asset_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }

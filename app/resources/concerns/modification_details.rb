@@ -2,10 +2,10 @@
 
 # Module to add custom date fields, created_by and update_by to Valkyrie resources.
 #
-# Valkyrie reserves the created_by and updated_by fields. Because we want to support storing the date that an item
-# was originally created we need to define our own date fields. `date_created` will be the original date an item
-# was created. `date_updated` will be an alias to the Valkyrie updated_at. created_by and updated_by will store
-# the User's email.
+# Because we want to track the time an Item was created in a previous or in another system, we need our own timestamp.
+# Valkyrie's created_at and updated_at attributes are reserved and cannot (and should now) be modified. `date_created`
+# will be the original date an item was created. `date_updated` will be an alias to the Valkyrie updated_at. created_by
+# and updated_by will store the User's email that created or updated the resource.
 module ModificationDetails
   extend ActiveSupport::Concern
 
