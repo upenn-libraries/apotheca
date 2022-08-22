@@ -22,7 +22,7 @@ module ModificationDetails
     attributes[:updated_at]
   end
 
-  # Overriding getter method to use created_at date if a date_created is not set.
+  # Overriding getter method to use created_at date if a date_created is not set. Things newly added in this system and not imported from another system will properly hold the time and date of creation in the `Valkyrie::Resource` `created_at` attribute.
   def date_created
     attributes[:date_created] || created_at
   end

@@ -14,6 +14,7 @@ class ValkyriePersistStrategy
   end
 
   # allow users to override the persister in the evaluator?
+  # @param [FactoryBot::Evaluation] evaluation
   def result(evaluation)
     instance = evaluation.object
     evaluation.notify(:after_build, instance)
