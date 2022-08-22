@@ -19,11 +19,14 @@ class AssetChangeSet < Valkyrie::ChangeSet
   end
 
   class TranscriptionChangeSet < Valkyrie::ChangeSet
+    # For now only accepting plain text transcriptions
+    VALID_MIME_TYPES = ['text/plain'].freeze
+
     property :mime_type, multiple: false, required: true
     property :contents, multiple: false, required: true
 
     validates :contents, presence: true
-    validates :mime_type, presence: true, inclusion: ['text/plain'] # For now only accepting plain text transcriptions
+    validates :mime_type, presence: true, inclusion: VALID_MIME_TYPES
   end
 
   class AssetDerivativeChangeSet < DerivativeChangeSet
