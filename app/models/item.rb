@@ -45,7 +45,7 @@ class Item
   end
 
   def mint_ark
-    return if ark
+    return if ark?
 
     ark = Ezid::Identifier.mint
     @change_set.alternate_ids = [ark]
@@ -61,10 +61,9 @@ class Item
     Ezid::Identifier.modify(@change_set.alternate_ids.first.id, erc_metadata)
   end
 
-  def ark
+  def ark?
     arks = @change_set.alternate_ids.select { |i| i.to_s.starts_with?('ark:/') } # TODO: Maybe should check for the whole shoulder
-    raise "More than one ark defined" if arks.count > 1
-    arks.count == 1 ? arks.first : nil
+    arks.count >= 1
   end
 
   def set_thumbnail_asset_id
