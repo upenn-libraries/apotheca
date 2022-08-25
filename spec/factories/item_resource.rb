@@ -12,7 +12,7 @@ FactoryBot.define do
     descriptive_metadata do
       { title: ['New Item'] }
     end
-    alternate_ids { ['ark:/12345/random'] }
+    unique_identifier { 'ark:/12345/random' }
     created_by { 'admin@library.upenn.edu' }
     updated_by { 'admin@library.upenn.edu' }
 

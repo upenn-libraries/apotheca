@@ -29,7 +29,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
   end
 
   # Defining Fields
-  property :alternate_ids, multiple: true, required: false
+  property :unique_identifier, multiple: false, required: false
   property :human_readable_name, multiple: false, required: true
   property :thumbnail_asset_id, multiple: false, required: true
   property :descriptive_metadata, multiple: false, required: true, form: DescriptiveMetadataChangeSet
@@ -45,8 +45,8 @@ class ItemChangeSet < Valkyrie::ChangeSet
   validates :human_readable_name, presence: true
   validates :published, inclusion: [true, false]
   validates :thumbnail_asset_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }
+  validates :unique_identifier, presence: true, format: { with: /\Aark:\//, message: 'must be an ARK' }
   validate :ensure_arranged_asset_ids_are_valid
-  validate :ark_present
 
   # Ensuring arranged_asset_ids are also present in asset_ids.
   def ensure_arranged_asset_ids_are_valid
@@ -54,13 +54,5 @@ class ItemChangeSet < Valkyrie::ChangeSet
     return if structural_metadata.arranged_asset_ids.all? { |a| asset_ids&.include?(a) }
 
     errors.add(:'structural_metadata.arranged_asset_ids', 'are not all included in asset_ids')
-  end
-
-  # Ensuring that exactly one ark is present in alternate_ids array.
-  def ark_present
-    arks = alternate_ids.select { |i| i.to_s.starts_with?('ark:/') }
-
-    errors.add(:alternate_ids, 'must include an ARK') if arks.count.zero?
-    errors.add(:alternate_ids, 'can only include one ARK') if arks.count > 1
   end
 end

@@ -24,7 +24,7 @@ class ItemResource < Valkyrie::Resource
     attribute :arranged_asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
   end
 
-  attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # Ark
+  attribute :unique_identifier, Valkyrie::Types::String
   attribute :human_readable_name, Valkyrie::Types::String
   attribute :thumbnail_asset_id, Valkyrie::Types::ID # ID of asset that should be thumbnail
   attribute :descriptive_metadata, DescriptiveMetadata

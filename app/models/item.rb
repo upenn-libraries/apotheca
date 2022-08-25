@@ -45,10 +45,10 @@ class Item
   end
 
   def mint_ark
-    return if ark?
+    return if @change_set.unique_identifier.present?
 
     ark = Ezid::Identifier.mint
-    @change_set.alternate_ids = [ark]
+    @change_set.unique_identifier = ark
   end
 
   def update_ark_metadata
@@ -58,12 +58,7 @@ class Item
       erc_what: @change_set.descriptive_metadata.title.join('; '),
       erc_when: @change_set.descriptive_metadata.date.join('; ')
     }
-    Ezid::Identifier.modify(@change_set.alternate_ids.first.id, erc_metadata)
-  end
-
-  def ark?
-    arks = @change_set.alternate_ids.select { |i| i.to_s.starts_with?('ark:/') } # TODO: Maybe should check for the whole shoulder
-    arks.count >= 1
+    Ezid::Identifier.modify(@change_set.unique_identifier, erc_metadata)
   end
 
   def set_thumbnail_asset_id
