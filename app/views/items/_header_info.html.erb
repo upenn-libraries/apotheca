@@ -2,9 +2,7 @@
   <div class="col">
     <dl>
       <dt>Unique Identifier</dt>
-      <dd><%= @item.alternate_ids.first %></dd>
-      <dt>Description</dt>
-      <dd><%= @item.description %></dd>
+      <dd><%= @item.unique_identifier %></dd>
       <dt>Number of Assets</dt>
       <dd><%= @assets.count %></dd>
     </dl>
@@ -12,17 +10,17 @@
   <div class="col-3">
     <dl>
       <dt>Created By</dt>
-      <dd><%# @item.created_by&.email %></dd>
+      <dd><%= @item.created_by %></dd>
       <dt>Created At</dt>
-      <dd><%= @item.created_at&.to_s(:display) %></dd>
+      <dd><%= @item.date_created&.to_s(:display) %></dd>
     </dl>
   </div>
   <div class="col-3">
     <dl>
       <dt>Updated By</dt>
-      <dd><%# @item.updated_by&.email %></dd>
+      <dd><%= @item.updated_by %></dd>
       <dt>Updated At</dt>
-      <dd><%= @item.updated_at&.to_s(:display) %></dd>
+      <dd><%= @item.date_updated&.to_s(:display) %></dd>
     </dl>
   </div>
 </div>

@@ -8,6 +8,7 @@ require_relative '../config/environment'
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'valkyrie/specs/shared_specs'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -22,7 +23,7 @@ require 'rspec/rails'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -33,11 +34,14 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 RSpec.configure do |config|
-  # FactoryBot
   config.include FactoryBot::Syntax::Methods
+  config.include ActiveSupport::Testing::TimeHelpers
 
   # RSpec Devise helpers
   config.include Devise::Test::IntegrationHelpers, type: :request
+
+  # Adding Valkyrie persist strategy for FactoryBot
+  FactoryBot.register_strategy(:persist, ValkyriePersistStrategy)
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -71,4 +75,28 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # Clear out storage before each test.
+  config.before do
+    wipe_metadata_adapters!
+    wipe_storage_adapters!
+  end
+
+  # Clear our storage at the end of suite in order to clean up after the last test.
+  config.after(:suite) do
+    wipe_metadata_adapters!
+    wipe_storage_adapters!
+  end
+
+  # Clean out all Valkyrie Storage adapters.
+  def wipe_storage_adapters!
+    Valkyrie::StorageAdapter.storage_adapters.each do |_short_name, adapter|
+      adapter.shrine.clear! if adapter.is_a? Valkyrie::Storage::Shrine
+    end
+  end
+
+  # Clean out Valkyrie Metadata Adapters.
+  def wipe_metadata_adapters!
+    Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.wipe!
+  end
 end
