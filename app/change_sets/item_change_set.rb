@@ -1,11 +1,15 @@
+# frozen_string_literal: true
+
 class ItemChangeSet < Valkyrie::ChangeSet
+  include ModificationDetailsChangeSet
+
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
     ItemResource::DescriptiveMetadata::FIELDS.each do |field|
       property field, multiple: true
 
       # Remove blank values from array.
       define_method "#{field}=" do |values|
-        super(values.compact_blank)
+        super(values&.compact_blank)
       end
     end
 
@@ -13,26 +17,42 @@ class ItemChangeSet < Valkyrie::ChangeSet
   end
 
   class StructuralMetadataChangeSet < Valkyrie::ChangeSet
-    VIEWING_DIRECTIONS = ['right-to-left', 'left-to-right', 'top-to-bottom', 'bottom-to-top']
-    VIEWING_HINTS = ['individual', 'paged']
+    VIEWING_DIRECTIONS = %w[right-to-left left-to-right top-to-bottom bottom-to-top].freeze
+    VIEWING_HINTS = %w[individual paged].freeze
 
-    property :viewing_direction, multiple: false, required: false, validates: { inclusion: VIEWING_DIRECTIONS, allow_nil: true }
-    property :viewing_hint, multiple: false, required: false, validates: { inclusion: VIEWING_HINTS, allow_nil: true }
+    property :viewing_direction, multiple: false, required: false
+    property :viewing_hint, multiple: false, required: false
     property :arranged_asset_ids, multiple: true, required: true
 
-    # TODO: validate at least one ordered asset id is present
-    # TODO: validate that all ordered asset ids are listed as a member id
+    validates :viewing_direction, inclusion: VIEWING_DIRECTIONS, allow_nil: true
+    validates :viewing_hint, inclusion: VIEWING_HINTS, allow_nil: true
   end
 
   # Defining Fields
-  property :alternate_ids, multiple: true, required: false
+  property :unique_identifier, multiple: false, required: false
   property :human_readable_name, multiple: false, required: true
-  property :asset_ids, multiple: true, required: false
+  property :thumbnail_asset_id, multiple: false, required: true
   property :descriptive_metadata, multiple: false, required: true, form: DescriptiveMetadataChangeSet
   property :structural_metadata, multiple: false, required: true, form: StructuralMetadataChangeSet
-  property :thumbnail_id, multiple: false, required: true
+
+  property :published, multiple: false, required: false, default: false
+  property :first_published_at, multiple: false, required: false
+  property :last_published_at, multiple: false, required: false
+
+  property :asset_ids, multiple: true, required: false
 
   # Validations
-  # TODO: Validate that ark is present in alternate_ids
   validates :human_readable_name, presence: true
+  validates :published, inclusion: [true, false]
+  validates :thumbnail_asset_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }
+  validates :unique_identifier, presence: true, format: { with: /\Aark:\//, message: 'must be an ARK' }
+  validate :ensure_arranged_asset_ids_are_valid
+
+  # Ensuring arranged_asset_ids are also present in asset_ids.
+  def ensure_arranged_asset_ids_are_valid
+    return if structural_metadata.arranged_asset_ids.blank?
+    return if structural_metadata.arranged_asset_ids.all? { |a| asset_ids&.include?(a) }
+
+    errors.add(:'structural_metadata.arranged_asset_ids', 'are not all included in asset_ids')
+  end
 end

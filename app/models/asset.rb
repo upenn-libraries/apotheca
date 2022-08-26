@@ -10,11 +10,14 @@ class Asset
   end
 
   def self.create(attributes)
+    attributes[:updated_by] = attributes[:created_by] if attributes[:updated_by].blank?
+
     asset = Asset.new(AssetResource.new)
     asset.update(attributes)
   end
 
   def update(file: nil, **attributes)
+    # TODO: Should require `updated_by` to be set.
     valid = @change_set.validate(attributes)
     raise 'Error validating asset' unless valid
 
@@ -28,7 +31,7 @@ class Asset
 
       # New change set.
       @change_set = AssetChangeSet.new(@resource)
-      @change_set.file_ids = [file_resource.id]
+      @change_set.preservation_file_id = file_resource.id
 
       save
     end
@@ -55,11 +58,11 @@ class Asset
 
   # @return [TrueClass, FalseClass]
   def file_changed?
-    @change_set.changed?(:file_ids)
+    @change_set.changed?(:preservation_file_id)
   end
 
   def set_file
-    file_id = @change_set.file_ids.first
+    file_id = @change_set.preservation_file_id
 
     preservation_storage = Valkyrie::StorageAdapter.find(:preservation)
     @file = preservation_storage.find_by(id: file_id)

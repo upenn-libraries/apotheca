@@ -1,13 +1,11 @@
+# frozen_string_literal: true
+
 class AssetResource < Valkyrie::Resource
-  # class Annotation < Valkyrie::Resource
-  #   attribute :text
-  #   attribute :type # 'table_of_contents'
-  #   attribute :location #x,y,w,h # optional
-  # end
-  #
-  class DescriptiveMetadata < Valkyrie::Resource
-    attribute :label, Valkyrie::Types::String
-    attribute :table_of_contents, Valkyrie::Types::String
+  include ModificationDetails
+
+  class Annotation < Valkyrie::Resource
+    attribute :text, Valkyrie::Types::String
+    # attribute :location, Valkyrie::Types::String # x,y,w,h
   end
 
   class TechnicalMetadata < Valkyrie::Resource
@@ -19,20 +17,24 @@ class AssetResource < Valkyrie::Resource
     attribute :sha256, Valkyrie::Types::String
   end
 
+  class Transcription < Valkyrie::Resource
+    attribute :mime_type, Valkyrie::Types::String
+    attribute :contents, Valkyrie::Types::String
+    # attribute :type, ORC, caption, human transcribed
+  end
+
   attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
   attribute :original_filename, Valkyrie::Types::String
-  attribute :file_ids, Valkyrie::Types::Set # Link to where its stored in storage
-  attribute :descriptive_metadata, DescriptiveMetadata
+  attribute :preservation_file_id, Valkyrie::Types::ID
+  attribute :preservation_copies_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)
   attribute :technical_metadata, TechnicalMetadata
+  attribute :label, Valkyrie::Types::String
 
-  # attribute :derivatives, DerivativeResource # { type: 'thumbnail', file_id: '', generated_at: '' }
+  attribute :annotations, Valkyrie::Types::Array.of(Annotation) # previously, called table of contents
 
-  # attribute :fulltext or :transcription { mime_type: '', contents: '' }
+  attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
+
+  attribute :transcriptions, Valkyrie::Types::Array.of(Transcription)
+
   # attribute :preservation_metadata
-  #
-  # Potential way to group two preservation copies of file
-  # class PreservationFile < Valkyrie::Resource
-  #   attribute :preservation_file_id
-  #   attribute :deep_preservation_file_id # ID for deep storage copy, duplicate_file_id?, backup_file_id?
-  # end
 end

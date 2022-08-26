@@ -43,6 +43,12 @@ Rails.application.config.to_prepare do
     public: true # Adds public-read acl to all objects
   )
 
+  preservation_copy_storage_config = Settings.preservation_copy_storage.to_h.merge(
+    region: 'us-east-1', # using default region
+    force_path_style: true,
+    public: true # Adds public-read acl to all objects
+  )
+
   derivatives_storage_config = Settings.derivative_storage.to_h.merge(
     region: 'us-east-1', # using default region
     force_path_style: true,
@@ -51,15 +57,23 @@ Rails.application.config.to_prepare do
 
   Shrine.storages = {
     preservation: Shrine::Storage::S3.new(preservation_storage_config),
+    preservation_copy: Shrine::Storage::S3.new(preservation_copy_storage_config),
     derivatives: Shrine::Storage::S3.new(derivatives_storage_config)
   }
 
   Valkyrie::StorageAdapter.register(
-    Valkyrie::Storage::Shrine.new(Shrine.storages[:preservation]), :preservation
+    Valkyrie::Storage::Shrine.new(Shrine.storages[:preservation], identifier_prefix: 'preservation'),
+    :preservation
   )
 
   Valkyrie::StorageAdapter.register(
-    Valkyrie::Storage::Shrine.new(Shrine.storages[:derivatives], nil, DerivativePathGenerator), :derivatives
+    Valkyrie::Storage::Shrine.new(Shrine.storages[:preservation_copy], identifier_prefix: 'preservation_copy'),
+    :preservation_copy
+  )
+
+  Valkyrie::StorageAdapter.register(
+    Valkyrie::Storage::Shrine.new(Shrine.storages[:derivatives], nil, DerivativePathGenerator, identifier_prefix: 'derivatives'),
+    :derivatives
   )
 
   # Register custom queries for Solr

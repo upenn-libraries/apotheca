@@ -12,7 +12,7 @@ module SelectInput
       @id = id
       @value = value
       @field = field
-      @options = options.prepend(nil)
+      @options = options + [nil]
     end
 
     def call
