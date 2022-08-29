@@ -45,10 +45,17 @@ class ItemIndex
     filters = filters.delete_if { |k, v| !k.in?(PERMITTED_FILTERS) || v.blank? }
     all_filters = DEFAULT_FQ.merge filters.to_h
     all_filters.map do |fq, v|
-      Array.wrap(v).map do |value|
-        "#{fq}: \"#{value}\""
-      end.join(' OR ').insert(0, '(').insert(-1, ')') # use OR for particular field values (this OR that collection)
+      solr_fq_condition field: fq, values: v
     end.join(' AND ') # use AND for all field values (have this attribute AND that attribute)
+  end
+
+  # @param [String] field
+  # @param [String, Array] values
+  # @return [String]
+  def solr_fq_condition(field:, values:)
+    Array.wrap(values).map do |value|
+      "#{field}: \"#{value}\""
+    end.join(' OR ').insert(0, '(').insert(-1, ')') # use OR for particular field values (this OR that collection)
   end
 
   # compose Sort param
@@ -80,7 +87,7 @@ class ItemIndex
 
     def initialize(items:, facet_data:)
       @items = items
-      @facets = OpenStruct.new facets_to_hash(facet_data: facet_data)
+      @facets = facets_to_hash(facet_data: facet_data)
     end
 
     private

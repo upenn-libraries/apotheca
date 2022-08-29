@@ -14,6 +14,6 @@ class CollectionIndexer < BaseIndexer
   end
 
   def descriptive_metadata
-    @descriptive_metadata ||= @resource.descriptive_metadata
+    @descriptive_metadata ||= @resource.try :descriptive_metadata
   end
 end
