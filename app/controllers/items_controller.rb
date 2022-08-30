@@ -6,7 +6,9 @@ class ItemsController < ApplicationController
 
   def index
     authorize! :read, ItemResource
-    @items = @query_service.find_all_of_model model: ItemResource
+    items_container = solr_query_service.custom_queries.item_index parameters: search_params
+    @items = items_container.items
+    @facets = items_container.facets
   end
 
   # def show
@@ -40,7 +42,15 @@ class ItemsController < ApplicationController
     @query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
 
+  def solr_query_service
+    @solr_query_service = Valkyrie::MetadataAdapter.find(:index_solr).query_service
+  end
+
   def load_assets
     @assets = @query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
+  end
+
+  def search_params
+    params.permit(:keyword, :sort_field, :sort_direction, :rows, filters: {})
   end
 end
