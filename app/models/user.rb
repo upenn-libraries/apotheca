@@ -11,7 +11,7 @@ class User < ApplicationRecord
   if Rails.env.development?
     devise :omniauthable, omniauth_providers: [:developer]
   else
-    devise :omniauthable, omniauth_providers: []
+    devise :omniauthable, omniauth_providers: [:saml]
   end
 
   before_validation :deduplicate_roles
@@ -24,13 +24,30 @@ class User < ApplicationRecord
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
 
-  def self.from_omniauth(auth)
+  # @param [OmniAuth::AuthHash] auth
+  # @return [User]
+  def self.from_omniauth_developer(auth)
+    return unless Rails.env.development?
+
     where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
       user.email = auth.info.email
       user.first_name = 'A.'
       user.last_name = 'Developer'
       user.active = true
-      user.roles << 'admin'
+      user.roles << ADMIN_ROLE
+    end
+  end
+
+  # @param [OmniAuth::AuthHash] auth
+  # @return [User]
+  def self.from_omniauth_saml(auth)
+    name = auth.info.name # this field is 'required' so might be better to use than below
+    where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
+      user.email = auth.info.email
+      user.first_name = auth.info.first_name # || name.split(',').second.strip ?
+      user.last_name = auth.info.last_name # || name.split(',').first.strip ?
+      user.active = true
+      user.roles << VIEWER_ROLE
     end
   end
 

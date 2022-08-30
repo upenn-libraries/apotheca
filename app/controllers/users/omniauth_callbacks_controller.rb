@@ -7,7 +7,7 @@ module Users
     skip_before_action :verify_authenticity_token, only: :developer
 
     def developer
-      @user = User.from_omniauth(request.env['omniauth.auth'])
+      @user = User.from_omniauth_developer(request.env['omniauth.auth'])
 
       # if user is already exists or is successfully created...
       if @user.persisted? || @user.save
@@ -17,6 +17,22 @@ module Users
         # problem saving - show validation errors
         if is_navigational_format?
           set_flash_message(:notice, :failure, kind: 'Developer', reason: @user.errors.to_a.join(', '))
+        end
+        redirect_to login_path
+      end
+    end
+
+    def saml
+      @user = User.from_omniauth_saml(request.env['omniauth.auth']) # TODO
+
+      # if user is already exists or is successfully created...
+      if @user.persisted? || @user.save
+        sign_in_and_redirect @user, event: :authentication
+        set_flash_message(:notice, :success, kind: 'SAML') if is_navigational_format?
+      else
+        # problem saving - show validation errors
+        if is_navigational_format?
+          set_flash_message(:notice, :failure, kind: 'SAML', reason: @user.errors.to_a.join(', '))
         end
         redirect_to login_path
       end

@@ -273,6 +273,10 @@ Devise.setup do |config|
   # up on your models and hooks.
   config.omniauth :developer, fields: [:email]
 
+  config.omniauth :saml,
+                  idp_cert_fingerprint: 'fingerprint',
+                  idp_sso_service_url: 'idp_sso_service_url'
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
