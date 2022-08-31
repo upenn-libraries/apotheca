@@ -279,9 +279,6 @@ Devise.setup do |config|
     idp_sso_service_url: '', # Penn URL to send requests to - required
     idp_cert: '', # the cert as string (PEM format)
     # idp_cert_fingerprint: '', # if cert not provided above, this is needed. SHA1 of cert
-    # for "SP-init" auth, this is the format of our apps username (email)
-    name_identifier_format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
-    request_attributes: {}
   }
 
   config.omniauth :saml, saml_config
