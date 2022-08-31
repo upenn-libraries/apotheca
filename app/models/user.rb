@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   devise :rememberable, :timeoutable
   if Rails.env.development?
-    devise :omniauthable, omniauth_providers: [:developer]
+    devise :omniauthable, omniauth_providers: [:developer, :saml]
   else
     devise :omniauthable, omniauth_providers: [:saml]
   end
@@ -40,12 +40,11 @@ class User < ApplicationRecord
 
   # @param [OmniAuth::AuthHash] auth
   # @return [User]
-  def self.from_omniauth_saml(auth)
-    name = auth.info.name # this field is 'required' so might be better to use than below
+ def self.from_omniauth_saml(auth)
     where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
       user.email = auth.info.email
-      user.first_name = auth.info.first_name # || name.split(',').second.strip ?
-      user.last_name = auth.info.last_name # || name.split(',').first.strip ?
+      user.first_name = auth.info.first_name # || auth.info.name.split(',').second.strip ?
+      user.last_name = auth.info.last_name # || auth.info.name.split(',').first.strip ?
       user.active = true
       user.roles << VIEWER_ROLE
     end

@@ -273,9 +273,18 @@ Devise.setup do |config|
   # up on your models and hooks.
   config.omniauth :developer, fields: [:email]
 
-  config.omniauth :saml,
-                  idp_cert_fingerprint: 'fingerprint',
-                  idp_sso_service_url: 'idp_sso_service_url'
+  # see https://github.com/omniauth/omniauth-saml#options for info on these and other config options available
+  saml_config = {
+    sp_entity_id: '', # app name for SP (this app)
+    idp_sso_service_url: '', # Penn URL to send requests to - required
+    idp_cert: '', # the cert as string (PEM format)
+    # idp_cert_fingerprint: '', # if cert not provided above, this is needed. SHA1 of cert
+    # for "SP-init" auth, this is the format of our apps username (email)
+    name_identifier_format: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
+    request_attributes: {}
+  }
+
+  config.omniauth :saml, saml_config
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
