@@ -12,11 +12,13 @@ Rails.application.config.to_prepare do
     :postgres
   )
 
+  indexers = [TitleIndexer, CollectionIndexer]
+
   # To use the solr adapter you must add gem 'rsolr' to your Gemfile
   Valkyrie::MetadataAdapter.register(
     Valkyrie::Persistence::Solr::MetadataAdapter.new(
       connection: RSolr.connect(url: Settings.solr.url),
-      # resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(DescriptiveMetadataIndexer, TechnicalMetadataIndexer),
+      resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(*indexers),
       write_only: true
     ),
     :index_solr
@@ -73,4 +75,11 @@ Rails.application.config.to_prepare do
     Valkyrie::Storage::Shrine.new(Shrine.storages[:derivatives], nil, DerivativePathGenerator, identifier_prefix: 'derivatives'),
     :derivatives
   )
+
+  # Register custom queries for Solr
+  [ItemIndex].each do |solr_query_handler|
+    Valkyrie::MetadataAdapter.find(:index_solr)
+                             .query_service.custom_queries
+                             .register_query_handler(solr_query_handler)
+  end
 end
