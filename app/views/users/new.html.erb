@@ -1,3 +1,9 @@
+<%= render(BreadcrumbsComponent.new) do |component| %>
+  <% component.breadcrumb(href: '/') do %>Home<% end %>
+  <% component.breadcrumb(href: users_path) do %>Users<% end %>
+  <% component.breadcrumb(active: true) do %>New<% end %>
+<% end %>
+
 <h2>New User</h2>
 
 <%= render 'form' %>
