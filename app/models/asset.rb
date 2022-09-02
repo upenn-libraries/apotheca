@@ -29,6 +29,9 @@ class Asset
       preservation_storage = Valkyrie::StorageAdapter.find(:preservation)
       file_resource = preservation_storage.upload(file: file, resource: @resource, original_filename: @resource.original_filename)
 
+      # TODO: Might want to explicitly close the reference to the original file. It's not necessary, but its considered
+      # good practice and can lead to the tmp space being cleaned up sooner.
+
       # New change set.
       @change_set = AssetChangeSet.new(@resource)
       @change_set.preservation_file_id = file_resource.id
@@ -41,8 +44,8 @@ class Asset
 
   def before_save
     if file.present?
-      # TODO: Generate derivatives for assets, if file was added
       add_file_characterization
+      add_derivatives
       generate_sha256_checksum
     end
   end
@@ -78,6 +81,25 @@ class Asset
     @change_set.technical_metadata.size      = tech_metadata.size
     @change_set.technical_metadata.md5       = tech_metadata.md5
     @change_set.technical_metadata.duration  = tech_metadata.duration
+  end
+
+  def add_derivatives
+    # TODO: derivative generation can fail, we need to account for that.
+    generator = DerivativeService::Generator.for(file, @change_set.technical_metadata.mime_type)
+    derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
+
+    # TODO: remove previous derivatives?
+    # if new derivatives are generated is it overriding the current file in derivative storage
+    [:thumbnail, :access].each do |type|
+      derivative_file = generator.send(type) # todo: explicitly close the DerivativeFile
+      file_resource = derivative_storage.upload(file: derivative_file, resource: @resource, original_filename: type)
+
+      @change_set.derivatives << DerivativeResource.new(file_id: file_resource.id, mime_type: derivative_file.mime_type, type: type, generated_at: DateTime.current)
+
+      # uploading the new derivatives should override them because currently they will have the same filename.
+      # TODO: need to figure out what to do if we are updating a derivative
+      # TODO: if derivative generation fails need to delete any files that were created.
+    end
   end
 
   def generate_sha256_checksum

@@ -4,6 +4,7 @@ Administrative application that enables the ingestion and management of digital 
 ## System Requirements
 - Ruby 2.7.5
 - Postgres
+- [libvips](https://www.libvips.org/)
 
 ## Local Development and Test Environment
 We are using docker-compose to run adjacent services required for the application to run. The application will run directly on your machine.
@@ -14,6 +15,7 @@ We are using docker-compose to run adjacent services required for the applicatio
 rbenv install 2.7.5
 brew install --cask docker
 brew install libpq
+brew install vips
 ```
 
 #### Linux
