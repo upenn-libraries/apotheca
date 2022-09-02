@@ -10,11 +10,11 @@
 
 <%= render Tabs::Component.new(id: 'item-tabs') do |component| %>
   <% component.tab(title: 'Descriptive Metadata', active: true) do %>
-    <%= render partial: 'descriptive_metadata_form' %>
+    <%= render partial: 'descriptive_metadata' %>
   <% end %>
 
   <% component.tab(title: 'Structural Metadata') do %>
-    <%= render partial: 'structural_metadata_form' %>
+    <%= render partial: 'structural_metadata' %>
   <% end %>
 
   <% component.tab(title: 'Assets') do  %>

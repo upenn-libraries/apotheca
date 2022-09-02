@@ -1,0 +1,5 @@
+<h3>Descriptive Metadata</h3>
+
+<% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
+  <%= render(StaticField::Component.new(label: field, value: @item.descriptive_metadata.send(field))) %>
+<% end %>

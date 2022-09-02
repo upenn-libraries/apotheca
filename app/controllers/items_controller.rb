@@ -3,6 +3,7 @@
 # controller actions for Item stuff
 class ItemsController < ApplicationController
   before_action :load_query_service
+  before_action :load_and_authorize_resources, only: [:show, :edit]
 
   def index
     authorize! :read, ItemResource
@@ -11,15 +12,9 @@ class ItemsController < ApplicationController
     @facets = items_container.facets
   end
 
-  # def show
-  #   authorize! :read, @item
-  # end
+  def show; end
 
-  def edit
-    authorize! :edit, ItemResource
-    @item = @query_service.find_by id: params[:id]
-    load_assets
-  end
+  def edit; end
 
   def update
     authorize! :edit, ItemResource
@@ -46,7 +41,9 @@ class ItemsController < ApplicationController
     @solr_query_service = Valkyrie::MetadataAdapter.find(:index_solr).query_service
   end
 
-  def load_assets
+  def load_and_authorize_resources
+    @item = @query_service.find_by id: params[:id]
+    authorize! :read, @item
     @assets = @query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
   end
 
