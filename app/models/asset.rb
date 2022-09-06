@@ -32,31 +32,35 @@ class Asset
       # TODO: Might want to explicitly close the reference to the original file. It's not necessary, but its considered
       # good practice and can lead to the tmp space being cleaned up sooner.
 
-      # New change set.
-      @change_set = AssetChangeSet.new(@resource)
+      # Add file resource to refreshed change_set
       @change_set.preservation_file_id = file_resource.id
 
+      # Process file.
+      set_file
+      add_file_characterization
+      generate_sha256_checksum
+      delete_derivatives
+
+      # Save before adding derivatives, in case derivative generation fails.
+      save
+
+      # Create and add derivatives.
+      add_derivatives
+
+      # Save asset records with derivatives.
       save
     end
   end
 
   private
 
-  def before_save
-    if file.present?
-      add_file_characterization
-      add_derivatives
-      generate_sha256_checksum
-    end
-  end
-
   def save
-    set_file if file_changed?
-
-    before_save
-
     @resource = @change_set.sync
     @resource = Valkyrie::MetadataAdapter.find(:postgres).persister.save(resource: @resource)
+
+    @change_set = AssetChangeSet.new(@resource) # Create new change_set in case further changes are required.
+
+    @resource
   end
 
   # @return [TrueClass, FalseClass]
@@ -83,22 +87,31 @@ class Asset
     @change_set.technical_metadata.duration  = tech_metadata.duration
   end
 
+  def delete_derivatives
+    derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
+
+    # Deleting derivatives BEFORE new derivatives are created in case derivative generation fails.
+    @change_set.derivatives.each do |derivative|
+      derivative_storage.delete(id: derivative.file_id)
+    end
+
+    @change_set.derivatives = []
+  end
+
   def add_derivatives
     # TODO: derivative generation can fail, we need to account for that.
     generator = DerivativeService::Generator.for(file, @change_set.technical_metadata.mime_type)
     derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
 
-    # TODO: remove previous derivatives?
-    # if new derivatives are generated is it overriding the current file in derivative storage
     [:thumbnail, :access].each do |type|
-      derivative_file = generator.send(type) # todo: explicitly close the DerivativeFile
+      derivative_file = generator.send(type)
+      next unless derivative_file # Skip, if no derivative was generated.
+
       file_resource = derivative_storage.upload(file: derivative_file, resource: @resource, original_filename: type)
 
       @change_set.derivatives << DerivativeResource.new(file_id: file_resource.id, mime_type: derivative_file.mime_type, type: type, generated_at: DateTime.current)
 
-      # uploading the new derivatives should override them because currently they will have the same filename.
-      # TODO: need to figure out what to do if we are updating a derivative
-      # TODO: if derivative generation fails need to delete any files that were created.
+      derivative_file.cleanup!
     end
   end
 

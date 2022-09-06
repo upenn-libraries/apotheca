@@ -17,12 +17,15 @@ brew install --cask docker
 brew install libpq
 brew install vips
 ```
+Note: Homebrew installation of libtiff does not seem to support tiff jpeg compression.
 
 #### Linux
 ```shell
 sudo apt install libpq-dev
 rbenv install 2.7.5
 ```
+
+TODO: Add installation notes for libvips.
 
 ### 2. Install gems
 ```shell

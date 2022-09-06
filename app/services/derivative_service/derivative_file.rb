@@ -8,5 +8,15 @@ module DerivativeService
       @mime_type = mime_type
       @file = Tempfile.new
     end
+
+    # Explicitly removing tempfile. After calling `cleanup!` this file should not be used.
+    #
+    # It's good practice to close and unlink a tempfile after its done being used. It ensures that is removed
+    # and garbage collected quickly.
+    def cleanup!
+      @file.close
+      @file.unlink
+      @file = nil
+    end
   end
 end

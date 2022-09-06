@@ -17,6 +17,8 @@ describe Asset do
     it 'sets sha256 checksum' do
       expect(asset.technical_metadata.sha256).to eql 'd58516c7d3ece4d79f0de3a649a090af2174e67b7658f336a027a42123a2da72'
     end
+
+    it 'generates and adds derivatives'
   end
 
   describe '.update'
