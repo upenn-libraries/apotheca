@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Show aset of metadata fields in a description list element
+# Show a set of metadata fields in a description list element
 class StaticFieldsComponent < ViewComponent::Base
   renders_many :fields, 'StaticFieldComponent'
 
