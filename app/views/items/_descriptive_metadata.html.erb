@@ -1,5 +1,7 @@
 <h3>Descriptive Metadata</h3>
 
+<%= link_to 'Edit Descriptive Metadata', edit_item_path(@item, anchor: 'descriptive'), class: 'btn btn-primary mb-3' %>
+
 <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
   <%= render(StaticField::Component.new(label: field, value: @item.descriptive_metadata.send(field))) %>
 <% end %>
