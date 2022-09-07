@@ -2,7 +2,9 @@
 
 # controller actions for Item stuff
 class ItemsController < ApplicationController
-  before_action :load_query_service
+  before_action :load_and_authorize_resources, only: [:show, :edit]
+
+  rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
   def index
     authorize! :read, ItemResource
@@ -11,19 +13,17 @@ class ItemsController < ApplicationController
     @facets = items_container.facets
   end
 
-  # def show
-  #   authorize! :read, @item
-  # end
+  def show
+    authorize! :read, @item
+  end
 
   def edit
-    authorize! :edit, ItemResource
-    @item = @query_service.find_by id: params[:id]
-    load_assets
+    authorize! :edit, @item
   end
 
   def update
     authorize! :edit, ItemResource
-    @item = @query_service.find_by id: params[:id]
+    @item = pg_query_service.find_by id: params[:id]
     Item.new(@item).update(update_params[:item])
     redirect_to edit_item_path(@item)
   end
@@ -38,16 +38,24 @@ class ItemsController < ApplicationController
     })
   end
 
-  def load_query_service
-    @query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
+  # @return [Valkyrie::MetadataAdapter]
+  def pg_query_service
+    @pg_query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
 
+  # @return [Valkyrie::MetadataAdapter]
   def solr_query_service
-    @solr_query_service = Valkyrie::MetadataAdapter.find(:index_solr).query_service
+    @solr_query_service ||= Valkyrie::MetadataAdapter.find(:index_solr).query_service
   end
 
-  def load_assets
-    @assets = @query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
+  def load_and_authorize_resources
+    @item = pg_query_service.find_by id: params[:id]
+    @assets = pg_query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
+  end
+
+  # @param [StandardError] exception
+  def error_redirect(exception)
+    redirect_to items_path, notice: "Problem loading page: #{exception.message}"
   end
 
   def search_params

@@ -20,12 +20,14 @@
       <th></th>
       <th>Title</th>
       <th>Alt. ID</th>
+      <th></th>
     </tr>
   </thead>
   <% @items.each do |item| %>
   <tr>
     <td>&nbsp;</td>
-    <td><%= link_to item.descriptive_metadata.title.first, edit_item_path(item.id) %></td>
+    <td><%= link_to item.descriptive_metadata.title.first, item_path(item.id) %></td>
     <td><%= item.unique_identifier %></td>
+    <td><%= link_to 'Edit', edit_item_path(item.id), class: 'btn btn-primary' %></td>
   <% end %>
 </table>

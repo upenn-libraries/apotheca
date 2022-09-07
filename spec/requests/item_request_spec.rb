@@ -10,9 +10,11 @@ describe ItemsController do
   end
 
   context 'edit' do
+    let(:item) { persist(:item_resource) }
+
     it 'redirects viewer users to authenticated root path with authorization message' do
       sign_in(create :user, :viewer)
-      get '/items/1/edit'
+      get "/items/#{item.id}/edit"
       expect(response).to redirect_to(authenticated_root_path)
       expect(flash['alert']).to include 'not authorized'
     end

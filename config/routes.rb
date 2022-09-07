@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   resources :alert_messages, only: %w[index update]
   resources :users, except: :destroy
-  resources :items, only: %i[index new edit update]
+  resources :items, except: %i[new create]
   get 'login', to: 'login#index'
 
   authenticated do

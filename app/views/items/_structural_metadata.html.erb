@@ -1,0 +1,14 @@
+<h3>Structural Metadata</h3>
+
+<%= link_to 'Edit Structural Metadata', edit_item_path(@item, anchor: 'structural'), class: 'btn btn-primary mb-3' %>
+
+<%= render(StaticFieldsComponent.new) do |component| %>
+  <% component.field(
+       label: 'Viewing Hint',
+       values: @item.structural_metadata.viewing_hint
+     ) %>
+  <% component.field(
+       label: 'Viewing Direction',
+       values: @item.structural_metadata.viewing_direction
+     ) %>
+<% end %>
