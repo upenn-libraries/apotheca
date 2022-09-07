@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 module DerivativeService
   module Generator
+    # Generator class encapsulating image derivative generation logic.
     class Image < Base
-      VALID_MIME_TYPES = ['image/tiff', 'image/jpeg']
+      VALID_MIME_TYPES = ['image/tiff', 'image/jpeg'].freeze
 
       # @return [DerivativeService::Generator::DerivativeFile]
       def thumbnail
@@ -20,7 +23,17 @@ module DerivativeService
         image = image.autorot
 
         derivative_file = DerivativeFile.new('image/tiff')
-        image.tiffsave(derivative_file.path, tile: true, pyramid: true, compression: :jpeg, tile_width: 256, tile_height: 256, strip: true) # compression: :jpeg,
+
+        image.tiffsave(
+          derivative_file.path,
+          tile: true,
+          pyramid: true,
+          compression: :jpeg,
+          tile_width: 256,
+          tile_height: 256,
+          strip: true
+        )
+
         derivative_file
       end
 
