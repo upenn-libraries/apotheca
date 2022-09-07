@@ -8,14 +8,16 @@ module DerivativeService
 
       # @return [DerivativeService::Generator::DerivativeFile]
       def thumbnail
-        # TODO: i think we need to apply page: 0 if its a tiff, vips says it defaults to 0 though
-        # but in bulwark we had to specify the page number for some tiffs
+        # TODO: We might need to apply `page: 0` if the image file is a tiff. Vips says it defaults to 0 though
+        #   but before we have had to specify the page/layer for some tiffs.
         image = Vips::Image.new_from_buffer(file.read, '')
         image = image.autorot.thumbnail_image(200, height: 200)
 
         derivative_file = DerivativeFile.new('image/jpeg')
         image.jpegsave(derivative_file.path, Q: 90, strip: true)
         derivative_file
+      rescue => e
+        raise Generator::Error,"Error generating image thumbnail: #{e.class} #{e.message}", e.backtrace
       end
 
       def access
@@ -35,6 +37,8 @@ module DerivativeService
         )
 
         derivative_file
+      rescue => e
+        raise Generator::Error,"Error generating image access copy: #{e.class} #{e.message}", e.backtrace
       end
 
       def thumbnail?

@@ -59,13 +59,7 @@ class Asset
     @resource = Valkyrie::MetadataAdapter.find(:postgres).persister.save(resource: @resource)
 
     @change_set = AssetChangeSet.new(@resource) # Create new change_set in case further changes are required.
-
     @resource
-  end
-
-  # @return [TrueClass, FalseClass]
-  def file_changed?
-    @change_set.changed?(:preservation_file_id)
   end
 
   def set_file
@@ -99,7 +93,6 @@ class Asset
   end
 
   def add_derivatives
-    # TODO: derivative generation can fail, we need to account for that.
     generator = DerivativeService::Generator.for(file, @change_set.technical_metadata.mime_type)
     derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
 
