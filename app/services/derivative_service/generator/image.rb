@@ -38,7 +38,7 @@ module DerivativeService
 
         derivative_file
       rescue => e
-        raise Generator::Error,"Error generating image access copy: #{e.class} #{e.message}", e.backtrace
+        raise Generator::Error, "Error generating image access copy: #{e.class} #{e.message}", e.backtrace
       end
 
       def thumbnail?
