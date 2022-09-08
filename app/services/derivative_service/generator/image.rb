@@ -40,14 +40,6 @@ module DerivativeService
       rescue => e
         raise Generator::Error, "Error generating image access copy: #{e.class} #{e.message}", e.backtrace
       end
-
-      def thumbnail?
-        true
-      end
-
-      def access?
-        true
-      end
     end
   end
 end

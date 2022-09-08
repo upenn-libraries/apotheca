@@ -21,14 +21,6 @@ module DerivativeService
       def access
         raise NotImplementedError
       end
-
-      def thumbnail?
-        raise NotImplementedError
-      end
-
-      def access?
-        raise NotImplementedError
-      end
     end
   end
 end

@@ -11,14 +11,6 @@ module DerivativeService
       def access
         nil
       end
-
-      def thumbnail?
-        false
-      end
-
-      def access?
-        false
-      end
     end
   end
 end
