@@ -17,7 +17,7 @@
     <%= render partial: 'structural_metadata_form' %>
   <% end %>
 
-  <% component.tab(title: 'Assets') do  %>
+  <% component.tab(title: 'Assets', count: @assets.count) do  %>
     <%= render partial: 'assets_list' %>
   <% end %>
 <% end %>

@@ -11,12 +11,13 @@ module Tabs
     end
 
     class Tab < ViewComponent::Base
-      attr_reader :id, :active, :title
+      attr_reader :id, :active, :title, :count
 
-      def initialize(title:, active: false)
+      def initialize(title:, count: nil, active: false)
         @id = title.downcase.gsub(' ', '-')
         @title = title
         @active = active
+        @count = count
       end
 
       def call
