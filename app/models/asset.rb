@@ -29,36 +29,37 @@ class Asset
       preservation_storage = Valkyrie::StorageAdapter.find(:preservation)
       file_resource = preservation_storage.upload(file: file, resource: @resource, original_filename: @resource.original_filename)
 
-      # New change set.
-      @change_set = AssetChangeSet.new(@resource)
+      # TODO: Might want to explicitly close the reference to the original file. It's not necessary, but its considered
+      # good practice and can lead to the tmp space being cleaned up sooner.
+
+      # Add file resource to refreshed change_set
       @change_set.preservation_file_id = file_resource.id
 
+      # Process file.
+      set_file
+      add_file_characterization
+      generate_sha256_checksum
+      delete_derivatives
+
+      # Save before adding derivatives, in case derivative generation fails.
+      save
+
+      # Create and add derivatives.
+      add_derivatives
+
+      # Save asset records with derivatives.
       save
     end
   end
 
   private
 
-  def before_save
-    if file.present?
-      # TODO: Generate derivatives for assets, if file was added
-      add_file_characterization
-      generate_sha256_checksum
-    end
-  end
-
   def save
-    set_file if file_changed?
-
-    before_save
-
     @resource = @change_set.sync
     @resource = Valkyrie::MetadataAdapter.find(:postgres).persister.save(resource: @resource)
-  end
 
-  # @return [TrueClass, FalseClass]
-  def file_changed?
-    @change_set.changed?(:preservation_file_id)
+    @change_set = AssetChangeSet.new(@resource) # Create new change_set in case further changes are required.
+    @resource
   end
 
   def set_file
@@ -78,6 +79,33 @@ class Asset
     @change_set.technical_metadata.size      = tech_metadata.size
     @change_set.technical_metadata.md5       = tech_metadata.md5
     @change_set.technical_metadata.duration  = tech_metadata.duration
+  end
+
+  def delete_derivatives
+    derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
+
+    # Deleting derivatives BEFORE new derivatives are created in case derivative generation fails.
+    @change_set.derivatives.each do |derivative|
+      derivative_storage.delete(id: derivative.file_id)
+    end
+
+    @change_set.derivatives = []
+  end
+
+  def add_derivatives
+    generator = DerivativeService::Generator.for(file, @change_set.technical_metadata.mime_type)
+    derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
+
+    [:thumbnail, :access].each do |type|
+      derivative_file = generator.send(type)
+      next unless derivative_file # Skip, if no derivative was generated.
+
+      file_resource = derivative_storage.upload(file: derivative_file, resource: @resource, original_filename: type)
+
+      @change_set.derivatives << DerivativeResource.new(file_id: file_resource.id, mime_type: derivative_file.mime_type, type: type, generated_at: DateTime.current)
+
+      derivative_file.cleanup!
+    end
   end
 
   def generate_sha256_checksum

@@ -46,6 +46,7 @@ gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
 gem 'pg', '~> 1.1'
 gem 'rsolr'
+gem 'ruby-vips'
 gem 'sassc-rails' # Use Sass to process CSS
 gem 'stimulus-rails'
 gem 'upennlib-rubocop', require: false
