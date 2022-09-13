@@ -6,8 +6,10 @@ module AssetCard
     attr_reader :asset
 
     # @param [AssetResource] asset
-    def initialize(asset:)
+    # @param [Integer] index
+    def initialize(asset:, index:)
       @asset = asset
+      @index = index + 1
     end
 
     # @return [Array<AssetResource::Annotation>]
@@ -15,20 +17,23 @@ module AssetCard
       @asset.annotations
     end
 
-    # @return [DerivativeResource]
+    # @return [String]
     def thumbnail_path
       file_asset_path @asset, type: :thumbnail, disposition: :inline
     end
 
+    # @return [ActiveSupport::SafeBuffer]
     def preservation_download_link
       link_to('Download Preservation File',
-              file_asset_path(@asset, type: :preservation, disposition: 'attachment'))
+              file_asset_path(@asset, type: :preservation, disposition: 'attachment'),
+              class: 'stretched-link')
     end
 
+    # @return [ActiveSupport::SafeBuffer]
     def access_download_link
       link_to('Download Access Copy',
-              file_asset_path(@asset, type: :access, disposition: 'attachment'))
+              file_asset_path(@asset, type: :access, disposition: 'attachment'),
+              class: 'stretched-link')
     end
-
   end
 end

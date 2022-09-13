@@ -46,7 +46,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
   validates :published, inclusion: [true, false]
   validates :thumbnail_asset_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }
   validates :unique_identifier, presence: true, format: { with: /\Aark:\//, message: 'must be an ARK' }
-  validate :ensure_arranged_asset_ids_are_valid
+  validate :ensure_arranged_asset_ids_are_valid # TODO: validate that an un-arranged asset is not in that arranged array?
 
   # Ensuring arranged_asset_ids are also present in asset_ids.
   def ensure_arranged_asset_ids_are_valid
