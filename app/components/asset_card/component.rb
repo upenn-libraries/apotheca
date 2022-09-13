@@ -7,9 +7,9 @@ module AssetCard
 
     # @param [AssetResource] asset
     # @param [Integer] index
-    def initialize(asset:, index:)
+    def initialize(asset:, index: nil)
       @asset = asset
-      @index = index + 1
+      @index = index ? index + 1 : nil
     end
 
     # @return [Array<AssetResource::Annotation>]

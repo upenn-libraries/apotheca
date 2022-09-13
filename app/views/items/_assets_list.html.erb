@@ -9,8 +9,8 @@
 
 <h4>Assets (unarranged)</h4>
 <% if @unarranged_assets&.any? %>
-<% @unarranged_assets.each_with_index do |asset, i| %>
-  <%= render(AssetCard::Component.new(asset: asset, index: i)) %>
+<% @unarranged_assets.each do |asset| %>
+  <%= render(AssetCard::Component.new(asset: asset)) %>
 <% end %>
 <% else %>
   <p>No unarranged assets</p>

@@ -1,9 +1,11 @@
 <div class="card mb-3">
   <div class="row g-0">
     <div class="col-md-3">
+      <% if @index %>
       <div class="asset-index-overlay position-absolute top-5 start-5">
         <span class="badge bg-light text-dark"><%= @index %></span>
       </div>
+      <% end %>
       <img src="<%= thumbnail_path %>" class="img-fluid rounded-start" alt="Thumbnail for Asset">
     </div>
     <div class="col-md-9">
