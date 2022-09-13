@@ -1,17 +1,35 @@
-<h4>Assets (arranged)</h4>
-<% if @arranged_assets&.any? %>
-<% @arranged_assets.each_with_index do |asset, i| %>
-<%= render(AssetCard::Component.new(asset: asset, index: i)) %>
-<% end %>
-<% else %>
-  <p>No arranged assets</p>
-<% end %>
+<div class="row">
+  <h4>Assets (arranged)</h4>
+  <div class="col-10">
+    <div id="arranged-assets-cards" data-bs-spy="scroll" data-bs-target="#arranged-asset-list" data-bs-offset="0" tabindex="0">
+      <% if @arranged_assets&.any? %>
+        <% @arranged_assets.each_with_index do |asset, i| %>
+          <%= render(AssetCard::Component.new(asset: asset, index: i)) %>
+        <% end %>
+      <% else %>
+        <p>No arranged assets</p>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-2">
+    <div id="arranged-asset-list">
+      <% @arranged_assets.each_with_index do |a, i| %>
+        <a class="list-group-item list-group-item-action" href="#<%= "asset-#{i + 1}" %>"><%= a.label || a.original_filename || "Asset #{i + 1}" %></a>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-<h4>Assets (unarranged)</h4>
-<% if @unarranged_assets&.any? %>
-<% @unarranged_assets.each do |asset| %>
-  <%= render(AssetCard::Component.new(asset: asset)) %>
-<% end %>
-<% else %>
-  <p>No unarranged assets</p>
-<% end %>
+<div class="row">
+  <h4>Assets (unarranged)</h4>
+  <div class="col-10">
+    <% if @unarranged_assets&.any? %>
+      <% @unarranged_assets.each do |asset| %>
+        <%= render(AssetCard::Component.new(asset: asset)) %>
+      <% end %>
+    <% else %>
+      <p>No unarranged assets</p>
+    <% end %>
+  </div>
+  <div class="col-2"></div>
+</div>

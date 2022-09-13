@@ -1,4 +1,4 @@
-<div class="card mb-3">
+<div class="card mb-3" <%= @index ? "id=asset-#{@index + 1}" : '' %>>
   <div class="row g-0">
     <div class="col-md-3">
       <% if @index %>
@@ -37,7 +37,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
