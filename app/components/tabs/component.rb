@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # Component to render tabs
-
 module Tabs
   class Component < ViewComponent::Base
     renders_many :tabs, 'Tab'

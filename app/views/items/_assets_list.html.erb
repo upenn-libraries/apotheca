@@ -1,23 +1,17 @@
-<h4>Assets (unarranged)</h4>
-<% if @assets&.any? %>
-  <table class="table table-sm">
-    <thead>
-    <tr>
-      <th scope="col">Original Filename</th>
-      <th scope="col">Created</th>
-      <th scope="col">Updated</th>
-    </tr>
-    </thead>
-    <tbody>
-    <% @assets.each do |asset| %>
-      <tr>
-        <th scope="row"><%= asset.original_filename %></th>
-        <td><%= asset.created_at %></td>
-        <td><%= asset.updated_at %></td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
+<h4>Assets (arranged)</h4>
+<% if @arranged_assets&.any? %>
+<% @arranged_assets.each do |asset| %>
+<%= render(AssetCard::Component.new(asset: asset)) %>
+<% end %>
 <% else %>
-  <p>No assets</p>
+  <p>No arranged assets</p>
+<% end %>
+
+<h4>Assets (unarranged)</h4>
+<% if @unarranged_assets&.any? %>
+<% @unarranged_assets.each do |asset| %>
+  <%= render(AssetCard::Component.new(asset: asset)) %>
+<% end %>
+<% else %>
+  <p>No unarranged assets</p>
 <% end %>

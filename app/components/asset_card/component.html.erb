@@ -1,0 +1,16 @@
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="<%= thumbnail_path %>" class="img-fluid rounded-start" alt="Thumbnail for Asset">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title"><%= @asset.id %></h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><%= access_download_link %></li>
+        <li class="list-group-item"><%= preservation_download_link %></li>
+      </ul>
+    </div>
+  </div>
+</div>

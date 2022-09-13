@@ -50,7 +50,8 @@ class ItemsController < ApplicationController
 
   def load_and_authorize_resources
     @item = pg_query_service.find_by id: params[:id]
-    @assets = pg_query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
+    @arranged_assets = pg_query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
+    @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids
   end
 
   # @param [StandardError] exception
