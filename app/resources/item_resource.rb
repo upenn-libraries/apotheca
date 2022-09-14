@@ -37,6 +37,12 @@ class ItemResource < Valkyrie::Resource
   # Asset IDs
   attribute :asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).optional
 
+
+  # @return [Integer]
+  def asset_count
+    asset_ids.length
+  end
+
   # @return [Array<Valkyrie::ID>]
   def unarranged_asset_ids
     asset_ids - structural_metadata.arranged_asset_ids
