@@ -1,37 +1,32 @@
-<div class="card mb-3" <%= @index ? "id=asset-#{@index + 1}" : '' %>>
+<div class="card mb-3" id="<%= arranged? ? "arranged-asset-#{@index}" : "unarranged-asset-#{@index}" %>">
   <div class="row g-0">
     <div class="col-md-3">
-      <% if @index %>
-      <div class="asset-index-overlay position-absolute top-5 start-5">
-        <span class="badge bg-light text-dark"><%= @index %></span>
-      </div>
-      <% end %>
       <img src="<%= thumbnail_path %>" class="img-fluid rounded-start" alt="Thumbnail for Asset">
     </div>
     <div class="col-md-9">
       <div class="card-body p-0">
         <div class="row">
           <div class="col p-2">
-            <dl>
-              <dt>ID</dt>
-              <dd class="user-select-all"><%= @asset.id %></dd>
-              <dt>Original Filename</dt>
-              <dd class="user-select-all"><%= @asset.original_filename %></dd>
-              <dt>Size</dt>
-              <dd><%= number_to_human_size @asset.technical_metadata.size %> </dd>
-              <dt>MIME Type</dt>
-              <dd><%= @asset.technical_metadata.mime_type %></dd>
-              <dt>Label</dt>
-              <dd><%= @asset.label %></dd>
+            <h4><%= card_title %></h4>
+            <dl class="row">
+              <dt class="col-sm-3">ID</dt>
+              <dd class="col-sm-9 user-select-all"><%= asset.id %> </dd>
+              <dt class="col-sm-3 ">Size</dt>
+              <dd class="col-sm-9 user-select-all"><%= size %> </dd>
+              <dt class="col-sm-3">MIME Type</dt>
+              <dd class="col-sm-9 user-select-all"><%= mime_type %></dd>
+              <dt class="col-sm-3">Annotations</dt>
+              <% annotations.each do |ano| %>
+                <dd class="col-sm-9 user-select-all"><%= ano.text %></dd>
+              <% end %>
             </dl>
           </div>
-          <div class="col text-end">
+          <div class="col-4 text-end h-100">
             <ul class="list-group list-group-flush border-start border-bottom">
               <li class="list-group-item"><%= access_download_link %></li>
               <li class="list-group-item"><%= preservation_download_link %></li>
               <li class="list-group-item"><%= link_to 'More Details', '', class: 'stretched-link' %></li>
               <li class="list-group-item"><%= link_to 'Edit Asset', '', class: 'stretched-link' %></li>
-              <li class="list-group-item"><%= link_to 'Annotations', '', class: 'stretched-link' %></li>
               <li class="list-group-item"><%= link_to 'Set as Item Thumbnail', '', class: 'stretched-link' %></li>
             </ul>
           </div>
