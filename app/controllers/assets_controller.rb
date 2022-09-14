@@ -9,10 +9,8 @@ class AssetsController < ApplicationController
 
   def file
     case params[:type].to_sym
-    when :thumbnail
-      serve_thumbnail_file
-    when :access
-      serve_access_file
+    when :thumbnail, :access
+      serve_derivative_file type: params[:type].to_sym
     when :preservation
       serve_preservation_file
     else
@@ -22,26 +20,15 @@ class AssetsController < ApplicationController
 
   private
 
-  def serve_thumbnail_file
-    thumbnail_resource = @asset.thumbnail
-    raise FileNotFound, "No thumbnail exists for asset #{@asset.id}" unless thumbnail_resource
+  def serve_derivative_file(type:)
+    resource = @asset.send(type)
+    raise FileNotFound, "No #{type} derivative exists for asset #{@asset.id}" unless resource
 
-    file = derivatives_storage_adapter.find_by id: thumbnail_resource.file_id
+    file = Valkyrie::StorageAdapter.find_by id: resource.file_id
     send_data file.read,
-              type: thumbnail_resource.mime_type,
+              type: resource.mime_type,
               disposition: file_disposition,
-              filename: 'thumbnail'
-  end
-
-  def serve_access_file
-    access_resource = @asset.access
-    raise FileNotFound, "No access copy exists for asset #{@asset.id}" unless access_resource
-
-    file = derivatives_storage_adapter.find_by id: access_resource.file_id
-    send_data file.read,
-              type: access_resource.mime_type,
-              disposition: file_disposition,
-              filename: 'access'
+              filename: type.to_s
   end
 
   def serve_preservation_file
@@ -51,7 +38,7 @@ class AssetsController < ApplicationController
     send_data file.read,
               type: @asset.technical_metadata.mime_type,
               disposition: file_disposition,
-              filename: @asset.original_filename || @asset.id
+              filename: @asset.original_filename
   end
 
   # @return [String]
@@ -67,14 +54,5 @@ class AssetsController < ApplicationController
 
   def metadata_adapter
     @metadata_adapter ||= Valkyrie::MetadataAdapter.find(:postgres)
-  end
-
-  def derivatives_storage_adapter
-    @derivatives_storage_adapter ||= Valkyrie::StorageAdapter.find :derivatives
-  end
-
-  # TODO: use preservation_copy?
-  def preservation_storage_adapter
-    @preservation_storage_adapter ||= Valkyrie::StorageAdapter.find :preservation
   end
 end
