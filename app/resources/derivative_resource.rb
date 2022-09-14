@@ -7,13 +7,15 @@ class DerivativeResource < Valkyrie::Resource
   attribute :mime_type, Valkyrie::Types::String
   attribute :file_id, Valkyrie::Types::ID
 
-  # @return [TrueClass, FalseClass]
-  def thumbnail?
-    type == AssetChangeSet::AssetDerivativeChangeSet::THUMBNAIL_TYPE
+  def method_missing(symbol, *args)
+    raise NoMethodError unless respond_to_missing? symbol
+
+    type == symbol.to_s[...-1]
   end
 
-  # @return [TrueClass, FalseClass]
-  def access?
-    type == AssetChangeSet::AssetDerivativeChangeSet::ACCESS_TYPE
+  def respond_to_missing?(symbol, _include_private = false)
+    return false unless symbol.to_s[...-1].in? AssetChangeSet::AssetDerivativeChangeSet::TYPES
+
+    symbol.to_s.end_with? '?'
   end
 end

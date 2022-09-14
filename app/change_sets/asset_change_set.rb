@@ -30,9 +30,7 @@ class AssetChangeSet < Valkyrie::ChangeSet
   end
 
   class AssetDerivativeChangeSet < DerivativeChangeSet
-    THUMBNAIL_TYPE = 'thumbnail'
-    ACCESS_TYPE = 'access'
-    TYPES = [THUMBNAIL_TYPE, ACCESS_TYPE].freeze
+    TYPES = %w[thumbnail access].freeze
 
     validates :type, inclusion: TYPES
   end
