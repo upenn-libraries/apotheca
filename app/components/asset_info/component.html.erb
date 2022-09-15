@@ -1,0 +1,38 @@
+<div id="<%= "asset-#{asset.id}" %>" class="row mb-2">
+  <div class="col">
+    <div class="row">
+      <div class="col-sm-12">
+        <h4><%= asset_title %></h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-auto">
+        <img src="<%= thumbnail_path %>" alt="Thumbnail for Asset">
+      </div>
+      <div class="col">
+        <dl class="row">
+          <dt class="col-sm-4">ID</dt>
+          <dd class="col-sm-8 user-select-all"><%= asset.id %> </dd>
+          <dt class="col-sm-4 ">Size</dt>
+          <dd class="col-sm-8 user-select-all"><%= size %> </dd>
+          <dt class="col-sm-4">MIME Type</dt>
+          <dd class="col-sm-8 user-select-all"><%= mime_type %></dd>
+          <dt class="col-sm-4">Annotations</dt>
+          <% annotations.each do |ano| %>
+            <dd class="col-sm-8 user-select-all"><%= ano.text %></dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+  <div class="col-auto">
+    <ul class="list-group text-end">
+      <li class="list-group-item list-group-item-action"><%= access_download_link %></li>
+      <li class="list-group-item list-group-item-action"><%= preservation_download_link %></li>
+      <li class="list-group-item list-group-item-action"><%= link_to 'More Details', '', class: 'stretched-link' %></li>
+      <li class="list-group-item list-group-item-action"><%= link_to 'Edit Asset', '', class: 'stretched-link' %></li>
+      <li class="list-group-item list-group-item-action"><%= link_to 'Set as Item Thumbnail', '', class: 'stretched-link' %></li>
+    </ul>
+  </div>
+</div>
+<hr>

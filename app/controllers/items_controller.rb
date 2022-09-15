@@ -50,7 +50,7 @@ class ItemsController < ApplicationController
 
   def load_and_authorize_resources
     @item = pg_query_service.find_by id: params[:id]
-    @arranged_assets = pg_query_service.find_references_by resource: @item, property: :asset_ids, model: AssetResource
+    @arranged_assets = pg_query_service.find_many_by_ids ids: @item.structural_metadata.arranged_asset_ids
     @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids
   end
 

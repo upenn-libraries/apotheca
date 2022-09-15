@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
-module AssetCard
+module AssetInfo
   # ViewComponent
   class Component < ViewComponent::Base
     attr_reader :asset, :index
 
     # @param [AssetResource] asset
     # @param [Integer] index
-    # @param [TrueClass, FalseClass] arranged
-    def initialize(asset:, arranged: false, index: nil)
+    def initialize(asset:, index: nil)
       @asset = asset
       @index = index ? index + 1 : nil
-      @arranged = arranged
     end
 
     # @return [String]
-    def card_title
+    def asset_title
       [index, asset.original_filename, asset.label].compact.join(' - ')
     end
 
@@ -51,11 +49,6 @@ module AssetCard
     # @return [String]
     def mime_type
       asset.technical_metadata.mime_type
-    end
-
-    # @return [TrueClass, FalseClass]
-    def arranged?
-      @arranged
     end
   end
 end
