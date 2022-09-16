@@ -30,7 +30,7 @@ module AssetInfo
     # @return [ActiveSupport::SafeBuffer]
     def preservation_download_link
       link_to('Download Preservation File',
-              file_asset_path(@asset, type: :preservation, disposition: 'attachment'),
+              file_asset_path(@asset, type: :preservation, disposition: :attachment),
               class: 'stretched-link')
     end
 

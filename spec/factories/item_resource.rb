@@ -34,7 +34,7 @@ FactoryBot.define do
       asset_ids { [asset1.id, asset2.id] }
       thumbnail_asset_id { asset1.id }
 
-      structural_metadata { ItemResource::StructuralMetadata.new(arranged_asset_ids: [asset1.id]) }
+      structural_metadata { { arranged_asset_ids: [asset1.id] } }
     end
   end
 end

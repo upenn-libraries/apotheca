@@ -7,6 +7,16 @@ class AssetsController < ApplicationController
 
   before_action :set_asset, only: [:file]
 
+  # respond with a 404 for missing asset files
+  rescue_from 'AssetsController::FileNotFound' do |_e|
+    head :not_found
+  end
+
+  # respond with a 500 for unsupported type requests
+  rescue_from 'AssetsController::UnsupportedFileType' do |_e|
+    head :bad_request
+  end
+
   def file
     case params[:type].to_sym
     when :thumbnail, :access
@@ -20,6 +30,7 @@ class AssetsController < ApplicationController
 
   private
 
+  # @param [Symbol] type
   def serve_derivative_file(type:)
     resource = @asset.send(type)
     raise FileNotFound, "No #{type} derivative exists for asset #{@asset.id}" unless resource
@@ -41,18 +52,26 @@ class AssetsController < ApplicationController
               filename: @asset.original_filename
   end
 
-  # @return [String]
+  # @return [Symbol]
   def file_disposition
-    return 'inline' if params[:disposition] == 'inline'
+    return :inline if params[:disposition] == 'inline'
 
-    'attachment'
+    :attachment
   end
 
   def set_asset
     @asset = metadata_adapter.query_service.find_by id: params[:id]
+  rescue Valkyrie::Persistence::ObjectNotFoundError => e
+    raise FileNotFound, e
   end
 
+  # @return [Valkyrie::MetadataAdapter]
   def metadata_adapter
     @metadata_adapter ||= Valkyrie::MetadataAdapter.find(:postgres)
+  end
+
+  # @return [Valkyrie::StorageAdapter]
+  def preservation_storage_adapter
+    @preservation_storage_adapter ||= Valkyrie::StorageAdapter.find(:preservation)
   end
 end

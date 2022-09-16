@@ -80,6 +80,7 @@ RSpec.configure do |config|
   config.before do
     wipe_metadata_adapters!
     wipe_storage_adapters!
+    ::Warden.asset_paths = %r{^/#{Rails.application.config.assets.prefix}/}
   end
 
   # Clear our storage at the end of suite in order to clean up after the last test.
