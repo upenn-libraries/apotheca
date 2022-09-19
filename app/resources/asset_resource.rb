@@ -37,4 +37,18 @@ class AssetResource < Valkyrie::Resource
   attribute :transcriptions, Valkyrie::Types::Array.of(Transcription)
 
   # attribute :preservation_metadata
+
+  # @return [DerivativeResource]
+  def thumbnail
+    derivatives.find do |d|
+      return d if d.thumbnail?
+    end
+  end
+
+  # @return [DerivativeResource]
+  def access
+    derivatives.find do |d|
+      return d if d.access?
+    end
+  end
 end

@@ -5,7 +5,7 @@ describe DerivativeService::Generator::Image do
   let(:generator) { described_class.new(file) }
 
   describe '#thumbnail' do
-    subject(:derivative_file) {  generator.thumbnail }
+    subject(:derivative_file) { generator.thumbnail }
 
     it 'returns DerivativeFile' do
       expect(derivative_file).to be_a DerivativeService::DerivativeFile
@@ -21,7 +21,7 @@ describe DerivativeService::Generator::Image do
   end
 
   describe '#access' do
-    subject(:derivative_file) {  generator.access }
+    subject(:derivative_file) { generator.access }
 
     it 'returns DerivativeFile' do
       expect(derivative_file).to be_a DerivativeService::DerivativeFile
