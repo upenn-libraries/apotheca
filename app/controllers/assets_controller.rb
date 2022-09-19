@@ -45,7 +45,7 @@ class AssetsController < ApplicationController
   def serve_preservation_file
     raise FileNotFound, "No preservation file exists for asset #{@asset.id}" unless @asset.preservation_file_id
 
-    file = preservation_storage_adapter.find_by id: @asset.preservation_file_id
+    file = Valkyrie::StorageAdapter.find_by id: @asset.preservation_file_id
     send_data file.read,
               type: @asset.technical_metadata.mime_type,
               disposition: file_disposition,
@@ -68,10 +68,5 @@ class AssetsController < ApplicationController
   # @return [Valkyrie::MetadataAdapter]
   def metadata_adapter
     @metadata_adapter ||= Valkyrie::MetadataAdapter.find(:postgres)
-  end
-
-  # @return [Valkyrie::StorageAdapter]
-  def preservation_storage_adapter
-    @preservation_storage_adapter ||= Valkyrie::StorageAdapter.find(:preservation)
   end
 end
