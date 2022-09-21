@@ -3,18 +3,24 @@
 # actions for Assets
 class AssetsController < ApplicationController
   class FileNotFound < StandardError; end
+  class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
 
-  before_action :set_asset, only: [:file]
+  before_action :set_asset, only: [:show, :file]
+  before_action :set_item, only: [:show]
 
-  # respond with a 404 for missing asset files
-  rescue_from 'AssetsController::FileNotFound' do |_e|
+  # respond with a 404 for missing asset files or missing Item (when required)
+  rescue_from 'AssetsController::FileNotFound', 'AssetsController::ItemNotFound' do |_e|
     head :not_found
   end
 
   # respond with a 500 for unsupported type requests
   rescue_from 'AssetsController::UnsupportedFileType' do |_e|
     head :bad_request
+  end
+
+  def show
+    authorize! :show, @asset
   end
 
   def file
@@ -63,6 +69,12 @@ class AssetsController < ApplicationController
     @asset = metadata_adapter.query_service.find_by id: params[:id]
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
     raise FileNotFound, e
+  end
+
+  def set_item
+    @item = metadata_adapter.query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
+  rescue Valkyrie::Persistence::ObjectNotFoundError => e
+    raise ItemNotFound, e
   end
 
   # @return [Valkyrie::MetadataAdapter]
