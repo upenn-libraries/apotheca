@@ -24,5 +24,13 @@ class StaticFieldsComponent < ViewComponent::Base
       @values = Array.wrap(values)
       @classes = Array.wrap(classes)
     end
+
+    # Properly offset <dd> elements when rendering multiple <dd> values for a field
+    # @param [String] value
+    # @param [Integer] index
+    def value_element(value:, index:)
+      classes = index.zero? ? ['col-sm-9'] : %w[offset-sm-3 col-sm-9]
+      content_tag :dd, value, class: classes
+    end
   end
 end
