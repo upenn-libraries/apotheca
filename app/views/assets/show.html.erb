@@ -11,7 +11,9 @@
     <h2>Asset Details - <%= @asset.label %></h2>
   </div>
   <div class="align-self-center">
-    <%= render(PreservationStatusComponent.new(asset: @asset)) %>
+    <%= render(StatusBadgeComponent.new(test: @asset.preservation_copies_ids.any?, truthy: 'Backed up to Cloud Storage', falsey: 'Not in Cloud Storage')) %>
+    <%= render(StatusBadgeComponent.new(test: @asset.thumbnail, truthy: 'Thumbnail', falsey: 'No Thumbnail')) %>
+    <%= render(StatusBadgeComponent.new(test: @asset.access, truthy: 'Access Copy', falsey: 'No Access Copy')) %>
   </div>
 </div>
 
@@ -26,28 +28,33 @@
       <% component.field(label: 'Label', values: @asset.label) %>
     <% end %>
   </div>
-  <div class="p-2">
-  <% if @asset.derivatives.any? %>
-    <%= render(DerivativeInventoryComponent.new(asset: @asset)) %>
-  <% else %>
-    <p>No derivatives exist for this Asset</p>
-  <% end %>
-  </div>
 </div>
 
-<h3 class="mb-3">Annotations</h3>
+<h3 id="transcriptions" class="mb-3">Transcriptions</h3>
+
+<% if @asset.transcriptions.any? %>
+  <ol>
+    <% @asset.transcriptions.each do |transcription| %>
+      <li><%= transcription.mime_type %> - <%= transcription.contents %></li>
+    <% end %>
+  </ol>
+<% else %>
+  <p>No transcriptions to display</p>
+<% end %>
+
+<h3 id="annotations" class="mb-3">Annotations</h3>
 
 <% if @asset.annotations.any? %>
   <ol>
     <% @asset.annotations.each do |annotation| %>
-      <li><%= annotation %></li>
+      <li><%= annotation.text %></li>
     <% end %>
   </ol>
 <% else %>
   <p>No annotations to display</p>
 <% end %>
 
-<h3 class="mb-3">Technical Metadata</h3>
+<h3 id="technical-metadata" class="mb-3">Technical Metadata</h3>
 
 <%= render(StaticFieldsComponent.new) do |component| %>
   <% component.field(label: 'MIME Type', values: @asset.technical_metadata.mime_type, classes: ['user-select-all']) %>
@@ -57,7 +64,7 @@
   <% component.field(label: 'SHA256 Checksum', values: @asset.technical_metadata.sha256, classes: %w[user-select-all font-monospace]) %>
 <% end %>
 
-<h3 class="mb-3">Modification Details</h3>
+<h3 id="modification-details" class="mb-3">Modification Details</h3>
 
 <%= render(StaticFieldsComponent.new) do |component| %>
   <% component.field(label: 'Date Created', values: @asset.date_created&.to_s(:display)) %>
