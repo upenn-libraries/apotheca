@@ -16,6 +16,8 @@ class StaticFieldsComponent < ViewComponent::Base
 
   # Represent a single set of dt and dd(s) elements that displays a field and it's values
   class StaticFieldComponent < ViewComponent::Base
+    attr_reader :classes
+
     # @param [String] label
     # @param [Array] values
     # @param [Array] classes
@@ -29,8 +31,8 @@ class StaticFieldsComponent < ViewComponent::Base
     # @param [String] value
     # @param [Integer] index
     def value_element(value:, index:)
-      classes = index.zero? ? ['col-sm-9'] : %w[offset-sm-3 col-sm-9]
-      content_tag :dd, value, class: classes
+      col_classes = index.zero? ? ['col-sm-9'] : %w[offset-sm-3 col-sm-9]
+      content_tag :dd, value, class: col_classes.push(classes)
     end
   end
 end
