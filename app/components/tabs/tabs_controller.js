@@ -5,8 +5,11 @@ export default class extends Controller {
         const anchor = window.location.hash;
         const elem = document.querySelector(anchor + '-tab');
         if(elem) {
-            const tab = new bootstrap.Tab(anchor);
+            const tab = new bootstrap.Tab(anchor + '-tab');
             tab.show()
         }
+    }
+    updateUrl(event) {
+        window.location = event.target.dataset.bsTarget;
     }
 }
