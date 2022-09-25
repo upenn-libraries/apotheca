@@ -1,0 +1,74 @@
+<%= render(BreadcrumbsComponent.new) do |component| %>
+  <% component.breadcrumb(href: "/") { 'Home' } %>
+  <% component.breadcrumb(href: '/items') { 'Items' } %>
+  <% component.breadcrumb(href: item_path(@item)) { @item.human_readable_name } %>
+  <% component.breadcrumb { 'Assets' } %>
+  <% component.breadcrumb(active: true) { @asset.original_filename } %>
+<% end %>
+
+<div class="d-flex">
+  <div class="me-auto">
+    <h2>Asset Details - <%= @asset.label %></h2>
+  </div>
+  <div class="align-self-center">
+    <%= render(StatusBadgeComponent.new(test: @asset.preservation_copies_ids.any?, truthy: 'Backed up to Cloud Storage', falsey: 'Not in Cloud Storage')) %>
+    <%= render(StatusBadgeComponent.new(test: @asset.thumbnail, truthy: 'Thumbnail', falsey: 'No Thumbnail')) %>
+    <%= render(StatusBadgeComponent.new(test: @asset.access, truthy: 'Access Copy', falsey: 'No Access Copy')) %>
+  </div>
+</div>
+
+<div class="d-flex">
+  <div class="p-2 me-auto">
+    <%= image_tag file_asset_path(@asset, type: :thumbnail) %>
+  </div>
+  <div class="p-2">
+    <%= render(StaticFieldsComponent.new) do |component| %>
+      <% component.field(label: 'ID', values: @asset.id, classes: %w[user-select-all font-monospace]) %>
+      <% component.field(label: 'Original Filename', values: @asset.original_filename, classes: ['user-select-all']) %>
+      <% component.field(label: 'Label', values: @asset.label) %>
+    <% end %>
+  </div>
+</div>
+
+<h3 id="transcriptions" class="mb-3">Transcriptions</h3>
+
+<% if @asset.transcriptions.any? %>
+  <ol>
+    <% @asset.transcriptions.each do |transcription| %>
+      <li><%= transcription.mime_type %> - <%= transcription.contents %></li>
+    <% end %>
+  </ol>
+<% else %>
+  <p>No transcriptions to display</p>
+<% end %>
+
+<h3 id="annotations" class="mb-3">Annotations</h3>
+
+<% if @asset.annotations.any? %>
+  <ol>
+    <% @asset.annotations.each do |annotation| %>
+      <li><%= annotation.text %></li>
+    <% end %>
+  </ol>
+<% else %>
+  <p>No annotations to display</p>
+<% end %>
+
+<h3 id="technical-metadata" class="mb-3">Technical Metadata</h3>
+
+<%= render(StaticFieldsComponent.new) do |component| %>
+  <% component.field(label: 'MIME Type', values: @asset.technical_metadata.mime_type, classes: ['user-select-all']) %>
+  <% component.field(label: 'Size', values: number_to_human_size(@asset.technical_metadata.size, classes: ['user-select-all'])) %>
+  <% component.field(label: 'Duration', values: @asset.technical_metadata.duration) %>
+  <% component.field(label: 'MD5 Checksum', values: @asset.technical_metadata.md5, classes: %w[user-select-all font-monospace]) %>
+  <% component.field(label: 'SHA256 Checksum', values: @asset.technical_metadata.sha256, classes: %w[user-select-all font-monospace]) %>
+<% end %>
+
+<h3 id="modification-details" class="mb-3">Modification Details</h3>
+
+<%= render(StaticFieldsComponent.new) do |component| %>
+  <% component.field(label: 'Date Created', values: @asset.date_created&.to_s(:display)) %>
+  <% component.field(label: 'Created By', values: @asset.created_by) %>
+  <% component.field(label: 'Date Updated', values: @asset.date_updated&.to_s(:display)) %>
+  <% component.field(label: 'Updated By', values: @asset.updated_by) %>
+<% end %>

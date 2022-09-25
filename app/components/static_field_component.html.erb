@@ -1,10 +1,9 @@
 <dt class="col-sm-3">
   <%= @label %>
 </dt>
-<% if @values.any? %><% @values.each_with_index do |v, i| %>
-    <dd class="col-sm-9 <%= i.zero? ? '' : 'offset-sm-3' %>">
-      <%= v %>
-    </dd>
+<% if @values.any? %>
+  <% @values.each_with_index do |v, i| %>
+   <%= value_element value: v, index: i %>
   <% end %>
 <% else %> <%# If no values, show an empty dd with content so things are spaced properly %>
   <dd class="col-sm-9">&nbsp;</dd>
