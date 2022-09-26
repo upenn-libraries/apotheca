@@ -8,6 +8,13 @@
     <div class="row">
       <div class="col-auto">
         <img src="<%= thumbnail_path %>" alt="Thumbnail for Asset">
+        <%= render(AttributeToggleComponent.new(
+          resource: @item,
+          attribute: :thumbnail_asset_id,
+          value: asset.id,
+          do_label: 'Set as Item Thumbnail',
+          done_label: 'Current Thumbnail'
+        )) %>
       </div>
       <div class="col">
         <dl class="row">
@@ -31,7 +38,6 @@
       <li class="list-group-item list-group-item-action"><%= preservation_download_link %></li>
       <li class="list-group-item list-group-item-action"><%= link_to 'More Details', asset_path(asset), class: 'stretched-link' %></li>
       <li class="list-group-item list-group-item-action"><%= link_to 'Edit Asset', '', class: 'stretched-link' %></li>
-      <li class="list-group-item list-group-item-action"><%= link_to 'Set as Item Thumbnail', '', class: 'stretched-link' %></li>
     </ul>
   </div>
 </div>

@@ -4,7 +4,7 @@
       <h3 class="mb-3">Assets (arranged)</h3>
       <% if @arranged_assets&.any? %>
         <% @arranged_assets.each_with_index do |asset, i| %>
-          <%= render(AssetInfo::Component.new(asset: asset, index: i)) %>
+          <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
         <% end %>
       <% else %>
         <p>No arranged assets</p>
@@ -12,7 +12,7 @@
       <h3>Assets (unarranged)</h3>
       <% if @unarranged_assets&.any? %>
         <% @unarranged_assets.each_with_index do |asset, i| %>
-          <%= render(AssetInfo::Component.new(asset: asset, index: i)) %>
+          <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
         <% end %>
       <% else %>
         <p>No unarranged assets</p>

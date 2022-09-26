@@ -3,13 +3,15 @@
 module AssetInfo
   # ViewComponent
   class Component < ViewComponent::Base
-    attr_reader :asset, :index
+    attr_reader :asset, :item, :index
 
     # @param [AssetResource] asset
+    # @param [ItemResource] item
     # @param [Integer] index
-    def initialize(asset:, index: nil)
+    def initialize(asset:, item:, index: nil)
       @asset = asset
       @index = index ? index + 1 : nil
+      @item = item
     end
 
     # @return [String]
