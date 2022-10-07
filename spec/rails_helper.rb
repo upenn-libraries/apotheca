@@ -23,7 +23,7 @@ require 'valkyrie/specs/shared_specs'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec/{support,shared_examples}/**/*.rb')].sort.each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -76,11 +76,14 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  config.before(:each, type: :request) do
+    ::Warden.asset_paths = %r{^/#{Rails.application.config.assets.prefix}/}
+  end
+
   # Clear out storage before each test.
   config.before do
     wipe_metadata_adapters!
     wipe_storage_adapters!
-    ::Warden.asset_paths = %r{^/#{Rails.application.config.assets.prefix}/}
   end
 
   # Clear our storage at the end of suite in order to clean up after the last test.
