@@ -7,8 +7,13 @@ module Steps
 
     def call(change_set)
       resource = change_set.sync
-      saved_resource = persister.save(resource: resource)
-      Success(saved_resource)
+
+      begin
+        saved_resource = persister.save(resource: resource)
+        Success(saved_resource)
+      rescue => e
+        Failure(:error_saving_resource)
+      end
     end
 
     private
