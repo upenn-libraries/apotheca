@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Steps::SetThumbnail do
-  let(:set_thumbnail) { Steps::SetThumbnail.new }
+  let(:set_thumbnail) { described_class.new }
   let(:asset1) { persist(:asset_resource) }
   let(:asset2) { persist(:asset_resource) }
   let(:change_set) do

@@ -11,7 +11,7 @@ describe Steps::CreateChangeSet do
       subject(:result) { create_change_set.call(original_filename: 'file.txt') }
 
       it 'returns successful result' do
-        expect(subject.success?).to be true
+        expect(result.success?).to be true
       end
     end
 
@@ -19,8 +19,8 @@ describe Steps::CreateChangeSet do
       subject(:result) { create_change_set.call(original_filename: 'file.txt', technical_metadata: 'invalid') }
 
       it 'returns failure' do
-        expect(subject.failure?).to be true
-        expect(subject.failure).to eql :error_creating_change_set
+        expect(result.failure?).to be true
+        expect(result.failure).to be :error_creating_change_set
       end
     end
   end

@@ -12,7 +12,7 @@ describe Steps::UpdateArkMetadata do
 
       it 'fails' do
         expect(result.failure?).to be true
-        expect(result.failure).to eql :failed_to_update_ezid_metadata
+        expect(result.failure).to be :failed_to_update_ezid_metadata
       end
     end
   end

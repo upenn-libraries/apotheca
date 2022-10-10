@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Steps::SetUpdatedBy do
-  let(:set_updated_by) { Steps::SetUpdatedBy.new }
+  let(:set_updated_by) { described_class.new }
   let(:change_set) do
     change_set = ItemChangeSet.new(ItemResource.new)
     change_set.created_by = 'admin@example.com'
