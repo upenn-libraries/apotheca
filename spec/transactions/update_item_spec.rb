@@ -57,24 +57,5 @@ describe UpdateItem do
         expect(result.failure).to be :missing_updated_by
       end
     end
-
-    context 'when :id is not valid' do
-      subject(:result) do
-        transaction.call(
-          id: 'not-valid',
-          human_readable_name: 'Updated Item',
-          descriptive_metadata: { subject: ['Cataloging', 'Animals'] }
-        )
-      end
-
-      it 'fails' do
-        expect(result.failure?).to be true
-      end
-
-      it 'returns errors' do
-        expect(result.failure.first).to be :resource_not_found
-        expect(result.failure.second).to be_a Valkyrie::Persistence::ObjectNotFoundError
-      end
-    end
   end
 end

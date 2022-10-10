@@ -11,9 +11,13 @@ module Steps
         erc_what: resource.descriptive_metadata.title.join('; '),
         erc_when: resource.descriptive_metadata.date.join('; ')
       }
-      Ezid::Identifier.modify(resource.unique_identifier, erc_metadata)
-
-      Success(resource)
+      begin
+        # Note: EZID library retries requests twice before raising an error.
+        Ezid::Identifier.modify(resource.unique_identifier, erc_metadata)
+        Success(resource)
+      rescue => e
+        Failure(:failed_to_update_ezid_metadata)
+      end
     end
   end
 end
