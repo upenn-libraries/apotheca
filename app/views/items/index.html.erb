@@ -1,6 +1,6 @@
 <%= render(BreadcrumbsComponent.new) do |component| %>
-  <% component.breadcrumb(href: "/") do %>Home<% end %>
-  <% component.breadcrumb(active: true) do %>Items<% end %>
+  <% component.with_breadcrumb(href: "/") do %>Home<% end %>
+  <% component.with_breadcrumb(active: true) do %>Items<% end %>
 <% end %>
 
 <%= bootstrap_form_tag(url: items_path, method: :get) do |f| %>
