@@ -23,9 +23,18 @@ class ItemsController < ApplicationController
 
   def update
     authorize! :edit, ItemResource
-    @item = pg_query_service.find_by id: params[:id]
-    Item.new(@item).update(update_params[:item])
-    redirect_to edit_item_path(@item)
+
+    result = UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **update_params[:item])
+    if result.success?
+      flash.notice = 'Successfully updated item.'
+      redirect_to edit_item_path(result.value!)
+    else
+      # For right now, we need to have access to the items and assets if we are rendering the edit page. In future,
+      # we will submit the form via ajax and return just the errors if there is a failure.
+      load_and_authorize_resources
+      flash.alert = result.failure
+      render :edit
+    end
   end
 
   private
