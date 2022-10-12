@@ -1,9 +1,9 @@
 <%= render(BreadcrumbsComponent.new) do |component| %>
-  <% component.breadcrumb(href: "/") { 'Home' } %>
-  <% component.breadcrumb(href: '/items') { 'Items' } %>
-  <% component.breadcrumb(href: item_path(@item)) { @item.human_readable_name } %>
-  <% component.breadcrumb { 'Assets' } %>
-  <% component.breadcrumb(active: true) { @asset.original_filename } %>
+  <% component.with_breadcrumb(href: "/") { 'Home' } %>
+  <% component.with_breadcrumb(href: '/items') { 'Items' } %>
+  <% component.with_breadcrumb(href: item_path(@item)) { @item.human_readable_name } %>
+  <% component.with_breadcrumb { 'Assets' } %>
+  <% component.with_breadcrumb(active: true) { @asset.original_filename } %>
 <% end %>
 
 <div class="d-flex">
@@ -23,9 +23,9 @@
   </div>
   <div class="p-2">
     <%= render(StaticFieldsComponent.new) do |component| %>
-      <% component.field(label: 'ID', values: @asset.id, classes: %w[user-select-all font-monospace]) %>
-      <% component.field(label: 'Original Filename', values: @asset.original_filename, classes: ['user-select-all']) %>
-      <% component.field(label: 'Label', values: @asset.label) %>
+      <% component.with_field(label: 'ID', values: @asset.id, classes: %w[user-select-all font-monospace]) %>
+      <% component.with_field(label: 'Original Filename', values: @asset.original_filename, classes: ['user-select-all']) %>
+      <% component.with_field(label: 'Label', values: @asset.label) %>
     <% end %>
   </div>
 </div>
@@ -57,18 +57,18 @@
 <h3 id="technical-metadata" class="mb-3">Technical Metadata</h3>
 
 <%= render(StaticFieldsComponent.new) do |component| %>
-  <% component.field(label: 'MIME Type', values: @asset.technical_metadata.mime_type, classes: ['user-select-all']) %>
-  <% component.field(label: 'Size', values: number_to_human_size(@asset.technical_metadata.size, classes: ['user-select-all'])) %>
-  <% component.field(label: 'Duration', values: @asset.technical_metadata.duration) %>
-  <% component.field(label: 'MD5 Checksum', values: @asset.technical_metadata.md5, classes: %w[user-select-all font-monospace]) %>
-  <% component.field(label: 'SHA256 Checksum', values: @asset.technical_metadata.sha256, classes: %w[user-select-all font-monospace]) %>
+  <% component.with_field(label: 'MIME Type', values: @asset.technical_metadata.mime_type, classes: ['user-select-all']) %>
+  <% component.with_field(label: 'Size', values: number_to_human_size(@asset.technical_metadata.size, classes: ['user-select-all'])) %>
+  <% component.with_field(label: 'Duration', values: @asset.technical_metadata.duration) %>
+  <% component.with_field(label: 'MD5 Checksum', values: @asset.technical_metadata.md5, classes: %w[user-select-all font-monospace]) %>
+  <% component.with_field(label: 'SHA256 Checksum', values: @asset.technical_metadata.sha256, classes: %w[user-select-all font-monospace]) %>
 <% end %>
 
 <h3 id="modification-details" class="mb-3">Modification Details</h3>
 
 <%= render(StaticFieldsComponent.new) do |component| %>
-  <% component.field(label: 'Date Created', values: @asset.date_created&.to_s(:display)) %>
-  <% component.field(label: 'Created By', values: @asset.created_by) %>
-  <% component.field(label: 'Date Updated', values: @asset.date_updated&.to_s(:display)) %>
-  <% component.field(label: 'Updated By', values: @asset.updated_by) %>
+  <% component.with_field(label: 'Date Created', values: @asset.date_created&.to_s(:display)) %>
+  <% component.with_field(label: 'Created By', values: @asset.created_by) %>
+  <% component.with_field(label: 'Date Updated', values: @asset.date_updated&.to_s(:display)) %>
+  <% component.with_field(label: 'Updated By', values: @asset.updated_by) %>
 <% end %>

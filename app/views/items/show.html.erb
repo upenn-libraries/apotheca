@@ -1,7 +1,7 @@
 <%= render(BreadcrumbsComponent.new) do |component| %>
-  <% component.breadcrumb(href: "/")      { 'Home' } %>
-  <% component.breadcrumb(href: "/items") { 'Items' } %>
-  <% component.breadcrumb(active: true)   { @item.human_readable_name } %>
+  <% component.with_breadcrumb(href: "/")      { 'Home' } %>
+  <% component.with_breadcrumb(href: "/items") { 'Items' } %>
+  <% component.with_breadcrumb(active: true)   { @item.human_readable_name } %>
 <% end %>
 
 <h2><%= @item.human_readable_name %></h2>
@@ -9,15 +9,15 @@
 <%= render partial: 'header_info' %>
 
 <%= render Tabs::Component.new(id: 'item-tabs') do |component| %>
-  <% component.tab(title: 'Descriptive Metadata', active: true) do %>
+  <% component.with_tab(title: 'Descriptive Metadata', active: true) do %>
     <%= render partial: 'descriptive_metadata' %>
   <% end %>
 
-  <% component.tab(title: 'Structural Metadata') do %>
+  <% component.with_tab(title: 'Structural Metadata') do %>
     <%= render partial: 'structural_metadata' %>
   <% end %>
 
-  <% component.tab(title: 'Assets', count: @item.asset_count) do  %>
+  <% component.with_tab(title: 'Assets', count: @item.asset_count) do  %>
     <%= render partial: 'assets_list' %>
   <% end %>
 <% end %>
