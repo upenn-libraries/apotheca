@@ -1,0 +1,10 @@
+
+<%= form_tag(@url, method: @method) do %>
+  <div id="error-messages"></div>
+
+  <% inputs.each do |input| %>
+    <%= input %>
+  <% end %>
+
+  <%= submit %>
+<% end %>

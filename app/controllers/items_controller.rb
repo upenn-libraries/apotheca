@@ -25,15 +25,15 @@ class ItemsController < ApplicationController
     authorize! :edit, ItemResource
 
     result = UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **update_params[:item])
+
     if result.success?
       flash.notice = 'Successfully updated item.'
       redirect_to edit_item_path(result.value!)
     else
-      # For right now, we need to have access to the items and assets if we are rendering the edit page. In future,
-      # we will submit the form via ajax and return just the errors if there is a failure.
-      load_and_authorize_resources
-      flash.alert = result.failure
-      render :edit
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace('error-messages', partial: 'shared/error_message', locals: { error: result.failure }) }
+        format.html         { redirect_to edit_item_path(params[:id]) } # TODO: maybe add a flash notice as well here?
+      end
     end
   end
 
