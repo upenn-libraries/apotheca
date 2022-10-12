@@ -1,10 +1,12 @@
+<div data-controller="form--form">
+  <div id="error-messages" data-form--form-target="errors"></div>
 
-<%= form_tag(@url, method: @method) do %>
-  <div id="error-messages"></div>
+  <%= form_tag(@url, method: @method, data: { action: 'turbo:submit-end->form--form#formSubmission' }) do %>
+    <% inputs.each do |input| %>
+      <%= input %>
+    <% end %>
 
-  <% inputs.each do |input| %>
-    <%= input %>
+    <%= submit %>
   <% end %>
+</div>
 
-  <%= submit %>
-<% end %>

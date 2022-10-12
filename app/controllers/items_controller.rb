@@ -31,7 +31,7 @@ class ItemsController < ApplicationController
       redirect_to edit_item_path(result.value!)
     else
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace('error-messages', partial: 'shared/error_message', locals: { error: result.failure }) }
+        format.turbo_stream { render turbo_stream: turbo_stream.update('error-messages', partial: 'shared/error_message', locals: { error: result.failure }) }
         format.html         { redirect_to edit_item_path(params[:id]) } # TODO: maybe add a flash notice as well here?
       end
     end
