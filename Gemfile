@@ -38,6 +38,8 @@ gem "bootstrap_form", "~> 5.0"
 gem 'cancancan'
 gem 'config'
 gem 'devise'
+gem 'dry-monads'
+gem 'dry-transaction'
 gem 'ezid-client'
 gem 'factory_bot_rails'
 gem 'faker'
