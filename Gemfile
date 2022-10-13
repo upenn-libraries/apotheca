@@ -14,9 +14,6 @@ gem 'sprockets-rails'
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 5.0'
 
-# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem 'turbo-rails'
-
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'jbuilder'
 
@@ -51,6 +48,7 @@ gem 'rsolr'
 gem 'ruby-vips'
 gem 'sassc-rails' # Use Sass to process CSS
 gem 'stimulus-rails'
+gem 'turbo-rails'
 gem 'upennlib-rubocop', require: false
 gem 'valkyrie', '3.0.0.pre.beta.2'
 gem 'valkyrie-shrine'
