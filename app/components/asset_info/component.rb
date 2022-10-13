@@ -3,13 +3,15 @@
 module AssetInfo
   # ViewComponent
   class Component < ViewComponent::Base
-    attr_reader :asset, :index
+    attr_reader :asset, :item, :index
 
     # @param [AssetResource] asset
+    # @param [ItemResource] item
     # @param [Integer] index
-    def initialize(asset:, index: nil)
+    def initialize(asset:, item:, index: nil)
       @asset = asset
       @index = index ? index + 1 : nil
+      @item = item
     end
 
     # @return [String]
@@ -39,6 +41,18 @@ module AssetInfo
       link_to('Download Access Copy',
               file_asset_path(@asset, type: :access, disposition: 'attachment'),
               class: 'stretched-link')
+    end
+
+    def set_as_thumbnail
+      if @item.is_thumbnail?(@asset.id)
+        tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status'
+      else
+        # use a future form component here?
+        form_tag item_path(@item), method: :patch do
+          hidden_field_tag('item[thumbnail_asset_id]', @asset.id) +
+            submit_tag('Set as Item Thumbnail', class: 'btn btn-primary')
+        end
+      end
     end
 
     # @return [String]
