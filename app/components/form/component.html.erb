@@ -1,7 +1,8 @@
-<div data-controller="form--form">
+<div data-controller="form--form" data-turbo="true">
   <div id="error-messages" data-form--form-target="errors"></div>
 
-  <%= form_tag(@url, method: @method, data: { action: 'turbo:submit-end->form--form#formSubmission' }) do %>
+  <%= form_tag(@url, method: @method,
+                     data: { action: 'turbo:submit-end->form--form#formSubmission turbo:fetch-request-error->form--form#networkError' }) do %>
     <% inputs.each do |input| %>
       <%= input %>
     <% end %>
