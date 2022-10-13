@@ -46,4 +46,10 @@ class ItemResource < Valkyrie::Resource
   def unarranged_asset_ids
     Array.wrap(asset_ids) - structural_metadata.arranged_asset_ids
   end
+
+  # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
+  # @param [Valkyrie::ID] asset_id
+  def is_thumbnail?(asset_id)
+    thumbnail_asset_id == asset_id
+  end
 end

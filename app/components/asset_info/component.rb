@@ -43,6 +43,18 @@ module AssetInfo
               class: 'stretched-link')
     end
 
+    def set_as_thumbnail
+      if @item.is_thumbnail?(@asset.id)
+        tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status'
+      else
+        # use a future form component here?
+        form_tag item_path(@item), method: :patch do
+          hidden_field_tag('item[thumbnail_asset_id]', @asset.id) +
+            submit_tag('Set as Item Thumbnail', class: 'btn btn-primary')
+        end
+      end
+    end
+
     # @return [String]
     def size
       number_to_human_size asset.technical_metadata.size

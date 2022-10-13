@@ -8,13 +8,9 @@
     <div class="row">
       <div class="col-auto">
         <img src="<%= thumbnail_path %>" alt="Thumbnail for Asset">
-        <%= render(AttributeToggleComponent.new(
-          resource: @item,
-          attribute: :thumbnail_asset_id,
-          value: asset.id,
-          do_label: 'Set as Item Thumbnail',
-          done_label: 'Current Thumbnail'
-        )) %>
+        <div class="row mt-2">
+          <div class="col"><%= set_as_thumbnail %></div>
+        </div>
       </div>
       <div class="col">
         <dl class="row">
