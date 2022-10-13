@@ -2,8 +2,7 @@
 
 <%= render(Form::Component.new(url: item_path(@item), method: :patch)) do |form| %>
   <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
-    <% form.input_text(type: :text,
-                       label: field,
+    <% form.input_text(label: field,
                        value: @item.descriptive_metadata.send(field),
                        field: "item[descriptive_metadata][#{field}][]") %>
     <% form.submit('Save') %>
