@@ -23,11 +23,11 @@ Note: Homebrew installation of libtiff does not seem to support tiff jpeg compre
 
 #### Linux
 ```shell
-sudo apt install libpq-dev
+sudo apt install libpq-dev ffmpeg libvips
 rbenv install 2.7.5
 ```
 
-TODO: Add installation notes for libvips.
+TODO: Add installation notes for libvips TIFF support.
 
 ### 2. Install gems
 ```shell
