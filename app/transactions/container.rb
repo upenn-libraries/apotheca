@@ -15,6 +15,10 @@ class Container
     register 'set_updated_by' do
       Steps::SetUpdatedBy.new
     end
+
+    register 'require_updated_by' do
+      Steps::RequireUpdatedBy.new
+    end
   end
 
   namespace 'item_resource' do

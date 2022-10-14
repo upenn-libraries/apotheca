@@ -17,8 +17,8 @@ module Steps
         # Note: EZID library retries requests twice before raising an error.
         Ezid::Identifier.modify(resource.unique_identifier, erc_metadata)
         Success(resource)
-      rescue => e
-        Failure(:failed_to_update_ezid_metadata)
+      rescue StandardError => e
+        Failure[:failed_to_update_ezid_metadata, e]
       end
     end
   end

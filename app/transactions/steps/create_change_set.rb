@@ -21,7 +21,7 @@ module Steps
         change_set.validate(attributes)
         Success(change_set)
       rescue StandardError => e
-        Failure(:error_creating_change_set)
+        Failure[:error_creating_change_set, e]
       end
     end
   end
