@@ -4,9 +4,15 @@ module DerivativeService
   # Generator module that determines the correct generator for a file and mime type.
   module Generator
     def self.for(file, mime_type)
-      return Generator::Image.new(file) if Generator::Image::VALID_MIME_TYPES.include?(mime_type)
-
-      Generator::Default.new(file)
+      generator = case mime_type
+                  when *Generator::Image::VALID_MIME_TYPES
+                    Generator::Image
+                  when *Generator::Audio::VALID_MIME_TYPES
+                    Generator::Audio
+                  else
+                    Generator::Default
+                  end
+      generator.new file
     end
   end
 end

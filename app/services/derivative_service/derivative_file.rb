@@ -7,9 +7,11 @@ module DerivativeService
 
     delegate_missing_to :@file
 
-    def initialize(mime_type)
+    # @param [String] mime_type
+    # @param [String, NilClass] extension
+    def initialize(mime_type, extension = nil)
       @mime_type = mime_type
-      @file = Tempfile.new
+      @file = Tempfile.new(['', extension])
     end
 
     # Explicitly removing tempfile. After calling `cleanup!` this file should not be used.
