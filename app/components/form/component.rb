@@ -5,8 +5,8 @@
 module Form
   class Component < ViewComponent::Base
     renders_many :inputs, types: {
-      text: lambda { |**system_arguments| FormField::Component.new(type: :text, **system_arguments) },
-      select: lambda { |**system_arguments| FormField::Component.new(type: :select, **system_arguments) }
+      text: lambda { |**system_arguments| Input::Component.new(type: :text, **system_arguments) },
+      select: lambda { |**system_arguments| Input::Component.new(type: :select, **system_arguments) }
     }
 
     renders_one :submit, SubmitButton::Component

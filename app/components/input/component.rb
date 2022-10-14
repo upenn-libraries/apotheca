@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module FormField
+module Input
   class Component < ViewComponent::Base
     VALID_TYPES = [:text, :select]
 
@@ -26,12 +26,12 @@ module FormField
       case @type
       when :text
         if @value.is_a? Array
-          render MultivaluedInput::Component.new(id: @id, value: @value, field: @field)
+          render Multivalued::Component.new(id: @id, value: @value, field: @field)
         else
           text_field_tag @field, @value, class: 'form-control', id: @id
         end
       when :select
-        render SelectInput::Component.new(id: @id, value: @value, field: @field, options: @options)
+        render Select::Component.new(id: @id, value: @value, field: @field, options: @options)
       else
         # should never happen due to validation
       end
