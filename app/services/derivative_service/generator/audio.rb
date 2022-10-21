@@ -19,6 +19,11 @@ module DerivativeService
       rescue StandardError => e
         raise Generator::Error, "Error generating MP3: #{e.class} #{e.message}", e.backtrace
       end
+
+      # @return [NilClass]
+      def thumbnail
+        nil
+      end
     end
 
     # wrap up ffmpeg interaction
