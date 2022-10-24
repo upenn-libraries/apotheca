@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DerivativeService::Generator::Audio do
-  let(:file) { ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/bell.wav'))) }
+  let(:file) { Valkyrie::StorageAdapter::StreamFile.new id: 1, io: File.open(file_fixture('files/bell.wav')) }
   let(:generator) { described_class.new(file) }
 
   describe '#access' do
