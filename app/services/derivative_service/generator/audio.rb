@@ -6,7 +6,7 @@ module DerivativeService
   module Generator
     # Generator class encapsulating audio derivative generation logic.
     class Audio < Base
-      VALID_MIME_TYPES = %w[audio/wav audio/wave audio/x-wav audio/x-pn-wav audio/vnd.wave].freeze
+      VALID_MIME_TYPES = %w[audio/wav audio/wave audio/x-wav audio/x-wave audio/x-pn-wav audio/vnd.wave].freeze
 
       # @return [DerivativeService::Generator::DerivativeFile]
       def access
