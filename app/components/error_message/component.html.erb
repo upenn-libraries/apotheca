@@ -1,0 +1,11 @@
+<div class="alert alert-danger" role="alert">
+  <h4><%= overview.to_s.titleize %></h4>
+
+  <% if validation_errors.present? %>
+    <ul>
+      <% validation_errors.full_messages.each do |e| %>
+        <li><%= e %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
