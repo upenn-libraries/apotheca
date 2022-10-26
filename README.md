@@ -5,6 +5,7 @@ Administrative application that enables the ingestion and management of digital 
 - Ruby 2.7.5
 - Postgres
 - [libvips](https://www.libvips.org/)
+- [ffmpeg](https://ffmpeg.org/) - ensure `ffmpeg` executable is on your `$PATH`
 
 ## Local Development and Test Environment
 We are using docker-compose to run adjacent services required for the application to run. The application will run directly on your machine.
@@ -16,16 +17,17 @@ rbenv install 2.7.5
 brew install --cask docker
 brew install libpq
 brew install vips
+brew install ffmpeg
 ```
 Note: Homebrew installation of libtiff does not seem to support tiff jpeg compression.
 
 #### Linux
 ```shell
-sudo apt install libpq-dev
+sudo apt install libpq-dev ffmpeg libvips
 rbenv install 2.7.5
 ```
 
-TODO: Add installation notes for libvips.
+TODO: Add installation notes for libvips TIFF support.
 
 ### 2. Install gems
 ```shell
