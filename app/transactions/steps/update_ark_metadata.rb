@@ -5,6 +5,8 @@ module Steps
     include Dry::Monads[:result]
 
     def call(resource)
+      return Success(resource) if Settings.skip_ezid_metadata_update
+
       # TODO: This is the metadata that we use now, but we should probably revisit.
       erc_metadata = {
         erc_who: resource.descriptive_metadata.creator.join('; '),
