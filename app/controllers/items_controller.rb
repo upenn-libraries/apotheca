@@ -43,7 +43,8 @@ class ItemsController < ApplicationController
     metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.map { |f| [f, []] }.to_h
     params.permit(item: [
                     :thumbnail_asset_id,
-                    { descriptive_metadata: metadata_fields,
+                    { internal_notes: [],
+                      descriptive_metadata: metadata_fields,
                       structural_metadata: [:viewing_direction, :viewing_hint] }
                   ])
   end

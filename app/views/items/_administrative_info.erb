@@ -1,0 +1,10 @@
+<h3>Administrative Information</h3>
+
+<%= link_to 'Edit Administrative Info', edit_item_path(@item, anchor: 'administrative-info'), class: 'btn btn-primary mb-3' %>
+
+<%= render(StaticFieldsComponent.new) do |component| %>
+  <% component.with_field(
+       label: 'Internal Notes',
+       values: @item.internal_notes
+     ) %>
+<% end %>
