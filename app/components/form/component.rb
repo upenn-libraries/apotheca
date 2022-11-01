@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
-# Renders a form element that .... performs form submission via turbo and displays errors inline without re-rendering.
-# going forward, we should be using this form element for all of our forms....
 module Form
+  # Renders a form element. Has configurable slots for inputs, a submit button and an error message.
   class Component < ViewComponent::Base
     renders_many :inputs, types: {
       text: lambda { |**system_arguments| Input::Component.new(type: :text, **system_arguments) },
       select: lambda { |**system_arguments| Input::Component.new(type: :select, **system_arguments) }
     }
 
+    renders_one :error, ErrorMessage::Component
+
     renders_one :submit, SubmitButton::Component
 
-    def initialize(url:, method:)
+    def initialize(name:, url:, method:)
+      @name = name
       @url = url
       @method = method
     end

@@ -1,8 +1,10 @@
-<div data-controller="form--form" data-turbo="true">
-  <div id="error-messages" data-form--form-target="errors"></div>
 
-  <%= form_tag(@url, method: @method,
-                     data: { action: 'turbo:submit-end->form--form#formSubmission turbo:fetch-request-error->form--form#networkError' }) do %>
+<div>
+  <%= error %>
+
+  <%= form_tag(@url, method: @method) do %>
+    <%= hidden_field_tag :form, @name %>
+
     <% inputs.each do |input| %>
       <%= input %>
     <% end %>
@@ -10,4 +12,3 @@
     <%= submit %>
   <% end %>
 </div>
-

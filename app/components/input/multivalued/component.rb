@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-# Renders multivalued text input with the ability to add/remove inputs.
 module Input
   module Multivalued
+    # Renders multivalued text input with the ability to add/remove inputs.
     class Component < ViewComponent::Base
-
       # @param id [String]
       # @param value [Array<String>]
       # @param field [String]

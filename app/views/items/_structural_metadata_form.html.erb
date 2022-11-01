@@ -1,7 +1,8 @@
 <h3>Structural Metadata</h3>
 
-<%= render(Form::Component.new(url: item_path(@item), method: :patch)) do |form| %>
-  <%= form.input_select(label: 'Viewing Hint',
+<%= render(Form::Component.new(url: item_path(@item), method: :patch, name: 'struct-metadata')) do |form| %>
+  <% form.error(@error, display: @errors_for == 'struct-metadata') %>
+  <% form.input_select(label: 'Viewing Hint',
                         value: @item.structural_metadata.viewing_hint,
                         field: "item[structural_metadata][viewing_hint]",
                         options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS) %>

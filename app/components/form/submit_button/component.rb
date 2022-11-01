@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Form
   module SubmitButton
+    # Component for form submit button.
     class Component < ViewComponent::Base
       def initialize(value, variant: :primary)
         @value = value
@@ -17,5 +20,4 @@ module Form
       end
     end
   end
-
 end

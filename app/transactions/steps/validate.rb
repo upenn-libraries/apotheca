@@ -9,7 +9,7 @@ module Steps
       if change_set.valid?
         Success(change_set)
       else
-        Failure([:validation_failed, change_set.errors])
+        Failure([:validation_failed, change_set])
       end
     end
   end

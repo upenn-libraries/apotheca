@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Input
+  # Component that provides a single interface to create form inputs.
   class Component < ViewComponent::Base
-    VALID_TYPES = [:text, :select]
+    VALID_TYPES = [:text, :select].freeze
 
     # @param type [Symbol] type of input
     # @param label [String] label for input
@@ -19,7 +20,7 @@ module Input
 
       # Validations
       raise ArgumentError, "type must be one of #{VALID_TYPES.join(' ')}" unless VALID_TYPES.include?(@type)
-      raise ArgumentError, "value cannot be array when type is a select" if @type == :select && @value.is_a?(Array)
+      raise ArgumentError, 'value cannot be array when type is a select' if @type == :select && @value.is_a?(Array)
     end
 
     def input

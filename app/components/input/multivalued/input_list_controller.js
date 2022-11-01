@@ -13,7 +13,7 @@ export default class extends Controller {
 
     preventDeletionOfFirstInput(inputs) {
         inputs.forEach((input, index) => {
-            var deleteButton = input.querySelector('[data-multivalued-input--input-list-target="delete"]')
+            var deleteButton = input.querySelector('[data-input--multivalued--input-list-target="delete"]')
 
             if (index === 0) {
                 deleteButton.setAttribute("disabled", "")
