@@ -17,6 +17,10 @@
     <%= render partial: 'structural_metadata' %>
   <% end %>
 
+  <% component.with_tab(title: 'Administrative Info') do %>
+    <%= render partial: 'administrative_info' %>
+  <% end %>
+
   <% component.with_tab(title: 'Assets', count: @item.asset_count) do  %>
     <%= render partial: 'assets_list' %>
   <% end %>
