@@ -16,7 +16,7 @@ class UpdateAsset
   tee :generate_derivatives
   tee :preservation_backup
 
-  def store_file_in_preservation_storage(file:, **attributes)
+  def store_file_in_preservation_storage(file: nil, **attributes)
     if file
       file_resource = preservation_storage.upload(
         file: file, resource: attributes[:resource], original_filename: file.original_filename
@@ -29,7 +29,7 @@ class UpdateAsset
   end
 
   def add_technical_metadata(change_set)
-    Success(change_set) unless change_set.changed?(:preservation_file_id)
+    return Success(change_set) unless change_set.changed?(:preservation_file_id)
 
     file = preservation_storage.find_by(id: change_set.preservation_file_id)
 
@@ -49,7 +49,7 @@ class UpdateAsset
   def mark_stale_derivatives(change_set)
     if change_set.changed?(:preservation_file_id)
       change_set.derivatives.each do |derivative|
-        derivative.stale = false
+        derivative.stale = true
       end
     end
     Success(change_set)
@@ -61,7 +61,7 @@ class UpdateAsset
 
       # Deleting derivatives BEFORE new derivatives are created in case derivative generation fails.
       if change_set.preservation_copies_ids.first
-        preservation_copy_storage.delete(id: preservation_copies_ids.first)
+        preservation_copy_storage.delete(id: change_set.preservation_copies_ids.first)
       end
 
       change_set.preservation_copies_ids = []
@@ -75,7 +75,7 @@ class UpdateAsset
   # @param [Valkyrie::Resource] resource
   # @param [Boolean] async runs process asynchronously
   def generate_derivatives(resource, async: true)
-    return if resource.derivatives.present? && resource.derivatives.none?(&:stale)
+    return if resource.preservation_file_id.blank? || (resource.derivatives.present? && resource.derivatives.none?(&:stale))
 
     method = async ? 'perform_later' : 'perform_now'
     GenerateDerivativesJob.send(method, resource.id.to_s)
@@ -83,7 +83,7 @@ class UpdateAsset
 
   # Enqueue job to backup to S3 if backup is not present.
   def preservation_backup(resource)
-    return unless resource.preservation_copies_ids.blank?
+    return if resource.preservation_file_id.blank? || resource.preservation_copies_ids.present?
 
     PreservationBackupJob.perform_later(resource.id.to_s)
   end

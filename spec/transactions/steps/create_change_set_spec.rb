@@ -20,7 +20,8 @@ describe Steps::CreateChangeSet do
 
       it 'returns failure' do
         expect(result.failure?).to be true
-        expect(result.failure).to be :error_creating_change_set
+        expect(result.failure[0]).to be :error_creating_change_set
+        expect(result.failure[1]).to be_an Exception
       end
     end
   end
