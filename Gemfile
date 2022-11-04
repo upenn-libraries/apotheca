@@ -48,7 +48,6 @@ gem 'rsolr'
 gem 'ruby-vips'
 gem 'sassc-rails' # Use Sass to process CSS
 gem 'stimulus-rails'
-gem 'turbo-rails'
 gem 'upennlib-rubocop', require: false
 gem 'valkyrie', '3.0.0.pre.beta.2'
 gem 'valkyrie-shrine'
