@@ -8,8 +8,10 @@
 class GenerateDerivatives
   include Dry::Transaction(container: Container)
 
-  # TODO: Delete derivatives from storage layer if cannot save?
-  # - since the derivative has the same name as the previous derivative this would delete the current derivative, should we have randomized names for derivatives?
+  # TODO: We should delete derivatives from storage layer if cannot save. The problem is
+  #       that doing that would delete the current derivative because the new derivatives
+  #       will have the same name as the old ones.
+  # TODO: Should we require updated_by?
   step :find_asset, with: 'asset_resource.find_resource'
   step :create_change_set, with: 'asset_resource.create_change_set'
   # around :cleanup_derivative_files
