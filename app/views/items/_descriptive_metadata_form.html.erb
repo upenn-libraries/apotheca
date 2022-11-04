@@ -2,7 +2,7 @@
 
 <%= render(Form::Component.new(url: item_path(@item), method: :patch, name: 'descriptive-metadata')) do |form| %>
   <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
-    <% form.error(@error, display: @errors_for == 'descriptive-metadata') %>
+    <% form.error(@error, show: @errors_for == 'descriptive-metadata') %>
     <% form.input_text(label: field,
                        value: @change_set.descriptive_metadata.send(field),
                        field: "item[descriptive_metadata][#{field}][]") %>
