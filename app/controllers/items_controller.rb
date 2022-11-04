@@ -25,9 +25,9 @@ class ItemsController < ApplicationController
     authorize! :edit, ItemResource
 
     UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **update_params[:item]) do |result|
-      result.success do
+      result.success do |resource|
         flash.notice = 'Successfully updated item.'
-        redirect_to edit_item_path(result.value!)
+        redirect_to edit_item_path(resource, anchor: params[:form])
       end
 
       result.failure :validate do |failure|
