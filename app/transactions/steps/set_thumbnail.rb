@@ -11,8 +11,6 @@ module Steps
                          change_set.structural_metadata.arranged_asset_ids.first
                        elsif change_set.asset_ids&.any?
                          change_set.asset_ids.first
-                       else
-                         nil
                        end
 
         change_set.thumbnail_asset_id = thumbnail_id

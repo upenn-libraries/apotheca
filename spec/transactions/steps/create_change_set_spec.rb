@@ -18,8 +18,11 @@ describe Steps::CreateChangeSet do
     context 'when attributes invalid' do
       subject(:result) { create_change_set.call(original_filename: 'file.txt', technical_metadata: 'invalid') }
 
-      it 'returns failure' do
+      it 'fails' do
         expect(result.failure?).to be true
+      end
+
+      it 'returns expected failure' do
         expect(result.failure[0]).to be :error_creating_change_set
         expect(result.failure[1]).to be_an Exception
       end

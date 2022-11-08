@@ -12,6 +12,9 @@ describe Steps::UpdateArkMetadata do
 
       it 'fails' do
         expect(result.failure?).to be true
+      end
+
+      it 'returns expected failure' do
         expect(result.failure[0]).to be :failed_to_update_ezid_metadata
         expect(result.failure[1]).to be_an Exception
       end

@@ -8,7 +8,7 @@ class UpdateAsset
   step :require_updated_by, with: 'change_set.require_updated_by'
   step :store_file_in_preservation_storage
   step :create_change_set, with: 'asset_resource.create_change_set'
-  step :add_technical_metadata
+  step :add_technical_metadata, with: 'asset_resource.add_technical_metadata'
   step :mark_stale_derivatives
   step :remove_stale_preservation_backup
   step :validate, with: 'change_set.validate'
@@ -26,24 +26,6 @@ class UpdateAsset
     end
 
     Success(attributes)
-  end
-
-  def add_technical_metadata(change_set)
-    return Success(change_set) unless change_set.changed?(:preservation_file_id)
-
-    file = preservation_storage.find_by(id: change_set.preservation_file_id)
-
-    fits = FileCharacterization::Fits.new(url: Settings.fits.url)
-    tech_metadata = fits.examine(contents: file.read, filename: change_set.original_filename)
-
-    change_set.technical_metadata.raw       = tech_metadata.raw
-    change_set.technical_metadata.mime_type = tech_metadata.mime_type
-    change_set.technical_metadata.size      = tech_metadata.size
-    change_set.technical_metadata.md5       = tech_metadata.md5
-    change_set.technical_metadata.duration  = tech_metadata.duration
-    change_set.technical_metadata.sha256    = file.checksum digests: [Digest::SHA256.new]
-
-    Success(change_set)
   end
 
   def mark_stale_derivatives(change_set)
@@ -75,7 +57,8 @@ class UpdateAsset
   # @param [Valkyrie::Resource] resource
   # @param [Boolean] async runs process asynchronously
   def generate_derivatives(resource, async: true)
-    return if resource.preservation_file_id.blank? || (resource.derivatives.present? && resource.derivatives.none?(&:stale))
+    return if resource.preservation_file_id.blank?
+    return if resource.derivatives.present? && resource.derivatives.none?(&:stale)
 
     method = async ? 'perform_later' : 'perform_now'
     GenerateDerivativesJob.send(method, resource.id.to_s)

@@ -47,5 +47,9 @@ class Container
     register 'create_change_set' do
       Steps::CreateChangeSet.new(AssetResource, AssetChangeSet)
     end
+
+    register 'add_technical_metadata' do
+      Steps::AddTechnicalMetadata.new
+    end
   end
 end

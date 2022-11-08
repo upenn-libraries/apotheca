@@ -37,7 +37,11 @@ class GenerateDerivatives
         original_filename: type,
         content_type: derivative_file.mime_type
       )
-      change_set.derivatives << DerivativeResource.new(file_id: file_resource.id, mime_type: derivative_file.mime_type, type: type, generated_at: DateTime.current)
+      change_set.derivatives << DerivativeResource.new(
+        file_id: file_resource.id,
+        mime_type: derivative_file.mime_type,
+        type: type, generated_at: DateTime.current
+      )
 
       derivative_file.cleanup!
     end

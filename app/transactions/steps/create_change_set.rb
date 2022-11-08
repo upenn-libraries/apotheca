@@ -14,7 +14,7 @@ module Steps
     end
 
     def call(resource: nil, **attributes)
-      resource = resource_class.new unless resource
+      resource ||= resource_class.new
       change_set = change_set_class.new(resource)
 
       begin

@@ -14,6 +14,7 @@ module Steps
     def call(id:, **attributes)
       resource = query_service.find_by id: id
       raise Valkyrie::Persistence::ObjectNotFoundError unless resource.is_a?(resource_class)
+
       Success(resource: resource, **attributes)
     rescue Valkyrie::Persistence::ObjectNotFoundError => e
       Failure[:resource_not_found, e]

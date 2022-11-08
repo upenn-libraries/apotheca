@@ -29,9 +29,9 @@ describe UpdateAsset do
       end
 
       it 'sets technical metadata' do
-        expect(updated_asset.technical_metadata.mime_type).to eql 'image/jpeg'
-        expect(updated_asset.technical_metadata.size).to be 42_421
-        expect(updated_asset.technical_metadata.md5).to eql 'a93d8dc6bc83cd51ad60a151a8ce11e4'
+        expect(
+          updated_asset.technical_metadata
+        ).to include(mime_type: 'image/jpeg', size: 42_421, md5: 'a93d8dc6bc83cd51ad60a151a8ce11e4')
       end
 
       it 'sets sha256 checksum' do
@@ -82,9 +82,9 @@ describe UpdateAsset do
       end
 
       it 'updates technical metadata' do
-        expect(updated_asset.technical_metadata.mime_type).to eql 'audio/x-wave'
-        expect(updated_asset.technical_metadata.size).to be 30_804
-        expect(updated_asset.technical_metadata.md5).to eql '79a2f8e83b4babe41ba0b5458e3d1e4a'
+        expect(
+          updated_asset.technical_metadata
+        ).to include(mime_type: 'audio/x-wave', size: 30_804, md5: '79a2f8e83b4babe41ba0b5458e3d1e4a')
       end
 
       it 'updates checksum' do
