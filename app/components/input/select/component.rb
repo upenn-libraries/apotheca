@@ -12,13 +12,13 @@ module Input
         @id = id
         @value = value
         @field = field
-        @options = options + [nil]
+        @options = options
       end
 
       def call
         select_tag(@field,
                    options_for_select(@options, selected: @value),
-                   class: 'form-control form-select-sm form-select', id: @id)
+                   class: 'form-control form-select-sm form-select', id: @id, include_blank: true)
       end
     end
   end
