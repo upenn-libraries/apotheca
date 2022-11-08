@@ -172,7 +172,7 @@ GEM
       dry-core (~> 0.5, >= 0.5)
       dry-initializer (~> 3.0)
       dry-schema (~> 1.9, >= 1.9.1)
-    erubi (1.10.0)
+    erubi (1.11.0)
     execjs (2.8.1)
     ezid-client (1.9.1)
       hashie (~> 3.4, >= 3.4.3)
@@ -217,7 +217,7 @@ GEM
       rack (~> 2.2)
       rdf (~> 3.2)
     link_header (0.0.8)
-    loofah (2.18.0)
+    loofah (2.19.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -245,9 +245,9 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.8)
-    nokogiri (1.13.8-x86_64-darwin)
+    nokogiri (1.13.9-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.8-x86_64-linux)
+    nokogiri (1.13.9-x86_64-linux)
       racc (~> 1.4)
     omniauth (2.0.4)
       hashie (>= 3.4.6)
@@ -391,9 +391,6 @@ GEM
     tilt (2.0.10)
     timeout (0.2.0)
     trailblazer-option (0.1.2)
-    turbo-rails (1.0.1)
-      actionpack (>= 6.0.0)
-      railties (>= 6.0.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
@@ -440,7 +437,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.0)
+    zeitwerk (2.6.1)
 
 PLATFORMS
   x86_64-darwin-21
@@ -473,7 +470,6 @@ DEPENDENCIES
   sassc-rails
   sprockets-rails
   stimulus-rails
-  turbo-rails
   tzinfo-data
   upennlib-rubocop
   valkyrie (= 3.0.0.pre.beta.2)

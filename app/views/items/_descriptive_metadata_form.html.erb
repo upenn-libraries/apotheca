@@ -1,13 +1,11 @@
 <h3>Descriptive Metadata</h3>
 
-<%= form_tag item_path(@item), method: :patch do %>
+<%= render(Form::Component.new(url: item_path(@item), method: :patch, name: 'descriptive-metadata')) do |form| %>
   <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
-    <%= render(FormField::Component.new(
-      type: :text,
-      label: field,
-      value: @item.descriptive_metadata.send(field),
-      field: "item[descriptive_metadata][#{field}][]" )) %>
+    <% form.with_error(@error, show: @errors_for == 'descriptive-metadata') %>
+    <% form.with_input_text(label: field,
+                       value: @change_set.descriptive_metadata.send(field),
+                       field: "item[descriptive_metadata][#{field}][]") %>
+    <% form.with_submit('Save') %>
   <% end %>
-
-  <input class="btn btn-primary" name="save" type="submit" value="Save">
 <% end %>

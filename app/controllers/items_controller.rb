@@ -2,7 +2,7 @@
 
 # controller actions for Item stuff
 class ItemsController < ApplicationController
-  before_action :load_and_authorize_resources, only: [:show, :edit]
+  before_action :load_resources, only: [:show, :edit]
 
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
@@ -24,20 +24,34 @@ class ItemsController < ApplicationController
   def update
     authorize! :edit, ItemResource
 
-    result = UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **update_params[:item])
-    if result.success?
-      # flash.notice = 'Successfully updated item.'
-      redirect_to edit_item_path(result.value!), notice: 'Successfully updated item.'
-    else
-      # For right now, we need to have access to the items and assets if we are rendering the edit page. In future,
-      # we will submit the form via ajax and return just the errors if there is a failure.
-      load_and_authorize_resources
-      flash.alert = result.failure
-      render :edit
+    UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **update_params[:item]) do |result|
+      result.success do |resource|
+        flash.notice = 'Successfully updated item.'
+        redirect_to edit_item_path(resource, anchor: params[:form])
+      end
+
+      result.failure :validate do |failure|
+        @change_set = failure[1]
+        @item = failure[1].resource
+
+        render_failure(failure)
+      end
+
+      result.failure do |failure|
+        render_failure(failure)
+      end
     end
   end
 
   private
+
+  def render_failure(failure)
+    load_resources
+    @error = failure
+    @errors_for = params[:form]
+
+    render :edit
+  end
 
   def update_params
     metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.map { |f| [f, []] }.to_h
@@ -59,8 +73,9 @@ class ItemsController < ApplicationController
     @solr_query_service ||= Valkyrie::MetadataAdapter.find(:index_solr).query_service
   end
 
-  def load_and_authorize_resources
-    @item = pg_query_service.find_by id: params[:id]
+  def load_resources
+    @item ||= pg_query_service.find_by id: params[:id]
+    @change_set ||= ItemChangeSet.new(@item)
     @arranged_assets = pg_query_service.find_many_by_ids ids: @item.structural_metadata.arranged_asset_ids
     @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids
   end
