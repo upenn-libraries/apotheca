@@ -11,7 +11,7 @@ FactoryBot.define do
   end
 
   trait :with_preservation_file do
-    technical_metadata { { mime_type: 'image/jpg' } }
+    technical_metadata { { mime_type: 'image/jpeg' } }
 
     # attach file as preservation file
     # note: this does not generate derivatives
