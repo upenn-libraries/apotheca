@@ -10,5 +10,6 @@ class UpdateItem
   step :set_thumbnail, with: 'item_resource.set_thumbnail'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
-  step :update_ark_metadata, with: 'item_resource.update_ark_metadata' # TODO: Perhaps do this before save so we can noop if the metadata didn't change.
+  # TODO: Perhaps do this before save so we can noop if the metadata didn't change.
+  step :update_ark_metadata, with: 'item_resource.update_ark_metadata'
 end

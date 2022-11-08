@@ -14,7 +14,7 @@ module Steps
         erc_when: resource.descriptive_metadata.date.join('; ')
       }
       begin
-        # Note: EZID library retries requests twice before raising an error.
+        # NOTE: EZID library retries requests twice before raising an error.
         Ezid::Identifier.modify(resource.unique_identifier, erc_metadata)
         Success(resource)
       rescue StandardError => e

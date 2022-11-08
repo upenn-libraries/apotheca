@@ -35,7 +35,9 @@ describe UpdateAsset do
       end
 
       it 'sets sha256 checksum' do
-        expect(updated_asset.technical_metadata.sha256).to eql 'd58516c7d3ece4d79f0de3a649a090af2174e67b7658f336a027a42123a2da72'
+        expect(
+          updated_asset.technical_metadata.sha256
+        ).to eql 'd58516c7d3ece4d79f0de3a649a090af2174e67b7658f336a027a42123a2da72'
       end
 
       it 'enqueues job to generate derivatives' do
@@ -68,9 +70,8 @@ describe UpdateAsset do
           updated_by: 'test@example.com'
         )
         GenerateDerivatives.new.call(id: asset.id)
-        PreservationBackup.new.call(id:asset.id)
+        PreservationBackup.new.call(id: asset.id)
       end
-
 
       it 'is successful' do
         expect(result.success?).to be true

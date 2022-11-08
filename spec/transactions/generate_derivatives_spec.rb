@@ -2,11 +2,10 @@
 
 describe GenerateDerivatives do
   describe '#call' do
-    let(:transaction) { described_class.new }
-    let(:asset) { persist(:asset_resource, :with_preservation_file) }
-
     subject(:updated_asset) { result.value! }
 
+    let(:transaction) { described_class.new }
+    let(:asset) { persist(:asset_resource, :with_preservation_file) }
     let(:result) { transaction.call(id: asset.id) }
 
     context 'when derivatives not present' do
