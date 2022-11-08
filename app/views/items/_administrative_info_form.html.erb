@@ -1,11 +1,9 @@
 <h3>Administrative Information</h3>
 
-<%= form_tag item_path(@item), method: :patch do %>
-  <%= render(FormField::Component.new(
-    type: :text,
-    label: 'Internal Notes',
-    value: @item.internal_notes,
-    field: "item[internal_notes][]")) %>
-
-  <input class="btn btn-primary" name="save" type="submit" value="Save">
+<%= render(Form::Component.new(url: item_path(@item, anchor: 'administrative-info'), method: :patch, name: 'administrative-info')) do |form| %>
+  <% form.error(@error, show: @errors_for == 'administrative-info') %>
+  <% form.input_text(label: 'Internal Notes',
+                     value: @item.internal_notes,
+                     field: "item[internal_notes][]") %>
+  <% form.submit('Save') %>
 <% end %>
