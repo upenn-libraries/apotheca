@@ -6,7 +6,7 @@ module Steps
     include Dry::Monads[:result]
 
     def call(change_set)
-      unless change_set.thumbnail_asset_id.present?
+      if change_set.thumbnail_asset_id.blank?
         thumbnail_id = if change_set.structural_metadata.arranged_asset_ids&.any?
                          change_set.structural_metadata.arranged_asset_ids.first
                        elsif change_set.asset_ids&.any?

@@ -27,6 +27,7 @@ class ItemResource < Valkyrie::Resource
   attribute :unique_identifier, Valkyrie::Types::String
   attribute :human_readable_name, Valkyrie::Types::String
   attribute :thumbnail_asset_id, Valkyrie::Types::ID # ID of asset that should be thumbnail
+  attribute :internal_notes, Valkyrie::Types::Array.of(Valkyrie::Types::String)
   attribute :descriptive_metadata, DescriptiveMetadata
   attribute :structural_metadata, StructuralMetadata
 
@@ -45,5 +46,11 @@ class ItemResource < Valkyrie::Resource
   # @return [Array<Valkyrie::ID>]
   def unarranged_asset_ids
     Array.wrap(asset_ids) - structural_metadata.arranged_asset_ids
+  end
+
+  # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
+  # @param [Valkyrie::ID] asset_id
+  def is_thumbnail?(asset_id)
+    thumbnail_asset_id == asset_id
   end
 end

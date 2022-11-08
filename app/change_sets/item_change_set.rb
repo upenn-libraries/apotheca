@@ -32,6 +32,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
   property :unique_identifier, multiple: false, required: false
   property :human_readable_name, multiple: false, required: true
   property :thumbnail_asset_id, multiple: false, required: true
+  property :internal_notes, multiple: true, required: false # TODO: do we need to remove empty values like we do for DescriptiveMetadata fields?
   property :descriptive_metadata, multiple: false, required: true, form: DescriptiveMetadataChangeSet
   property :structural_metadata, multiple: false, required: true, form: StructuralMetadataChangeSet
 
