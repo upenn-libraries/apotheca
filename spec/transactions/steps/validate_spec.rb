@@ -16,7 +16,7 @@ describe Steps::Validate do
       it 'returns error messages' do
         expect(result.failure.first).to be :validation_failed
         expect(
-          result.failure.second
+          result.failure.second.errors.messages
         ).to include(created_by: ['can\'t be blank', 'is invalid'], updated_by: ['can\'t be blank', 'is invalid'])
       end
     end

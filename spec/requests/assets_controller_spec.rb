@@ -33,7 +33,7 @@ describe 'Asset requests' do
       end
 
       it 'has the correct Content-Type header' do
-        expect(response.headers['Content-Type']).to eq 'image/jpg'
+        expect(response.headers['Content-Type']).to eq 'image/jpeg'
       end
 
       it 'has the correct filename' do

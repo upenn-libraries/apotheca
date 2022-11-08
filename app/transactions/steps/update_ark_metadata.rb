@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Steps
+  # Updating metadata in EZID record.
   class UpdateArkMetadata
     include Dry::Monads[:result]
 
