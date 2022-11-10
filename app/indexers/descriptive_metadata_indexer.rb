@@ -2,80 +2,58 @@
 
 # Indexing behavior for descriptive metadata
 class DescriptiveMetadataIndexer < BaseIndexer
-
-  # TODO: what about fields in Marmite metadata but not in Item descriptive metadata?
+  RESOURCE_METADATA_JSON_FIELD = :resource_metadata_ss
+  ILS_METADATA_JSON_FIELD = :ils_metadata_ss
   # @return [Hash]
   def to_solr
+    mapper = IndexingMappers::DescriptiveMetadata.new data: source
     hashes = fields.filter_map do |field|
-      public_send(field)
-    rescue NoMethodError => _e
-      next # TODO: remove upon full implementation?
+      mapper.public_send(field) if mapper.respond_to?(field)
     end
-    hashes.inject(:update) || {}
+    ret = hashes.inject(:update) || {}
+    ret[RESOURCE_METADATA_JSON_FIELD] = descriptive_metadata.to_json
+    ret[ILS_METADATA_JSON_FIELD] = ils_descriptive_metadata.to_json if bibnumber_present?
+    ret
   end
 
-  def title
-    { title_tsim: source.title,
-      title_ssim: source.title,
-      title_tesim: source.title,
-      title_tsi: source.title.first,
-      title_ssi: source.title.first,
-      title_tesi: source.title.first }
-  end
-
-  def collection
-    { collection_tsim: descriptive_metadata.collection,
-      collection_ssim: descriptive_metadata.collection,
-      collection_tesim: descriptive_metadata.collection }
-  end
-
-  private
-
-  #   identifier_tsim: alma_descriptive_metadata['identifier'],
-  #   creator_tsim: alma_descriptive_metadata['creator'],
-  #   provenance_tsim: alma_descriptive_metadata['provenance'],
-  #   provenance_tesim: alma_descriptive_metadata['provenance'],
-  #   provenance_ssim: alma_descriptive_metadata['provenance'],
-  #   description_tsim: alma_descriptive_metadata['description'],
-  #   description_tesim: alma_descriptive_metadata['description'],
-  #   subject_tsim: alma_descriptive_metadata['subject'],
-  #   subject_tesim: alma_descriptive_metadata['subject'],
-  #   subject_ssim: alma_descriptive_metadata['subject'],
-  #   date_tsim: alma_descriptive_metadata['date'],
-  #   personal_name_tsim: alma_descriptive_metadata['personal_name'],
-  #   personal_name_tesim: alma_descriptive_metadata['personal_name'],
-  #   personal_name_ssim: alma_descriptive_metadata['personal_name'],
-  #   geographic_name_tsim: alma_descriptive_metadata['geographic_name'],
-  #   geographic_name_tesim: alma_descriptive_metadata['geographic_name'],
-  #   geographic_name_ssim: alma_descriptive_metadata['geographic_name'],
-  #   item_type_ssim: alma_descriptive_metadata['item_type'],
-  #   call_number_tsim: alma_descriptive_metadata['call_number']
-
+  # @return [Array]
   def fields
-    ItemResource::DescriptiveMetadata::FIELDS
+    ItemResource::DescriptiveMetadata::FIELDS # MARC Metadata may have more fields, but they should be ignored
   end
 
+  # @return [Hash]
   def source
-    @source ||= bibnumber_present? ? ils_descriptive_metadata : descriptive_metadata
+    @source ||= merged_metadata_sources
   end
 
+  # @return [Hash]
   def ils_descriptive_metadata
     @ils_descriptive_metadata ||= extracted_metadata
   end
 
+  # @return [Hash]
+  def merged_metadata_sources
+    fields.index_with do |field|
+      val = descriptive_metadata.public_send(field)
+      if val.blank? && bibnumber_present?
+        ils_descriptive_metadata[field.to_s]
+      else
+        val
+      end
+    end
+  end
+
   # Provide Marmite metadata in an object-like fashion
-  # @return [anonymous Struct]
   def extracted_metadata
-    metadata_hash = MetadataExtractor::Marmite
-                    .new(url: Settings.marmite.url)
-                    .descriptive_metadata(resource.descriptive_metadata.bibnumber.first)
-    Struct.new('Metadata', *metadata_hash.keys).new(*metadata_hash.values)
+    MetadataExtractor::Marmite.new(url: Settings.marmite.url)
+                              .descriptive_metadata(resource.descriptive_metadata.bibnumber.first)
   end
 
   def descriptive_metadata
     @descriptive_metadata ||= resource.try :descriptive_metadata
   end
 
+  # @return [TrueClass, FalseClass]
   def bibnumber_present?
     return false unless descriptive_metadata
 
