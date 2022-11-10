@@ -43,12 +43,13 @@ class DescriptiveMetadataIndexer < BaseIndexer
     end
   end
 
-  # Provide Marmite metadata in an object-like fashion
+  # @return [Hash]
   def extracted_metadata
     MetadataExtractor::Marmite.new(url: Settings.marmite.url)
                               .descriptive_metadata(resource.descriptive_metadata.bibnumber.first)
   end
 
+  # @return [ItemResource::DescriptiveMetadata]
   def descriptive_metadata
     @descriptive_metadata ||= resource.try :descriptive_metadata
   end

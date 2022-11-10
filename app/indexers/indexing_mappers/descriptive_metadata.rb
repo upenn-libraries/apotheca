@@ -16,6 +16,7 @@ module IndexingMappers
         abstract_tesim: data[:abstract] }
     end
 
+    # @return [Hash{Symbol->Unknown}]
     def bibnumber
       { bibnumber_ss: data[:bibnumber] }
     end
