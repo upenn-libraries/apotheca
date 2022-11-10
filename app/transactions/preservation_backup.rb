@@ -7,7 +7,6 @@
 class PreservationBackup
   include Dry::Transaction(container: Container)
 
-  # TODO: Should we require updated_by?
   step :find_asset, with: 'asset_resource.find_resource'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :store_file_in_backup_location
