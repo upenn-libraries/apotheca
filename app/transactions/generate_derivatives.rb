@@ -27,7 +27,7 @@ class GenerateDerivatives
     generator = DerivativeService::Generator.for(file, change_set.technical_metadata.mime_type)
     derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
 
-    AssetChangeSet::AssetDerivativeChangeSet::TYPES.each do |type|
+    new_derivatives = AssetChangeSet::AssetDerivativeChangeSet::TYPES.filter_map do |type|
       derivative_file = generator.send(type)
       next unless derivative_file # Skip, if no derivative was generated.
 
@@ -37,14 +37,17 @@ class GenerateDerivatives
         original_filename: type,
         content_type: derivative_file.mime_type
       )
-      change_set.derivatives << DerivativeResource.new(
+
+      derivative_file.cleanup!
+
+      DerivativeResource.new(
         file_id: file_resource.id,
         mime_type: derivative_file.mime_type,
         type: type, generated_at: DateTime.current
       )
-
-      derivative_file.cleanup!
     end
+
+    change_set.derivatives = new_derivatives
 
     Success(change_set)
   end

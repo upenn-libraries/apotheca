@@ -16,7 +16,16 @@ describe GenerateDerivatives do
     end
 
     context 'when derivatives already present' do
-      it 'regenerates derivatives' # check timestamps
+      before do
+        travel_to(1.minute.ago) do
+          transaction.call(id: asset.id)
+        end
+      end
+
+      it 'regenerates derivatives' do
+        expect(updated_asset.derivatives.count).to be 2
+        expect(updated_asset.derivatives.map(&:generated_at)).to all(be_within(1.second).of(DateTime.current))
+      end
     end
   end
 end
