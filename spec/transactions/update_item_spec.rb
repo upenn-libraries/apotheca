@@ -54,7 +54,7 @@ describe UpdateItem do
       end
 
       it 'returns error' do
-        expect(result.failure).to be :missing_updated_by
+        expect(result.failure[:error]).to be :missing_updated_by
       end
     end
   end

@@ -50,5 +50,5 @@ class AssetChangeSet < Valkyrie::ChangeSet
   collection :annotations, multiple: true, form: AnnotationChangeSet, populate_if_empty: AssetResource::Annotation
 
   # Validations
-  validates :original_filename, presence: true
+  validates :original_filename, presence: true, if: ->(asset) { asset.preservation_file_id.present? }
 end

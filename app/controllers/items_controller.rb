@@ -31,8 +31,8 @@ class ItemsController < ApplicationController
       end
 
       result.failure :validate do |failure|
-        @change_set = failure[1]
-        @item = failure[1].resource
+        @change_set = failure[:change_set]
+        @item = @change_set.resource
 
         render_failure(failure)
       end

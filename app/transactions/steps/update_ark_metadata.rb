@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Steps
+  # Updating metadata in EZID record.
   class UpdateArkMetadata
     include Dry::Monads[:result]
 
@@ -14,11 +15,11 @@ module Steps
         erc_when: resource.descriptive_metadata.date.join('; ')
       }
       begin
-        # Note: EZID library retries requests twice before raising an error.
+        # NOTE: EZID library retries requests twice before raising an error.
         Ezid::Identifier.modify(resource.unique_identifier, erc_metadata)
         Success(resource)
-      rescue => e
-        Failure(:failed_to_update_ezid_metadata)
+      rescue StandardError => e
+        Failure(error: :failed_to_update_ezid_metadata, exception: e)
       end
     end
   end

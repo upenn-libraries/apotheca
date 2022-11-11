@@ -1,7 +1,7 @@
 <h3>Structural Metadata</h3>
 
 <%= render(Form::Component.new(url: item_path(@item, anchor: 'structural-metadata'), method: :patch, name: 'structural-metadata')) do |form| %>
-  <% form.with_error(@error, show: @errors_for == 'structural-metadata') %>
+  <% form.with_error(@error) if @errors_for == 'structural-metadata' %>
   <% form.with_input_select(label: 'Viewing Hint',
                         value: @item.structural_metadata.viewing_hint,
                         field: "item[structural_metadata][viewing_hint]",

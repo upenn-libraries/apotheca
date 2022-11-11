@@ -6,6 +6,7 @@ class DerivativeResource < Valkyrie::Resource
   attribute :generated_at, Valkyrie::Types::DateTime
   attribute :mime_type, Valkyrie::Types::String
   attribute :file_id, Valkyrie::Types::ID
+  attribute :stale, Valkyrie::Types::Bool
 
   def method_missing(symbol, *_args)
     raise NoMethodError unless respond_to_missing? symbol

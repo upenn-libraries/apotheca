@@ -14,9 +14,13 @@ describe Steps::Save do
         Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.delete(resource: item)
       end
 
-      it 'returns a failure' do
+      it 'fails' do
         expect(result.failure?).to be true
-        expect(result.failure).to be :error_saving_resource
+      end
+
+      it 'returns expected failure' do
+        expect(result.failure[:error]).to be :error_saving_resource
+        expect(result.failure[:exception]).to be_an Valkyrie::Persistence::ObjectNotFoundError
       end
     end
   end

@@ -9,13 +9,6 @@ describe AssetChangeSet do
   it_behaves_like 'a ModificationDetailsChangeSet'
   # it_behaves_like 'a Valkyrie::ChangeSet'
 
-  it 'requires original filename' do
-    change_set.validate(original_filename: nil)
-
-    expect(change_set.valid?).to be false
-    expect(change_set.errors[:original_filename]).to include 'can\'t be blank'
-  end
-
   it 'sets label' do
     change_set.validate(label: 'First Page')
 
@@ -136,6 +129,13 @@ describe AssetChangeSet do
 
     it 'sets file ids' do
       expect(change_set.preservation_file_id).to eql preservation_file.id
+    end
+
+    it 'requires original filename' do
+      change_set.validate(original_filename: nil)
+
+      expect(change_set.valid?).to be false
+      expect(change_set.errors[:original_filename]).to include 'can\'t be blank'
     end
   end
 
