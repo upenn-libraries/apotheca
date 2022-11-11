@@ -5,12 +5,15 @@ minio: &minio
 preservation_storage:
   <<: *minio
   bucket: preservation-test
-derivative_storage:
-  <<: *minio
-  bucket: derivatives-test
 preservation_copy_storage:
   <<: *minio
   bucket: preservation-copy-test
+derivative_storage:
+  <<: *minio
+  bucket: derivatives-test
+iiif_derivative_storage:
+  <<: *minio
+  bucket: iiif-derivatives-test
 solr:
   url: http://127.0.0.1:8983/solr/colenda_admin_test
 fits:

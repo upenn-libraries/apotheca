@@ -55,10 +55,17 @@ Rails.application.config.to_prepare do
     public: true # Adds public-read acl to all objects
   )
 
+  iiif_derivatives_storage_config = Settings.iiif_derivative_storage.to_h.merge(
+    region: 'us-east-1', # using default region
+    force_path_style: true,
+    public: true # Adds public-read acl to all objects
+  )
+
   Shrine.storages = {
     preservation: Shrine::Storage::S3.new(preservation_storage_config),
     preservation_copy: Shrine::Storage::S3.new(preservation_copy_storage_config),
-    derivatives: Shrine::Storage::S3.new(derivatives_storage_config)
+    derivatives: Shrine::Storage::S3.new(derivatives_storage_config),
+    iiif_derivatives: Shrine::Storage::S3.new(iiif_derivatives_storage_config)
   }
 
   Valkyrie::StorageAdapter.register(
@@ -72,8 +79,15 @@ Rails.application.config.to_prepare do
   )
 
   Valkyrie::StorageAdapter.register(
-    Valkyrie::Storage::Shrine.new(Shrine.storages[:derivatives], nil, DerivativePathGenerator, identifier_prefix: 'derivatives'),
-    :derivatives
+    Valkyrie::Storage::Shrine.new(
+      Shrine.storages[:derivatives], nil, DerivativePathGenerator, identifier_prefix: 'derivatives'
+    ), :derivatives
+  )
+
+  Valkyrie::StorageAdapter.register(
+    Valkyrie::Storage::Shrine.new(
+      Shrine.storages[:iiif_derivatives], nil, DerivativePathGenerator, identifier_prefix: 'iiif_derivatives'
+    ), :iiif_derivatives
   )
 
   # Register custom queries for Solr
