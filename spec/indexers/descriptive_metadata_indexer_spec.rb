@@ -23,7 +23,7 @@ RSpec.describe DescriptiveMetadataIndexer do
   context 'when an item has a bibnumber' do
     let(:resource) { persist(:item_resource, descriptive_metadata: { title: 'Test Item', bibnumber: '123' }) }
     # this is taken from spec/services/metadata_extractor/marmite/client_spec.rb
-    # TODO: perhaps a shared context, or a stub/mock of the service injected into the indexer?
+    # TODO: perhaps use a shared context, or a stub/mock of the service injected into the indexer?
     let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
 
     before do
@@ -39,7 +39,5 @@ RSpec.describe DescriptiveMetadataIndexer do
       expect(result[described_class::RESOURCE_METADATA_JSON_FIELD]).to be_present
       expect(result[described_class::ILS_METADATA_JSON_FIELD]).to be_present
     end
-
   end
-
 end

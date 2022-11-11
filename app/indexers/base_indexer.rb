@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# shared behavior for Indexers
+# Shared behavior for Indexers
 class BaseIndexer
   attr_reader :resource
 

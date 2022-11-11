@@ -2,6 +2,10 @@
 
 module IndexingMappers
   # Mapping from source data to Solr fields
+  # Methods here should be names after values in the ItemResource::DescriptiveMetadata::FIELDS array,
+  # and return a hash that will be used to construct the JSON data sent to Solr to index a Resource.
+  # While much of this looks repetitive, it leaves open each field for quick and easy customization,
+  # while making indexed fields very explicit.
   class DescriptiveMetadata
     attr_reader :data
 

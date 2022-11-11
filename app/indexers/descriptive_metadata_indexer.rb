@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
-# Indexing behavior for descriptive metadata
+# Indexing behavior for the fields defined in ItemResource::DescriptiveMetadata Resource
 class DescriptiveMetadataIndexer < BaseIndexer
   RESOURCE_METADATA_JSON_FIELD = :resource_metadata_ss
   ILS_METADATA_JSON_FIELD = :ils_metadata_ss
+
+  # Constructs hash for aggregation of descriptive metadata into the Solr update data.
+  # Adds fields from the DescriptiveMetadata mapper using each field name from those defined in
+  # the ItemResource::DescriptiveMetadata Resource
   # @return [Hash]
   def to_solr
     mapper = IndexingMappers::DescriptiveMetadata.new data: source
@@ -18,7 +22,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
 
   # @return [Array]
   def fields
-    ItemResource::DescriptiveMetadata::FIELDS # MARC Metadata may have more fields, but they should be ignored
+    ItemResource::DescriptiveMetadata::FIELDS
   end
 
   # @return [Hash]
@@ -31,6 +35,8 @@ class DescriptiveMetadataIndexer < BaseIndexer
     @ils_descriptive_metadata ||= extracted_metadata
   end
 
+  # Hash uniting the ILS and Resource field data, preferring Resource metadata and only including ILS
+  # metadata if a bibnumber is present in the Resource
   # @return [Hash]
   def merged_metadata_sources
     fields.index_with do |field|
