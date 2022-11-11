@@ -1,7 +1,7 @@
 <h3>Administrative Information</h3>
 
 <%= render(Form::Component.new(url: item_path(@item, anchor: 'administrative-info'), method: :patch, name: 'administrative-info')) do |form| %>
-  <% form.with_error(@error, show: @errors_for == 'administrative-info') %>
+  <% form.with_error(@error) if @errors_for == 'administrative-info' %>
   <% form.with_input_text(label: 'Internal Notes',
                      value: @item.internal_notes,
                      field: "item[internal_notes][]") %>
