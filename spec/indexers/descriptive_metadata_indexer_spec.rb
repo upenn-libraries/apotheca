@@ -31,7 +31,7 @@ RSpec.describe DescriptiveMetadataIndexer do
         .to_return(status: 200, body: marc_xml, headers: {})
     end
 
-    it 'has field vales that prefer values from the Resource' do
+    it 'has field values that prefer values from the Resource' do
       expect(result[:title_tsi]).to eq 'Test Item'
     end
 
