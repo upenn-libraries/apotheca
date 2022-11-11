@@ -199,5 +199,6 @@ title = "gitlab gitleaks config"
         '''solr/conf/schema.xml''',
         '''config/initializers/ezid.rb''',
         '''config/initializers/devise.rb''',
-        '''spec/shared_examples/ezid.rb'''
+        '''spec/shared_examples/ezid.rb''',
+        '''spec/indexers/descriptive_metadata_spec.rb''',
     ]
