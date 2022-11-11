@@ -34,8 +34,9 @@ FactoryBot.define do
         uploaded_file.rewind
 
         preservation_copy_storage = Valkyrie::StorageAdapter.find(:preservation_copy)
-        file = preservation_copy_storage.upload(file: uploaded_file, resource: asset,
-                                           original_filename: asset.original_filename)
+        file = preservation_copy_storage.upload(
+          file: uploaded_file, resource: asset, original_filename: asset.original_filename
+        )
         asset.preservation_copies_ids = [file.id]
       end
     end

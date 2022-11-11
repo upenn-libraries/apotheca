@@ -19,8 +19,8 @@ describe Steps::Save do
       end
 
       it 'returns expected failure' do
-        expect(result.failure[0]).to be :error_saving_resource
-        expect(result.failure[1]).to be_an Valkyrie::Persistence::ObjectNotFoundError
+        expect(result.failure[:error]).to be :error_saving_resource
+        expect(result.failure[:exception]).to be_an Valkyrie::Persistence::ObjectNotFoundError
       end
     end
   end

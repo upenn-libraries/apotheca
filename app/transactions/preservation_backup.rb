@@ -14,7 +14,7 @@ class PreservationBackup
   step :save, with: 'change_set.save'
 
   def store_file_in_backup_location(change_set)
-    return Failure(:file_backup_already_present) if change_set.preservation_copies_ids.present?
+    return Failure(error: :file_backup_already_present) if change_set.preservation_copies_ids.present?
 
     file = preservation_storage.find_by(id: change_set.preservation_file_id)
 

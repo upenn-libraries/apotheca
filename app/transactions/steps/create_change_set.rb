@@ -2,7 +2,7 @@
 
 module Steps
   # Creates appropriate change set based on resource and change set classes provided. If a resource is
-  # not provided a blank one is created based off `resource_classs`.
+  # not provided a blank one is created based off `resource_class`.
   class CreateChangeSet
     include Dry::Monads[:result]
 
@@ -21,7 +21,7 @@ module Steps
         change_set.validate(attributes)
         Success(change_set)
       rescue StandardError => e
-        Failure[:error_creating_change_set, e]
+        Failure(error: :error_creating_change_set, exception: e)
       end
     end
   end

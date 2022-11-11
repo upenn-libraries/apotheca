@@ -17,7 +17,7 @@ module Steps
 
       Success(resource: resource, **attributes)
     rescue Valkyrie::Persistence::ObjectNotFoundError => e
-      Failure[:resource_not_found, e]
+      Failure(error: :resource_not_found, exception: e)
     end
 
     private

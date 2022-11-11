@@ -7,7 +7,7 @@ module Steps
 
     def call(attributes)
       if attributes[:updated_by].blank?
-        Failure(:missing_updated_by)
+        Failure(error: :missing_updated_by)
       else
         Success(attributes)
       end

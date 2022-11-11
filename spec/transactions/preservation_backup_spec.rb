@@ -12,11 +12,11 @@ describe PreservationBackup do
 
       it 'fails' do
         expect(result.failure?).to be true
-        expect(result.failure).to eql :file_backup_already_present
+        expect(result.failure[:error]).to be :file_backup_already_present
       end
     end
 
-    context 'when preservation file is not backedup' do
+    context 'when preservation file is not backed up' do
       let(:asset) { persist(:asset_resource, :with_preservation_file) }
 
       it 'generates and adds preservation backup' do

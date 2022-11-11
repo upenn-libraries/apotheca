@@ -52,6 +52,12 @@ describe UpdateAsset do
     context 'when updating file' do
       subject(:updated_asset) { result.value! }
 
+      let(:asset) do
+        a = persist(:asset_resource)
+        transaction.call(id: a.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
+        GenerateDerivatives.new.call(id: a.id)
+        PreservationBackup.new.call(id: a.id).value!
+      end
       let(:result) do
         transaction.call(
           id: asset.id,
@@ -60,17 +66,6 @@ describe UpdateAsset do
           label: 'First',
           updated_by: 'test@example.com'
         )
-      end
-
-      before do
-        transaction.call(
-          id: asset.id,
-          file: file1,
-          label: 'Front of Card',
-          updated_by: 'test@example.com'
-        )
-        GenerateDerivatives.new.call(id: asset.id)
-        PreservationBackup.new.call(id: asset.id)
       end
 
       it 'is successful' do
@@ -87,6 +82,11 @@ describe UpdateAsset do
         ).to include(mime_type: 'audio/x-wave', size: 30_804, md5: '79a2f8e83b4babe41ba0b5458e3d1e4a')
       end
 
+      it 'updates preservation_file_id and stores new file' do
+        expect(asset.preservation_file_id).not_to eql updated_asset.preservation_file_id
+        expect(Valkyrie::StorageAdapter.find_by(id: updated_asset.preservation_file_id)).to be_a Valkyrie::StorageAdapter::StreamFile
+      end
+
       it 'updates checksum' do
         expect(
           updated_asset.technical_metadata.sha256
@@ -98,8 +98,11 @@ describe UpdateAsset do
         expect(updated_asset.derivatives.all?(&:stale)).to be true
       end
 
-      it 'removes preservation backup' do
+      it 'unlinks and deletes preservation backup' do
         expect(updated_asset.preservation_copies_ids).to be_blank
+        expect {
+          Valkyrie::StorageAdapter.find_by(id: asset.preservation_copies_ids.first)
+        }.to raise_error Valkyrie::StorageAdapter::FileNotFound
       end
 
       it 'enqueues job to generate derivatives twice' do
@@ -137,6 +140,38 @@ describe UpdateAsset do
       it 'does not enqueue and jobs' do
         expect(GenerateDerivativesJob).to have_been_enqueued.with(updated_asset.id.to_s).exactly(0)
         expect(PreservationBackupJob).to have_been_enqueued.with(updated_asset.id.to_s).exactly(0)
+      end
+    end
+
+    context 'when adding a file and a error occurs' do
+      let(:result) do
+        transaction.call(
+          id: asset.id,
+          file: file1,
+          label: 'Front of Card',
+          original_filename: nil,
+          updated_by: 'test@example.com'
+        )
+      end
+
+      it 'fails' do
+        expect(result.failure?).to be true
+        expect(result.failure[:error]).to be :file_characterization_failed
+      end
+
+      it 'returns change_set' do
+        expect(result.failure[:change_set]).to be_a AssetChangeSet
+      end
+
+      it 'does not enqueue and jobs' do
+        expect(GenerateDerivativesJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
+        expect(PreservationBackupJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
+      end
+
+      it 'deletes the new file from preservation storage' do
+        expect {
+          Valkyrie::StorageAdapter.find_by(id: result.failure[:change_set].preservation_file_id)
+        }.to raise_error Valkyrie::StorageAdapter::FileNotFound
       end
     end
   end

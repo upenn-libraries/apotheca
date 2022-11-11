@@ -19,7 +19,7 @@ module Steps
         Ezid::Identifier.modify(resource.unique_identifier, erc_metadata)
         Success(resource)
       rescue StandardError => e
-        Failure[:failed_to_update_ezid_metadata, e]
+        Failure(error: :failed_to_update_ezid_metadata, exception: e)
       end
     end
   end

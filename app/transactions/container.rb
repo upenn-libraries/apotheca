@@ -51,5 +51,9 @@ class Container
     register 'add_technical_metadata' do
       Steps::AddTechnicalMetadata.new
     end
+
+    register 'cleanup' do
+      Around::AssetCleanup.new
+    end
   end
 end

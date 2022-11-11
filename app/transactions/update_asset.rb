@@ -7,14 +7,32 @@ class UpdateAsset
   step :find_asset, with: 'asset_resource.find_resource'
   step :require_updated_by, with: 'change_set.require_updated_by'
   step :store_file_in_preservation_storage
+  around :cleanup, with: 'asset_resource.cleanup'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :add_technical_metadata, with: 'asset_resource.add_technical_metadata'
   step :mark_stale_derivatives
-  step :remove_stale_preservation_backup
+  step :unlink_stale_preservation_backup
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
   tee :generate_derivatives
   tee :preservation_backup
+
+  # Wrapping save method in order to delete the old preservation file if a file update is successful.
+  def save(change_set)
+    # Storing ID for stale preservation backup.
+    stale_preservation_backup = change_set.changed?(:preservation_copies_ids) ? change_set.resource.preservation_copies_ids&.first : nil
+
+    result = super(change_set)
+
+    # Delete stale preservation backup file
+    if result.success? && stale_preservation_backup
+
+      preservation_copy_storage = Valkyrie::StorageAdapter.find(:preservation_copy)
+      preservation_copy_storage.delete(id: stale_preservation_backup)
+    end
+
+    result
+  end
 
   def store_file_in_preservation_storage(file: nil, **attributes)
     if file
@@ -37,17 +55,10 @@ class UpdateAsset
     Success(change_set)
   end
 
-  def remove_stale_preservation_backup(change_set)
-    if change_set.changed?(:preservation_file_id)
-      preservation_copy_storage = Valkyrie::StorageAdapter.find(:preservation_copy)
-
-      # Deleting derivatives BEFORE new derivatives are created in case derivative generation fails.
-      if change_set.preservation_copies_ids.first
-        preservation_copy_storage.delete(id: change_set.preservation_copies_ids.first)
-      end
-
-      change_set.preservation_copies_ids = []
-    end
+  # Removing connection to stale preservation backup.
+  def unlink_stale_preservation_backup(change_set)
+    # At this point we won't delete the stale preservation backup in case there is a problem saving the asset.
+    change_set.preservation_copies_ids = [] if change_set.changed?(:preservation_file_id)
 
     Success(change_set)
   end

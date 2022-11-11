@@ -12,7 +12,7 @@ module Steps
         saved_resource = persister.save(resource: resource)
         Success(saved_resource)
       rescue StandardError => e
-        Failure[:error_saving_resource, e]
+        Failure(error: :error_saving_resource, exception: e, change_set: change_set)
       end
     end
 

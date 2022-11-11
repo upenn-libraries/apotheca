@@ -14,8 +14,8 @@ describe Steps::FindResource do
       end
 
       it 'returns errors' do
-        expect(result.failure.first).to be :resource_not_found
-        expect(result.failure.second).to be_a Valkyrie::Persistence::ObjectNotFoundError
+        expect(result.failure[:error]).to be :resource_not_found
+        expect(result.failure[:exception]).to be_a Valkyrie::Persistence::ObjectNotFoundError
       end
     end
 
@@ -29,8 +29,8 @@ describe Steps::FindResource do
       end
 
       it 'returns errors' do
-        expect(result.failure.first).to be :resource_not_found
-        expect(result.failure.second).to be_a Valkyrie::Persistence::ObjectNotFoundError
+        expect(result.failure[:error]).to be :resource_not_found
+        expect(result.failure[:exception]).to be_a Valkyrie::Persistence::ObjectNotFoundError
       end
     end
   end

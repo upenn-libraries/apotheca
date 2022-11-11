@@ -18,7 +18,7 @@ class GenerateDerivatives
   step :save, with: 'change_set.save'
 
   def generate_derivatives(change_set)
-    Failure(:missing_mime_type) unless change_set.technical_metadata.mime_type
+    Failure(error: :missing_mime_type) unless change_set.technical_metadata.mime_type
 
     file = preservation_storage.find_by(id: change_set.preservation_file_id)
 

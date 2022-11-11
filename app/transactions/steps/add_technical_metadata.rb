@@ -20,6 +20,8 @@ module Steps
       change_set.technical_metadata.sha256    = file.checksum digests: [Digest::SHA256.new]
 
       Success(change_set)
+    rescue FileCharacterization::Fits::Error => e
+      Failure(error: :file_characterization_failed, exception: e, change_set: change_set)
     end
 
     private
