@@ -10,6 +10,8 @@ class DescriptiveMetadataIndexer < BaseIndexer
   # the ItemResource::DescriptiveMetadata Resource
   # @return [Hash]
   def to_solr
+    return {} unless descriptive_metadata
+
     mapper = IndexingMappers::DescriptiveMetadata.new data: source
     hashes = fields.filter_map do |field|
       mapper.public_send(field) if mapper.respond_to?(field)
