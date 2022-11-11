@@ -137,7 +137,7 @@ describe UpdateAsset do
         expect(updated_asset.transcriptions.first.contents).to eql 'Importers, 32 S. Howard Street, Baltimore, MD.'
       end
 
-      it 'does not enqueue and jobs' do
+      it 'does not enqueue any jobs' do
         expect(GenerateDerivativesJob).to have_been_enqueued.with(updated_asset.id.to_s).exactly(0)
         expect(PreservationBackupJob).to have_been_enqueued.with(updated_asset.id.to_s).exactly(0)
       end
@@ -163,7 +163,7 @@ describe UpdateAsset do
         expect(result.failure[:change_set]).to be_a AssetChangeSet
       end
 
-      it 'does not enqueue and jobs' do
+      it 'does not enqueue any jobs' do
         expect(GenerateDerivativesJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
         expect(PreservationBackupJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
       end
