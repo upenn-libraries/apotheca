@@ -79,8 +79,7 @@ module MetadataExtractor
         %w[subject corporate_name personal_name language].each { |f| mapped_values[f]&.uniq! }
 
         # Cleanup
-        mapped_values.transform_values! { |values| values.map(&:strip).reject(&:blank?) }
-                     .delete_if { |_, v| v.blank? }
+        mapped_values.transform_values! { |values| values.map(&:strip).compact_blank }.compact_blank!
 
         # Join fields if they aren't multivalued.
         mapped_values.each do |k, v|
@@ -101,10 +100,10 @@ module MetadataExtractor
 
         # Checking for values in field 040 subfield e
         subfield_e = xml.xpath("//records/record/datafield[@tag=040]/subfield[@code='e']").map(&:text)
-        manuscript = true if subfield_e.any? { |s| ["appm", "appm2", "amremm", "dacs", "dcrmmss"].include? s.downcase }
+        manuscript = true if subfield_e.any? { |s| ['appm', 'appm2', 'amremm', 'dacs', 'dcrmmss'].include? s.downcase }
 
         # Checking for value in all subfield of field 040
-        all_subfields = xml.xpath("//records/record/datafield[@tag=040]/subfield").map(&:text)
+        all_subfields = xml.xpath('//records/record/datafield[@tag=040]/subfield').map(&:text)
         manuscript = true if all_subfields.any? { |s| s.casecmp('paulm').zero? }
 
         manuscript
@@ -113,7 +112,7 @@ module MetadataExtractor
       # Returns true if the MARC data describes the item as a Book
       def book?
         # Checking for `a` in 7th value of the leader field
-        leader = xml.at_xpath("//records/record/leader")&.text
+        leader = xml.at_xpath('//records/record/leader')&.text
         return if leader.blank?
         leader[6] == 'a'
       end

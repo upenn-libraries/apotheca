@@ -127,6 +127,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
       document.remove_namespaces!
       document
     end
+
     context 'when PAULM is present in 040 field' do
       let(:xml) do
         <<~XML
