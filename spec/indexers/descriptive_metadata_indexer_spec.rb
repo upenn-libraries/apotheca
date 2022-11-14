@@ -32,7 +32,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     let(:expected_subjects) do
       ['Metallurgy -- Early works to 1800.',
        'Assaying -- Early works to 1800.',
-       'PU', 'PU', 'PU']
+       'Assaying.', 'Metallurgy.']
     end
 
     before do
@@ -45,7 +45,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     end
 
     it 'has values from MARC metadata when Resource fields are blank' do
-      expect(result[:personal_name_tsim]).to eq ['Feyerabend, Johann,']
+      expect(result[:personal_name_tsim]).to eq ['Feyerabend, Johann, 1550-1599, printer.']
       expect(result[:subject_tsim]).to match_array(expected_subjects)
     end
 

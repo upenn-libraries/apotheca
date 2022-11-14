@@ -12,7 +12,7 @@
       <dt>Created By</dt>
       <dd><%= @item.created_by %></dd>
       <dt>Created At</dt>
-      <dd><%= @item.date_created&.to_s(:display) %></dd>
+      <dd><%= @item.date_created&.to_fs(:display) %></dd>
     </dl>
   </div>
   <div class="col-3">
@@ -20,7 +20,7 @@
       <dt>Updated By</dt>
       <dd><%= @item.updated_by %></dd>
       <dt>Updated At</dt>
-      <dd><%= @item.date_updated&.to_s(:display) %></dd>
+      <dd><%= @item.date_updated&.to_fs(:display) %></dd>
     </dl>
   </div>
 </div>
