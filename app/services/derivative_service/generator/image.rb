@@ -13,7 +13,7 @@ module DerivativeService
         image = Vips::Image.new_from_buffer(file.read, '')
         image = image.autorot.thumbnail_image(200, height: 200)
 
-        derivative_file = DerivativeFile.new('image/jpeg')
+        derivative_file = DerivativeFile.new mime_type: 'image/jpeg'
         image.jpegsave(derivative_file.path, Q: 90, strip: true)
         derivative_file
       rescue => e
@@ -24,7 +24,7 @@ module DerivativeService
         image = Vips::Image.new_from_buffer(file.read, '')
         image = image.autorot
 
-        derivative_file = DerivativeFile.new('image/tiff')
+        derivative_file = DerivativeFile.new mime_type: 'image/tiff', iiif: true
 
         image.tiffsave(
           derivative_file.path,
