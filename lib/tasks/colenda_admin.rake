@@ -33,7 +33,8 @@ namespace :colenda_admin do
 
   desc 'Create preservation and derivative buckets for development and test environments'
   task create_buckets: :environment do
-    configs = [Settings.preservation_storage, Settings.derivative_storage, Settings.preservation_copy_storage]
+    configs = [Settings.derivative_storage, Settings.iiif_derivative_storage,
+               Settings.preservation_storage, Settings.preservation_copy_storage]
 
     configs.each do |config|
       client = Aws::S3::Client.new(

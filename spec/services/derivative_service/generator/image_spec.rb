@@ -15,6 +15,10 @@ describe DerivativeService::Generator::Image do
       expect(derivative_file.mime_type).to eql 'image/jpeg'
     end
 
+    it 'sets expected iiif value of false' do
+      expect(derivative_file.iiif).to be false
+    end
+
     it 'adds file' do
       expect(derivative_file.length).not_to be 0
     end
@@ -29,6 +33,10 @@ describe DerivativeService::Generator::Image do
 
     it 'sets expected mime_type' do
       expect(derivative_file.mime_type).to eql 'image/tiff'
+    end
+
+    it 'sets expected iiif value of true' do
+      expect(derivative_file.iiif).to be true
     end
 
     it 'adds file' do

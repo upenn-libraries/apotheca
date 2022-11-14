@@ -10,7 +10,7 @@ module DerivativeService
 
       # @return [DerivativeService::Generator::DerivativeFile]
       def access
-        derivative_file = DerivativeFile.new('audio/mpeg', '.mp3')
+        derivative_file = DerivativeFile.new mime_type: 'audio/mpeg', extension: '.mp3'
         FfmpegWrapper.wav_to_mp3(
           input_file_path: file.disk_path,
           output_file_path: derivative_file.path
