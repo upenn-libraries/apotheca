@@ -61,6 +61,7 @@
        </str>
        <str name="author_pf">
        </str>
+
        <str name="title_qf">
           title_tsim
           full_title_tsim
@@ -83,6 +84,8 @@
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
        <str name="facet.limit">10</str>
+       <str name="facet.field">created_by_ssi</str>
+       <str name="facet.field">updated_by_ssi</str>
        <str name="facet.field">collection_ssim</str>
        <str name="facet.field">internal_resource_ssim</str>
 

@@ -14,7 +14,7 @@ RSpec.describe ItemIndex do
 
   describe '#item_index' do
     let(:parameters) { ActionController::Parameters.new(params_hash) }
-    let(:items) { query_service.custom_queries.item_index(parameters: parameters).items }
+    let(:items) { query_service.custom_queries.item_index(parameters: parameters).documents }
 
     context 'with a keyword search' do
       let(:params_hash) { { keyword: 'Crunchy' } }

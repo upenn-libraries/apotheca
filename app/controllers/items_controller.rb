@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+#
 
 # controller actions for Item stuff
 class ItemsController < ApplicationController
@@ -9,7 +10,7 @@ class ItemsController < ApplicationController
   def index
     authorize! :read, ItemResource
     items_container = solr_query_service.custom_queries.item_index parameters: search_params
-    @items = items_container.items
+    @items = items_container.documents
     @facets = items_container.facets
   end
 
