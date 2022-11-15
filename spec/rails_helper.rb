@@ -76,10 +76,6 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  config.before(:each, type: :request) do
-    ::Warden.asset_paths = %r{^/#{Rails.application.config.assets.prefix}/}
-  end
-
   # Clear out storage before each test.
   config.before do
     wipe_metadata_adapters!
