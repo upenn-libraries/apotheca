@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe 'Items Requests' do
   it 'redirects unauthenticated users to sign in' do
-    get '/items'
+    get '/resources/items'
     expect(response).to redirect_to(root_path)
     expect(flash['alert']).to include 'You need to sign in'
   end
@@ -15,7 +15,7 @@ describe 'Items Requests' do
     context 'without edit role' do
       it 'redirects viewer users to authenticated root path with authorization message' do
         sign_in create(:user, :viewer)
-        get "/items/#{item.id}/edit"
+        get "/resources/items/#{item.id}/edit"
         expect(response).to redirect_to(authenticated_root_path)
         expect(flash['alert']).to include 'not authorized'
       end
@@ -24,7 +24,7 @@ describe 'Items Requests' do
     context 'with proper role' do
       it 'shows item edit form' do
         sign_in create(:user, :editor)
-        get "/items/#{item.id}/edit"
+        get "/resources/items/#{item.id}/edit"
         expect(response).to have_http_status :ok
       end
     end

@@ -32,8 +32,6 @@ module ColendaAdmin
 
     config.time_zone = 'Eastern Time (US & Canada)'
 
-    config.assets.prefix = '/page_assets'
-
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Don't generate system test files.

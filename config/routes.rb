@@ -8,10 +8,13 @@ Rails.application.routes.draw do
 
   resources :alert_messages, only: %w[index update]
   resources :users, except: :destroy
-  resources :items, except: %i[new create]
-  resources :assets, only: [:show] do
-    member do
-      get 'file/:type', to: 'assets#file', as: :file
+
+  scope :resources do
+    resources :items, except: %i[new create]
+    resources :assets, only: [:show] do
+      member do
+        get 'file/:type', to: 'assets#file', as: :file
+      end
     end
   end
 
