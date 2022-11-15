@@ -21,6 +21,8 @@ module Form
       # @option args [Valkyrie::ChangeSet] :change_set with validation errors
       # @option args [Exception] :exception object
       def initialize(args)
+        args ||= {}
+
         @error = args[:error]
         @exception = args[:exception]
         @change_set = args[:change_set]

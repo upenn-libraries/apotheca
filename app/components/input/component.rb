@@ -29,7 +29,7 @@ module Input
         if @value.is_a? Array
           render Multivalued::Component.new(id: @id, value: @value, field: @field)
         else
-          text_field_tag @field, @value, class: 'form-control', id: @id
+          text_field_tag @field, @value, class: 'form-control form-control-sm', id: @id
         end
       when :select
         render Select::Component.new(id: @id, value: @value, field: @field, options: @options)
