@@ -5,8 +5,8 @@ module Form
   # inputs can be grouped in sections.
   class Component < ViewComponent::Base
     renders_many :inputs, types: {
-      text: lambda { |**system_arguments| Input::Component.new(type: :text, **system_arguments) },
-      select: lambda { |**system_arguments| Input::Component.new(type: :select, **system_arguments) }
+      text: ->(system_arguments) { Input::Component.new(type: :text, **system_arguments) },
+      select: ->(system_arguments) { Input::Component.new(type: :select, **system_arguments) }
     }
 
     renders_many :sections, Section::Component

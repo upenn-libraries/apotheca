@@ -76,7 +76,9 @@ class ItemsController < ApplicationController
   def item_params
     metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.map { |f| [f, []] }.to_h
     params.require(:item).permit(
-      :human_readable_name, :thumbnail_asset_id, internal_notes: [], descriptive_metadata: metadata_fields,
+      :human_readable_name, :thumbnail_asset_id,
+      internal_notes: [],
+      descriptive_metadata: metadata_fields,
       structural_metadata: [:viewing_direction, :viewing_hint]
     )
   end

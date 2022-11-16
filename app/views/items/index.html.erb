@@ -3,6 +3,11 @@
   <% component.with_breadcrumb(active: true) do %>Items<% end %>
 <% end %>
 
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title { 'Items' } %>
+  <%= header.with_right_link(href: new_item_path) { 'Create Item' } %>
+<% end %>
+
 <%= bootstrap_form_tag(url: items_path, method: :get) do |f| %>
   <%= f.text_field :keyword, value: params[:keyword], label: 'Search' %>
   <%= f.select :sort_field, options_for_select([%w[Relevance score], %w[ID id], %w[Title title_tsi]], params[:sort_field]), label: 'Sort By' %>
