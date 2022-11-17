@@ -2,8 +2,9 @@
 
 # query class for searching, filtering and sorting over ItemResources
 class ItemIndex
-  DEFAULT_FQ = { internal_resource_tsim: ['ItemResource'] }.freeze # ensure we are returning only ItemResources
+  DEFAULT_FQ = { internal_resource: ['ItemResource'] }.freeze # ensure we are returning only ItemResources
   PERMITTED_FILTERS = ['collection_ssim'].freeze
+  MAPPER = Solr::QueryMaps::Item
 
   attr_reader :query_service
 
@@ -33,7 +34,7 @@ class ItemIndex
   # convert Solr response into Resource objects
   # @param [Object] parameters
   def resources_from(parameters:)
-    query_builder = Solr::QueryBuilder.new params: parameters, defaults: { fq: DEFAULT_FQ }
+    query_builder = Solr::QueryBuilder.new params: parameters, defaults: { fq: DEFAULT_FQ }, mapper: MAPPER
     response = response solr_query: query_builder.solr_query
     docs = response.dig('response', 'docs')
     items = docs.map { |d| resource_factory.to_resource(object: d) }

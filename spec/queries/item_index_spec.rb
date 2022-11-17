@@ -26,7 +26,7 @@ RSpec.describe ItemIndex do
     end
 
     context 'with an ascending title sort' do
-      let(:params_hash) { { sort_field: 'title_tsi', sort_direction: 'asc' } }
+      let(:params_hash) { { sort: { field: 'title', direction: 'asc' } } }
 
       it 'returns result properly ordered' do
         expect(items.count).to eq 2
@@ -35,7 +35,7 @@ RSpec.describe ItemIndex do
     end
 
     context 'with descending title sort' do
-      let(:params_hash) { { sort_field: 'title_tsi', sort_direction: 'desc' } }
+      let(:params_hash) { { sort: { field: 'title', direction: 'desc' } } }
 
       it 'returns result properly ordered' do
         expect(items.count).to eq 2
@@ -44,7 +44,7 @@ RSpec.describe ItemIndex do
     end
 
     context 'with collection filter applied' do
-      let(:params_hash) { { filters: { collection_ssim: 'Collection A' } } }
+      let(:params_hash) { { filter: { collection: 'Collection A' } } }
 
       it 'returns only Collection A item' do
         expect(items.count).to eq 1

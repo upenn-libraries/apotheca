@@ -10,15 +10,14 @@
 
 <%= bootstrap_form_tag(url: items_path, method: :get) do |f| %>
   <%= f.text_field :keyword, value: params[:keyword], label: 'Search' %>
-  <%= f.select :sort_field, options_for_select([%w[Relevance score], %w[ID id], %w[Title title_tsi]], params[:sort_field]), label: 'Sort By' %>
-  <%= f.select :sort_direction, options_for_select([ %w[Descending desc], %w[Ascending asc]], params[:sort_direction]), label: 'Sort Direction' %>
+  <%= f.select 'sort[field]', options_for_select(Solr::QueryMaps::Item::Sort.field_map, params[:sort_field]), label: 'Sort By' %>
+  <%= f.select 'sort[direction]', options_for_select([ %w[Descending desc], %w[Ascending asc]], params[:sort_direction]), label: 'Sort Direction' %>
   <%= f.select :rows, options_for_select([50,100,250,500], params[:rows]), label: 'Rows' %>
-  <%= f.select 'filters[published_bsi]', options_for_select([['Yes', true], ['No', false]], params.dig(:filter, :published_bsi)), include_blank: false, label: 'Published?' %>
-  <%= f.select 'filters[created_by_ssi]', options_for_select(@facets.fetch('created_by_ssi', [])), include_blank: true, label: 'Created By' %>
-  <%= f.select 'filters[updated_by_ssi]', options_for_select(@facets.fetch('updated_by_ssi', [])), include_blank: true, label: 'Updated By' %>
-  <%= f.select 'filters[collection_ssim]', options_for_select(@facets.fetch('collection_ssim', []), (params[:filters] ? params[:filters][:collection_ssim] : '')),
-               include_blank: true, label: 'Collection'  %>
-  <%= f.select 'search[field_0]', options_for_select(searchable_fields, selected_field_1) %>
+  <%= f.select 'filter[published]', options_for_select([['Yes', true], ['No', false]], params.dig(:filter, :published)), include_blank: false, label: 'Published?' %>
+  <%= f.select 'filter[created_by]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.created_by.to_s, []), params.dig(:filter, :created_by)), include_blank: true, label: 'Created By' %>
+  <%= f.select 'filter[updated_by]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.updated_by.to_s, []), params.dig(:filter, :updated_by)), include_blank: true, label: 'Updated By' %>
+  <%= f.select 'filter[collection]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.collection.to_s, []), params.dig(:filter, :collection)), include_blank: true, label: 'Collection' %>
+  <%= f.select 'search_field[field_0]', options_for_select(Solr::QueryMaps::Item::Search.field_map) %>
   <%= f.text_field 'search[value_0]', value: params[:value_0] %>
   <%= f.submit 'Submit', class: 'btn btn-primary' %>
 <% end %>
