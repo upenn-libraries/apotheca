@@ -3,50 +3,74 @@
 module Solr
   # build a solr query hash from expected parameters
   class QueryBuilder
-    def initialize(params:, defaults:, permitted_fq: [])
+    def initialize(params:, defaults:, mapper: nil)
       @query = {}
-      @params = params
+      @params = mapper ? map_params(params) : params # map params if mapper provided
       @defaults = defaults
-      @permitted_fq = permitted_fq
+    end
+
+    def map_params(params)
+      # TODO: replace values using mapper module?
     end
 
     # @return [Hash]
     def solr_query
       { q: @params[:keyword],
         rows: @params[:rows],
-        sort: solr_sort_from(sort_field: @params[:sort_field].to_s,
-                             sort_direction: @params[:sort_direction].to_s),
-        fq: solr_fq_from(filters: @params[:filters]) }
+        sort: sort,
+        fq: fq }
+    end
+
+    # @param [String] query
+    # @param [Object] field
+    def search(query:, field: nil)
+      return query unless field
+
+      # TODO: handle fielded search?
     end
 
     # compose FilterQuery param
-    # @param [ActionController::Parameters] filters
     # @return [String]
-    def solr_fq_from(filters:)
-      filters = filters&.to_unsafe_h || {}
-      filters = filters.delete_if { |k, v| !k.in?(@permitted_fq) || v.blank? }
+    def fq
+      filters = @params['filters']&.to_unsafe_h || {}
+      filters = filters.delete_if { |k,v| v.blank? }
+      # TODO use querymap to ensure only configured fields are used?
+      # filters = filters.delete_if { |k, v| !k.in?(Solr::QueryMaps::Item::Mapping::Filter.constants.map(&downcase) || v.blank? }
       all_filters = @defaults[:fq].merge filters.to_h
       all_filters.map do |fq, v|
-        solr_fq_condition field: fq, values: v
+        fq_condition field: fq, values: v
       end.join(' AND ') # use AND for all field values (have this attribute AND that attribute)
     end
+
+    # compose Sort param
+    def sort
+      sort_field = @params['sort_field']
+      sort_direction = @params['sort_direction']
+      sort_field = 'score' if sort_field.blank?
+      sort_direction = 'asc' if sort_direction.blank?
+      "#{sort_field} #{sort_direction}"
+    end
+
+    private
 
     # @param [String] field
     # @param [String, Array] values
     # @return [String]
-    def solr_fq_condition(field:, values:)
+    def fq_condition(field:, values:)
       Array.wrap(values).map do |value|
         "#{field}: \"#{value}\""
       end.join(' OR ').insert(0, '(').insert(-1, ')') # use OR for particular field values (this OR that collection)
     end
 
-    # compose Sort param
-    # @param [String] sort_field
-    # @param [String] sort_direction
-    def solr_sort_from(sort_field:, sort_direction:)
-      sort_field = 'score' if sort_field.blank?
-      sort_direction = 'asc' if sort_direction.blank?
-      "#{sort_field} #{sort_direction}"
+    def map_field(entity:, type:, field:)
+      mapper = Solr::QueryMaps.const_get entity.to_s.titleize
+      return 'no mapper' unless mapper
+
+      map = mapper::Mapping.const_get type.to_s.titleize
+      return unless map
+
+      map.const_get field.to_s.titleize
     end
+
   end
 end

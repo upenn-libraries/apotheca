@@ -33,8 +33,7 @@ class ItemIndex
   # convert Solr response into Resource objects
   # @param [Object] parameters
   def resources_from(parameters:)
-    query_builder = Solr::QueryBuilder.new params: parameters, defaults: { fq: DEFAULT_FQ },
-                                           permitted_fq: PERMITTED_FILTERS
+    query_builder = Solr::QueryBuilder.new params: parameters, defaults: { fq: DEFAULT_FQ }
     response = response solr_query: query_builder.solr_query
     docs = response.dig('response', 'docs')
     items = docs.map { |d| resource_factory.to_resource(object: d) }
