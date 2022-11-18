@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 namespace :colenda_admin do
+  desc 'Reindex Resources'
+  task reindex: :environment do
+    Solr::Reindexer.reindex_all
+  end
+
   desc 'Start local development & test environments'
   task start: :environment do
     # Start services
