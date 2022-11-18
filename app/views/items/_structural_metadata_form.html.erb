@@ -3,11 +3,11 @@
 <%= render(Form::Component.new(url: item_path(@item, anchor: 'structural-metadata'), method: :patch, name: 'structural-metadata')) do |form| %>
   <% form.with_error(@error) if @errors_for == 'structural-metadata' %>
   <% form.with_input_select(label: 'Viewing Hint',
-                        value: @item.structural_metadata.viewing_hint,
+                        value: @change_set.structural_metadata.viewing_hint,
                         field: "item[structural_metadata][viewing_hint]",
                         options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS) %>
   <%= form.with_input_select(label: 'Viewing Direction',
-                        value: @item.structural_metadata.viewing_direction,
+                        value: @change_set.structural_metadata.viewing_direction,
                         field: "item[structural_metadata][viewing_direction]",
                         options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS) %>
 

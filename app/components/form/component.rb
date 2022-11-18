@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 module Form
-  # Renders a form element. Has configurable slots for inputs, a submit button and an error message.
+  # Renders a form element. Has slots for inputs, a submit button and an error message. If desired,
+  # inputs can be grouped in sections.
   class Component < ViewComponent::Base
     renders_many :inputs, types: {
-      text: lambda { |**system_arguments| Input::Component.new(type: :text, **system_arguments) },
-      select: lambda { |**system_arguments| Input::Component.new(type: :select, **system_arguments) }
+      text: ->(system_arguments) { Input::Component.new(type: :text, **system_arguments) },
+      select: ->(system_arguments) { Input::Component.new(type: :select, **system_arguments) }
     }
+
+    renders_many :sections, Section::Component
 
     renders_one :error, ErrorMessage::Component
 

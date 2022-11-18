@@ -17,50 +17,70 @@ class ItemsController < ApplicationController
     authorize! :read, @item
   end
 
+  def new
+    authorize! :new, ItemResource
+    @item = ItemResource.new
+    @change_set = ItemChangeSet.new(@item)
+  end
+
   def edit
     authorize! :edit, @item
+  end
+
+  def create
+    authorize! :create, ItemResource
+
+    CreateItem.new.call(created_by: current_user.email, **item_params) do |result|
+      result.success do |resource|
+        flash.notice = 'Successfully created item.'
+        redirect_to edit_item_path(resource)
+      end
+
+      result.failure do |failure|
+        render_failure(failure, :new)
+      end
+    end
   end
 
   def update
     authorize! :edit, ItemResource
 
-    UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **update_params[:item]) do |result|
+    UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **item_params) do |result|
       result.success do |resource|
         flash.notice = 'Successfully updated item.'
         redirect_to edit_item_path(resource, anchor: params[:form])
       end
 
-      result.failure :validate do |failure|
-        @change_set = failure[:change_set]
-        @item = @change_set.resource
-
-        render_failure(failure)
-      end
-
       result.failure do |failure|
-        render_failure(failure)
+        render_failure(failure, :edit)
       end
     end
   end
 
   private
 
-  def render_failure(failure)
-    load_resources
+  def render_failure(failure, template)
+    if failure.key?(:change_set)
+      @change_set = failure[:change_set]
+      @item = @change_set.resource
+    end
+
     @error = failure
     @errors_for = params[:form]
 
-    render :edit
+    load_resources
+
+    render template
   end
 
-  def update_params
+  def item_params
     metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.map { |f| [f, []] }.to_h
-    params.permit(item: [
-                    :thumbnail_asset_id,
-                    { internal_notes: [],
-                      descriptive_metadata: metadata_fields,
-                      structural_metadata: [:viewing_direction, :viewing_hint] }
-                  ])
+    params.require(:item).permit(
+      :human_readable_name, :thumbnail_asset_id,
+      internal_notes: [],
+      descriptive_metadata: metadata_fields,
+      structural_metadata: [:viewing_direction, :viewing_hint]
+    )
   end
 
   # @return [Valkyrie::MetadataAdapter]
@@ -76,8 +96,8 @@ class ItemsController < ApplicationController
   def load_resources
     @item ||= pg_query_service.find_by id: params[:id]
     @change_set ||= ItemChangeSet.new(@item)
-    @arranged_assets = pg_query_service.find_many_by_ids ids: @item.structural_metadata.arranged_asset_ids
-    @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids
+    @arranged_assets = pg_query_service.find_many_by_ids ids: @item.structural_metadata.arranged_asset_ids.deep_dup
+    @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids.deep_dup
   end
 
   # @param [StandardError] exception

@@ -1,0 +1,9 @@
+<%= render(BreadcrumbsComponent.new) do |component| %>
+  <% component.with_breadcrumb(href: "/")      { 'Home' } %>
+  <% component.with_breadcrumb(href: items_path) { 'Items' } %>
+  <% component.with_breadcrumb(active: true)   { 'New' } %>
+<% end %>
+
+<h2>Create Item</h2>
+
+<%= render partial: 'new_form' %>

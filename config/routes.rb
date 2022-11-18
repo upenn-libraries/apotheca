@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :users, except: :destroy
 
   scope :resources do
-    resources :items, except: %i[new create]
+    resources :items
     resources :assets, only: [:show] do
       member do
         get 'file/:type', to: 'assets#file', as: :file
