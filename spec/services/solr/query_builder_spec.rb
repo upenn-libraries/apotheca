@@ -50,4 +50,20 @@ describe Solr::QueryBuilder do
       expect(builder.sort).to eq 'title_ssi asc'
     end
   end
+
+  describe '#search' do
+    let(:params) do
+      ActionController::Parameters.new(
+        { 'search' => {
+          'all' => 'blah',
+          'field' => %w[date subject],
+          'value' => %w[1999 Ruby]
+        } }
+      ).permit!
+    end
+
+    it 'properly composes a q param' do
+      expect(builder.search).to eq 'blah AND date_tsim:1999 AND subject_tsim:Ruby'
+    end
+  end
 end

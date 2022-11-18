@@ -106,6 +106,6 @@ class ItemsController < ApplicationController
   end
 
   def search_params
-    params.permit(:keyword, :sort_field, :sort_direction, :rows, filters: {})
+    params.permit(:keyword, :rows, filter: {}, sort: {}, search: {})
   end
 end

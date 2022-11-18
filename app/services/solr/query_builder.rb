@@ -2,11 +2,11 @@
 
 module Solr
   # build a solr query hash from expected parameters
+  # solr docs: https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#standard-query-parser-parameters
   class QueryBuilder
-    attr_accessor :params, :mapper
+    attr_accessor :params, :mapper, :defaults
 
     def initialize(params:, defaults:, mapper:)
-      @query = {}
       @params = params
       @defaults = defaults
       @mapper = mapper
@@ -14,26 +14,33 @@ module Solr
 
     # @return [Hash]
     def solr_query
-      { q: @params[:keyword],
-        rows: @params[:rows],
+      { q: search,
+        rows: params[:rows],
         sort: sort,
         fq: fq }
     end
 
-    # @param [String] query
-    # @param [Object] field
-    def search(query:, field: nil)
-      return query unless field
-
-      # TODO: handle fielded search?
+    # return q param for solr query
+    # e.g., subject_tsim: "subject" AND title_tsim: "ancient"
+    # "fielded" queries should be ANDed
+    # e.g., (+subject_tsim: 'Metallurgy' AND -description_tsim: 'Gold')
+    def search
+      search = field_queries.map do |field_query|
+        field = field_query[:field] # solr field name, mapped or not
+        term = field_query[:term] # query term
+        op = char_for opr: field_query[:op]
+        "#{op}#{field}:#{term}"
+      end
+      search.prepend(params.dig(:search, :all)) if params.dig(:search, :all).present?
+      search.join(' AND ')
     end
 
     # compose FilterQuery param
     # @return [String]
     def fq
-      filters = @params['filter']&.to_unsafe_h || {}
+      filters = params['filter']&.to_unsafe_h || {}
       filters = filters.delete_if { |k, v| v.blank? || !k.to_sym.in?(Solr::QueryMaps::Item::Filter.fields) }
-      all_filters = @defaults[:fq].merge filters.to_h
+      all_filters = defaults[:fq].merge filters.to_h
       all_filters.filter_map do |field, v|
         fq_condition field: field, values: v
       end.join(' AND ') # use AND for all field values (have this attribute AND that attribute)
@@ -50,6 +57,31 @@ module Solr
     end
 
     private
+
+    # op (required[+], excluded[-], optional[ ]) - default to optional
+    # see: https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#boolean-operators-supported-by-the-standard-query-parser
+    def char_for(opr: :optional)
+      case opr.to_sym
+      when :required then '+'
+      when :excluded then '-'
+      else
+        ''
+      end
+    end
+
+    # map params into field query hashes for use in #search
+    def field_queries
+      search_fields = params.dig(:search, :field)
+      return [] if search_fields.blank?
+
+      search_fields.filter_map.with_index do |search_field, i|
+        solr_field = Solr::QueryMaps::Item::Search.send search_field
+        raise "no map for #{search_field}" unless solr_field
+
+        # TODO: default operator of :optional for now (i.e., no add'l query syntax)
+        { field: solr_field, term: params.dig(:search, :value)&.at(i), op: :optional }
+      end
+    end
 
     def map(type:, field:)
       mapper_type = mapper.const_get(type.to_s.titleize)

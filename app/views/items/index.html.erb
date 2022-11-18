@@ -8,8 +8,9 @@
   <%= header.with_right_link(href: new_item_path) { 'Create Item' } %>
 <% end %>
 
+<!-- TODO: view component -->
 <%= bootstrap_form_tag(url: items_path, method: :get) do |f| %>
-  <%= f.text_field :keyword, value: params[:keyword], label: 'Search' %>
+  <%= f.text_field 'search[all]', value: params.dig(:search, :all), label: 'Search' %>
   <%= f.select 'sort[field]', options_for_select(Solr::QueryMaps::Item::Sort.field_map, params[:sort_field]), label: 'Sort By' %>
   <%= f.select 'sort[direction]', options_for_select([ %w[Descending desc], %w[Ascending asc]], params[:sort_direction]), label: 'Sort Direction' %>
   <%= f.select :rows, options_for_select([50,100,250,500], params[:rows]), label: 'Rows' %>
@@ -17,8 +18,12 @@
   <%= f.select 'filter[created_by]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.created_by.to_s, []), params.dig(:filter, :created_by)), include_blank: true, label: 'Created By' %>
   <%= f.select 'filter[updated_by]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.updated_by.to_s, []), params.dig(:filter, :updated_by)), include_blank: true, label: 'Updated By' %>
   <%= f.select 'filter[collection]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.collection.to_s, []), params.dig(:filter, :collection)), include_blank: true, label: 'Collection' %>
-  <%= f.select 'search_field[field_0]', options_for_select(Solr::QueryMaps::Item::Search.field_map) %>
-  <%= f.text_field 'search[value_0]', value: params[:value_0] %>
+  <!-- TODO: use js to add/remove additional fielded search elements -->
+  <%= f.select 'search[field][]', options_for_select(Solr::QueryMaps::Item::Search.field_map) %>
+  <%= f.text_field 'search[value][]' %>
+  <%= f.select 'search[field][]', options_for_select(Solr::QueryMaps::Item::Search.field_map) %>
+  <%= f.text_field 'search[value][]' %>
+  <!-- TODO: handling for term 'operator' - 'required', 'excluded', 'optional'
   <%= f.submit 'Submit', class: 'btn btn-primary' %>
 <% end %>
 

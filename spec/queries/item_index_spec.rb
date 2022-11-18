@@ -17,7 +17,7 @@ RSpec.describe ItemIndex do
     let(:items) { query_service.custom_queries.item_index(parameters: parameters).documents }
 
     context 'with a keyword search' do
-      let(:params_hash) { { keyword: 'Crunchy' } }
+      let(:params_hash) { { search: { all: 'Crunchy' } } }
 
       it 'returns result from title field' do
         expect(items.count).to eq 1
