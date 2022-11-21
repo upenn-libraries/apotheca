@@ -6,7 +6,9 @@ module Form
   class Component < ViewComponent::Base
     renders_many :inputs, types: {
       text: ->(system_arguments) { Input::Component.new(type: :text, **system_arguments) },
-      select: ->(system_arguments) { Input::Component.new(type: :select, **system_arguments) }
+      select: ->(system_arguments) { Input::Component.new(type: :select, **system_arguments) },
+      hidden: ->(system_arguments) { Input::Component.new(type: :hidden, **system_arguments) },
+      textarea: ->(system_arguments) { Input::Component.new(type: :textarea, **system_arguments) }
     }
 
     renders_many :sections, Section::Component

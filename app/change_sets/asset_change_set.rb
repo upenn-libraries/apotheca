@@ -45,10 +45,30 @@ class AssetChangeSet < Valkyrie::ChangeSet
 
   collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource
 
-  collection :transcriptions, multiple: true, form: TranscriptionChangeSet, populate_if_empty: AssetResource::Transcription
+  collection :transcriptions, multiple: true, form: TranscriptionChangeSet, populator: :transcriptions!
 
-  collection :annotations, multiple: true, form: AnnotationChangeSet, populate_if_empty: AssetResource::Annotation
+  collection :annotations, multiple: true, form: AnnotationChangeSet, populator: :annotations!
 
   # Validations
   validates :original_filename, presence: true, if: ->(asset) { asset.preservation_file_id.present? }
+
+  def transcriptions!(collection:, index:, fragment:, **)
+    if fragment['contents'].blank?
+      skip!
+    elsif item = collection[index]
+      item
+    else
+      collection.insert(index, AssetResource::Transcription.new)
+    end
+  end
+
+  def annotations!(collection:, index:, fragment:, **)
+    if fragment['text'].blank?
+      skip!
+    elsif item = collection[index]
+      item
+    else
+      collection.insert(index, AssetResource::Annotation.new)
+    end
+  end
 end

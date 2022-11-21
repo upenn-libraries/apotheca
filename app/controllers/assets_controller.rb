@@ -7,7 +7,7 @@ class AssetsController < ApplicationController
   class UnsupportedFileType < StandardError; end
 
   before_action :set_asset, only: [:show, :file]
-  before_action :set_item, only: [:show]
+  before_action :set_item, only: [:show, :new, :create]
 
   # respond with a 404 for missing asset files or missing Item (when required)
   rescue_from 'AssetsController::FileNotFound', 'AssetsController::ItemNotFound' do |_e|
@@ -23,6 +23,35 @@ class AssetsController < ApplicationController
     authorize! :show, @asset
   end
 
+  def new
+    authorize! :new, AssetResource
+    @change_set = AssetChangeSet.new(AssetResource.new)
+  end
+
+  def create
+    authorize! :create, AssetResource
+
+    CreateAsset.new.call(**asset_params, created_by: current_user.email) do |result|
+      result.success do |resource|
+        AddAsset.new.call(id: @item.id, asset_id: resource.id, updated_by: current_user.email) do |add_asset_result|
+          add_asset_result.success do
+            flash.notice = 'Successfully created asset.'
+            redirect_to asset_path(resource) # TODO: This should redirect to the edit page.
+          end
+
+          add_asset_result.failure do |failure|
+            DeleteAsset.new.call(id: resource.id) # Delete Asset because it was not properly attached to Item
+            render_failure(failure, :new)
+          end
+        end
+      end
+
+      result.failure do |failure|
+        render_failure(failure, :new)
+      end
+    end
+  end
+
   def file
     case params[:type].to_sym
     when :thumbnail, :access
@@ -35,6 +64,17 @@ class AssetsController < ApplicationController
   end
 
   private
+
+  def render_failure(failure, template)
+    @change_set = failure[:change_set]
+    @error = failure
+
+    render :new
+  end
+
+  def asset_params
+    params.require(:asset).permit(:label, annotations: [:text], transcriptions: [:contents, :mime_type])
+  end
 
   # @param [Symbol] type
   def serve_derivative_file(type:)
@@ -72,7 +112,12 @@ class AssetsController < ApplicationController
   end
 
   def set_item
-    @item = metadata_adapter.query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
+    @item = if params[:item_id]
+              metadata_adapter.query_service.find_by(id: params[:item_id])
+            else
+              metadata_adapter.query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
+            end
+
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
     raise ItemNotFound, e
   end
