@@ -3,9 +3,10 @@
   <% component.with_breadcrumb(active: true) do %>Users<% end %>
 <% end %>
 
-<h2>Users</h2>
-
-<%= link_to 'New User', new_user_path(@user), class: 'btn btn-primary mb-2' %>
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title { 'Users' } %>
+  <%= header.with_right_link(href: new_user_path) { 'New User' } %>
+<% end %>
 
 <table class="table">
   <thead>

@@ -7,7 +7,7 @@ module Header
     end
 
     renders_one :right_link, ->(href:, &block) do
-      content_tag :a, href: href, class: 'btn btn-primary', &block
+      content_tag :a, href: href, class: 'btn btn-outline-primary', &block
     end
   end
 end
