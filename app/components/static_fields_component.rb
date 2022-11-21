@@ -9,7 +9,7 @@ class StaticFieldsComponent < ViewComponent::Base
   end
 
   def call
-    content_tag :dl, class: 'row' do
+    content_tag :dl, class: 'row my-2' do
       safe_join(fields)
     end
   end
