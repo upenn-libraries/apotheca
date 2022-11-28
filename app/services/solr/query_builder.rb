@@ -39,7 +39,7 @@ module Solr
     # @return [String]
     def fq
       filters = params['filter']&.to_unsafe_h || {}
-      filters = filters.delete_if { |k, v| v.blank? || !k.to_sym.in?(mapper::Filter.fields) }
+      filters.delete_if { |k, v| reject_filter(k, v) }
       all_filters = defaults[:fq].merge filters.to_h
       all_filters.filter_map do |field, v|
         fq_condition field: field, values: v
@@ -78,8 +78,11 @@ module Solr
         solr_field = map type: :search, field: search_field.to_sym
         raise "no map for #{search_field}" unless solr_field
 
-        # TODO: default operator of :optional for now (i.e., no add'l query syntax)
-        { field: solr_field, term: params.dig(:search, :value)&.at(i), op: :optional }
+        opr = params.dig(:search, :opr)&.at(i) || :optional
+        term = params.dig(:search, :value)&.at(i)
+        next if term.blank?
+
+        { field: solr_field, term: term, op: opr }
       end
     end
 
@@ -97,9 +100,15 @@ module Solr
       solr_field = map type: :filter, field: field
       return nil unless solr_field
 
-      Array.wrap(values).map do |value|
+      Array.wrap(values).compact_blank.map do |value|
         "#{solr_field}: \"#{value}\""
       end.join(' OR ').insert(0, '(').insert(-1, ')') # use OR for particular field values (this OR that collection)
+    end
+
+    # @return [TrueClass, FalseClass]
+    def reject_filter(field, values)
+      empty_values = values.is_a?(Array) ? values.compact_blank.empty? : values.blank?
+      empty_values || !field.to_sym.in?(mapper::Filter.fields)
     end
   end
 end

@@ -3,11 +3,12 @@
 module Solr
   # provide a nice container for handling solr response in controllers
   class ResponseContainer
-    attr_reader :documents, :facets
+    attr_reader :documents, :facets, :query
 
-    def initialize(documents:, facet_data:)
+    def initialize(documents:, facet_data:, query: nil)
       @documents = documents
       @facets = facets_to_hash(facet_data: facet_data)
+      @query = query.to_s
     end
 
     private
