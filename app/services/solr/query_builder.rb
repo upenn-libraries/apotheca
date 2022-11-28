@@ -39,7 +39,7 @@ module Solr
     # @return [String]
     def fq
       filters = params['filter']&.to_unsafe_h || {}
-      filters = filters.delete_if { |k, v| v.blank? || !k.to_sym.in?(Solr::QueryMaps::Item::Filter.fields) }
+      filters = filters.delete_if { |k, v| v.blank? || !k.to_sym.in?(mapper::Filter.fields) }
       all_filters = defaults[:fq].merge filters.to_h
       all_filters.filter_map do |field, v|
         fq_condition field: field, values: v
@@ -75,7 +75,7 @@ module Solr
       return [] if search_fields.blank?
 
       search_fields.filter_map.with_index do |search_field, i|
-        solr_field = Solr::QueryMaps::Item::Search.send search_field
+        solr_field = map type: :search, field: search_field
         raise "no map for #{search_field}" unless solr_field
 
         # TODO: default operator of :optional for now (i.e., no add'l query syntax)
