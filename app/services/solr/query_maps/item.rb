@@ -32,11 +32,11 @@ module Solr
       end
 
       class Sort < Type
-        CREATED_AT = :aaa
-        UPDATED_AT = :aaa
+        CREATED_AT = :created_at_dtsi
+        UPDATED_AT = :updated_at_dtsi
         TITLE = :title_ssi
-        FIRST_PUBLISHED_AT = :aaa
-        LAST_PUBLISHED_AT = :aaa
+        FIRST_PUBLISHED_AT = :first_published_at_dtsi
+        LAST_PUBLISHED_AT = :last_published_at_dtsi
         SCORE = :score
       end
 
