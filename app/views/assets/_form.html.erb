@@ -1,0 +1,40 @@
+<% method = @change_set.resource.new_record ? :post : :patch %>
+<% url = @change_set.resource.new_record ? assets_path : asset_path(@change_set.resource.id) %>
+
+<%= render(Form::Component.new(name: 'asset', url: url, method: method, multipart: true)) do |form| %>
+  <% form.with_error(@error) %>
+
+  <% form.with_input_hidden(label: 'Item ID', value: @item.id, field: 'item_id') %>
+
+  <% form.with_input_text(label: 'Label', value: @change_set.label, field: "asset[label]") %>
+  <% form.with_input_text(label: 'Annotations', value: @change_set.annotations, field: "asset[annotations][][text]") %>
+
+  <% form.with_section do |section| %>
+    <% section.with_title { 'Transcription' } %>
+    <% section.with_input_select(label: 'Mime Type',
+                                 value: @change_set.transcriptions.first&.mime_type,
+                                 field: "asset[transcriptions][][mime_type]",
+                                 options: AssetChangeSet::TranscriptionChangeSet::VALID_MIME_TYPES) %>
+    <% section.with_input_textarea(label: 'Contents',
+                                   value: @change_set.transcriptions.first&.contents,
+                                   field: "asset[transcriptions][][contents]") %>
+  <% end %>
+
+  <% form.section do |section| %>
+    <% section.with_title { 'Preservation File' } %>
+
+    <% if @change_set.resource.preservation_file_id.present? %>
+      <% section.with_input_readonly(label: 'Original Filename', field: 'asset[original_filename]', value: @change_set.original_filename) %>
+      <% section.with_input_readonly(label: 'File', field: 'asset[file]', value: @change_set.preservation_file_id) %>
+    <% end %>
+
+    <% section.with_input_file(label: 'New File', value: nil, field: 'asset[file]') %>
+  <% end %>
+
+  <%# form.with_section do |section| %>
+    <%# section.with_title { 'New Preservation File' } %>
+    <%# section.with_input_file(label: 'File', value: nil, field: 'asset[file]') %>
+  <%# end %>
+
+  <% form.with_submit('Save') %>
+<% end %>

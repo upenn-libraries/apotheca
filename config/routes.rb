@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   scope :resources do
     resources :items
-    resources :assets, only: [:show, :create, :new] do
+    resources :assets, except: [:index, :destroy] do
       member do
         get 'file/:type', to: 'assets#file', as: :file
       end

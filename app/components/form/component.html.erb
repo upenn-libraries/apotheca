@@ -2,7 +2,7 @@
 <div>
   <%= error %>
 
-  <%= form_tag(@url, method: @method) do %>
+  <%= form_tag(@url, **@options) do %>
     <%= hidden_field_tag :form, @name %>
 
     <% inputs.each do |input| %>

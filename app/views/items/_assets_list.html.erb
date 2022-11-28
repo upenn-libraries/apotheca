@@ -25,11 +25,11 @@
     <div id="asset-list list-group">
       <a href="#" class="list-group-item disabled" tabindex="-1" aria-disabled="true">Arranged</a>
       <% @arranged_assets.each do |a| %>
-        <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename&.truncate(20) %></a>
+        <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename&.truncate(20) || a.id %></a>
       <% end %>
       <a href="#" class="list-group-item disabled" tabindex="-1" aria-disabled="true">Unarranged</a>
       <% @unarranged_assets.each do |a| %>
-        <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename&.truncate(20) %></a>
+        <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename&.truncate(20) || a.id %></a>
       <% end %>
     </div>
   </div>
