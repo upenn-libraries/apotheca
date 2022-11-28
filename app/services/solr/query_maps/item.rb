@@ -24,8 +24,8 @@ module Solr
           end
 
           def field_map
-            fields.each_with_object({}) do |field, map|
-              map[field.to_s.titleize] = const_get field.upcase
+            fields.index_by do |field|
+              field.to_s.titleize
             end
           end
         end

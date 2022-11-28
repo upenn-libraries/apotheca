@@ -75,7 +75,7 @@ module Solr
       return [] if search_fields.blank?
 
       search_fields.filter_map.with_index do |search_field, i|
-        solr_field = map type: :search, field: search_field
+        solr_field = map type: :search, field: search_field.to_sym
         raise "no map for #{search_field}" unless solr_field
 
         # TODO: default operator of :optional for now (i.e., no add'l query syntax)

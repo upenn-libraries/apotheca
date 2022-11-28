@@ -17,14 +17,15 @@
   <%= f.select 'filter[published]', options_for_select([['Yes', true], ['No', false]], params.dig(:filter, :published)), include_blank: false, label: 'Published?' %>
   <%= f.select 'filter[created_by]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.created_by.to_s, []), params.dig(:filter, :created_by)), include_blank: true, label: 'Created By' %>
   <%= f.select 'filter[updated_by]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.updated_by.to_s, []), params.dig(:filter, :updated_by)), include_blank: true, label: 'Updated By' %>
-  <%= f.select 'filter[collection]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.collection.to_s, []), params.dig(:filter, :collection)), include_blank: true, label: 'Collection' %>
+  <%= f.select 'filter[collection]', options_for_select(@facets.fetch(Solr::QueryMaps::Item::Filter.collection.to_s, []), params.dig(:filter, :collection)), { label: 'Collection' }, { multiple: true, include_blank: true } %>
   <!-- TODO: use js to add/remove additional fielded search elements -->
   <%= f.select 'search[field][]', options_for_select(Solr::QueryMaps::Item::Search.field_map) %>
   <%= f.text_field 'search[value][]' %>
   <%= f.select 'search[field][]', options_for_select(Solr::QueryMaps::Item::Search.field_map) %>
   <%= f.text_field 'search[value][]' %>
-  <!-- TODO: handling for term 'operator' - 'required', 'excluded', 'optional'
+  <!-- TODO: handling for term 'operator' - 'required', 'excluded', 'optional' -->
   <%= f.submit 'Submit', class: 'btn btn-primary' %>
+  <%= link_to 'Start Over', items_path, class: 'btn btn-secondary' %>
 <% end %>
 
 <hr>
