@@ -53,9 +53,9 @@ class AssetChangeSet < Valkyrie::ChangeSet
   validates :original_filename, presence: true, if: ->(asset) { asset.preservation_file_id.present? }
 
   def transcriptions!(collection:, index:, fragment:, **)
-    if fragment['contents'].blank?
+    if fragment['contents'].blank? && fragment[:contents].blank?
       skip!
-    elsif item = collection[index]
+    elsif (item = collection[index])
       item
     else
       collection.insert(index, AssetResource::Transcription.new)
@@ -63,9 +63,9 @@ class AssetChangeSet < Valkyrie::ChangeSet
   end
 
   def annotations!(collection:, index:, fragment:, **)
-    if fragment['text'].blank?
+    if fragment['text'].blank? && fragment[:text].blank?
       skip!
-    elsif item = collection[index]
+    elsif (item = collection[index])
       item
     else
       collection.insert(index, AssetResource::Annotation.new)

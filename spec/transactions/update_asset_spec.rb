@@ -121,8 +121,7 @@ describe UpdateAsset do
         transaction.call(
           id: asset.id,
           transcriptions: [
-            mime_type: 'text/plain',
-            contents: 'Importers, 32 S. Howard Street, Baltimore, MD.'
+            { mime_type: 'text/plain', contents: 'Importers, 32 S. Howard Street, Baltimore, MD.' }
           ],
           updated_by: 'test@example.com'
         )
