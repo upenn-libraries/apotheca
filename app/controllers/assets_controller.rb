@@ -30,7 +30,7 @@ class AssetsController < ApplicationController
 
   def create
     authorize! :create, AssetResource
-    result = create_asset
+    result = build_and_attach_asset
     if result.success?
       flash.notice = 'Successfully created asset.'
       redirect_to asset_path(result.value!.id)
@@ -75,7 +75,7 @@ class AssetsController < ApplicationController
   # Creates asset, adds file to asset (if one is present), then attaches asset to item.
   # Note: This method does not require a file, therefore assets can be created without
   # an associated preservation file.
-  def create_asset
+  def build_and_attach_asset
     # Create base asset.
     result = CreateAsset.new.call(**asset_params, created_by: current_user.email)
     return result if result.failure?
@@ -96,7 +96,7 @@ class AssetsController < ApplicationController
       return add_asset_result
     end
 
-    update_result
+    update_result || result
   end
 
   def render_failure(failure, template)

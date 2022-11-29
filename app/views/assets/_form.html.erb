@@ -7,7 +7,7 @@
   <% form.with_input_hidden(label: 'Item ID', value: @item.id, field: 'item_id') %>
 
   <% form.with_input_text(label: 'Label', value: @change_set.label, field: "asset[label]") %>
-  <% form.with_input_text(label: 'Annotations', value: @change_set.annotations, field: "asset[annotations][][text]") %>
+  <% form.with_input_text(label: 'Annotations', value: @change_set.annotations.map(&:text), field: "asset[annotations][][text]") %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Transcription' } %>
