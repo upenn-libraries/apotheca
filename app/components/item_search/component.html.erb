@@ -1,0 +1,69 @@
+<%= bootstrap_form_tag(url: url, method: :get) do |form| %>
+  <div class="row g-2">
+    <div class="col-md-6">
+      <%= form.text_field 'search[all]', value: params.dig(:search, :all), label: 'Search' %>
+    </div>
+    <div class="col-md-1">
+      <%= form.select :rows, rows_options, label: 'Rows' %>
+    </div>
+    <div class="col-md-2">
+      <%= form.select 'sort[field]', sort_fields_options, label: 'Sort By' %>
+    </div>
+    <div class="col-md-2">
+      <%= form.select 'sort[direction]', sort_directions_options, label: 'Direction' %>
+    </div>
+    <div class="col-md-1">
+      <%= form.select 'filter[published]', published_options, include_blank: true, label: 'Published?' %>
+    </div>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-12">
+          <%= form.select 'filter[created_by]', created_by_options, include_blank: true, label: 'Created By' %>
+        </div>
+        <div class="col-md-12">
+          <%= form.select 'filter[updated_by]', updated_by_options, include_blank: true, label: 'Updated By' %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="col-md-12">
+        <%= form.select 'filter[collection]', collections_options, { label: 'Collection' }, { multiple: true, include_blank: true, size: 6 } %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row g-1 mt-2">
+            <div class="col-md-2">
+              <%= form.select 'search[field][]', search_fields_options, label: 'Field' %>
+            </div>
+            <div class="col-md-7">
+              <%= form.text_field 'search[value][]', label: 'Term' %>
+            </div>
+            <div class="col-md-2">
+              <%= form.select 'search[opr][]', operator_options, label: 'Operator' %>
+            </div>
+            <div class="col-md-1">
+              <br class="mb-2">
+              <button type="button" class="btn btn-danger" data-input--multivalued--input-list-target="delete" data-action="input--multivalued--input#removeInput">-</button>
+              <button type="button" class="btn btn-success" data-action="input--multivalued--input#addInput">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="btn-group-vertical d-block">
+        <%= form.submit 'Submit', class: 'btn btn-primary' %>
+        <%= link_to 'Start Over', items_path, class: 'btn btn-secondary' %>
+        <%= link_to 'Export as CSV', items_path, class: 'btn btn-secondary' %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if query.present? %>
+  <div class="card mt-2 font-monospace bg-info bg-opacity-25 p-2"><%= query %></div>
+<% end %>

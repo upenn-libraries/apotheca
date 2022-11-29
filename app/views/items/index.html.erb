@@ -9,75 +9,7 @@
 <% end %>
 
 <!-- TODO: view component -->
-<%= bootstrap_form_tag(url: items_path, method: :get) do |f| %>
-  <div class="row g-2">
-    <div class="col-md-6">
-      <%= f.text_field 'search[all]', value: params.dig(:search, :all), label: 'Search' %>
-    </div>
-    <div class="col-md-1">
-      <%= f.select :rows, options_for_select([50,100,250,500], params[:rows]), label: 'Rows' %>
-    </div>
-    <div class="col-md-2">
-      <%= f.select 'sort[field]', options_for_select(Solr::QueryMaps::Item::Sort.field_map, params[:sort_field]), label: 'Sort By' %>
-    </div>
-    <div class="col-md-2">
-      <%= f.select 'sort[direction]', options_for_select([ %w[Descending desc], %w[Ascending asc]], params[:sort_direction]), label: 'Direction' %>
-    </div>
-    <div class="col-md-1">
-      <%= f.select 'filter[published]', options_for_select([['Yes', true], ['No', false]], params.dig(:filter, :published)), include_blank: true, label: 'Published?' %>
-    </div>
-    <div class="col-md-6">
-      <div class="row">
-        <div class="col-md-12">
-          <%= f.select 'filter[created_by]', options_for_select(@container.facets.fetch(Solr::QueryMaps::Item::Filter.created_by.to_s, []), params.dig(:filter, :created_by)), include_blank: true, label: 'Created By' %>
-        </div>
-        <div class="col-md-12">
-          <%= f.select 'filter[updated_by]', options_for_select(@container.facets.fetch(Solr::QueryMaps::Item::Filter.updated_by.to_s, []), params.dig(:filter, :updated_by)), include_blank: true, label: 'Updated By' %>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="col-md-12">
-        <%= f.select 'filter[collection]', options_for_select(@container.facets.fetch(Solr::QueryMaps::Item::Filter.collection.to_s, []), params.dig(:filter, :collection)), { label: 'Collection' }, { multiple: true, include_blank: true, size: 6 } %>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-10">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="row g-1 mt-2">
-            <div class="col-md-2">
-              <%= f.select 'search[field][]', options_for_select(Solr::QueryMaps::Item::Search.field_map), class: 'form-control', label: 'Field' %>
-            </div>
-            <div class="col-md-7">
-              <%= f.text_field 'search[value][]', class: 'form-control', label: 'Term' %>
-            </div>
-            <div class="col-md-2">
-              <%= f.select 'search[opr][]', options_for_select([['None', ''], %w[Required required], %w[Excluded excluded]]), label: 'Operator' %>
-            </div>
-            <div class="col-md-1">
-              <br class="mb-2">
-              <button type="button" class="btn btn-danger" data-input--multivalued--input-list-target="delete" data-action="input--multivalued--input#removeInput">-</button>
-              <button type="button" class="btn btn-success" data-action="input--multivalued--input#addInput">+</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="btn-group-vertical d-block">
-        <%= f.submit 'Submit', class: 'btn btn-primary' %>
-        <%= link_to 'Start Over', items_path, class: 'btn btn-secondary' %>
-        <%= link_to 'Export as CSV', items_path, class: 'btn btn-secondary' %>
-      </div>
-    </div>
-  </div>
-<% end %>
-
-<% if @container.query.present? %>
-  <div class="card mt-2 font-monospace bg-info bg-opacity-25 p-2"><%= @container.query %></div>
-<% end %>
+<%= render partial: 'search_form', locals: { container: @container } %>
 
 <hr>
 
