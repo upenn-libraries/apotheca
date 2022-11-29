@@ -3,13 +3,12 @@
 module ItemSearch
   # Organize logic for rendering item search form inputs, etc
   class Component < ViewComponent::Base
-    attr_reader :params, :mapper, :url, :container
+    attr_reader :mapper, :url, :container
 
     delegate :facets, :query, to: :container
 
-    def initialize(url:, params:, response_container:, mapper: Solr::QueryMaps::Item)
+    def initialize(url:, response_container:, mapper: Solr::QueryMaps::Item)
       @url = url
-      @params = params
       @container = response_container
       @mapper = mapper
     end

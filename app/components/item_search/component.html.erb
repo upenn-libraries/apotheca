@@ -1,4 +1,4 @@
-<%= bootstrap_form_tag(url: url, method: :get) do |form| %>
+<%= bootstrap_form_tag(url: url, method: :get, id: 'item-search-form') do |form| %>
   <div class="row g-2">
     <div class="col-md-6">
       <%= form.text_field 'search[all]', value: params.dig(:search, :all), label: 'Search' %>
@@ -34,8 +34,8 @@
   <div class="row">
     <div class="col-md-10">
       <div class="row">
-        <div class="col-md-12">
-          <div class="row g-1 mt-2">
+        <div id="fielded-search-area" class="col-md-12" data-controller="item-search--field-search">
+          <div class="row g-1 mt-2 field-search-set" data-item-search--field-search-target="row">
             <div class="col-md-2">
               <%= form.select 'search[field][]', search_fields_options, label: 'Field' %>
             </div>
@@ -47,8 +47,8 @@
             </div>
             <div class="col-md-1">
               <br class="mb-2">
-              <button type="button" class="btn btn-danger" data-input--multivalued--input-list-target="delete" data-action="input--multivalued--input#removeInput">-</button>
-              <button type="button" class="btn btn-success" data-action="input--multivalued--input#addInput">+</button>
+              <button type="button" class="btn btn-danger" data-action="item-search--field-search#removeInputSet">-</button>
+              <button type="button" class="btn btn-success" data-action="item-search--field-search#addInputSet">+</button>
             </div>
           </div>
         </div>
