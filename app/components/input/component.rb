@@ -42,7 +42,7 @@ module Input
       when :hidden
         hidden_field_tag @field, @value, id: @id
       when :file
-        file_field_tag @field, class: 'form-control form-control-sm', id: @id
+        file_field_tag @field, class: 'form-control form-control-sm', id: @id, **@args
       when :readonly
         content_tag :input, nil, type: :text, class: 'form-control-sm form-control-plaintext', value: @value
       else

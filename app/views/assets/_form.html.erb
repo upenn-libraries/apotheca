@@ -28,7 +28,7 @@
       <% section.with_input_readonly(label: 'File', field: 'asset[file]', value: @change_set.preservation_file_id) %>
     <% end %>
 
-    <% section.with_input_file(label: 'New File', value: nil, field: 'asset[file]') %>
+    <% section.with_input_file(label: 'New File', value: nil, field: 'asset[file]', required: @change_set.resource.new_record) %>
   <% end %>
 
   <% form.with_submit('Save') %>
