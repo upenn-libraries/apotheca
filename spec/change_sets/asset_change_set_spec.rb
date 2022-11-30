@@ -21,11 +21,11 @@ describe AssetChangeSet do
     expect(change_set.annotations[0].text).to eql 'Special Image'
   end
 
-  it 'requires that a validation has text' do
+  it 'does not set annotation if text missing' do
     change_set.validate(annotations: [{ text: nil }])
 
-    expect(change_set.valid?).to be false
-    expect(change_set.errors[:'annotations.text']).to include 'can\'t be blank'
+    expect(change_set.valid?).to be true
+    expect(change_set.annotations[0]).to be_nil
   end
 
   context 'when mass assigning technical metadata' do
@@ -100,9 +100,9 @@ describe AssetChangeSet do
         change_set.validate(transcriptions: [{ mime_type: 'text/plain' }])
       end
 
-      it 'is not valid' do
-        expect(change_set.valid?).to be false
-        expect(change_set.errors[:'transcriptions.contents']).to include 'can\'t be blank'
+      it 'it does not set transcription value' do
+        expect(change_set.valid?).to be true
+        expect(change_set.transcriptions[0]).to be_nil
       end
     end
   end
@@ -141,7 +141,7 @@ describe AssetChangeSet do
 
   # NOTE: Resource must already be created in order to add files.
   context 'when adding a preservation copy' do
-    let(:resource) { persist(:asset_resource) }
+    let(:resource) { persist(:asset_resource, :with_preservation_file) }
     let(:preservation_copy_storage) { Valkyrie::StorageAdapter.find(:preservation_copy) }
     let(:preservation_copy_file) do
       preservation_copy_storage.upload(
@@ -166,7 +166,7 @@ describe AssetChangeSet do
 
   # NOTE: Resource must already be created in order to add files.
   context 'when adding a derivative' do
-    let(:resource) { persist(:asset_resource) }
+    let(:resource) { persist(:asset_resource, :with_preservation_file) }
     let(:derivative_storage) { Valkyrie::StorageAdapter.find(:derivatives) }
     let(:derivative) do
       derivative_storage.upload(

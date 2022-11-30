@@ -55,5 +55,9 @@ class Container
     register 'cleanup' do
       Around::AssetCleanup.new
     end
+
+    register 'delete_resource' do
+      Steps::DeleteResource.new
+    end
   end
 end

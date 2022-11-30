@@ -2,6 +2,8 @@
   <div class="col">
     <div id="assets-cards" data-bs-spy="scroll" data-bs-target="#asset-list" data-bs-offset="0" tabindex="0"><%# TODO: scrollspy is not working properly - perhaps due to this element not being position: relative? %>
       <h3 class="mb-3">Assets (arranged)</h3>
+      <%= link_to 'Add Asset', new_asset_path(item_id: @item.id), class: 'btn btn-primary' %>
+
       <% if @arranged_assets&.any? %>
         <% @arranged_assets.each_with_index do |asset, i| %>
           <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
@@ -23,11 +25,11 @@
     <div id="asset-list list-group">
       <a href="#" class="list-group-item disabled" tabindex="-1" aria-disabled="true">Arranged</a>
       <% @arranged_assets.each do |a| %>
-        <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename.truncate(20) %></a>
+        <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename&.truncate(20) || a.id %></a>
       <% end %>
       <a href="#" class="list-group-item disabled" tabindex="-1" aria-disabled="true">Unarranged</a>
       <% @unarranged_assets.each do |a| %>
-        <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename.truncate(20) %></a>
+        <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename&.truncate(20) || a.id %></a>
       <% end %>
     </div>
   </div>

@@ -34,7 +34,9 @@ class UpdateAsset
     result
   end
 
-  def store_file_in_preservation_storage(file: nil, **attributes)
+  def store_file_in_preservation_storage(**attributes)
+    file = attributes.delete(:file) || attributes.delete('file')
+
     if file
       file_resource = preservation_storage.upload(
         file: file, resource: attributes[:resource], original_filename: file.original_filename

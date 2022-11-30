@@ -8,17 +8,18 @@ module Input
       # @param value [Array<String>]
       # @param field [String]
       # @param options [Array<String>] options for select
-      def initialize(id:, value:, field:, options:)
+      def initialize(id:, value:, field:, options:, **args)
         @id = id
         @value = value
         @field = field
         @options = options
+        @args = args
       end
 
       def call
         select_tag(@field,
                    options_for_select(@options, selected: @value),
-                   class: 'form-control form-select-sm form-select', id: @id, include_blank: true)
+                   class: 'form-control form-select-sm form-select', id: @id, **@args)
       end
     end
   end

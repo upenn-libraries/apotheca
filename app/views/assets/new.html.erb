@@ -1,0 +1,12 @@
+
+<%= render(BreadcrumbsComponent.new) do |component| %>
+  <% component.with_breadcrumb(href: "/") { 'Home' } %>
+  <% component.with_breadcrumb(href: items_path) { 'Items' } %>
+  <% component.with_breadcrumb(href: item_path(@item, anchor: 'assets')) { @item.human_readable_name } %>
+  <% component.with_breadcrumb { 'Assets' } %>
+  <% component.with_breadcrumb(active: true) { 'New' } %>
+<% end %>
+
+<h1>New Asset</h1>
+
+<%= render 'form', method: :post, url: assets_path %>

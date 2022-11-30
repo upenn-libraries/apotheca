@@ -1,6 +1,10 @@
-<div class="row mb-3">
-  <label for="<%= @id %>" class="col-sm-2 col-form-label col-form-label-sm"><%= @label %></label>
-  <div class="col-sm-10">
-    <%= input %>
+<% if @type == :hidden %>
+  <%= input %>
+<% else %>
+  <div class="row mb-3">
+    <label for="<%= @id %>" class="col-sm-2 col-form-label col-form-label-sm"><%= @label %></label>
+    <div class="col-sm-10">
+      <%= input %>
+    </div>
   </div>
-</div>
+<% end %>

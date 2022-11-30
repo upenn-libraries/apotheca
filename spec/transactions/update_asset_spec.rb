@@ -3,7 +3,6 @@
 describe UpdateAsset do
   describe '#call' do
     let(:transaction) { described_class.new }
-    let(:asset) { persist(:asset_resource) }
 
     let(:file1) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/front.jpg')) }
     let(:file2) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/bell.wav')) }
@@ -11,6 +10,7 @@ describe UpdateAsset do
     context 'when providing a file for the first time' do
       subject(:updated_asset) { result.value! }
 
+      let(:asset) { persist(:asset_resource) }
       let(:result) do
         transaction.call(
           id: asset.id,
@@ -117,12 +117,15 @@ describe UpdateAsset do
     context 'when adding transcriptions' do
       subject(:updated_asset) { result.value! }
 
+      let(:asset) do
+        a = persist(:asset_resource, :with_preservation_file, :with_preservation_backup)
+        GenerateDerivatives.new.call(id: a.id).value!
+      end
       let(:result) do
         transaction.call(
           id: asset.id,
           transcriptions: [
-            mime_type: 'text/plain',
-            contents: 'Importers, 32 S. Howard Street, Baltimore, MD.'
+            { mime_type: 'text/plain', contents: 'Importers, 32 S. Howard Street, Baltimore, MD.' }
           ],
           updated_by: 'test@example.com'
         )
@@ -144,6 +147,7 @@ describe UpdateAsset do
     end
 
     context 'when adding a file and a error occurs' do
+      let(:asset) { persist(:asset_resource) }
       let(:result) do
         transaction.call(
           id: asset.id,

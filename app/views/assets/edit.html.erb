@@ -1,0 +1,11 @@
+<%= render(BreadcrumbsComponent.new) do |component| %>
+  <% component.with_breadcrumb(href: "/") { 'Home' } %>
+  <% component.with_breadcrumb(href: items_path) { 'Items' } %>
+  <% component.with_breadcrumb(href: item_path(@item, anchor: 'assets')) { @item.human_readable_name } %>
+  <% component.with_breadcrumb { 'Assets' } %>
+  <% component.with_breadcrumb(active: true) { @asset.original_filename || @asset.id.to_s } %>
+<% end %>
+
+<h1>Edit Asset: <%= @asset.original_filename || @asset.id %></h1>
+
+<%= render 'form', method: :patch, url: asset_path(@change_set.resource.id) %>

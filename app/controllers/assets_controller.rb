@@ -6,8 +6,8 @@ class AssetsController < ApplicationController
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
 
-  before_action :set_asset, only: [:show, :file]
-  before_action :set_item, only: [:show]
+  before_action :set_asset, only: [:show, :file, :edit, :update]
+  before_action :set_item, only: [:show, :new, :create, :edit, :update]
 
   # respond with a 404 for missing asset files or missing Item (when required)
   rescue_from 'AssetsController::FileNotFound', 'AssetsController::ItemNotFound' do |_e|
@@ -23,6 +23,42 @@ class AssetsController < ApplicationController
     authorize! :show, @asset
   end
 
+  def new
+    authorize! :new, AssetResource
+    @change_set = AssetChangeSet.new(AssetResource.new)
+  end
+
+  def create
+    authorize! :create, AssetResource
+    result = build_and_attach_asset
+    if result.success?
+      flash.notice = 'Successfully created asset.'
+      redirect_to asset_path(result.value!.id)
+    else
+      render_failure(result.failure, :new)
+    end
+  end
+
+  def edit
+    authorize! :new, @asset
+    @change_set = AssetChangeSet.new(@asset)
+  end
+
+  def update
+    authorize! :update, @asset
+
+    UpdateAsset.new.call(id: @asset.id, updated_by: current_user.email, **asset_params, **file_params) do |result|
+      result.success do |resource|
+        flash.notice = 'Successfully updated asset.'
+        redirect_to asset_path(resource)
+      end
+
+      result.failure do |failure|
+        render_failure(failure, :edit)
+      end
+    end
+  end
+
   def file
     case params[:type].to_sym
     when :thumbnail, :access
@@ -35,6 +71,48 @@ class AssetsController < ApplicationController
   end
 
   private
+
+  # Creates asset, adds file to asset (if one is present), then attaches asset to item.
+  # Note: This method does not require a file, therefore assets can be created without
+  # an associated preservation file.
+  def build_and_attach_asset
+    # Create base asset.
+    result = CreateAsset.new.call(**asset_params, created_by: current_user.email)
+    return result if result.failure?
+
+    # Add file to asset.
+    update_result = UpdateAsset.new.call(id: result.value!.id, updated_by: current_user.email, **file_params)
+    if update_result.failure?
+      DeleteAsset.new.call(id: result.value!.id)
+      return update_result
+    end
+
+    # Add Asset to Item.
+    add_asset_result = AddAsset.new.call(id: @item.id, asset_id: update_result.value!.id, updated_by: current_user.email)
+    if add_asset_result.failure?
+      DeleteAsset.new.call(id: result.value!.id)
+      return add_asset_result
+    end
+
+    update_result
+  end
+
+  def render_failure(failure, template)
+    @change_set = failure[:change_set]
+    @error = failure
+
+    render template
+  end
+
+  def asset_params
+    params.require(:asset).permit(:label, annotations: [:text], transcriptions: [:contents, :mime_type])
+  end
+
+  def file_params
+    params.require(:asset).permit(:file).tap do |p|
+      p[:original_filename] = p[:file].original_filename if p[:file].is_a? ActionDispatch::Http::UploadedFile
+    end
+  end
 
   # @param [Symbol] type
   def serve_derivative_file(type:)
@@ -72,7 +150,11 @@ class AssetsController < ApplicationController
   end
 
   def set_item
-    @item = metadata_adapter.query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
+    @item = if params[:item_id]
+              metadata_adapter.query_service.find_by(id: params[:item_id])
+            else
+              metadata_adapter.query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
+            end
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
     raise ItemNotFound, e
   end
