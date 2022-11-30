@@ -37,6 +37,7 @@ module Solr
       solr_adapter.persister.wipe!
     end
 
+    # Indexer class supporting filtering by resource type
     class FilteredIndexer
       attr_reader :indexer, :resources
 

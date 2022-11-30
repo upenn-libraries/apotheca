@@ -13,7 +13,7 @@ RSpec.describe ItemIndex do
   end
 
   describe '#item_index' do
-    let(:parameters) { ActionController::Parameters.new(params_hash) }
+    let(:parameters) { ActionController::Parameters.new(params_hash).permit! }
     let(:items) { query_service.custom_queries.item_index(parameters: parameters).documents }
 
     context 'with a keyword search' do
@@ -49,6 +49,17 @@ RSpec.describe ItemIndex do
       it 'returns only Collection A item' do
         expect(items.count).to eq 1
         expect(items.first.descriptive_metadata.collection).to match_array 'Collection A'
+      end
+    end
+
+    context 'with multiple collection filters applied' do
+      let(:collections) { ['Collection A', 'Collection B'] }
+      let(:params_hash) { { filter: { collection: collections } } }
+
+      it 'returns Collection A and Collection B items' do
+        expect(items.count).to eq 2
+        returned_collections = items.collect { |i| i.descriptive_metadata.collection }.flatten
+        expect(returned_collections).to match_array collections
       end
     end
   end

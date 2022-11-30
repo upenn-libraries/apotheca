@@ -21,26 +21,39 @@ class ItemIndex
 
   # search for Resources based on parameters
   # @param [ActionController::Parameters] parameters
+  # @return [Solr::ResponseContainer]
   def item_index(parameters:)
-    resources_from query: solr_query(parameters: parameters)
+    query = solr_query(parameters: parameters)
+    response = response(solr_query: query)
+    build_response_container response: response, search_params: parameters, query: query
+  end
+
+  # @param [RSolr::HashWithResponse] response
+  # @param [ActionController::Parameters] search_params
+  # @param [Hash] query
+  # @return [Solr::ResponseContainer]
+  def build_response_container(response:, search_params:, query:)
+    docs = response.dig('response', 'docs')
+    items = docs.map { |d| resource_factory.to_resource(object: d) }
+    Solr::ResponseContainer.new(
+      documents: items,
+      facet_data: response.dig('facet_counts', 'facet_fields'),
+      search_params: search_params,
+      query: query
+    )
   end
 
   # get Solr response
+  # @param [Hash] solr_query
+  # @return [RSolr::HashWithResponse]
   def response(solr_query:)
     connection.get('select', params: solr_query)
   end
 
+  # Use Solr::QueryBuilder to compose Solr query from params
+  # @param [ActionController::Parameters] parameters
+  # @return [Hash]
   def solr_query(parameters:)
     Solr::QueryBuilder.new(params: parameters, defaults: { fq: DEFAULT_FQ }, mapper: MAPPER).solr_query
-  end
-
-  # convert Solr response into Resource objects
-  # @param [Object] query
-  def resources_from(query:)
-    response = response solr_query: query
-    docs = response.dig('response', 'docs')
-    items = docs.map { |d| resource_factory.to_resource(object: d) }
-    facets = response.dig('facet_counts', 'facet_fields')
-    Solr::ResponseContainer.new documents: items, facet_data: facets, query: query
   end
 end

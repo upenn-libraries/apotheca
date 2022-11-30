@@ -14,7 +14,7 @@ describe Solr::QueryBuilder do
       let(:params) do
         ActionController::Parameters.new(
           { 'filter' => { 'format' => '', 'collection' => 'test', 'subject' => %w[a b] } }
-        )
+        ).permit!
       end
 
       it 'includes a default' do
@@ -43,7 +43,7 @@ describe Solr::QueryBuilder do
     let(:params) do
       ActionController::Parameters.new(
         { 'sort' => { 'field' => 'title', 'direction' => 'asc' } }
-      )
+      ).permit!
     end
 
     it 'properly sets sort value' do
@@ -57,7 +57,7 @@ describe Solr::QueryBuilder do
         { 'search' => {
           'all' => 'blah',
           'field' => %w[date subject],
-          'value' => %w[1999 Ruby]
+          'term' => %w[1999 Ruby]
         } }
       ).permit!
     end

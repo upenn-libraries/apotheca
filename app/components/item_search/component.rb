@@ -5,8 +5,11 @@ module ItemSearch
   class Component < ViewComponent::Base
     attr_reader :mapper, :url, :container
 
-    delegate :facets, :query, to: :container
+    delegate :documents, :facets, :query, :search_params, to: :container
 
+    # @param [String] url
+    # @param [Solr::ResponseContainer] response_container
+    # @param [Module<Solr::QueryMaps::Item>] mapper
     def initialize(url:, response_container:, mapper: Solr::QueryMaps::Item)
       @url = url
       @container = response_container
@@ -56,16 +59,32 @@ module ItemSearch
       )
     end
 
-    def search_fields_options
+    # @param [String, nil] selected
+    def search_fields_options(selected: nil)
       options_for_select(
-        Solr::QueryMaps::Item::Search.field_map # TODO: selected
+        Solr::QueryMaps::Item::Search.field_map,
+        selected
       )
     end
 
-    def operator_options
+    # @param [String, nil] selected
+    def operator_options(selected: nil)
       options_for_select(
-        [['None', ''], %w[Required required], %w[Excluded excluded]] # TODO: selected
+        [['', ''], %w[Required required], %w[Excluded excluded]],
+        selected
       )
+    end
+
+    # extract and organize fielded search values for use in re-rending the form from params
+    # @return [Array]
+    def fielded_search_params
+      search = (search_params[:search] || { field: [], term: [], opr: [] }) # :/
+      fields = (0...search[:field].try(:length)).map do |i|
+        { field: search[:field][i],
+          term: search[:term][i],
+          opr: search[:opr][i] }
+      end
+      Array.wrap fields
     end
   end
 end
