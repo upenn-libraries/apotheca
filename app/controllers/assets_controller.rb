@@ -81,22 +81,20 @@ class AssetsController < ApplicationController
     return result if result.failure?
 
     # Add file to asset.
-    if file_params[:file].is_a?(ActionDispatch::Http::UploadedFile)
-      update_result = UpdateAsset.new.call(id: result.value!.id, updated_by: current_user.email, **file_params)
-      if update_result.failure?
-        DeleteAsset.new.call(id: result.value!.id)
-        return update_result
-      end
+    update_result = UpdateAsset.new.call(id: result.value!.id, updated_by: current_user.email, **file_params)
+    if update_result.failure?
+      DeleteAsset.new.call(id: result.value!.id)
+      return update_result
     end
 
     # Add Asset to Item.
-    add_asset_result = AddAsset.new.call(id: @item.id, asset_id: result.value!.id, updated_by: current_user.email)
+    add_asset_result = AddAsset.new.call(id: @item.id, asset_id: update_result.value!.id, updated_by: current_user.email)
     if add_asset_result.failure?
       DeleteAsset.new.call(id: result.value!.id)
       return add_asset_result
     end
 
-    update_result || result
+    update_result
   end
 
   def render_failure(failure, template)

@@ -1,5 +1,3 @@
-<% method = @change_set.resource.new_record ? :post : :patch %>
-<% url = @change_set.resource.new_record ? assets_path : asset_path(@change_set.resource.id) %>
 
 <%= render(Form::Component.new(name: 'asset', url: url, method: method, multipart: true)) do |form| %>
   <% form.with_error(@error) %>

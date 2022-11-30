@@ -141,7 +141,7 @@ describe AssetChangeSet do
 
   # NOTE: Resource must already be created in order to add files.
   context 'when adding a preservation copy' do
-    let(:resource) { persist(:asset_resource) }
+    let(:resource) { persist(:asset_resource, :with_preservation_file) }
     let(:preservation_copy_storage) { Valkyrie::StorageAdapter.find(:preservation_copy) }
     let(:preservation_copy_file) do
       preservation_copy_storage.upload(
@@ -166,7 +166,7 @@ describe AssetChangeSet do
 
   # NOTE: Resource must already be created in order to add files.
   context 'when adding a derivative' do
-    let(:resource) { persist(:asset_resource) }
+    let(:resource) { persist(:asset_resource, :with_preservation_file) }
     let(:derivative_storage) { Valkyrie::StorageAdapter.find(:derivatives) }
     let(:derivative) do
       derivative_storage.upload(

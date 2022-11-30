@@ -16,6 +16,7 @@ FactoryBot.define do
     transient do
       preservation_backup { false }
     end
+
     # Attach file as preservation file. If `preservation_backup` flag is set to true also
     # backs up preservation file.
     #

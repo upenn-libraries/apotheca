@@ -8,4 +8,4 @@
 
 <h1>Edit Asset: <%= @asset.original_filename || @asset.id %></h1>
 
-<%= render 'form' %>
+<%= render 'form', method: :patch, url: asset_path(@change_set.resource.id) %>
