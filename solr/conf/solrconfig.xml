@@ -30,7 +30,7 @@
        <str name="defType">edismax</str>
        <str name="echoParams">explicit</str>
        <str name="q.alt">*:*</str>
-       <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
+       <str name="mm">1</str>
        <int name="qs">1</int>
        <int name="ps">2</int>
        <float name="tie">0.01</float>
@@ -62,41 +62,7 @@
        <str name="facet.field">personal_name_ssim</str>
        <str name="facet.field">subject_ssim</str>
        <str name="facet.field">internal_resource_ssim</str>
-
-       <str name="spellcheck">false</str>
-       <str name="spellcheck.dictionary">default</str>
-       <str name="spellcheck.onlyMorePopular">true</str>
-       <str name="spellcheck.extendedResults">true</str>
-       <str name="spellcheck.collate">false</str>
-       <str name="spellcheck.count">5</str>
-
      </lst>
-    <arr name="last-components">
-      <str>spellcheck</str>
-    </arr>
-  </requestHandler>
-
-  <requestHandler name="permissions" class="solr.SearchHandler" >
-    <lst name="defaults">
-      <str name="facet">off</str>
-      <str name="echoParams">all</str>
-      <str name="rows">1</str>
-      <str name="q">{!raw f=id v=$id}</str> <!-- use id=666 instead of q=id:666 -->
-      <str name="fl">
-        id,
-        access_ssim,
-        discover_access_group_ssim,discover_access_person_ssim,
-        read_access_group_ssim,read_access_person_ssim,
-        edit_access_group_ssim,edit_access_person_ssim,
-        depositor_ti,
-        embargo_release_date_dtsi
-        inheritable_access_ssim,
-        inheritable_discover_access_group_ssim,inheritable_discover_access_person_ssim,
-        inheritable_read_access_group_ssim,inheritable_read_access_person_ssim,
-        inheritable_edit_access_group_ssim,inheritable_edit_access_person_ssim,
-        inheritable_embargo_release_date_dtsi
-      </str>
-    </lst>
   </requestHandler>
 
   <requestHandler name="standard" class="solr.SearchHandler">
@@ -104,62 +70,6 @@
        <str name="echoParams">explicit</str>
        <str name="defType">lucene</str>
      </lst>
-  </requestHandler>
-
-
-  <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
-    <str name="queryAnalyzerFieldType">textSpell</str>
-    <!-- Multiple "Spell Checkers" can be declared and used by this component
-      (e.g. for title_spell field)
-      -->
-    <lst name="spellchecker">
-      <str name="name">default</str>
-      <str name="field">spell</str>
-      <str name="spellcheckIndexDir">./spell</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-    <lst name="spellchecker">
-      <str name="name">author</str>
-      <str name="field">author_spell</str>
-      <str name="spellcheckIndexDir">./spell_author</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-    <lst name="spellchecker">
-      <str name="name">subject</str>
-      <str name="field">subject_spell</str>
-      <str name="spellcheckIndexDir">./spell_subject</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-    <lst name="spellchecker">
-      <str name="name">title</str>
-      <str name="field">title_spell</str>
-      <str name="spellcheckIndexDir">./spell_title</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-  </searchComponent>
-
-  <searchComponent name="suggest" class="solr.SuggestComponent">
-    <lst name="suggester">
-      <str name="name">mySuggester</str>
-      <str name="lookupImpl">FuzzyLookupFactory</str>
-      <str name="suggestAnalyzerFieldType">textSuggest</str>
-      <str name="buildOnCommit">true</str>
-      <str name="field">suggest</str>
-    </lst>
-  </searchComponent>
-
-  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">
-    <lst name="defaults">
-      <str name="suggest">true</str>
-      <str name="suggest.count">5</str>
-      <str name="suggest.dictionary">mySuggester</str>
-    </lst>
-    <arr name="components">
-      <str>suggest</str>
-    </arr>
   </requestHandler>
 
   <requestHandler name="/replication" class="solr.ReplicationHandler" startup="lazy" />
