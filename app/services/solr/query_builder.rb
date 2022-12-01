@@ -34,7 +34,7 @@ module Solr
         op = char_for opr: field_query[:op]
         "#{op}#{field}:\"#{term}\""
       end
-      search.prepend(params.dig(:search, :all)) if params.dig(:search, :all).present?
+      search.prepend("+(#{params.dig(:search, :all)})") if params.dig(:search, :all).present?
       search.join(' ')
     end
 
