@@ -24,19 +24,18 @@ module Solr
     end
 
     # return q param for solr query
-    # e.g., subject_tsim: "subject" AND title_tsim: "ancient"
-    # "fielded" queries should be ANDed
-    # e.g., (+subject_tsim: 'Metallurgy' AND -description_tsim: 'Gold')
+    # e.g., (+subject_tsim: 'Metallurgy' -description_tsim: 'Gold')
+    # Don't use a boolean operator to join term expressions, rely on operators
     # @return [String]
     def search
       search = field_queries.map do |field_query|
         field = field_query[:field] # solr field name, mapped or not
         term = field_query[:term] # query term
         op = char_for opr: field_query[:op]
-        "#{op}#{field}:#{term}"
+        "#{op}#{field}:\"#{term}\""
       end
       search.prepend(params.dig(:search, :all)) if params.dig(:search, :all).present?
-      search.join(' AND ')
+      search.join(' ')
     end
 
     # compose FilterQuery param
