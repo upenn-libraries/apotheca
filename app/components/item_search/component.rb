@@ -75,16 +75,10 @@ module ItemSearch
       )
     end
 
-    # extract and organize fielded search values for use in re-rending the form from params
+    # extract fielded search values for use in re-rending the form from params
     # @return [Array]
     def fielded_search_params
-      search = (search_params[:search] || { field: [], term: [], opr: [] }) # :/
-      fields = (0...search[:field].try(:length)).map do |i|
-        { field: search[:field][i],
-          term: search[:term][i],
-          opr: search[:opr][i] }
-      end
-      Array.wrap fields
+      search_params.dig(:search, :fielded) || [{}]
     end
   end
 end

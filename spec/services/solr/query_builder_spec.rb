@@ -56,14 +56,17 @@ describe Solr::QueryBuilder do
       ActionController::Parameters.new(
         { 'search' => {
           'all' => 'blah',
-          'field' => %w[date subject],
-          'term' => %w[1999 Ruby]
+          'fielded' => [
+            { field: 'date', term: '1999', opr: '' },
+            { field: 'subject', term: 'Ruby', opr: 'required' },
+            { field: 'creator', term: '', opr: 'excluded' }
+          ]
         } }
       ).permit!
     end
 
     it 'properly composes a q param' do
-      expect(builder.search).to eq 'blah AND date_tsim:1999 AND subject_tsim:Ruby'
+      expect(builder.search).to eq '+(blah) date_tsim:"1999" +subject_tsim:"Ruby"'
     end
   end
 end

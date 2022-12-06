@@ -28,11 +28,15 @@ module Solr
     # Don't use a boolean operator to join term expressions, rely on operators
     # @return [String]
     def search
-      search = field_queries.map do |field_query|
-        field = field_query[:field] # solr field name, mapped or not
-        term = field_query[:term] # query term
-        op = char_for opr: field_query[:op]
-        "#{op}#{field}:\"#{term}\""
+      search = Array.wrap(params.dig(:search, :fielded)).filter_map do |field_query|
+        solr_field = map type: :search, field: field_query[:field].to_sym
+        raise "no map for #{field_query[:field]}" unless solr_field
+
+        term = field_query[:term]
+        next if term.blank?
+
+        op = char_for opr: field_query[:opr]
+        "#{op}#{solr_field}:\"#{term}\""
       end
       search.prepend("+(#{params.dig(:search, :all)})") if params.dig(:search, :all).present?
       search.join(' ')
@@ -72,23 +76,6 @@ module Solr
       when :excluded then '-'
       else
         ''
-      end
-    end
-
-    # map params into field query hashes for use in #search
-    # @return [Array]
-    def field_queries
-      search_fields = params.dig(:search, :field)
-      Array.wrap(search_fields).filter_map.with_index do |search_field, i|
-        solr_field = map type: :search, field: search_field.to_sym
-        raise "no map for #{search_field}" unless solr_field
-
-        term = params.dig(:search, :term)&.at(i)
-        next if term.blank?
-
-        { field: solr_field,
-          term: term,
-          op: (params.dig(:search, :opr)&.at(i) || :optional) }
       end
     end
 
