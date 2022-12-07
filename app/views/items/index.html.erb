@@ -8,14 +8,7 @@
   <%= header.with_right_link(href: new_item_path) { 'Create Item' } %>
 <% end %>
 
-<%= bootstrap_form_tag(url: items_path, method: :get) do |f| %>
-  <%= f.text_field :keyword, value: params[:keyword], label: 'Search' %>
-  <%= f.select :sort_field, options_for_select([%w[Relevance score], %w[ID id], %w[Title title_tsi]], params[:sort_field]), label: 'Sort By' %>
-  <%= f.select :sort_direction, options_for_select([ %w[Descending desc], %w[Ascending asc]], params[:sort_direction]), label: 'Sort Direction' %>
-  <%= f.select :rows, options_for_select([50,100,250,500], params[:rows]), label: 'Rows' %>
-  <%= f.select 'filters[collection_ssim]', options_for_select(@facets.fetch(:collection_ssim, []), (params[:filters] ? params[:filters][:collection_ssim] : '')), include_blank: true, label: 'Collection'  %>
-  <%= f.submit 'Submit', class: 'btn btn-primary' %>
-<% end %>
+<%= render partial: 'search_form', locals: { container: @container } %>
 
 <hr>
 
@@ -28,7 +21,7 @@
       <th></th>
     </tr>
   </thead>
-  <% @items.each do |item| %>
+  <% @container.documents.each do |item| %>
   <tr>
     <td>&nbsp;</td>
     <td><%= link_to item.descriptive_metadata.title.first, item_path(item.id) %></td>

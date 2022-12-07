@@ -13,11 +13,11 @@ RSpec.describe ItemIndex do
   end
 
   describe '#item_index' do
-    let(:parameters) { ActionController::Parameters.new(params_hash) }
-    let(:items) { query_service.custom_queries.item_index(parameters: parameters).items }
+    let(:parameters) { ActionController::Parameters.new(params_hash).permit! }
+    let(:items) { query_service.custom_queries.item_index(parameters: parameters).documents }
 
     context 'with a keyword search' do
-      let(:params_hash) { { keyword: 'Crunchy' } }
+      let(:params_hash) { { search: { all: 'Crunchy' } } }
 
       it 'returns result from title field' do
         expect(items.count).to eq 1
@@ -26,7 +26,7 @@ RSpec.describe ItemIndex do
     end
 
     context 'with an ascending title sort' do
-      let(:params_hash) { { sort_field: 'title_tsi', sort_direction: 'asc' } }
+      let(:params_hash) { { sort: { field: 'title', direction: 'asc' } } }
 
       it 'returns result properly ordered' do
         expect(items.count).to eq 2
@@ -35,7 +35,7 @@ RSpec.describe ItemIndex do
     end
 
     context 'with descending title sort' do
-      let(:params_hash) { { sort_field: 'title_tsi', sort_direction: 'desc' } }
+      let(:params_hash) { { sort: { field: 'title', direction: 'desc' } } }
 
       it 'returns result properly ordered' do
         expect(items.count).to eq 2
@@ -44,11 +44,22 @@ RSpec.describe ItemIndex do
     end
 
     context 'with collection filter applied' do
-      let(:params_hash) { { filters: { collection_ssim: 'Collection A' } } }
+      let(:params_hash) { { filter: { collection: 'Collection A' } } }
 
       it 'returns only Collection A item' do
         expect(items.count).to eq 1
         expect(items.first.descriptive_metadata.collection).to match_array 'Collection A'
+      end
+    end
+
+    context 'with multiple collection filters applied' do
+      let(:collections) { ['Collection A', 'Collection B'] }
+      let(:params_hash) { { filter: { collection: collections } } }
+
+      it 'returns Collection A and Collection B items' do
+        expect(items.count).to eq 2
+        returned_collections = items.collect { |i| i.descriptive_metadata.collection }.flatten
+        expect(returned_collections).to match_array collections
       end
     end
   end

@@ -30,50 +30,68 @@
        <str name="defType">edismax</str>
        <str name="echoParams">explicit</str>
        <str name="q.alt">*:*</str>
-       <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
+       <str name="mm">1</str>
        <int name="qs">1</int>
        <int name="ps">2</int>
        <float name="tie">0.01</float>
-       <!-- this qf and pf are used by default, if not otherwise specified by
-            client. The default blacklight_config will use these for the
-            "keywords" search. See the author_qf/author_pf, title_qf, etc
-            below, which the default blacklight_config will specify for
-            those searches. You may also be interested in:
-            http://wiki.apache.org/solr/LocalParams
-       -->
+
         <str name="qf">
           id
-          full_title_tsim
-          short_title_tsim
-          alternative_title_tsim
-          active_fedora_model_ssi
-          title_tsim
-          author_tsim
+          abstract_tsim
+          bibnumber_ss
+          call_number_tsim
+          collection_tsim
+          contributor_tsim
+          corporate_name_tsim
+          coverage_tsim
+          creator_tsim
+          date_tsim
+          format_ssim
+          description_tsim
+          geographic_subject_tsim
+          identifier_ssim
+          includes_tsim
+          item_type_ssim
+          language_ssim
+          notes_tsim
+          personal_name_tsim
+          provenance_tsim
+          publisher_tsim
+          relation_tsim
+          rights_tsim
+          source_tsim
           subject_tsim
-          all_text_timv
+          title_tsim
+          admin_search_tmiv
         </str>
         <str name="pf">
-          all_text_timv^10
-        </str>
-
-       <str name="author_qf">
-          author_tsim
-       </str>
-       <str name="author_pf">
-       </str>
-       <str name="title_qf">
-          title_tsim
-          full_title_tsim
-          short_title_tsim
-          alternative_title_tsim
-       </str>
-       <str name="title_pf">
-       </str>
-       <str name="subject_qf">
+          abstract_tsim
+          bibnumber_ss
+          call_number_tsim
+          collection_tsim
+          contributor_tsim
+          corporate_name_tsim
+          coverage_tsim
+          creator_tsim
+          date_tsim
+          format_ssim
+          description_tsim
+          geographic_subject_tsim
+          identifier_ssim
+          includes_tsim
+          item_type_ssim
+          language_ssim
+          notes_tsim
+          personal_name_tsim
+          provenance_tsim
+          publisher_tsim
+          relation_tsim
+          rights_tsim
+          source_tsim
           subject_tsim
-       </str>
-       <str name="subject_pf">
-       </str>
+          title_tsim
+          admin_search_tmiv
+        </str>
 
        <str name="fl">
          *,
@@ -83,43 +101,18 @@
        <str name="facet">true</str>
        <str name="facet.mincount">1</str>
        <str name="facet.limit">10</str>
+       <str name="facet.field">created_by_ssi</str>
+       <str name="facet.field">updated_by_ssi</str>
        <str name="facet.field">collection_ssim</str>
+       <str name="facet.field">corporate_name_ssim</str>
+       <str name="facet.field">format_ssim</str>
+       <str name="facet.field">geographic_subject_ssim</str>
+       <str name="facet.field">item_type_ssim</str>
+       <str name="facet.field">language_ssim</str>
+       <str name="facet.field">personal_name_ssim</str>
+       <str name="facet.field">subject_ssim</str>
        <str name="facet.field">internal_resource_ssim</str>
-
-       <str name="spellcheck">false</str>
-       <str name="spellcheck.dictionary">default</str>
-       <str name="spellcheck.onlyMorePopular">true</str>
-       <str name="spellcheck.extendedResults">true</str>
-       <str name="spellcheck.collate">false</str>
-       <str name="spellcheck.count">5</str>
-
      </lst>
-    <arr name="last-components">
-      <str>spellcheck</str>
-    </arr>
-  </requestHandler>
-
-  <requestHandler name="permissions" class="solr.SearchHandler" >
-    <lst name="defaults">
-      <str name="facet">off</str>
-      <str name="echoParams">all</str>
-      <str name="rows">1</str>
-      <str name="q">{!raw f=id v=$id}</str> <!-- use id=666 instead of q=id:666 -->
-      <str name="fl">
-        id,
-        access_ssim,
-        discover_access_group_ssim,discover_access_person_ssim,
-        read_access_group_ssim,read_access_person_ssim,
-        edit_access_group_ssim,edit_access_person_ssim,
-        depositor_ti,
-        embargo_release_date_dtsi
-        inheritable_access_ssim,
-        inheritable_discover_access_group_ssim,inheritable_discover_access_person_ssim,
-        inheritable_read_access_group_ssim,inheritable_read_access_person_ssim,
-        inheritable_edit_access_group_ssim,inheritable_edit_access_person_ssim,
-        inheritable_embargo_release_date_dtsi
-      </str>
-    </lst>
   </requestHandler>
 
   <requestHandler name="standard" class="solr.SearchHandler">
@@ -127,62 +120,6 @@
        <str name="echoParams">explicit</str>
        <str name="defType">lucene</str>
      </lst>
-  </requestHandler>
-
-
-  <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
-    <str name="queryAnalyzerFieldType">textSpell</str>
-    <!-- Multiple "Spell Checkers" can be declared and used by this component
-      (e.g. for title_spell field)
-      -->
-    <lst name="spellchecker">
-      <str name="name">default</str>
-      <str name="field">spell</str>
-      <str name="spellcheckIndexDir">./spell</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-    <lst name="spellchecker">
-      <str name="name">author</str>
-      <str name="field">author_spell</str>
-      <str name="spellcheckIndexDir">./spell_author</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-    <lst name="spellchecker">
-      <str name="name">subject</str>
-      <str name="field">subject_spell</str>
-      <str name="spellcheckIndexDir">./spell_subject</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-    <lst name="spellchecker">
-      <str name="name">title</str>
-      <str name="field">title_spell</str>
-      <str name="spellcheckIndexDir">./spell_title</str>
-      <str name="accuracy">0.7</str>
-      <str name="buildOnOptimize">true</str>
-    </lst>
-  </searchComponent>
-
-  <searchComponent name="suggest" class="solr.SuggestComponent">
-    <lst name="suggester">
-      <str name="name">mySuggester</str>
-      <str name="lookupImpl">FuzzyLookupFactory</str>
-      <str name="suggestAnalyzerFieldType">textSuggest</str>
-      <str name="buildOnCommit">true</str>
-      <str name="field">suggest</str>
-    </lst>
-  </searchComponent>
-
-  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">
-    <lst name="defaults">
-      <str name="suggest">true</str>
-      <str name="suggest.count">5</str>
-      <str name="suggest.dictionary">mySuggester</str>
-    </lst>
-    <arr name="components">
-      <str>suggest</str>
-    </arr>
   </requestHandler>
 
   <requestHandler name="/replication" class="solr.ReplicationHandler" startup="lazy" />

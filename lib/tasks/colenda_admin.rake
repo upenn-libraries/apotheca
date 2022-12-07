@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
+require './spec/support/valkyrie_persist_strategy'
+
 namespace :colenda_admin do
+  desc 'Reindex Resources'
+  task reindex: :environment do
+    Solr::Reindexer.reindex_all
+  end
+
+  desc 'Generate some sample items'
+  task generate_samples: :environment do
+    FactoryBot.register_strategy(:persist, ValkyriePersistStrategy)
+
+    sample_records_count = 20
+    0.upto(sample_records_count).each do |i|
+      FactoryBot.persist :item_resource, :with_faker_metadata, :with_asset
+    end
+  end
+
   desc 'Start local development & test environments'
   task start: :environment do
     # Start services
