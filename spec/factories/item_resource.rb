@@ -17,6 +17,30 @@ FactoryBot.define do
     created_by { 'admin@library.upenn.edu' }
     updated_by { 'admin@library.upenn.edu' }
 
+    trait :with_faker_metadata do
+      users = (0..5).map { Faker::Internet.email }
+      human_readable_name { Faker::Book.title }
+      descriptive_metadata do
+        format_type = [['Book', 'Manuscript', 'Audio Recording', 'Video Recording', 'Ancient Utensil'].sample]
+        {
+          title: [human_readable_name],
+          description: Faker::Lorem.paragraphs,
+          call_number: [Faker::IDNumber.spanish_foreign_citizen_number],
+          collection: ["#{Faker::GreekPhilosophers.name} collection"],
+          date: [Faker::Date.backward],
+          format: format_type,
+          subject: (0..rand(1..5)).to_a.map { Faker::Educator.subject },
+          identifier: [Faker::Code.isbn],
+          item_type: format_type,
+          language: [['English', Faker::Nation.language].sample(rand(1..2)).uniq]
+        }
+      end
+      internal_notes { Faker::Lorem.sentences(number: 2) }
+      unique_identifier { "ark:/#{Faker::Number.number(digits: 8)}/random" }
+      created_by { users.sample }
+      updated_by { users.sample }
+    end
+
     trait :with_asset do
       transient do
         asset { persist(:asset_resource) }

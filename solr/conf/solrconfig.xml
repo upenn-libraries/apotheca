@@ -37,9 +37,59 @@
 
         <str name="qf">
           id
+          abstract_tsim
+          bibnumber_ss
+          call_number_tsim
+          collection_tsim
+          contributor_tsim
+          corporate_name_tsim
+          coverage_tsim
+          creator_tsim
+          date_tsim
+          format_ssim
+          description_tsim
+          geographic_subject_tsim
+          identifier_ssim
+          includes_tsim
+          item_type_ssim
+          language_ssim
+          notes_tsim
+          personal_name_tsim
+          provenance_tsim
+          publisher_tsim
+          relation_tsim
+          rights_tsim
+          source_tsim
+          subject_tsim
+          title_tsim
           admin_search_tmiv
         </str>
         <str name="pf">
+          abstract_tsim
+          bibnumber_ss
+          call_number_tsim
+          collection_tsim
+          contributor_tsim
+          corporate_name_tsim
+          coverage_tsim
+          creator_tsim
+          date_tsim
+          format_ssim
+          description_tsim
+          geographic_subject_tsim
+          identifier_ssim
+          includes_tsim
+          item_type_ssim
+          language_ssim
+          notes_tsim
+          personal_name_tsim
+          provenance_tsim
+          publisher_tsim
+          relation_tsim
+          rights_tsim
+          source_tsim
+          subject_tsim
+          title_tsim
           admin_search_tmiv
         </str>
 
