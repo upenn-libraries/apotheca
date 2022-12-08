@@ -17,7 +17,7 @@ module ItemSearch
     end
 
     def rows_options
-      options_for_select(mapper::ROWS_OPTIONS, search_params[:rows]) # TODO: reset for commit
+      options_for_select(mapper::ROWS_OPTIONS, search_params[:rows])
     end
 
     def sort_fields_options
