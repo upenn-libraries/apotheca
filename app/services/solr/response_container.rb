@@ -18,6 +18,10 @@ module Solr
       @total_count = total_count
     end
 
+    # Build a Kaminari-wrapped array for feeding to the paginator renderer in the view. Parameters here ensure proper
+    # rendering of active page, number of pages, etc. No pagination is actually performed on the documents array.
+    # See: https://github.com/kaminari/kaminari#paginating-a-generic-array-object
+    # @return [Kaminari::PaginatableArray]
     def paginator
       Kaminari.paginate_array(documents, total_count: total_count, limit: search_params[:rows])
               .page(search_params[:page]).per(search_params[:rows])
