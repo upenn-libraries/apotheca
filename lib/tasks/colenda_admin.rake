@@ -13,7 +13,7 @@ namespace :colenda_admin do
     FactoryBot.register_strategy(:persist, ValkyriePersistStrategy)
 
     sample_records_count = 20
-    0.upto(sample_records_count).each do |i|
+    0.upto(sample_records_count).each do
       FactoryBot.persist :item_resource, :with_faker_metadata, :with_asset
     end
   end
