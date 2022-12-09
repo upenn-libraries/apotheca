@@ -3,3 +3,9 @@
 .formatted-text {
   white-space: pre;
 }
+
+#assets-cards {
+  position: relative;
+  height: 50vh;
+  overflow: auto;
+}
