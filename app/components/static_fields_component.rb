@@ -4,12 +4,17 @@
 class StaticFieldsComponent < ViewComponent::Base
   renders_many :fields, 'StaticFieldComponent'
 
+  def initialize(**options)
+    @options = options
+    @options[:class] = @options.fetch(:class, []).push('row')
+  end
+
   def render?
     fields.any?
   end
 
   def call
-    content_tag :dl, class: 'row my-2' do
+    content_tag :dl, **@options do
       safe_join(fields)
     end
   end

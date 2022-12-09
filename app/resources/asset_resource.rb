@@ -51,4 +51,12 @@ class AssetResource < Valkyrie::Resource
       return d if d.access?
     end
   end
+
+  # Best title to use when trying to represent asset. In most cases Assets should
+  # have a name. If they don't we display the id.
+  #
+  # @return [String]
+  def display_title
+    original_filename || id.to_s
+  end
 end

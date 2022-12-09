@@ -1,26 +1,9 @@
-<div class="row">
-  <div class="col">
-    <div id="assets-cards" data-bs-spy="scroll" data-bs-target="#asset-list" data-bs-offset="0" tabindex="0"><%# TODO: scrollspy is not working properly - perhaps due to this element not being position: relative? %>
-      <h3 class="mb-3">Assets (arranged)</h3>
-      <%= link_to 'Add Asset', new_asset_path(item_id: @item.id), class: 'btn btn-primary' %>
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title(tag: :h3) { 'Assets' } %>
+  <%= header.with_right_link(href: new_asset_path(item_id: @item.id)) { 'Add Asset' } %>
+<% end %>
 
-      <% if @arranged_assets&.any? %>
-        <% @arranged_assets.each_with_index do |asset, i| %>
-          <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
-        <% end %>
-      <% else %>
-        <p>No arranged assets</p>
-      <% end %>
-      <h3>Assets (unarranged)</h3>
-      <% if @unarranged_assets&.any? %>
-        <% @unarranged_assets.each_with_index do |asset, i| %>
-          <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
-        <% end %>
-      <% else %>
-        <p>No unarranged assets</p>
-      <% end %>
-    </div>
-  </div>
+<div class="row">
   <div class="col-auto">
     <div id="asset-list list-group">
       <a href="#" class="list-group-item disabled" tabindex="-1" aria-disabled="true">Arranged</a>
@@ -30,6 +13,27 @@
       <a href="#" class="list-group-item disabled" tabindex="-1" aria-disabled="true">Unarranged</a>
       <% @unarranged_assets.each do |a| %>
         <a class="list-group-item list-group-item-action" href="#<%= "asset-card-#{a.id}" %>"><%= a.original_filename&.truncate(20) || a.id %></a>
+      <% end %>
+    </div>
+  </div>
+  <div class="col">
+    <div id="assets-cards" data-bs-spy="scroll" data-bs-target="#asset-list" data-bs-offset="0" tabindex="0"><%# TODO: scrollspy is not working properly - perhaps due to this element not being position: relative? %>
+      <h4 class="mb-3">Arranged</h4>
+
+      <% if @arranged_assets&.any? %>
+        <% @arranged_assets.each_with_index do |asset, i| %>
+          <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
+        <% end %>
+      <% else %>
+        <p>No arranged assets</p>
+      <% end %>
+      <h4>Unarranged</h4>
+      <% if @unarranged_assets&.any? %>
+        <% @unarranged_assets.each_with_index do |asset, i| %>
+          <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
+        <% end %>
+      <% else %>
+        <p>No unarranged assets</p>
       <% end %>
     </div>
   </div>

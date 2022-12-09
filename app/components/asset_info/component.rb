@@ -14,19 +14,17 @@ module AssetInfo
       @item = item
     end
 
-    # @return [String]
-    def asset_title
-      [index, asset.original_filename, asset.label].compact.join(' - ')
-    end
-
     # @return [Array<AssetResource::Annotation>]
     def annotations
-      @asset.annotations
+      @asset.annotations&.map(&:text)
     end
 
-    # @return [String]
-    def thumbnail_path
-      file_asset_path @asset, type: :thumbnail, disposition: :inline
+    def thumbnail
+      if @asset.thumbnail
+        tag :img, src: thumbnail_path, alt: 'Thumbnail for Asset', class: 'img-thumbnail'
+      else
+        return render(partial: 'shared/no_thumbnail')
+      end
     end
 
     # @return [ActiveSupport::SafeBuffer]
@@ -44,15 +42,18 @@ module AssetInfo
     end
 
     def set_as_thumbnail
-      if @item.is_thumbnail?(@asset.id)
-        tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status'
-      else
-        # use a future form component here?
-        form_tag item_path(@item), method: :patch do
-          hidden_field_tag('item[thumbnail_asset_id]', @asset.id) +
-            submit_tag('Set as Item Thumbnail', class: 'btn btn-primary')
-        end
+      classes = ['p-0']
+      classes.push('disabled') if @item.is_thumbnail?(@asset.id)
+
+      render(Form::Component.new(name: 'assets', url: item_path(@item), method: :patch)) do |form|
+        form.with_input_hidden(label: nil, field: 'item[thumbnail_asset_id]', value: @asset.id)
+        form.with_submit('Set as Item Thumbnail', variant: :link, class: classes)
       end
+    end
+
+    def thumbnail_badge
+      return unless @item.is_thumbnail?(@asset.id)
+      tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status m-2'
     end
 
     # @return [String]
@@ -63,6 +64,13 @@ module AssetInfo
     # @return [String]
     def mime_type
       asset.technical_metadata.mime_type
+    end
+
+    private
+
+    # @return [String]
+    def thumbnail_path
+      file_asset_path @asset, type: :thumbnail, disposition: :inline
     end
   end
 end
