@@ -4,8 +4,6 @@
   white-space: pre;
 }
 
-#assets-cards {
-  position: relative;
-  height: 50vh;
-  overflow: auto;
+#asset-list {
+  overflow-y: scroll;
 }
