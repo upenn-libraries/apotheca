@@ -4,7 +4,7 @@ module Solr
   # build a solr query hash from expected parameters
   # solr docs: https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#standard-query-parser-parameters
   class QueryBuilder
-    attr_accessor :params, :mapper, :defaults
+    attr_accessor :params, :mapper, :defaults, :rows, :page
 
     # @param [ActionController::Parameters] params
     # @param [Hash] defaults
@@ -13,13 +13,16 @@ module Solr
       @params = params
       @defaults = defaults
       @mapper = mapper
+      @rows = params[:rows] || mapper::ROWS_OPTIONS.min
+      @page = params[:page] || 1
     end
 
     # @return [Hash]
     def solr_query
       { q: search,
-        rows: params[:rows],
+        rows: rows,
         sort: sort,
+        start: start,
         fq: fq }
     end
 
@@ -40,6 +43,10 @@ module Solr
       end
       search.prepend("+(#{params.dig(:search, :all)})") if params.dig(:search, :all).present?
       search.join(' ')
+    end
+
+    def start
+      (page.to_i - 1) * rows.to_i
     end
 
     # compose FilterQuery param

@@ -8,6 +8,8 @@
   <%= header.with_right_link(href: new_user_path) { 'New User' } %>
 <% end %>
 
+<%= page_entries_info @users, entry_name: 'user' %>
+
 <table class="table">
   <thead>
   <tr>
@@ -36,3 +38,5 @@
   <% end %>
   </tbody>
 </table>
+
+<%= paginate @users %>

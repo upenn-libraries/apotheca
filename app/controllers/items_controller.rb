@@ -2,6 +2,7 @@
 
 # controller actions for Item stuff
 class ItemsController < ApplicationController
+  before_action :configure_pagination, only: :index
   before_action :load_resources, only: [:show, :edit]
 
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
@@ -57,6 +58,15 @@ class ItemsController < ApplicationController
 
   private
 
+  # Explicitly set the default per page for initial page load (when there are no params) only for the ItemResource
+  # case. With AR models, this config can be specified in the model. I do this here to avoid setting a default app-wide
+  # config that might later be altered and break proper page counts when rendering the paginator in the item index.
+  def configure_pagination
+    Kaminari.configure do |config|
+      config.default_per_page = Solr::QueryMaps::Item::ROWS_OPTIONS.min
+    end
+  end
+
   def render_failure(failure, template)
     if failure.key?(:change_set)
       @change_set = failure[:change_set]
@@ -104,6 +114,6 @@ class ItemsController < ApplicationController
   end
 
   def search_params
-    params.permit(:keyword, :rows, filter: {}, sort: {}, search: {})
+    params.permit(:keyword, :rows, :page, filter: {}, sort: {}, search: {})
   end
 end

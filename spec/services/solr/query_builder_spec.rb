@@ -69,4 +69,31 @@ describe Solr::QueryBuilder do
       expect(builder.search).to eq '+(blah) date_tsim:"1999" +subject_tsim:"Ruby"'
     end
   end
+
+  describe '#start' do
+    context 'with page and rows set' do
+      let(:params) do
+        ActionController::Parameters.new(
+          { 'page' => '3', 'rows' => '20' }
+        ).permit!
+      end
+
+      it 'sets the proper start value' do
+        expect(builder.start).to eq 40
+      end
+    end
+
+    context 'with no rows value set' do
+      let(:default_rows) { mapper::ROWS_OPTIONS.min }
+      let(:params) do
+        ActionController::Parameters.new(
+          { 'page' => '2' }
+        ).permit!
+      end
+
+      it 'sets the proper start value' do
+        expect(builder.start).to eq default_rows
+      end
+    end
+  end
 end

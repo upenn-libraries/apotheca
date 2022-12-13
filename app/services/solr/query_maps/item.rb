@@ -3,6 +3,8 @@
 module Solr
   module QueryMaps
     module Item
+      ROWS_OPTIONS = [20, 50, 100, 250].freeze
+
       # accessor for constant values
       class Type
         class << self

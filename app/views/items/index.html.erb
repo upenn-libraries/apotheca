@@ -12,6 +12,8 @@
 
 <hr>
 
+<%= page_entries_info @container.paginator, entry_name: 'result' %>
+
 <table class="table">
   <thead>
     <tr>
@@ -29,3 +31,5 @@
     <td><%= link_to 'Edit', edit_item_path(item.id), class: 'btn btn-primary' %></td>
   <% end %>
 </table>
+
+<%= paginate @container.paginator %>

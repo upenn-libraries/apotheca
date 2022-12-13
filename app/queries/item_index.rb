@@ -39,6 +39,7 @@ class ItemIndex
       documents: items,
       facet_data: response.dig('facet_counts', 'facet_fields'),
       search_params: search_params,
+      total_count: response.dig('response', 'numFound'),
       query: query
     )
   end
