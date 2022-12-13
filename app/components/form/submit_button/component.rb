@@ -4,19 +4,15 @@ module Form
   module SubmitButton
     # Component for form submit button.
     class Component < ViewComponent::Base
-      def initialize(value, variant: :primary)
+      def initialize(value, variant: :primary, **options)
         @value = value
-        @variant = variant
+        @options = options
+
+        @options[:class] = @options.fetch(:class, []).push('btn', "btn-#{variant}")
       end
 
       def call
-        submit_tag @value, class: classes
-      end
-
-      private
-
-      def classes
-        ['btn', "btn-#{@variant}"]
+        submit_tag @value, **@options
       end
     end
   end

@@ -3,9 +3,9 @@
   <% component.with_breadcrumb(href: items_path) { 'Items' } %>
   <% component.with_breadcrumb(href: item_path(@item, anchor: 'assets')) { @item.human_readable_name } %>
   <% component.with_breadcrumb { 'Assets' } %>
-  <% component.with_breadcrumb(active: true) { @asset.original_filename || @asset.id.to_s } %>
+  <% component.with_breadcrumb(active: true) { @asset.display_title } %>
 <% end %>
 
-<h1>Edit Asset: <%= @asset.original_filename || @asset.id %></h1>
+<h1>Edit Asset: <%= @asset.display_title %></h1>
 
 <%= render 'form', method: :patch, url: asset_path(@change_set.resource.id) %>
