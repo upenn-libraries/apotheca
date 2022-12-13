@@ -23,9 +23,8 @@
     </nav>
   </div>
   <div class="col">
-    <div id="assets-cards" data-bs-spy="scroll" data-bs-target="#asset-list" data-bs-smooth-scroll="true" tabindex="0">
+    <div id="assets-cards" data-bs-smooth-scroll="true" tabindex="0">
       <h4 id="arranged-assets" class="mb-3">Arranged</h4>
-
       <% if @arranged_assets&.any? %>
         <% @arranged_assets.each_with_index do |asset, i| %>
           <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
