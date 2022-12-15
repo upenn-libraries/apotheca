@@ -73,6 +73,12 @@ Environment specific configuration values should be placed in the appropriate fi
 
 In production, configuration values that are secret should be set using docker secrets and the application should read them in from the filesystem.
 
+## Javascript and CSS Asset management
+We will be following Rails 7 convention and using `importmap-rails` to manage and load javascript assets. We can make use of JS NPM packages by following [these instructions](https://github.com/rails/importmap-rails#using-npm-packages-via-javascript-cdns) from the `importmap-rails` docs.
+
+For CSS vendored assets, CDN or Gemified versions should be used when available. Otherwise, CSS can be copied into `app/assets/stylesheets` and imported in `application.scss`.
+
+Node, NPM nor Yarn are required to develop, run or deploy this application.
 
 ## Code Linting and Formatting
 ### Rubocop
@@ -84,7 +90,7 @@ bundle exec rubocop
 ```
 
 #### To regenerate `.rubocop_todo.yml`:
-```ruby
+```shell
 bundle exec rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
 ```
 
