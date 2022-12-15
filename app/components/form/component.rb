@@ -19,7 +19,7 @@ module Form
 
     renders_one :submit, SubmitButton::Component
 
-    # Requires name, url and method, any additional arguments will be passed to the form_tag helper.
+    # Requires name and url. Any additional arguments will be passed to the form_tag helper.
     #
     # Often times a `:method` parameter should be provided. If the form contains file inputs a truthy
     # `:multipart` parameter should be provided.
