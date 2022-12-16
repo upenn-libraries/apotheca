@@ -7,7 +7,7 @@ class AssetsController < ApplicationController
   class UnsupportedFileType < StandardError; end
 
   before_action :set_asset, only: [:show, :file, :edit, :update]
-  before_action :set_item, only: [:show, :new, :create, :edit, :update]
+  before_action :set_item, only: [:show, :new, :create, :edit, :update, :delete]
 
   # respond with a 404 for missing asset files or missing Item (when required)
   rescue_from 'AssetsController::FileNotFound', 'AssetsController::ItemNotFound' do |_e|
@@ -55,6 +55,20 @@ class AssetsController < ApplicationController
 
       result.failure do |failure|
         render_failure(failure, :edit)
+      end
+    end
+  end
+
+  def delete
+    authorize! :delete, @asset
+
+    DeleteAsset.new.call(id: @asset.id, item_id: @item.id) do |result|
+      result.success do
+        flash.notice = 'Successfully deleted Asset'
+        redirect_to item_path @item, anchor: 'assets'
+      end
+      result.failure do |failure|
+        render_failure(failure, :show)
       end
     end
   end

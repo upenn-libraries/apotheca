@@ -10,7 +10,7 @@ class Ability
     if user.viewer?
       can :read, [ItemResource, AssetResource]
     elsif user.editor?
-      can :manage, [ItemResource, AssetResource]
+      can [:read, :create, :update], [ItemResource, AssetResource]
     elsif user.admin?
       can :manage, :all
     end

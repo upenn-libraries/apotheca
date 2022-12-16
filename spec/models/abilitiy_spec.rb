@@ -19,14 +19,24 @@ describe 'Ability' do
 
     it { is_expected.to be_able_to(:read, ItemResource) }
     it { is_expected.to be_able_to(:read, AssetResource) }
+    it { is_expected.not_to be_able_to(:edit, AssetResource) }
+    it { is_expected.not_to be_able_to(:edit, ItemResource) }
     it { is_expected.not_to be_able_to(:view, User) }
   end
 
   context 'with an editor user' do
     let(:user) { create :user, :editor }
 
-    it { is_expected.to be_able_to(:manage, ItemResource) }
-    it { is_expected.to be_able_to(:manage, AssetResource) }
+    it { is_expected.to be_able_to(:read, AssetResource) }
+    it { is_expected.to be_able_to(:create, AssetResource) }
+    it { is_expected.to be_able_to(:update, AssetResource) }
+    it { is_expected.not_to be_able_to(:destroy, AssetResource) }
+
+    it { is_expected.to be_able_to(:read, ItemResource) }
+    it { is_expected.to be_able_to(:create, ItemResource) }
+    it { is_expected.to be_able_to(:update, ItemResource) }
+    it { is_expected.not_to be_able_to(:destroy, ItemResource) }
+
     it { is_expected.not_to be_able_to(:manage, User) }
   end
 

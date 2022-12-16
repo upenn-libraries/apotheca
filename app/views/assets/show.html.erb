@@ -11,6 +11,8 @@
   <%= header.with_right_link(href: edit_asset_path(@asset)) { 'Edit Asset' } %>
 <% end %>
 
+<%= button_to 'Delete', asset_path(@asset), method: :delete, class: 'btn btn-danger' %>
+
 <div class="align-self-center mb-2">
   <%= render(StatusBadgeComponent.new(test: @asset.preservation_copies_ids.any?, truthy: 'Backed up to Cloud Storage', falsey: 'Not in Cloud Storage')) %>
   <%= render(StatusBadgeComponent.new(test: @asset.thumbnail, truthy: 'Thumbnail', falsey: 'No Thumbnail')) %>

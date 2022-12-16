@@ -43,7 +43,7 @@ module AssetInfo
 
     def set_as_thumbnail
       classes = ['p-0']
-      classes.push('disabled') if @item.is_thumbnail?(@asset.id)
+      classes.push('disabled') if @item.thumbnail?(@asset.id)
 
       render(Form::Component.new(name: 'assets', url: item_path(@item), method: :patch)) do |form|
         form.with_input_hidden(label: nil, field: 'item[thumbnail_asset_id]', value: @asset.id)
@@ -52,7 +52,8 @@ module AssetInfo
     end
 
     def thumbnail_badge
-      return unless @item.is_thumbnail?(@asset.id)
+      return unless @item.thumbnail?(@asset.id)
+
       tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status m-2'
     end
 
