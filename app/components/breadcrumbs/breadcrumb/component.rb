@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Breadcrumbs
   module Breadcrumb
+    # Component to create a section of a breadcrumb path.
     class Component < ViewComponent::Base
       def initialize(href: nil, active: false, **options)
         @href = href

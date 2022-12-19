@@ -23,7 +23,7 @@ module AssetInfo
       if @asset.thumbnail
         tag :img, src: thumbnail_path, alt: 'Thumbnail for Asset', class: 'img-thumbnail'
       else
-        return render(partial: 'shared/no_thumbnail')
+        render(partial: 'shared/no_thumbnail')
       end
     end
 
@@ -53,6 +53,7 @@ module AssetInfo
 
     def thumbnail_badge
       return unless @item.is_thumbnail?(@asset.id)
+
       tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status m-2'
     end
 

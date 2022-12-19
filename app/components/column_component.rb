@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# Component for Bootstrap Column.
 class ColumnComponent < ViewComponent::Base
   def initialize(tag, col: nil, **options)
     @tag = tag

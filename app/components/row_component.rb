@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# Component for a Bootstrap Row.
 class RowComponent < ViewComponent::Base
   def initialize(tag, **options)
     @tag = tag

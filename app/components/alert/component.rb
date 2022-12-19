@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# Component to create alert box.
 module Alert
+  # Component to create Bootstrap alert box.
   class Component < ViewComponent::Base
-    def initialize(tag: :div, variant: :primary,  **options)
+    def initialize(tag: :div, variant: :primary, **options)
       @tag = tag
       @options = options
 

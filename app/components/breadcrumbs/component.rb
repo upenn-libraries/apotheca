@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Component to create breadcrumb links.
 module Breadcrumbs
+  # Component to create breadcrumbs.
   class Component < ViewComponent::Base
     renders_many :breadcrumbs, Breadcrumb::Component
 

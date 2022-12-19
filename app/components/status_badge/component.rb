@@ -33,4 +33,3 @@ module StatusBadge
     end
   end
 end
-
