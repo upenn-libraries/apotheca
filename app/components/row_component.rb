@@ -3,8 +3,7 @@ class RowComponent < ViewComponent::Base
   def initializer(tag, **options)
     @tag = tag
     @options = options
-
-    @options[:class] = Array.wrap(options[:class]).append('row')
+    @options[:class] = Array.wrap(@options[:class]).append('row')
   end
 
   def call

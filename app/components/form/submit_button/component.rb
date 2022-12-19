@@ -8,7 +8,7 @@ module Form
         @value = value
         @options = options
 
-        @options[:class] = @options.fetch(:class, []).push('btn', "btn-#{variant}")
+        @options[:class] = Array.wrap(@options[:class]).push('btn', "btn-#{variant}")
       end
 
       def call
