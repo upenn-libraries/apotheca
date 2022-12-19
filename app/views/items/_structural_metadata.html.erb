@@ -4,7 +4,7 @@
   <%= header.with_right_link(href: edit_item_path(@item, anchor: 'structural')) { 'Edit' } %>
 <% end %>
 
-<%= render(StaticFieldsComponent.new) do |component| %>
+<%= render(StaticFields::Component.new) do |component| %>
   <% component.with_field(
        label: 'Viewing Hint',
        values: @item.structural_metadata.viewing_hint

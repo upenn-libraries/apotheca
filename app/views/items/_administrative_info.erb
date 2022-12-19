@@ -4,7 +4,7 @@
   <%= header.with_right_link(href: edit_item_path(@item, anchor: 'administrative-info')) { 'Edit' } %>
 <% end %>
 
-<%= render(StaticFieldsComponent.new) do |component| %>
+<%= render(StaticFields::Component.new) do |component| %>
   <% component.with_field(
        label: 'Internal Notes',
        values: @item.internal_notes
