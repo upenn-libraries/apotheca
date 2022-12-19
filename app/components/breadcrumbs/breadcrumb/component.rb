@@ -1,17 +1,17 @@
 module Breadcrumbs
   module Breadcrumb
     class Component < ViewComponent::Base
-      def initialize(href: nil, active: false)
+      def initialize(href: nil, active: false, **options)
         @href = href
-        @active = active
+        @options = options
+
+        @options[:class] = Array.wrap(@options[:class]).append('breadcrumb-item')
+        @options[:class] << 'active'       if active
+        @options['aria-current'] = 'page'  if active
       end
 
       def call
-        options = { class: ['breadcrumb-item'] }
-        options[:class] << 'active'       if @active
-        options['aria-current'] = 'page'  if @active
-
-        content_tag :li, options do
+        render(BaseComponent.new(:li, **@options)) do
           if @href
             content_tag(:a, href: @href) { content }
           else

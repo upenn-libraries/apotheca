@@ -7,7 +7,6 @@ module StaticFields
 
     def initialize(**options)
       @options = options
-      @options[:class] = @options.fetch(:class, []).push('row')
     end
 
     def render?
@@ -15,7 +14,7 @@ module StaticFields
     end
 
     def call
-      content_tag :dl, **@options do
+      render(RowComponent.new(:dl, **@options)) do
         safe_join(fields)
       end
     end

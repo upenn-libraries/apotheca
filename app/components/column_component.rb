@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ColumnComponent < ViewComponent::Base
-  def initializer(tag, col: nil, **options)
+  def initialize(tag, col: nil, **options)
     @tag = tag
     @options = options
 

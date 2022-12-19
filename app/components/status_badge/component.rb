@@ -8,10 +8,13 @@ module StatusBadge
     # @param [TrueClass, FalseClass] test
     # @param [String] truthy
     # @param [String] falsey
-    def initialize(test:, truthy:, falsey:)
+    def initialize(test:, truthy:, falsey:, **options)
       @test = test
       @truthy = truthy
       @falsey = falsey
+
+      @options = options
+      @options[:class] = Array.wrap(@options[:class]).append('badge').concat(classes)
     end
 
     # @return [Array<String (frozen)>]
@@ -26,7 +29,7 @@ module StatusBadge
 
     # @return [ActiveSupport::SafeBuffer]
     def call
-      content_tag :span, label, class: classes.push('badge')
+      render(BaseComponent.new(:span, **@options)) { label }
     end
   end
 end

@@ -16,16 +16,17 @@ module Form
       # Reform::Form::ActiveModel::Validations::Result::ResultErrors. Both of these error classes respond to
       # `full_messages`.
       #
-      # @param [Hash] args the arguments to create a error message with.
-      # @option args [String] :error message
-      # @option args [Valkyrie::ChangeSet] :change_set with validation errors
-      # @option args [Exception] :exception object
-      def initialize(args)
-        args ||= {}
+      # @param [Hash] error_args the arguments to create a error message with.
+      # @option error_args [String] :error message
+      # @option error_args [Valkyrie::ChangeSet] :change_set with validation errors
+      # @option error_args [Exception] :exception object
+      def initialize(error_args, **options)
+        error_args ||= {}
 
-        @error = args[:error]
-        @exception = args[:exception]
-        @change_set = args[:change_set]
+        @error = error_args[:error]
+        @exception = error_args[:exception]
+        @change_set = error_args[:change_set]
+        @options = options
 
         @validation_errors = @change_set.errors if @change_set&.respond_to?(:errors)
       end

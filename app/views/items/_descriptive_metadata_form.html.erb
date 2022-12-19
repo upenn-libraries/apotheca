@@ -1,7 +1,7 @@
 <h3>Descriptive Metadata</h3>
 
 <%= render(Form::Component.new(url: item_path(@item), method: :patch, name: 'descriptive-metadata')) do |form| %>
-  <% form.with_error(@error) if @errors_for == 'descriptive-metadata' %>
+  <% form.with_error(@error,) if @errors_for == 'descriptive-metadata' %>
 
   <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
     <% form.with_input_text(label: field,
