@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ColumnComponent < ViewComponent::Base
-  def initializer(tag, col:, **options)
+  def initializer(tag, col: nil, **options)
     @tag = tag
     @options = options
 
@@ -10,11 +10,11 @@ class ColumnComponent < ViewComponent::Base
   def column_classes(col)
     case col
     when String, Integer
-      "col-#{col}"
+      ["col-#{col}"]
     when Hash
       col.map { |size, num| "col-#{size}-#{num}" }
     else
-      'col'
+      ['col']
     end
   end
 
