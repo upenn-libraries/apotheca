@@ -25,7 +25,7 @@ describe DeleteAsset do
     context 'when files attached' do
       context 'when set as thumbnail' do # TODO: Rubocop says too much nesting...
         let(:item) do
-          persist(:item_resource, :with_asset)
+          persist(:item_resource, :with_assets_some_arranged)
         end
 
         let(:asset) do

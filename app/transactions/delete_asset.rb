@@ -11,19 +11,23 @@ class DeleteAsset
   step :delete_asset, with: 'asset_resource.delete_resource'
 
   def check_thumbnail_id(resource:, item_id:)
-    item_resource = query_service.find_by(id: item_id)
+    item = query_service.find_by(id: item_id)
     # TODO: raise if item not found?
-    if item_resource.thumbnail? resource.id
+    # If this is the last asset, just remove the set thumbnail in the next step
+    return Success(asset: resource, item: item, unset_thumbnail: true) if item.asset_ids.one?
+
+    if item.thumbnail? resource.id
       Failure(error: 'This asset is currently designated as the item thumbnail. Please select a new asset to serve as the thumbnail before deleting this asset.')
     else
-      Success(asset: resource, item: item_resource)
+      Success(asset: resource, item: item)
     end
   end
 
-  def unlink_from_item_and_save(asset:, item:)
+  def unlink_from_item_and_save(asset:, item:, unset_thumbnail: false)
     item_change_set = ItemChangeSet.new(item)
     item_change_set.asset_ids.delete asset.id
     item_change_set.structural_metadata.arranged_asset_ids.delete asset.id
+    item_change_set.thumbnail_asset_id = nil if unset_thumbnail
     updated_item = item_change_set.sync
 
     begin
