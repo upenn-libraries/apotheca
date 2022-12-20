@@ -5,9 +5,9 @@ module Steps
   class DeleteResource
     include Dry::Monads[:result]
 
-    def call(resource:, **options)
+    def call(resource:)
       persister.delete(resource: resource)
-      Success(resource: resource, **options)
+      Success(resource: resource)
     rescue StandardError => e
       Failure(error: :failed_to_delete_resource, exception: e)
     end

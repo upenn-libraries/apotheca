@@ -26,7 +26,6 @@ class UpdateAsset
 
     # Delete stale preservation backup file
     if result.success? && stale_preservation_backup
-
       preservation_copy_storage = Valkyrie::StorageAdapter.find(:preservation_copy)
       preservation_copy_storage.delete(id: stale_preservation_backup)
     end

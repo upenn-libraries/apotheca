@@ -5,12 +5,12 @@ module Steps
   class Save
     include Dry::Monads[:result]
 
-    def call(change_set:, **options)
+    def call(change_set)
       resource = change_set.sync
 
       begin
         saved_resource = persister.save(resource: resource)
-        Success(resource: saved_resource, **options)
+        Success(saved_resource)
       rescue StandardError => e
         Failure(error: :error_saving_resource, exception: e, change_set: change_set)
       end
