@@ -1,5 +1,5 @@
 <% if @header_alert&.active? %>
-  <div class="alert header-alert alert-<%= @header_alert.level %> sticky-top">
+  <%= render(Alert::Component.new(variant: @header_alert.level, class: 'header-alert sticky-top')) do %>
     <%= @header_alert.message %>
-  </div>
+  <% end %>
 <% end %>

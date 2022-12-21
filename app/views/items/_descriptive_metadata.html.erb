@@ -4,7 +4,7 @@
   <%= header.with_right_link(href: edit_item_path(@item, anchor: 'descriptive')) { 'Edit' } %>
 <% end %>
 
-<%= render(StaticFieldsComponent.new) do |component| %>
+<%= render(StaticFields::Component.new) do |component| %>
   <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
     <% component.with_field(
          label: field.to_s.titlecase,

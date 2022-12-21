@@ -1,5 +1,5 @@
 
-<%= render(BreadcrumbsComponent.new) do |component| %>
+<%= render(Breadcrumbs::Component.new) do |component| %>
   <% component.with_breadcrumb(href: "/") { 'Home' } %>
   <% component.with_breadcrumb(href: items_path) { 'Items' } %>
   <% component.with_breadcrumb(href: item_path(@item, anchor: 'assets')) { @item.human_readable_name } %>
