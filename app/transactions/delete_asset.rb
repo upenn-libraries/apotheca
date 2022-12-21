@@ -5,36 +5,38 @@ class DeleteAsset
   include Dry::Transaction(container: Container)
 
   step :find_asset, with: 'asset_resource.find_resource'
-  step :check_thumbnail_id # prevent deletion of Asset currently designated as a thumbnail with message
+  step :find_parent_item, with: 'asset_resource.find_asset_parent_item'
+  step :check_thumbnail_id
   step :unlink_from_item_and_save
   step :delete_files
   step :delete_asset, with: 'asset_resource.delete_resource'
 
-  def check_thumbnail_id(resource:, item_id:)
-    item = query_service.find_by(id: item_id)
-    # TODO: raise if item not found?
-    # If this is the last asset, just remove the set thumbnail in the next step
-    return Success(asset: resource, item: item, unset_thumbnail: true) if item.asset_ids.one?
+  # prevent deletion of Asset currently designated as a thumbnail with message
+  def check_thumbnail_id(asset:, item:)
+    return Success(asset: asset, item: nil) unless item # move along if no item is provided
 
-    if item.thumbnail? resource.id
+    if item.thumbnail?(asset.id) && item.asset_ids.count > 1
       Failure(error: 'This asset is currently designated as the item thumbnail. Please select a new asset to serve as the thumbnail before deleting this asset.')
     else
-      Success(asset: resource, item: item)
+      Success(asset: asset, item: item)
     end
   end
 
-  def unlink_from_item_and_save(asset:, item:, unset_thumbnail: false)
+  def unlink_from_item_and_save(asset:, item:)
+    return Success(asset: asset) unless item # move along if no item is provided
+
     item_change_set = ItemChangeSet.new(item)
     item_change_set.asset_ids.delete asset.id
     item_change_set.structural_metadata.arranged_asset_ids.delete asset.id
-    item_change_set.thumbnail_asset_id = nil if unset_thumbnail
+    # remove thumbnail if final asset is deleted
+    item_change_set.thumbnail_asset_id = nil if item_change_set.asset_ids.empty?
     updated_item = item_change_set.sync
 
     begin
       _saved_resource = persister.save(resource: updated_item)
       Success(asset: asset)
     rescue StandardError => e
-      Failure(error: :error_saving_resource, exception: e)
+      Failure(error: :error_unlinking_asset_from_item, exception: e)
     end
   end
 

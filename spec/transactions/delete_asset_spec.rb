@@ -5,7 +5,15 @@ describe DeleteAsset do
   let(:query_service) { Valkyrie::MetadataAdapter.find(:postgres_solr_persister).query_service }
 
   describe '#call' do
-    let(:result) { transaction.call(id: asset.id, item_id: item.id) }
+    let(:result) { transaction.call(id: asset.id) }
+
+    context 'when the asset is not attached to any item' do
+      let(:asset) { persist(:asset_resource) }
+
+      it 'is successful' do
+        expect(result.success?).to be true
+      end
+    end
 
     context 'when files are not attached' do
       let(:asset) { persist(:asset_resource) }
@@ -63,8 +71,9 @@ describe DeleteAsset do
         end
 
         it 'is unlinked from the parent ItemResource' do
+          item_id = item.id # ensure item is instantiated before determining result
           deleted_asset_id = result.value![:resource].id
-          reloaded_item = query_service.find_by id: item.id # reload item to get changes in memory
+          reloaded_item = query_service.find_by id: item_id # reload item to get changes in memory
           expect(reloaded_item.asset_ids).not_to include deleted_asset_id
           expect(reloaded_item.structural_metadata.arranged_asset_ids).not_to include deleted_asset_id
         end

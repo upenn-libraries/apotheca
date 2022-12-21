@@ -62,7 +62,7 @@ class AssetsController < ApplicationController
   def destroy
     authorize! :delete, @asset
 
-    DeleteAsset.new.call(id: @asset.id, item_id: @item.id) do |result|
+    DeleteAsset.new.call(id: @asset.id) do |result|
       result.success do
         flash.notice = 'Successfully deleted Asset'
         redirect_to item_path @item, anchor: 'assets'
