@@ -11,8 +11,9 @@ module Form
       def initialize(value, variant: :primary, confirm: false, **options)
         @value = value
         @options = options
+
         @confirm = confirm
-        @options[:class] = @options.fetch(:class, []).push('btn', "btn-#{variant}")
+        @options[:class] = Array.wrap(@options[:class]).push('btn', "btn-#{variant}")
         @options[:data] = @options.fetch(:data, {})
         configure_confirmation if confirm
       end

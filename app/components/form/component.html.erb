@@ -1,18 +1,16 @@
 
-<div>
+<%= form_tag(@url, **@options) do %>
   <%= error %>
 
-  <%= form_tag(@url, **@options) do %>
-    <%= hidden_field_tag :form, @name %>
+  <%= hidden_field_tag :form, @name %>
 
-    <% inputs.each do |input| %>
-      <%= input %>
-    <% end %>
-
-    <% sections.each do |section| %>
-      <%= section %>
-    <% end %>
-
-    <%= submit %>
+  <% inputs.each do |input| %>
+    <%= input %>
   <% end %>
-</div>
+
+  <% sections.each do |section| %>
+    <%= section %>
+  <% end %>
+
+  <%= submit %>
+<% end %>

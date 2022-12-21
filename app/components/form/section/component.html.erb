@@ -1,7 +1,9 @@
-<%= title %>
+<%= render(BaseComponent.new(:div, **@options)) do %>
+  <%= title %>
 
-<div class="m-3">
-  <% inputs.each do |input| %>
-    <%= input %>
-  <% end %>
-</div>
+  <div class="m-3">
+    <% inputs.each do |input| %>
+      <%= input %>
+    <% end %>
+  </div>
+<% end %>

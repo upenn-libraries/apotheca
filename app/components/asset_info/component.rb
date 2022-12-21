@@ -23,7 +23,7 @@ module AssetInfo
       if @asset.thumbnail
         tag :img, src: thumbnail_path, alt: 'Thumbnail for Asset', class: 'img-thumbnail'
       else
-        return render(partial: 'shared/no_thumbnail')
+        render(partial: 'shared/no_thumbnail')
       end
     end
 

@@ -4,7 +4,7 @@ module Form
   module Section
     # Component to define a section of a form.
     class Component < ViewComponent::Base
-      renders_one :title, ->(&block) { content_tag :h4, &block }
+      renders_one :title, ->(**options, &block) { BaseComponent.new(:h4, **options, &block) }
 
       renders_many :inputs, types: {
         text: ->(system_arguments) { Input::Component.new(type: :text, **system_arguments) },
@@ -14,6 +14,10 @@ module Form
         file: ->(system_arguments) { Input::Component.new(type: :file, **system_arguments) },
         readonly: ->(system_arguments) { Input::Component.new(type: :readonly, **system_arguments) }
       }
+
+      def initialize(**options)
+        @options = options
+      end
     end
   end
 end
