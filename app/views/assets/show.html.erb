@@ -85,8 +85,9 @@
   <% component.with_field(label: 'Updated By', values: @asset.updated_by) %>
 <% end %>
 
-<%#= button_to 'Delete Asset', asset_path(@asset), method: :delete, class: 'btn btn-danger' %>
-<%= render Form::Component.new(name: 'delete_asset', url: asset_path(@asset), method: :delete) do |component| %>
-  <% component.with_error(@error) %>
-  <% component.with_submit('Delete Asset', confirm: 'Do you really want to delete this asset?', class: %w[btn btn-danger]) %>
+<% if can? :delete, @asset  %>
+  <%= render Form::Component.new(name: 'delete_asset', url: asset_path(@asset), method: :delete) do |component| %>
+    <% component.with_error(@error) %>
+    <% component.with_submit('Delete Asset', confirm: 'Do you really want to delete this asset?', class: %w[btn btn-danger]) %>
+  <% end %>
 <% end %>
