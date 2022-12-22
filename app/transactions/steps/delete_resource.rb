@@ -7,7 +7,7 @@ module Steps
 
     def call(resource:)
       persister.delete(resource: resource)
-      Success(resource)
+      Success(resource: resource)
     rescue StandardError => e
       Failure(error: :failed_to_delete_resource, exception: e)
     end

@@ -10,8 +10,8 @@ Rails.application.routes.draw do
   resources :users, except: :destroy
 
   scope :resources do
-    resources :items
-    resources :assets, except: [:index, :destroy] do
+    resources :items, except: :destroy
+    resources :assets, except: :index do
       member do
         get 'file/:type', to: 'assets#file', as: :file
       end

@@ -44,6 +44,10 @@ class Container
       Steps::FindResource.new(AssetResource)
     end
 
+    register 'find_asset_parent_item' do
+      Steps::FindAssetParentItem.new
+    end
+
     register 'create_change_set' do
       Steps::CreateChangeSet.new(AssetResource, AssetChangeSet)
     end
