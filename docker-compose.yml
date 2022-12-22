@@ -23,11 +23,11 @@ services:
       - "8983:8983"
     volumes:
       - solr_data:/var/solr
-      - ./solr:/colenda_admin_config
+      - ./solr:/apotheca_config
     command:
       - bash
       - "-c"
-      - "precreate-core colenda_admin_dev /colenda_admin_config; precreate-core colenda_admin_test /colenda_admin_config; solr-foreground;"
+      - "precreate-core apotheca_dev /apotheca_config; precreate-core apotheca_test /apotheca_config; solr-foreground;"
   fits:
     image: harvardlts/fitsservlet_container:latest
     ports:

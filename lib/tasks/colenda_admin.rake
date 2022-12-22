@@ -2,7 +2,7 @@
 
 require './spec/support/valkyrie_persist_strategy'
 
-namespace :colenda_admin do
+namespace :apotheca do
   desc 'Reindex Resources'
   task reindex: :environment do
     Solr::Reindexer.reindex_all
@@ -34,8 +34,8 @@ namespace :colenda_admin do
     end
 
     # Create buckets
-    system('RAILS_ENV=development rake colenda_admin:create_buckets')
-    system('RAILS_ENV=test rake colenda_admin:create_buckets')
+    system('RAILS_ENV=development rake apotheca:create_buckets')
+    system('RAILS_ENV=test rake apotheca:create_buckets')
   end
 
   desc 'Destroys local development & test environments and any data'
