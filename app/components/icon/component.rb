@@ -10,7 +10,7 @@ module Icon
     # @param [String, nil] color
     def initialize(name:, size: nil, color: nil, **options)
       @options = options
-      @options[:class] = Array.wrap(@options[:class]).append("bi-#{name.to_s}")
+      @options[:class] = Array.wrap(@options[:class]).append("bi-#{name}")
       @options[:style] = (@options[:style] || '') + style_from(size, color)
     end
 
