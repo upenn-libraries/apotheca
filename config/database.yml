@@ -10,14 +10,14 @@ default: &default
 
 development:
   <<: *default
-  database: colenda_admin_development
+  database: apotheca_development
 
 test:
   <<: *default
-  database: colenda_admin_test
+  database: apotheca_test
 
 production:
   <<: *default
-  database: colenda_admin_production
-  username: colenda_admin
-  password: <%= ENV["COLENDA_ADMIN_DATABASE_PASSWORD"] %>
+  database: apotheca_production
+  username: apotheca
+  password: <%= ENV["APOTHECA_DATABASE_PASSWORD"] %>
