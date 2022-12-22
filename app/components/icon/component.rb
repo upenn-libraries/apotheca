@@ -2,7 +2,7 @@
 
 module Icon
   # Component to create an <i> tag for rendering a Bootstrap Icon
-  # For a lis tof all available icons, see: https://icons.getbootstrap.com
+  # For a list of all available icons, see: https://icons.getbootstrap.com
   class Component < ViewComponent::Base
     # see: https://icons.getbootstrap.com/#icon-font
     # @param [String, Symbol] name
@@ -14,6 +14,12 @@ module Icon
       @options[:style] = (@options[:style] || '') + style_from(size, color)
     end
 
+    def call
+      render(BaseComponent.new(:i, **@options))
+    end
+
+    private
+
     # @param [String] size
     # @param [String] color
     # @return [String (frozen)]
@@ -21,10 +27,6 @@ module Icon
       size_def = "font-size: #{size};"
       color_def = "color: #{color};"
       "#{size_def if size}#{color_def if color}"
-    end
-
-    def call
-      render(BaseComponent.new(:i, **@options))
     end
   end
 end
