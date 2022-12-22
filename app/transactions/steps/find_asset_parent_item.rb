@@ -10,8 +10,6 @@ module Steps
       return Failure(error: :multiple_parent_items_found) if items.count > 1
 
       Success(asset: resource, item: items.try(:first), **attributes)
-    rescue Valkyrie::Persistence::ObjectNotFoundError => e
-      Failure(error: :asset_not_found, exception: e)
     end
 
     private
