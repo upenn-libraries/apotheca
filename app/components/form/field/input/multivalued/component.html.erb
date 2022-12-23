@@ -1,0 +1,15 @@
+<div data-controller="input--multivalued--input-list">
+  <% @values.each do |v| %>
+    <div data-controller="input--multivalued--input" data-input--multivalued--input-list-target="input">
+      <div class="row mb-1" data-input--multivalued--input-target="source">
+        <div class="col-sm-10">
+            <input type="text" class="form-control form-control-sm" name="<%= @field %>" value="<%= v %>" id="<%= @id %>">
+          </div>
+          <div class="col-sm-2">
+            <button type="button" class="btn btn-danger btn-sm" data-input--multivalued--input-list-target="delete" data-action="input--multivalued--input#removeInput">-</button>
+            <button type="button" class="btn btn-success btn-sm" data-action="input--multivalued--input#addInput">+</button>
+          </div>
+      </div>
+    </div>
+  <% end %>
+</div>

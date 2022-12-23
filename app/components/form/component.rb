@@ -13,6 +13,10 @@ module Form
       readonly: ->(system_arguments) { Input::Component.new(type: :readonly, **system_arguments) }
     }
 
+    renders_many :fields, ->(*field_path, **args, &block) {
+      Field::Component.new(*field_path, model: @model, **args, &block)
+    }
+
     renders_many :sections, Section::Component
 
     renders_one :error, ErrorMessage::Component
@@ -27,10 +31,18 @@ module Form
     # @param [String] name given to form, passed to backend to identify form
     # @param [String] url for request
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
-    def initialize(name:, url:, **options)
+    def initialize(name:, url:, model: nil, **options)
       @name = name
       @url = url
       @options = options
+      @model = model
+      # if method is not passed in, we should make an assuption based on whether or not its a new record
+    end
+
+    def new_record?
+      if @model.is_a? Valkyrie::ChangeSet
+        @model.resource.new_record
+      end
     end
   end
 end
