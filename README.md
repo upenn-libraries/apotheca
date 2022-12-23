@@ -1,4 +1,4 @@
-# Colenda Admin
+# Apotheca
 Administrative application that enables the ingestion and management of digital assets. 
 
 ## System Requirements
@@ -36,24 +36,24 @@ bundle install
 
 ### 3a. Run application in development
 ```shell
-rake colenda_admin:start
+rake apotheca:start
 rails s
 ```
 
 ### 3b. Run application tests
 ```shell
-rake colenda_admin:start
+rake apotheca:start
 rspec
 ```
 
 ### 4. Stop running services
 ```shell
-rake colenda_admin:stop
+rake apotheca:stop
 ```
 
 ### 5. Destroy services (clears all data)
 ```shell
-rake colenda_admin:destroy
+rake apotheca:destroy
 ```
 
 ### Interacting directly with services

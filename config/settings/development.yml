@@ -15,7 +15,7 @@ iiif_derivative_storage:
   <<: *minio
   bucket: iiif-derivatives-dev
 solr:
-  url: http://127.0.0.1:8983/solr/colenda_admin_dev
+  url: http://127.0.0.1:8983/solr/apotheca_dev
 fits:
   url: http://localhost:8080/fits
 marmite:
