@@ -47,7 +47,9 @@ module AssetInfo
 
       render(Form::Component.new(name: 'assets', url: item_path(@item), method: :patch)) do |form|
         form.with_input_hidden(label: nil, field: 'item[thumbnail_asset_id]', value: @asset.id)
-        form.with_submit('Set as Item Thumbnail', variant: :link, class: classes)
+        form.with_submit('Set as Item Thumbnail', variant: :link,
+                                                  confirm: "Are you sure you want to change this item's thumbnail?",
+                                                  class: classes)
       end
     end
 
