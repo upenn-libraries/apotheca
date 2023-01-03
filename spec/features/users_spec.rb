@@ -17,7 +17,7 @@ describe 'User management' do
       visit new_user_path
       fill_in :user_email, with: 'test@user.com'
       click_on 'Create User'
-      expect(page).to have_text 'test@user.com'
+      expect(page).to have_text 'User created'
     end
   end
 end
