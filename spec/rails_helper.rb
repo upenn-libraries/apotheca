@@ -39,6 +39,7 @@ RSpec.configure do |config|
 
   # RSpec Devise helpers
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :feature
 
   # Adding Valkyrie persist strategy for FactoryBot
   FactoryBot.register_strategy(:persist, ValkyriePersistStrategy)
