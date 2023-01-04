@@ -5,20 +5,23 @@ module Form
     # Component that provides a single interface to create form fields with a label and input.
     class Component < ViewComponent::Base
       renders_one :label, ->(text, **options, &block) do
-        Label::Component.new(text, for: @id, **options, &block)
+        Label::Component.new(text, for: @id, size: @size, **options, &block)
       end
 
       renders_one :input, ->(**options, &block) do
-        Input::Component.new(id: @id, field: @name, value: @value, **options, &block)
+        Input::Component.new(id: @id, size: @size, field: @name, value: @value, **options, &block)
       end
 
-      def initialize(*field_path, model: nil, **options)
+      def initialize(*field_path, model: nil, size: nil, **options)
         @field_path = field_path
         @model = model
+        @size = size
         @options = options
 
+        @options[:class] = Array.wrap(@options[:class]).append('mb-3')
+
         @name = @options.delete(:field) || generate_name
-        @value = @options.delete(:value) || extract_value
+        @value = @options.key?(:value) ? @options.delete(:value) : extract_value # Accounting for value to be nil
 
         @id = generate_id(@name)
       end
@@ -63,6 +66,8 @@ module Form
       end
 
       def call
+        return input if input.type == :hidden
+
         render(RowComponent.new(:div, **@options)) do
           safe_join([label, input])
         end

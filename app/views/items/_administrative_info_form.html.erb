@@ -1,17 +1,10 @@
 <h3>Administrative Information</h3>
 
-<%= render(Form::Component.new(url: item_path(@item, anchor: 'administrative-info'), method: :patch, name: 'administrative-info', model: @change_set)) do |form| %>
+<%= render(Form::Component.new(url: item_path(@item, anchor: 'administrative-info'), name: 'administrative-info', model: @change_set)) do |form| %>
   <% form.with_error(@error) if @errors_for == 'administrative-info' %>
 
-  <% form.with_field(:human_readable_name) do |field| %>
-    <% field.with_label('Human Readable Name') %>
-    <% field.with_input(type: :text) %>
-  <% end %>
-
-  <% form.with_field(:internal_notes) do |field| %>
-    <% field.with_label('Internal Notes') %>
-    <% field.with_input(type: :text) %>
-  <% end %>
+  <% form.with_field(:human_readable_name, size: :sm, type: :text) %>
+  <% form.with_field(:internal_notes, size: :sm, type: :text) %>
 
   <% form.with_submit('Save') %>
 <% end %>

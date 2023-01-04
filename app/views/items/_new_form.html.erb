@@ -1,41 +1,47 @@
-<%= render(Form::Component.new(url: items_path, method: :post, name: 'item-new')) do |form| %>
+<%= render(Form::Component.new(url: items_path, model: @change_set, name: 'item-new')) do |form| %>
   <% form.with_error(@error) %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Administrative Fields' } %>
 
-    <% section.with_input_text(label: 'Human Readable Name',
-                               value: @change_set.human_readable_name,
-                               field: "item[human_readable_name]") %>
+    <% section.with_field(:human_readable_name, size: :sm) do |field| %>
+      <% field.with_label('Human Readable Name') %>
+      <% field.with_input(type: :text) %>
+    <% end %>
 
-    <% section.with_input_text(label: 'Internal Notes',
-                               value: @change_set.internal_notes,
-                               field: "item[internal_notes][]") %>
+    <% section.with_field(:internal_notes, size: :sm) do |field| %>
+      <% field.with_label('Internal Notes') %>
+      <% field.with_input(type: :text) %>
+    <% end %>
   <% end %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Descriptive Metadata' } %>
 
-    <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
-      <% section.with_input_text(label: field,
-                                 value: @change_set.descriptive_metadata.send(field),
-                                 field: "item[descriptive_metadata][#{field}][]") %>
+    <% ItemResource::DescriptiveMetadata::FIELDS.each do |field_name| %>
+      <% section.with_field(:descriptive_metadata, field_name, size: :sm) do |field| %>
+        <% field.with_label(field_name) %>
+        <% field.with_input(type: :text) %>
+      <% end %>
     <% end %>
   <% end %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Structural Metadata' } %>
-    <% section.with_input_select(label: 'Viewing Hint',
-                                 value: @change_set.structural_metadata.viewing_hint,
-                                 field: "item[structural_metadata][viewing_hint]",
-                                 options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS,
-                                 include_blank: true) %>
-    <%= section.with_input_select(label: 'Viewing Direction',
-                                  value: @change_set.structural_metadata.viewing_direction,
-                                  field: "item[structural_metadata][viewing_direction]",
-                                  options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
-                                  include_blank: true) %>
 
+    <% section.with_field(:structural_metadata, :viewing_hint, size: :sm) do |field| %>
+      <% field.with_label('Viewing Hint') %>
+      <% field.with_input(type: :select,
+                          choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS,
+                          include_blank: true) %>
+    <% end %>
+
+    <% section.with_field(:structural_metadata, :viewing_direction, size: :sm) do |field| %>
+      <% field.with_label('Viewing Direction') %>
+      <% field.with_input(type: :select,
+                          choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
+                          include_blank: true) %>
+    <% end %>
   <% end %>
 
   <% form.with_submit('Save') %>

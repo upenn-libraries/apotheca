@@ -4,20 +4,13 @@ module Form
   # Renders a form element. Has slots for inputs, a submit button and an error message. If desired,
   # inputs can be grouped in sections.
   class Component < ViewComponent::Base
-    renders_many :inputs, types: {
-      text: ->(system_arguments) { Input::Component.new(type: :text, **system_arguments) },
-      select: ->(system_arguments) { Input::Component.new(type: :select, **system_arguments) },
-      hidden: ->(system_arguments) { Input::Component.new(type: :hidden, **system_arguments) },
-      textarea: ->(system_arguments) { Input::Component.new(type: :textarea, **system_arguments) },
-      file: ->(system_arguments) { Input::Component.new(type: :file, **system_arguments) },
-      readonly: ->(system_arguments) { Input::Component.new(type: :readonly, **system_arguments) }
-    }
-
     renders_many :fields, ->(*field_path, **args, &block) {
       Field::Component.new(*field_path, model: @model, **args, &block)
     }
 
-    renders_many :sections, Section::Component
+    renders_many :sections, ->(**options, &block) {
+      Section::Component.new(model: @model, **options, &block)
+    }
 
     renders_one :error, ErrorMessage::Component
 
@@ -34,9 +27,11 @@ module Form
     def initialize(name:, url:, model: nil, **options)
       @name = name
       @url = url
-      @options = options
       @model = model
-      # if method is not passed in, we should make an assuption based on whether or not its a new record
+      @options = options
+
+      # If method is not passed in, we set the appropriate method.
+      @options[:method] = new_record? ? :post : :patch unless @options[:method]
     end
 
     def new_record?

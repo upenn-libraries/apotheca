@@ -8,17 +8,18 @@ module Form
           # @param value [Array<String>]
           # @param field [String]
           # @param choices [Array<String>] options for select
-          def initialize(value:, field:, choices:, **options)
+          def initialize(value:, field:, choices:, size: nil, **options)
             @value = value
             @field = field
             @choices = choices
             @options = options
+
+            @options[:class] = Array.wrap(@options[:class]).append('form-select')
+            @options[:class] = @options[:class].append("form-select-#{size}") if size
           end
 
           def call
-            select_tag(@field,
-                       options_for_select(@choices, selected: @value),
-                       class: 'form-control form-select-sm form-select', **@options)
+            select_tag(@field, options_for_select(@choices, selected: @value), **@options)
           end
         end
       end
