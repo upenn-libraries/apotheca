@@ -14,22 +14,43 @@
 
 <%= page_entries_info @container.paginator, entry_name: 'result' %>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Title</th>
-      <th>Alt. ID</th>
-      <th></th>
-    </tr>
-  </thead>
-  <% @container.documents.each do |item| %>
-  <tr>
-    <td>&nbsp;</td>
-    <td><%= link_to item.descriptive_metadata.title.first, item_path(item.id) %></td>
-    <td><%= item.unique_identifier %></td>
-    <td><%= link_to 'Edit', edit_item_path(item.id), class: 'btn btn-primary' %></td>
-  <% end %>
-</table>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Human Readable Name</th>
+        <th>Title</th>
+        <th>Collection(s)</th>
+        <th>Unique Identifier</th>
+        <th>Created By</th>
+        <th>Published</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @container.documents.each do |item| %>
+        <tr>
+          <td><%= link_to item.human_readable_name, item_path(item.id) %></td>
+          <td>
+            <ul class="list-unstyled mb-0">
+              <% item.descriptive_metadata.title.each.with_index do |t, i| %>
+                <li class="<%= 'pb-2' if i.zero? %>"><%= t %></li>
+              <% end %>
+            </ul>
+          </td>
+          <td>
+            <ul class="list-unstyled mb-0">
+              <% item.descriptive_metadata.collection.each.with_index do |t, i| %>
+                <li class="<%= 'pb-2' if i.zero? %>"><%= t %></li>
+              <% end %>
+            </ul>
+          </td>
+          <td><%= item.unique_identifier %></td>
+          <td><%= item.created_by %></td>
+          <td><%= item.published ? 'Yes' : 'No' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <%= paginate @container.paginator %>
