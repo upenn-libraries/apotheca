@@ -56,6 +56,11 @@ class ItemsController < ApplicationController
     end
   end
 
+  def reorder_assets
+    authorize! :edit, ItemResource
+    load_resources
+  end
+
   private
 
   # Explicitly set the default per page for initial page load (when there are no params) only for the ItemResource

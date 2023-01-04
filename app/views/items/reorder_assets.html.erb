@@ -1,0 +1,11 @@
+<ul>
+  <% @unarranged_assets.each do |unarranged_asset| %>
+  <li><%= unarranged_asset.id %></li>
+  <% end %>
+</ul>
+
+<ol>
+  <% @arranged_assets.each do |arranged_asset| %>
+  <li><%= arranged_asset.id %></li>
+  <% end %>
+</ol>
