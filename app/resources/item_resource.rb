@@ -18,7 +18,6 @@ class ItemResource < Valkyrie::Resource
     def to_export
       attributes.slice(*FIELDS)
     end
-
   end
 
   class StructuralMetadata < Valkyrie::Resource
@@ -59,8 +58,8 @@ class ItemResource < Valkyrie::Resource
     thumbnail_asset_id == asset_id
   end
 
+  # @param [Boolean] include_assets
   def to_export(include_assets: false)
-
     bulk_export_hash = {
       unique_identifier: unique_identifier,
       human_readable_name: human_readable_name,
@@ -81,8 +80,8 @@ class ItemResource < Valkyrie::Resource
 
     if include_assets
       bulk_export_hash[:assets] = {
-        ordered: assets_array(arranged_asset_ids),
-        unordered: assets_array(unarranged_asset_ids)
+        ordered: assets_export(structural_metadata.arranged_asset_ids),
+        unordered: assets_export(unarranged_asset_ids)
       }
     end
 
@@ -90,12 +89,12 @@ class ItemResource < Valkyrie::Resource
   end
 
   # @param [Array<Valkyrie::ID>] asset_ids
-  def assets_array(asset_ids)
+  def assets_export(asset_ids)
     query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
     asset_resources = query_service.find_many_by_ids(ids: asset_ids)
 
     asset_ids.map do |asset_id|
-      asset = asset_resources.find { |r| r.id == asset_id}
+      asset = asset_resources.find { |r| r.id == asset_id }
       { filename: asset.original_filename, label: asset.label, annotations: asset.annotations.map(&:text) }
     end
   end
