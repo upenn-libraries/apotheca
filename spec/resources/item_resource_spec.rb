@@ -12,15 +12,17 @@ describe ItemResource do
     it_behaves_like 'ModificationDetails', :item_resource
   end
 
-  context 'with arranged assets' do
-    let(:resource) do
-      build(:item_resource, :with_assets_some_arranged)
-    end
+  context '#unarranged_asset_ids' do
+    context 'with arranged assets' do
+      let(:resource) do
+        build(:item_resource, :with_assets_some_arranged)
+      end
 
-    it 'returns a list of unarranged asset ids' do
-      ordered_asset_ids = resource.structural_metadata.arranged_asset_ids
-      expect(resource.unarranged_asset_ids).not_to include ordered_asset_ids
-      expect(resource.unarranged_asset_ids.length).to eq 1
+      it 'returns a list of unarranged asset ids' do
+        ordered_asset_ids = resource.structural_metadata.arranged_asset_ids
+        expect(resource.unarranged_asset_ids).not_to include ordered_asset_ids
+        expect(resource.unarranged_asset_ids.length).to eq 1
+      end
     end
   end
 
