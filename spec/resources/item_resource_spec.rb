@@ -23,4 +23,21 @@ describe ItemResource do
       expect(resource.unarranged_asset_ids.length).to eq 1
     end
   end
+
+  context '#to_export' do
+    context 'without assets' do
+      let(:resource) { persist(:item_resource) }
+      subject(:export) { resource.to_export }
+      it 'returns expected data' do
+        expect(export[:human_readable_name]).to eql ('New Item')
+        expect(export[:metadata][:title].first).to eql ('New Item')
+        expect(export[:structural][:viewing_hint]).to eql('paged')
+      end
+
+      it 'does not return asset data' do
+        expect(export[:assets]).to be_nil
+      end
+
+    end
+  end
 end
