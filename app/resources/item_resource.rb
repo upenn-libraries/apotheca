@@ -14,6 +14,11 @@ class ItemResource < Valkyrie::Resource
     FIELDS.each do |field|
       attribute field, Valkyrie::Types::Array.of(Valkyrie::Types::String)
     end
+
+    def to_export
+      attributes.slice(*FIELDS)
+    end
+
   end
 
   class StructuralMetadata < Valkyrie::Resource
@@ -52,5 +57,46 @@ class ItemResource < Valkyrie::Resource
   # @param [Valkyrie::ID] asset_id
   def thumbnail?(asset_id)
     thumbnail_asset_id == asset_id
+  end
+
+  def to_export(include_assets: false)
+
+    bulk_export_hash = {
+      unique_identifier: unique_identifier,
+      human_readable_name: human_readable_name,
+      metadata: descriptive_metadata.to_export,
+      created_at: created_at&.to_fs(:display),
+      created_by: created_by,
+      updated_at: updated_at&.to_fs(:display),
+      updated_by: updated_by,
+      internal_notes: internal_notes,
+      published: published,
+      first_published_at: first_published_at&.to_fs(:display),
+      last_published_at: last_published_at&.to_fs(:display),
+      structural: {
+        viewing_direction: structural_metadata.viewing_direction,
+        viewing_hint: structural_metadata.viewing_hint
+      }
+    }
+
+    if include_assets
+      bulk_export_hash[:assets] = {
+        ordered: assets_array(arranged_asset_ids),
+        unordered: assets_array(unarranged_asset_ids)
+      }
+    end
+
+    bulk_export_hash
+  end
+
+  # @param [Array<Valkyrie::ID>] asset_ids
+  def assets_array(asset_ids)
+    query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
+    asset_resources = query_service.find_many_by_ids(ids: asset_ids)
+
+    asset_ids.map do |asset_id|
+      asset = asset_resources.find { |r| r.id == asset_id}
+      { filename: asset.original_filename, label: asset.label, annotations: asset.annotations.map(&:text) }
+    end
   end
 end
