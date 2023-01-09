@@ -92,7 +92,10 @@ class ItemsController < ApplicationController
       :human_readable_name, :thumbnail_asset_id,
       internal_notes: [],
       descriptive_metadata: metadata_fields,
-      structural_metadata: [:viewing_direction, :viewing_hint]
+      structural_metadata: [
+        :viewing_direction, :viewing_hint,
+        { arranged_asset_ids: [] }
+      ]
     )
   end
 
