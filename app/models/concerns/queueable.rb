@@ -2,7 +2,8 @@
 
 # Module that implements a state machine to manage state of asynchronous
 # jobs. Models that use this concern should implement a #run method that
-# does the necessary processing.
+# does the necessary processing and have a `status` attribute (and
+# corresponding db column if using ActiveRecord).
 module Queueable
   extend ActiveSupport::Concern
 
