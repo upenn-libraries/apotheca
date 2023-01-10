@@ -112,9 +112,7 @@ class ItemsController < ApplicationController
   def load_resources
     @item ||= pg_query_service.find_by id: params[:id]
     @change_set ||= ItemChangeSet.new(@item)
-    @arranged_assets = pg_query_service.find_many_by_ids(ids: @item.structural_metadata.arranged_asset_ids.deep_dup).sort_by do |asset_id|
-      @item.structural_metadata.arranged_asset_ids.index(asset_id)
-    end
+    @arranged_assets = @item.arranged_assets
     @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids.deep_dup
   end
 

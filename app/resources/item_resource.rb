@@ -52,6 +52,15 @@ class ItemResource < Valkyrie::Resource
     Array.wrap(asset_ids) - structural_metadata.arranged_asset_ids
   end
 
+  # @todo memoize to prevent duplicate queries & sorting?
+  # @return [Array<AssetResource>]
+  def arranged_assets
+    pg_query_service.find_many_by_ids(ids: structural_metadata.arranged_asset_ids)
+                    .sort_by do |asset|
+      structural_metadata.arranged_asset_ids.index(asset.id)
+    end
+  end
+
   # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
   # @param [Valkyrie::ID] asset_id
   def thumbnail?(asset_id)
@@ -90,12 +99,15 @@ class ItemResource < Valkyrie::Resource
 
   # @param [Array<Valkyrie::ID>] asset_ids
   def assets_export(asset_ids)
-    query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
-    asset_resources = query_service.find_many_by_ids(ids: asset_ids)
+    asset_resources = pg_query_service.find_many_by_ids(ids: asset_ids)
 
     asset_ids.map do |asset_id|
       asset = asset_resources.find { |r| r.id == asset_id }
       { filename: asset.original_filename, label: asset.label, annotations: asset.annotations.map(&:text) }
     end
+  end
+
+  def pg_query_service
+    @pg_query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
 end

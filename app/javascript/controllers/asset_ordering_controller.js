@@ -44,7 +44,7 @@ export default class extends Controller {
         const orderedList = document.getElementById("arranged-assets")
         if(unorderedList.querySelector(".asset-card") && unorderedList.querySelector(".placeholder-card")) {
             unorderedList.querySelector(".placeholder-card").remove()
-        } else if (!unorderedList.querySelector(".asset-card") && !orderedList.querySelector(".placeholder-card")) {
+        } else if (!unorderedList.querySelector(".asset-card") && !unorderedList.querySelector(".placeholder-card")) {
             this.conjurePlaceholder(unorderedList)
         }
         if(orderedList.querySelector(".asset-card") && orderedList.querySelector(".placeholder-card")) {
