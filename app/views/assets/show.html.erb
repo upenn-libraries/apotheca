@@ -6,7 +6,7 @@
   <% component.with_breadcrumb(active: true) { @asset.display_title } %>
 <% end %>
 
-<%= render(Header::Component.new) do |header| %>
+<%= render(Header::Component.new(render_right_link: can?(:update, AssetResource))) do |header| %>
   <%= header.with_title(tag: :h2) { 'Asset: ' + @asset.display_title } %>
   <%= header.with_right_link(href: edit_asset_path(@asset)) { 'Edit Asset' } %>
 <% end %>
