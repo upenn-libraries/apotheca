@@ -12,6 +12,9 @@ FactoryBot.define do
     descriptive_metadata do
       { title: ['New Item'] }
     end
+    structural_metadata do
+      { viewing_hint: 'paged' }
+    end
     internal_notes { ['One note', 'Another Note'] }
     unique_identifier { 'ark:/12345/random' }
     created_by { 'admin@library.upenn.edu' }
