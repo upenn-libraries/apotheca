@@ -3,11 +3,12 @@
 module AssetInfo
   # ViewComponent
   class Component < ViewComponent::Base
-    attr_reader :asset, :item, :index, :can
+    attr_reader :asset, :item, :index, :render_edit_links
 
     # @param [AssetResource] asset
     # @param [ItemResource] item
     # @param [Integer] index
+    # @param [Boolean] render_edit_links
     def initialize(asset:, item:, index: nil, render_edit_links: true)
       @asset = asset
       @index = index ? index + 1 : nil
