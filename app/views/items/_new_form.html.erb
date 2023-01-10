@@ -1,4 +1,4 @@
-<%= render(Form::Component.new(url: items_path, model: @change_set, name: 'item-new')) do |form| %>
+<%= render(Form::Component.new(model: @change_set)) do |form| %>
   <% form.with_error(@error) %>
 
   <% form.with_section do |section| %>

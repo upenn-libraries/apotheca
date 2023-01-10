@@ -12,6 +12,10 @@ module Form
         Input::Component.new(id: @id, size: @size, field: @name, value: @value, **options, &block)
       end
 
+      # @param [Array<String|Symbol>] field_path to value in model
+      # @param [Valkyrie::ChangeSet] model for field
+      # @param [String|Symbol] size of input and label
+      # @param [Hash] options for field row
       def initialize(*field_path, model: nil, size: nil, **options)
         @field_path = field_path
         @model = model
@@ -36,21 +40,20 @@ module Form
         @field_path.reduce(@model) { |value, field| value.send(field) }
       end
 
+      # Recursively generates field name.
       def generate_name
-        return unless @model.is_a?(Valkyrie::ChangeSet)
-
-        name = model_name
-        formatted_field_name(name, @field_path.dup, @model)
+        formatted_field_name(model_name, @field_path.dup, @model)
       end
 
       def formatted_field_name(field_name, field_path, object)
         return field_name if field_path.empty?
 
         field = field_path.shift
-        new_object = object.send(field) # TODO: if this does not succeed throw an error
+        new_object = object.send(field)
         field_name << "[#{field}]"
-        field_name << "[]" if object.multiple?(field)
-        if object.multiple?(field)
+
+        if object.respond_to?(:multiple?) ? object.multiple?(field) : object.is_a?(Array)
+          field_name << '[]'
           formatted_field_name(field_name, field_path, new_object.first)
         else
           formatted_field_name(field_name, field_path, new_object)
@@ -58,10 +61,13 @@ module Form
       end
 
       def model_name
-        if @model.is_a? Valkyrie::ChangeSet
+        case @model
+        when Valkyrie::ChangeSet
           @model.class.to_s.underscore.delete_suffix('_change_set')
+        when Valkyrie::Resource
+          @model.class.to_s.underscore.delete_suffix('_resource')
         else
-          # TODO: if its an active record model do something else?
+          @model.model_name.param_key
         end
       end
 

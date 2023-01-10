@@ -1,5 +1,5 @@
 
-<%= render(Form::Component.new(name: 'asset', url: url, model: @change_set, multipart: true)) do |form| %>
+<%= render(Form::Component.new(model: @change_set, multipart: true)) do |form| %>
   <% form.with_error(@error) %>
 
   <% form.with_field(field: 'item_id', value: @item.id) do |field| %>

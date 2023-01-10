@@ -1,7 +1,7 @@
-<%= form_tag(@url, **@options) do %>
+<%= form_tag(url, **@options) do %>
   <%= error %>
 
-  <%= hidden_field_tag :form, @name %>
+  <%= hidden_field_tag(:form, @name) if @name %>
 
   <% fields.each do |field| %>
     <%= field %>
