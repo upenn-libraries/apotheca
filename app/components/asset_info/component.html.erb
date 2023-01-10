@@ -35,11 +35,15 @@
   </div>
   <div class="col-auto">
     <ul class="list-group text-end">
-      <li class="list-group-item list-group-item-action"><%= set_as_thumbnail %></li>
+      <% if @render_edit_links %>
+        <li class="list-group-item list-group-item-action"><%= set_as_thumbnail %></li>
+      <% end %>
       <li class="list-group-item list-group-item-action"><%= access_download_link %></li>
       <li class="list-group-item list-group-item-action"><%= preservation_download_link %></li>
       <li class="list-group-item list-group-item-action"><%= link_to 'More Details', asset_path(asset), class: 'stretched-link' %></li>
-      <li class="list-group-item list-group-item-action"><%= link_to 'Edit Asset', edit_asset_path(asset), class: 'stretched-link' %></li>
+      <% if @render_edit_links %>
+        <li class="list-group-item list-group-item-action"><%= link_to 'Edit Asset', edit_asset_path(asset), class: 'stretched-link' %></li>
+      <% end %>
     </ul>
   </div>
 </div>
