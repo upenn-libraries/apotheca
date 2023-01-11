@@ -2,6 +2,8 @@
 
 # alert message application actions
 class AlertMessagesController < ApplicationController
+  before_action :authorize
+
   def index
     @header_alert = AlertMessage.header
     @home_alert = AlertMessage.home
@@ -21,5 +23,9 @@ class AlertMessagesController < ApplicationController
 
   def alert_message_params
     params.require(:alert_message).permit(:active, :message, :level)
+  end
+
+  def authorize
+    authorize! :manage, AlertMessage
   end
 end
