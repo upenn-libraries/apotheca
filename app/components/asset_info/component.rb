@@ -7,6 +7,7 @@ module AssetInfo
 
     # @param [AssetResource] asset
     # @param [ItemResource] item
+    # @param [User] user
     # @param [Integer] index
     def initialize(asset:, item:, user:, index: nil)
       @asset = asset

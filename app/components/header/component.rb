@@ -10,6 +10,5 @@ module Header
       options[:class] = Array.wrap(options[:class]).append('btn', 'btn-outline-primary')
       BaseComponent.new(:a, href: href, **options, &block)
     end
-
   end
 end
