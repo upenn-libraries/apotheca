@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_06_161618) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_11_154118) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -22,6 +22,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_06_161618) do
     t.string "location"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "bulk_exports", force: :cascade do |t|
+    t.bigint "user_id"
+    t.jsonb "solr_params"
+    t.string "process_errors", array: true
+    t.integer "duration"
+    t.string "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_bulk_exports_on_user_id"
   end
 
   create_table "imports", force: :cascade do |t|
