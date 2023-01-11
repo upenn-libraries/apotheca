@@ -3,17 +3,20 @@
 module AssetInfo
   # ViewComponent
   class Component < ViewComponent::Base
-    attr_reader :asset, :item, :index, :render_edit_links
+    attr_reader :asset, :item, :index
 
     # @param [AssetResource] asset
     # @param [ItemResource] item
     # @param [Integer] index
-    # @param [Boolean] render_edit_links
-    def initialize(asset:, item:, index: nil, render_edit_links: true)
+    def initialize(asset:, item:, user:, index: nil)
       @asset = asset
       @index = index ? index + 1 : nil
       @item = item
-      @render_edit_links = render_edit_links
+      @user = user
+    end
+
+    def ability
+      @ability ||= Ability.new(@user)
     end
 
     # @return [Array<AssetResource::Annotation>]

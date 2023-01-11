@@ -3,9 +3,9 @@
   <% component.with_breadcrumb(active: true) do %>Items<% end %>
 <% end %>
 
-<%= render(Header::Component.new(render_right_link: can?(:create, ItemResource))) do |header| %>
-  <%= header.with_title { 'Items' } %>
-  <%= header.with_right_link(href: new_item_path) { 'Create Item' } %>
+<%= render(Header::Component.new) do |header| %>
+  <% header.with_title { 'Items' } %>
+  <% header.with_right_link(href: new_item_path) { 'Create Item' } if can? :create, ItemResource %>
 <% end %>
 
 <%= render partial: 'search_form', locals: { container: @container } %>
