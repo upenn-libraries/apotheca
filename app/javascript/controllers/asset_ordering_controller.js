@@ -39,6 +39,30 @@ export default class extends Controller {
         this.toggleArrangedComponents()
     }
 
+    unorder(event) {
+        const unorderedList = document.getElementById("unarranged-assets")
+        unorderedList.appendChild(event.target.closest(".asset-card"))
+        this.togglePlaceholders()
+        this.updateNumbering()
+        this.toggleArrangedComponents()
+    }
+
+    makeFirst(event) {
+        const orderedList = document.getElementById("arranged-assets")
+        orderedList.prepend(event.target.closest(".asset-card"))
+        this.togglePlaceholders()
+        this.updateNumbering()
+        this.toggleArrangedComponents()
+    }
+
+    makeLast(event) {
+        const orderedList = document.getElementById("arranged-assets")
+        orderedList.append(event.target.closest(".asset-card"))
+        this.togglePlaceholders()
+        this.updateNumbering()
+        this.toggleArrangedComponents()
+    }
+
     togglePlaceholders() {
         const unorderedList = document.getElementById("unarranged-assets")
         const orderedList = document.getElementById("arranged-assets")
@@ -58,7 +82,7 @@ export default class extends Controller {
         const message = list.dataset.emptyMessage
         const placeholder = document.createElement("div")
         const placeholderBody = document.createElement("div")
-        placeholder.className = "card placeholder-card"
+        placeholder.className = "card placeholder-card border border-3 rounded-1"
         placeholderBody.className = "card-body"
         placeholderBody.innerText = message
         placeholder.appendChild(placeholderBody)
