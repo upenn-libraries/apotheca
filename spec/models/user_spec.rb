@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe User, type: :model do
   it 'requires an email' do
     user = described_class.new email: nil

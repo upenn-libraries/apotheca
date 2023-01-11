@@ -9,9 +9,11 @@
         <li class="nav-item">
           <a class="nav-link" href="<%= items_path %>">Items</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<%= users_path %>">Users</a>
-        </li>
+        <% if can? :manage, User %>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= users_path %>">Users</a>
+          </li>
+        <% end %>
         <% if can? :manage, AlertMessage %>
           <li class="nav-item">
             <a class="nav-link" href="<%= alert_messages_path %>">Alerts</a>
