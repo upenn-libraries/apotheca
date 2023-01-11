@@ -10,13 +10,15 @@
   <%= header.with_title(tag: :h2) { 'Arrange Assets' } %>
 <% end %>
 
-<p>Drag an asset to adjust ordering or to mark it unordered.</p>
+<p>Drag an asset to adjust arrangement or to mark it unarranged.</p>
 
 <hr>
 
 <%= form_with url: item_path(@item), method: :patch, data: { controller: 'asset-ordering' } do |form| %>
-  <h3 class="mt-2">Unarranged Assets</h3>
+  <h3 class="mt-2">Unarranged</h3>
+  <p>Unarranged assets are not included in the public display of an item.</p>
   <div id="unarranged-assets"
+       data-asset-ordering-target="unarrangedList"
        data-action="dragstart->asset-ordering#dragstart dragover->asset-ordering#dragover dragenter->asset-ordering#dragenter drop->asset-ordering#drop dragend->asset-ordering#dragend"
        data-empty-message="Drag an Asset here to mark it unordered.">
     <% @unarranged_assets.each do |unarranged_asset| %>
@@ -26,8 +28,9 @@
 
   <hr>
 
-  <h3 class="mt-2">Arranged Assets</h3>
+  <h3 class="mt-2">Arranged</h3>
   <div id="arranged-assets"
+       data-asset-ordering-target="arrangedList"
        data-action="dragstart->asset-ordering#dragstart dragover->asset-ordering#dragover dragenter->asset-ordering#dragenter drop->asset-ordering#drop dragend->asset-ordering#dragend"
        data-empty-message="Drag an Asset here to order it.">
     <% @arranged_assets.each do |arranged_asset| %>
