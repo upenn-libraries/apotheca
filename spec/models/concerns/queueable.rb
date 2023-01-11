@@ -32,4 +32,9 @@ shared_examples_for 'queueable' do
   it 'implements #run method' do
     expect(queueable_obj).to respond_to(:run)
   end
+
+  it 'requires state' do
+    queueable_obj.state = nil
+    expect(queueable_obj.save).to be_falsey
+  end
 end
