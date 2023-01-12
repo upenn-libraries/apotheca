@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :bulk_export do
     association :user, :admin
-    solr_params { %w[first second third] }
+    solr_params { { search: { all: 'Crunchy' } } }
     state { 'successful' }
   end
 end
