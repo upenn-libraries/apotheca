@@ -3,3 +3,10 @@ en:
     update:
       updated: "Alert updated"
       problem: "Problem saving Alert: %{message}"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            bulk_exports:
+              too_long: "Too many Bulk Exports, maximum is 10."
