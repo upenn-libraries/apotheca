@@ -4,6 +4,7 @@ class BulkExport < ApplicationRecord
 
   belongs_to :user
 
+  validates_associated :user
   validates :solr_params, presence: true
   validates :state, presence: true
 
