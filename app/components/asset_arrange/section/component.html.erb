@@ -14,7 +14,7 @@
           <div class="card-body d-flex flex-row align-items-center p-10">
             <span class="badge bg-primary asset-order-number"></span>
             <div class="p-2">
-              <p class="card-text"><%= asset.label %> - <%= asset.display_title %> (<%= number_to_human_size(asset.technical_metadata.size) %> <%= asset.technical_metadata.mime_type %>)</p>
+              <p class="card-text"><%= asset_description_text(asset) %></p>
             </div>
             <div class="arranged-shortcut-buttons text-end ms-auto <%= arranged ? '' : 'visually-hidden' %>">
               <a href="<%= asset_path(asset) %>" class="btn btn-link btn-sm">View Asset</a>
