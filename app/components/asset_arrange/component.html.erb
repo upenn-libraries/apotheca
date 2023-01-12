@@ -3,6 +3,7 @@
 <hr>
 
 <%= form_with url: item_path(item), method: :patch, data: { controller: 'asset-arrange--arrangement' } do %>
+  <%= hidden_field_tag :form, 'assets' %>
   <%= unarranged_section %>
   <hr>
   <%= arranged_section %>

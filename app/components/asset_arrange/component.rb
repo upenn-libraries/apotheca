@@ -8,6 +8,7 @@ module AssetArrange
     renders_one :unarranged_section, Section::Component
     renders_one :arranged_section, Section::Component
 
+    # @param [ItemResource] item
     def initialize(item:)
       @item = item
     end

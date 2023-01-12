@@ -61,16 +61,16 @@ export default class extends Controller {
         if(unarrangedList.querySelector(".asset-card") && unarrangedList.querySelector(".placeholder-card")) {
             unarrangedList.querySelector(".placeholder-card").remove()
         } else if (!unarrangedList.querySelector(".asset-card") && !unarrangedList.querySelector(".placeholder-card")) {
-            this.conjurePlaceholder(unarrangedList)
+            this.conjurePlaceholder(unarrangedList, false)
         }
         if(arrangedList.querySelector(".asset-card") && arrangedList.querySelector(".placeholder-card")) {
             arrangedList.querySelector(".placeholder-card").remove()
         } else if (!arrangedList.querySelector(".asset-card") && !arrangedList.querySelector(".placeholder-card")) {
-            this.conjurePlaceholder(arrangedList)
+            this.conjurePlaceholder(arrangedList, true)
         }
     }
 
-    conjurePlaceholder(list) {
+    conjurePlaceholder(list, arranged) {
         const message = list.dataset.emptyMessage
         const placeholder = document.createElement("div")
         const placeholderBody = document.createElement("div")
@@ -78,8 +78,16 @@ export default class extends Controller {
         placeholderBody.className = "card-body"
         placeholderBody.innerText = message
         placeholder.appendChild(placeholderBody)
+        if(arranged) { placeholder.appendChild(this.emptyArrangementInput()) }
         list.insertAdjacentElement("afterbegin", placeholder)
-        // TODO: unarranged placeholder should include empty array value as hidden field
+    }
+
+    emptyArrangementInput() {
+        const input = document.createElement("input")
+        input.setAttribute("type", "hidden")
+        input.setAttribute("name", "item[structural_metadata][arranged_asset_ids][]")
+        input.setAttribute("value", "")
+        return input
     }
 
     updateNumbering() {
