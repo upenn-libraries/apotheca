@@ -1,30 +1,13 @@
-<p>Drag an asset to adjust arrangement or to mark it unarranged.</p>
+<p><%= instructions %></p>
 
 <hr>
 
-<%= form_with url: item_path(item), method: :patch, data: { controller: 'asset-arrange--arrangement' } do |form| %>
-  <h3 class="mt-2">Unarranged</h3>
-  <p>Unarranged assets are not included in the public display of an item.</p>
-  <div id="unarranged-assets"
-       data-asset-arrange--arrangement-target="unarrangedList"
-       data-action="dragstart->asset-arrange--arrangement#dragstart dragover->asset-arrange--arrangement#dragover dragenter->asset-arrange--arrangement#dragenter drop->asset-arrange--arrangement#drop dragend->asset-arrange--arrangement#dragend"
-       data-empty-message="Drag an Asset here to mark it unordered.">
-    <% unarranged_assets.each do |unarranged_asset| %>
-      <%= render partial: 'order_asset_card',locals: { form: form, asset: unarranged_asset, arranged: false } %>
-    <% end %>
-  </div>
-
+<%= form_with url: item_path(item), method: :patch, data: { controller: 'asset-arrange--arrangement' } do %>
+  <%= unarranged_section %>
   <hr>
-
-  <h3 class="mt-2">Arranged</h3>
-  <div id="arranged-assets"
-       data-asset-arrange--arrangement-target="arrangedList"
-       data-action="dragstart->asset-arrange--arrangement#dragstart dragover->asset-arrange--arrangement#dragover dragenter->asset-arrange--arrangement#dragenter drop->asset-arrange--arrangement#drop dragend->asset-arrange--arrangement#dragend"
-       data-empty-message="Drag an Asset here to order it.">
-    <% arranged_assets.each do |arranged_asset| %>
-      <%= render partial: 'order_asset_card', locals: { form: form, asset: arranged_asset, arranged: true } %>
-    <% end %>
+  <%= arranged_section %>
+  <div class="mt-2">
+    <%= submit %>
+    <%= reset %>
   </div>
-  <%= form.submit 'Save Arrangement', class: 'btn btn-primary mt-2' %>
-  <%= link_to 'Reset', reorder_assets_item_path(item), class: 'btn btn-secondary mt-2' %>
 <% end %>

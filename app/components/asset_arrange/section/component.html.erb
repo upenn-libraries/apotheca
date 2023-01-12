@@ -1,0 +1,32 @@
+<h3 class="mt-2"><%= title %></h3> <%# title %>
+<% if message.present? %><p><%= message %></p><% end %>
+<div id="<%= id %>"
+     data-asset-arrange--arrangement-target="<%= target %>"
+     data-action="dragstart->asset-arrange--arrangement#dragstart dragover->asset-arrange--arrangement#dragover dragenter->asset-arrange--arrangement#dragenter drop->asset-arrange--arrangement#drop dragend->asset-arrange--arrangement#dragend"
+     data-empty-message="<%= placeholder_message %>">
+  <% assets.each do |asset| %>
+    <div class="card asset-card mb-1 g-0 border border-3 rounded-1" draggable="true" data-asset-id="<%= asset.id %>">
+      <div class="row">
+        <div class="col-auto d-flex flex-row" style="max-width: 120px">
+          <%= tag :img, src: file_asset_path(asset, type: :thumbnail, disposition: :inline), alt: 'Thumbnail for Asset', class: 'img-thumbnail border-0', draggable: 'false' %>
+        </div>
+        <div class="col">
+          <div class="card-body d-flex flex-row align-items-center p-10">
+            <span class="badge bg-primary asset-order-number"></span>
+            <div class="p-2">
+              <p class="card-text"><%= asset.label %> - <%= asset.display_title %> (<%= number_to_human_size(asset.technical_metadata.size) %> <%= asset.technical_metadata.mime_type %>)</p>
+            </div>
+            <div class="arranged-shortcut-buttons text-end ms-auto <%= arranged ? '' : 'visually-hidden' %>">
+              <a href="<%= asset_path(asset) %>" class="btn btn-link btn-sm">View Asset</a>
+              <a href="<%= edit_asset_path(asset) %>" class="btn btn-link btn-sm">Edit Asset</a>
+              <a href="#" class="btn btn-link btn-sm" data-action="asset-ordering#unorder">Mark Unordered</a>
+              <a href="#" class="btn btn-link btn-sm" data-action="asset-ordering#makeFirst">Make First</a>
+              <a href="#" class="btn btn-link btn-sm" data-action="asset-ordering#makeLast">Make Last</a>
+            </div>
+            <%= hidden_field_tag 'item[structural_metadata][arranged_asset_ids][]', asset.id, id: nil, class: 'asset-id-input', disabled: !arranged %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

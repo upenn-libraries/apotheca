@@ -10,6 +10,7 @@
   <%= header.with_title(tag: :h2) { 'Arrange Assets' } %>
 <% end %>
 
-<%= render(AssetArrange::Component.new(item: @item,
-                                       arranged_assets: @arranged_assets,
-                                       unarranged_assets: @unarranged_assets)) %>
+<%= render(AssetArrange::Component.new(item: @item)) do |component| %>
+  <%= component.with_unarranged_section(assets: @unarranged_assets, arranged: false) %>
+  <%= component.with_arranged_section(assets: @arranged_assets, arranged: true) %>
+<% end %>
