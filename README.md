@@ -6,6 +6,7 @@ Administrative application that enables the ingestion and management of digital 
 - Postgres
 - [libvips](https://www.libvips.org/)
 - [ffmpeg](https://ffmpeg.org/) - ensure `ffmpeg` executable is on your `$PATH`
+- Docker for [MacOS](https://docs.docker.com/desktop/install/mac-install/) or [Linux](https://docs.docker.com/engine/install/)
 
 ## Local Development and Test Environment
 We are using docker-compose to run adjacent services required for the application to run. The application will run directly on your machine.
@@ -44,6 +45,11 @@ rails s
 ```shell
 rake apotheca:start
 rspec
+```
+
+### 3c. Generate Sample Data
+```shell
+rake apotheca:generate_samples
 ```
 
 ### 4. Stop running services
