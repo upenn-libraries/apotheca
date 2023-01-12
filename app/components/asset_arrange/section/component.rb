@@ -6,9 +6,6 @@ module AssetArrange
     class Component < ViewComponent::Base
       attr_reader :assets, :arranged
 
-      renders_one :unarranged_section, Section::Component
-      renders_one :arranged_section, Section::Component
-
       # @param [Array<AssetResource>] assets
       # @param [TrueClass, FalseClass] arranged
       def initialize(assets:, arranged:)
