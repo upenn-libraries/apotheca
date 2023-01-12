@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :bulk_export do
     association :user, :admin
     solr_params { %w[first second third] }
-    state { 'success' }
+    state { 'successful' }
   end
 end
 
