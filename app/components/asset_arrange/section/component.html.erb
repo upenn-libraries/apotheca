@@ -1,4 +1,4 @@
-<h3 class="mt-2"><%= title %></h3> <%# title %>
+<h3 class="mt-2"><%= title %></h3>
 <% if message.present? %><p><%= message %></p><% end %>
 <div id="<%= id %>"
      data-asset-arrange--arrangement-target="<%= target %>"
@@ -19,7 +19,7 @@
             <div class="arranged-shortcut-buttons text-end ms-auto <%= arranged ? '' : 'visually-hidden' %>">
               <a href="<%= asset_path(asset) %>" class="btn btn-link btn-sm">View Asset</a>
               <a href="<%= edit_asset_path(asset) %>" class="btn btn-link btn-sm">Edit Asset</a>
-              <a href="#" class="btn btn-link btn-sm" data-action="asset-ordering#unorder">Mark Unordered</a>
+              <a href="#" class="btn btn-link btn-sm" data-action="asset-ordering#unorder">Mark Unarranged</a>
               <a href="#" class="btn btn-link btn-sm" data-action="asset-ordering#makeFirst">Make First</a>
               <a href="#" class="btn btn-link btn-sm" data-action="asset-ordering#makeLast">Make Last</a>
             </div>

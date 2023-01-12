@@ -50,7 +50,6 @@ export default class extends Controller {
     }
 
     makeLast(event) {
-        // const orderedList = document.getElementById("arranged-assets")
         this.arrangedListTarget.append(event.target.closest(".asset-card"))
         this.refresh()
     }
