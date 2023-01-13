@@ -11,6 +11,6 @@
 <% end %>
 
 <%= render(AssetArrange::Component.new(item: @item)) do |component| %>
-  <%= component.with_unarranged_section(assets: @unarranged_assets, arranged: false) %>
-  <%= component.with_arranged_section(assets: @arranged_assets, arranged: true) %>
+  <%= component.with_unarranged_section(assets: @unarranged_assets) %>
+  <%= component.with_arranged_section(assets: @arranged_assets) %>
 <% end %>
