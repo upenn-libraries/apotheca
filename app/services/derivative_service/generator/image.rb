@@ -4,7 +4,7 @@ module DerivativeService
   module Generator
     # Generator class encapsulating image derivative generation logic.
     class Image < Base
-      VALID_MIME_TYPES = ['image/tiff', 'image/jpeg'].freeze
+      VALID_MIME_TYPES = ['image/tiff'].freeze
 
       # @return [DerivativeService::Generator::DerivativeFile]
       def thumbnail

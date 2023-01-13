@@ -5,13 +5,13 @@
 # Use `.build` to build object and use `.persist` to persist via Valkyrie persister.
 FactoryBot.define do
   factory :asset_resource do
-    original_filename { 'front.jpg' }
+    original_filename { 'front.tif' }
     created_by { 'admin@library.upenn.edu' }
     updated_by { 'admin@library.upenn.edu' }
   end
 
   trait :with_preservation_file do
-    technical_metadata { { mime_type: 'image/jpeg' } }
+    technical_metadata { { mime_type: 'image/tiff' } }
 
     transient do
       preservation_backup { false }
@@ -23,7 +23,7 @@ FactoryBot.define do
     # Note: This does not generate derivatives.
     before(:create) do |asset, evaluator|
       uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: File.new(Rails.root.join('spec/fixtures/files/front.jpg')),
+        tempfile: File.new(Rails.root.join('spec/fixtures/files/front.tif')),
         filename: asset.original_filename, type: asset.technical_metadata.mime_type
       )
       preservation_storage = Valkyrie::StorageAdapter.find(:preservation)

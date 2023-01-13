@@ -17,43 +17,9 @@ describe FileCharacterization::Fits do
     let(:fits) { described_class.new(url: Settings.fits.url) }
 
     context 'with tiff file' do
-      subject(:metadata) { fits.examine(contents: file_contents, filename: 'front.jpg') }
+      subject(:metadata) { fits.examine(contents: file_contents, filename: 'front.tif') }
 
-      let(:file_contents) { File.read(file_fixture('files/front.jpg')) }
-      let(:technical_metadata) do
-        <<~METADATA
-          <?xml version="1.0" encoding="UTF-8"?>
-          <fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="1.5.0" timestamp="3/1/22 9:04 PM">
-            <identification status="SINGLE_RESULT">
-              <identity format="JPEG EXIF" mimetype="image/jpeg" toolname="FITS" toolversion="1.5.0">
-                <tool toolname="Exiftool" toolversion="11.54" />
-                <version toolname="Exiftool" toolversion="11.54">1.01</version>
-              </identity>
-            </identification>
-            <fileinfo>
-              <size toolname="Jhove" toolversion="1.20.1">42421</size>
-              <filename toolname="OIS File Information" toolversion="1.0" status="SINGLE_RESULT">front.jpg</filename>
-              <md5checksum toolname="OIS File Information" toolversion="1.0" status="SINGLE_RESULT">a93d8dc6bc83cd51ad60a151a8ce11e4</md5checksum>
-              <fslastmodified toolname="OIS File Information" toolversion="1.0" status="SINGLE_RESULT">1646168644000</fslastmodified>
-            </fileinfo>
-            <filestatus />
-            <metadata>
-              <image>
-                <imageWidth toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">500</imageWidth>
-                <imageHeight toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">297</imageHeight>
-                <iccProfileName toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">Adobe RGB (1998)</iccProfileName>
-                <iccProfileVersion toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">2.1.0</iccProfileVersion>
-                <YCbCrSubSampling toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">2 2</YCbCrSubSampling>
-                <samplingFrequencyUnit toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">in.</samplingFrequencyUnit>
-                <xSamplingFrequency toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">600</xSamplingFrequency>
-                <ySamplingFrequency toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">600</ySamplingFrequency>
-                <bitsPerSample toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">8 8 8</bitsPerSample>
-                <exifVersion toolname="Exiftool" toolversion="11.54" status="SINGLE_RESULT">0221</exifVersion>
-              </image>
-            </metadata>
-          </fits>
-        METADATA
-      end
+      let(:file_contents) { File.read(file_fixture('files/front.tif')) }
 
       it { is_expected.to be_an_instance_of FileCharacterization::Fits::Metadata }
 
@@ -62,11 +28,11 @@ describe FileCharacterization::Fits do
       end
 
       it 'returns mime type' do
-        expect(metadata.mime_type).to eql 'image/jpeg'
+        expect(metadata.mime_type).to eql 'image/tiff'
       end
 
       it 'returns size' do
-        expect(metadata.size).to be 42_421
+        expect(metadata.size).to be 291_455
       end
 
       it 'returns duration' do
@@ -74,7 +40,7 @@ describe FileCharacterization::Fits do
       end
 
       it 'returns md5 checksum' do
-        expect(metadata.md5).to eql 'a93d8dc6bc83cd51ad60a151a8ce11e4'
+        expect(metadata.md5).to eql 'c2c44072c0ec08013cff72aa7dc8d405'
       end
     end
 
