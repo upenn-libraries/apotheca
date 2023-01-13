@@ -39,7 +39,7 @@ export default class extends Controller {
         this.refreshLists()
     }
 
-    unorder(event) {
+    unarrange(event) {
         this.unarrangedListTarget.appendChild(event.target.closest(".asset-card"))
         this.refreshLists()
     }
@@ -51,7 +51,7 @@ export default class extends Controller {
 
     makeLast(event) {
         this.arrangedListTarget.append(event.target.closest(".asset-card"))
-        this.refresh()
+        this.refreshLists()
     }
 
     togglePlaceholders() {
