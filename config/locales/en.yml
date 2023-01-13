@@ -3,3 +3,16 @@ en:
     update:
       updated: "Alert updated"
       problem: "Problem saving Alert: %{message}"
+  assets:
+    arrangement:
+      instructions: "Drag an asset to adjust arrangement or to mark it unarranged."
+      submit: "Save Arrangement"
+      reset: "Reset"
+      unarranged:
+        title: "Unarranged"
+        message: "Unarranged assets are not included in the public display of an item."
+        placeholder_message: "Drag an Asset here to mark it unordered."
+      arranged:
+        title: "Arranged"
+        message: ""
+        placeholder_message: "Drag an Asset here to order it."

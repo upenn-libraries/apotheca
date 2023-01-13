@@ -26,6 +26,15 @@ describe ItemResource do
     end
   end
 
+  describe '#arranged_assets' do
+    let(:resource) { persist(:item_resource, :with_many_assets_most_arranged) }
+    let(:expected_arrangement) { %w[page1 page2 page3] }
+
+    it 'returns AssetResource instances in proper order' do
+      expect(resource.arranged_assets.collect(&:original_filename)).to eq expected_arrangement
+    end
+  end
+
   describe '#to_export' do
     context 'when not including assets' do
       subject(:export) { resource.to_export }
