@@ -7,6 +7,10 @@
 
 <%= render(StaticFields::Component.new) do |component| %>
   <% component.with_field(
+       label: 'Human Readable Name',
+       values: @item.human_readable_name
+     ) %>
+  <% component.with_field(
        label: 'Internal Notes',
        values: @item.internal_notes
      ) %>
