@@ -153,7 +153,10 @@ title = "gitlab gitleaks config"
         regexes = [
             '''(?i)(/run/secrets/)''',
             '''(?i)(foreign[-_]key)''',
-            '''(?i)(primary[-_]key)'''
+            '''(?i)(primary[-_]key)''',
+            '''(?i)(omniauth)''',
+            '''(?i)(header\[\:key\])''',
+            '''(?i)(\?\<key\>)'''
         ]
 
 [[rules]]
