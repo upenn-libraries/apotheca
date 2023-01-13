@@ -1,0 +1,16 @@
+<%= render(Breadcrumbs::Component.new) do |component| %>
+  <% component.with_breadcrumb(href: "/") { 'Home' } %>
+  <% component.with_breadcrumb(href: items_path) { 'Items' } %>
+  <% component.with_breadcrumb(href: item_path(@item, anchor: 'assets')) { @item.human_readable_name } %>
+  <% component.with_breadcrumb { 'Assets' } %>
+  <% component.with_breadcrumb { 'Arrange' } %>
+<% end %>
+
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title(tag: :h2) { 'Arrange Assets' } %>
+<% end %>
+
+<%= render(AssetArrange::Component.new(item: @item)) do |component| %>
+  <%= component.with_unarranged_section(assets: @unarranged_assets) %>
+  <%= component.with_arranged_section(assets: @arranged_assets) %>
+<% end %>

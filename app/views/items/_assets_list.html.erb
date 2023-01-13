@@ -1,6 +1,6 @@
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title(tag: :h3) { 'Assets' } %>
-  <%= header.with_right_link(href: new_asset_path(item_id: @item.id)) { 'Add Asset' } %>
+  <%= header.with_right_link(href: new_asset_path(item_id: @item.id)) { 'Add Asset' } if can? :create, AssetResource %>
 <% end %>
 
 <div class="row">
@@ -20,6 +20,7 @@
           <% end %>
         </nav>
       </nav>
+      <%= link_to 'Arrange Assets', reorder_assets_item_path(@item), class: 'mt-5 btn btn-outline-primary' %>
     </nav>
   </div>
   <div class="col">
@@ -27,7 +28,7 @@
       <h4 id="arranged-assets" class="mb-3">Arranged</h4>
       <% if @arranged_assets&.any? %>
         <% @arranged_assets.each_with_index do |asset, i| %>
-          <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
+          <%= render(AssetInfo::Component.new(asset: asset, item: @item, user: current_user, index: i)) %>
         <% end %>
       <% else %>
         <p>No arranged assets</p>
@@ -35,7 +36,7 @@
       <h4 id="unarranged-assets">Unarranged</h4>
       <% if @unarranged_assets&.any? %>
         <% @unarranged_assets.each_with_index do |asset, i| %>
-          <%= render(AssetInfo::Component.new(asset: asset, item: @item, index: i)) %>
+          <%= render(AssetInfo::Component.new(asset: asset, item: @item, user: current_user, index: i)) %>
         <% end %>
       <% else %>
         <p>No unarranged assets</p>
