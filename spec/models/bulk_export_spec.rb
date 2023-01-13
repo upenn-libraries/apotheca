@@ -22,5 +22,18 @@ describe BulkExport do
     expect(bulk_export.valid?).to be false
     expect(bulk_export.errors['state']).to include "can't be blank"
   end
+
+  context 'with associated User validation' do
+    let(:user) { create :user, :admin }
+
+    before { create_list(:bulk_export, 10, user: user) }
+
+    it 'does not allow more than 10 bulk exports' do
+      bulk_export = create(:bulk_export, user: user)
+      user.reload
+      expect(bulk_export).to be_invalid
+      expect(bulk_export.user.errors[:bulk_exports]).to include('Too many Bulk Exports, maximum is 10.')
+    end
+  end
 end
 
