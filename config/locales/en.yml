@@ -3,7 +3,6 @@ en:
     update:
       updated: "Alert updated"
       problem: "Problem saving Alert: %{message}"
-
   assets:
     arrangement:
       instructions: "Drag an asset to adjust arrangement or to mark it unarranged."
