@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :users, except: :destroy
 
   scope :resources do
-    resources :items, except: :destroy do
+    resources :items do
       member do
         get :reorder_assets, to: 'items#reorder_assets'
       end

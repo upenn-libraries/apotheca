@@ -37,6 +37,10 @@ class Container
     register 'update_ark_metadata' do
       Steps::UpdateArkMetadata.new
     end
+
+    register 'delete_resource' do
+      Steps::DeleteResource.new
+    end
   end
 
   namespace 'asset_resource' do
