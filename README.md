@@ -108,9 +108,9 @@ WIP
 
 ```ruby
 # Create Asset and attach file
-result = CreateAsset.new.call(original_filename: 'front.jpg', created_by: 'admin@library.upenn.edu')
+result = CreateAsset.new.call(original_filename: 'front.tif', created_by: 'admin@library.upenn.edu')
 
-uploaded_file = ActionDispatch::Http::UploadedFile.new tempfile: File.new(Rails.root.join('spec', 'fixtures', 'files', 'front.jpg')), filename: 'front.jpg', type: 'image/jpg'
+uploaded_file = ActionDispatch::Http::UploadedFile.new tempfile: File.new(Rails.root.join('spec', 'fixtures', 'files', 'front.tif')), filename: 'front.tif', type: 'image/tiff'
 
 result = UpdateAsset.new.call(id: result.value!.id, file: uploaded_file, updated_by: 'admin@library.upenn.edu')
 
