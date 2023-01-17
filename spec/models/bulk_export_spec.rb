@@ -29,10 +29,9 @@ describe BulkExport do
     before { create_list(:bulk_export, 10, user: user) }
 
     it 'does not allow more than 10 bulk exports' do
-      bulk_export = create(:bulk_export, user: user)
-      user.reload
+      bulk_export = build(:bulk_export, user: user)
       expect(bulk_export).to be_invalid
-      expect(bulk_export.user.errors[:bulk_exports]).to include('Too many Bulk Exports, maximum is 10.')
+      expect(bulk_export.errors[:user]).to include('The number of Bulk Exports for a user cannot exceed 10.')
     end
   end
 end
