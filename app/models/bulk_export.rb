@@ -15,6 +15,8 @@ class BulkExport < ApplicationRecord
   private
 
   def restrict_number_of_bulk_exports
-    errors.add(:user, 'The number of Bulk Exports for a user cannot exceed 10.') if user.bulk_exports.count >= 10
+    if user.present? && (user.bulk_exports.count >= 10)
+      errors.add(:user, 'The number of Bulk Exports for a user cannot exceed 10.')
+    end
   end
 end
