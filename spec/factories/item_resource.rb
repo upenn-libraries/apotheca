@@ -65,5 +65,19 @@ FactoryBot.define do
 
       structural_metadata { { arranged_asset_ids: [asset1.id] } }
     end
+
+    trait :with_many_assets_most_arranged do
+      transient do
+        asset0 { persist(:asset_resource, original_filename: 'page0') }
+        asset1 { persist(:asset_resource, original_filename: 'page1') }
+        asset2 { persist(:asset_resource, original_filename: 'page2') }
+        asset3 { persist(:asset_resource, original_filename: 'page3') }
+      end
+
+      asset_ids { [asset0.id, asset1.id, asset2.id, asset3.id] }
+      thumbnail_asset_id { asset1.id }
+
+      structural_metadata { { arranged_asset_ids: [asset1.id, asset2.id, asset3.id] } }
+    end
   end
 end

@@ -26,6 +26,11 @@ class ItemChangeSet < Valkyrie::ChangeSet
 
     validates :viewing_direction, inclusion: VIEWING_DIRECTIONS, allow_nil: true
     validates :viewing_hint, inclusion: VIEWING_HINTS, allow_nil: true
+
+    # Allow emptying of asset arrangement by submitting a blank array
+    def arranged_asset_ids=(values)
+      super(values.compact_blank)
+    end
   end
 
   # Defining Fields

@@ -52,6 +52,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_11_204441) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "bulk_exports", force: :cascade do |t|
+    t.bigint "user_id"
+    t.jsonb "solr_params"
+    t.string "process_errors", array: true
+    t.integer "duration"
+    t.string "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_bulk_exports_on_user_id"
+  end
+
   create_table "imports", force: :cascade do |t|
     t.string "state"
     t.datetime "created_at", null: false

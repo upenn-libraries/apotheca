@@ -113,7 +113,7 @@ describe AssetChangeSet do
     let(:preservation_storage) { Valkyrie::StorageAdapter.find(:preservation) }
     let(:preservation_file) do
       preservation_storage.upload(
-        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
+        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.tif'))),
         resource: resource,
         original_filename: resource.original_filename
       )
@@ -145,7 +145,7 @@ describe AssetChangeSet do
     let(:preservation_copy_storage) { Valkyrie::StorageAdapter.find(:preservation_copy) }
     let(:preservation_copy_file) do
       preservation_copy_storage.upload(
-        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
+        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.tif'))),
         resource: resource,
         original_filename: resource.original_filename
       )
@@ -170,7 +170,7 @@ describe AssetChangeSet do
     let(:derivative_storage) { Valkyrie::StorageAdapter.find(:derivatives) }
     let(:derivative) do
       derivative_storage.upload(
-        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.jpg'))),
+        file: ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/front.tif'))),
         resource: resource,
         original_filename: 'thumbnail'
       )

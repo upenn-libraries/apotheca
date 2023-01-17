@@ -7,11 +7,17 @@ module AssetInfo
 
     # @param [AssetResource] asset
     # @param [ItemResource] item
+    # @param [User] user
     # @param [Integer] index
-    def initialize(asset:, item:, index: nil)
+    def initialize(asset:, item:, user:, index: nil)
       @asset = asset
       @index = index ? index + 1 : nil
       @item = item
+      @user = user
+    end
+
+    def ability
+      @ability ||= Ability.new(@user)
     end
 
     # @return [Array<AssetResource::Annotation>]
@@ -21,7 +27,7 @@ module AssetInfo
 
     def thumbnail
       if @asset.thumbnail
-        tag :img, src: thumbnail_path, alt: 'Thumbnail for Asset', class: 'img-thumbnail'
+        tag.img src: thumbnail_path, alt: 'Thumbnail for Asset', class: 'img-thumbnail'
       else
         render(partial: 'shared/no_thumbnail')
       end

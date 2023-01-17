@@ -6,6 +6,7 @@ Administrative application that enables the ingestion and management of digital 
 - Postgres
 - [libvips](https://www.libvips.org/)
 - [ffmpeg](https://ffmpeg.org/) - ensure `ffmpeg` executable is on your `$PATH`
+- Docker for [MacOS](https://docs.docker.com/desktop/install/mac-install/) or [Linux](https://docs.docker.com/engine/install/)
 
 ## Local Development and Test Environment
 We are using docker-compose to run adjacent services required for the application to run. The application will run directly on your machine.
@@ -44,6 +45,11 @@ rails s
 ```shell
 rake apotheca:start
 rspec
+```
+
+### 3c. Generate Sample Data
+```shell
+rake apotheca:generate_samples
 ```
 
 ### 4. Stop running services
@@ -102,9 +108,9 @@ WIP
 
 ```ruby
 # Create Asset and attach file
-result = CreateAsset.new.call(original_filename: 'front.jpg', created_by: 'admin@library.upenn.edu')
+result = CreateAsset.new.call(original_filename: 'front.tif', created_by: 'admin@library.upenn.edu')
 
-uploaded_file = ActionDispatch::Http::UploadedFile.new tempfile: File.new(Rails.root.join('spec', 'fixtures', 'files', 'front.jpg')), filename: 'front.jpg', type: 'image/jpg'
+uploaded_file = ActionDispatch::Http::UploadedFile.new tempfile: File.new(Rails.root.join('spec', 'fixtures', 'files', 'front.tif')), filename: 'front.tif', type: 'image/tiff'
 
 result = UpdateAsset.new.call(id: result.value!.id, file: uploaded_file, updated_by: 'admin@library.upenn.edu')
 

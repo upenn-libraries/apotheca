@@ -4,7 +4,7 @@ describe UpdateAsset do
   describe '#call' do
     let(:transaction) { described_class.new }
 
-    let(:file1) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/front.jpg')) }
+    let(:file1) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/front.tif')) }
     let(:file2) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/bell.wav')) }
 
     context 'when providing a file for the first time' do
@@ -31,13 +31,13 @@ describe UpdateAsset do
       it 'sets technical metadata' do
         expect(
           updated_asset.technical_metadata
-        ).to include(mime_type: 'image/jpeg', size: 42_421, md5: 'a93d8dc6bc83cd51ad60a151a8ce11e4')
+        ).to include(mime_type: 'image/tiff', size: 291_455, md5: 'c2c44072c0ec08013cff72aa7dc8d405')
       end
 
       it 'sets sha256 checksum' do
         expect(
           updated_asset.technical_metadata.sha256
-        ).to eql 'd58516c7d3ece4d79f0de3a649a090af2174e67b7658f336a027a42123a2da72'
+        ).to eql '0929169032ec29557bf85b05b82923fdb75694393e34f652b8955912376e1e0b'
       end
 
       it 'enqueues job to generate derivatives' do

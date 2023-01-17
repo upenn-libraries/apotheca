@@ -56,6 +56,11 @@ class ItemsController < ApplicationController
     end
   end
 
+  def reorder_assets
+    authorize! :edit, ItemResource
+    load_resources
+  end
+
   private
 
   # Explicitly set the default per page for initial page load (when there are no params) only for the ItemResource
@@ -87,7 +92,10 @@ class ItemsController < ApplicationController
       :human_readable_name, :thumbnail_asset_id,
       internal_notes: [],
       descriptive_metadata: metadata_fields,
-      structural_metadata: [:viewing_direction, :viewing_hint]
+      structural_metadata: [
+        :viewing_direction, :viewing_hint,
+        { arranged_asset_ids: [] }
+      ]
     )
   end
 
@@ -104,7 +112,7 @@ class ItemsController < ApplicationController
   def load_resources
     @item ||= pg_query_service.find_by id: params[:id]
     @change_set ||= ItemChangeSet.new(@item)
-    @arranged_assets = pg_query_service.find_many_by_ids ids: @item.structural_metadata.arranged_asset_ids.deep_dup
+    @arranged_assets = @item.arranged_assets
     @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids.deep_dup
   end
 

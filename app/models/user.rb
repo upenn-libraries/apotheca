@@ -14,6 +14,8 @@ class User < ApplicationRecord
     devise :omniauthable, omniauth_providers: []
   end
 
+  has_many :bulk_exports, dependent: :destroy
+
   before_validation :deduplicate_roles
 
   validate :require_only_one_role
