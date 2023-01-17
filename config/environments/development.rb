@@ -76,4 +76,6 @@ Rails.application.configure do
     max_queue: 10,
     idletime: 600.seconds
   )
+
+  config.active_storage.service = :local
 end
