@@ -3,13 +3,7 @@ en:
     update:
       updated: "Alert updated"
       problem: "Problem saving Alert: %{message}"
-  activerecord:
-    errors:
-      models:
-        user:
-          attributes:
-            bulk_exports:
-              too_long: "Too many Bulk Exports, maximum is 10."
+
   assets:
     arrangement:
       instructions: "Drag an asset to adjust arrangement or to mark it unarranged."
