@@ -19,7 +19,6 @@ class User < ApplicationRecord
   before_validation :deduplicate_roles
 
   validate :require_only_one_role
-  validates :bulk_exports, length: { maximum: 10 }
   validates :roles, inclusion: ROLES
   validates :email, presence: true, uniqueness: true
   validates :uid, uniqueness: { scope: :provider }, if: :provider_provided?

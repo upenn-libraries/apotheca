@@ -47,12 +47,4 @@ describe User, type: :model do
     user.save
     expect(user.roles).to eq ['admin']
   end
-
-  it "can't have more than 10 bulk exports" do
-    user = create :user, :admin
-    create_list(:bulk_export, 11, user: user)
-    user.reload
-    expect(user.valid?).to be false
-    expect(user.errors[:bulk_exports]).to include('Too many Bulk Exports, maximum is 10.')
-  end
 end
