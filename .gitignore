@@ -19,7 +19,7 @@
 !/tmp/pids/.keep
 
 /storage
-!/storage.keep
+!/storage/.keep
 
 /public/assets
 
