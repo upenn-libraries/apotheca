@@ -2,53 +2,41 @@
 <%= render(Form::Component.new(model: @change_set, multipart: true)) do |form| %>
   <% form.with_error(@error) %>
 
-  <% form.with_field(field: 'item_id', value: @item.id) do |field| %>
-    <% field.with_input(type: :hidden) %>
-  <% end %>
-
-  <% form.with_field(:label) do |field| %>
-    <% field.with_label('Label') %>
-    <% field.with_input(type: :text) %>
-  <% end %>
-
-  <% form.with_field(field: 'asset[annotations][][text]', value: @change_set.annotations.map(&:text)) do |field| %>
-    <% field.with_label('Annotations') %>
-    <% field.with_input(type: :text) %>
-  <% end %>
+  <% form.with_field(field: 'item_id', value: @item.id, type: :hidden) %>
+  <% form.with_field(:label, type: :text) %>
+  <% form.with_field(field: 'asset[annotations][][text]',
+                     value: @change_set.annotations.map(&:text),
+                     label: 'Annotations',
+                     type: :text) %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Transcription' } %>
 
-    <% section.with_field(value: @change_set.transcriptions.first&.mime_type, field: "asset[transcriptions][][mime_type]") do |field| %>
-      <% field.with_label('Mime Type') %>
-      <% field.with_input(type: :select, choices: AssetChangeSet::TranscriptionChangeSet::VALID_MIME_TYPES) %>
-    <% end %>
+    <% section.with_field(value: @change_set.transcriptions.first&.mime_type,
+                          field: "asset[transcriptions][][mime_type]",
+                          label: 'Mime Type',
+                          type: :select,
+                          choices: AssetChangeSet::TranscriptionChangeSet::VALID_MIME_TYPES) %>
 
-    <% section.with_field(value: @change_set.transcriptions.first&.contents, field: "asset[transcriptions][][contents]") do |field| %>
-      <% field.with_label('Contents') %>
-      <% field.with_input(type: :textarea) %>
-    <% end %>
+    <% section.with_field(value: @change_set.transcriptions.first&.contents,
+                          field: "asset[transcriptions][][contents]",
+                          label: 'Contents',
+                          type: :textarea) %>
   <% end %>
 
   <% form.section do |section| %>
     <% section.with_title { 'Preservation File' } %>
 
     <% if @change_set.resource.preservation_file_id.present? %>
-      <% section.with_field(:original_filename) do |field| %>
-        <% field.with_label('Original Filename') %>
-        <% field.with_input(type: :readonly) %>
-      <% end %>
-
-      <% section.with_field(:preservation_file_id) do |field| %>
-        <% field.with_label('File') %>
-        <% field.with_input(type: :readonly) %>
-      <% end %>
+      <% section.with_field(:original_filename, type: :readonly) %>
+      <% section.with_field(:preservation_file_id, label: 'File', type: :readonly) %>
     <% end %>
 
-    <% section.with_field(field: 'asset[file]', value: nil) do |field| %>
-      <% field.with_label('New File') %>
-      <% field.with_input(type: :file, required: @change_set.resource.new_record) %>
-    <% end %>
+    <% section.with_field(field: 'asset[file]',
+                          value: nil,
+                          label: 'New File',
+                          type: :file,
+                          required: @change_set.resource.new_record) %>
   <% end %>
 
   <% form.with_submit('Save') %>

@@ -11,13 +11,18 @@ module Form
           @text = text.to_s.titlecase
           @options = options
 
-          @options[:col] = { sm: 2 } unless @options.key?(:col)
-          @options[:class] = Array.wrap(@options[:class]).append('col-form-label')
-          @options[:class] = @options[:class].append("col-form-label-#{size}") if size
+          if @options[:col]
+            @options[:class] = Array.wrap(@options[:class]).append('col-form-label')
+            @options[:class] = @options[:class].append("col-form-label-#{size}") if size
+          end
         end
 
         def call
-          render(ColumnComponent.new(:label, **@options)) { text }
+          if @options[:col]
+            render(ColumnComponent.new(:label, **@options)) { text }
+          else
+            render(BaseComponent.new(:label, **@options)) { text }
+          end
         end
       end
     end

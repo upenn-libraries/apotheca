@@ -5,21 +5,23 @@ module Form
   # inputs can be grouped in sections.
   class Component < ViewComponent::Base
     renders_many :fields, ->(*field_path, **args, &block) {
-      Field::Component.new(*field_path, model: @model, **args, &block)
+      Field::Component.new(*field_path, model: @model, label_col: @label_col, input_col: @input_col, **args, &block)
     }
 
     renders_many :sections, ->(**options, &block) {
-      Section::Component.new(model: @model, **options, &block)
+      Section::Component.new(model: @model, label_col: @label_col, input_col: @input_col, **options, &block)
     }
 
     renders_one :error, ErrorMessage::Component
 
     renders_one :submit, SubmitButton::Component
 
-    # Generates form for the ActiveRecord, Valkyrie::ChangeSet or Valkyrie::Resource provided.
+    # Generates form for the ActiveRecord, Valkyrie::ChangeSet or Valkyrie::Resource provided. Currently,
+    # we only support a horizontal form layout though we could continue extending this component to support
+    # alternative layouts.
     #
     # When a model is provided the form url and method can be automatically generated. Url and method
-    # values provided will override the defaults. Also in cases where a model is provided field names
+    # values provided will override the defaults. In cases where a model is provided field names
     # and values don't have to be explicitly provided. When a model is NOT provided a method and
     # url must be provided.
     #
@@ -31,9 +33,11 @@ module Form
     # Any additional arguments will be passed to the form_tag helper.
     #
     # @param [String] name given to form, passed to backend to identify form
-    # @param [String] url for request
-    # @param [Valkyrie::ChangeSet] model or change set that the form is representing
+    # @param [String] url for request, optional
+    # @param [Valkyrie::ChangeSet] model or change set that the form is representing, optional
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
+    # @option options [Symbol] :method to use for html form
+    # @option options [Boolean] :multipart flag to be used when file upload present
     def initialize(name: nil, url: nil, model: nil, **options)
       @name = name
       @model = model
@@ -42,6 +46,9 @@ module Form
 
       # If method is not passed in, we set the appropriate method.
       @options[:method] = new_record? ? :post : :patch unless @options[:method]
+
+      @label_col = @options.delete(:label_col) || { sm: 2 }
+      @input_col = @options.delete(:input_col) || { sm: 10 }
     end
 
     def url
@@ -59,7 +66,7 @@ module Form
       when Valkyrie::Resource
         @model.class.to_s.underscore.delete_suffix('_resource')
       else
-        @model.model_name.param_key
+        @model.class.to_s.underscore.downcase
       end
     end
 

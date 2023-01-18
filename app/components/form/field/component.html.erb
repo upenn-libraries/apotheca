@@ -1,0 +1,18 @@
+<% case @options[:type] %>
+<% when :hidden  %>
+  <%= render(Form::Field::Input::Component.new(type: @type, id: @id, size: @size, field: @name, value: @value, **@options)) %>
+<% when :boolean %>
+  <%= render(RowComponent.new(:div, class: 'mb-3')) do %>
+    <%= render(ColumnComponent.new(:div, col: @input_col, offset: @label_col)) do %>
+      <%= render(BaseComponent.new(:div, class: 'form-check form-switch')) do %>
+        <%= render(Form::Field::Input::Component.new(id: @id, size: @size, field: @name, value: @value, **@options)) %>
+        <%= render(Form::Field::Label::Component.new(label_text, for: @id, size: @size, class: 'form-check-label')) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= render(RowComponent.new(:div, class: 'mb-3')) do %>
+    <%= render(Form::Field::Label::Component.new(label_text, for: @id, size: @size, col: @label_col)) %>
+    <%= render(Form::Field::Input::Component.new(type: @type, id: @id, size: @size, field: @name, value: @value, col: @input_col, **@options)) %>
+  <% end %>
+<% end %>

@@ -2,24 +2,19 @@
 
 <%= render(Form::Component.new(url: item_path(@item, anchor: 'structural-metadata'),
                                name: 'structural-metadata',
-                               model: @change_set)) do |form| %>
+                               model: @change_set,
+                               input_col: { sm: 3 })) do |form| %>
   <% form.with_error(@error) if @errors_for == 'structural-metadata' %>
 
-  <% form.with_field(:structural_metadata, :viewing_hint) do |field| %>
-    <% field.with_label('Viewing Hint') %>
-    <% field.with_input(type: :select,
-                        col: { sm: 3 },
-                        choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS,
-                        include_blank: true) %>
-  <% end %>
+  <% form.with_field(:structural_metadata, :viewing_hint,
+                     type: :select,
+                     choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS,
+                     include_blank: true) %>
 
-  <% form.with_field(:structural_metadata, :viewing_direction) do |field| %>
-    <% field.with_label('Viewing Direction') %>
-    <% field.with_input(type: :select,
-                        col: { sm: 3 },
-                        choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
-                        include_blank: true) %>
-  <% end %>
+  <% form.with_field(:structural_metadata, :viewing_direction,
+                     type: :select,
+                     choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
+                     include_blank: true) %>
 
   <% form.with_submit('Save') %>
 <% end %>

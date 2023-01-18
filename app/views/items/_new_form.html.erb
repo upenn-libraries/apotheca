@@ -3,45 +3,32 @@
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Administrative Fields' } %>
-
-    <% section.with_field(:human_readable_name, size: :sm) do |field| %>
-      <% field.with_label('Human Readable Name') %>
-      <% field.with_input(type: :text) %>
-    <% end %>
-
-    <% section.with_field(:internal_notes, size: :sm) do |field| %>
-      <% field.with_label('Internal Notes') %>
-      <% field.with_input(type: :text) %>
-    <% end %>
+    <% section.with_field(:human_readable_name, size: :sm, type: :text) %>
+    <% section.with_field(:internal_notes, size: :sm, type: :text) %>
   <% end %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Descriptive Metadata' } %>
 
     <% ItemResource::DescriptiveMetadata::FIELDS.each do |field_name| %>
-      <% section.with_field(:descriptive_metadata, field_name, size: :sm) do |field| %>
-        <% field.with_label(field_name) %>
-        <% field.with_input(type: :text) %>
-      <% end %>
+      <% section.with_field(:descriptive_metadata, field_name, size: :sm, type: :text) %>
     <% end %>
   <% end %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Structural Metadata' } %>
 
-    <% section.with_field(:structural_metadata, :viewing_hint, size: :sm) do |field| %>
-      <% field.with_label('Viewing Hint') %>
-      <% field.with_input(type: :select,
+    <% section.with_field(:structural_metadata, :viewing_hint,
+                          size: :sm,
+                          type: :select,
                           choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS,
                           include_blank: true) %>
-    <% end %>
 
-    <% section.with_field(:structural_metadata, :viewing_direction, size: :sm) do |field| %>
-      <% field.with_label('Viewing Direction') %>
-      <% field.with_input(type: :select,
+    <% section.with_field(:structural_metadata, :viewing_direction,
+                          size: :sm,
+                          type: :select,
                           choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
-                          include_blank: true) %>
-    <% end %>
+                          include_blank: true)  %>
   <% end %>
 
   <% form.with_submit('Save') %>

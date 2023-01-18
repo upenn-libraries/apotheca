@@ -4,15 +4,17 @@ module Form
   module Section
     # Component to define a section of a form.
     class Component < ViewComponent::Base
-      renders_one :title, ->(**options, &block) { BaseComponent.new(:h4, **options, &block) }
+      renders_one :title, ->(**args, &block) { BaseComponent.new(:h4, **args, &block) }
 
       renders_many :fields, ->(*field_path, **args, &block) {
-        Field::Component.new(*field_path, model: @model, **args, &block)
+        Field::Component.new(*field_path, **@field_options, **args, &block)
       }
 
-      def initialize(model: nil, **options)
-        @model = model
+      def initialize(**options)
         @options = options
+
+        # Extracting options that should be passed to the field component.
+        @field_options = @options.extract!(:model, :label_col, :input_col)
       end
     end
   end
