@@ -23,6 +23,16 @@ describe BulkExport do
     expect(bulk_export.errors['state']).to include "can't be blank"
   end
 
+  describe '#csv' do
+    let(:bulk_export) { create :bulk_export }
+
+    it 'attaches a csv file' do
+      bulk_export.csv.attach(io: StringIO.new('contents'), filename: 'file.csv')
+      expect(bulk_export.csv).to be_attached
+      expect(bulk_export.csv.download).to eq 'contents'
+    end
+  end
+
   context 'with associated User validation' do
     let(:user) { create :user, :admin }
 
