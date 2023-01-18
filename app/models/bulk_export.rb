@@ -4,6 +4,8 @@ class BulkExport < ApplicationRecord
 
   belongs_to :user
 
+  has_one_attached :csv
+
   validates :solr_params, presence: true
   validates :state, presence: true
   validate :restrict_number_of_bulk_exports
