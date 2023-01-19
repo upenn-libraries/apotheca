@@ -33,6 +33,43 @@ describe BulkExport do
     end
   end
 
+  describe '#run' do
+
+    context 'when successful' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state) }
+      let!(:item) { persist(:item_resource) }
+
+      before { bulk_export.run }
+
+      it 'changes state to successful' do
+        expect(bulk_export.state).to eq('successful')
+      end
+
+      it 'calculates and stores duration' do
+        expect(bulk_export.duration).not_to be_nil
+      end
+
+      it 'attaches csv to record' do
+        expect(bulk_export.csv).to be_attached
+      end
+
+      it 'generates csv with correct data' do
+        expect(bulk_export.csv.download).to include('created_at,created_by,first_published')
+      end
+    end
+
+
+    context 'when and error is raised' do
+      let(:bulk_export) { build(:bulk_export, :with_processing_state) }
+
+      it 'changes state to failed' do
+        allow(bulk_export).to receive(:bulk_export_csv).and_raise(StandardError)
+        bulk_export.run
+        expect(bulk_export.state).to eq('failed')
+      end
+    end
+  end
+
   context 'with associated User validation' do
     let(:user) { create :user, :admin }
 

@@ -6,5 +6,8 @@ FactoryBot.define do
     solr_params { { search: { all: 'Crunchy' } } }
     state { BulkExport::STATE_SUCCESSFUL }
   end
+  trait :with_processing_state do
+    state { BulkExport::STATE_PROCESSING }
+  end
 end
 
