@@ -9,14 +9,13 @@ class DeleteItem
   tee :delete_assets
 
   # An Item can have lots of Assets, so we enqueue jobs to delete each of them here.
-  # Note that ActiveJob cannot receive an array of Valkyrie::ID objects, so we convert them to strings here.
+  # Note that ActiveJob cannot receive a Valkyrie::ID object, so we convertto string here.
   # @param [ItemResource] resource
   # @param [TrueClass, FalseClass] async
   def delete_assets(resource:, async: true)
-    asset_ids = resource.asset_ids.map(&:to_s)
     method = async ? 'perform_later' : 'perform_now'
-    asset_ids.each do |asset_id|
-      RemoveAssetJob.send(method, asset_id)
+    resource.asset_ids.each do |asset_id|
+      RemoveAssetJob.send(method, asset_id.to_s)
     end
   end
 end
