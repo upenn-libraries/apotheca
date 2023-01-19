@@ -14,12 +14,13 @@ class BulkExport < ApplicationRecord
     start_time = current_monotonic_time
     items = solr_items
     raise StandardError, 'No search results returned, cannot generate csv' if items.empty?
+
     csv_file = bulk_export_csv(items)
     self.duration = calculate_duration(start_time)
     attach_csv_to_record(csv_file)
     success!
   rescue StandardError => e
-    self.process_errors = [e.message] #TODO this error also needs to be sent to HoneyBadger
+    self.process_errors = [e.message] # TODO: this error also needs to be sent to HoneyBadger
     csv.purge if csv.attached?
     failure!
   end
