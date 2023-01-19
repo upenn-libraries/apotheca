@@ -3,6 +3,8 @@
     <%= title %>
   </div>
   <div class="col-auto align-self-center">
-    <%= right_link %>
+    <% links.each do |link| %>
+      <%= link %>
+    <% end %>
   </div>
 </div>

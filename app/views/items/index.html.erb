@@ -5,7 +5,7 @@
 
 <%= render(Header::Component.new) do |header| %>
   <% header.with_title { 'Items' } %>
-  <% header.with_right_link(href: new_item_path) { 'Create Item' } if can? :create, ItemResource %>
+  <% header.with_link(href: new_item_path) { 'Create Item' } if can? :create, ItemResource %>
 <% end %>
 
 <%= render partial: 'search_form', locals: { container: @container } %>

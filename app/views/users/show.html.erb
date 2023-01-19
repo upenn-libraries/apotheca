@@ -6,7 +6,7 @@
 
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title { @user.full_name } %>
-  <%= header.with_right_link(href: edit_user_path(@user)) { 'Edit User' } %>
+  <%= header.with_link(href: edit_user_path(@user)) { 'Edit User' } %>
 <% end %>
 
 <dl>
