@@ -33,6 +33,16 @@ describe BulkExport do
     end
   end
 
+  describe '#process!' do
+    let(:bulk_export) { create :bulk_export, state: BulkExport::STATE_QUEUED }
+
+    it 'calls #run' do
+      allow(bulk_export).to receive(:run).and_call_original
+      bulk_export.process!
+      expect(bulk_export).to have_received(:run)
+    end
+  end
+
   describe '#run' do
     let!(:item1) do
       persist(:item_resource, descriptive_metadata: { title: 'The New Catcher In The Rye' }, human_readable_name: 'Item')
@@ -77,6 +87,18 @@ describe BulkExport do
       end
     end
 
+    context 'when solr_params return no search params' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state, solr_params: { search: { all: 'Basketball' } }) }
+
+      before { bulk_export.run }
+
+      it 'changes state to failed' do
+        expect(bulk_export.state).to eq('failed')
+      end
+
+      it 'does not attach csv' do
+        expect(bulk_export.csv).not_to be_attached
+      end
 
       it 'updates process_errors attribute' do
         expect(bulk_export.process_errors.first).to eq('No search results returned, cannot generate csv')
