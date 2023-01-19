@@ -25,10 +25,3 @@
     <%= render partial: 'assets_list' %>
   <% end %>
 <% end %>
-
-<% if can? :delete, @item  %>
-  <%= render Form::Component.new(name: 'delete_item', url: item_path(@item), method: :delete) do |component| %>
-    <% component.with_error(@error) %>
-    <% component.with_submit('Delete Item', confirm: 'Do you really want to delete this item?', class: %w[btn btn-danger]) %>
-  <% end %>
-<% end %>
