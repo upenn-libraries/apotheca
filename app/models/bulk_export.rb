@@ -10,19 +10,17 @@ class BulkExport < ApplicationRecord
   validates :state, presence: true
   validate :restrict_number_of_bulk_exports
 
-  def generate
-    process!
-  end
-
   def run
     start_time = current_monotonic_time
-    items =  solr_items
+    items = solr_items
+    raise StandardError, 'No search results returned, cannot generate csv' if items.empty?
     csv_file = bulk_export_csv(items)
     self.duration = calculate_duration(start_time)
     attach_csv_to_record(csv_file)
     success!
-  rescue StandardError
-    csv.purge
+  rescue StandardError => e
+    self.process_errors = [e.message] #TODO this error also needs to be sent to HoneyBadger
+    csv.purge if csv.attached?
     failure!
   end
 
@@ -34,42 +32,20 @@ class BulkExport < ApplicationRecord
     end
   end
 
-  def solr_query
-    ItemIndex.new(query_service: Valkyrie::MetadataAdapter.find(:index_solr).query_service)
-  end
-
-  def solr_query_response
-    solr_query.item_index(parameters: solr_params)
-  end
-
   def solr_items
-    solr_query_response.documents
-  end
-
-  # @param [Array<ItemResource>] items
-  # @return [Array<Hash>]
-  def csv_data(items)
-    items.map(&:to_export)
-  end
-
-  # @param [Array<Hash>] csv_data
-  # @return String
-  def csv_string(csv_data)
-    StructuredCSV.generate(csv_data)
-  end
-
-  # @param [String] csv_string
-  # @return StringIO
-  def create_csv_file(csv_string)
-    StringIO.new(csv_string)
+    container = Valkyrie::MetadataAdapter.find(:index_solr)
+                                         .query_service
+                                         .custom_queries
+                                         .item_index parameters: solr_params.with_indifferent_access
+    container.documents
   end
 
   # @param [Array<ItemResource>] items
   # @return StringIO
   def bulk_export_csv(items)
-    data = csv_data(items)
-    string = csv_string(data)
-    create_csv_file(string)
+    data = items.map(&:to_export)
+    string = StructuredCSV.generate(data)
+    StringIO.new(string)
   end
 
   # @param [StringIO] csv_file
