@@ -1,6 +1,7 @@
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title(tag: :h3) { 'Assets' } %>
   <%= header.with_link(href: new_asset_path(item_id: @item.id)) { 'Add Asset' } if can? :create, AssetResource %>
+  <%= header.with_link(href:  reorder_assets_item_path(@item)) { 'Arrange Assets' } %>
 <% end %>
 
 <div class="row">
@@ -20,7 +21,6 @@
           <% end %>
         </nav>
       </nav>
-      <%= link_to 'Arrange Assets', reorder_assets_item_path(@item), class: 'mt-5 btn btn-outline-primary' %>
     </nav>
   </div>
   <div class="col">
