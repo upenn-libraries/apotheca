@@ -34,10 +34,13 @@ describe BulkExport do
   end
 
   describe '#run' do
+    let!(:item1) do
+      persist(:item_resource, descriptive_metadata: { title: 'The New Catcher In The Rye' }, human_readable_name: 'Item')
+    end
+    let!(:item2) { persist(:item_resource) }
 
-    context 'when successful' do
+    context 'when successful and contains two search results' do
       let(:bulk_export) { create(:bulk_export, :with_processing_state) }
-      let!(:item) { persist(:item_resource) }
 
       before { bulk_export.run }
 
@@ -54,18 +57,46 @@ describe BulkExport do
       end
 
       it 'generates csv with correct data' do
-        expect(bulk_export.csv.download).to include('created_at,created_by,first_published')
+        expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
+        expect(bulk_export.csv.download).to include(item2.descriptive_metadata.title.first)
+      end
+    end
+
+    context 'when successful and contains one search results' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state, solr_params: { search: { all: 'Catcher' } }) }
+
+      before { bulk_export.run }
+
+      it 'changes state to successful' do
+        expect(bulk_export.state).to eq('successful')
+      end
+
+      it 'generates csv data for one search result' do
+        expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
+        expect(bulk_export.csv.download).not_to include(item2.descriptive_metadata.title.first)
       end
     end
 
 
-    context 'when and error is raised' do
-      let(:bulk_export) { build(:bulk_export, :with_processing_state) }
+      it 'updates process_errors attribute' do
+        expect(bulk_export.process_errors.first).to eq('No search results returned, cannot generate csv')
+      end
+    end
+
+    context 'when an error is raised' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state) }
+
+      before do
+        allow(bulk_export).to receive(:bulk_export_csv).and_raise(StandardError.new('test error'))
+        bulk_export.run
+      end
 
       it 'changes state to failed' do
-        allow(bulk_export).to receive(:bulk_export_csv).and_raise(StandardError)
-        bulk_export.run
         expect(bulk_export.state).to eq('failed')
+      end
+
+      it 'updates the process_errors attribute' do
+        expect(bulk_export.process_errors.first).to eq('test error')
       end
     end
   end
