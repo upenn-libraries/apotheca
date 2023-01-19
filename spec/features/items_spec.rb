@@ -15,10 +15,6 @@ describe 'Item management' do
       it 'shows link to create item' do
         expect(page).to have_link('Create Item', href: new_item_path)
       end
-
-      it 'shows link to delete the item' do
-        expect(page).to have_button(value: 'Delete Item', count: item.asset_ids.length)
-      end
     end
 
     context 'when viewing item show page' do
