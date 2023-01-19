@@ -5,11 +5,11 @@ module Form
   # inputs can be grouped in sections.
   class Component < ViewComponent::Base
     renders_many :fields, ->(*field_path, **args, &block) {
-      Field::Component.new(*field_path, model: @model, label_col: @label_col, input_col: @input_col, **args, &block)
+      Field::Component.new(*field_path, **@field_options.merge(args), &block)
     }
 
     renders_many :sections, ->(**options, &block) {
-      Section::Component.new(model: @model, label_col: @label_col, input_col: @input_col, **options, &block)
+      Section::Component.new(**@field_options, **options, &block)
     }
 
     renders_one :error, ErrorMessage::Component
@@ -38,6 +38,9 @@ module Form
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
     # @option options [Symbol] :method to use for html form
     # @option options [Boolean] :multipart flag to be used when file upload present
+    # @option options [Hash] :label_col bootstrap column to use for all labels
+    # @option options [Hash] :input_col bootstrap column to use for all inputs
+    # @option options [Symbol] :size to be used for labels and inputs
     def initialize(name: nil, url: nil, model: nil, **options)
       @name = name
       @model = model
@@ -47,8 +50,12 @@ module Form
       # If method is not passed in, we set the appropriate method.
       @options[:method] = new_record? ? :post : :patch unless @options[:method]
 
-      @label_col = @options.delete(:label_col) || { sm: 2 }
-      @input_col = @options.delete(:input_col) || { sm: 10 }
+      @field_options = {
+        model: @model,
+        size: @options.delete(:size),
+        label_col: @options.delete(:label_col) || { sm: 2 },
+        input_col: @options.delete(:input_col) || { sm: 10 }
+      }
     end
 
     def url

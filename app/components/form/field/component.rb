@@ -10,27 +10,23 @@ module Form
       # passed to the input.
       #
       # @param [Array<String|Symbol>] field_path to value in model
-      # @param [Valkyrie::ChangeSet] model for field
-      # @param [String|Symbol] size of input and label
+      # @param [Hash] label_col bootstrap columns to use for label
+      # @param [Hash] input_col bootstrap columns to use for input
       # @param [Hash] options for field
       # @option options [String] label text
-      # @option options [Hash] label_col bootstrap columns to use for label
-      # @option options [Hash] input_col bootstrap columns to use for input
-      def initialize(*field_path, model: nil, size: nil, **options)
+      # @option options [String|Symbol] size of input and label
+      # @option options [Valkyrie::ChangeSet] model for field
+      def initialize(*field_path, label_col:, input_col:, **options)
         @field_path = field_path
-        @model = model
-        @size = size
+        @label_col = label_col
+        @input_col = input_col
         @options = options
 
-        # TODO: these probably need to be required
-        @label_col = @options.delete(:label_col)
-        @input_col = @options.delete(:input_col)
-
+        @model = @options.delete(:model)
+        @size = @options.delete(:size)
         @label_text = @options.delete(:label)
-
         @name = @options.delete(:field) || generate_name
         @value = @options.key?(:value) ? @options.delete(:value) : extract_value # Accounting for value to be nil
-
         @id = generate_id(@name)
       end
 

@@ -3,7 +3,8 @@
 <%= render(Form::Component.new(url: item_path(@item, anchor: 'structural-metadata'),
                                name: 'structural-metadata',
                                model: @change_set,
-                               input_col: { sm: 3 })) do |form| %>
+                               input_col: { sm: 3 },
+                               size: :sm)) do |form| %>
   <% form.with_error(@error) if @errors_for == 'structural-metadata' %>
 
   <% form.with_field(:structural_metadata, :viewing_hint,

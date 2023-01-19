@@ -1,17 +1,17 @@
-<%= render(Form::Component.new(model: @change_set)) do |form| %>
+<%= render(Form::Component.new(model: @change_set, size: :sm)) do |form| %>
   <% form.with_error(@error) %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Administrative Fields' } %>
-    <% section.with_field(:human_readable_name, size: :sm, type: :text) %>
-    <% section.with_field(:internal_notes, size: :sm, type: :text) %>
+    <% section.with_field(:human_readable_name, type: :text) %>
+    <% section.with_field(:internal_notes, type: :text) %>
   <% end %>
 
   <% form.with_section do |section| %>
     <% section.with_title { 'Descriptive Metadata' } %>
 
     <% ItemResource::DescriptiveMetadata::FIELDS.each do |field_name| %>
-      <% section.with_field(:descriptive_metadata, field_name, size: :sm, type: :text) %>
+      <% section.with_field(:descriptive_metadata, field_name, type: :text) %>
     <% end %>
   <% end %>
 
@@ -19,13 +19,11 @@
     <% section.with_title { 'Structural Metadata' } %>
 
     <% section.with_field(:structural_metadata, :viewing_hint,
-                          size: :sm,
                           type: :select,
                           choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS,
                           include_blank: true) %>
 
     <% section.with_field(:structural_metadata, :viewing_direction,
-                          size: :sm,
                           type: :select,
                           choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
                           include_blank: true)  %>
