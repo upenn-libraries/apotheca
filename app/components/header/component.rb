@@ -6,7 +6,7 @@ module Header
       BaseComponent.new(tag, **options, &block)
     end
 
-    renders_one :right_link, ->(href:, **options, &block) do
+    renders_many :links, ->(href:, **options, &block) do
       options[:class] = Array.wrap(options[:class]).append('btn', 'btn-outline-primary')
       BaseComponent.new(:a, href: href, **options, &block)
     end
