@@ -54,12 +54,14 @@ class BulkExport < ApplicationRecord
     csv.attach(io: csv_file, filename: "#{Time.current.strftime('%Y-%m-%d-T%H%M%S')}.csv", content_type: 'text/csv')
   end
 
+  # @return Integer
   def current_monotonic_time
-    Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    Process.clock_gettime(Process::CLOCK_MONOTONIC, :millisecond)
   end
 
-  # @param [Float] start_time
+  # @param [Integer] start_time
+  # @return Integer
   def calculate_duration(start_time)
-    (current_monotonic_time - start_time) * 1000
+    (current_monotonic_time - start_time)
   end
 end
