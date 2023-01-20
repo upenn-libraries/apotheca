@@ -5,14 +5,15 @@ module Form
     module Select
       # Component for select.
       class Component < ViewComponent::Base
-        def initialize(field:, label:, choices:, size: nil, value: nil, input_col: nil, label_col: nil, **options)
-          @value = value
+        def initialize(field:, choices:, **options)
           @field = field
-          @label = label
-          @size = size
-          @label_col = label_col
-          @input_col = input_col
           @choices = choices
+
+          @value = options.delete(:value)
+          @label_col = options.delete(:label_col)
+          @input_col = options.delete(:input_col)
+          @label = options.delete(:label)
+          @size = options.delete(:size)
 
           # Options for input
           @options = options

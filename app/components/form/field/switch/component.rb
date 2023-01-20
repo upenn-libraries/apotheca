@@ -6,12 +6,13 @@ module Form
       # Component for switch input to be used for boolean fields. Switches are rendered differently
       # than the rest of the fields. They label is rendered to the right of the input
       class Component < ViewComponent::Base
-        def initialize(field:, value:, label:, label_col:, input_col:, **options)
+        def initialize(field:, **options)
           @field = field
-          @value = value
-          @label = label
-          @label_col = label_col
-          @input_col = input_col
+
+          @value = options.delete(:value)
+          @label = options.delete(:label)
+          @label_col = options.delete(:label_col)
+          @input_col = options.delete(:input_col)
 
           # Options for input
           @options = options

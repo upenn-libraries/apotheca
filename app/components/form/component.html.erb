@@ -11,13 +11,13 @@
     <%= section %>
   <% end %>
 
-  <% if fields? %>
+  <% if fields? || sections? %>
     <%= render(RowComponent.new(:div)) do %>
       <%= render(ColumnComponent.new(:div, col: @field_options[:input_col], offset: @field_options[:label_col])) do %>
         <%= submit %>
       <% end %>
     <% end %>
   <% else %>
-    <% byebug %>
+    <%= submit %>
   <% end %>
 <% end %>

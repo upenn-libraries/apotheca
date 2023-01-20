@@ -6,20 +6,19 @@ module Form
       # Component that provides a single interface to create Bootstrap form control
       # fields (which includes text and file fields).
       class Component < ViewComponent::Base
-        def initialize(type:, field:, label_col:, input_col:, value: nil, label: nil, size: nil, **options)
+        def initialize(type:, field:, **options)
           @type = type
           @field = field
-          @value = value
-          @size = size
-          @label_col = label_col
-          @input_col = input_col
-          @label = label
+
+          @label_col = options.delete(:label_col)
+          @input_col = options.delete(:input_col)
+          @value     = options.delete(:value)
+          @size      = options.delete(:size)
+          @label     = options.delete(:label)
 
           # Options for input
           @options = options
-          add_class('form-control')
-          add_class("form-control-#{@size}") if @size
-          add_class('form-control-plaintext') if @type == :readonly
+          @options[:class] = Array.wrap(@options[:class]).append(*input_classes)
         end
 
         def call
@@ -35,27 +34,33 @@ module Form
         end
 
         def input
-          i = case @type
-              when :text
-                if @value.is_a? Array
-                  render Input::Multivalued::Component.new(value: @value, field: @field, **@options)
-                else
-                  text_field_tag @field, @value, **@options
-                end
-              when :textarea
-                text_area_tag @field, @value, **@options
-              when :file
-                file_field_tag @field, **@options
-              when :readonly
-                content_tag :input, nil, type: :text, value: @value, **@options
-              when :email
-                email_field_tag @field, @value, **@options
-              end
-          render(ColumnComponent.new(:div, col: @input_col)) { i }
+          render(ColumnComponent.new(:div, col: @input_col)) { input_element }
         end
 
-        def add_class(*classes)
-          @options[:class] = Array.wrap(@options[:class]).append(*classes)
+        def input_element
+          case @type
+          when :text
+            if @value.is_a? Array
+              render Input::Multivalued::Component.new(value: @value, field: @field, **@options)
+            else
+              text_field_tag @field, @value, **@options
+            end
+          when :textarea
+            text_area_tag @field, @value, **@options
+          when :file
+            file_field_tag @field, **@options
+          when :readonly
+            content_tag :input, nil, type: :text, value: @value, **@options
+          when :email
+            email_field_tag @field, @value, **@options
+          end
+        end
+
+        def input_classes
+          classes = ['form-control']
+          classes << "form-control-#{@size}"  if @size
+          classes << 'form-control-plaintext' if @type == :readonly
+          classes
         end
       end
     end
