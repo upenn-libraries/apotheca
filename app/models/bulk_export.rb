@@ -11,12 +11,14 @@ class BulkExport < ApplicationRecord
   validate :restrict_number_of_bulk_exports
 
   def run
-    start_time = current_monotonic_time
-    items = solr_items
-    raise StandardError, 'No search results returned, cannot generate csv' if items.empty?
+    csv_file = nil
+    benchmark = Benchmark.measure do
+      items = solr_items
+      raise StandardError, 'No search results returned, cannot generate csv' if items.empty?
 
-    csv_file = bulk_export_csv(items)
-    self.duration = calculate_duration(start_time)
+      csv_file = bulk_export_csv(items)
+    end
+    self.duration = benchmark.total * 1000
     attach_csv_to_record(csv_file)
     success!
   rescue StandardError => e
@@ -52,16 +54,5 @@ class BulkExport < ApplicationRecord
   # @param [StringIO] csv_file
   def attach_csv_to_record(csv_file)
     csv.attach(io: csv_file, filename: "#{Time.current.strftime('%Y-%m-%d-T%H%M%S')}.csv", content_type: 'text/csv')
-  end
-
-  # @return Integer
-  def current_monotonic_time
-    Process.clock_gettime(Process::CLOCK_MONOTONIC, :millisecond)
-  end
-
-  # @param [Integer] start_time
-  # @return Integer
-  def calculate_duration(start_time)
-    (current_monotonic_time - start_time)
   end
 end
