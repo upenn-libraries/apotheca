@@ -3,6 +3,6 @@
   <% form.with_field(:first_name, type: :text) %>
   <% form.with_field(:last_name, type: :text) %>
   <% form.with_field(:roles, type: :select, value: @user.roles.first, choices: User::ROLES) %>
-  <% form.with_field(:active, type: :boolean) %>
+  <% form.with_field(:active, type: :switch) %>
   <% form.with_submit('Save') %>
 <% end %>
