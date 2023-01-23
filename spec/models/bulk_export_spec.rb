@@ -33,6 +33,96 @@ describe BulkExport do
     end
   end
 
+  describe '#process!' do
+    let(:bulk_export) { create :bulk_export, state: BulkExport::STATE_QUEUED }
+
+    it 'calls #run' do
+      allow(bulk_export).to receive(:run).and_call_original
+      bulk_export.process!
+      expect(bulk_export).to have_received(:run)
+    end
+  end
+
+  describe '#run' do
+    let!(:item1) do
+      persist(:item_resource, descriptive_metadata: { title: 'The New Catcher In The Rye' }, human_readable_name: 'Item')
+    end
+    let!(:item2) { persist(:item_resource) }
+
+    context 'when successful and contains two search results' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state) }
+
+      before { bulk_export.run }
+
+      it 'changes state to successful' do
+        expect(bulk_export.state).to eq described_class::STATE_SUCCESSFUL.to_s
+      end
+
+      it 'calculates and stores duration' do
+        expect(bulk_export.duration).not_to be_nil
+      end
+
+      it 'attaches csv to record' do
+        expect(bulk_export.csv).to be_attached
+      end
+
+      it 'generates csv with correct data' do
+        expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
+        expect(bulk_export.csv.download).to include(item2.descriptive_metadata.title.first)
+      end
+    end
+
+    context 'when successful and contains one search results' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state, solr_params: { search: { all: 'Catcher' } }) }
+
+      before { bulk_export.run }
+
+      it 'changes state to successful' do
+        expect(bulk_export.state).to eq described_class::STATE_SUCCESSFUL.to_s
+      end
+
+      it 'generates csv data for one search result' do
+        expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
+        expect(bulk_export.csv.download).not_to include(item2.descriptive_metadata.title.first)
+      end
+    end
+
+    context 'when solr_params return no search results' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state, solr_params: { search: { all: 'Basketball' } }) }
+
+      before { bulk_export.run }
+
+      it 'changes state to failed' do
+        expect(bulk_export.state).to eq described_class::STATE_FAILED.to_s
+      end
+
+      it 'does not attach csv' do
+        expect(bulk_export.csv).not_to be_attached
+      end
+
+      it 'updates process_errors attribute' do
+        expect(bulk_export.process_errors.first).to eq('No search results returned, cannot generate csv')
+      end
+    end
+
+    context 'when an error is raised' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state) }
+
+      before do
+        allow(bulk_export).to receive(:bulk_export_csv).and_raise(StandardError.new('test error'))
+        bulk_export.run
+      end
+
+      it 'changes state to failed' do
+        expect(bulk_export.state).to eq BulkExport::STATE_FAILED.to_s
+      end
+
+      it 'updates the process_errors attribute' do
+        expect(bulk_export.process_errors.first).to eq('test error')
+      end
+    end
+  end
+
   context 'with associated User validation' do
     let(:user) { create :user, :admin }
 
@@ -45,4 +135,3 @@ describe BulkExport do
     end
   end
 end
-

@@ -11,7 +11,20 @@ class BulkExport < ApplicationRecord
   validate :restrict_number_of_bulk_exports
 
   def run
-    raise '#run still needs to be implemented'
+    csv_file = nil
+    benchmark = Benchmark.measure do
+      items = solr_items
+      raise StandardError, 'No search results returned, cannot generate csv' if items.empty?
+
+      csv_file = bulk_export_csv(items)
+    end
+    self.duration = benchmark.total * 1000
+    attach_csv_to_record(csv_file)
+    success!
+  rescue StandardError => e
+    self.process_errors = [e.message] # TODO: this error also needs to be sent to HoneyBadger
+    csv.purge if csv.attached?
+    failure!
   end
 
   private
@@ -20,5 +33,26 @@ class BulkExport < ApplicationRecord
     if user.present? && (user.bulk_exports.count >= 10)
       errors.add(:user, 'The number of Bulk Exports for a user cannot exceed 10.')
     end
+  end
+
+  def solr_items
+    container = Valkyrie::MetadataAdapter.find(:index_solr)
+                                         .query_service
+                                         .custom_queries
+                                         .item_index parameters: solr_params.with_indifferent_access
+    container.documents
+  end
+
+  # @param [Array<ItemResource>] items
+  # @return StringIO
+  def bulk_export_csv(items)
+    data = items.map(&:to_export)
+    string = StructuredCSV.generate(data)
+    StringIO.new(string)
+  end
+
+  # @param [StringIO] csv_file
+  def attach_csv_to_record(csv_file)
+    csv.attach(io: csv_file, filename: "#{Time.current.strftime('%Y-%m-%d-T%H%M%S')}.csv", content_type: 'text/csv')
   end
 end
