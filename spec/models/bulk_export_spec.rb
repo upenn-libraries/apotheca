@@ -114,7 +114,7 @@ describe BulkExport do
       end
 
       it 'changes state to failed' do
-        expect(bulk_export.state).to eq('failed')
+        expect(bulk_export.state).to eq BulkExport::STATE_FAILED.to_s
       end
 
       it 'updates the process_errors attribute' do
@@ -135,4 +135,3 @@ describe BulkExport do
     end
   end
 end
-
