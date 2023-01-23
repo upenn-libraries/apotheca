@@ -1,7 +1,9 @@
 class ProcessBulkExportJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
-    # Do something later
+  def perform(bulk_export)
+    return if bulk_export.cancelled?
+
+    bulk_export.process!
   end
 end
