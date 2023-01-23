@@ -87,7 +87,7 @@ describe BulkExport do
       end
     end
 
-    context 'when solr_params return no search params' do
+    context 'when solr_params return no search results' do
       let(:bulk_export) { create(:bulk_export, :with_processing_state, solr_params: { search: { all: 'Basketball' } }) }
 
       before { bulk_export.run }
