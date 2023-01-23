@@ -55,7 +55,7 @@ describe BulkExport do
       before { bulk_export.run }
 
       it 'changes state to successful' do
-        expect(bulk_export.state).to eq('successful')
+        expect(bulk_export.state).to eq described_class::STATE_SUCCESSFUL.to_s
       end
 
       it 'calculates and stores duration' do
@@ -78,7 +78,7 @@ describe BulkExport do
       before { bulk_export.run }
 
       it 'changes state to successful' do
-        expect(bulk_export.state).to eq('successful')
+        expect(bulk_export.state).to eq described_class::STATE_SUCCESSFUL.to_s
       end
 
       it 'generates csv data for one search result' do
@@ -93,7 +93,7 @@ describe BulkExport do
       before { bulk_export.run }
 
       it 'changes state to failed' do
-        expect(bulk_export.state).to eq('failed')
+        expect(bulk_export.state).to eq described_class::STATE_FAILED.to_s
       end
 
       it 'does not attach csv' do
