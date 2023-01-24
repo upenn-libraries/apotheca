@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe ProcessBulkExportJob, type: :job do
   include ActiveJob::TestHelper
 
@@ -12,7 +10,7 @@ describe ProcessBulkExportJob, type: :job do
 
     it 'enqueues the job' do
       described_class.perform_later(bulk_export)
-      expect(described_class).to have_been_enqueued
+      expect(described_class).to have_been_enqueued.with(bulk_export)
     end
   end
 
