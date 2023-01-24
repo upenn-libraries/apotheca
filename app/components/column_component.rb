@@ -22,6 +22,9 @@ class ColumnComponent < ViewComponent::Base
     end
   end
 
+  # Classes to offset columns: https://getbootstrap.com/docs/5.2/layout/columns/#offsetting-columns
+  #
+  # @param [Hash<Symbol, Integer>] offset columns
   def offset_classes(offset)
     case offset
     when Hash

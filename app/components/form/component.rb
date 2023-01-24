@@ -34,7 +34,7 @@ module Form
     #
     # @param [String] name given to form, passed to backend to identify form
     # @param [String] url for request, optional
-    # @param [Valkyrie::ChangeSet] model or change set that the form is representing, optional
+    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource] model or change set that the form is representing, optional
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
     # @option options [Symbol] :method to use for html form
     # @option options [Boolean] :multipart flag to be used when file upload present
