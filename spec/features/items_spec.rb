@@ -32,8 +32,10 @@ describe 'Item management' do
         expect(page).to have_link('Edit', href: "#{items_path}/#{item.id}/edit#administrative-info")
       end
 
-      it 'shows link to edit item thumbnail on assets tab' do
-        expect(page).to have_button(value: 'Set as Item Thumbnail', count: item.asset_ids.length)
+      it 'shows button to delete the item on administrative info tab' do
+        within '#administrative-info' do
+          expect(page).to have_button('Delete Item')
+        end
       end
     end
 
@@ -58,7 +60,7 @@ describe 'Item management' do
         end
       end
 
-      it 'does not show link to create item' do
+      it 'does not show link to create an item' do
         visit items_path
         expect(page).not_to have_link('Create Item', href: new_item_path)
       end
@@ -82,7 +84,13 @@ describe 'Item management' do
       it 'does not show button to set item thumbnail on assets tab' do
         expect(page).not_to have_button(value: 'Set as Item Thumbnail')
       end
-    end
 
+      it 'does not show link to delete an item on the administrative info tab' do
+        visit item_path(item)
+        within '#administrative-info' do
+          expect(page).not_to have_button('Delete Item')
+        end
+      end
+    end
   end
 end

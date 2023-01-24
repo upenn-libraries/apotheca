@@ -3,7 +3,7 @@
 # controller actions for Item stuff
 class ItemsController < ApplicationController
   before_action :configure_pagination, only: :index
-  before_action :load_resources, only: [:show, :edit]
+  before_action :load_resources, only: [:show, :edit, :destroy]
 
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
@@ -52,6 +52,20 @@ class ItemsController < ApplicationController
 
       result.failure do |failure|
         render_failure(failure, :edit)
+      end
+    end
+  end
+
+  def destroy
+    authorize! :delete, ItemResource
+
+    DeleteItem.new.call(id: params[:id]) do |result|
+      result.success do
+        flash.notice = 'Successfully deleted Item'
+        redirect_to items_path
+      end
+      result.failure do |failure|
+        render_failure(failure, :show)
       end
     end
   end
