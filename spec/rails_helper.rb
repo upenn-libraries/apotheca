@@ -78,16 +78,22 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  # Clear out storage before each test.
+  # Perform cleanup tasks before each test.
   config.before do
-    wipe_metadata_adapters!
-    wipe_storage_adapters!
+    cleanup_tasks
   end
 
-  # Clear our storage at the end of suite in order to clean up after the last test.
+  # Perform cleanup tasks at the end of suite in order to clean up after the last test.
   config.after(:suite) do
+    cleanup_tasks
+  end
+
+  # Combine cleanup tasks
+  def cleanup_tasks
     wipe_metadata_adapters!
     wipe_storage_adapters!
+    clear_enqueued_jobs
+    clear_performed_jobs
   end
 
   # Clean out all Valkyrie Storage adapters.
@@ -100,5 +106,15 @@ RSpec.configure do |config|
   # Clean out Valkyrie Metadata Adapters.
   def wipe_metadata_adapters!
     Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.wipe!
+  end
+
+  # Clear enqueued jobs
+  def clear_enqueued_jobs
+    ActiveJob::Base.queue_adapter.enqueued_jobs.clear
+  end
+
+  # Clear performed jobs
+  def clear_performed_jobs
+    ActiveJob::Base.queue_adapter.performed_jobs.clear
   end
 end
