@@ -1,36 +1,93 @@
 # frozen_string_literal: true
 
 module Form
-  # Renders a form element. Has slots for inputs, a submit button and an error message. If desired,
+  # Renders a form element. Has slots for fields, a submit button and an error message. If desired,
   # inputs can be grouped in sections.
   class Component < ViewComponent::Base
-    renders_many :inputs, types: {
-      text: ->(system_arguments) { Input::Component.new(type: :text, **system_arguments) },
-      select: ->(system_arguments) { Input::Component.new(type: :select, **system_arguments) },
-      hidden: ->(system_arguments) { Input::Component.new(type: :hidden, **system_arguments) },
-      textarea: ->(system_arguments) { Input::Component.new(type: :textarea, **system_arguments) },
-      file: ->(system_arguments) { Input::Component.new(type: :file, **system_arguments) },
-      readonly: ->(system_arguments) { Input::Component.new(type: :readonly, **system_arguments) }
+    renders_many :fields, ->(*field_path, **args, &block) {
+      Field::Component.new(*field_path, **@field_options.merge(args), &block)
     }
 
-    renders_many :sections, Section::Component
+    renders_many :sections, ->(**options, &block) {
+      Section::Component.new(**@field_options, **options, &block)
+    }
 
     renders_one :error, ErrorMessage::Component
 
     renders_one :submit, SubmitButton::Component
 
-    # Requires name and url. Any additional arguments will be passed to the form_tag helper.
+    # Generates form for the ActiveRecord, Valkyrie::ChangeSet or Valkyrie::Resource provided. Currently,
+    # we only support a horizontal form layout though we could continue extending this component to support
+    # alternative layouts.
     #
-    # Often times a `:method` parameter should be provided. If the form contains file inputs a truthy
-    # `:multipart` parameter should be provided.
+    # When a model is provided the form url and method can be automatically generated. Url and method
+    # values provided will override the defaults. In cases where a model is provided field names
+    # and values don't have to be explicitly provided. When a model is NOT provided a method and
+    # url must be provided.
+    #
+    # Generally, a `:method` parameter should be provided if the action is something other than creating
+    # or updating a record. If the form contains file inputs a truthy `:multipart` parameter should be provided.
+    #
+    # A `name` parameter should be provided when there are multiple form on the same page.
+    #
+    # Any additional arguments will be passed to the form_tag helper.
     #
     # @param [String] name given to form, passed to backend to identify form
-    # @param [String] url for request
+    # @param [String] url for request, optional
+    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource] model or change set that the form is representing, optional
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
-    def initialize(name:, url:, **options)
+    # @option options [Symbol] :method to use for html form
+    # @option options [Boolean] :multipart flag to be used when file upload present
+    # @option options [Hash] :label_col bootstrap column to use for all labels
+    # @option options [Hash] :input_col bootstrap column to use for all inputs
+    # @option options [Symbol] :size to be used for labels and inputs
+    def initialize(name: nil, url: nil, model: nil, **options)
       @name = name
+      @model = model
       @url = url
       @options = options
+
+      # If method is not passed in, we set the appropriate method.
+      @options[:method] = new_record? ? :post : :patch unless @options[:method]
+
+      @field_options = {
+        model: @model,
+        size: @options.delete(:size),
+        label_col: @options.delete(:label_col) || { sm: 2 },
+        input_col: @options.delete(:input_col) || { sm: 10 }
+      }
+    end
+
+    def url
+      @url || generate_url
+    end
+
+    def generate_url
+      new_record? ? send("#{model_name.pluralize}_path") : send("#{model_name}_path", @model)
+    end
+
+    def model_name
+      case @model
+      when Valkyrie::ChangeSet
+        @model.class.to_s.underscore.delete_suffix('_change_set')
+      when Valkyrie::Resource
+        @model.class.to_s.underscore.delete_suffix('_resource')
+      else
+        @model.class.to_s.underscore.downcase
+      end
+    end
+
+    def new_record?
+      raise ArgumentError, 'model must be provided to form to automatically generate method' unless @model
+
+      case @model
+      when Valkyrie::ChangeSet
+        @model.resource.new_record
+      when Valkyrie::Resource
+        @model.new_record
+      else
+        @model.new_record?
+      end
     end
   end
 end

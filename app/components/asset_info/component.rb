@@ -51,8 +51,8 @@ module AssetInfo
       classes = ['p-0']
       classes.push('disabled') if @item.thumbnail?(@asset.id)
 
-      render(Form::Component.new(name: 'assets', url: item_path(@item), method: :patch)) do |form|
-        form.with_input_hidden(label: nil, field: 'item[thumbnail_asset_id]', value: @asset.id)
+      render(Form::Component.new(name: 'assets', model: @item)) do |form|
+        form.with_field(:thumbnail_asset_id, value: @asset.id, type: :hidden)
         form.with_submit('Set as Item Thumbnail', variant: :link,
                                                   confirm: "Are you sure you want to change this item's thumbnail?",
                                                   class: classes)

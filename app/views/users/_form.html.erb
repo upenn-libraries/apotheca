@@ -1,8 +1,8 @@
-<%= bootstrap_form_for @user do |f| %>
-  <%= f.email_field :email %>
-  <%= f.text_field :first_name %>
-  <%= f.text_field :last_name %>
-  <%= f.select :roles, User::ROLES %>
-  <%= f.check_box :active, switch: true %>
-  <%= f.submit class: 'btn btn-primary mt-2' %>
+<%= render(Form::Component.new(model: @user, input_col: { sm: 6 })) do |form| %>
+  <% form.with_field(:email, type: :email) %>
+  <% form.with_field(:first_name, type: :text) %>
+  <% form.with_field(:last_name, type: :text) %>
+  <% form.with_field(:roles, type: :select, value: @user.roles.first, choices: User::ROLES) %>
+  <% form.with_field(:active, type: :switch) %>
+  <% form.with_submit('Save') %>
 <% end %>

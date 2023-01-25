@@ -1,17 +1,21 @@
 <h3>Structural Metadata</h3>
 
-<%= render(Form::Component.new(url: item_path(@item, anchor: 'structural-metadata'), method: :patch, name: 'structural-metadata')) do |form| %>
+<%= render(Form::Component.new(url: item_path(@item, anchor: 'structural-metadata'),
+                               name: 'structural-metadata',
+                               model: @change_set,
+                               input_col: { sm: 3 },
+                               size: :sm)) do |form| %>
   <% form.with_error(@error) if @errors_for == 'structural-metadata' %>
-  <% form.with_input_select(label: 'Viewing Hint',
-                            value: @change_set.structural_metadata.viewing_hint,
-                            field: "item[structural_metadata][viewing_hint]",
-                            options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS,
-                            include_blank: true) %>
-  <%= form.with_input_select(label: 'Viewing Direction',
-                             value: @change_set.structural_metadata.viewing_direction,
-                             field: "item[structural_metadata][viewing_direction]",
-                             options: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
-                             include_blank: true) %>
+
+  <% form.with_field(:structural_metadata, :viewing_hint,
+                     type: :select,
+                     choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS,
+                     include_blank: true) %>
+
+  <% form.with_field(:structural_metadata, :viewing_direction,
+                     type: :select,
+                     choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
+                     include_blank: true) %>
 
   <% form.with_submit('Save') %>
 <% end %>

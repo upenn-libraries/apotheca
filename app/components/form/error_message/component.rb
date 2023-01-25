@@ -28,7 +28,7 @@ module Form
         @change_set = error_args[:change_set]
         @options = options
 
-        @validation_errors = @change_set.errors if @change_set&.respond_to?(:errors)
+        @validation_errors = @change_set.errors if @change_set.respond_to?(:errors)
       end
 
       def render?
