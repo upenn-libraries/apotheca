@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 describe ProcessBulkExportJob, type: :job do
-  include ActiveJob::TestHelper
 
   context 'when performing the job later' do
     let(:bulk_export) { create(:bulk_export, state: BulkExport::STATE_QUEUED) }
-
-    after { clear_enqueued_jobs }
 
     it 'enqueues the job' do
       described_class.perform_later(bulk_export)

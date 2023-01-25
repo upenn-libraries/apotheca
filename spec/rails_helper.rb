@@ -84,10 +84,22 @@ RSpec.configure do |config|
     wipe_storage_adapters!
   end
 
+  # Clear enqueued and performed jobs before each test
+  config.before do
+    clear_enqueued_jobs
+    clear_performed_jobs
+  end
+
   # Clear our storage at the end of suite in order to clean up after the last test.
   config.after(:suite) do
     wipe_metadata_adapters!
     wipe_storage_adapters!
+  end
+
+  # Clear enqueued and performed jobs at the end of suite
+  config.after(:suite) do
+    clear_enqueued_jobs
+    clear_performed_jobs
   end
 
   # Clean out all Valkyrie Storage adapters.
@@ -100,5 +112,15 @@ RSpec.configure do |config|
   # Clean out Valkyrie Metadata Adapters.
   def wipe_metadata_adapters!
     Valkyrie::MetadataAdapter.find(:postgres_solr_persister).persister.wipe!
+  end
+
+  # Clear enqueued jobs
+  def clear_enqueued_jobs
+    ActiveJob::Base.queue_adapter.enqueued_jobs.clear
+  end
+
+  # Clear performed jobs
+  def clear_performed_jobs
+    ActiveJob::Base.queue_adapter.performed_jobs.clear
   end
 end
