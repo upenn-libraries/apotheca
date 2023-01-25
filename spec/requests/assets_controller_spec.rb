@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'Asset requests' do
   context 'when downloading files' do
     before { sign_in create(:user, :admin) }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe 'Items Requests' do
   it 'redirects unauthenticated users to sign in' do
     get '/resources/items'
