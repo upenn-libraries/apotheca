@@ -78,26 +78,20 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  # Clear out storage before each test.
+  # Perform cleanup tasks before each test.
   config.before do
+    cleanup_tasks
+  end
+
+  # Perform cleanup tasks at the end of suite in order to clean up after the last test.
+  config.after(:suite) do
+    cleanup_tasks
+  end
+
+  # Combine cleanup tasks
+  def cleanup_tasks
     wipe_metadata_adapters!
     wipe_storage_adapters!
-  end
-
-  # Clear enqueued and performed jobs before each test
-  config.before do
-    clear_enqueued_jobs
-    clear_performed_jobs
-  end
-
-  # Clear our storage at the end of suite in order to clean up after the last test.
-  config.after(:suite) do
-    wipe_metadata_adapters!
-    wipe_storage_adapters!
-  end
-
-  # Clear enqueued and performed jobs at the end of suite
-  config.after(:suite) do
     clear_enqueued_jobs
     clear_performed_jobs
   end
