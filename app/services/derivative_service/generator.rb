@@ -9,6 +9,8 @@ module DerivativeService
                     Generator::Image
                   when *Generator::Audio::VALID_MIME_TYPES
                     Generator::Audio
+                  when *Generator::Video::VALID_MIME_TYPES
+                    Generator::Video
                   else
                     Generator::Default
                   end
