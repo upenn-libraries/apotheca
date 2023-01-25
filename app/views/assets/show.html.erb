@@ -71,7 +71,7 @@
     <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
       <% component.with_field(label: 'File', values: derivative.file_id) %>
       <% component.with_field(label: 'MIME Type', values: derivative.mime_type, classes: ['user-select-all']) %>
-      <% component.with_field(label: 'Generated At', values: derivative.generated_at&.to_s(:display)) %>
+      <% component.with_field(label: 'Generated At', values: derivative.generated_at&.to_fs(:display)) %>
     <% end %>
   <% end %>
 </div>
@@ -79,9 +79,9 @@
 <h3 id="modification-details" class="mb-3">Modification Details</h3>
 
 <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
-  <% component.with_field(label: 'Date Created', values: @asset.date_created&.to_s(:display)) %>
+  <% component.with_field(label: 'Date Created', values: @asset.date_created&.to_fs(:display)) %>
   <% component.with_field(label: 'Created By', values: @asset.created_by) %>
-  <% component.with_field(label: 'Date Updated', values: @asset.date_updated&.to_s(:display)) %>
+  <% component.with_field(label: 'Date Updated', values: @asset.date_updated&.to_fs(:display)) %>
   <% component.with_field(label: 'Updated By', values: @asset.updated_by) %>
 <% end %>
 
