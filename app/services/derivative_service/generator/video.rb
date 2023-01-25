@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
 require 'open3'
 require_relative '../ffmpeg_wrapper'
 
@@ -23,9 +21,11 @@ module DerivativeService
         raise Generator::Error, "Error generating MP3: #{e.class} #{e.message}", e.backtrace
       end
 
-      # @return [NilClass]
+      # @return [DerivativeService::Generator::DerivativeFile]
       def thumbnail
         video = file.disk_path
+        # Use FFMpeg to grab the first frame of the input video and save it to stdout
+        # loglevel quiet used because FFmpeg was outputting a bunch of stuff to the console during tests
         thumbnail_command = "ffmpeg -i #{video} -ss 00:00:00 -vframes 1 -q:v 2 -f image2 pipe:1 -loglevel quiet"
         output, status = Open3.capture2(thumbnail_command)
 

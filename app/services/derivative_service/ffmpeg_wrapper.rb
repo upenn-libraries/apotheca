@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
+# Wrap FFMpeg functionality so it can be used for audio and video generators
 class FfmpegWrapper
   FFMPEG_EXECUTABLE = 'ffmpeg'
   MOV_OPTIONS = [
-    '-y',
+    '-y', # automatically overwrite any existing output files
     '-vcodec h264', # video codec
     '-acodec mp2', # audio codec
   ].freeze
