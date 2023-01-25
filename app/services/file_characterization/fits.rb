@@ -52,7 +52,14 @@ module FileCharacterization
       end
 
       def duration
-        @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:audio/xmlns:duration')&.text
+        # duration xpath differs based on the type of asset being attached
+        if mime_type.include?('audio')
+          @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:audio/xmlns:duration')&.text
+        elsif mime_type.include?('video')
+          duration = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:video/xmlns:duration')&.text
+          seconds = duration.to_f / 1_000.0
+          "#{seconds} s"
+        end
       end
 
       private
