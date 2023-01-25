@@ -18,7 +18,7 @@ describe 'Alert management' do
   context 'with a Viewer' do
     let(:user) { create(:user, :viewer) }
 
-    it 'cannot managing alerts' do
+    it 'cannot manage alerts' do
       visit alert_messages_path
       expect(page).to have_text 'You are not authorized'
     end
