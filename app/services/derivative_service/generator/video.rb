@@ -3,6 +3,7 @@
 # frozen_string_literal: true
 
 require 'open3'
+require_relative '../ffmpeg_wrapper'
 
 module DerivativeService
   module Generator
@@ -40,28 +41,6 @@ module DerivativeService
         end
       rescue => e
         raise Generator::Error, "Error generating video thumbnail: #{e.class} #{e.message}", e.backtrace
-      end
-    end
-
-    # wrap up ffmpeg interaction
-    class FfmpegWrapper
-      MOV_OPTIONS = [
-        '-y',
-        '-vcodec h264', # video codec
-        '-acodec mp2', # audio codec
-      ].freeze
-      FFMPEG_EXECUTABLE = 'ffmpeg'
-
-      # @param [String] input_file_path
-      # @param [String] output_file_path
-      def self.mov_to_mp4(input_file_path:, output_file_path:)
-        # ffmpeg -i my-video.mov -vcodec h264 -acodec mp2 my-video.mp4
-        _stdout, stderr, status = Open3.capture3(
-          "#{FFMPEG_EXECUTABLE} -i #{input_file_path} #{MOV_OPTIONS.join(' ')} #{output_file_path}"
-        )
-        raise "FFMpeg Error: #{stderr}" unless status.success?
-
-        true
       end
     end
   end
