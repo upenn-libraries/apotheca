@@ -21,7 +21,7 @@ class BulkExport < ApplicationRecord
     end
     self.generated_at = DateTime.now
     self.duration = benchmark.total * 1000
-    attach_csv_to_record(csv_file: csv_file, filename: sanitized_filename)
+    attach_csv_to_record(csv_file)
     success!
   rescue StandardError => e
     self.process_errors = [e.message] # TODO: this error also needs to be sent to HoneyBadger
@@ -64,8 +64,7 @@ class BulkExport < ApplicationRecord
   end
 
   # @param [StringIO] csv_file
-  # @param [ActiveStorage::Filename] filename
-  def attach_csv_to_record(csv_file:, filename:)
-    csv.attach(io: csv_file, filename: filename, content_type: 'text/csv')
+  def attach_csv_to_record(csv_file)
+    csv.attach(io: csv_file, filename: sanitized_filename, content_type: 'text/csv')
   end
 end
