@@ -41,7 +41,6 @@ module DerivativeService
     # @param [String] input_file_path
     # @param [String] output_file_path
     def self.mov_to_mp4(input_file_path:, output_file_path:)
-      # ffmpeg -i my-video.mov -vcodec h264 -acodec mp2 my-video.mp4
       _stdout, stderr, status = Open3.capture3(
         "#{FFMPEG_EXECUTABLE} -i #{input_file_path} #{MOV_OPTIONS.join(' ')} #{output_file_path}"
       )
@@ -51,9 +50,6 @@ module DerivativeService
     end
 
     def self.first_frame_from_video(input_video_file_path:)
-      # output, status = Open3.capture2(
-      #   "#{FFMPEG_EXECUTABLE} -i #{video} #{FIRST_FRAME_OPTIONS.join(' ')}"
-      # )
       _stdout, stderr, status = Open3.capture3(
         "#{FFMPEG_EXECUTABLE} -i #{input_video_file_path} #{FIRST_FRAME_OPTIONS.join(' ')}"
       )
