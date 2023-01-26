@@ -8,6 +8,7 @@ class BulkExport < ApplicationRecord
 
   validates :solr_params, presence: true
   validates :state, presence: true
+  validates :generated_at, presence: true, if: -> { csv.attached? }
   validate :restrict_number_of_bulk_exports
 
   def run
@@ -16,8 +17,9 @@ class BulkExport < ApplicationRecord
       items = solr_items
       raise StandardError, 'No search results returned, cannot generate csv' if items.empty?
 
-      csv_file = bulk_export_csv(items)
+      csv_file = bulk_export_csv(items: items, include_assets: include_assets)
     end
+    self.generated_at = DateTime.now
     self.duration = benchmark.total * 1000
     attach_csv_to_record(csv_file)
     success!
@@ -44,15 +46,25 @@ class BulkExport < ApplicationRecord
   end
 
   # @param [Array<ItemResource>] items
+  # @param [Boolean] include_assets
   # @return StringIO
-  def bulk_export_csv(items)
-    data = items.map(&:to_export)
+  def bulk_export_csv(items:, include_assets:)
+    data = items.map do |item|
+      item.to_export(include_assets: include_assets)
+    end
     string = StructuredCSV.generate(data)
     StringIO.new(string)
   end
 
+  # @return ActiveStorage::Filename
+  def sanitized_filename
+    timestamp = generated_at.strftime('%Y%m%d_%H%M%S')
+    filename = "#{title ? "#{title}_#{timestamp}" : timestamp.to_s}.csv"
+    ActiveStorage::Filename.new(filename).sanitized
+  end
+
   # @param [StringIO] csv_file
   def attach_csv_to_record(csv_file)
-    csv.attach(io: csv_file, filename: "#{Time.current.strftime('%Y-%m-%d-T%H%M%S')}.csv", content_type: 'text/csv')
+    csv.attach(io: csv_file, filename: sanitized_filename, content_type: 'text/csv')
   end
 end
