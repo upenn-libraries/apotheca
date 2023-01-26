@@ -65,9 +65,9 @@ describe BulkExport do
     end
 
     context 'when title contains dangerous characters' do
-      safe_chars = 'Crunchy'
-      dangerous_chars = ':$/'
-      title = dangerous_chars + safe_chars
+      let(:safe_chars)  { 'Crunchy' }
+      let(:dangerous_chars) { ':$/' }
+      let(:title) { dangerous_chars + safe_chars }
       let(:bulk_export) { create(:bulk_export, :with_processing_state, title: title) }
 
       before { bulk_export.run }
