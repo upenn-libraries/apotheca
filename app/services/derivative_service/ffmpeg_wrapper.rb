@@ -6,8 +6,8 @@ module DerivativeService
     FFMPEG_EXECUTABLE = 'ffmpeg'
     MOV_OPTIONS = [
       '-y', # automatically overwrite any existing output files
-      '-vcodec h264', # video codec
-      '-acodec mp2', # audio codec
+      '-vcodec h264', # video codec h264
+      '-acodec aac' # audio codec aac
     ].freeze
     # see: https://ffmpeg.org/ffmpeg.html#toc-Generic-options
     # and: https://trac.ffmpeg.org/wiki/Encode/MP3
