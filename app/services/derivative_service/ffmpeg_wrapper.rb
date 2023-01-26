@@ -49,6 +49,8 @@ module DerivativeService
       true
     end
 
+    # @param [String] input_video_file_path
+    # @return [String] stdout
     def self.first_frame_from_video(input_video_file_path:)
       stdout, stderr, status = Open3.capture3(
         "#{FFMPEG_EXECUTABLE} -i #{input_video_file_path} #{FIRST_FRAME_OPTIONS.join(' ')}"
