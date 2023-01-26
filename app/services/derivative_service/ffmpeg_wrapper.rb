@@ -50,12 +50,12 @@ module DerivativeService
     end
 
     def self.first_frame_from_video(input_video_file_path:)
-      _stdout, stderr, status = Open3.capture3(
+      stdout, stderr, status = Open3.capture3(
         "#{FFMPEG_EXECUTABLE} -i #{input_video_file_path} #{FIRST_FRAME_OPTIONS.join(' ')}"
       )
       raise "FFMpeg Error: #{stderr}" unless status.success?
 
-      _stdout
+      stdout
     end
   end
 end
