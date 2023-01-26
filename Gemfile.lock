@@ -506,7 +506,7 @@ DEPENDENCIES
   stimulus-rails
   tzinfo-data
   upennlib-rubocop
-  valkyrie (= 3.0.0)
+  valkyrie (~> 3.0)
   valkyrie-shrine
   view_component
   web-console
