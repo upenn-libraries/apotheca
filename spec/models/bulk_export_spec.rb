@@ -23,8 +23,15 @@ describe BulkExport do
     expect(bulk_export.errors['state']).to include "can't be blank"
   end
 
+  it 'requires generated_by if csv is attached' do
+    bulk_export = build :bulk_export
+    bulk_export.csv.attach(io: StringIO.new('contents'), filename: 'file.csv')
+    expect(bulk_export.valid?).to be false
+    expect(bulk_export.errors['generated_at']).to include "can't be blank"
+  end
+
   describe '#csv' do
-    let(:bulk_export) { create :bulk_export }
+    let(:bulk_export) { create :bulk_export, generated_at: DateTime.current }
 
     it 'attaches a csv file' do
       bulk_export.csv.attach(io: StringIO.new('contents'), filename: 'file.csv')
@@ -49,6 +56,21 @@ describe BulkExport do
     end
     let!(:item2) { persist(:item_resource) }
 
+    context 'when processing' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state, include_assets: true) }
+
+      before do
+        allow(bulk_export).to receive(:bulk_export_csv)
+        bulk_export.run
+      end
+
+      it 'passes include_assets to the export method' do
+        expect(bulk_export).to have_received(:bulk_export_csv)
+          .with(hash_including(include_assets: bulk_export.include_assets))
+      end
+
+    end
+
     context 'when successful and contains two search results' do
       let(:bulk_export) { create(:bulk_export, :with_processing_state) }
 
@@ -62,6 +84,10 @@ describe BulkExport do
         expect(bulk_export.duration).not_to be_nil
       end
 
+      it 'sets generated_at' do
+        expect(bulk_export.generated_at).not_to be_nil
+      end
+
       it 'attaches csv to record' do
         expect(bulk_export.csv).to be_attached
       end
@@ -69,6 +95,10 @@ describe BulkExport do
       it 'generates csv with correct data' do
         expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
         expect(bulk_export.csv.download).to include(item2.descriptive_metadata.title.first)
+      end
+
+      it 'generates csv with the correct filename' do
+        expect(bulk_export.csv.filename.to_s).to eq("#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
       end
     end
 
@@ -84,6 +114,23 @@ describe BulkExport do
       it 'generates csv data for one search result' do
         expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
         expect(bulk_export.csv.download).not_to include(item2.descriptive_metadata.title.first)
+      end
+    end
+
+    context 'when BulkExport has a title' do
+
+      it 'generates the correct filename' do
+        bulk_export = create(:bulk_export, :with_processing_state, title: 'Crunchy')
+        bulk_export.run
+        expect(bulk_export.csv.filename.to_s)
+          .to eq("#{bulk_export.title}_#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
+      end
+
+      it 'removes characters that are not safe for filenames' do
+        bulk_export = create(:bulk_export, :with_processing_state, title: ':$?')
+        bulk_export.run
+        expect(bulk_export.title).to include(':$?')
+        expect(bulk_export.csv.filename.to_s).not_to include(':$?')
       end
     end
 
