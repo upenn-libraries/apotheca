@@ -40,6 +40,62 @@ describe BulkExport do
     end
   end
 
+  describe '#sanitized_filename' do
+    before { persist(:item_resource) }
+
+    context 'when there is no title' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state) }
+
+      before { bulk_export.run }
+
+      it 'generates the correct filename' do
+        expect(bulk_export.csv.filename.to_s).to eq("#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
+      end
+    end
+
+    context 'when title does not contain dangerous characters' do
+      let(:bulk_export) { create(:bulk_export, :with_processing_state, title: 'Crunchy') }
+
+      before { bulk_export.run }
+
+      it 'includes the title in the filename' do
+        expect(bulk_export.csv.filename.to_s).to include(bulk_export.title)
+      end
+
+      it 'includes the generated_at formatted timestamp in the filename' do
+        expect(bulk_export.csv.filename.to_s).to include(bulk_export.generated_at.strftime('%Y%m%d_%H%M%S'))
+      end
+
+      it 'generates the correct filename' do
+        expect(bulk_export.csv.filename.to_s)
+          .to eq("#{bulk_export.title}_#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
+      end
+    end
+
+    context 'when title contains dangerous characters' do
+      safe_chars = 'Crunchy'
+      dangerous_chars = ':$/'
+      title = dangerous_chars + safe_chars
+      let(:bulk_export) { create(:bulk_export, :with_processing_state, title: title) }
+
+      before { bulk_export.run }
+
+      it 'includes the safe characters in the filename' do
+        expect(bulk_export.csv.filename.to_s).to include(safe_chars)
+      end
+
+      it 'removes dangerous characters from filename' do
+        expect(bulk_export.title).to include(dangerous_chars)
+        expect(bulk_export.csv.filename.to_s).not_to include(dangerous_chars)
+      end
+
+      it 'generates the correct filename' do
+        expect(bulk_export.csv.filename.to_s)
+          .to eq("---#{safe_chars}_#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
+      end
+    end
+  end
+
   describe '#process!' do
     let(:bulk_export) { create :bulk_export, state: BulkExport::STATE_QUEUED }
 
@@ -52,7 +108,8 @@ describe BulkExport do
 
   describe '#run' do
     let!(:item1) do
-      persist(:item_resource, descriptive_metadata: { title: 'The New Catcher In The Rye' }, human_readable_name: 'Item')
+      persist(:item_resource, descriptive_metadata: { title: 'The New Catcher In The Rye' },
+                              human_readable_name: 'Item')
     end
     let!(:item2) { persist(:item_resource) }
 
@@ -61,12 +118,17 @@ describe BulkExport do
 
       before do
         allow(bulk_export).to receive(:bulk_export_csv)
+        allow(bulk_export).to receive(:sanitized_filename)
         bulk_export.run
       end
 
       it 'passes include_assets to the export method' do
         expect(bulk_export).to have_received(:bulk_export_csv)
           .with(hash_including(include_assets: bulk_export.include_assets))
+      end
+
+      it 'calls sanitized filename' do
+        expect(bulk_export).to have_received(:sanitized_filename)
       end
 
     end
@@ -114,23 +176,6 @@ describe BulkExport do
       it 'generates csv data for one search result' do
         expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
         expect(bulk_export.csv.download).not_to include(item2.descriptive_metadata.title.first)
-      end
-    end
-
-    context 'when BulkExport has a title' do
-
-      it 'generates the correct filename' do
-        bulk_export = create(:bulk_export, :with_processing_state, title: 'Crunchy')
-        bulk_export.run
-        expect(bulk_export.csv.filename.to_s)
-          .to eq("#{bulk_export.title}_#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
-      end
-
-      it 'removes characters that are not safe for filenames' do
-        bulk_export = create(:bulk_export, :with_processing_state, title: ':$?')
-        bulk_export.run
-        expect(bulk_export.title).to include(':$?')
-        expect(bulk_export.csv.filename.to_s).not_to include(':$?')
       end
     end
 
