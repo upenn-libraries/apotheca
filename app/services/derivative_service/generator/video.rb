@@ -22,7 +22,13 @@ module DerivativeService
 
       # @return [DerivativeService::Generator::DerivativeFile]
       def thumbnail
-        FfmpegWrapper.first_frame_from_video(input_video_file_path: file.disk_path)
+        frame = FfmpegWrapper.first_frame_from_video(input_video_file_path: file.disk_path)
+        image = Vips::Image.new_from_buffer(frame, '')
+        image = image.autorot.thumbnail_image(200, height: 200)
+
+        derivative_file = DerivativeFile.new mime_type: 'image/jpeg'
+        image.jpegsave(derivative_file.path, Q: 90, strip: true)
+        derivative_file
       rescue StandardError => e
         raise Generator::Error, "Error generating video thumbnail: #{e.class} #{e.message}", e.backtrace
       end

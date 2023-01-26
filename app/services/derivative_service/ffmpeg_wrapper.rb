@@ -18,6 +18,14 @@ module DerivativeService
       '-ac 2', # ensure 2-channel (stereo) sound
       '-hide_banner' # hide banner about config/formats from output - remove if debugging
     ].freeze
+    FIRST_FRAME_OPTIONS = [
+      '-ss 00:00:00', # seek to a specific time in the input file
+      '-vframes 1', # extract a specific number of video frames
+      '-q:v 2', # set the quality of the output video frame
+      '-f image2', # force output as image
+      'pipe:1', # output data to stdout
+      '-loglevel quiet' # used to suppress ffmpeg console output
+    ].freeze
 
     # @param [String] input_file_path
     # @param [String] output_file_path
@@ -42,24 +50,16 @@ module DerivativeService
       true
     end
 
-    # thumbnail_command = "ffmpeg -i #{video} -ss 00:00:00 -vframes 1 -q:v 2 -f image2 pipe:1 -loglevel quiet"
     def self.first_frame_from_video(input_video_file_path:)
-      video = input_video_file_path
-      # Use FFMpeg to grab the first frame of the input video and save it to stdout
-      # loglevel quiet used because FFmpeg was outputting a bunch of stuff to the console during tests
-      thumbnail_command = "ffmpeg -i #{video} -ss 00:00:00 -vframes 1 -q:v 2 -f image2 pipe:1 -loglevel quiet"
-      output, status = Open3.capture2(thumbnail_command)
+      # output, status = Open3.capture2(
+      #   "#{FFMPEG_EXECUTABLE} -i #{video} #{FIRST_FRAME_OPTIONS.join(' ')}"
+      # )
+      _stdout, stderr, status = Open3.capture3(
+        "#{FFMPEG_EXECUTABLE} -i #{input_video_file_path} #{FIRST_FRAME_OPTIONS.join(' ')}"
+      )
+      raise "FFMpeg Error: #{stderr}" unless status.success?
 
-      if status.success?
-        image = Vips::Image.new_from_buffer(output, '')
-        image = image.autorot.thumbnail_image(200, height: 200)
-
-        derivative_file = DerivativeFile.new mime_type: 'image/jpeg'
-        image.jpegsave(derivative_file.path, Q: 90, strip: true)
-        derivative_file
-      else
-        raise "Error generating video thumbnail: #{output}"
-      end
+      _stdout
     end
   end
 end
