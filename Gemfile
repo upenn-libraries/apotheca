@@ -34,7 +34,7 @@ gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'upennlib-rubocop', require: false
-gem 'valkyrie', '3.0.0'
+gem 'valkyrie', '~> 3.0'
 gem 'valkyrie-shrine'
 gem 'view_component'
 
