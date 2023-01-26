@@ -218,19 +218,16 @@ GEM
       railties (>= 6.0.0)
     io-wait (0.2.1)
     iso-639 (0.3.5)
-    jbuilder (2.11.5)
-      actionview (>= 5.0.0)
-      activesupport (>= 5.0.0)
     jmespath (1.6.1)
     json (2.6.2)
-    json-canonicalization (0.3.0)
-    json-ld (3.2.1)
+    json-canonicalization (0.3.1)
+    json-ld (3.2.3)
       htmlentities (~> 4.3)
       json-canonicalization (~> 0.3)
       link_header (~> 0.0, >= 0.0.8)
       multi_json (~> 1.15)
       rack (~> 2.2)
-      rdf (~> 3.2)
+      rdf (~> 3.2, >= 3.2.9)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -256,7 +253,7 @@ GEM
     minitest (5.16.3)
     msgpack (1.4.5)
     multi_json (1.15.0)
-    multipart-post (2.2.3)
+    multipart-post (2.3.0)
     net-imap (0.2.3)
       digest
       net-protocol
@@ -329,9 +326,9 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
-    rdf (3.2.8)
+    rdf (3.2.9)
       link_header (~> 0.0, >= 0.0.8)
-    rdf-vocab (3.2.1)
+    rdf-vocab (3.2.3)
       rdf (~> 3.2, >= 3.2.4)
     reform (2.6.2)
       disposable (>= 0.5.0, < 1.0.0)
@@ -431,7 +428,7 @@ GEM
       rubocop-rails
       rubocop-rake
       rubocop-rspec
-    valkyrie (3.0.0.pre.beta.2)
+    valkyrie (3.0.0)
       activemodel
       activesupport
       dry-struct
@@ -495,7 +492,6 @@ DEPENDENCIES
   faker
   importmap-rails
   iso-639
-  jbuilder
   kaminari
   omniauth
   omniauth-rails_csrf_protection
@@ -510,7 +506,7 @@ DEPENDENCIES
   stimulus-rails
   tzinfo-data
   upennlib-rubocop
-  valkyrie (= 3.0.0.pre.beta.2)
+  valkyrie (= 3.0.0)
   valkyrie-shrine
   view_component
   web-console
