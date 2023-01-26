@@ -58,14 +58,6 @@ describe BulkExport do
 
       before { bulk_export.run }
 
-      it 'includes the title in the filename' do
-        expect(bulk_export.csv.filename.to_s).to include(bulk_export.title)
-      end
-
-      it 'includes the generated_at formatted timestamp in the filename' do
-        expect(bulk_export.csv.filename.to_s).to include(bulk_export.generated_at.strftime('%Y%m%d_%H%M%S'))
-      end
-
       it 'generates the correct filename' do
         expect(bulk_export.csv.filename.to_s)
           .to eq("#{bulk_export.title}_#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
