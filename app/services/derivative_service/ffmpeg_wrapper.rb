@@ -28,36 +28,31 @@ module DerivativeService
     ].freeze
 
     # @param [String] input_file_path
+    # @param [Array] options
     # @param [String] output_file_path
-    def self.wav_to_mp3(input_file_path:, output_file_path:)
-      _stdout, stderr, status = Open3.capture3(
-        "#{FFMPEG_EXECUTABLE} -i #{input_file_path} #{MP3_OPTIONS.join(' ')} #{output_file_path}"
-      )
-      raise "FFMpeg Error: #{stderr}" unless status.success?
-
-      true
-    end
-
-    # @param [String] input_file_path
-    # @param [String] output_file_path
-    def self.mov_to_mp4(input_file_path:, output_file_path:)
-      _stdout, stderr, status = Open3.capture3(
-        "#{FFMPEG_EXECUTABLE} -i #{input_file_path} #{MOV_OPTIONS.join(' ')} #{output_file_path}"
-      )
-      raise "FFMpeg Error: #{stderr}" unless status.success?
-
-      true
-    end
-
-    # @param [String] input_video_file_path
     # @return [String] stdout
-    def self.first_frame_from_video(input_video_file_path:)
-      stdout, stderr, status = Open3.capture3(
-        "#{FFMPEG_EXECUTABLE} -i #{input_video_file_path} #{FIRST_FRAME_OPTIONS.join(' ')}"
-      )
+    def self.command(input_file_path:, options:, output_file_path: nil)
+      command_string = "#{FFMPEG_EXECUTABLE} -i #{input_file_path} #{options.join(' ')}"
+      command_string += " #{output_file_path}" if output_file_path
+
+      stdout, stderr, status = Open3.capture3(command_string)
       raise "FFMpeg Error: #{stderr}" unless status.success?
 
       stdout
+    end
+
+    def self.wav_to_mp3(input_file_path:, output_file_path:)
+      command(input_file_path: input_file_path, options: MP3_OPTIONS, output_file_path: output_file_path)
+      true
+    end
+
+    def self.mov_to_mp4(input_file_path:, output_file_path:)
+      command(input_file_path: input_file_path, options: MOV_OPTIONS, output_file_path: output_file_path)
+      true
+    end
+
+    def self.first_frame_from_video(input_video_file_path:)
+      command(input_file_path: input_video_file_path, options: FIRST_FRAME_OPTIONS)
     end
   end
 end
