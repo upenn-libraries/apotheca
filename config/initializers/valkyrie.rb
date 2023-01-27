@@ -62,10 +62,10 @@ Rails.application.config.to_prepare do
   )
 
   Shrine.storages = {
-    preservation: Shrine::Storage::S3.new(client: nil, **preservation_storage_config),
-    preservation_copy: Shrine::Storage::S3.new(client: nil, **preservation_copy_storage_config),
-    derivatives: Shrine::Storage::S3.new(client: nil, **derivatives_storage_config),
-    iiif_derivatives: Shrine::Storage::S3.new(client: nil, **iiif_derivatives_storage_config)
+    preservation: Shrine::Storage::S3.new(**preservation_storage_config),
+    preservation_copy: Shrine::Storage::S3.new(**preservation_copy_storage_config),
+    derivatives: Shrine::Storage::S3.new(**derivatives_storage_config),
+    iiif_derivatives: Shrine::Storage::S3.new(**iiif_derivatives_storage_config)
   }
 
   Valkyrie::StorageAdapter.register(
