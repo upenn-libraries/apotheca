@@ -39,10 +39,10 @@ gem 'valkyrie-shrine'
 gem 'view_component'
 
 group :development, :test do
-  gem 'simplecov', require: false
   gem 'byebug'
   gem 'faker'
   gem 'rspec-rails', '~> 5.0'
+  gem 'simplecov', require: false
   gem 'webmock'
 end
 
