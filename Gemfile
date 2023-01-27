@@ -42,6 +42,7 @@ group :development, :test do
   gem 'byebug'
   gem 'faker'
   gem 'rspec-rails', '~> 5.0'
+  gem 'simplecov', require: false
   gem 'webmock'
 end
 
