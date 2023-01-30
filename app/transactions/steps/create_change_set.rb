@@ -13,8 +13,8 @@ module Steps
       @change_set_class = change_set_class
     end
 
-    def call(resource: nil, **attributes)
-      resource ||= resource_class.new
+    def call(attributes)
+      resource = attributes.delete(:resource) || resource_class.new
       change_set = change_set_class.new(resource)
 
       begin
