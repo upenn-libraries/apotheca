@@ -12,8 +12,8 @@ module DerivativeService
       def access
         derivative_file = DerivativeFile.new mime_type: 'audio/mpeg', extension: '.mp3'
         FfmpegWrapper.wav_to_mp3(
-          input_file_path: file.disk_path,
-          output_file_path: derivative_file.path
+          input_path: file.disk_path,
+          output_path: derivative_file.path
         )
         derivative_file
       rescue StandardError => e

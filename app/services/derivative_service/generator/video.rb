@@ -12,8 +12,8 @@ module DerivativeService
       def access
         derivative_file = DerivativeFile.new mime_type: 'video/mp4', extension: '.mp4'
         FfmpegWrapper.mov_to_mp4(
-          input_file_path: file.disk_path,
-          output_file_path: derivative_file.path
+          input_path: file.disk_path,
+          output_path: derivative_file.path
         )
         derivative_file
       rescue StandardError => e
@@ -22,7 +22,7 @@ module DerivativeService
 
       # @return [DerivativeService::Generator::DerivativeFile]
       def thumbnail
-        frame = FfmpegWrapper.first_frame_from_video(input_video_file_path: file.disk_path)
+        frame = FfmpegWrapper.first_frame_from_video(input_path: file.disk_path)
         image = Vips::Image.new_from_buffer(frame, '')
         image = image.autorot.thumbnail_image(200, height: 200)
 

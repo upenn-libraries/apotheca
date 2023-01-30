@@ -27,13 +27,13 @@ module DerivativeService
       '-loglevel quiet' # used to suppress ffmpeg console output
     ].freeze
 
-    # @param [String] input_file_path
+    # @param [String] input_path
     # @param [Array] options
-    # @param [String] output_file_path
+    # @param [String] output_path
     # @return [String] stdout
-    def self.command(input_file_path:, options:, output_file_path: nil)
-      command_string = "#{FFMPEG_EXECUTABLE} -i #{input_file_path} #{options.join(' ')}"
-      command_string += " #{output_file_path}" if output_file_path
+    def self.command(input_path:, options:, output_path: nil)
+      command_string = "#{FFMPEG_EXECUTABLE} -i #{input_path} #{options.join(' ')}"
+      command_string += " #{output_path}" if output_path
 
       stdout, stderr, status = Open3.capture3(command_string)
       raise "FFMpeg Error: #{stderr}" unless status.success?
@@ -41,18 +41,18 @@ module DerivativeService
       stdout
     end
 
-    def self.wav_to_mp3(input_file_path:, output_file_path:)
-      command(input_file_path: input_file_path, options: MP3_OPTIONS, output_file_path: output_file_path)
+    def self.wav_to_mp3(input_path:, output_path:)
+      command(input_path: input_path, options: MP3_OPTIONS, output_path: output_path)
       true
     end
 
-    def self.mov_to_mp4(input_file_path:, output_file_path:)
-      command(input_file_path: input_file_path, options: MOV_OPTIONS, output_file_path: output_file_path)
+    def self.mov_to_mp4(input_path:, output_path:)
+      command(input_path: input_path, options: MOV_OPTIONS, output_path: output_path)
       true
     end
 
-    def self.first_frame_from_video(input_video_file_path:)
-      command(input_file_path: input_video_file_path, options: FIRST_FRAME_OPTIONS)
+    def self.first_frame_from_video(input_path:)
+      command(input_path: input_path, options: FIRST_FRAME_OPTIONS)
     end
   end
 end
