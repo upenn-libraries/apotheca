@@ -69,5 +69,31 @@ describe FileCharacterization::Fits do
         expect(metadata.md5).to eql '79a2f8e83b4babe41ba0b5458e3d1e4a'
       end
     end
+
+    context 'with video file' do
+      subject(:metadata) { fits.examine(contents: file_contents, filename: 'video.mov') }
+
+      let(:file_contents) { File.read(file_fixture('files/video.mov')) }
+
+      it 'contains raw metadata' do
+        expect(metadata.raw).to be_a String
+      end
+
+      it 'returns mime type' do
+        expect(metadata.mime_type).to eql 'video/quicktime'
+      end
+
+      it 'returns size' do
+        expect(metadata.size).to be  480_754
+      end
+
+      it 'returns duration' do
+        expect(metadata.duration).to eql '1.134 s'
+      end
+
+      it 'returns md5 checksum' do
+        expect(metadata.md5).to eql '0c77b046855997e15f059c61b0084a43'
+      end
+    end
   end
 end
