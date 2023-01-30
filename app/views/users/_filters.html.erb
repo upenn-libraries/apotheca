@@ -1,0 +1,46 @@
+<section class="my-4" >
+
+    <%= bootstrap_form_tag(url: users_path, method: :get) do |f| %>
+
+      <div class="row align-items-end">
+        <div class="col-md-3 col-lg-2">
+          <%= f.text_field :users_search,
+                           value: params[:users_search],
+                           label: 'Search'
+          %>
+        </div>
+
+        <div class="col-md-auto">
+          <%= f.select :active_filter,
+                       options_for_select([['Yes', 1], ['No', 0]], selected: params[:active_filter]),
+                       include_blank: "Active?",
+                       label: 'Status'
+          %>
+        </div>
+
+        <div class="col-md-auto">
+          <%= f.select :roles_filter,
+                       options_for_select([%w(Admin admin), %w(Editor editor), %w(Viewer viewer)], selected: params[:roles_filter]),
+                       include_blank: "Select",
+                       label: 'Role'
+          %>
+        </div>
+
+        <div class="col my-3 d-flex align-items-center">
+          <%= f.submit 'Filter',
+                       class: 'btn btn-primary users-filter-submit',
+                       label: 'Submit',
+                       hide_label: true
+          %>
+
+          <%= link_to '',
+                      users_path,
+                      class: 'btn btn-close btn-sm ms-3',
+                      label: 'Reset',
+                      hide_label: true
+          %>
+        </div>
+      </div>
+    <% end %>
+
+</section>

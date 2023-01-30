@@ -8,6 +8,8 @@
   <%= header.with_link(href: new_user_path) { 'New User' } %>
 <% end %>
 
+<%= render 'filters' %>
+
 <%= page_entries_info @users, entry_name: 'user' %>
 
 <table class="table">
