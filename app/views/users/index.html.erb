@@ -15,7 +15,7 @@
 </div>
 
 <% unless @users.empty? %>
-  <table class="table">
+  <table class="table users-list">
     <thead>
     <tr>
       <th scope="col">Email</th>
@@ -29,18 +29,18 @@
     </tr>
     </thead>
     <tbody>
-    <% @users.each do |user| %>
-    <tr>
-      <td><%= link_to user.email, user_path(user) %></td>
-      <td><%= user.first_name %></td>
-      <td><%= user.last_name %></td>
-      <td><%= user.roles.join(', ') %></td>
-      <td><%= user.active ? 'yes' : 'no' %></td>
-      <td><%= user.created_at.to_fs(:display) %></td>
-      <td><%= user.updated_at.to_fs(:display) %></td>
-      <td><%= link_to 'Edit', edit_user_path(user), class: 'btn btn-sm btn-outline-primary' %></td>
-    </tr>
-    <% end %>
+      <% @users.each do |user| %>
+        <tr class="user">
+          <td><%= link_to user.email, user_path(user) %></td>
+          <td><%= user.first_name %></td>
+          <td><%= user.last_name %></td>
+          <td><%= user.roles.join(', ') %></td>
+          <td><%= user.active ? 'yes' : 'no' %></td>
+          <td><%= user.created_at.to_fs(:display) %></td>
+          <td><%= user.updated_at.to_fs(:display) %></td>
+          <td><%= link_to 'Edit', edit_user_path(user), class: 'btn btn-sm btn-outline-primary' %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 
