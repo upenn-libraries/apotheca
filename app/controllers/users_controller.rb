@@ -6,9 +6,9 @@ class UsersController < ApplicationController
 
   def index
     @users = User.page(params[:page])
-    @users = @users.users_search(params[:users_search])
-    @users = @users.active_filter(params[:active_filter])
-    @users = @users.roles_filter(params[:roles_filter])
+    @users = @users.users_search(params[:users_search]) if params[:users_search].present?
+    @users = @users.active_filter(params[:active_filter]) if params[:active_filter].present?
+    @users = @users.roles_filter(params[:roles_filter]) if params[:roles_filter].present?
   end
 
   def show; end
