@@ -6,11 +6,9 @@ class UsersController < ApplicationController
 
   def index
     @users = User.page(params[:page])
-    if params[:users_search].present?
-      @users = @users.where('email || first_name || last_name ILIKE ?', "%#{params[:users_search]}%")
-    end
-    @users = @users.where(active: params[:active_filter]) if params[:active_filter].present?
-    @users = @users.where('? = ANY (roles)', params[:roles_filter]) if params[:roles_filter].present?
+    @users = @users.users_search(params[:users_search])
+    @users = @users.active_filter(params[:active_filter])
+    @users = @users.roles_filter(params[:roles_filter])
   end
 
   def show; end

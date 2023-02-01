@@ -12,8 +12,8 @@
 
         <div class="col-md-auto">
           <%= f.select :active_filter,
-                       options_for_select([['Yes', 1], ['No', 0]], selected: params[:active_filter]),
-                       include_blank: "Active?",
+                       options_for_select([['Active', 1], ['Inactive', 0]], selected: params[:active_filter]),
+                       include_blank: true,
                        label: 'Status'
           %>
         </div>
@@ -21,7 +21,7 @@
         <div class="col-md-auto">
           <%= f.select :roles_filter,
                        options_for_select([%w(Admin admin), %w(Editor editor), %w(Viewer viewer)], selected: params[:roles_filter]),
-                       include_blank: "Select",
+                       include_blank: true,
                        label: 'Role'
           %>
         </div>
