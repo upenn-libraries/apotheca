@@ -9,6 +9,9 @@
         <li class="nav-item">
           <a class="nav-link" href="<%= items_path %>">Items</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<%= bulk_exports_path %>">Exports</a>
+        </li>
         <% if can? :manage, User %>
           <li class="nav-item">
             <a class="nav-link" href="<%= users_path %>">Users</a>
