@@ -3,14 +3,15 @@
 module BulkExportCard
   # ViewComponent
   class Component < ViewComponent::Base
-    attr_reader :bulk_export, :counter
-
+    attr_reader :bulk_export
 
     # @param [BulkExport] bulk_export
     # @param [User] user
-    def initialize(bulk_export:, user:)
+    # @param [Hash] options
+    def initialize(bulk_export:, user:, **options)
       @bulk_export = bulk_export
       @user = user
+      @options = options
     end
 
     # @return [Ability]
@@ -19,22 +20,22 @@ module BulkExportCard
     end
 
     # @return [Boolean]
-    def in_a_modifiable_state?
-      return false if @bulk_export.cancelled? || @bulk_export.processing?
+    def can_cancel?
+      return true if (ability.can? :update, @bulk_export) && !(@bulk_export.cancelled? || @bulk_export.processing?)
 
-      true
+      false
     end
 
     # @return [Boolean]
-    def can_modify?
-      return true if (ability.can? :update, BulkExport) && in_a_modifiable_state?
+    def can_regenerate?
+      return true if (ability.can? :update, @bulk_export) && !@bulk_export.processing?
 
       false
     end
 
     # @return [Boolean]
     def can_delete?
-      return true if (ability.can? :destroy, BulkExport) && in_a_modifiable_state?
+      return true if (ability.can? :destroy, @bulk_export) && !@bulk_export.processing?
 
       false
     end
