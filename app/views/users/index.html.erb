@@ -30,7 +30,7 @@
     </thead>
     <tbody>
       <% @users.each do |user| %>
-        <tr class="user">
+        <tr class="users-list__user">
           <td><%= link_to user.email, user_path(user) %></td>
           <td><%= user.first_name %></td>
           <td><%= user.last_name %></td>
