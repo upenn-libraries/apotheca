@@ -63,7 +63,7 @@
         <td>
           <ul class="list-group">
             <% bulk_export.solr_params.dig('search', 'fielded')&.each do |fielded| %>
-              <li class="list-group-item border-0 p-0" style=background:none><%= "#{fielded.dig("opr")} #{fielded.dig("term")} #{fielded.dig("field")}" %></li>
+              <li class="list-group-item border-0 p-0" style=background:none><%= "#{fielded.dig("opr")} #{fielded.dig("field")}": '#{fielded.dig("term")}'%></li>
             <% end %>
           </ul>
         </td>

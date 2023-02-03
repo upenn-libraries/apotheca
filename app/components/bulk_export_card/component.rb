@@ -21,7 +21,7 @@ module BulkExportCard
 
     # @return [Boolean]
     def can_cancel?
-      return true if (ability.can? :update, @bulk_export) && !(@bulk_export.cancelled? || @bulk_export.processing?)
+      return true if (ability.can? :update, bulk_export) && !(@bulk_export.cancelled? || bulk_export.processing?)
 
       false
     end
