@@ -3,7 +3,9 @@
 # controller actions for BulkExport
 class BulkExportsController < ApplicationController
   load_and_authorize_resource
-  def index; end
+  def index
+    authorize! :read, BulkExport
+  end
 
   def new
     # instantiate new bulk export
@@ -13,5 +15,6 @@ class BulkExportsController < ApplicationController
 
   def create
     # create and save bulk export
+    authorize! :create, BulkExport
   end
 end
