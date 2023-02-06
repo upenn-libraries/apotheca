@@ -1,0 +1,6 @@
+<%= render(Form::Component.new(model: @bulk_export, size: :sm)) do |form| %>
+  <% form.with_field(:title, type: :text) %>
+  <% form.with_field(:solr_params, type: :text) %>
+
+  <% form.with_submit('Create') %>
+<% end %>
