@@ -7,12 +7,13 @@ class Ability
   def initialize(user)
     return if user.blank?
 
+    can [:read, :create], BulkExport
+    can [:update, :destroy], BulkExport, user: user
+
     if user.viewer?
-      can :read, [BulkExport, ItemResource, AssetResource]
+      can :read, [ItemResource, AssetResource]
     elsif user.editor?
       can [:read, :create, :update], [ItemResource, AssetResource]
-      can [:read, :create], BulkExport
-      can [:update, :destroy], BulkExport, user: user
     elsif user.admin?
       can :manage, :all
     end
