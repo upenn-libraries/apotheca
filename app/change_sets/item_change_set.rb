@@ -2,6 +2,7 @@
 
 class ItemChangeSet < Valkyrie::ChangeSet
   include ModificationDetailsChangeSet
+  include LockableChangeSet
 
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
     ItemResource::DescriptiveMetadata::FIELDS.each do |field|
@@ -32,9 +33,6 @@ class ItemChangeSet < Valkyrie::ChangeSet
       super(values.compact_blank)
     end
   end
-
-  property :optimistic_lock_token,
-           multiple: true, required: true, type: Valkyrie::Types::Set.of(Valkyrie::Types::OptimisticLockToken)
 
   # Defining Fields
   property :unique_identifier, multiple: false, required: false

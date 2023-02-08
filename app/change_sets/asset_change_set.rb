@@ -2,6 +2,7 @@
 
 class AssetChangeSet < Valkyrie::ChangeSet
   include ModificationDetailsChangeSet
+  include LockableChangeSet
 
   class AnnotationChangeSet < Valkyrie::ChangeSet
     property :text, multiple: false
@@ -34,9 +35,6 @@ class AssetChangeSet < Valkyrie::ChangeSet
 
     validates :type, inclusion: TYPES
   end
-
-  property :optimistic_lock_token,
-           multiple: true, required: true, type: Valkyrie::Types::Set.of(Valkyrie::Types::OptimisticLockToken)
 
   # Defining Fields
   property :alternate_ids, multiple: true, required: false

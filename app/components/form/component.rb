@@ -62,7 +62,7 @@ module Form
     def include_lock?
       return @options[:optimistic_lock] if @options[:optimistic_lock]&.in? [true, false]
 
-      (@model.class.ancestors & [Valkyrie::ChangeSet, Valkyrie::Resource]).any?
+      @model.try :lockable?
     end
 
     def url

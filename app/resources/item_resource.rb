@@ -2,8 +2,7 @@
 
 class ItemResource < Valkyrie::Resource
   include ModificationDetails
-
-  enable_optimistic_locking
+  include Lockable
 
   class DescriptiveMetadata < Valkyrie::Resource
     # All descriptive metadata fields

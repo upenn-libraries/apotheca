@@ -2,8 +2,7 @@
 
 class AssetResource < Valkyrie::Resource
   include ModificationDetails
-
-  enable_optimistic_locking
+  include Lockable
 
   class Annotation < Valkyrie::Resource
     attribute :text, Valkyrie::Types::String
