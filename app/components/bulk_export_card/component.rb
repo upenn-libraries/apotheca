@@ -21,17 +21,17 @@ module BulkExportCard
 
     # @return [Boolean]
     def can_cancel?
-      (ability.can? :update, bulk_export) && bulk_export.may_cancel?
+      ability.can?(:update, bulk_export) && bulk_export.may_cancel?
     end
 
     # @return [Boolean]
     def can_regenerate?
-      (ability.can? :update, bulk_export) && !bulk_export.processing?
+      ability.can?(:update, bulk_export) && !bulk_export.processing?
     end
 
     # @return [Boolean]
     def can_delete?
-      (ability.can? :destroy, bulk_export) && !bulk_export.processing?
+      ability.can?(:destroy, bulk_export) && !bulk_export.processing?
     end
 
     def csv_download_link
