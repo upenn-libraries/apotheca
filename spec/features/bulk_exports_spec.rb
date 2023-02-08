@@ -41,7 +41,7 @@ describe 'BulkExport management' do
     end
 
     it 'only shows buttons for BulkExports that belong to user' do
-      expect(page).to have_button('Export', count: 3)
+      expect(page).to have_button('Export', count: 2)
     end
   end
 
@@ -59,12 +59,12 @@ describe 'BulkExport management' do
     end
 
     it 'shows all the buttons' do
-      expect(page).to have_button('Export', count: bulk_exports.length * 3)
+      expect(page).to have_button('Export', count: bulk_exports.length * 2)
     end
   end
 
   context 'with a processed bulk export' do
-    let(:user) { create(:user, :viewer) }
+    let(:user) { create(:user, :admin) }
 
     before do
       bulk_exports.each(&:process!)
@@ -74,6 +74,10 @@ describe 'BulkExport management' do
 
     it 'shows a link to download the attached csv' do
       expect(page).to have_link('Download CSV', count: bulk_exports.length)
+    end
+
+    it 'shows button to regenerate bulk export' do
+      expect(page).to have_button('Regenerate', count: bulk_exports.length)
     end
   end
 end
