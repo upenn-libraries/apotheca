@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-
 describe 'BulkExport management' do
-
   let!(:bulk_exports) { create_list(:bulk_export, 10, state: BulkExport::STATE_QUEUED) }
 
   before do
@@ -10,7 +8,6 @@ describe 'BulkExport management' do
   end
 
   context 'with a viewer' do
-
     before do
       sign_in user
       visit bulk_exports_path
@@ -30,7 +27,6 @@ describe 'BulkExport management' do
   end
 
   context 'with an editor' do
-
     let(:user) { create(:user, :editor) }
     let!(:bulk_export) { create(:bulk_export, user: user, state: BulkExport::STATE_QUEUED) }
 
@@ -50,7 +46,6 @@ describe 'BulkExport management' do
   end
 
   context 'with and admin' do
-
     let(:user) { create(:user, :admin) }
 
     before do
@@ -69,7 +64,6 @@ describe 'BulkExport management' do
   end
 
   context 'with a processed bulk export' do
-
     let(:user) { create(:user, :viewer) }
 
     before do
@@ -82,5 +76,4 @@ describe 'BulkExport management' do
       expect(page).to have_link('Download CSV', count: bulk_exports.length)
     end
   end
-
 end
