@@ -33,6 +33,9 @@ class ItemChangeSet < Valkyrie::ChangeSet
     end
   end
 
+  property :optimistic_lock_token,
+           multiple: true, required: true, type: Valkyrie::Types::Set.of(Valkyrie::Types::OptimisticLockToken)
+
   # Defining Fields
   property :unique_identifier, multiple: false, required: false
   property :human_readable_name, multiple: false, required: true

@@ -2,6 +2,7 @@
   <%= error %>
 
   <%= hidden_field_tag(:form, @name) if @name %>
+  <%= hidden_field_tag(:optimistic_lock_token, @model.optimistic_lock_token) if include_lock? %>
 
   <% fields.each do |field| %>
     <%= field %>

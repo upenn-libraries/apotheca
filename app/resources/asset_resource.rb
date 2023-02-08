@@ -3,6 +3,8 @@
 class AssetResource < Valkyrie::Resource
   include ModificationDetails
 
+  enable_optimistic_locking
+
   class Annotation < Valkyrie::Resource
     attribute :text, Valkyrie::Types::String
     # attribute :location, Valkyrie::Types::String # x,y,w,h

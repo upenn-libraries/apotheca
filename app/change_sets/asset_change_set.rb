@@ -35,6 +35,9 @@ class AssetChangeSet < Valkyrie::ChangeSet
     validates :type, inclusion: TYPES
   end
 
+  property :optimistic_lock_token,
+           multiple: true, required: true, type: Valkyrie::Types::Set.of(Valkyrie::Types::OptimisticLockToken)
+
   # Defining Fields
   property :alternate_ids, multiple: true, required: false
   property :original_filename, multiple: false, required: true

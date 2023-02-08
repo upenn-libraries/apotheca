@@ -3,6 +3,8 @@
 class ItemResource < Valkyrie::Resource
   include ModificationDetails
 
+  enable_optimistic_locking
+
   class DescriptiveMetadata < Valkyrie::Resource
     # All descriptive metadata fields
     FIELDS = %i[

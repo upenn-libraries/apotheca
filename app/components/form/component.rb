@@ -41,6 +41,7 @@ module Form
     # @option options [Hash] :label_col bootstrap column to use for all labels
     # @option options [Hash] :input_col bootstrap column to use for all inputs
     # @option options [Symbol] :size to be used for labels and inputs
+    # @option options [Boolean] :optimistic_lock override model inspection for placing of optimistic lock token
     def initialize(name: nil, url: nil, model: nil, **options)
       @name = name
       @model = model
@@ -56,6 +57,12 @@ module Form
         label_col: @options.delete(:label_col) || { sm: 2 },
         input_col: @options.delete(:input_col) || { sm: 10 }
       }
+    end
+
+    def include_lock?
+      return @options[:optimistic_lock] if @options[:optimistic_lock]&.in? [true, false]
+
+      (@model.class.ancestors & [Valkyrie::ChangeSet, Valkyrie::Resource]).any?
     end
 
     def url
