@@ -26,7 +26,7 @@ class User < ApplicationRecord
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
   scope :active_filter, ->(query) { where(active: query) }
-  scope :roles_filter, ->(query) { where('? = ANY (roles)', query) }
+  scope :roles_filter, ->(query) { where('? = ANY (roles)', query.downcase) }
   scope :users_search, ->(query) { where("email || ' ' || first_name || ' ' || last_name ILIKE ?", "%#{query}%") }
 
   def self.from_omniauth(auth)
