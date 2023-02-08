@@ -20,7 +20,7 @@
 
         <div class="col-md-auto">
           <%= f.select :roles_filter,
-                       options_for_select((User::ROLES).map(&:titleize), selected: params[:roles_filter]),
+                       options_for_select(User::ROLES.map(&:titleize), selected: params[:roles_filter]),
                        include_blank: true,
                        label: 'Role'
           %>
