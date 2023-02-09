@@ -59,12 +59,6 @@ module Form
       }
     end
 
-    def include_lock?
-      return @options[:optimistic_lock] if @options[:optimistic_lock]&.in? [true, false]
-
-      @model.try :lockable?
-    end
-
     def url
       @url || generate_url
     end
@@ -95,6 +89,15 @@ module Form
       else
         @model.new_record?
       end
+    end
+
+    # Should the locking token be rendered as a hidden field? This expects a value in @options[:optimistic_lock]
+    # otherwise it checks the @model for #lockable? which is mixed in by the Lockability concerns
+    # @return [TrueClass, FalseClass]
+    def include_lock?
+      return @options[:optimistic_lock] if @options[:optimistic_lock]&.in? [true, false]
+
+      @model.try :lockable?
     end
   end
 end
