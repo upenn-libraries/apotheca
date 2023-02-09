@@ -22,19 +22,16 @@
       </ul>
       <ul class="navbar-nav ms-auto">
         <% if user_signed_in? %>
-          <li class="nav-item">
-            <div class="dropdown">
-              <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                <%= "#{bs_icon :person} #{current_user.full_name}".html_safe %>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="Sign out button">
-                  <%= button_to "Sign Out", destroy_user_session_path, class: 'dropdown-item' %>
-              </ul>
-            </div>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             <%= current_user.full_name %> 
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><%= button_to "Sign Out", destroy_user_session_path, class: 'dropdown-item' %> </li>
+            </ul>
           </li>
-        <% end %>
+      <% end %>
       </ul>
-
     </div>
   </div>
 </nav>
