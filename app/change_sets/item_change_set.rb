@@ -2,6 +2,7 @@
 
 class ItemChangeSet < Valkyrie::ChangeSet
   include ModificationDetailsChangeSet
+  include LockableChangeSet
 
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
     ItemResource::DescriptiveMetadata::FIELDS.each do |field|
