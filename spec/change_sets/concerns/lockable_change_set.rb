@@ -5,9 +5,8 @@ shared_examples_for 'a LockableChangeSet' do |change_set_class|
   let(:persisted_resource) { persister.save(resource: resource) }
 
   context 'when a lock token is invalid' do
-    let(:change_set) { change_set_class.new(persisted_resource) }
-
     before do
+      change_set = change_set_class.new(persisted_resource)
       change_set.validate(updated_by: 'someuser@upenn.edu')
       persister.save(resource: change_set.sync)
     end
