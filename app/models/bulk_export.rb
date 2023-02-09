@@ -20,7 +20,7 @@ class BulkExport < ApplicationRecord
       csv_file = bulk_export_csv(items: items, include_assets: include_assets)
     end
     self.generated_at = DateTime.now
-    self.duration = benchmark.total * 1000
+    self.duration = benchmark.total
     attach_csv_to_record(csv_file)
     success!
   rescue StandardError => e

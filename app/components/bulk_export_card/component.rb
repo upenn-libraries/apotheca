@@ -35,9 +35,10 @@ module BulkExportCard
     end
 
     def csv_download_link
-      link_to 'Download CSV', rails_blob_path(bulk_export.csv, disposition: 'attachment'), class: "card-link col"
+      link_to(rails_blob_path(bulk_export.csv, disposition: 'attachment'),
+              title: 'Download CSV', class: 'card-link col-2 text-center') do
+        render Icon::Component.new(name: 'download', size: '24px')
+      end
     end
-
   end
 end
-
