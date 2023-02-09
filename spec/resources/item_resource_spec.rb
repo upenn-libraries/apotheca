@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'concerns/modification_details'
+require_relative 'concerns/lockable'
 
 describe ItemResource do
   let(:resource_klass) { described_class }

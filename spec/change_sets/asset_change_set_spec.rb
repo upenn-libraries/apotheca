@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 require_relative 'concerns/modification_details_change_set'
+require_relative 'concerns/lockable_change_set'
 
 describe AssetChangeSet do
   let(:resource) { build(:asset_resource) }
   let(:change_set) { described_class.new(resource) }
 
   it_behaves_like 'a ModificationDetailsChangeSet'
+  it_behaves_like 'a LockableChangeSet', described_class
   # it_behaves_like 'a Valkyrie::ChangeSet'
 
   it 'sets label' do
