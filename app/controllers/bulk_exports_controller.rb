@@ -15,7 +15,7 @@ class BulkExportsController < ApplicationController
   def create
     authorize! :create, BulkExport
     @bulk_export = BulkExport.new(bulk_export_params)
-    # something like this
+    @bulk_export.user = current_user
     if @bulk_export.save
       ProcessBulkExportJob.perform_later(@bulk_export)
       redirect_to items_path, notice: 'Bulk export created'
