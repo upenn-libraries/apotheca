@@ -20,7 +20,7 @@ class BulkExportsController < ApplicationController
       ProcessBulkExportJob.perform_later(@bulk_export)
       redirect_to items_path, notice: 'Bulk export created'
     else
-      render :new, alert: "Problem creating bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
+      redirect_to items_path, alert: "Problem creating bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
     end
   end
 
