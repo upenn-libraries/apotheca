@@ -7,6 +7,9 @@ class Ability
   def initialize(user)
     return if user.blank?
 
+    can [:read, :create], BulkExport
+    can [:update, :destroy], BulkExport, user: user
+
     if user.viewer?
       can :read, [ItemResource, AssetResource]
     elsif user.editor?

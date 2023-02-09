@@ -1,0 +1,18 @@
+<%= render(Breadcrumbs::Component.new) do |component| %>
+  <% component.with_breadcrumb(href: "/") do %>Home
+  <% end %>
+  <% component.with_breadcrumb(active: true) do %>Exports
+  <% end %>
+<% end %>
+
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title { 'Exports' } %>
+<% end %>
+
+<ol class="list-group">
+  <% @bulk_exports.map.with_index do |bulk_export, index| %>
+        <li class="list-group-item border-0 d-flex justify-content-around">
+        <%= render(BulkExportCard::Component.new(bulk_export: bulk_export, user: current_user, count: (index +1) )) %>
+        </li>
+  <% end %>
+</ol>
