@@ -1,83 +1,193 @@
 # frozen_string_literal: true
 
 describe 'BulkExport management' do
-  let!(:bulk_exports) { create_list(:bulk_export, 10, state: BulkExport::STATE_QUEUED) }
+  shared_examples_for 'any logged in user' do
+    before do
+      persist(:item_resource)
+      sign_in user
+    end
 
-  before do
-    persist(:item_resource)
+    context 'when viewing bulk exports' do
+      let!(:bulk_exports) { create_list(:bulk_export, 10) }
+
+      before { visit bulk_exports_path }
+
+      it 'lists all BulkExports' do
+        expect(page).to have_text('Search Parameters', count: bulk_exports.length)
+        expect(page).to have_css('.card', count: bulk_exports.length)
+      end
+    end
+
+    context 'when viewing their queued bulk export' do
+      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_QUEUED) }
+
+      before { visit bulk_exports_path }
+
+      it 'displays the correct state' do
+        expect(page).to have_text(user_export.state.titleize)
+      end
+
+      it 'displays cancel button' do
+        expect(page).to have_button('Cancel', count: 1)
+      end
+
+      it 'displays delete button' do
+        expect(page).to have_button('Delete', count: 1)
+      end
+
+      it 'does not display regenerate button' do
+        expect(page).not_to have_button('Regenerate')
+      end
+    end
+
+    context 'when viewing their cancelled bulk export' do
+      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_CANCELLED) }
+
+      before { visit bulk_exports_path }
+
+      it 'displays the correct state' do
+        expect(page).to have_text(user_export.state.titleize)
+      end
+
+      it 'displays delete button' do
+        expect(page).to have_button('Delete', count: 1)
+      end
+
+      it 'does not display cancel button' do
+        expect(page).not_to have_button('Cancel')
+      end
+
+      it 'does not display regenerate button' do
+        expect(page).not_to have_button('Regenerate')
+      end
+    end
+
+    context 'when viewing their processing bulk export' do
+      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_PROCESSING) }
+
+      before { visit bulk_exports_path }
+
+      it 'displays the correct state' do
+        expect(page).to have_text(user_export.state.titleize)
+      end
+
+      it 'does not display any buttons' do
+        expect(page).not_to have_button('Export')
+      end
+    end
+
+    context 'when viewing their failed bulk export' do
+      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_FAILED) }
+
+      before { visit bulk_exports_path }
+
+      it 'displays the correct state' do
+        expect(page).to have_text(user_export.state.titleize)
+      end
+
+      it 'displays regenerate button' do
+        expect(page).to have_button('Regenerate', count: 1)
+      end
+
+      it 'displays delete button' do
+        expect(page).to have_button('Delete', count: 1)
+      end
+
+      it 'does not display cancel button' do
+        expect(page).not_to have_button('Cancel')
+      end
+    end
+
+    context 'when viewing their successful bulk export' do
+      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_QUEUED) }
+
+      before do
+        user_export.process!
+        visit bulk_exports_path
+      end
+
+      it 'displays the correct state' do
+        expect(page).to have_text(user_export.state.titleize)
+      end
+
+      it 'displays link to download attached csv' do
+        expect(page).to have_link('Download CSV', count: 1)
+      end
+
+      it 'displays regenerate button' do
+        expect(page).to have_button('Regenerate', count: 1)
+      end
+
+      it 'displays delete button' do
+        expect(page).to have_button('Delete', count: 1)
+      end
+
+      it 'does not display cancel button' do
+        expect(page).not_to have_button('Cancel')
+      end
+    end
   end
 
   context 'with a viewer' do
-    before do
-      sign_in user
-      visit bulk_exports_path
+    let(:viewer) { create(:user, :viewer) }
+
+    it_behaves_like 'any logged in user' do
+      let(:user) { viewer }
     end
 
-    let(:user) { create(:user, :viewer) }
+    context 'when viewing bulk exports that belong to other users' do
+      let!(:bulk_exports) { create_list(:bulk_export, 10) }
 
-    it 'lists all BulkExports' do
-      expect(page).to have_text('Search Parameters', count: bulk_exports.length)
-      expect(page).to have_css('.card', count: bulk_exports.length)
-    end
+      before do
+        sign_in viewer
+        visit bulk_exports_path
+      end
 
-    it 'does not show any buttons' do
-      visit bulk_exports_path
-      expect(page).not_to have_button('Export')
+      it 'does not display the buttons' do
+        expect(page).not_to have_button('Export')
+      end
     end
   end
 
   context 'with an editor' do
-    let(:user) { create(:user, :editor) }
-    let!(:bulk_export) { create(:bulk_export, user: user, state: BulkExport::STATE_QUEUED) }
+    let(:editor) { create(:user, :editor) }
 
-    before do
-      sign_in user
-      visit bulk_exports_path
+    it_behaves_like 'any logged in user' do
+      let(:user) { editor }
     end
 
-    it 'lists all BulkExports' do
-      expect(page).to have_text('Search Parameters', count: bulk_exports.length + 1)
-      expect(page).to have_css('.card', count: bulk_exports.length + 1)
-    end
+    context 'when viewing bulk exports that belong to other users' do
+      let!(:bulk_exports) { create_list(:bulk_export, 10) }
 
-    it 'only shows buttons for BulkExports that belong to user' do
-      expect(page).to have_button('Export', count: 2)
+      before do
+        sign_in editor
+        visit bulk_exports_path
+      end
+
+      it 'does not display the buttons' do
+        expect(page).not_to have_button('Export')
+      end
     end
   end
 
   context 'with and admin' do
-    let(:user) { create(:user, :admin) }
+    let(:admin) { create(:user, :admin) }
 
-    before do
-      sign_in user
-      visit bulk_exports_path
+    it_behaves_like 'any logged in user' do
+      let(:user) { admin }
     end
 
-    it 'lists all BulkExports' do
-      expect(page).to have_text('Search Parameters', count: bulk_exports.length)
-      expect(page).to have_css('.card', count: bulk_exports.length)
-    end
+    context 'when viewing bulk exports that belong to other users' do
+      let!(:bulk_exports) { create_list(:bulk_export, 10) }
 
-    it 'shows all the buttons' do
-      expect(page).to have_button('Export', count: bulk_exports.length * 2)
-    end
-  end
+      before do
+        sign_in admin
+        visit bulk_exports_path
+      end
 
-  context 'with a processed bulk export' do
-    let(:user) { create(:user, :admin) }
-
-    before do
-      bulk_exports.each(&:process!)
-      sign_in user
-      visit bulk_exports_path
-    end
-
-    it 'shows a link to download the attached csv' do
-      expect(page).to have_link('Download CSV', count: bulk_exports.length)
-    end
-
-    it 'shows button to regenerate bulk export' do
-      expect(page).to have_button('Regenerate', count: bulk_exports.length)
+      it 'displays the buttons' do
+        expect(page).to have_button('Export')
+      end
     end
   end
 end
