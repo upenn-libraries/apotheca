@@ -9,6 +9,10 @@
   <%= header.with_title { 'Exports' } %>
 <% end %>
 
+<%= render 'bulk_exports/filter' %>
+
+<%= page_entries_info @bulk_exports, entry_name: 'export' %>
+
 <ol class="list-group">
   <% @bulk_exports.map.with_index do |bulk_export, index| %>
         <li class="list-group-item border-0 d-flex justify-content-around">
@@ -16,3 +20,5 @@
         </li>
   <% end %>
 </ol>
+
+<%= paginate @bulk_exports %>

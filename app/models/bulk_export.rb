@@ -11,6 +11,10 @@ class BulkExport < ApplicationRecord
   validates :generated_at, presence: true, if: -> { csv.attached? }
   validate :restrict_number_of_bulk_exports
 
+  scope :filter_user, ->(query) { joins(:user).where({ user: { email: query } }) }
+  scope :sort_by_field, ->(field, direction) { order("#{field}": direction.to_s) }
+  scope :with_user, -> { includes(:user).distinct }
+
   def run
     csv_file = nil
     benchmark = Benchmark.measure do
