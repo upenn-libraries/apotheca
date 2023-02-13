@@ -10,5 +10,9 @@ FactoryBot.define do
   trait :with_processing_state do
     state { BulkExport::STATE_PROCESSING }
   end
+
+  trait :queued do
+    state { BulkExport::STATE_QUEUED }
+  end
 end
 
