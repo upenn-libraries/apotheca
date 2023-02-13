@@ -9,24 +9,25 @@ class BulkExportsController < ApplicationController
 
   def new
     authorize! :new, BulkExport
-    @bulk_export = BulkExport.new(solr_params: CGI.unescape(params[:query]))
+    @bulk_export = BulkExport.new(solr_params: params[:solr_params])
   end
 
   def create
     authorize! :create, BulkExport
     @bulk_export = BulkExport.new(bulk_export_params)
     @bulk_export.user = current_user
+    @bulk_export.solr_params = JSON.parse(params[:bulk_export][:solr_params])
     if @bulk_export.save
       ProcessBulkExportJob.perform_later(@bulk_export)
-      redirect_to items_path, notice: 'Bulk export created'
+      redirect_to bulk_exports_path, notice: 'Bulk export created'
     else
-      redirect_to items_path, alert: "Problem creating bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
+      redirect_to bulk_exports_path, alert: "Problem creating bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
     end
   end
 
   private
 
   def bulk_export_params
-    params.require(:bulk_export).permit(:title, :solr_params, :include_assets)
+    params.require(:bulk_export).permit(:title, :include_assets)
   end
 end

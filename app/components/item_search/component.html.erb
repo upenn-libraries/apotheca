@@ -60,7 +60,7 @@
       <div class="btn-group-vertical d-block mt-2">
         <%= form.submit 'Submit', class: 'btn btn-primary' %>
         <%= link_to 'Start Over', items_path, class: 'btn btn-secondary' %>
-        <%= link_to 'Export as CSV', new_bulk_export_path(query: CGI.escape(query)), class: 'btn btn-secondary' %>
+        <%= link_to 'Export as CSV', new_bulk_export_path(solr_params: search_params), class: 'btn btn-secondary' %>
       </div>
     </div>
   </div>
