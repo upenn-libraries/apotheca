@@ -2,9 +2,9 @@
   <div class="row mx-0 mb-3 align-items-center">
     <div class="col-12 col-md-auto">
       <%= form.select 'filter[user]',
-                      options_for_select(BulkExport.with_user.pluck("email"), params.dig('filter', 'user')),
+                      options_from_collection_for_select(@users, 'email', 'email', params.dig('filter', 'user')),
                       include_blank: true,
-                      label: 'Filter'
+                      label: 'User'
       %>
     </div>
     <div class="col-12 col-md-auto">
@@ -17,7 +17,7 @@
     <div class="col-12 col-md-auto">
       <%= form.select 'sort[direction]',
                       options_for_select([%w[Descending desc], %w[Ascending asc]], params.dig('sort', 'direction')),
-                      label: 'Direction'
+                      label: 'Sort Direction'
       %>
     </div>
     <div class="col-12 col-lg-3 col-xl-2 mt-3 d-flex align-items-center justify-content-around">
