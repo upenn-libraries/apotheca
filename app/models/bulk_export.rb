@@ -42,7 +42,7 @@ class BulkExport < ApplicationRecord
     container = Valkyrie::MetadataAdapter.find(:index_solr)
                                          .query_service
                                          .custom_queries
-                                         .item_index parameters: JSON.parse(solr_params).with_indifferent_access
+                                         .item_index parameters: solr_params.with_indifferent_access
     container.documents
   end
 
