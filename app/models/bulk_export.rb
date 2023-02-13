@@ -13,7 +13,7 @@ class BulkExport < ApplicationRecord
 
   scope :filter_user, ->(query) { joins(:user).where({ user: { email: query } }) }
   scope :sort_by_field, ->(field, direction) { order("#{field}": direction.to_s) }
-  scope :with_user, -> { includes(:user).distinct }
+  scope :with_user, -> { includes(:user) }
 
   def run
     csv_file = nil

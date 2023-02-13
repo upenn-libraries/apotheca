@@ -28,6 +28,7 @@ class User < ApplicationRecord
   scope :active_filter, ->(query) { where(active: query) }
   scope :roles_filter, ->(query) { where('? = ANY (roles)', query.downcase) }
   scope :users_search, ->(query) { where("email || ' ' || first_name || ' ' || last_name ILIKE ?", "%#{query}%") }
+  scope :user_with_exports, -> { joins(:bulk_exports).distinct }
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
