@@ -34,6 +34,7 @@ class BulkExportsController < ApplicationController
   def clean_params(params)
     params.delete('rows')
     params['filter']['collection'] = params['filter']['collection'].reject(&:empty?)
+    params['search']['fielded'] = params['search']['fielded'].reject{ |v| v['opr'].empty? && v['term'].empty? }
     params
   end
 end
