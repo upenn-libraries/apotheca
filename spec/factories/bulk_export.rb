@@ -7,8 +7,20 @@ FactoryBot.define do
     state { BulkExport::STATE_SUCCESSFUL }
   end
 
-  trait :with_processing_state do
+  trait :queued do
+    state { BulkExport::STATE_QUEUED }
+  end
+
+  trait :cancelled do
+    state { BulkExport::STATE_CANCELLED }
+  end
+
+  trait :processing do
     state { BulkExport::STATE_PROCESSING }
+  end
+
+  trait :failed do
+    state { BulkExport::STATE_FAILED }
   end
 end
 
