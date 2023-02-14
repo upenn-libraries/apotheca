@@ -3,17 +3,13 @@
 # controller actions for BulkExport
 class BulkExportsController < ApplicationController
   load_and_authorize_resource
-  def index
-    authorize! :read, BulkExport
-  end
+  def index; end
 
   def new
-    authorize! :new, BulkExport
     @bulk_export = BulkExport.new(solr_params: params[:solr_params])
   end
 
   def create
-    authorize! :create, BulkExport
     @bulk_export = BulkExport.new(bulk_export_params)
     @bulk_export.user = current_user
     @bulk_export.solr_params = clean_params(JSON.parse(params[:bulk_export][:solr_params]))
