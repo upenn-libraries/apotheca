@@ -9,9 +9,18 @@ describe 'Alert management' do
   context 'with an Admin' do
     let(:user) { create(:user, :admin) }
 
+    before { visit alert_messages_path }
+
     it 'can manage Alerts' do
-      visit alert_messages_path
       expect(page).to have_text 'Alert Messages'
+    end
+
+    it 'can update Alerts' do
+      expect(page).not_to have_text('test message')
+      find(:checkbox).check
+      find(:fillable_field).fill_in(with: 'test message')
+      click_on('Save')
+      expect(page).to have_text('test message', count: 2)
     end
   end
 
