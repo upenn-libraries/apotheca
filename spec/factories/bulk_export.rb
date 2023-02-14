@@ -20,7 +20,7 @@ FactoryBot.define do
   end
 
   trait :failed do
-    state {BulkExport::STATE_FAILED }
+    state { BulkExport::STATE_FAILED }
   end
 end
 
