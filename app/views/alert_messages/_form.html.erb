@@ -1,8 +1,6 @@
-<%= bootstrap_form_for alert_message do |f| %>
-  <%= f.check_box :active %>
-  <%= f.select :level,
-               options_for_select(AlertMessage::LEVELS, alert_message.level),
-               label: 'Level' %>
-  <%= f.text_area :message %>
-  <%= f.submit 'Save' %>
+<%= render(Form::Component.new(model: alert_message)) do |form| %>
+  <%= form.with_field(:active, type: :switch) %>>
+  <%= form.with_field(:level, type: :select, choices: AlertMessage::LEVELS, value: alert_message.level) %>
+  <%= form.with_field(:message, type: :textarea) %>
+  <%=form.with_submit('Save') %>
 <% end %>
