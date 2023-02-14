@@ -19,7 +19,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their queued bulk export' do
-      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_QUEUED) }
+      let!(:user_export) { create(:bulk_export, :queued, user: user) }
 
       before { visit bulk_exports_path }
 
@@ -41,7 +41,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their cancelled bulk export' do
-      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_CANCELLED) }
+      let!(:user_export) { create(:bulk_export, :cancelled, user: user) }
 
       before { visit bulk_exports_path }
 
@@ -63,7 +63,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their processing bulk export' do
-      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_PROCESSING) }
+      let!(:user_export) { create(:bulk_export, :processing, user: user) }
 
       before { visit bulk_exports_path }
 
@@ -77,7 +77,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their failed bulk export' do
-      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_FAILED) }
+      let!(:user_export) { create(:bulk_export, :failed, user: user) }
 
       before { visit bulk_exports_path }
 
@@ -99,7 +99,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their successful bulk export' do
-      let!(:user_export) { create(:bulk_export, user: user, state: BulkExport::STATE_QUEUED) }
+      let!(:user_export) { create(:bulk_export, :queued, user: user) }
 
       before do
         user_export.process!
