@@ -90,10 +90,17 @@ Rails.application.config.to_prepare do
     ), :iiif_derivatives
   )
 
-  # Register custom queries for Solr
+  # Register custom queries for Solr adapter
   [ItemIndex].each do |solr_query_handler|
     Valkyrie::MetadataAdapter.find(:index_solr)
                              .query_service.custom_queries
                              .register_query_handler(solr_query_handler)
+  end
+
+  # Register custom queries for Postgres adapter
+  [FindByUniqueIdentifier].each do |postgres_query_handler|
+    Valkyrie::MetadataAdapter.find(:postgres)
+                             .query_service.custom_queries
+                             .register_query_handler(postgres_query_handler)
   end
 end
