@@ -2,6 +2,7 @@
 
 class AssetChangeSet < Valkyrie::ChangeSet
   include ModificationDetailsChangeSet
+  include LockableChangeSet
 
   class AnnotationChangeSet < Valkyrie::ChangeSet
     property :text, multiple: false

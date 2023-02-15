@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'concerns/modification_details'
+require_relative 'concerns/lockable'
 
 describe ItemResource do
   let(:resource_klass) { described_class }
@@ -10,6 +11,7 @@ describe ItemResource do
 
     it_behaves_like 'a Valkyrie::Resource'
     it_behaves_like 'ModificationDetails', :item_resource
+    it_behaves_like 'Lockable', :item_resource
   end
 
   describe '#unarranged_asset_ids' do

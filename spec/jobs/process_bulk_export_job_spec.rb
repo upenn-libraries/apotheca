@@ -3,7 +3,7 @@
 describe ProcessBulkExportJob, type: :job do
 
   context 'when performing the job later' do
-    let(:bulk_export) { create(:bulk_export, state: BulkExport::STATE_QUEUED) }
+    let(:bulk_export) { create(:bulk_export, :queued) }
 
     it 'enqueues the job' do
       described_class.perform_later(bulk_export)
@@ -13,7 +13,7 @@ describe ProcessBulkExportJob, type: :job do
 
   context 'when performing the job' do
 
-    let(:bulk_export) { create(:bulk_export, state: BulkExport::STATE_QUEUED) }
+    let(:bulk_export) { create(:bulk_export, :queued) }
     let!(:item) { persist(:item_resource) }
 
     it 'calls BulkExport#process!' do
@@ -31,7 +31,7 @@ describe ProcessBulkExportJob, type: :job do
   end
 
   context 'when performing the job with cancelled state' do
-    let(:bulk_export) { create(:bulk_export, state: BulkExport::STATE_CANCELLED) }
+    let(:bulk_export) { create(:bulk_export, :cancelled) }
 
     it 'does not call BulkExport#process!' do
       allow(bulk_export).to receive(:process!)

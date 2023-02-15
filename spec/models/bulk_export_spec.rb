@@ -44,7 +44,7 @@ describe BulkExport do
     before { persist(:item_resource) }
 
     context 'when there is no title' do
-      let(:bulk_export) { create(:bulk_export, :with_processing_state) }
+      let(:bulk_export) { create(:bulk_export, :processing) }
 
       before { bulk_export.run }
 
@@ -54,7 +54,7 @@ describe BulkExport do
     end
 
     context 'when title does not contain dangerous characters' do
-      let(:bulk_export) { create(:bulk_export, :with_processing_state, title: 'Crunchy') }
+      let(:bulk_export) { create(:bulk_export, :processing, title: 'Crunchy') }
 
       before { bulk_export.run }
 
@@ -68,7 +68,7 @@ describe BulkExport do
       let(:safe_chars)  { 'Crunchy' }
       let(:dangerous_chars) { ':$/' }
       let(:title) { dangerous_chars + safe_chars }
-      let(:bulk_export) { create(:bulk_export, :with_processing_state, title: title) }
+      let(:bulk_export) { create(:bulk_export, :processing, title: title) }
 
       before { bulk_export.run }
 
@@ -89,7 +89,7 @@ describe BulkExport do
   end
 
   describe '#process!' do
-    let(:bulk_export) { create :bulk_export, state: BulkExport::STATE_QUEUED }
+    let(:bulk_export) { create :bulk_export, :queued }
 
     it 'calls #run' do
       allow(bulk_export).to receive(:run).and_call_original
@@ -106,7 +106,7 @@ describe BulkExport do
     let!(:item2) { persist(:item_resource) }
 
     context 'when processing' do
-      let(:bulk_export) { create(:bulk_export, :with_processing_state, include_assets: true) }
+      let(:bulk_export) { create(:bulk_export, :processing, include_assets: true) }
 
       before do
         allow(bulk_export).to receive(:bulk_export_csv)
@@ -126,7 +126,7 @@ describe BulkExport do
     end
 
     context 'when successful and contains two search results' do
-      let(:bulk_export) { create(:bulk_export, :with_processing_state) }
+      let(:bulk_export) { create(:bulk_export, :processing) }
 
       before { bulk_export.run }
 
@@ -157,7 +157,7 @@ describe BulkExport do
     end
 
     context 'when successful and contains one search results' do
-      let(:bulk_export) { create(:bulk_export, :with_processing_state, solr_params: { search: { all: 'Catcher' } }) }
+      let(:bulk_export) { create(:bulk_export, :processing, solr_params: { search: { all: 'Catcher' } }) }
 
       before { bulk_export.run }
 
@@ -172,7 +172,7 @@ describe BulkExport do
     end
 
     context 'when solr_params return no search results' do
-      let(:bulk_export) { create(:bulk_export, :with_processing_state, solr_params: { search: { all: 'Basketball' } }) }
+      let(:bulk_export) { create(:bulk_export, :processing, solr_params: { search: { all: 'Basketball' } }) }
 
       before { bulk_export.run }
 
@@ -190,7 +190,7 @@ describe BulkExport do
     end
 
     context 'when an error is raised' do
-      let(:bulk_export) { create(:bulk_export, :with_processing_state) }
+      let(:bulk_export) { create(:bulk_export, :processing) }
 
       before do
         allow(bulk_export).to receive(:bulk_export_csv).and_raise(StandardError.new('test error'))

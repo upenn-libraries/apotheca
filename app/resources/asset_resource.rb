@@ -2,6 +2,7 @@
 
 class AssetResource < Valkyrie::Resource
   include ModificationDetails
+  include Lockable
 
   class Annotation < Valkyrie::Resource
     attribute :text, Valkyrie::Types::String

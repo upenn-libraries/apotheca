@@ -41,6 +41,7 @@ module Form
     # @option options [Hash] :label_col bootstrap column to use for all labels
     # @option options [Hash] :input_col bootstrap column to use for all inputs
     # @option options [Symbol] :size to be used for labels and inputs
+    # @option options [Boolean] :optimistic_lock override model inspection for placing of optimistic lock token
     def initialize(name: nil, url: nil, model: nil, **options)
       @name = name
       @model = model
@@ -88,6 +89,15 @@ module Form
       else
         @model.new_record?
       end
+    end
+
+    # Should the locking token be rendered as a hidden field? This expects a value in @options[:optimistic_lock]
+    # otherwise it checks the @model for #lockable? which is mixed in by the Lockability concerns
+    # @return [TrueClass, FalseClass]
+    def include_lock?
+      return @options[:optimistic_lock] if @options[:optimistic_lock]&.in? [true, false]
+
+      @model.try :lockable?
     end
   end
 end
