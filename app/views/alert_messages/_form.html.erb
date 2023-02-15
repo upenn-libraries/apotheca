@@ -1,6 +1,6 @@
 <%= render(Form::Component.new(model: alert_message)) do |form| %>
-  <%= form.with_field(:active, type: :switch) %>>
   <%= form.with_field(:level, type: :select, choices: AlertMessage::LEVELS, value: alert_message.level) %>
   <%= form.with_field(:message, type: :textarea) %>
+  <%= form.with_field(:active, type: :switch) %>>
   <%=form.with_submit('Save') %>
 <% end %>
