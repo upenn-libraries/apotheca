@@ -275,8 +275,22 @@ describe 'BulkExport management' do
       click_on 'Export as CSV'
       expect(page).to have_text('Create Bulk Export')
     end
-    # enter in a title for bulk export
-    # click submit
-    # check that that title exists on the bulk export index page
+
+    it 'fills Solr Params field with search params' do
+      fill_in 'Search', with: 'Green'
+      click_on 'Submit'
+      click_on 'Export as CSV'
+      expect(page).to have_field('bulk-export-solr-params', disabled: true)
+      # TODO: check for actual solr param value in hidden field
+    end
+
+    it 'creates a bulk export and redirects to bulk export index page' do
+      fill_in 'Search', with: 'Green'
+      click_on 'Submit'
+      click_on 'Export as CSV'
+      fill_in 'bulk-export-title', with: 'Green'
+      click_on 'Create'
+      expect(page).to have_text('Green')
+    end
   end
 end
