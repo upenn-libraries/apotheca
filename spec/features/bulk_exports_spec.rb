@@ -280,7 +280,8 @@ describe 'BulkExport management' do
 
       it 'fills Solr Params field with search params' do
         expect(page).to have_field('bulk-export-solr-params', disabled: true)
-        # TODO: check for actual solr param value in hidden field
+        field = find_field('bulk-export-solr-params', disabled: true)
+        expect(field.value).to have_text '"all"=>"Green"'
       end
 
       it 'creates a bulk export and redirects to bulk export index page' do
