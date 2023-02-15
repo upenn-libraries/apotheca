@@ -2,6 +2,16 @@
 
 FactoryBot.define do
   factory :import do
-    # TODO: Additional attributes to be added when model is complete.
+    import_data do
+      {
+        action: 'CREATE',
+        human_readable_name: 'Marian Anderson; SSID: 18792434; filename: 10-14-1.tif',
+        metadata: {
+          title: [
+            'Marian Anderson'
+          ]
+        }
+      }
+    end
   end
 end
