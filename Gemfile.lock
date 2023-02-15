@@ -137,6 +137,9 @@ GEM
       declarative (>= 0.0.9, < 1.0.0)
       representable (>= 3.1.1, < 4)
     docile (1.4.0)
+    dotiw (5.3.3)
+      activesupport
+      i18n
     down (5.4.0)
       addressable (~> 2.8)
     dry-configurable (1.0.1)
@@ -491,6 +494,7 @@ DEPENDENCIES
   capybara
   config
   devise
+  dotiw
   dry-monads
   dry-transaction
   ezid-client
