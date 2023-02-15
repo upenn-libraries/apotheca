@@ -267,30 +267,27 @@ describe 'BulkExport management' do
       expect(page).to have_text('Export as CSV')
     end
 
-    # ensure it redirects to new bulk export form
-    it 'redirects to bulk export new form' do
-      # enter a search term
-      fill_in 'Search', with: 'Green'
-      click_on 'Submit'
-      click_on 'Export as CSV'
-      expect(page).to have_text('Create Bulk Export')
-    end
+    context 'when redirected to bulk export new form' do
+      before do
+        fill_in 'Search', with: 'Green'
+        click_on 'Submit'
+        click_on 'Export as CSV'
+      end
 
-    it 'fills Solr Params field with search params' do
-      fill_in 'Search', with: 'Green'
-      click_on 'Submit'
-      click_on 'Export as CSV'
-      expect(page).to have_field('bulk-export-solr-params', disabled: true)
-      # TODO: check for actual solr param value in hidden field
-    end
+      it 'redirects to bulk export new form' do
+        expect(page).to have_text('Create Bulk Export')
+      end
 
-    it 'creates a bulk export and redirects to bulk export index page' do
-      fill_in 'Search', with: 'Green'
-      click_on 'Submit'
-      click_on 'Export as CSV'
-      fill_in 'bulk-export-title', with: 'Green'
-      click_on 'Create'
-      expect(page).to have_text('Green')
+      it 'fills Solr Params field with search params' do
+        expect(page).to have_field('bulk-export-solr-params', disabled: true)
+        # TODO: check for actual solr param value in hidden field
+      end
+
+      it 'creates a bulk export and redirects to bulk export index page' do
+        fill_in 'bulk-export-title', with: 'Green'
+        click_on 'Create'
+        expect(page).to have_text('Green')
+      end
     end
   end
 end
