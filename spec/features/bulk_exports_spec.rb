@@ -251,4 +251,32 @@ describe 'BulkExport management' do
       expect(first('.card')).to have_text(second_export.title)
     end
   end
+
+  context 'when creating bulk exports' do
+    let(:user) { create(:user, :admin) }
+
+    # create and persist an item
+    before do
+      sign_in user
+      persist(:item_resource)
+      visit items_path
+    end
+
+    # visit items page and ensure it has `export to csv` button
+    it 'has link to create bulk export' do
+      expect(page).to have_text('Export as CSV')
+    end
+
+    # ensure it redirects to new bulk export form
+    it 'redirects to bulk export new form' do
+      # enter a search term
+      fill_in 'Search', with: 'Green'
+      click_on 'Submit'
+      click_on 'Export as CSV'
+      expect(page).to have_text('Create Bulk Export')
+    end
+    # enter in a title for bulk export
+    # click submit
+    # check that that title exists on the bulk export index page
+  end
 end
