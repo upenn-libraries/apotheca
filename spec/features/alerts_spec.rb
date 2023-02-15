@@ -17,10 +17,10 @@ describe 'Alert management' do
 
     it 'can update Alerts' do
       expect(page).not_to have_text('test message')
-      find(:checkbox).check
-      find(:fillable_field).fill_in(with: 'test message')
-      click_on('Save')
-      expect(page).to have_text('test message', count: 2)
+      find('#alert-message-active', match: :first).check
+      find('#alert-message-message', match: :first).fill_in(with: 'test message')
+      find_button('Save', match: :first).click
+      within('.header-alert') { expect(page).to have_text('test message') }
     end
   end
 
