@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :bulk_export do
     association :user, :admin
+    title { 'New export' }
     solr_params { { search: { all: 'New' } } }
     state { BulkExport::STATE_SUCCESSFUL }
   end

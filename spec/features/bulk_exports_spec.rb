@@ -255,14 +255,12 @@ describe 'BulkExport management' do
   context 'when creating bulk exports' do
     let(:user) { create(:user, :admin) }
 
-    # create and persist an item
     before do
       sign_in user
       persist(:item_resource)
       visit items_path
     end
 
-    # visit items page and ensure it has `export to csv` button
     it 'has link to create bulk export' do
       expect(page).to have_text('Export as CSV')
     end
