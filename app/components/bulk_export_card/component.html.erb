@@ -68,11 +68,9 @@
             <div class="col-6 col-md-8"><%= bulk_export.solr_params.dig('search', 'all') %></div>
           </div>
           <div class="row">
-            <%# TODO: add conditional for displaying fielded title, could be wrapped in its own function on this component %>
             <div class="col-6 col-md-4 fw-bold"><%= 'Fielded' if bulk_export.solr_params.dig('search', 'fielded').present? %></div>
             <div class="col-6 col-md-8">
               <ul class="list-group">
-                <%# TODO: don't display 'geographic_subject' default field submission %>
                 <% bulk_export.solr_params.dig('search', 'fielded')&.each do |fielded| %>
                     <li class="list-group-item border-0 p-0" style=background:none><%= "#{fielded.dig("opr")} #{fielded.dig("field")}: '#{fielded.dig("term")}'" %></li>
                 <% end %>

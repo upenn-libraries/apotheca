@@ -18,7 +18,7 @@ class BulkExportsController < ApplicationController
   def create
     @bulk_export = BulkExport.new(bulk_export_params)
     @bulk_export.user = current_user
-    @bulk_export.solr_params = clean_params(JSON.parse(params[:bulk_export][:solr_params]))
+    @bulk_export.solr_params = clean_search_params(JSON.parse(params[:bulk_export][:solr_params]))
     if @bulk_export.save
       ProcessBulkExportJob.perform_later(@bulk_export)
       redirect_to bulk_exports_path, notice: 'Bulk export created'
@@ -33,10 +33,10 @@ class BulkExportsController < ApplicationController
     params.require(:bulk_export).permit(:title, :include_assets)
   end
 
-  def clean_params(params)
-    params.delete('rows')
-    params['filter']['collection'] = params['filter']['collection'].reject(&:empty?)
-    params['search']['fielded'] = params['search']['fielded'].reject{ |v| v['term'].empty? }
-    params
+  def clean_search_params(search_params)
+    search_params.delete('rows')
+    search_params['filter']['collection'] = search_params['filter']['collection'].reject(&:empty?)
+    search_params['search']['fielded'] = search_params['search']['fielded'].reject{ |v| v['term'].blank? }
+    search_params
   end
 end

@@ -253,7 +253,7 @@ describe 'BulkExport management' do
   end
 
   context 'when creating bulk exports' do
-    let(:user) { create(:user, :admin) }
+    let(:user) { create(:user, :viewer) }
 
     before do
       sign_in user
@@ -285,7 +285,7 @@ describe 'BulkExport management' do
       it 'creates a bulk export and redirects to bulk export index page' do
         fill_in 'bulk-export-title', with: 'Green'
         click_on 'Create'
-        expect(page).to have_text('Green')
+        expect(find(class: 'card-title')).to have_text('Green')
       end
     end
   end
