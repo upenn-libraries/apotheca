@@ -6,7 +6,6 @@ class BulkExport < ApplicationRecord
 
   has_one_attached :csv
 
-  validates :title, presence: true
   validates :solr_params, presence: true
   validates :state, presence: true
   validates :generated_at, presence: true, if: -> { csv.attached? }
