@@ -20,4 +20,14 @@ class BulkExportsController < ApplicationController
       redirect_to bulk_exports_path, notice: 'Bulk export deleted.'
     end
   end
+
+  def cancel
+    @bulk_export = BulkExport.find(params[:id])
+    if @bulk_export.cancellable?
+      cancel!
+      redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
+    else
+      redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that processing or complete'
+    end
+  end
 end
