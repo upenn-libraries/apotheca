@@ -36,7 +36,7 @@ module BulkExportCard
 
     # @return [String]
     def title
-      (bulk_export.title || bulk_export.csv.filename) || '(Untitled)'
+      bulk_export.title || bulk_export.csv.filename || '(Untitled)'
     end
 
     def csv_download_link
