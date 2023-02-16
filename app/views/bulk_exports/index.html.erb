@@ -13,10 +13,8 @@
 
 <%= page_entries_info @bulk_exports, entry_name: 'export' %>
 
-<ol class="list-group">
   <% @bulk_exports.map.with_index do |bulk_export, index| %>
         <%= render(BulkExportCard::Component.new(bulk_export: bulk_export, user: current_user, count: (index +1) )) %>
   <% end %>
-</ol>
 
 <%= paginate @bulk_exports %>
