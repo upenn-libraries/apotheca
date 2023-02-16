@@ -3,7 +3,7 @@
     <div class="row align-items-center">
       <h2 class="card-title col-10 fs-5">
         <%= "#{@options[:count]}." if @options[:count].present?%>
-        <%= bulk_export.title || bulk_export.csv.filename %>
+        <%= title %>
       </h2>
       <%= csv_download_link if bulk_export.csv.attached?%>
     </div>
@@ -44,28 +44,17 @@
     </table>
     <h5 class="card-text">Search Parameters</h5>
       <div class="row m-auto">
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-4 col-lg-2">
           <div class="row mb-2 text-left">
-          <strong>Rows and Sort</strong>
+          <strong>Sort</strong>
           </div>
           <div class="row">
-            <div class="col-6 col-md-4 fw-bold">
-              <%= 'Rows' if bulk_export.solr_params.dig('rows').present? %>
-            </div>
-            <div class="col-6 col-md-8">
-              <%= bulk_export.solr_params.dig('rows') %>
-            </div>
-          </div>
-          <div class="row">
-            <div class ="col-6 col-md-4 fw-bold">
-              <%= 'Sort' if bulk_export.solr_params.dig('sort').present? %>
-            </div>
-            <div class="col-6 col-md-8">
+            <div class="col-6 offset-6 col-md-8 offset-md-0 ">
               <%= "#{bulk_export.solr_params.dig('sort', 'field')}," if bulk_export.solr_params.dig('sort', 'field')  %>
               <%= bulk_export.solr_params.dig('sort', 'direction') %></div>
           </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-8 col-lg-5">
           <div class="row mb-2 text-left">
           <strong>Search</strong>
           </div>
@@ -92,7 +81,7 @@
             </div>
           </div>
         </div>
-        <div class="col-auto col-lg-5">
+        <div class="col-12 col-lg-5">
           <div class="row mb-2 text-left">
           <strong>Filter(s)</strong>
           </div>
