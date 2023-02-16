@@ -8,7 +8,8 @@ Rails.application.routes.draw do
 
   resources :alert_messages, only: %w[index update]
   resources :users, except: :destroy
-  resources :bulk_exports, only: %w[index]
+  resources :bulk_exports, except: [:edit, :update, :show]
+
 
   scope :resources do
     resources :items do
