@@ -30,7 +30,7 @@ class BulkExportsController < ApplicationController
   private
 
   def bulk_export_params
-    params.require(:bulk_export).permit(:title, :include_assets)
+    params.require(:bulk_export).permit(:title, :include_assets).compact_blank!
   end
 
   def clean_search_params(search_params)
