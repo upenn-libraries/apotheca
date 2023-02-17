@@ -8,7 +8,7 @@ class Ability
     return if user.blank?
 
     can [:read, :create], BulkExport
-    can [:update, :destroy], BulkExport, user: user
+    can [:update, :destroy, :cancel], BulkExport, user: user
 
     if user.viewer?
       can :read, [ItemResource, AssetResource]

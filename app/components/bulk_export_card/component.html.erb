@@ -32,7 +32,7 @@
         </td>
         <td>
           <% if can_cancel? %>
-            <%= render Form::Component.new(name: 'cancel_bulk_export', url: cancel_bulk_export_path(@bulk_export), method: :cancel) do |component| %>
+            <%= render Form::Component.new(name: 'cancel_bulk_export', url: cancel_bulk_export_path(@bulk_export), method: :get) do |component| %>
               <% component.with_submit('Cancel Export', confirm: 'Do you really want to cancel this bulk export?', class: %w[btn btn-secondary]) %>
             <% end %>
           <% end %>
