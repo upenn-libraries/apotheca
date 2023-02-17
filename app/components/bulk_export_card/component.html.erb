@@ -32,12 +32,16 @@
         </td>
         <td>
           <% if can_cancel? %>
-            <button class="btn btn-outline-secondary">Cancel Export</button>
+            <%= render Form::Component.new(name: 'cancel_bulk_export', url: cancel_bulk_export_path(@bulk_export), method: :cancel) do |component| %>
+              <% component.with_submit('Cancel Export', confirm: 'Do you really want to cancel this bulk export?', class: %w[btn btn-secondary]) %>
+            <% end %>
           <% end %>
         </td>
         <td>
           <% if can_delete? %>
-            <button class="btn btn-danger">Delete Export</button>
+            <%= render Form::Component.new(name: 'delete_bulk_export', url: bulk_export_path(@bulk_export), method: :delete) do |component| %>
+              <% component.with_submit('Delete Export', confirm: 'Do you really want to delete this bulk export?', class: %w[btn btn-danger]) %>
+            <% end %>
           <% end %>
         </td>
       </tr>
