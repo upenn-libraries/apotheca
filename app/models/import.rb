@@ -4,6 +4,8 @@
 class Import < ApplicationRecord
   include Queueable
 
+  belongs_to :bulk_import
+
   validates :import_data, presence: true
 
   # This method will run the import and set the status of the import to a success or failure.
