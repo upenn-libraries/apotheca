@@ -38,6 +38,11 @@ describe 'BulkExport management' do
       it 'does not display regenerate button' do
         expect(page).not_to have_button('Regenerate')
       end
+
+      it 'can be cancelled' do
+        click_on 'Cancel Export'
+        expect(page).to have_text('Bulk export cancelled.')
+      end
     end
 
     context 'when viewing their cancelled bulk export' do
@@ -59,6 +64,11 @@ describe 'BulkExport management' do
 
       it 'does not display regenerate button' do
         expect(page).not_to have_button('Regenerate')
+      end
+
+      it 'can be deleted' do
+        click_on 'Delete Export'
+        expect(page).to have_text('Bulk export deleted.')
       end
     end
 
@@ -96,6 +106,11 @@ describe 'BulkExport management' do
       it 'does not display cancel button' do
         expect(page).not_to have_button('Cancel')
       end
+
+      it 'can be deleted' do
+        click_on 'Delete Export'
+        expect(page).to have_text('Bulk export deleted.')
+      end
     end
 
     context 'when viewing their successful bulk export' do
@@ -124,6 +139,11 @@ describe 'BulkExport management' do
 
       it 'does not display cancel button' do
         expect(page).not_to have_button('Cancel')
+      end
+
+      it 'can be deleted' do
+        click_on 'Delete Export'
+        expect(page).to have_text('Bulk export deleted.')
       end
     end
   end
