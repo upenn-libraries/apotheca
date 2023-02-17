@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :import do
+    association :bulk_import
     import_data do
       {
         action: 'CREATE',
