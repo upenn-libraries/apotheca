@@ -34,11 +34,20 @@ module BulkExportCard
       ability.can?(:destroy, bulk_export) && !bulk_export.processing?
     end
 
+    # @return [String]
+    def title
+      bulk_export.title || bulk_export.csv.filename || '(Untitled)'
+    end
+
     def csv_download_link
       link_to(rails_blob_path(bulk_export.csv, disposition: 'attachment'),
-              title: 'Download CSV', class: 'card-link col-2 text-center') do
+              title: "Download CSV generated at #{bulk_export.generated_at}", class: 'card-link col-2 text-center') do
         render Icon::Component.new(name: 'download', size: '24px')
       end
+    end
+
+    def duration_in_words
+      distance_of_time(bulk_export.duration) if bulk_export.duration
     end
   end
 end

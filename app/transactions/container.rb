@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Container
-  extend Dry::Container::Mixin
+  extend Dry::Core::Container::Mixin
 
   namespace 'change_set' do
     register 'validate' do

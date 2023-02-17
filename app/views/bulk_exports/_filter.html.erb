@@ -1,5 +1,5 @@
 <%= bootstrap_form_tag(url: bulk_exports_path, method: 'get') do |form| %>
-  <div class="row mx-0 mb-3 align-items-center">
+  <div class="row mb-3 align-items-center">
     <div class="col-12 col-md-auto">
       <%= form.select 'filter[user]',
                       options_from_collection_for_select(@users, 'email', 'email', params.dig('filter', 'user')),
