@@ -14,12 +14,11 @@ class BulkImport < ApplicationRecord
   validates_associated :created_by, :imports
 
   def state
-
     return nil if imports.empty?
 
-    if imports.all?(&:queued?)
+    if imports_queued?
       QUEUED
-    elsif imports.all?(&:cancelled?)
+    elsif imports_cancelled?
       CANCELLED
     elsif imports_successful_or_cancelled?
       COMPLETED
@@ -33,8 +32,7 @@ class BulkImport < ApplicationRecord
   # @return [StringIO]
   def csv
     data = imports.map(&:import_data)
-    string = StructuredCSV.generate(data)
-    StringIO.new(string)
+    StructuredCSV.generate(data)
   end
 
   # @return [Integer]
@@ -47,6 +45,18 @@ class BulkImport < ApplicationRecord
     imports.where(state: Import::STATE_FAILED).count
   end
 
+  # Determine if the related Imports are all queued
+  # @return [TrueClass, FalseClass]
+  def imports_queued?
+    imports.count.positive? && imports.queued.count == imports.count
+  end
+
+  # Determine if the related Imports are all cancelled
+  # @return [TrueClass, FalseClass]
+  def imports_cancelled?
+    imports.count.positive? && imports.cancelled.count == imports.count
+  end
+
   # Determine if the related Imports are all complete (_not_ processing or queued) and has at least one failed
   # @return [TrueClass, FalseClass]
   def imports_finished_with_failures?
@@ -54,7 +64,9 @@ class BulkImport < ApplicationRecord
                                                                           Import::STATE_PROCESSING]).blank?
   end
 
+  # Determine if the related Imports are all either successful or cancelled
+  # @return [TrueClass, FalseClass]
   def imports_successful_or_cancelled?
-    imports.all? { |import| import.cancelled? || import.successful? }
+    imports.count.positive? && ((imports.successful.count + imports.cancelled.count) == imports.count)
   end
 end

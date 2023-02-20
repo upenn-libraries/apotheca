@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 describe BulkImport, type: :model do
-
   let(:bulk_import) do
     build :bulk_import, imports: build_list(:import, 1)
   end
 
-  it 'has many DigitalObjectImports' do
-    expect(bulk_import.imports).to be_a ActiveRecord::Associations::CollectionProxy
+  it 'has many Imports' do
     expect(bulk_import.imports.first).to be_a Import
   end
 
@@ -30,7 +28,7 @@ describe BulkImport, type: :model do
     end
   end
 
-  describe '.aggregate_processing_time' do
+  describe '#aggregate_processing_time' do
     let(:import_1) { build(:import, :successful, duration: 60) }
     let(:import_2) { build(:import, :successful, duration: 120) }
     let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
@@ -50,8 +48,16 @@ describe BulkImport, type: :model do
     end
   end
 
-  describe '#state' do
+  describe '#csv' do
+    let(:import) { build(:import, :successful) }
+    let(:bulk_import) { create(:bulk_import, imports: [import]) }
 
+    it 'returns the correct data' do
+      expect(bulk_import.csv).to include import.import_data['action'], import.import_data['human_readable_name']
+    end
+  end
+
+  describe '#state' do
     context 'when no imports are present' do
       let(:bulk_import) { create(:bulk_import) }
 
