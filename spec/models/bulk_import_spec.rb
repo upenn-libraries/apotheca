@@ -31,8 +31,8 @@ describe BulkImport, type: :model do
   end
 
   describe '.aggregate_processing_time' do
-    let(:import_1) { build(:import, state: Import::STATE_SUCCESSFUL, duration: 60) }
-    let(:import_2) { build(:import, state: Import::STATE_SUCCESSFUL, duration: 120) }
+    let(:import_1) { build(:import, :successful, duration: 60) }
+    let(:import_2) { build(:import, :successful, duration: 120) }
     let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
 
     it 'sums the processing time of child DigitalObjectImports' do
@@ -42,7 +42,7 @@ describe BulkImport, type: :model do
 
   describe '#number_of_errors' do
     let(:import_1) { build(:import, :failed) }
-    let(:import_2) { build(:import, state: Import::STATE_SUCCESSFUL) }
+    let(:import_2) { build(:import, :successful) }
     let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
 
     it 'returns completed' do
@@ -85,7 +85,7 @@ describe BulkImport, type: :model do
 
     context 'when imports are successful or queued' do
       let(:import_1) { build(:import, :queued) }
-      let(:import_2) { build(:import, state: Import::STATE_SUCCESSFUL) }
+      let(:import_2) { build(:import, :successful) }
       let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
 
       it 'returns in progress' do
@@ -116,7 +116,7 @@ describe BulkImport, type: :model do
     end
 
     context 'when all imports are successful or cancelled' do
-      let(:import_1) { build(:import, state: Import::STATE_SUCCESSFUL) }
+      let(:import_1) { build(:import, :successful) }
       let(:import_2) { build(:import, :cancelled) }
 
       let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
@@ -127,8 +127,8 @@ describe BulkImport, type: :model do
     end
 
     context 'when all imports are successful' do
-      let(:import_1) { build(:import, state: Import::STATE_SUCCESSFUL) }
-      let(:import_2) { build(:import, state: Import::STATE_SUCCESSFUL) }
+      let(:import_1) { build(:import, :successful) }
+      let(:import_2) { build(:import, :successful) }
       let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
 
       it 'returns completed' do
@@ -148,7 +148,7 @@ describe BulkImport, type: :model do
 
     context 'when all imports are successful, failures, or cancelled' do
       let(:import_1) { build(:import, :failed) }
-      let(:import_2) { build(:import, state: Import::STATE_SUCCESSFUL) }
+      let(:import_2) { build(:import, :successful) }
       let(:import_3) { build(:import, :cancelled) }
 
       let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }

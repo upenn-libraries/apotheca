@@ -5,22 +5,22 @@ FactoryBot.define do
     association :user, :admin
     solr_params { { search: { all: 'New' } } }
     state { BulkExport::STATE_SUCCESSFUL }
-  end
 
-  trait :queued do
-    state { BulkExport::STATE_QUEUED }
-  end
+    trait :queued do
+      state { BulkExport::STATE_QUEUED }
+    end
 
-  trait :cancelled do
-    state { BulkExport::STATE_CANCELLED }
-  end
+    trait :cancelled do
+      state { BulkExport::STATE_CANCELLED }
+    end
 
-  trait :processing do
-    state { BulkExport::STATE_PROCESSING }
-  end
+    trait :processing do
+      state { BulkExport::STATE_PROCESSING }
+    end
 
-  trait :failed do
-    state { BulkExport::STATE_FAILED }
+    trait :failed do
+      state { BulkExport::STATE_FAILED }
+    end
   end
 end
 
