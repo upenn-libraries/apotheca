@@ -42,7 +42,7 @@ class BulkImport < ApplicationRecord
 
   # @return [Integer]
   def number_of_errors
-    imports.where(state: Import::STATE_FAILED).count
+    imports.failed.count
   end
 
   # Determine if the related Imports are all queued
