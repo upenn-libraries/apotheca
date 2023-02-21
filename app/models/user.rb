@@ -15,6 +15,7 @@ class User < ApplicationRecord
   end
 
   has_many :bulk_exports, dependent: :destroy
+  has_many :bulk_imports, dependent: :destroy
 
   before_validation :deduplicate_roles
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_08_155338) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_17_210238) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -66,6 +66,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_08_155338) do
     t.index ["user_id"], name: "index_bulk_exports_on_user_id"
   end
 
+  create_table "bulk_imports", force: :cascade do |t|
+    t.text "note"
+    t.text "original_filename"
+    t.bigint "created_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_bulk_imports_on_created_by_id"
+  end
+
   create_table "imports", force: :cascade do |t|
     t.string "state"
     t.datetime "created_at", null: false
@@ -74,6 +83,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_08_155338) do
     t.jsonb "import_data"
     t.integer "duration"
     t.string "resource_identifier"
+    t.bigint "bulk_import_id", null: false
+    t.index ["bulk_import_id"], name: "index_imports_on_bulk_import_id"
   end
 
   create_table "orm_resources", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -106,4 +117,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_08_155338) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bulk_imports", "users", column: "created_by_id"
+  add_foreign_key "imports", "bulk_imports"
 end
