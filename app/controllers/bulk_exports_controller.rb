@@ -28,8 +28,6 @@ class BulkExportsController < ApplicationController
   end
 
   def destroy
-    # TODO: remove this installation and test that this works
-    @bulk_export = BulkExport.find(params[:id])
     if @bulk_export.processing?
       redirect_to bulk_exports_path, alert: 'Cannot delete a bulk export that is currently processing.'
     else
@@ -39,9 +37,6 @@ class BulkExportsController < ApplicationController
   end
 
   def cancel
-    # TODO: skip load and authorize for this
-    @bulk_export = BulkExport.find(params[:id])
-    authorize! :cancel, @bulk_export
     if @bulk_export.may_cancel?
       @bulk_export.cancel!
       redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
