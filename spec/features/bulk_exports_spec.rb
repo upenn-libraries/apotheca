@@ -19,7 +19,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their queued bulk export' do
-      let!(:user_export) { create(:bulk_export, :queued, user: user) }
+      let!(:user_export) { create(:bulk_export, :queued, created_by: user) }
 
       before { visit bulk_exports_path }
 
@@ -41,7 +41,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their cancelled bulk export' do
-      let!(:user_export) { create(:bulk_export, :cancelled, user: user) }
+      let!(:user_export) { create(:bulk_export, :cancelled, created_by: user) }
 
       before { visit bulk_exports_path }
 
@@ -63,7 +63,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their processing bulk export' do
-      let!(:user_export) { create(:bulk_export, :processing, user: user) }
+      let!(:user_export) { create(:bulk_export, :processing, created_by: user) }
 
       before { visit bulk_exports_path }
 
@@ -77,7 +77,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their failed bulk export' do
-      let!(:user_export) { create(:bulk_export, :failed, user: user) }
+      let!(:user_export) { create(:bulk_export, :failed, created_by: user) }
 
       before { visit bulk_exports_path }
 
@@ -99,7 +99,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing their successful bulk export' do
-      let!(:user_export) { create(:bulk_export, :queued, user: user) }
+      let!(:user_export) { create(:bulk_export, :queued, created_by: user) }
 
       before do
         user_export.process!
@@ -194,8 +194,8 @@ describe 'BulkExport management' do
   context 'when filtering Bulk Exports' do
     let(:user) { create(:user, :admin) }
     let(:other_user) { create(:user, :admin) }
-    let!(:user_export) { create(:bulk_export, user: user) }
-    let!(:bulk_export) { create(:bulk_export, user: other_user) }
+    let!(:user_export) { create(:bulk_export, created_by: user) }
+    let!(:bulk_export) { create(:bulk_export, created_by: other_user) }
 
     before do
       sign_in user
@@ -203,7 +203,7 @@ describe 'BulkExport management' do
     end
 
     it 'filters by associated user email' do
-      select user.email, from: 'User'
+      select user.email, from: 'Created By'
       click_on 'Submit'
       expect(page).to have_text(user.email, count: 2)
       expect(page).to have_text(other_user.email, count: 1)
@@ -276,9 +276,9 @@ describe 'BulkExport management' do
         expect(page).to have_text('Create Bulk Export')
       end
 
-      it 'fills Solr Params field with search params' do
-        expect(page).to have_field('bulk-export-solr-params', disabled: true)
-        field = find_field('bulk-export-solr-params', disabled: true)
+      it 'fills Search Params field with search params' do
+        expect(page).to have_field('bulk-export-search-params', disabled: true)
+        field = find_field('bulk-export-search-params', disabled: true)
         expect(field.value).to have_text '"all"=>"Green"'
       end
 

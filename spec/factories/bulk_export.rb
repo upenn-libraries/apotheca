@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :bulk_export do
-    association :user, :admin
-    solr_params { { search: { all: 'New' } } }
+    association :created_by, factory: [:user, :admin]
+    search_params { { search: { all: 'New' } } }
     state { BulkExport::STATE_SUCCESSFUL }
 
     trait :queued do
