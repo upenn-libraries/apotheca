@@ -25,7 +25,7 @@ describe 'BulkExport requests' do
     let!(:viewer) { create(:user, :viewer) }
     let!(:bulk_export) { create(:bulk_export) }
 
-    context 'as the owner of the bulk export' do
+    context 'with the owner' do
       it 'deletes the bulk export' do
         sign_in bulk_export.user
         expect {
@@ -35,7 +35,7 @@ describe 'BulkExport requests' do
       end
     end
 
-    context 'as an editor viewer' do
+    context 'with another user' do
       it 'does not delete the bulk export' do
         sign_in viewer
         expect {
@@ -51,7 +51,7 @@ describe 'BulkExport requests' do
     let!(:editor) { create(:user, :editor) }
     let!(:bulk_export) { create(:bulk_export, :queued) }
 
-    context 'as the owner of the bulk export' do
+    context 'with an owner' do
       it 'cancels the bulk export' do
         sign_in bulk_export.user
         get "/bulk_exports/#{bulk_export.id}/cancel"
@@ -61,7 +61,7 @@ describe 'BulkExport requests' do
       end
     end
 
-    context 'as an editor viewer' do
+    context 'with another user' do
       it 'does not cancel the bulk export' do
         sign_in editor
         get "/bulk_exports/#{bulk_export.id}/cancel"
