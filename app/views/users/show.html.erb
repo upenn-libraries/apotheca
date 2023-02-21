@@ -9,13 +9,21 @@
   <%= header.with_link(href: edit_user_path(@user)) { 'Edit User' } %>
 <% end %>
 
-<dl>
-  <dt>Email:</dt>
-  <dd><%= @user.email %></dd>
-  <dt>Name:</dt>
-  <dd><%= @user.full_name %></dd>
-  <dt>Roles:</dt>
-  <dd><%= @user.roles.join(', ') %></dd>
-  <dt>Active?</dt>
-  <dd><%= @user.active %></dd>
-</dl>
+<%= render(StaticFields::Component.new) do |component| %>
+  <%= component.with_field(
+        label: 'Email',
+        values: @user.email
+      ) %>
+  <%= component.with_field(
+        label: 'Name',
+        values: @user.full_name
+      ) %>
+  <%= component.with_field(
+        label: 'Roles',
+        values: @user.roles.join(', ')
+      ) %>
+  <%= component.with_field(
+        label: 'Active?',
+        values: @user.active
+      ) %>
+<% end %>
