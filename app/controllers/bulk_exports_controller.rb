@@ -34,7 +34,7 @@ class BulkExportsController < ApplicationController
       if @bulk_export.destroy
         redirect_to bulk_exports_path, notice: 'Bulk export deleted.'
       else
-        redirect_to bulk_exports_path, alert: 'An error occurred while deleting the bulk export.'
+        redirect_to bulk_exports_path, alert: "An error occurred while deleting the bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
       end
     end
   end
@@ -44,7 +44,7 @@ class BulkExportsController < ApplicationController
       if @bulk_export.cancel!
         redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
       else
-        redirect_to bulk_export_path, alert: 'Bulk export cancellation failed.'
+        redirect_to bulk_export_path, alert: "Bulk export cancellation failed: #{@bulk_export.errors.map(&:full_message).join(', ')}"
       end
     else
       redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.'
