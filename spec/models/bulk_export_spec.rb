@@ -5,16 +5,16 @@ require_relative 'concerns/queueable'
 describe BulkExport do
   it_behaves_like 'queueable'
 
-  it 'requires a user' do
-    bulk_export = build :bulk_export, user: nil
+  it 'requires created_by' do
+    bulk_export = build :bulk_export, created_by: nil
     expect(bulk_export.valid?).to be false
-    expect(bulk_export.errors['user']).to include 'must exist'
+    expect(bulk_export.errors['created_by']).to include 'must exist'
   end
 
-  it 'requires solr params' do
-    bulk_export = build :bulk_export, solr_params: nil
+  it 'requires search params' do
+    bulk_export = build :bulk_export, search_params: nil
     expect(bulk_export.valid?).to be false
-    expect(bulk_export.errors['solr_params']).to include "can't be blank"
+    expect(bulk_export.errors['search_params']).to include "can't be blank"
   end
 
   it 'requires state to be set' do
@@ -157,7 +157,7 @@ describe BulkExport do
     end
 
     context 'when successful and contains one search results' do
-      let(:bulk_export) { create(:bulk_export, :processing, solr_params: { search: { all: 'Catcher' } }) }
+      let(:bulk_export) { create(:bulk_export, :processing, search_params: { search: { all: 'Catcher' } }) }
 
       before { bulk_export.run }
 
@@ -171,8 +171,8 @@ describe BulkExport do
       end
     end
 
-    context 'when solr_params return no search results' do
-      let(:bulk_export) { create(:bulk_export, :processing, solr_params: { search: { all: 'Basketball' } }) }
+    context 'when search_params return no search results' do
+      let(:bulk_export) { create(:bulk_export, :processing, search_params: { search: { all: 'Basketball' } }) }
 
       before { bulk_export.run }
 
@@ -210,12 +210,12 @@ describe BulkExport do
   context 'with associated User validation' do
     let(:user) { create :user, :admin }
 
-    before { create_list(:bulk_export, 10, user: user) }
+    before { create_list(:bulk_export, 10, created_by: user) }
 
     it 'does not allow more than 10 bulk exports' do
-      bulk_export = build(:bulk_export, user: user)
+      bulk_export = build(:bulk_export, created_by: user)
       expect(bulk_export).to be_invalid
-      expect(bulk_export.errors[:user]).to include('The number of Bulk Exports for a user cannot exceed 10.')
+      expect(bulk_export.errors[:created_by]).to include('The number of Bulk Exports for a user cannot exceed 10.')
     end
   end
 end

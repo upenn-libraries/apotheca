@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_17_210238) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_22_163233) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -53,8 +53,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_17_210238) do
   end
 
   create_table "bulk_exports", force: :cascade do |t|
-    t.bigint "user_id"
-    t.jsonb "solr_params"
+    t.bigint "created_by_id", null: false
+    t.jsonb "search_params"
     t.string "process_errors", array: true
     t.integer "duration"
     t.string "state"
@@ -63,7 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_17_210238) do
     t.string "title"
     t.datetime "generated_at"
     t.boolean "include_assets", default: false
-    t.index ["user_id"], name: "index_bulk_exports_on_user_id"
+    t.index ["created_by_id"], name: "index_bulk_exports_on_created_by_id"
   end
 
   create_table "bulk_imports", force: :cascade do |t|
@@ -117,6 +117,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_17_210238) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bulk_exports", "users", column: "created_by_id"
   add_foreign_key "bulk_imports", "users", column: "created_by_id"
   add_foreign_key "imports", "bulk_imports"
 end
