@@ -18,6 +18,17 @@ namespace :apotheca do
     end
   end
 
+  desc 'Generate sample BulkImports'
+  task generate_bulk_imports: :environment do
+    sample_count = 10
+    import_states = Import.aasm.states.map(&:name)
+    bulk_imports = FactoryBot.create_list(:bulk_import, sample_count, :with_original_filename)
+
+    0.upto(sample_count * 3).each do
+      FactoryBot.create(:import, import_states.sample, bulk_import: bulk_imports.sample)
+    end
+  end
+
   desc 'Start local development & test environments'
   task start: :environment do
     # Start services

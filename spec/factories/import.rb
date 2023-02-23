@@ -33,6 +33,7 @@ FactoryBot.define do
 
     trait :successful do
       state { Import::STATE_SUCCESSFUL }
+      duration { Faker::Number.between(from: 1, to: 300) }
     end
   end
 end
