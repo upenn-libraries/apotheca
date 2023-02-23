@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :import do
+    association :bulk_import
     import_data do
       {
         action: 'CREATE',
@@ -12,6 +13,26 @@ FactoryBot.define do
           ]
         }
       }
+    end
+
+    trait :queued do
+      state { Import::STATE_QUEUED }
+    end
+
+    trait :cancelled do
+      state { Import::STATE_CANCELLED }
+    end
+
+    trait :processing do
+      state { Import::STATE_PROCESSING }
+    end
+
+    trait :failed do
+      state { Import::STATE_FAILED }
+    end
+
+    trait :successful do
+      state { Import::STATE_SUCCESSFUL }
     end
   end
 end

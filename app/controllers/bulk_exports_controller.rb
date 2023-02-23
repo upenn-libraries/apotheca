@@ -6,19 +6,19 @@ class BulkExportsController < ApplicationController
 
   def index
     @users = User.with_exports
-    @bulk_exports = BulkExport.with_user.page(params[:page])
-    @bulk_exports = @bulk_exports.filter_user(params[:filter][:user]) if params.dig('filter', 'user').present?
+    @bulk_exports = BulkExport.with_created_by.page(params[:page])
+    @bulk_exports = @bulk_exports.filter_created_by(params[:filter][:created_by]) if params.dig('filter', 'created_by').present?
     @bulk_exports = @bulk_exports.sort_by_field(params[:sort][:field], params[:sort][:direction]) if params[:sort].present?
   end
 
   def new
-    @bulk_export = BulkExport.new(solr_params: params[:solr_params])
+    @bulk_export = BulkExport.new(search_params: params[:search_params])
   end
 
   def create
     @bulk_export = BulkExport.new(bulk_export_params)
-    @bulk_export.user = current_user
-    @bulk_export.solr_params = clean_search_params(JSON.parse(params[:bulk_export][:solr_params]))
+    @bulk_export.created_by = current_user
+    @bulk_export.search_params = clean_search_params(JSON.parse(params[:bulk_export][:search_params]))
     if @bulk_export.save
       ProcessBulkExportJob.perform_later(@bulk_export)
       redirect_to bulk_exports_path, notice: 'Bulk export created'

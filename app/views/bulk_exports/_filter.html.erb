@@ -1,10 +1,10 @@
 <%= bootstrap_form_tag(url: bulk_exports_path, method: 'get') do |form| %>
   <div class="row mb-3 align-items-center">
     <div class="col-12 col-md-auto">
-      <%= form.select 'filter[user]',
-                      options_from_collection_for_select(@users, 'email', 'email', params.dig('filter', 'user')),
+      <%= form.select 'filter[created_by]',
+                      options_from_collection_for_select(@users, 'email', 'email', params.dig('filter', 'created_by')),
                       include_blank: true,
-                      label: 'User'
+                      label: 'Created By'
       %>
     </div>
     <div class="col-12 col-md-auto">

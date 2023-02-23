@@ -2,18 +2,18 @@
 class BulkExport < ApplicationRecord
   include Queueable
 
-  belongs_to :user
+  belongs_to :created_by, class_name: 'User'
 
   has_one_attached :csv
 
-  validates :solr_params, presence: true
+  validates :search_params, presence: true
   validates :state, presence: true
   validates :generated_at, presence: true, if: -> { csv.attached? }
   validate :restrict_number_of_bulk_exports
 
-  scope :filter_user, ->(query) { joins(:user).where({ user: { email: query } }) }
+  scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
   scope :sort_by_field, ->(field, direction) { order("#{field}": direction.to_s) }
-  scope :with_user, -> { includes(:user) }
+  scope :with_created_by, -> { includes(:created_by) }
 
   def run
     csv_file = nil
@@ -36,8 +36,8 @@ class BulkExport < ApplicationRecord
   private
 
   def restrict_number_of_bulk_exports
-    if user.present? && (user.bulk_exports.count >= 10)
-      errors.add(:user, 'The number of Bulk Exports for a user cannot exceed 10.')
+    if created_by.present? && (created_by.bulk_exports.count >= 10)
+      errors.add(:created_by, 'The number of Bulk Exports for a user cannot exceed 10.')
     end
   end
 
@@ -45,7 +45,7 @@ class BulkExport < ApplicationRecord
     container = Valkyrie::MetadataAdapter.find(:index_solr)
                                          .query_service
                                          .custom_queries
-                                         .item_index parameters: solr_params.with_indifferent_access
+                                         .item_index parameters: search_params.with_indifferent_access
     container.documents
   end
 

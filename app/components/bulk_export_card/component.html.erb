@@ -23,7 +23,7 @@
       <tr class="text-center">
         <td><%= bulk_export.state.titleize %></td>
         <td><%= duration_in_words %></td>
-        <td><%= bulk_export.user.email %></td>
+        <td><%= bulk_export.created_by.email %></td>
         <td><%= bulk_export.generated_at&.to_fs(:display) %></td>
         <td>
           <% if can_regenerate?%>
@@ -54,8 +54,8 @@
           </div>
           <div class="row">
             <div class="col-6 offset-6 col-md-8 offset-md-0 ">
-              <%= "#{bulk_export.solr_params.dig('sort', 'field')}," if bulk_export.solr_params.dig('sort', 'field')  %>
-              <%= bulk_export.solr_params.dig('sort', 'direction') %></div>
+              <%= "#{bulk_export.search_params.dig('sort', 'field')}," if bulk_export.search_params.dig('sort', 'field')  %>
+              <%= bulk_export.search_params.dig('sort', 'direction') %></div>
           </div>
         </div>
         <div class="col-12 col-md-8 col-lg-5">
@@ -64,19 +64,19 @@
           </div>
           <div class="row">
             <div class="col-6 col-md-4 fw-bold">
-              <%= 'All' if bulk_export.solr_params.dig('search', 'all').present? %>
+              <%= 'All' if bulk_export.search_params.dig('search', 'all').present? %>
             </div>
             <div class="col-6 col-md-8">
-              <%= bulk_export.solr_params.dig('search', 'all') %>
+              <%= bulk_export.search_params.dig('search', 'all') %>
             </div>
           </div>
           <div class="row">
             <div class="col-6 col-md-4 fw-bold">
-              <%= 'Fielded' if bulk_export.solr_params.dig('search', 'fielded').present? %>
+              <%= 'Fielded' if bulk_export.search_params.dig('search', 'fielded').present? %>
             </div>
             <div class="col-6 col-md-8">
               <ul class="list-group">
-                <% bulk_export.solr_params.dig('search', 'fielded')&.each do |fielded| %>
+                <% bulk_export.search_params.dig('search', 'fielded')&.each do |fielded| %>
                   <li class="list-group-item border-0 p-0" style=background:none>
                     <%= "#{fielded.dig("opr")} #{fielded.dig("field")}: '#{fielded.dig("term")}'"%>
                   </li>
@@ -89,7 +89,7 @@
           <div class="row mb-2 text-left">
           <strong>Filter(s)</strong>
           </div>
-          <% bulk_export.solr_params.dig('filter')&.each do |key, value| %>
+          <% bulk_export.search_params.dig('filter')&.each do |key, value| %>
             <% if value.present? %>
               <div class="row">
                 <div class="col-6 col-md-4 fw-bold"> <%= key.titleize%></div>
