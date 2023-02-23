@@ -32,7 +32,7 @@ class BulkExportsController < ApplicationController
       redirect_to bulk_exports_path, alert: 'Cannot delete a bulk export that is currently processing.'
     end
     if @bulk_export.queued?
-      redirect_to bulk_export_path, alert: 'A bulk export must be cancelled before it can be deleted.'
+      redirect_to bulk_export_path, alert: 'A queued bulk export must be cancelled before it can be deleted.'
     elsif @bulk_export.destroy
       redirect_to bulk_exports_path, notice: 'Bulk export deleted.'
     else
