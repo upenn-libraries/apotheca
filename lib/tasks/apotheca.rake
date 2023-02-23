@@ -22,7 +22,7 @@ namespace :apotheca do
   task generate_bulk_imports: :environment do
     sample_count = 10
     import_states = Import.aasm.states.map(&:name)
-    bulk_imports = FactoryBot.create_list(:bulk_import, sample_count, :with_original_filename)
+    bulk_imports = FactoryBot.create_list(:bulk_import, sample_count)
 
     0.upto(sample_count * 3).each do
       FactoryBot.create(:import, import_states.sample, bulk_import: bulk_imports.sample)

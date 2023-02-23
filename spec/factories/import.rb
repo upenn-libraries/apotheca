@@ -34,6 +34,7 @@ FactoryBot.define do
     trait :successful do
       state { Import::STATE_SUCCESSFUL }
       duration { Faker::Number.between(from: 1, to: 3000) }
+      resource_identifier { "ark:/12345/#{Faker::Number.number(digits: 8)}" }
     end
   end
 end
