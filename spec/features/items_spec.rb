@@ -89,6 +89,14 @@ describe 'Item management' do
           expect(page).not_to have_button('Delete Item')
         end
       end
+
+      it 'links title of asset to asset show page' do
+        visit item_path(item)
+
+        within "#asset-#{item.asset_ids.first}" do
+          expect(page).to have_link('front.tif', href: asset_path(item.asset_ids.first))
+        end
+      end
     end
   end
 end
