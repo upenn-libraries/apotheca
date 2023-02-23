@@ -29,9 +29,8 @@ module BulkExportCard
       ability.can?(:update, bulk_export) && (bulk_export.failed? || bulk_export.successful?)
     end
 
-    # @return [Boolean]
     def can_delete?
-      ability.can?(:destroy, bulk_export) && !bulk_export.processing?
+      ability.can?(:destroy, bulk_export) && (bulk_export.failed? || bulk_export.successful? || bulk_export.cancelled?)
     end
 
     # @return [String]

@@ -31,8 +31,8 @@ describe 'BulkExport management' do
         expect(page).to have_button('Cancel', count: 1)
       end
 
-      it 'displays delete button' do
-        expect(page).to have_button('Delete', count: 1)
+      it 'does not display delete button' do
+        expect(page).not_to have_button('Delete', count: 1)
       end
 
       it 'does not display regenerate button' do

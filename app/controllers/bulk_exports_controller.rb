@@ -30,12 +30,13 @@ class BulkExportsController < ApplicationController
   def destroy
     if @bulk_export.processing?
       redirect_to bulk_exports_path, alert: 'Cannot delete a bulk export that is currently processing.'
+    end
+    if @bulk_export.queued?
+      redirect_to bulk_export_path, alert: 'A bulk export must be cancelled before it can be deleted.'
+    elsif @bulk_export.destroy
+      redirect_to bulk_exports_path, notice: 'Bulk export deleted.'
     else
-      if @bulk_export.destroy
-        redirect_to bulk_exports_path, notice: 'Bulk export deleted.'
-      else
-        redirect_to bulk_exports_path, alert: "An error occurred while deleting the bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
-      end
+      redirect_to bulk_exports_path, alert: "An error occurred while deleting the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
     end
   end
 
@@ -44,7 +45,7 @@ class BulkExportsController < ApplicationController
       if @bulk_export.cancel!
         redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
       else
-        redirect_to bulk_export_path, alert: "Bulk export cancellation failed: #{@bulk_export.errors.map(&:full_message).join(', ')}"
+        redirect_to bulk_export_path, alert: "An error occurred while cancelling the bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
       end
     else
       redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.'
