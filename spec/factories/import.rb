@@ -29,6 +29,7 @@ FactoryBot.define do
 
     trait :failed do
       state { Import::STATE_FAILED }
+      process_errors { Array.new(rand(10)) { Faker::Lorem.sentence } }
     end
 
     trait :successful do
