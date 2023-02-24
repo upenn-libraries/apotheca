@@ -31,7 +31,7 @@ module Queueable
         transitions from: :processing, to: :failed
       end
 
-      event :reprocess do
+      event :reprocess, after_commit: :update_export do
         transitions from: [:successful, :failed], to: :queued
       end
     end

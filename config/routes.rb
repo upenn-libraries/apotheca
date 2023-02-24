@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :bulk_exports, except: [:edit, :update, :show] do
     member do
       get :cancel, to: 'bulk_exports#cancel'
+      get :regenerate, to: 'bulk_exports#regenerate'
     end
   end
 
