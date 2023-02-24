@@ -49,6 +49,16 @@ class BulkExportsController < ApplicationController
     end
   end
 
+  def regenerate
+    if @bulk_export.may_reprocess?
+      @bulk_export.reprocess!
+      ProcessBulkExportJob.perform_later(@bulk_export)
+      redirect_to bulk_exports_path, notice: 'Bulk export regenerating...'
+    else
+      redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{@bulk_export.state}"
+    end
+  end
+
   private
 
   def bulk_export_params
