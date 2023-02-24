@@ -8,7 +8,12 @@ Rails.application.routes.draw do
 
   resources :alert_messages, only: %w[index update]
   resources :users, except: :destroy
-  resources :bulk_exports, only: [:index, :new, :create]
+  resources :bulk_exports, except: [:edit, :update, :show] do
+    member do
+      get :cancel, to: 'bulk_exports#cancel'
+    end
+  end
+
 
   scope :resources do
     resources :items do

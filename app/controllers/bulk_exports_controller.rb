@@ -27,6 +27,28 @@ class BulkExportsController < ApplicationController
     end
   end
 
+  def destroy
+    if @bulk_export.processing? || @bulk_export.queued?
+      redirect_to bulk_exports_path, alert: "Cannot delete a bulk export that is #{@bulk_export.state}."
+    elsif @bulk_export.destroy
+      redirect_to bulk_exports_path, notice: 'Bulk export deleted.'
+    else
+      redirect_to bulk_exports_path, alert: "An error occurred while deleting the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+    end
+  end
+
+  def cancel
+    if @bulk_export.may_cancel?
+      if @bulk_export.cancel!
+        redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
+      else
+        redirect_to bulk_export_path, alert: "An error occurred while cancelling the bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
+      end
+    else
+      redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.'
+    end
+  end
+
   private
 
   def bulk_export_params
