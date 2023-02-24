@@ -27,7 +27,7 @@ describe 'BulkExport requests' do
 
     context 'with the owner' do
       it 'deletes the bulk export' do
-        sign_in bulk_export.user
+        sign_in bulk_export.created_by
         expect {
           delete "/bulk_exports/#{bulk_export.id}"
         }.to change(BulkExport, :count).by(-1)
@@ -53,7 +53,7 @@ describe 'BulkExport requests' do
 
     context 'with an owner' do
       it 'cancels the bulk export' do
-        sign_in bulk_export.user
+        sign_in bulk_export.created_by
         get "/bulk_exports/#{bulk_export.id}/cancel"
         expect(response).to redirect_to(bulk_exports_path)
         bulk_export.reload
