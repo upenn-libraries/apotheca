@@ -26,6 +26,15 @@ describe BulkImport, type: :model do
         expect(bulk_import.errors.messages[:created_by]).to include 'must exist'
       end
     end
+
+    context 'when original_filename not present' do
+      let(:bulk_import) { build(:bulk_import, original_filename: nil) }
+
+      it 'returns error' do
+        expect(bulk_import.valid?).to be false
+        expect(bulk_import.errors.messages[:original_filename]).to include "can't be blank"
+      end
+    end
   end
 
   describe '#aggregate_processing_time' do
