@@ -13,6 +13,8 @@ class BulkImport < ApplicationRecord
 
   validates_associated :created_by, :imports
 
+  validates :original_filename, presence: true
+
   def state
     return nil if imports.empty?
 
