@@ -92,6 +92,7 @@ RSpec.configure do |config|
   # Perform cleanup tasks at the end of suite in order to clean up after the last test.
   config.after(:suite) do
     cleanup_tasks
+    clear_active_storage_files
   end
 
   # Combine cleanup tasks
@@ -122,5 +123,10 @@ RSpec.configure do |config|
   # Clear performed jobs
   def clear_performed_jobs
     ActiveJob::Base.queue_adapter.performed_jobs.clear
+  end
+
+  # Clear ActiveStorage files generated during tests
+  def clear_active_storage_files
+    FileUtils.rm_rf(ActiveStorage::Blob.services.fetch(:test).root)
   end
 end

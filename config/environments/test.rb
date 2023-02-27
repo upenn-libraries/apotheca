@@ -59,5 +59,5 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :test
 
-  config.active_storage.service = :local
+  config.active_storage.service = :test
 end
