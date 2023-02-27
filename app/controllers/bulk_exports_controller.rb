@@ -51,9 +51,12 @@ class BulkExportsController < ApplicationController
 
   def regenerate
     if @bulk_export.may_reprocess?
-      @bulk_export.reprocess!
-      ProcessBulkExportJob.perform_later(@bulk_export)
-      redirect_to bulk_exports_path, notice: 'Bulk export regenerating...'
+      if @bulk_export.reprocess!
+        ProcessBulkExportJob.perform_later(@bulk_export)
+        redirect_to bulk_exports_path, notice: 'Bulk export regenerating...'
+      else
+        redirect_to bulk_export_path, alert: "An error occurred while regenerating the bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
+      end
     else
       redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{@bulk_export.state}"
     end
