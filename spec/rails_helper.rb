@@ -92,7 +92,6 @@ RSpec.configure do |config|
   # Perform cleanup tasks at the end of suite in order to clean up after the last test.
   config.after(:suite) do
     cleanup_tasks
-    clear_active_storage_files
   end
 
   # Combine cleanup tasks
@@ -101,6 +100,7 @@ RSpec.configure do |config|
     wipe_storage_adapters!
     clear_enqueued_jobs
     clear_performed_jobs
+    clear_active_storage_files
   end
 
   # Clean out all Valkyrie Storage adapters.
