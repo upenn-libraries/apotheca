@@ -20,14 +20,31 @@ describe MetadataExtractor::Marmite do
     let(:bibnumber) { 'sample-bib' }
     let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
 
-    before do
-      stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
-        .to_return(status: 200, body: marc_xml, headers: {})
+    context 'when record is found' do
+      before do
+        stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
+          .to_return(status: 200, body: marc_xml, headers: {})
+      end
+
+      it 'returns descriptive metadata' do
+        expect(metadata).to be_a Hash
+        expect(metadata['item_type']).to eql ['Books']
+      end
     end
 
-    it 'returns descriptive metadata' do
-      expect(metadata).to be_a Hash
-      expect(metadata['item_type']).to eql ['Books']
+    context 'when record is not found' do
+      let(:errors) { ["Bib not found in Alma for #{bibnumber}"] }
+
+      before do
+        stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
+          .to_return(status: 404, body: JSON.generate({ errors: }), headers: { 'Content-Type' => 'application/json' })
+      end
+
+      it 'raises an error with the correct message' do
+        expect { metadata }.to raise_error(MetadataExtractor::Marmite::Client::Error) do |error|
+          expect(error.message).to include(errors.join(' '))
+        end
+      end
     end
   end
 end
