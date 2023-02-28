@@ -21,6 +21,10 @@ FactoryBot.define do
     trait :failed do
       state { BulkExport::STATE_FAILED }
     end
+
+    trait :successful do
+      state { BulkExport::STATE_SUCCESSFUL }
+    end
   end
 end
 
