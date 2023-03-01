@@ -15,7 +15,6 @@ module MetadataExtractor
       # @return [String] contain MARC XML for the given bibnumber
       def marc21(bibnumber)
         # Get updated MARC record
-
         response = Faraday.get(url_for("/api/v2/records/#{bibnumber}/marc21?update=always"))
 
         return response.body if response.success?
