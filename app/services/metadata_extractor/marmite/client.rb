@@ -15,12 +15,12 @@ module MetadataExtractor
       # @return [String] contain MARC XML for the given bibnumber
       def marc21(bibnumber)
         # Get updated MARC record
-
         response = Faraday.get(url_for("/api/v2/records/#{bibnumber}/marc21?update=always"))
 
-        raise Error, "Could not retrieve MARC for #{bibnumber}. Error: #{response.body}" unless response.success?
+        return response.body if response.success?
 
-        response.body
+        error = JSON.parse(response.body)['errors'].join(' ')
+        raise Error, "Could not retrieve MARC for #{bibnumber}. Error: #{error}"
       end
 
       private

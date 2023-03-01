@@ -31,17 +31,17 @@ describe MetadataExtractor::Marmite::Client do
     end
 
     context 'when request is unsuccessful' do
-      let(:marmite_error) { "Record #{bibnumber} in marc21 format not found" }
+      let(:marmite_error) { ["Record #{bibnumber} in marc21 format not found"] }
 
       before do
         stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
-          .to_return(status: 404, body: marmite_error, headers: {})
+          .to_return(status: 404, body: JSON.generate(errors: marmite_error), headers: {})
       end
 
       it 'raises exception' do
         expect {
           marmite.marc21(bibnumber)
-        }.to raise_error(MetadataExtractor::Marmite::Client::Error, "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error}")
+        }.to raise_error(MetadataExtractor::Marmite::Client::Error, "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error.join(' ')}")
       end
     end
   end
