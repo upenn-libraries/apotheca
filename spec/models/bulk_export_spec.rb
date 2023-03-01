@@ -207,16 +207,22 @@ describe BulkExport do
     end
   end
 
-  context '#remove_values_for_display' do
-    let(:bulk_export) { create(:bulk_export, :successful, generated_at: Time.now, duration: '10') }
+  context 'when reprocessing' do
+    let(:bulk_export) { create(:bulk_export, :successful, generated_at: Time.current, duration: '10') }
 
     before do
       bulk_export.reprocess!
     end
 
-    it 'removes values' do
+    it 'removes generated at' do
       expect(bulk_export.generated_at).to be_nil
+    end
+
+    it 'removes duration' do
       expect(bulk_export.duration).to be_nil
+    end
+
+    it 'removes csv attachment' do
       expect(bulk_export.csv).not_to be_attached
     end
   end
