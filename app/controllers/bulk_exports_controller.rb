@@ -38,16 +38,26 @@ class BulkExportsController < ApplicationController
   end
 
   def cancel
-    if @bulk_export.may_cancel?
-      if @bulk_export.cancel!
-        redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
-      else
-        redirect_to bulk_export_path, alert: "An error occurred while cancelling the bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
-      end
-    else
-      redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.'
+    return redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.' unless @bulk_export.may_cancel?
+
+    unless @bulk_export.cancel!
+      return redirect_to bulk_export_path, alert: "An error occurred while cancelling the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
     end
+
+    redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
   end
+
+  def regenerate
+    return redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{bulk_export.state}" unless @bulk_export.may_reprocess?
+
+    unless @bulk_export.reprocess!
+      return redirect_to bulk_export_path, alert: "An error occurred while regenerating the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+    end
+
+    ProcessBulkExportJob.perform_later(@bulk_export)
+    redirect_to bulk_exports_path, notice: 'Bulk export queued for regeneration.'
+  end
+
 
   private
 

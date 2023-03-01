@@ -207,6 +207,26 @@ describe BulkExport do
     end
   end
 
+  context 'when reprocessing' do
+    let(:bulk_export) { create(:bulk_export, :successful, generated_at: Time.current, duration: '10') }
+
+    before do
+      bulk_export.reprocess!
+    end
+
+    it 'removes generated at' do
+      expect(bulk_export.generated_at).to be_nil
+    end
+
+    it 'removes duration' do
+      expect(bulk_export.duration).to be_nil
+    end
+
+    it 'removes csv attachment' do
+      expect(bulk_export.csv).not_to be_attached
+    end
+  end
+
   context 'with associated User validation' do
     let(:user) { create :user, :admin }
 

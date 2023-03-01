@@ -30,6 +30,10 @@ module Queueable
       event :failure do
         transitions from: :processing, to: :failed
       end
+
+      event :reprocess, after_commit: :remove_values_for_display do
+        transitions from: [:successful, :failed], to: :queued
+      end
     end
   end
 end

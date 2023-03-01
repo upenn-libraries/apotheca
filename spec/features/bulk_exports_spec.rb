@@ -111,6 +111,12 @@ describe 'BulkExport management' do
         click_on 'Delete Export'
         expect(page).to have_text('Bulk export deleted.')
       end
+
+      it 'can be regenerated' do
+        click_on 'Regenerate' do
+          expect(page).to have_text('Bulk export regenerating...')
+        end
+      end
     end
 
     context 'when viewing their successful bulk export' do
@@ -144,6 +150,12 @@ describe 'BulkExport management' do
       it 'can be deleted' do
         click_on 'Delete Export'
         expect(page).to have_text('Bulk export deleted.')
+      end
+
+      it 'can be regenerated' do
+        click_on 'Regenerate' do
+          expect(page).to have_text('Bulk export regenerating...')
+        end
       end
     end
   end

@@ -33,6 +33,11 @@ class BulkExport < ApplicationRecord
     failure!
   end
 
+  def remove_values_for_display
+    update(generated_at: nil, duration: nil)
+    csv.purge
+  end
+
   private
 
   def restrict_number_of_bulk_exports
