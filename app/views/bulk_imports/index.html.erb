@@ -1,0 +1,51 @@
+<%= render(Breadcrumbs::Component.new) do |component| %>
+  <% component.with_breadcrumb(href: "/") do %>Home<% end %>
+  <% component.with_breadcrumb(active: true) do %>Imports<% end %>
+<% end %>
+
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title { 'Bulk Imports' } %>
+  <%# Change cancel button to form submit %>
+  <%= header.with_link(href: '#') { 'New Bulk Import' } %>
+<% end %>
+
+<div class="mb-3">
+  <%= page_entries_info @bulk_imports, entry_name: 'bulk import' %>
+</div>
+
+<% if @bulk_imports.any? %>
+  <div class="table-responsive">
+    <table class="table table-striped 100vw">
+      <thead>
+        <tr>
+          <th scope="col">Original Filename</th>
+          <th scope="col">Created at</th>
+          <th scope="col">Created by</th>
+          <th scope="col">Imports</th>
+          <th scope="col">State</th>
+          <th scope="col">Errors</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bulk_imports.each do |bulk_import| %>
+          <tr>
+            <td><%= link_to (bulk_import.original_filename || '[Unknown]'), bulk_import_path(bulk_import) %></td>
+            <td><%= bulk_import.created_at.to_s(:display) %></td>
+            <td><%= bulk_import.created_by.email %></td>
+            <td><%= bulk_import.imports.length %></td>
+            <td><%= bulk_import.state.nil? ? 'No imports' : bulk_import.state.capitalize %></td>
+            <td><%= bulk_import.number_of_errors %></td>
+            <td>
+              <% if bulk_import.any_imports_queued? %>
+                <%= link_to 'Cancel', '#', class: 'btn btn-outline-secondary btn-sm' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= paginate @bulk_imports %>
+
+  </div>
+<% end %>
