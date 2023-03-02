@@ -4,9 +4,12 @@
 class BulkExportsController < ApplicationController
   load_and_authorize_resource
 
+  include PerPage
+
   def index
+    per_page = params[:per_page] || session[:"#{controller_name.classify}_per_page"]
     @users = User.with_exports
-    @bulk_exports = BulkExport.with_created_by.page(params[:page])
+    @bulk_exports = BulkExport.with_created_by.page(params[:page]).per(per_page)
     @bulk_exports = @bulk_exports.filter_created_by(params[:filter][:created_by]) if params.dig('filter', 'created_by').present?
     @bulk_exports = @bulk_exports.sort_by_field(params[:sort][:field], params[:sort][:direction]) if params[:sort].present?
   end
