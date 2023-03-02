@@ -3,6 +3,7 @@
 module ImportService
   # Wrapper around S3 digitization storage.
   class S3Storage
+    REQUIRED_CONFIG_KEYS = [:access_key_id, :secret_access_key, :endpoint, :region].freeze
     attr_reader :name
 
     def initialize(storage_name) # TODO: optional bucket param
@@ -18,7 +19,7 @@ module ImportService
         access_key_id: config[:access_key_id],
         secret_access_key: config[:secret_access_key],
         endpoint: config[:endpoint],
-        region: 'us-east-1', # using default region
+        region: config[:region],
         force_path_style: true
       )
     end
@@ -67,7 +68,7 @@ module ImportService
 
     # Returns true if the given store is configured.
     def self.valid?(storage_name)
-      all.key?(storage_name) && [:access_key_id, :secret_access_key, :endpoint].all? { |k| all[storage_name][k].present? }
+      all.key?(storage_name) && REQUIRED_CONFIG_KEYS.all? { |k| all[storage_name][k].present? }
     end
 
     # Returns all configured digitization stores.
