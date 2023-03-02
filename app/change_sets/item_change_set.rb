@@ -14,7 +14,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
       end
     end
 
-    validates :title, presence: true
+    validates :title, presence: true, if: ->(metadata) { metadata.bibnumber.blank? }
   end
 
   class StructuralMetadataChangeSet < Valkyrie::ChangeSet
