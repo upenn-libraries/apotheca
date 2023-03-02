@@ -15,7 +15,7 @@
 
 <% if @bulk_imports.any? %>
   <div class="table-responsive">
-    <table class="table table-striped 100vw">
+    <table class="table table-striped">
       <thead>
         <tr>
           <th scope="col">Original Filename</th>
@@ -24,6 +24,7 @@
           <th scope="col">Imports</th>
           <th scope="col">State</th>
           <th scope="col">Errors</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +36,7 @@
             <td><%= bulk_import.imports.length %></td>
             <td><%= bulk_import.state.nil? ? 'No imports' : bulk_import.state.capitalize %></td>
             <td><%= bulk_import.number_of_errors %></td>
-            <td>
+            <td class="py-xl-1 text-center">
               <% if bulk_import.any_imports_queued? %>
                 <%= link_to 'Cancel', '#', class: 'btn btn-outline-secondary btn-sm' %>
               <% end %>
