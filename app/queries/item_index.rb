@@ -34,9 +34,15 @@ class ItemIndex
   # @return [Solr::ResponseContainer]
   def build_response_container(response:, search_params:, query:)
     docs = response.dig('response', 'docs')
-    items = docs.map { |d| resource_factory.to_resource(object: d) }
+    document_presenters = docs.map do |d|
+      resource = resource_factory.to_resource(object: d)
+      # Get ILS metadata as a Hash by pulling it out of the Solr doc and parsing it.
+      ils_metadata = d[DescriptiveMetadataIndexer::ILS_METADATA_JSON_FIELD.to_s]
+      ils_metadata = JSON.parse(ils_metadata) if ils_metadata
+      ItemResourcePresenter.new resource: resource, ils_metadata: ils_metadata
+    end
     Solr::ResponseContainer.new(
-      documents: items,
+      documents: document_presenters,
       facet_data: response.dig('facet_counts', 'facet_fields'),
       search_params: search_params,
       total_count: response.dig('response', 'numFound'),
