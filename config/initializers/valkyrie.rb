@@ -38,25 +38,21 @@ Rails.application.config.to_prepare do
   ### STORAGE ADAPTERS ###
 
   preservation_storage_config = Settings.preservation_storage.to_h.merge(
-    region: 'us-east-1', # using default region
     force_path_style: true,
     public: true # Adds public-read acl to all objects
   )
 
   preservation_copy_storage_config = Settings.preservation_copy_storage.to_h.merge(
-    region: 'us-east-1', # using default region
     force_path_style: true,
     public: true # Adds public-read acl to all objects
   )
 
   derivatives_storage_config = Settings.derivative_storage.to_h.merge(
-    region: 'us-east-1', # using default region
     force_path_style: true,
     public: true # Adds public-read acl to all objects
   )
 
   iiif_derivatives_storage_config = Settings.iiif_derivative_storage.to_h.merge(
-    region: 'us-east-1', # using default region
     force_path_style: true,
     public: true # Adds public-read acl to all objects
   )

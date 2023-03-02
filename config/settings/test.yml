@@ -2,6 +2,7 @@ minio: &minio
   access_key_id: minioadmin
   secret_access_key: minioadmin
   endpoint: http://127.0.0.1:9000
+  region: us-east-1
 preservation_storage:
   <<: *minio
   bucket: preservation-test
