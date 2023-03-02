@@ -8,7 +8,7 @@ describe Steps::UpdateArkMetadata do
     let(:result) { update_ark_metadata.call(item) }
 
     context 'when EZID request invalid' do
-      include_context 'with unsuccessful EZID responses'
+      include_context 'with unsuccessful requests to update EZID'
 
       it 'fails' do
         expect(result.failure?).to be true
