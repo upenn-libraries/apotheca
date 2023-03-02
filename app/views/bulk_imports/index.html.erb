@@ -5,8 +5,9 @@
 
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title { 'Bulk Imports' } %>
-  <%# Change cancel button to form submit %>
-  <%= header.with_link(href: '#') { 'New Bulk Import' } %>
+  <% if can?(:create, BulkImport) %>
+    <%= header.with_link(href: '#') { 'New Bulk Import' } %>
+  <% end %>
 <% end %>
 
 <div class="mb-3">
@@ -15,7 +16,7 @@
 
 <% if @bulk_imports.any? %>
   <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped bulk-imports-list">
       <thead>
         <tr>
           <th scope="col">Original Filename</th>
@@ -29,7 +30,7 @@
       </thead>
       <tbody>
         <% @bulk_imports.each do |bulk_import| %>
-          <tr>
+          <tr class="bulk-imports-list__bulk-import">
             <td><%= link_to (bulk_import.original_filename || '[Unknown]'), bulk_import_path(bulk_import) %></td>
             <td><%= bulk_import.created_at.to_s(:display) %></td>
             <td><%= bulk_import.created_by.email %></td>
@@ -37,7 +38,7 @@
             <td><%= bulk_import.state.nil? ? 'No imports' : bulk_import.state.capitalize %></td>
             <td><%= bulk_import.number_of_errors %></td>
             <td class="py-xl-1 text-center">
-              <% if bulk_import.any_imports_queued? %>
+              <% if bulk_import.any_imports_queued? && can?(:update, bulk_import) %>
                 <%= link_to 'Cancel', '#', class: 'btn btn-outline-secondary btn-sm' %>
               <% end %>
             </td>
