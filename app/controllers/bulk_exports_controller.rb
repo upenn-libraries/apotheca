@@ -4,9 +4,7 @@
 class BulkExportsController < ApplicationController
   load_and_authorize_resource
 
-  before_action only: :index do
-    session[:"#{controller_name}_per_page"] = params[:per_page] unless params[:per_page].nil?
-  end
+  include PerPage
 
   def index
     @users = User.with_exports
