@@ -20,10 +20,10 @@
       ) %>
   <%= component.with_field(
         label: 'Roles',
-        values: @user.roles.join(', ')
+        values: @user.role_names
       ) %>
   <%= component.with_field(
         label: 'Active?',
-        values: @user.active
+        values: @user.active_text
       ) %>
 <% end %>

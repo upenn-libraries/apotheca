@@ -34,10 +34,10 @@
           <td><%= link_to user.email, user_path(user) %></td>
           <td><%= user.first_name %></td>
           <td><%= user.last_name %></td>
-          <td><%= user.roles.map(&:titleize).join(', ') %></td>
-          <td><%= user.active ? 'Yes' : 'No' %></td>
-          <td><%= user.created_at.to_fs(:display) %></td>
-          <td><%= user.updated_at.to_fs(:display) %></td>
+          <td><%= user.role_names %></td>
+          <td><%= user.active_text %></td>
+          <td><%= user.created_time %></td>
+          <td><%= user.updated_time %></td>
           <td><%= link_to 'Edit', edit_user_path(user), class: 'btn btn-sm btn-outline-primary' %></td>
         </tr>
       <% end %>

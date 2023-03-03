@@ -2,7 +2,7 @@
 
 RSpec.describe ItemResourcePresenter do
   subject(:presenter) do
-    described_class.new resource: item_resource, ils_metadata: ils_metadata
+    described_class.new object: item_resource, ils_metadata: ils_metadata
   end
 
   let(:item_resource) { persist(:item_resource) }
@@ -32,5 +32,7 @@ RSpec.describe ItemResourcePresenter do
     it 'defers descriptive metadata field calls to the ILS metadata if present' do
       expect(presenter.descriptive_metadata.title).to eq ils_metadata[:title]
     end
+
+    it 'can be used to get both '
   end
 end

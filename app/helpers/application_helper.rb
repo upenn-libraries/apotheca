@@ -6,4 +6,8 @@ module ApplicationHelper
   def bs_icon(name, **options)
     render Icon::Component.new name: name, **options
   end
+
+  def current_user_presenter
+    UserPresenter.new(object: current_user) if current_user.present?
+  end
 end
