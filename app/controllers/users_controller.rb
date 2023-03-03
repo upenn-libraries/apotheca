@@ -4,8 +4,11 @@
 class UsersController < ApplicationController
   load_and_authorize_resource
 
+  include PerPage
+
   def index
-    @users = User.page(params[:page])
+    per_page = params[:per_page] || session[:"#{controller_name}_per_page"]
+    @users = User.page(params[:page]).per(per_page)
     @users = @users.users_search(params[:users_search]) if params[:users_search].present?
     @users = @users.active_filter(params[:active_filter]) if params[:active_filter].present?
     @users = @users.roles_filter(params[:roles_filter]) if params[:roles_filter].present?

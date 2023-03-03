@@ -26,6 +26,14 @@
           %>
         </div>
 
+        <div class="col-md-auto">
+          <%= f.select :per_page,
+                          options_for_select([5, 10, 15, 20],
+                                             session[:"#{controller_name}_per_page"].to_i || params[:per_page]),
+                          label: 'Per Page'
+          %>
+        </div>
+
         <div class="col my-3 d-flex align-items-center">
           <%= f.submit 'Filter',
                        name: 'filter',
