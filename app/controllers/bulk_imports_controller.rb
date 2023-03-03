@@ -8,9 +8,4 @@ class BulkImportsController < ApplicationController
                               .page(params[:page])
                               .includes(:imports, :created_by)
   end
-
-  def show
-    # Displays individual imports contained in a bulk import
-    @bulk_import = BulkImport.find(params[:id])
-  end
 end

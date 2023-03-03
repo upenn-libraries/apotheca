@@ -1,6 +1,6 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
   <% component.with_breadcrumb(href: "/") do %>Home<% end %>
-  <% component.with_breadcrumb(active: true) do %>Imports<% end %>
+  <% component.with_breadcrumb(active: true) do %>Bulk Imports<% end %>
 <% end %>
 
 <%= render(Header::Component.new) do |header| %>
@@ -32,13 +32,13 @@
         <% @bulk_imports.each do |bulk_import| %>
           <tr class="bulk-imports-list__bulk-import">
             <td><%= link_to (bulk_import.original_filename || '[Unknown]'), bulk_import_path(bulk_import) %></td>
-            <td><%= bulk_import.created_at.to_s(:display) %></td>
+            <td><%= bulk_import.created_at.to_fs(:display) %></td>
             <td><%= bulk_import.created_by.email %></td>
             <td><%= bulk_import.imports.length %></td>
             <td><%= bulk_import.state.nil? ? 'No imports' : bulk_import.state.capitalize %></td>
             <td><%= bulk_import.number_of_errors %></td>
             <td class="py-xl-1 text-center">
-              <% if bulk_import.any_imports_queued? && can?(:update, bulk_import) %>
+              <% if bulk_import.any_imports_queued? && can?(:cancel, bulk_import) %>
                 <%= link_to 'Cancel', cancel_bulk_import_path(bulk_import), class: 'btn btn-outline-secondary btn-sm' %>
               <% end %>
             </td>

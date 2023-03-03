@@ -18,7 +18,6 @@ describe 'Ability' do
 
   context 'with a viewer user' do
     let(:user) { create :user, :viewer }
-    let(:bulk_import) { create :bulk_import }
     let(:bulk_export) { create :bulk_export }
 
     it { is_expected.to be_able_to(:read, AssetResource) }
@@ -44,7 +43,7 @@ describe 'Ability' do
 
   context 'with an editor user' do
     let(:user) { create :user, :editor }
-    let(:bulk_import) { create :bulk_import }
+    let(:bulk_import) { create :bulk_import, created_by: user }
     let(:bulk_export) { create :bulk_export }
 
     it { is_expected.to be_able_to(:read, AssetResource) }
@@ -59,8 +58,8 @@ describe 'Ability' do
 
     it { is_expected.to be_able_to(:read, BulkImport) }
     it { is_expected.to be_able_to(:create, BulkImport) }
-    it { is_expected.to be_able_to(:update, BulkImport) }
-    it { is_expected.not_to be_able_to(:update, bulk_import) }
+    it { is_expected.to be_able_to(:update, bulk_import) }
+    it { is_expected.to be_able_to(:cancel, bulk_import) }
 
     it { is_expected.to be_able_to(:read, BulkExport) }
     it { is_expected.to be_able_to(:create, BulkExport) }
