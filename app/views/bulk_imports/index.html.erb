@@ -6,7 +6,7 @@
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title { 'Bulk Imports' } %>
   <% if can?(:create, BulkImport) %>
-    <%= header.with_link(href: '#') { 'New Bulk Import' } %>
+    <%= header.with_link(href: new_bulk_import_path) { 'New Bulk Import' } %>
   <% end %>
 <% end %>
 
@@ -39,7 +39,7 @@
             <td><%= bulk_import.number_of_errors %></td>
             <td class="py-xl-1 text-center">
               <% if bulk_import.any_imports_queued? && can?(:update, bulk_import) %>
-                <%= link_to 'Cancel', '#', class: 'btn btn-outline-secondary btn-sm' %>
+                <%= link_to 'Cancel', cancel_bulk_import_path(bulk_import), class: 'btn btn-outline-secondary btn-sm' %>
               <% end %>
             </td>
           </tr>
