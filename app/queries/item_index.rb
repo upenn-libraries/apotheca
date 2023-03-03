@@ -34,15 +34,8 @@ class ItemIndex
   # @return [Solr::ResponseContainer]
   def build_response_container(response:, search_params:, query:)
     docs = response.dig('response', 'docs')
-    document_presenters = docs.map do |d|
-      resource = resource_factory.to_resource(object: d)
-      # Get ILS metadata as a Hash by pulling it out of the Solr doc and parsing it.
-      ils_metadata = d[DescriptiveMetadataIndexer::ILS_METADATA_JSON_FIELD.to_s]
-      ils_metadata = JSON.parse(ils_metadata) if ils_metadata
-      ItemResourcePresenter.new resource: resource, ils_metadata: ils_metadata
-    end
     Solr::ResponseContainer.new(
-      documents: document_presenters,
+      documents: build_item_presenters(solr_documents: docs),
       facet_data: response.dig('facet_counts', 'facet_fields'),
       search_params: search_params,
       total_count: response.dig('response', 'numFound'),
@@ -62,5 +55,16 @@ class ItemIndex
   # @return [Hash]
   def solr_query(parameters:)
     Solr::QueryBuilder.new(params: parameters, defaults: { fq: DEFAULT_FQ }, mapper: MAPPER).solr_query
+  end
+
+  # @param [Array] solr_documents
+  def build_item_presenters(solr_documents:)
+    solr_documents.map do |d|
+      resource = resource_factory.to_resource(object: d)
+      # Get ILS metadata as a Hash by pulling it out of the Solr doc and parsing it.
+      ils_metadata = d[DescriptiveMetadataIndexer::ILS_METADATA_JSON_FIELD.to_s]
+      ils_metadata = JSON.parse(ils_metadata) if ils_metadata
+      ItemResourcePresenter.new object: resource, ils_metadata: ils_metadata
+    end
   end
 end

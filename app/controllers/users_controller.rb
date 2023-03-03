@@ -9,9 +9,12 @@ class UsersController < ApplicationController
     @users = @users.users_search(params[:users_search]) if params[:users_search].present?
     @users = @users.active_filter(params[:active_filter]) if params[:active_filter].present?
     @users = @users.roles_filter(params[:roles_filter]) if params[:roles_filter].present?
+    @users.map { |u| UserPresenter.new object: u }
   end
 
-  def show; end
+  def show
+    @user = UserPresenter.new object: @user
+  end
 
   def new; end
 
