@@ -53,6 +53,11 @@ class BulkImport < ApplicationRecord
     imports.count.positive? && imports.queued.count == imports.count
   end
 
+  # Determine if any of the related Imports are queued
+  def any_imports_queued?
+    imports.exists?(state: Import::STATE_QUEUED)
+  end
+
   # Determine if the related Imports are all cancelled
   # @return [TrueClass, FalseClass]
   def imports_cancelled?

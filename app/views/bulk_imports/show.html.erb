@@ -15,7 +15,7 @@
       <dd class="col-8">
         <%= @bulk_import.original_filename || '[Unknown]' %>
 <%= link_to(csv_bulk_import_path, title: 'Download CSV', class: "mx-2") do %>
-  <%= render Icon::Component.new(name: 'download', size: '22px') %>\
+  <%= render Icon::Component.new(name: 'download', size: '22px') %>
 <% end %>
       </dd>
       <dt class="col-4 text-end">Total Imports</dt>
