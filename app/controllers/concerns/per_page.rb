@@ -8,4 +8,8 @@ module PerPage
       session[:"#{controller_name}_per_page"] = params[:per_page] unless params[:per_page].nil?
     end
   end
+
+  def per_page
+    params[:per_page] || session[:"#{controller_name}_per_page"]
+  end
 end

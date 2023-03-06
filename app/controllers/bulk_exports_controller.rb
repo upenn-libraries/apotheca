@@ -8,8 +8,6 @@ class BulkExportsController < ApplicationController
 
   def index
     @users = User.with_exports
-
-    per_page = params[:per_page] || session[:"#{controller_name}_per_page"]
     @bulk_exports = BulkExport.with_created_by.page(params[:page]).per(per_page)
     if params.dig('filter', 'created_by').present?
       @bulk_exports = @bulk_exports.filter_created_by(params[:filter][:created_by])

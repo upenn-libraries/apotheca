@@ -7,7 +7,6 @@ class UsersController < ApplicationController
   include PerPage
 
   def index
-    per_page = params[:per_page] || session[:"#{controller_name}_per_page"]
     @users = User.page(params[:page]).per(per_page)
     @users = @users.users_search(params[:users_search]) if params[:users_search].present?
     @users = @users.active_filter(params[:active_filter]) if params[:active_filter].present?
