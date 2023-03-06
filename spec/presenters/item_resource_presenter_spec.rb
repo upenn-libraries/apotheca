@@ -33,6 +33,9 @@ RSpec.describe ItemResourcePresenter do
       expect(presenter.descriptive_metadata.title).to eq ils_metadata[:title]
     end
 
-    it 'can be used to get both '
+    it 'can be used to get values from Resource and ILS sources' do
+      expect(presenter.descriptive_metadata.ils_metadata[:title]).to eq ils_metadata[:title]
+      expect(presenter.object.descriptive_metadata.title).to eq item_resource.descriptive_metadata.title
+    end
   end
 end
