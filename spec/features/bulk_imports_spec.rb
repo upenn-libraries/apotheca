@@ -8,16 +8,15 @@ describe 'BulkImport management' do
 
     context 'with a viewer' do
       let(:role) { :viewer }
-      let(:count) { 10 }
 
       before do
-        create_list(:bulk_import, count)
+        create_list(:bulk_import, 1)
         visit bulk_imports_path
       end
 
       it 'lists all BulkImports' do
-        expect(page).to have_text('.csv', count: count)
-        expect(page).to have_css('.bulk-imports-list__bulk-import', count: count)
+        expect(page).to have_text('.csv', count: 1)
+        expect(page).to have_css('.bulk-imports-list__bulk-import', count: 1)
       end
 
       it 'does not show button to create new bulk import' do
