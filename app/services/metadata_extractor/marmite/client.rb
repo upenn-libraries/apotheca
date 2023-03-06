@@ -19,7 +19,7 @@ module MetadataExtractor
 
         return response.body if response.success?
 
-        error = JSON.parse(response.body)['errors'].join(' ')
+        error = response.status == 500 ? response.body : JSON.parse(response.body)['errors'].join(' ')
         raise Error, "Could not retrieve MARC for #{bibnumber}. Error: #{error}"
       end
 
