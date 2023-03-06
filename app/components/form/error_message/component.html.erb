@@ -1,5 +1,11 @@
 <%= render(Alert::Component.new(variant: :danger, **@options)) do %>
-  <h4 data-controller="form--error-message--error-message"><%= error.to_s.titleize %></h4>
+  <h4 data-controller="form--error-message--error-message">
+    <%= error.to_s.titleize %>
+    <br>
+    <p class="fs-5 mt-2">
+    <%= exception %>
+    </p>
+  </h4>
 
   <% if validation_errors.present? %>
     <ul>
