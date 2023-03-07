@@ -64,7 +64,7 @@
 <ul class="nav nav-tabs" id="import-states-tabs">
   <li class="nav-item" role="presentation">
     <a class="nav-link <%= @state.nil? ? 'active' : '' %>"
-       href="<%=url_for(@bulk_import) %>">
+       href="<%= bulk_import_path(@bulk_import) %>">
       All
       <span class="badge">
       <%=@bulk_import.imports.count %>
