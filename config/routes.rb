@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   resources :bulk_imports, except: [:edit, :destroy] do
     member do
       get :cancel, to: 'bulk_imports#cancel'
+      get :csv, to: 'bulk_imports#csv'
+
     end
   end
   resources :bulk_exports, except: [:edit, :update, :show] do

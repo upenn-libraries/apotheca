@@ -8,4 +8,15 @@ class BulkImportsController < ApplicationController
                               .page(params[:page])
                               .includes(:imports, :created_by)
   end
+
+  def show
+    @state = params[:import_state]
+    @imports = @bulk_import.imports.page(params[:import_page])
+    @imports = @imports.where(state: @state).page(params[:import_page]) if @state
+  end
+
+  def csv
+    send_data @bulk_import.csv, type: 'text/csv', filename: @bulk_import.original_filename, disposition: :download
+  end
+
 end
