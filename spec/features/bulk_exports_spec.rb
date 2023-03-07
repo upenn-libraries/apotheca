@@ -8,13 +8,22 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing bulk exports' do
-      let!(:bulk_exports) { create_list(:bulk_export, 10) }
+      let!(:bulk_exports) { create_list(:bulk_export, 12) }
 
       before { visit bulk_exports_path }
 
       it 'lists all BulkExports' do
         expect(page).to have_text('Search Parameters', count: bulk_exports.length)
         expect(page).to have_css('.card', count: bulk_exports.length)
+      end
+
+      it 'stores per page value' do
+        select '10', from: 'Per Page'
+        click_on 'Submit'
+        expect(page).to have_text('Displaying exports 1 - 10')
+        click_on 'Items'
+        click_on 'Exports'
+        expect(page).to have_text('Displaying exports 1 - 10')
       end
     end
 
