@@ -4,12 +4,13 @@
 class ItemsController < ApplicationController
   before_action :configure_pagination, only: :index
   before_action :load_resources, only: [:show, :edit, :destroy]
+  before_action :store_rows, only: :index
 
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
   def index
     authorize! :read, ItemResource
-    @container = solr_query_service.custom_queries.item_index parameters: search_params
+    @container = solr_query_service.custom_queries.item_index parameters: search_params, rows: session[:"#{controller_name}_rows"]
   end
 
   def show
@@ -84,6 +85,10 @@ class ItemsController < ApplicationController
     Kaminari.configure do |config|
       config.default_per_page = Solr::QueryMaps::Item::ROWS_OPTIONS.min
     end
+  end
+
+  def store_rows
+    session[:"#{controller_name}_rows"] = search_params[:rows] unless search_params[:rows].nil?
   end
 
   def render_failure(failure, template)
