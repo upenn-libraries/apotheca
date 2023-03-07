@@ -51,7 +51,7 @@
 
 <div class="d-flex justify-content-between">
 <h4 class="col-9">Imports</h4>
-  <% if can?(:update, @bulk_import) %>
+  <% if can?(:update, @bulk_import) && @bulk_import.imports.queued.exists? %>
 <%= render Form::Component.new(name: 'cancel_all_imports', url: "", method: :get) do |component| %>
   <% component.with_submit('Cancel All Queued Imports',
                            confirm: 'Do you really want to cancel all queued Imports?',

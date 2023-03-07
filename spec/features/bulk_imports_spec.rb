@@ -74,7 +74,7 @@ describe 'BulkImport Management' do
         let!(:successful_imports) { create_list(:import, 5, :successful, duration: 60, bulk_import: bulk_import) }
         let(:failed_imports) { create_list(:import, 5, :failed, bulk_import: bulk_import) }
 
-        before { visit "#{bulk_imports_path}/#{bulk_import.id}" }
+        before { visit bulk_import_path(bulk_import) }
 
         it 'displays original_filename' do
           within('#bulk-import-dl') { expect(page).to have_text(bulk_import.original_filename) }
@@ -135,7 +135,7 @@ describe 'BulkImport Management' do
         let!(:bulk_import) { create(:bulk_import) }
         let!(:queued_import) { create(:import, :queued, bulk_import: bulk_import) }
 
-        before { visit "#{bulk_imports_path}/#{bulk_import.id}" }
+        before { visit bulk_import_path(bulk_import) }
 
         it 'does not display a button to cancel all queued imports' do
           expect(page).not_to have_button('Cancel All Queued Imports')
@@ -154,7 +154,7 @@ describe 'BulkImport Management' do
         let(:bulk_import) { create(:bulk_import, created_by: user) }
         let!(:queued_imports) { create_list(:import, 5, :queued, bulk_import: bulk_import) }
 
-        before { visit "#{bulk_imports_path}/#{bulk_import.id}" }
+        before { visit bulk_import_path(bulk_import) }
 
         it 'displays a button to cancel all queued imports' do
           expect(page).to have_button('Cancel All Queued Imports')
@@ -162,6 +162,21 @@ describe 'BulkImport Management' do
 
         it 'displays a cancel button for each queued import' do
           expect(page).to have_button('Cancel', exact: true, count: queued_imports.count)
+        end
+      end
+
+      context 'when viewing their bulk import that has no cancellable imports' do
+        let(:bulk_import) { create(:bulk_import, created_by: user) }
+        let!(:import) { create(:import, :successful, bulk_import: bulk_import) }
+
+        before { visit bulk_import_path(bulk_import) }
+
+        it 'does not display a button to cancel all queued imports' do
+          expect(page).not_to have_button('Cancel All Queued Imports')
+        end
+
+        it 'does not display a button to cancel individual imports' do
+          expect(page).not_to have_button('Cancel', exact: true)
         end
       end
     end
@@ -211,7 +226,7 @@ describe 'BulkImport Management' do
 
         before do
           sign_in admin
-          visit "#{bulk_imports_path}/#{bulk_import.id}"
+          visit bulk_import_path(bulk_import)
         end
 
         it 'displays a button to cancel all imports' do
