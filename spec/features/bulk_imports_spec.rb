@@ -33,7 +33,7 @@ describe 'BulkImport Management' do
       let(:bulk_import) { create(:bulk_import, created_by: user) }
 
       before do
-        create(:import, :queued, bulk_import:)
+        create(:import, :queued, bulk_import: bulk_import)
         visit bulk_imports_path
       end
 
@@ -51,7 +51,7 @@ describe 'BulkImport Management' do
       let(:bulk_import) { create(:bulk_import) }
 
       before do
-        create(:import, :queued, bulk_import:)
+        create(:import, :queued, bulk_import: bulk_import)
         visit bulk_imports_path
       end
 
@@ -71,8 +71,8 @@ describe 'BulkImport Management' do
 
       context 'when viewing the bulk import show page' do
         let(:bulk_import) { create(:bulk_import, note: 'Test') }
-        let!(:successful_imports) { create_list(:import, 5, :successful, duration: 60, bulk_import:) }
-        let(:failed_imports) { create_list(:import, 5, :failed, bulk_import:) }
+        let!(:successful_imports) { create_list(:import, 5, :successful, duration: 60, bulk_import: bulk_import) }
+        let(:failed_imports) { create_list(:import, 5, :failed, bulk_import: bulk_import) }
 
         before { visit "#{bulk_imports_path}/#{bulk_import.id}" }
 
@@ -133,7 +133,7 @@ describe 'BulkImport Management' do
 
       context 'when viewing a bulk import show page that belongs to another user' do
         let!(:bulk_import) { create(:bulk_import) }
-        let!(:queued_import) { create(:import, :queued, bulk_import:) }
+        let!(:queued_import) { create(:import, :queued, bulk_import: bulk_import) }
 
         before { visit "#{bulk_imports_path}/#{bulk_import.id}" }
 
@@ -152,7 +152,7 @@ describe 'BulkImport Management' do
 
       context 'when viewing their bulk import show page' do
         let(:bulk_import) { create(:bulk_import, created_by: user) }
-        let!(:queued_imports) { create_list(:import, 5, :queued, bulk_import:) }
+        let!(:queued_imports) { create_list(:import, 5, :queued, bulk_import: bulk_import) }
 
         before { visit "#{bulk_imports_path}/#{bulk_import.id}" }
 
@@ -207,7 +207,7 @@ describe 'BulkImport Management' do
 
       context 'when viewing a bulk import created by another user' do
         let(:bulk_import) { create(:bulk_import) }
-        let!(:queued_import) { create(:import, :queued, bulk_import:) }
+        let!(:queued_import) { create(:import, :queued, bulk_import: bulk_import) }
 
         before do
           sign_in admin
