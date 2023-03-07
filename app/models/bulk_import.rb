@@ -15,6 +15,8 @@ class BulkImport < ApplicationRecord
 
   validates :original_filename, presence: true
 
+  paginates_per 10
+
   def state
     return nil if imports.empty?
 
