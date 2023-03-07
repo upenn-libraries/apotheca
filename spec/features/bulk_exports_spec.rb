@@ -8,7 +8,7 @@ describe 'BulkExport management' do
     end
 
     context 'when viewing bulk exports' do
-      let!(:bulk_exports) { create_list(:bulk_export, 12) }
+      let!(:bulk_exports) { create_list(:bulk_export, 10) }
 
       before { visit bulk_exports_path }
 
@@ -17,15 +17,21 @@ describe 'BulkExport management' do
         expect(page).to have_css('.card', count: bulk_exports.length)
       end
 
-      it 'stores per page value' do
-        select '10', from: 'Per Page'
-        click_on 'Submit'
-        expect(page).to have_text('Displaying exports 1 - 10')
-        click_on 'Items'
-        click_on 'Exports'
-        expect(page).to have_text('Displaying exports 1 - 10')
+      context 'with per page selection' do
+        before { visit bulk_exports_path(per_page: 1) }
+
+        it 'paginates correctly' do
+          expect(page).to have_text 'Displaying export 1 - 1'
+        end
+
+        it 'stores per page value' do
+          select '25', from: 'Per Page'
+          click_on 'Submit'
+          click_on 'Items'
+          click_on 'Exports'
+          expect(page).to have_select('Per Page', selected: '25')
+        end
       end
-    end
 
     context 'when viewing their queued bulk export' do
       let!(:user_export) { create(:bulk_export, :queued, created_by: user) }
