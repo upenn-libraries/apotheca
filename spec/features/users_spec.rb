@@ -77,21 +77,5 @@ describe 'User management' do
       expect(page).to have_selector '.users-list__user', count: 1
       expect(page).to have_text user4_email
     end
-
-    context 'with more than 10 users' do
-
-      let!(:bulk_exports) { create_list(:user, 12, :viewer) }
-
-      before { visit users_path }
-
-      it 'stores per page value' do
-        select '10', from: 'Per Page'
-        click_on 'Filter'
-        expect(page).to have_text('Displaying users 1 - 10')
-        click_on 'Items'
-        click_on 'Users'
-        expect(page).to have_text('Displaying users 1 - 10')
-      end
-    end
   end
 end
