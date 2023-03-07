@@ -55,7 +55,7 @@
 <%= render Form::Component.new(name: 'cancel_all_imports', url: "", method: :get) do |component| %>
   <% component.with_submit('Cancel All Queued Imports',
                            confirm: 'Do you really want to cancel all queued Imports?',
-                           class: %w[btn btn-sm btn-secondary text-start])
+                           variant: :secondary, class: 'btn-sm')
   %>
     <% end %>
   <% end %>
@@ -109,7 +109,7 @@
           <% if can?(:update, import) && import.may_cancel?  %>
             <%= render Form::Component.new(name: 'cancel_import', url: "", method: :get) do |component| %>
               <% component.with_submit('Cancel', confirm: 'Do you really want to cancel this Import?',
-                                       class: %w[btn btn-sm btn-secondary])
+                                       variant: :secondary, class: 'btn-sm')
               %>
             <% end %>
           <% end %>
