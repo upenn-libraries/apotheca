@@ -3,20 +3,19 @@
 module Solr
   # provide a nice container for handling solr response and related query info in controllers
   class ResponseContainer
-    attr_reader :documents, :facets, :query, :search_params, :total_count, :rows
+    attr_reader :documents, :facets, :query, :search_params, :total_count
 
     # @param [Array] documents
     # @param [Hash] facet_data
     # @param [ActionController::Parameters] search_params
     # @param [Hash, String, nil] query
     # @param [Integer] total_count
-    def initialize(documents:, facet_data:, search_params:, total_count:, query: nil, rows:)
+    def initialize(documents:, facet_data:, search_params:, total_count:, query: nil)
       @documents = documents
       @facets = facets_to_hash(facet_data: facet_data)
       @search_params = search_params
       @query = query.to_s
       @total_count = total_count
-      @rows = rows
     end
 
     # Build a Kaminari-wrapped array for feeding to the paginator renderer in the view. Parameters here ensure proper
@@ -25,7 +24,7 @@ module Solr
     # @return [Kaminari::PaginatableArray]
     def paginator
       Kaminari.paginate_array(documents, total_count: total_count, limit: search_params[:rows])
-              .page(search_params[:page]).per(rows)
+              .page(search_params[:page]).per(search_params[:rows])
     end
 
     private

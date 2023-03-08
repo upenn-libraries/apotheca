@@ -10,7 +10,8 @@ class ItemsController < ApplicationController
 
   def index
     authorize! :read, ItemResource
-    @container = solr_query_service.custom_queries.item_index parameters: search_params, rows: session[:"#{controller_name}_rows"]
+    params[:rows] = session[:item_rows] || params[:rows]
+    @container = solr_query_service.custom_queries.item_index parameters: search_params
   end
 
   def show
@@ -88,7 +89,7 @@ class ItemsController < ApplicationController
   end
 
   def store_rows
-    session[:"#{controller_name}_rows"] = search_params[:rows] unless search_params[:rows].nil?
+    session[:item_rows] = params[:rows] unless search_params[:rows].nil?
   end
 
   def render_failure(failure, template)

@@ -22,17 +22,17 @@ class ItemIndex
   # search for Resources based on parameters
   # @param [ActionController::Parameters] parameters
   # @return [Solr::ResponseContainer]
-  def item_index(parameters:, rows:)
+  def item_index(parameters:)
     query = solr_query(parameters: parameters)
     response = response(solr_query: query)
-    build_response_container response: response, search_params: parameters, query: query, rows: rows
+    build_response_container response: response, search_params: parameters, query: query
   end
 
   # @param [RSolr::HashWithResponse] response
   # @param [ActionController::Parameters] search_params
   # @param [Hash] query
   # @return [Solr::ResponseContainer]
-  def build_response_container(response:, search_params:, query:, rows:)
+  def build_response_container(response:, search_params:, query:)
     docs = response.dig('response', 'docs')
     items = docs.map { |d| resource_factory.to_resource(object: d) }
     Solr::ResponseContainer.new(
@@ -41,7 +41,6 @@ class ItemIndex
       search_params: search_params,
       total_count: response.dig('response', 'numFound'),
       query: query,
-      rows: rows
     )
   end
 

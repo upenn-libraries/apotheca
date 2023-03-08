@@ -17,7 +17,7 @@ module ItemSearch
     end
 
     def rows_options
-      options_for_select(mapper::ROWS_OPTIONS, session[:"#{controller_name}_rows"])
+      options_for_select(mapper::ROWS_OPTIONS, params[:rows])
     end
 
     def sort_fields_options
