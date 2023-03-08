@@ -32,6 +32,7 @@ describe 'BulkExport management' do
           expect(page).to have_select('Per Page', selected: '25')
         end
       end
+    end
 
     context 'when viewing their queued bulk export' do
       let!(:user_export) { create(:bulk_export, :queued, created_by: user) }
