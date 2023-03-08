@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     @users = @users.users_search(params[:users_search]) if params[:users_search].present?
     @users = @users.active_filter(params[:active_filter]) if params[:active_filter].present?
     @users = @users.roles_filter(params[:roles_filter]) if params[:roles_filter].present?
-    @users = CollectionPresenter.new @users, UserPresenter
+    @users = CollectionPresenter.new @users
   end
 
   def show

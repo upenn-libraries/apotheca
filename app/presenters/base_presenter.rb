@@ -2,7 +2,7 @@
 
 # Base presenter logic
 class BasePresenter
-  attr_accessor :object
+  attr_accessor :object # #object_id is an Object method, but #object is OK
 
   delegate_missing_to :object
 
