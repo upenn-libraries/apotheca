@@ -89,7 +89,7 @@ class ItemsController < ApplicationController
   end
 
   def store_rows
-    session[:item_rows] = params[:rows] unless search_params[:rows].nil?
+    session[:item_rows] = params[:rows] unless params[:rows].nil?
   end
 
   def render_failure(failure, template)
