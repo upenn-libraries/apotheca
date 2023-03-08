@@ -13,6 +13,14 @@ describe 'Item management' do
       it 'shows link to create item' do
         expect(page).to have_link('Create Item', href: new_item_path)
       end
+
+      it 'stores per page value' do
+        select '50', from: 'Rows'
+        click_on 'Submit'
+        click_on 'Exports'
+        click_on 'Items'
+        expect(page).to have_select('Rows', selected: '50')
+      end
     end
 
     context 'when viewing item show page' do
