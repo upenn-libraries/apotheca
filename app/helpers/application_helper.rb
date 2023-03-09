@@ -15,4 +15,9 @@ module ApplicationHelper
                                    session[:"#{controller_name}_per_page"] || params[:per_page]),
                 label: 'Per Page'
   end
+
+  # @return [UserPresenter]
+  def current_user_presenter
+    UserPresenter.new(object: current_user) if current_user.present?
+  end
 end
