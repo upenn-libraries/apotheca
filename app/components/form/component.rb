@@ -34,7 +34,7 @@ module Form
     #
     # @param [String] name given to form, passed to backend to identify form
     # @param [String] url for request, optional
-    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource] model or change set that the form is representing, optional
+    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource|BasePresenter] model or change set that the form is representing, optional
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
     # @option options [Symbol] :method to use for html form
     # @option options [Boolean] :multipart flag to be used when file upload present
@@ -73,6 +73,8 @@ module Form
         @model.class.to_s.underscore.delete_suffix('_change_set')
       when Valkyrie::Resource
         @model.class.to_s.underscore.delete_suffix('_resource')
+      when BasePresenter
+        @model.class.to_s.underscore.delete_suffix('_presenter').delete_suffix('_resource')
       else
         @model.class.to_s.underscore.downcase
       end
@@ -86,6 +88,8 @@ module Form
         @model.resource.new_record
       when Valkyrie::Resource
         @model.new_record
+      when BasePresenter
+        @model.object.is_a?(Valkyrie::Resource) ? @model.new_record : @model.new_record?
       else
         @model.new_record?
       end
