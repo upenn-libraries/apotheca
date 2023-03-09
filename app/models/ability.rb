@@ -9,7 +9,7 @@ class Ability
 
     can [:read, :create], BulkExport
     can [:update, :destroy, :cancel], BulkExport, created_by: user
-    can [:read], BulkImport
+    can [:read, :csv], BulkImport
 
     if user.viewer?
       can :read, [ItemResource, AssetResource]
@@ -17,6 +17,7 @@ class Ability
       can [:read, :create, :update], [ItemResource, AssetResource]
       can [:read, :create], BulkImport
       can [:update, :cancel], BulkImport, created_by: user
+      can [:update], Import, bulk_import: { created_by: user }
     elsif user.admin?
       can :manage, :all
     end
