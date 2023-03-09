@@ -14,7 +14,7 @@ describe 'Item management' do
         expect(page).to have_link('Create Item', href: new_item_path)
       end
 
-      it 'stores per page value' do
+      it 'stores per page value across requests' do
         select '50', from: 'Rows'
         click_on 'Submit'
         click_on 'Exports'

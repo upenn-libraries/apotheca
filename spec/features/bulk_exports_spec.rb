@@ -17,7 +17,7 @@ describe 'BulkExport management' do
         expect(page).to have_css('.card', count: bulk_exports.length)
       end
 
-      it 'stores per page value' do
+      it 'stores per page value across requests' do
         select '25', from: 'Per Page'
         click_on 'Submit'
         click_on 'Items'
