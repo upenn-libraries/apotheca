@@ -27,10 +27,7 @@
         </div>
 
         <div class="col-md-auto">
-          <%= f.select :per_page,
-                          options_for_select(PerPage::PER_PAGE_OPTIONS, selected: session[:user_per_page] || params[:per_page]),
-                          label: 'Per Page'
-          %>
+          <%= per_page_select(form) %>
         </div>
 
         <div class="col my-3 d-flex align-items-center">
