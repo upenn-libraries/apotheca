@@ -4,7 +4,7 @@
 class CollectionPresenter
   attr_accessor :objects
 
-  delegate_missing_to :@objects
+  delegate_missing_to :objects
 
   # @param [ActiveRecord::Collection | Array] objects
   def initialize(objects)
