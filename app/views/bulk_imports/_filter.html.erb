@@ -2,8 +2,8 @@
   <div class="row mb-3 align-items-center">
     <div class="col-12 col-md-auto">
       <%= form.select 'per_page',
-                      options_for_select([10, 25, 50, 100],
-                                         session[:"#{controller_name}_per_page"].to_i || params[:per_page]),
+                      options_for_select(PerPage::PER_PAGE_OPTIONS,
+                                         session[:bulk_imports_per_page] || params[:per_page]),
                       label: 'Per Page'
       %>
     </div>
