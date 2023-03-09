@@ -24,7 +24,7 @@ class ItemResourcePresenter < BasePresenter
     # This sort-of duplicates the logic in DescriptiveMetadataIndexer#merged_metadata_sources
     ItemResource::DescriptiveMetadata::FIELDS.each do |field|
       define_method field do
-        return ils_metadata[field.to_sym] if ils_metadata.present? && ils_metadata[field.to_sym].present?
+        return ils_metadata[field] if ils_metadata.present? && ils_metadata[field].present?
 
         object.public_send field
       end
