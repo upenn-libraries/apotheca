@@ -27,7 +27,11 @@
         </div>
 
         <div class="col-md-auto">
-          <%= per_page_select(form) %>
+          <%= form.select 'per_page',
+                          options_for_select(PerPage::PER_PAGE_OPTIONS,
+                                             per_page_from_session(controller_name)),
+                          label: 'Per Page'
+          %>
         </div>
 
         <div class="col my-3 d-flex align-items-center">

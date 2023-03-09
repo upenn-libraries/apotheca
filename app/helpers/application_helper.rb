@@ -7,13 +7,10 @@ module ApplicationHelper
     render Icon::Component.new name: name, **options
   end
 
-  # @param [BootstrapForm::FormBuilder] form
-  # @return [String]
-  def per_page_select(form)
-    form.select 'per_page',
-                options_for_select(PerPage::PER_PAGE_OPTIONS,
-                                   session[:"#{controller_name}_per_page"] || params[:per_page]),
-                label: 'Per Page'
+  # @param [String] controller_name
+  # @return [String] per_page
+  def per_page_from_session(controller_name)
+    session[:"#{controller_name}_per_page"] || params[:per_page]
   end
 
   # @return [UserPresenter]
