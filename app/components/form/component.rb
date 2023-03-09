@@ -80,18 +80,18 @@ module Form
       end
     end
 
-    def new_record?
-      raise ArgumentError, 'model must be provided to form to automatically generate method' unless @model
+    def new_record?(model = @model)
+      raise ArgumentError, 'model must be provided to form to automatically generate method' unless model
 
-      case @model
+      case model
       when Valkyrie::ChangeSet
-        @model.resource.new_record
+        model.resource.new_record
       when Valkyrie::Resource
-        @model.new_record
+        model.new_record
       when BasePresenter
-        @model.object.is_a?(Valkyrie::Resource) ? @model.new_record : @model.new_record?
+        new_record? model.object
       else
-        @model.new_record?
+        model.new_record?
       end
     end
 
