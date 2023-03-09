@@ -41,11 +41,6 @@ class User < ApplicationRecord
     end
   end
 
-  # @return [String (frozen)]
-  def full_name
-    "#{first_name} #{last_name}"
-  end
-
   # @return [TrueClass, FalseClass]
   def admin?
     roles.include? ADMIN_ROLE
