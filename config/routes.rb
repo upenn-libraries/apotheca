@@ -12,8 +12,8 @@ Rails.application.routes.draw do
     member do
       get :cancel, to: 'bulk_imports#cancel'
       get :csv, to: 'bulk_imports#csv'
-
     end
+    resources :imports, only: %w[show cancel]
   end
   resources :bulk_exports, except: [:edit, :update, :show] do
     member do
