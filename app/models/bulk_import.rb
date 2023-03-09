@@ -16,6 +16,7 @@ class BulkImport < ApplicationRecord
   validates :original_filename, presence: true
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
+  scope :filter_created_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
 
   paginates_per 10
 
