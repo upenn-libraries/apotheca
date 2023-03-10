@@ -139,6 +139,10 @@ describe 'BulkExport management' do
         expect(page).to have_text(user_export.state.titleize)
       end
 
+      it 'displays the correct records count' do
+        expect(page).to have_text(user_export.records_count)
+      end
+
       it 'displays link to download attached csv' do
         expect(page).to have_link('Download CSV', count: 1)
       end

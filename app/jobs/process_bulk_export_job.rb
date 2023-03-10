@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# job to perform and save a bulk export
 class ProcessBulkExportJob < ApplicationJob
   queue_as :default
 
