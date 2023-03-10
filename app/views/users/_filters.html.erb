@@ -27,10 +27,10 @@
         </div>
 
         <div class="col-md-auto">
-          <%= form.select 'per_page',
-                          options_for_select(PerPage::PER_PAGE_OPTIONS,
-                                             per_page_from_session(controller_name)),
-                          label: 'Per Page'
+          <%= f.select 'per_page',
+                       options_for_select(PerPage::PER_PAGE_OPTIONS,
+                                          per_page_from_session(controller_name)),
+                       label: 'Per Page'
           %>
         </div>
 
