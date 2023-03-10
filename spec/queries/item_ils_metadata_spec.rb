@@ -17,7 +17,7 @@ RSpec.describe ItemIlsMetadata do
   describe '#ils_metadata_for' do
     let(:hash) { query.ils_metadata_for id: 'test-id' }
 
-    context 'with ILS metadata is present' do
+    context 'with ILS metadata present' do
       let(:ils_metadata) { { 'identifier' => ['123456789'], 'date' => ['1976'] } }
       let(:solr_response) do
         { 'response' => { 'docs' => [
