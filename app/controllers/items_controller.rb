@@ -4,6 +4,7 @@
 class ItemsController < ApplicationController
   before_action :configure_pagination, only: :index
   before_action :load_resources, only: [:show, :edit, :destroy]
+  before_action :store_rows, only: :index
 
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
@@ -83,6 +84,14 @@ class ItemsController < ApplicationController
   def configure_pagination
     Kaminari.configure do |config|
       config.default_per_page = Solr::QueryMaps::Item::ROWS_OPTIONS.min
+    end
+  end
+
+  def store_rows
+    if params[:rows].present?
+      session[:item_rows] = params[:rows]
+    else
+      params[:rows] = session[:item_rows]
     end
   end
 

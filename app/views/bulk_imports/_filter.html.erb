@@ -1,0 +1,15 @@
+<%= bootstrap_form_tag(url: bulk_imports_path, method: 'get') do |form| %>
+  <div class="row mb-3 align-items-center">
+    <div class="col-12 col-md-auto">
+      <%= form.select 'per_page',
+                      options_for_select(PerPage::PER_PAGE_OPTIONS,
+                                         per_page_from_session(controller_name)),
+                      label: 'Per Page'
+      %>
+    </div>
+    <div class="col-12 col-lg-3 col-xl-2 mt-3 d-flex align-items-center justify-content-around">
+      <%= form.submit 'Submit', name: nil, class: 'btn btn-primary' %>
+      <%= link_to 'Clear', bulk_imports_path, name: nil, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+<% end %>

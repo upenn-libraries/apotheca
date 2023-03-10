@@ -16,6 +16,14 @@ describe 'BulkExport management' do
         expect(page).to have_text('Search Parameters', count: bulk_exports.length)
         expect(page).to have_css('.card', count: bulk_exports.length)
       end
+
+      it 'stores per page value across requests' do
+        select '25', from: 'Per Page'
+        click_on 'Submit'
+        click_on 'Items'
+        click_on 'Exports'
+        expect(page).to have_select('Per Page', selected: '25')
+      end
     end
 
     context 'when viewing their queued bulk export' do
