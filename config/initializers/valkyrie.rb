@@ -91,9 +91,9 @@ Rails.application.config.to_prepare do
   )
 
   # Register custom queries for Solr
-  [ItemIndex].each do |solr_query_handler|
+  [ItemIndex, ItemIlsMetadata].each do |custom_query|
     Valkyrie::MetadataAdapter.find(:index_solr)
                              .query_service.custom_queries
-                             .register_query_handler(solr_query_handler)
+                             .register_query_handler(custom_query)
   end
 end

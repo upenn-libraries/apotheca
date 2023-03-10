@@ -15,6 +15,7 @@ class ItemsController < ApplicationController
 
   def show
     authorize! :read, @item
+    decorate_item_with_ils_metadata
   end
 
   def new
@@ -146,5 +147,13 @@ class ItemsController < ApplicationController
 
   def search_params
     params.permit(:keyword, :rows, :page, filter: {}, sort: {}, search: {})
+  end
+
+  def decorate_item_with_ils_metadata
+    ils_metadata_hash = solr_query_service.custom_queries.ils_metadata_for id: @item.id
+    @item = ItemResourcePresenter.new(
+      object: @item,
+      ils_metadata: ils_metadata_hash
+    )
   end
 end
