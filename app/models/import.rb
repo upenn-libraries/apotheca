@@ -12,4 +12,9 @@ class Import < ApplicationRecord
   def run
     raise '#run still needs to be implemented'
   end
+
+  # Determine if a user can cancel an import
+  def can_cancel?(user)
+    Ability.new(user).can?(:update, self) && self.may_cancel?
+  end
 end
