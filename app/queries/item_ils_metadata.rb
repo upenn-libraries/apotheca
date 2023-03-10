@@ -16,7 +16,7 @@ class ItemIlsMetadata
     @query_service = query_service
   end
 
-  # @param [Valkyrie::ID] id
+  # @param [Valkyrie::ID | String] id
   # @return [Hash]
   def ils_metadata_for(id:)
     doc = connection.get('select', params: {
