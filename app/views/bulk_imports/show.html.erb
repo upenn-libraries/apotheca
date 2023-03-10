@@ -103,7 +103,7 @@
         <td><%="[Placeholder]"%></td>
         <td><%= import.resource_identifier%></td>
         <td>
-          <%= link_to 'Details', bulk_import_path(@bulk_import), class: 'btn btn-sm btn-primary' %>
+          <%= link_to 'Details', bulk_import_import_path(@bulk_import, import), class: 'btn btn-sm btn-primary' %>
         </td>
         <td>
           <% if can?(:update, import) && import.may_cancel?  %>

@@ -4,11 +4,17 @@
 class BulkExportsController < ApplicationController
   load_and_authorize_resource
 
+  include PerPage
+
   def index
     @users = User.with_exports
-    @bulk_exports = BulkExport.with_created_by.page(params[:page])
-    @bulk_exports = @bulk_exports.filter_created_by(params[:filter][:created_by]) if params.dig('filter', 'created_by').present?
-    @bulk_exports = @bulk_exports.sort_by_field(params[:sort][:field], params[:sort][:direction]) if params[:sort].present?
+    @bulk_exports = BulkExport.with_created_by.page(params[:page]).per(per_page)
+    if params.dig('filter', 'created_by').present?
+      @bulk_exports = @bulk_exports.filter_created_by(params[:filter][:created_by])
+    end
+    if params[:sort].present?
+      @bulk_exports = @bulk_exports.sort_by_field(params[:sort][:field], params[:sort][:direction])
+    end
   end
 
   def new
@@ -38,7 +44,9 @@ class BulkExportsController < ApplicationController
   end
 
   def cancel
-    return redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.' unless @bulk_export.may_cancel?
+    unless @bulk_export.may_cancel?
+      return redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.'
+    end
 
     unless @bulk_export.cancel!
       return redirect_to bulk_export_path, alert: "An error occurred while cancelling the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
@@ -48,7 +56,9 @@ class BulkExportsController < ApplicationController
   end
 
   def regenerate
-    return redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{bulk_export.state}" unless @bulk_export.may_reprocess?
+    unless @bulk_export.may_reprocess?
+      return redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{bulk_export.state}"
+    end
 
     unless @bulk_export.reprocess!
       return redirect_to bulk_export_path, alert: "An error occurred while regenerating the bulk export: #{bulk_export.errors.full_messages.join(', ')}"

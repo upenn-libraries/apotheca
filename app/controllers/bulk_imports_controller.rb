@@ -3,10 +3,13 @@
 # controller actions for BulkImport
 class BulkImportsController < ApplicationController
   load_and_authorize_resource
+
+  include PerPage
+
   def index
     @users = User.with_imports
     @bulk_imports = BulkImport.order(created_at: :desc)
-                              .page(params[:page])
+                              .page(params[:page]).per(per_page)
                               .includes(:imports, :created_by)
     @bulk_imports = @bulk_imports.filter_created_by(params[:filter][:created_by]) if params.dig('filter', 'created_by').present?
     @bulk_imports = @bulk_imports.filter_created_between(params[:filter][:created_between]) if params.dig('filter', 'created_between').present?
