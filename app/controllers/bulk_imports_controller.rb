@@ -12,7 +12,9 @@ class BulkImportsController < ApplicationController
                               .page(params[:page]).per(per_page)
                               .includes(:imports, :created_by)
     @bulk_imports = @bulk_imports.filter_created_by(params[:filter][:created_by]) if params.dig('filter', 'created_by').present?
-    @bulk_imports = @bulk_imports.filter_created_between(params[:filter][:created_between]) if params.dig('filter', 'created_between').present?
+    if params.dig('filter', 'start_date').present? && params.dig('filter', 'end_date')
+      @bulk_imports = @bulk_imports.filter_created_between(params[:filter][:start_date], params[:filter][:end_date])
+    end
   end
 
   def show
