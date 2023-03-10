@@ -78,4 +78,10 @@ class BulkImport < ApplicationRecord
   def imports_successful_or_cancelled?
     imports.count.positive? && ((imports.successful.count + imports.cancelled.count) == imports.count)
   end
+
+  # @param [User] current_user
+  # Cancel all possible child imports
+  def cancel_all(current_user)
+    imports.queued.each { |import| import.cancel! if import.can_cancel?(current_user) }
+  end
 end
