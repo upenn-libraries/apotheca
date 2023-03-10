@@ -11,6 +11,7 @@ describe 'Ability' do
     it { is_expected.not_to be_able_to(:view, :any) }
     it { is_expected.not_to be_able_to(:view, ItemResource) }
     it { is_expected.not_to be_able_to(:view, AssetResource) }
+    it { is_expected.not_to be_able_to(:view, Import) }
     it { is_expected.not_to be_able_to(:view, BulkImport) }
     it { is_expected.not_to be_able_to(:view, BulkExport) }
     it { is_expected.not_to be_able_to(:view, User) }
@@ -25,6 +26,11 @@ describe 'Ability' do
 
     it { is_expected.not_to be_able_to(:edit, ItemResource) }
     it { is_expected.to be_able_to(:read, ItemResource) }
+
+    it { is_expected.to be_able_to(:read, Import) }
+    it { is_expected.not_to be_able_to(:create, Import) }
+    it { is_expected.not_to be_able_to(:update, Import) }
+    it { is_expected.not_to be_able_to(:destroy, Import) }
 
     it { is_expected.to be_able_to(:read, BulkImport) }
     it { is_expected.not_to be_able_to(:create, BulkImport) }
@@ -45,6 +51,7 @@ describe 'Ability' do
     let(:user) { create :user, :editor }
     let(:bulk_import) { create :bulk_import, created_by: user }
     let(:bulk_export) { create :bulk_export }
+    let(:import) { create :import, bulk_import: bulk_import }
 
     it { is_expected.to be_able_to(:read, AssetResource) }
     it { is_expected.to be_able_to(:create, AssetResource) }
@@ -55,6 +62,9 @@ describe 'Ability' do
     it { is_expected.to be_able_to(:create, ItemResource) }
     it { is_expected.to be_able_to(:update, ItemResource) }
     it { is_expected.not_to be_able_to(:destroy, ItemResource) }
+
+    it { is_expected.to be_able_to(:read, Import) }
+    it { is_expected.to be_able_to(:update, Import) }
 
     it { is_expected.to be_able_to(:read, BulkImport) }
     it { is_expected.to be_able_to(:create, BulkImport) }

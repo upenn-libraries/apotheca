@@ -10,6 +10,7 @@ class Ability
     can [:read, :create], BulkExport
     can [:update, :destroy, :cancel], BulkExport, created_by: user
     can [:read, :csv], BulkImport
+    can [:read], Import
 
     if user.viewer?
       can :read, [ItemResource, AssetResource]
