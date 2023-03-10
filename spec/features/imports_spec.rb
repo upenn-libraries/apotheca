@@ -57,6 +57,12 @@ describe 'Import Management' do
       it 'displays button to cancel queued import' do
         expect(page).to have_button('Cancel')
       end
+
+      it 'can cancel a queued import' do
+        click_on 'Cancel'
+        expect(page).to have_text("Import #{import.id} cancelled")
+        expect(page).not_to have_button('Cancel')
+      end
     end
 
     shared_examples_for 'any user that cannot update an import belonging to other users' do
@@ -121,6 +127,12 @@ describe 'Import Management' do
 
       it 'displays button to cancel queued import that belongs to other user' do
         expect(page).to have_button('Cancel')
+      end
+
+      it 'can cancel a queued import belonging to other user' do
+        click_on 'Cancel'
+        expect(page).to have_text("Import #{import.id} cancelled")
+        expect(page).not_to have_button('Cancel')
       end
     end
   end
