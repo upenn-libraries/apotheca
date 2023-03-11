@@ -11,10 +11,10 @@ class BulkImportsController < ApplicationController
     @bulk_imports = BulkImport.order(created_at: :desc)
                               .page(params[:page]).per(per_page)
                               .includes(:imports, :created_by)
-    @bulk_imports = @bulk_imports.filter_created_by(params[:filter][:created_by]) if params.dig('filter', 'created_by').present?
-    if params.dig('filter', 'start_date').present? && params.dig('filter', 'end_date')
-      @bulk_imports = @bulk_imports.filter_created_between(params[:filter][:start_date], params[:filter][:end_date])
-    end
+
+    @bulk_imports = @bulk_imports.filter_created_by(params.dig('filter', 'created_by')) if params.dig('filter', 'created_by').present?
+    @bulk_imports = @bulk_imports.filter_created_between(params.dig('filter', 'start_date'), params.dig('filter', 'end_date')) if params.dig('filter', 'start_date').present? || params.dig('filter', 'end_date').present?
+    @bulk_imports = @bulk_imports.bulk_imports_search(params.dig('filter', 'bulk_imports_search')) if params.dig('filter', 'bulk_imports_search').present?
   end
 
   def show
