@@ -65,6 +65,33 @@ describe 'BulkImport Management' do
     end
   end
 
+  context 'when searching bulk imports' do
+    let(:user) { create :user, :viewer }
+    let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_export.csv') }
+    let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_export.csv', note: 'awesome note!') }
+
+    before {
+      sign_in user
+      visit bulk_imports_path
+    }
+
+    it 'returns the result with the query in the original_filename' do
+      fill_in 'Search', with: 'great'
+      click_on 'Submit'
+      import = find('.bulk-imports-list__bulk-import')
+      expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
+      expect(import).to have_text 'great_export.csv'
+    end
+
+    it 'returns the result with the query in the note' do
+      fill_in 'Search', with: 'awesome'
+      click_on 'Submit'
+      import = find('.bulk-imports-list__bulk-import')
+      expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
+      expect(import).to have_text 'lame_export.csv'
+    end
+  end
+
   context 'when viewing bulk import show' do
     shared_examples_for 'any logged in user' do
       before { sign_in user }
