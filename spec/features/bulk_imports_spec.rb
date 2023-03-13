@@ -86,9 +86,46 @@ describe 'BulkImport Management' do
     it 'returns the result with the query in the note' do
       fill_in 'Search', with: 'awesome'
       click_on 'Submit'
-      import = find('.bulk-imports-list__bulk-import')
       expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
+      import = find('.bulk-imports-list__bulk-import')
       expect(import).to have_text 'lame_export.csv'
+    end
+  end
+
+  context 'when filtering bulk imports by date range' do
+    let(:user) { create :user, :viewer }
+    let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_export.csv', created_at: Time.zone.parse('2023-02-10 12:00:00')) }
+    let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_export.csv', created_at: Time.zone.parse('2023-03-17 12:00:00')) }
+
+    before {
+      sign_in user
+      params = { 'filter[start_date]' => '2023-03-07', 'filter[end_date]' => '2023-03-20' }
+      visit bulk_imports_path(params)
+    }
+
+    it 'returns the result within the specified date rage' do
+      expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
+      import = find('.bulk-imports-list__bulk-import')
+      expect(import).to have_text 'lame_export.csv'
+    end
+  end
+
+  context 'when filtering bulk imports by created_by' do
+    let(:user) { create(:user, :viewer) }
+    let(:other_user) { create(:user, :viewer) }
+    let!(:user_bulk_import) { create(:bulk_import, created_by: user) }
+    let!(:other_user_bulk_import) { create(:bulk_import, created_by: other_user) }
+
+    before do
+      sign_in user
+      visit bulk_imports_path
+    end
+
+    it 'filters by associated user email' do
+      select user.email, from: 'Created By'
+      click_on 'Submit'
+      expect(page).to have_text(user.email, count: 2)
+      expect(page).to have_text(other_user.email, count: 1)
     end
   end
 
