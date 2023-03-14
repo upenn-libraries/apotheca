@@ -11,8 +11,13 @@ class CollectionPresenter
     @objects = objects
   end
 
+  # @return [Array]
+  def presenters
+    @presenters ||= @objects.map { |o| presenter_class.new(object: o) }
+  end
+
   def each(&)
-    @objects.map { |o| presenter_class.new(object: o) }.each(&)
+    presenters.each(&)
   end
 
   private
