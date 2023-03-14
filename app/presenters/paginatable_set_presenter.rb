@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# decorate a collection, mostly to appease kaminari
-class CollectionPresenter
+# Contain and decorate a collection of objects, mostly to appease kaminari
+class PaginatableSetPresenter
   attr_accessor :objects
 
   delegate_missing_to :objects
