@@ -78,8 +78,8 @@ describe 'BulkImport Management' do
     it 'returns the result with the query in the original_filename' do
       fill_in 'Search', with: 'great'
       click_on 'Submit'
-      import = find('.bulk-imports-list__bulk-import')
       expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
+      import = find('.bulk-imports-list__bulk-import')
       expect(import).to have_text 'great_export.csv'
     end
 
