@@ -1,8 +1,8 @@
 <%= bootstrap_form_tag(url: bulk_imports_path, method: 'get') do |form| %>
   <div class="row mb-3 align-items-center">
     <div class="col-12 col-md-auto">
-      <%= form.text_field 'filter[bulk_imports_search]',
-                          value: params.dig('filter', 'bulk_imports_search'),
+      <%= form.text_field 'filter[search]',
+                          value: params.dig('filter', 'search'),
                           label: 'Search'
       %>
     </div>
