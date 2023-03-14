@@ -14,7 +14,7 @@ class BulkImportsController < ApplicationController
 
     @bulk_imports = @bulk_imports.filter_created_by(params.dig('filter', 'created_by')) if params.dig('filter', 'created_by').present?
     @bulk_imports = @bulk_imports.filter_created_between(params.dig('filter', 'start_date'), params.dig('filter', 'end_date')) if params.dig('filter', 'start_date').present? && params.dig('filter', 'end_date').present?
-    @bulk_imports = @bulk_imports.bulk_imports_search(params.dig('filter', 'bulk_imports_search')) if params.dig('filter', 'bulk_imports_search').present?
+    @bulk_imports = @bulk_imports.search(params.dig('filter', 'bulk_imports_search')) if params.dig('filter', 'bulk_imports_search').present?
   end
 
   def show

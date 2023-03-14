@@ -70,10 +70,10 @@ describe 'BulkImport Management' do
     let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_export.csv') }
     let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_export.csv', note: 'awesome note!') }
 
-    before {
+    before do
       sign_in user
       visit bulk_imports_path
-    }
+    end
 
     it 'returns the result with the query in the original_filename' do
       fill_in 'Search', with: 'great'
@@ -94,14 +94,14 @@ describe 'BulkImport Management' do
 
   context 'when filtering bulk imports by date range' do
     let(:user) { create :user, :viewer }
-    let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_export.csv', created_at: Time.zone.parse('2023-02-10 12:00:00')) }
-    let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_export.csv', created_at: Time.zone.parse('2023-03-17 12:00:00')) }
+    let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_export.csv', created_at: Time.zone.local(2023, 02, 10, 12)) }
+    let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_export.csv', created_at: Time.zone.local(2023, 03, 17, 12)) }
 
-    before {
+    before do
       sign_in user
       params = { 'filter[start_date]' => '2023-03-07', 'filter[end_date]' => '2023-03-20' }
       visit bulk_imports_path(params)
-    }
+    end
 
     it 'returns the result within the specified date rage' do
       expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
