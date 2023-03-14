@@ -6,7 +6,7 @@ class ImportsController < ApplicationController
   def show; end
 
   def cancel
-    if @import.may_cancel? == false
+    if !@import.may_cancel?
       redirect_back_or_to bulk_import_import_path(@import.bulk_import, @import),
                   notice: 'Only queued imports may be cancelled'
     elsif @import.cancel!
