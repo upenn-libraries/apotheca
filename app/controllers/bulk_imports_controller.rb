@@ -12,6 +12,8 @@ class BulkImportsController < ApplicationController
                               .includes(:imports, :created_by)
   end
 
+  def new; end
+
   def show
     @state = params[:import_state]
     @imports = @bulk_import.imports.page(params[:import_page])

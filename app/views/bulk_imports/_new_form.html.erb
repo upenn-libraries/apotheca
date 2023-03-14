@@ -1,0 +1,8 @@
+<%= render(Form::Component.new(model: @bulk_import, size: :sm)) do |form| %>
+  <% form.with_field(:created_by, type: :text, value: current_user.email, disabled: true ) %>
+  <% form.with_field(:original_filename, type: :text) %>
+  <% form.with_field(:csv, type: :file) %>
+  <% form.with_field(:note, type: :textarea) %>
+
+  <% form.with_submit('Create') %>
+<% end %>
