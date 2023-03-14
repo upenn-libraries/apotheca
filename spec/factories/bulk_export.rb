@@ -5,7 +5,6 @@ FactoryBot.define do
     association :created_by, factory: [:user, :admin]
     search_params { { search: { all: 'New' } } }
     state { BulkExport::STATE_SUCCESSFUL }
-    records_count { [0...12].sample }
 
     trait :queued do
       state { BulkExport::STATE_QUEUED }
@@ -25,6 +24,7 @@ FactoryBot.define do
 
     trait :successful do
       state { BulkExport::STATE_SUCCESSFUL }
+      records_count { [0...12].sample }
     end
   end
 end
