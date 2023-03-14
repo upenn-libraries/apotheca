@@ -24,4 +24,8 @@ class BulkImportsController < ApplicationController
     send_data @bulk_import.csv, type: 'text/csv', filename: @bulk_import.original_filename, disposition: :download
   end
 
+  def bulk_import_params
+    params.require(:bulk_import).permit(:original_filename, :csv, :note)
+  end
+
 end
