@@ -2,9 +2,9 @@
 
 # controller actions for BulkExport
 class BulkExportsController < ApplicationController
-  load_and_authorize_resource
-
   include PerPage
+
+  load_and_authorize_resource
 
   def index
     @users = User.with_exports
@@ -29,7 +29,8 @@ class BulkExportsController < ApplicationController
       ProcessBulkExportJob.perform_later(@bulk_export)
       redirect_to bulk_exports_path, notice: 'Bulk export created'
     else
-      redirect_to bulk_exports_path, alert: "Problem creating bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
+      redirect_to bulk_exports_path,
+                  alert: "Problem creating bulk export: #{@bulk_export.errors.map(&:full_message).join(', ')}"
     end
   end
 
@@ -68,7 +69,6 @@ class BulkExportsController < ApplicationController
     redirect_to bulk_exports_path, notice: 'Bulk export queued for regeneration.'
   end
 
-
   private
 
   def bulk_export_params
@@ -78,7 +78,7 @@ class BulkExportsController < ApplicationController
   def clean_search_params(search_params)
     search_params.delete('rows')
     search_params['filter']['collection'] = search_params['filter']['collection'].reject(&:empty?)
-    search_params['search']['fielded'] = search_params['search']['fielded'].reject{ |v| v['term'].blank? }
+    search_params['search']['fielded'] = search_params['search']['fielded'].reject { |v| v['term'].blank? }
     search_params
   end
 end

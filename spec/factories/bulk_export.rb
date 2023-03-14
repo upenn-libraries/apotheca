@@ -24,7 +24,7 @@ FactoryBot.define do
 
     trait :successful do
       state { BulkExport::STATE_SUCCESSFUL }
+      records_count { [0...12].sample }
     end
   end
 end
-
