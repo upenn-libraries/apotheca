@@ -10,7 +10,7 @@ module Form
       #
       # @param [Array<String|Symbol>] field_path to value in model
       # @param [Symbol] type of input
-      # @param  [Valkyrie::ChangeSet|ActiveRecord::Base|Valkyrie::Resource|BasePresenter] model used to extract field name and value
+      # @param  [Valkyrie::ChangeSet|ActiveRecord::Base|Valkyrie::Resource] model used to extract field name and value
       # @param [Hash] options for field
       # @option options [String] label text
       # @option options [String|Symbol] size of input and label
@@ -81,8 +81,6 @@ module Form
           @model.class.to_s.underscore.delete_suffix('_change_set')
         when Valkyrie::Resource
           @model.class.to_s.underscore.delete_suffix('_resource')
-        when BasePresenter
-          @model.class.to_s.underscore.delete_suffix('_presenter').delete_suffix('_resource')
         else
           @model.class.to_s.underscore.downcase
         end
