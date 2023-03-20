@@ -15,6 +15,6 @@ class Import < ApplicationRecord
 
   # Determine if a user can cancel an import
   def can_cancel?(user)
-    Ability.new(user).can?(:update, self) && self.may_cancel?
+    Ability.new(user).can?(:cancel, self) && self.may_cancel?
   end
 end
