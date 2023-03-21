@@ -16,7 +16,7 @@ module Form
 
     renders_one :submit, SubmitButton::Component
 
-    # Generates form for the BasePresenter, ActiveRecord, Valkyrie::ChangeSet or Valkyrie::Resource provided.
+    # Generates form for the ActiveRecord, Valkyrie::ChangeSet or Valkyrie::Resource provided.
     # Currently, we only support a horizontal form layout though we could continue extending this component to support
     # alternative layouts.
     #
