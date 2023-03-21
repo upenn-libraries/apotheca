@@ -14,6 +14,21 @@ class BulkImportsController < ApplicationController
 
   def new; end
 
+  def create
+    @bulk_import = BulkImport.new(created_by: current_user, note: params[:note])
+    uploaded_file = params[:bulk_import][:csv]
+    uploaded_file.tempfile.set_encoding('UTF-8')
+    @bulk_import.original_filename = uploaded_file.original_filename
+    csv = uploaded_file.read
+
+    if @bulk_import.save
+      @bulk_import.create_imports(csv)
+      redirect_to bulk_imports_path, notice: 'Bulk import created'
+    else
+      redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{@bulk_import.errors.map(&:full_message).join(', ')}"
+    end
+  end
+
   def show
     @state = params[:import_state]
     @imports = @bulk_import.imports.page(params[:import_page])
@@ -23,9 +38,4 @@ class BulkImportsController < ApplicationController
   def csv
     send_data @bulk_import.csv, type: 'text/csv', filename: @bulk_import.original_filename, disposition: :download
   end
-
-  def bulk_import_params
-    params.require(:bulk_import).permit(:original_filename, :csv, :note)
-  end
-
 end
