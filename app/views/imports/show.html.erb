@@ -10,8 +10,10 @@
 
 <div class="d-flex justify-content-between align-items-center">
 <h2>Import</h2>
-<% if can?(:update, @import) && @import.may_cancel?  %>
-  <%= render Form::Component.new(name: 'cancel_import', url: "", method: :patch) do |component| %>
+<% if @import.can_cancel?(current_user) %>
+  <%= render Form::Component.new(name: 'cancel_import',
+                                 url: cancel_bulk_import_import_path(@import.bulk_import, @import),
+                                 method: :patch) do |component| %>
     <% component.with_submit('Cancel', confirm: 'Do you really want to cancel this Import?',
                              variant: :secondary, class: 'btn-sm')
     %>
