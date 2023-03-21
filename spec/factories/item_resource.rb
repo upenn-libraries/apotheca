@@ -79,5 +79,11 @@ FactoryBot.define do
 
       structural_metadata { { arranged_asset_ids: [asset1.id, asset2.id, asset3.id] } }
     end
+
+    trait :with_bibnumber do
+      descriptive_metadata do
+        { bibnumber: ['sample-bib'] }
+      end
+    end
   end
 end

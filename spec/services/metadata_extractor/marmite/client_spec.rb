@@ -44,6 +44,21 @@ describe MetadataExtractor::Marmite::Client do
         }.to raise_error(MetadataExtractor::Marmite::Client::Error, "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error.join(' ')}")
       end
     end
+
+    context 'when saving record with invalid bib number' do
+      let(:marmite_error) { 'Internal Server Error' }
+
+      before do
+        stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
+          .to_return(status: 500, body: marmite_error, headers: {})
+      end
+
+      it 'raises exception' do
+        expect {
+          marmite.marc21(bibnumber)
+        }.to raise_error(MetadataExtractor::Marmite::Client::Error, "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error}")
+      end
+    end
   end
 
   describe '#url_for' do

@@ -10,6 +10,9 @@
           <a class="nav-link" href="<%= items_path %>">Items</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="<%= bulk_imports_path %>">Imports</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="<%= bulk_exports_path %>">Exports</a>
         </li>
         <% if can? :manage, User %>
@@ -27,7 +30,7 @@
         <% if user_signed_in? %>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-             <%= current_user.full_name %> 
+             <%= current_user_presenter.full_name %>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><%= button_to "Sign Out", destroy_user_session_path, class: 'dropdown-item' %> </li>

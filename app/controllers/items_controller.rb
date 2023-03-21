@@ -4,6 +4,7 @@
 class ItemsController < ApplicationController
   before_action :configure_pagination, only: :index
   before_action :load_resources, only: [:show, :edit, :destroy]
+  before_action :store_rows, only: :index
 
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
@@ -14,6 +15,7 @@ class ItemsController < ApplicationController
 
   def show
     authorize! :read, @item
+    decorate_item_with_ils_metadata
   end
 
   def new
@@ -86,6 +88,14 @@ class ItemsController < ApplicationController
     end
   end
 
+  def store_rows
+    if params[:rows].present?
+      session[:item_rows] = params[:rows]
+    else
+      params[:rows] = session[:item_rows]
+    end
+  end
+
   def render_failure(failure, template)
     if failure.key?(:change_set)
       @change_set = failure[:change_set]
@@ -137,5 +147,13 @@ class ItemsController < ApplicationController
 
   def search_params
     params.permit(:keyword, :rows, :page, filter: {}, sort: {}, search: {})
+  end
+
+  def decorate_item_with_ils_metadata
+    ils_metadata_hash = solr_query_service.custom_queries.ils_metadata_for id: @item.id
+    @item = ItemResourcePresenter.new(
+      object: @item,
+      ils_metadata: ils_metadata_hash
+    )
   end
 end

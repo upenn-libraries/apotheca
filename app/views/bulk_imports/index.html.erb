@@ -1,0 +1,60 @@
+<%= render(Breadcrumbs::Component.new) do |component| %>
+  <% component.with_breadcrumb(href: "/") do %>Home<% end %>
+  <% component.with_breadcrumb(active: true) do %>Bulk Imports<% end %>
+<% end %>
+
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title { 'Bulk Imports' } %>
+  <% if can?(:create, BulkImport) %>
+    <%= header.with_link(href: new_bulk_import_path) { 'New Bulk Import' } %>
+  <% end %>
+<% end %>
+
+<%= render 'bulk_imports/filter' %>
+
+<div class="mb-3">
+  <%= page_entries_info @bulk_imports, entry_name: 'bulk import' %>
+</div>
+
+<% if @bulk_imports.any? %>
+  <div class="table-responsive">
+    <table class="table table-striped bulk-imports-list">
+      <thead>
+        <tr>
+          <th scope="col">Original Filename</th>
+          <th scope="col">Created at</th>
+          <th scope="col">Created by</th>
+          <th scope="col">Imports</th>
+          <th scope="col">State</th>
+          <th scope="col">Errors</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bulk_imports.each do |bulk_import| %>
+          <tr class="bulk-imports-list__bulk-import">
+            <td><%= link_to (bulk_import.original_filename || '[Unknown]'), bulk_import_path(bulk_import) %></td>
+            <td><%= bulk_import.created_at.to_fs(:display) %></td>
+            <td><%= bulk_import.created_by.email %></td>
+            <td><%= bulk_import.imports.length %></td>
+            <td><%= bulk_import.state.nil? ? 'No imports' : bulk_import.state.capitalize %></td>
+            <td><%= bulk_import.number_of_errors %></td>
+            <td class="py-xl-1 text-center">
+              <% if bulk_import.any_imports_queued? && can?(:cancel, bulk_import) %>
+                <%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(bulk_import), method: :patch) do |component| %>
+                  <% component.with_submit('Cancel',
+                                           confirm: 'Do you really want to cancel all queued Imports?',
+                                           variant: :secondary, class: 'btn-sm')
+                  %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= paginate @bulk_imports %>
+
+  </div>
+<% end %>

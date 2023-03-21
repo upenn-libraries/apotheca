@@ -30,6 +30,7 @@ class User < ApplicationRecord
   scope :roles_filter, ->(query) { where('? = ANY (roles)', query.downcase) }
   scope :users_search, ->(query) { where("email || ' ' || first_name || ' ' || last_name ILIKE ?", "%#{query}%") }
   scope :with_exports, -> { joins(:bulk_exports).distinct }
+  scope :with_imports, -> { joins(:bulk_imports).distinct }
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
@@ -39,11 +40,6 @@ class User < ApplicationRecord
       user.active = true
       user.roles << 'admin'
     end
-  end
-
-  # @return [String (frozen)]
-  def full_name
-    "#{first_name} #{last_name}"
   end
 
   # @return [TrueClass, FalseClass]
