@@ -18,8 +18,8 @@ describe ImportService::AssetsData do
       assets = described_class.new(arranged_filenames: 'a.tif', arranged: [{ filename: 'a.tif' }])
       expect(assets.valid?).to be false
       expect(assets.errors).to include(
-                                  'arranged_filenames/unarranged_filenames cannot be used in conjunction with arranged/unarranged keys'
-                                )
+        'arranged_filenames/unarranged_filenames cannot be used in conjunction with arranged/unarranged keys'
+      )
     end
 
     it 'requires that paths are valid' do

@@ -6,7 +6,7 @@ module ImportService
     REQUIRED_CONFIG_KEYS = [:access_key_id, :secret_access_key, :endpoint, :region].freeze
     attr_reader :name
 
-    def initialize(storage_name) # TODO: optional bucket param
+    def initialize(storage_name) # TODO: Optional bucket param
       @name = storage_name
     end
 
@@ -31,9 +31,13 @@ module ImportService
       @bucket ||= config[:bucket]
     end
 
-    # @return [StringIO]
+    # Returns file at the given location.
+    #
+    # @return [Tempfile]
     def file(key)
-      client.get_object(bucket: bucket, key: key).body # TODO: reading into memory, probably want to read into a temp file
+      tempfile = Tempfile.new
+      client.get_object({ bucket: bucket, key: key }, target: tempfile.path)
+      tempfile
     end
 
     # Returns true if the given path exists within the bucket. Checks for valid filepaths and directories.

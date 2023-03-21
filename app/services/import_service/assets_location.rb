@@ -51,6 +51,8 @@ module ImportService
     end
 
     def file_for(filename)
+      raise "Could not find #{filename} in storage" unless file_locations.key?(filename)
+
       storage.file(file_locations[filename])
     end
 
@@ -63,7 +65,7 @@ module ImportService
     # Mapping of filename to filepath (s3 key).
     #
     # @return [Hash<String, String>]
-    def file_locations # TODO: need to check for duplicate filenames
+    def file_locations
       @file_locations ||= all_filepaths.index_by { |path| path.split('/').last }
     end
 
@@ -76,5 +78,3 @@ module ImportService
     end
   end
 end
-
-

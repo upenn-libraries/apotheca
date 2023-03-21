@@ -5,11 +5,13 @@ class TestDigitizationStorage
   def self.load_example_files
     s3.upload(File.new(Rails.root.join('spec/fixtures/files/front.tif')), 'trade_card/front.tif')
     s3.upload(File.new(Rails.root.join('spec/fixtures/files/back.tif')), 'trade_card/back.tif')
+    s3.upload(File.new(Rails.root.join('spec/fixtures/files/bell.wav')), 'bell.wav')
+    s3.upload(File.new(Rails.root.join('spec/fixtures/files/video.mov')), 'video.mov')
   end
 
   # Remove all files from digitization storage.
   def self.clean
-    s3.delete_prefixed('trade_card/')
+    s3.clear!
   end
 
   def self.s3
