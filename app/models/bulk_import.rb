@@ -33,6 +33,15 @@ class BulkImport < ApplicationRecord
     end
   end
 
+  # @param csv [String]
+  def create_imports(csv)
+    # rows = StructuredCSV.parse(csv)
+    # rows.each do |row|
+    #   import = Import.create(bulk_import: self, import_data: row)
+    #   ProcessImportJob.perform_later(import)
+    # end
+  end
+
   # @return [StringIO]
   def csv
     data = imports.map(&:import_data)
