@@ -51,8 +51,8 @@
 
 <div class="d-flex justify-content-between">
 <h4 class="col-9">Imports</h4>
-  <% if can?(:update, @bulk_import) && @bulk_import.imports.queued.exists? %>
-<%= render Form::Component.new(name: 'cancel_all_imports', url: "", method: :get) do |component| %>
+  <% if @bulk_import.any_imports_queued? &&  can?(:cancel, @bulk_import)  %>
+<%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(@bulk_import), method: :patch) do |component| %>
   <% component.with_submit('Cancel All Queued Imports',
                            confirm: 'Do you really want to cancel all queued Imports?',
                            variant: :secondary, class: 'btn-sm')
@@ -106,8 +106,8 @@
           <%= link_to 'Details', bulk_import_import_path(@bulk_import, import), class: 'btn btn-sm btn-primary' %>
         </td>
         <td>
-          <% if can?(:update, import) && import.may_cancel?  %>
-            <%= render Form::Component.new(name: 'cancel_import', url: "", method: :get) do |component| %>
+          <% if import.can_cancel?(current_user)  %>
+            <%= render Form::Component.new(name: 'cancel_import', url: cancel_bulk_import_import_path(import.bulk_import, import), method: :patch) do |component| %>
               <% component.with_submit('Cancel', confirm: 'Do you really want to cancel this Import?',
                                        variant: :secondary, class: 'btn-sm')
               %>

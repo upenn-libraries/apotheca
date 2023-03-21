@@ -42,7 +42,13 @@ describe 'BulkImport Management' do
       end
 
       it 'shows a cancel button' do
-        expect(page).to have_link('Cancel', href: cancel_bulk_import_path(bulk_import.id))
+        expect(page).to have_button('Cancel', type: "submit")
+      end
+
+      it 'can cancel all queued imports' do
+        click_on 'Cancel'
+        expect(page).to have_text('All queued imports were cancelled')
+        expect(page).not_to have_button('Cancel')
       end
     end
 
@@ -60,7 +66,9 @@ describe 'BulkImport Management' do
       end
 
       it 'can cancel others\' bulk imports' do
-        expect(page).to have_link('Cancel', href: cancel_bulk_import_path(bulk_import.id))
+        expect(page).to have_button('Cancel', type: "submit")
+        click_on 'Cancel'
+        expect(page).to have_text('All queued imports were cancelled')
       end
     end
   end
@@ -227,6 +235,20 @@ describe 'BulkImport Management' do
         it 'displays a cancel button for each queued import' do
           expect(page).to have_button('Cancel', exact: true, count: queued_imports.count)
         end
+
+        it 'can cancel all queued imports' do
+          click_on 'Cancel All Queued Imports'
+          expect(page).to have_text('All queued imports were cancelled')
+          expect(page).not_to have_button('Cancel')
+        end
+
+        it 'can cancel an individual Import' do
+          within '#imports-table > tbody > tr:first-child' do
+            click_on 'Cancel'
+          end
+          expect(page).to have_text("Import #{queued_imports.first.id} cancelled")
+        end
+
       end
 
       context 'when viewing their bulk import that has no cancellable imports' do

@@ -18,7 +18,7 @@ class Ability
       can [:read, :create, :update], [ItemResource, AssetResource]
       can [:read, :create], BulkImport
       can [:update, :cancel], BulkImport, created_by: user
-      can [:update], Import, bulk_import: { created_by: user }
+      can [:update, :cancel], Import, bulk_import: { created_by: user }
     elsif user.admin?
       can :manage, :all
     end

@@ -41,7 +41,12 @@
             <td><%= bulk_import.number_of_errors %></td>
             <td class="py-xl-1 text-center">
               <% if bulk_import.any_imports_queued? && can?(:cancel, bulk_import) %>
-                <%= link_to 'Cancel', cancel_bulk_import_path(bulk_import), class: 'btn btn-outline-secondary btn-sm' %>
+                <%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(bulk_import), method: :patch) do |component| %>
+                  <% component.with_submit('Cancel',
+                                           confirm: 'Do you really want to cancel all queued Imports?',
+                                           variant: :secondary, class: 'btn-sm')
+                  %>
+                <% end %>
               <% end %>
             </td>
           </tr>
