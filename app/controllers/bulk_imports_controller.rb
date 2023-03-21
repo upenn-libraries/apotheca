@@ -2,7 +2,7 @@
 
 # controller actions for BulkImport
 class BulkImportsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:create]
 
   include PerPage
 
@@ -15,7 +15,8 @@ class BulkImportsController < ApplicationController
   def new; end
 
   def create
-    @bulk_import = BulkImport.new(created_by: current_user, note: params[:note])
+    authorize! :create, @bulk_import
+    @bulk_import = BulkImport.new(created_by: current_user, note: params[:bulk_import][:note])
     uploaded_file = params[:bulk_import][:csv]
     uploaded_file.tempfile.set_encoding('UTF-8')
     @bulk_import.original_filename = uploaded_file.original_filename
