@@ -15,7 +15,7 @@ class BulkImportsController < ApplicationController
   def new; end
 
   def create
-    authorize! :create, @bulk_import
+    authorize! :create, BulkImport
     @bulk_import = BulkImport.new(created_by: current_user, note: params[:bulk_import][:note])
     uploaded_file = params[:bulk_import][:csv]
     uploaded_file.tempfile.set_encoding('UTF-8')
