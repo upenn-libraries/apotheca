@@ -16,7 +16,7 @@ module Form
 
     renders_one :submit, SubmitButton::Component
 
-    # Generates form for the BasePresenter, ActiveRecord, Valkyrie::ChangeSet or Valkyrie::Resource provided.
+    # Generates form for the ActiveRecord, Valkyrie::ChangeSet or Valkyrie::Resource provided.
     # Currently, we only support a horizontal form layout though we could continue extending this component to support
     # alternative layouts.
     #
@@ -34,7 +34,7 @@ module Form
     #
     # @param [String] name given to form, passed to backend to identify form
     # @param [String] url for request, optional
-    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource|BasePresenter] model or change set that the form is representing, optional
+    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource] model or change set that the form is representing, optional
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
     # @option options [Symbol] :method to use for html form
     # @option options [Boolean] :multipart flag to be used when file upload present
@@ -73,25 +73,21 @@ module Form
         @model.class.to_s.underscore.delete_suffix('_change_set')
       when Valkyrie::Resource
         @model.class.to_s.underscore.delete_suffix('_resource')
-      when BasePresenter
-        @model.class.to_s.underscore.delete_suffix('_presenter').delete_suffix('_resource')
       else
         @model.class.to_s.underscore.downcase
       end
     end
 
-    def new_record?(model = @model)
-      raise ArgumentError, 'model must be provided to form to automatically generate method' unless model
+    def new_record?
+      raise ArgumentError, 'model must be provided to form to automatically generate method' unless @model
 
-      case model
+      case @model
       when Valkyrie::ChangeSet
-        model.resource.new_record
+        @model.resource.new_record
       when Valkyrie::Resource
-        model.new_record
-      when BasePresenter
-        new_record? model.object
+        @model.new_record
       else
-        model.new_record?
+        @model.new_record?
       end
     end
 
