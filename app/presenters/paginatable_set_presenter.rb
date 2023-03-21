@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# decorate a collection, mostly to appease kaminari
-class CollectionPresenter
+# Contain and decorate a collection of objects, mostly to appease kaminari
+class PaginatableSetPresenter
   attr_accessor :objects
 
   delegate_missing_to :objects
@@ -11,8 +11,13 @@ class CollectionPresenter
     @objects = objects
   end
 
+  # @return [Array]
+  def presenters
+    @presenters ||= @objects.map { |o| presenter_class.new(object: o) }
+  end
+
   def each(&)
-    @objects.map { |o| presenter_class.new(object: o) }.each(&)
+    presenters.each(&)
   end
 
   private

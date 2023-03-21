@@ -22,6 +22,7 @@ class BulkExport < ApplicationRecord
       raise StandardError, 'No search results returned, cannot generate csv' if items.empty?
 
       csv_file = bulk_export_csv(items: items, include_assets: include_assets)
+      self.records_count = items.length
     end
     self.generated_at = DateTime.now
     self.duration = benchmark.total
@@ -34,7 +35,7 @@ class BulkExport < ApplicationRecord
   end
 
   def remove_values_for_display
-    update(generated_at: nil, duration: nil)
+    update(generated_at: nil, duration: nil, records_count: nil)
     csv.purge
   end
 

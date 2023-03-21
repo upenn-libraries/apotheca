@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_24_174213) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_10_210545) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -63,6 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_24_174213) do
     t.string "title"
     t.datetime "generated_at"
     t.boolean "include_assets", default: false
+    t.integer "records_count"
     t.index ["created_by_id"], name: "index_bulk_exports_on_created_by_id"
   end
 
