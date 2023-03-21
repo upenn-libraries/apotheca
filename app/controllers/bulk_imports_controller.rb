@@ -23,7 +23,7 @@ class BulkImportsController < ApplicationController
     csv = uploaded_file.read
 
     if @bulk_import.save
-      @bulk_import.create_imports(csv)
+      @bulk_import.create_imports(csv, safe_queue_name_from(params[:bulk_import][:job_priority].to_s))
       redirect_to bulk_imports_path, notice: 'Bulk import created'
     else
       redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{@bulk_import.errors.map(&:full_message).join(', ')}"
@@ -38,5 +38,17 @@ class BulkImportsController < ApplicationController
 
   def csv
     send_data @bulk_import.csv, type: 'text/csv', filename: @bulk_import.original_filename, disposition: :download
+  end
+
+  private
+
+  # @param [String] priority_param
+  # @return [String]
+  def safe_queue_name_from(priority_param)
+    if priority_param.in?(BulkImport::PRIORITY_QUEUES)
+      priority_param
+    else
+      BulkImport::DEFAULT_PRIORITY
+    end
   end
 end

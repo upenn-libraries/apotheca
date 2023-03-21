@@ -2,6 +2,9 @@
   <% form.with_field(:created_by, type: :text, value: current_user.email, disabled: true ) %>
   <% form.with_field(:csv, type: :file) %>
   <% form.with_field(:note, type: :textarea) %>
+  <% form.with_field(name: :job_priority, type: :select,
+                     choices: BulkImport::PRIORITY_QUEUES, selected: BulkImport::DEFAULT_PRIORITY,
+                     label: 'Priority') %>
 
   <% form.with_submit('Create') %>
 <% end %>
