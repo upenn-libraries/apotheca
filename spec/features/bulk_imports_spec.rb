@@ -65,6 +65,28 @@ describe 'BulkImport Management' do
     end
   end
 
+  context 'when creating a new bulk import' do
+    let(:user) { create(:user, :editor) }
+
+    before do
+      sign_in user
+      visit new_bulk_import_path
+    end
+
+    it 'fills Created By with the current user' do
+      expect(page).to have_field('bulk-import-created-by', with: user.email, disabled: true)
+    end
+
+    it 'successfully creates a bulk import' do
+      csv_path = Rails.root.join('spec/fixtures/files/Mermaids_20230303_101203.csv')
+      attach_file('bulk-import-csv', csv_path)
+      click_on 'Create'
+
+      expect(page).to have_content('Bulk import created')
+      expect(BulkImport.count).to eq(1)
+    end
+  end
+
   context 'when viewing bulk import show' do
     shared_examples_for 'any logged in user' do
       before { sign_in user }
