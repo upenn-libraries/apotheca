@@ -86,7 +86,7 @@ describe 'BulkImport Management' do
     end
 
     it 'successfully creates a bulk import' do
-      csv_path = Rails.root.join('spec/fixtures/files/Mermaids_20230303_101203.csv')
+      csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_data.csv')
       attach_file('bulk-import-csv', csv_path)
       click_on 'Create'
 
