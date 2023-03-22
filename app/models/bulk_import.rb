@@ -9,7 +9,7 @@ class BulkImport < ApplicationRecord
   CANCELLED = 'cancelled'
 
   PRIORITY_QUEUES = %w[high medium low].freeze
-  DEFAULT_PRIORITY = 'Medium'
+  DEFAULT_PRIORITY = 'medium'
 
   belongs_to :created_by, class_name: 'User'
   has_many :imports, dependent: :destroy
