@@ -59,7 +59,7 @@ namespace :apotheca do
     system('docker-compose stop')
   end
 
-  desc 'Create preservation, derivative and digitization buckets for development and test environments'
+  desc 'Create preservation, derivative and working storage buckets for development and test environments'
   task create_buckets: :environment do
     configs = [Settings.derivative_storage, Settings.iiif_derivative_storage,
                Settings.preservation_storage, Settings.preservation_copy_storage,

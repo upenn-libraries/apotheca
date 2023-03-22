@@ -98,6 +98,7 @@ module ImportService
         end
 
         if error.present?
+          # if there's an error creating any Asset, fail and remove any loaded Assets
           delete_assets(asset_list)
           error
         else

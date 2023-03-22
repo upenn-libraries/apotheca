@@ -64,7 +64,7 @@ module ImportService
     private
 
     # @param [Array<Hash>] asset_data
-    # @return [TrueClass] if every hash contains a filename
+    # @return [TrueClass|FalseClass] whether all asset data hashes include a filename
     def filenames_present?(asset_data)
       asset_data.all? { |a| a.key?(:filename) }
     end
@@ -76,8 +76,8 @@ module ImportService
       if data.key?(:"#{type}_filenames")
         filenames = data[:"#{type}_filenames"]
         filenames.blank? ? [] : filenames.split(';').map(&:strip).map { |f| { original_filename: f } }
-      elsif data.key?(:"#{type}")
-        data[:"#{type}"].map { |a| normalize_data(a) }
+      elsif data.key?(type.to_sym)
+        data[type.to_sym].map { |a| normalize_data(a) }
       else
         []
       end
