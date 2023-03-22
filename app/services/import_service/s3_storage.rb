@@ -6,8 +6,9 @@ module ImportService
     REQUIRED_CONFIG_KEYS = [:access_key_id, :secret_access_key, :endpoint, :region].freeze
     attr_reader :name
 
-    def initialize(storage_name) # TODO: Optional bucket param
+    def initialize(storage_name)
       @name = storage_name
+      # TODO: Optional bucket param
     end
 
     def config

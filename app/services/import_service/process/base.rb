@@ -8,13 +8,14 @@ module ImportService
       include Dry::Monads[:result]
 
       attr_reader :errors, :imported_by, :descriptive_metadata, :structural_metadata,
-                  :assets, :unique_identifier, :human_readable_name
+                  :assets, :unique_identifier, :human_readable_name, :internal_notes
 
       # Initializes object to conduct import. For the time being this class will only import Items.
       #
       # @param [String] :imported_by
       # @param [String] :unique_identifier
       # @param [String] :human_readable_name
+      # @param [Array<String>] :internal_notes
       # @param [Hash] :metadata  # gets mapped to descriptive_metadata
       # @param [Hash] :structural  # gets mapped to structural_metadata
       # @param [AssetsLocation] :assets
@@ -22,6 +23,7 @@ module ImportService
         @imported_by          = args[:imported_by]
         @unique_identifier    = args[:unique_identifier]
         @human_readable_name  = args[:human_readable_name]
+        @internal_notes       = args[:internal_notes]
         @descriptive_metadata = args.fetch(:metadata, {})
         @structural_metadata  = args.fetch(:structural, {})
         @assets               = args[:assets].blank? ? nil : AssetsData.new(**args[:assets])

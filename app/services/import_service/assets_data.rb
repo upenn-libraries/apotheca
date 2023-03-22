@@ -5,6 +5,8 @@ module ImportService
   class AssetsData
     attr_reader :errors, :data, :location
 
+    delegate :file_for, to: :location
+
     # Asset information can be provided in different structures. Filenames and asset metadata can be
     # provided in two ways:
     #   1. { arranged: [ { filename: 'file1.tif', label: '1' }, { filename: 'file2.tif', label: '2' }],
@@ -28,8 +30,8 @@ module ImportService
       end
 
       # Ensure all arranged/unarranged assets have a filename
-      @errors << 'arranged assets missing filename(s)'   if data[:arranged] && !data[:arranged].all? { |a| a.key?(:filename) }
-      @errors << 'unarranged assets missing filename(s)' if data[:unarranged] && !data[:unarranged].all? { |a| a.key?(:filename) }
+      @errors << 'arranged assets missing filename(s)'   if data[:arranged] && !filenames_present?(data[:arranged])
+      @errors << 'unarranged assets missing filename(s)' if data[:unarranged] && !filenames_present?(data[:unarranged])
 
       # Ensure at least one asset is defined
       unless [:arranged_filenames, :unarranged_filenames, :arranged, :unarragned].any? { |k| data.key?(k) }
@@ -46,15 +48,11 @@ module ImportService
     end
 
     def arranged
-      @arranged ||= normalize_data_for(:arranged)
+      @arranged ||= data_for(:arranged)
     end
 
     def unarranged
-      @unarranged ||= normalize_data_for(:unarranged)
-    end
-
-    def file_for(filename)
-      location.file_for(filename)
+      @unarranged ||= data_for(:unarranged)
     end
 
     # Return any files that are not present in storage.
@@ -65,20 +63,33 @@ module ImportService
 
     private
 
-    def normalize_data_for(type)
+    # @param [Array<Hash>] asset_data
+    # @return [TrueClass] if every hash contains a filename
+    def filenames_present?(asset_data)
+      asset_data.all? { |a| a.key?(:filename) }
+    end
+
+    # Extracts and normalizes the data for the given asset type.
+    #
+    # @param [Symbol] type of asset
+    def data_for(type)
       if data.key?(:"#{type}_filenames")
-        filenames = data[:"#{type}_filenames"].dup
+        filenames = data[:"#{type}_filenames"]
         filenames.blank? ? [] : filenames.split(';').map(&:strip).map { |f| { original_filename: f } }
       elsif data.key?(:"#{type}")
-        data[:"#{type}"].deep_dup.map do |a|
-          a[:original_filename] = a.delete(:filename)
-          a[:annotations] = a.delete(:annotation)&.map { |t| { text: t } }
-          a[:transcriptions] = a.delete(:transcription)&.map { |t| { mime_type: 'text/plain', contents: t } }
-          a
-        end
+        data[:"#{type}"].map { |a| normalize_data(a) }
       else
         []
       end
+    end
+
+    # Convert asset data provided in CSV to the fields/format expected by the asset model.
+    def normalize_data(asset)
+      asset = asset.deep_dup
+      asset[:original_filename] = asset.delete(:filename)
+      asset[:annotations]       = asset.delete(:annotation)&.map { |t| { text: t } }
+      asset[:transcriptions]    = asset.delete(:transcription)&.map { |t| { mime_type: 'text/plain', contents: t } }
+      asset
     end
   end
 end

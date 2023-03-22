@@ -20,9 +20,6 @@ module ImportService
       @errors << "assets storage invalid: '#{storage_name}'" if storage_name && !S3Storage.valid?(storage_name)
       @errors << 'assets must contain at least one path' if paths.empty?
 
-      # TODO: might want an error that list the invalid paths
-      @errors << 'asset path invalid' unless valid_paths?
-
       if valid_paths?
         dups = duplicate_filenames
         @errors << "duplicate filenames found in storage location: #{dups.join(', ')}" if dups.present?

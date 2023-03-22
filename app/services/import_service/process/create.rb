@@ -13,9 +13,9 @@ module ImportService
       def initialize(**args)
         super
 
-        # TODO: created_at, internal_notes, thumbnail_filename
+        # TODO: created_at, thumbnail
         @created_by = args[:created_by]
-        # @publish              = args.fetch(:publish, 'false').casecmp('true').zero?
+        # @publish    = args.fetch(:publish, 'false').casecmp('true').zero?
       end
 
       # Validates that Item can be created with the arguments given.
@@ -27,8 +27,8 @@ module ImportService
         @errors << 'metadata must be provided to create an object' if descriptive_metadata.blank?
 
         if unique_identifier
-          @errors << "\"#{unique_identifier}\" already belongs to an object. Cannot create new object with given unique identifier." if find_item(unique_identifier)
-          @errors << "\"#{unique_identifier}\" is not minted" if unique_identifier && !ark_exists?(unique_identifier)
+          @errors << "\"#{unique_identifier}\" already assigned to an item" if find_item(unique_identifier)
+          @errors << "\"#{unique_identifier}\" is not minted" unless ark_exists?(unique_identifier)
         end
 
         # Validate that all filenames listed in structural metadata.
@@ -60,11 +60,11 @@ module ImportService
           human_readable_name: human_readable_name,
           created_by: created_by || imported_by,
           updated_by: imported_by,
+          internal_notes: internal_notes,
           descriptive_metadata: descriptive_metadata,
-          structural_metadata: structural_metadata,
+          structural_metadata: structural_metadata.merge({ arranged_asset_ids: arranged_assets }),
           asset_ids: all_assets.map(&:id)
         }
-        item_attributes[:structural_metadata][:arranged_asset_ids] = arranged_assets
 
         CreateItem.new.call(item_attributes) do |result|
           result.success { |i| Success(i) }
@@ -123,7 +123,7 @@ module ImportService
             }
 
             update_transaction.call(**update_args) do |update_result|
-              update_result.success { |a| Success(a) } # TODO: might want to unlink temp file here manually...
+              update_result.success { |u| Success(u) } # TODO: might want to unlink temp file here manually or do it in the transaction
               update_result.failure do |failure_hash|
                 DeleteAsset.new.call(id: a.id)
                 failure(**failure_hash)

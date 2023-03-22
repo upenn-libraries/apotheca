@@ -4,11 +4,6 @@ module ImportService
   class Process
     # Import class to update an Item and its Assets.
     class Update < Base
-      # (see Base#initialize)
-      def initialize(**args)
-        super
-      end
-
       # Validates that Item can be updated with the information given.
       def validate
         super

@@ -27,7 +27,8 @@ describe ImportService::Process::Create do
     end
 
     it 'requires all files to be present in storage' do
-      process = build(:import_process, :create, assets: { storage: 'sceti_digitized', path: 'trade_card', arranged_filenames: 'new.tif; front.tif' })
+      assets = { storage: 'sceti_digitized', path: 'trade_card', arranged_filenames: 'new.tif; front.tif' }
+      process = build(:import_process, :create, assets: assets)
       expect(process.valid?).to be false
       expect(process.errors).to include('assets contains the following invalid filenames: new.tif')
     end
@@ -40,7 +41,7 @@ describe ImportService::Process::Create do
 
       it 'adds errors' do
         expect(process.valid?).to be false
-        expect(process.errors).to include("\"#{ark}\" already belongs to an object. Cannot create new object with given unique identifier.")
+        expect(process.errors).to include("\"#{ark}\" already assigned to an item")
       end
     end
 
@@ -132,16 +133,18 @@ describe ImportService::Process::Create do
       end
     end
 
-    # TODO: come up with a better asset error, this error is caught during validation.
     context 'when creating and item with an asset error' do
-      let(:process) do
-        build(:import_process, :create,
-              assets: {
-                arranged_filenames: 'front.tif; back.tif; invalid.tif',
-                storage: 'sceti_digitized',
-                path: 'trade_card'
-              })
+      # Mock a miscellaneous error arising from file characterization.
+      before do
+        fits = instance_double(FileCharacterization::Fits)
+        allow(FileCharacterization::Fits).to receive(:new) { fits }
+        allow(fits).to receive(:examine).and_raise(
+          FileCharacterization::Fits::Error,
+          'Could not successfully characterize contents: Unexpected Error'
+        )
       end
+
+      let(:process) { build(:import_process, :create) }
 
       it 'fails' do
         expect(result).to be_a Dry::Monads::Failure
@@ -149,7 +152,10 @@ describe ImportService::Process::Create do
 
       it 'return expected failure object' do
         expect(result.failure[:error]).to be :import_failed
-        expect(result.failure[:details]).to contain_exactly('assets contains the following invalid filenames: invalid.tif')
+        expect(result.failure[:details]).to contain_exactly(
+          'Error raised when generating front.tif',
+          'File characterization failed: Could not successfully characterize contents: Unexpected Error'
+        )
       end
     end
   end
