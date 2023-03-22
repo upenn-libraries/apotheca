@@ -21,7 +21,7 @@ fits:
   url: http://localhost:8080/fits
 marmite:
   url: https://marmite.library.upenn.edu:9292
-digitization_storage:
+working_storage:
   sceti_digitized:
     <<: *minio
     bucket: sceti-digitized-test

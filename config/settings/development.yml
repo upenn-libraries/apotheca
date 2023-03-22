@@ -22,7 +22,7 @@ fits:
 marmite:
   url: http://mdproc.library.upenn.edu:9292
 skip_ezid_metadata_update: true
-digitization_storage:
+working_storage:
   sceti_digitized:
     <<: *minio
     bucket: sceti-digitized

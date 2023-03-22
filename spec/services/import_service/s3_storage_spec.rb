@@ -54,7 +54,7 @@ describe ImportService::S3Storage do
 
     context 'when invalid configuration' do
       before do
-        Settings.merge!(digitization_storage: { new: { bucket: 'something' } })
+        Settings.merge!(working_storage: { new: { bucket: 'something' } })
       end
 
       after { Settings.reload! }

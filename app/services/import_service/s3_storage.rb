@@ -78,7 +78,7 @@ module ImportService
 
     # Returns all configured digitization stores.
     def self.all
-      Settings.digitization_storage.to_h.with_indifferent_access
+      Settings.working_storage.to_h.with_indifferent_access
     end
   end
 end

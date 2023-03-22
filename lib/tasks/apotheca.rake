@@ -63,7 +63,7 @@ namespace :apotheca do
   task create_buckets: :environment do
     configs = [Settings.derivative_storage, Settings.iiif_derivative_storage,
                Settings.preservation_storage, Settings.preservation_copy_storage,
-               Settings.digitization_storage.sceti_digitized]
+               Settings.working_storage.sceti_digitized]
 
     configs.each do |config|
       client = Aws::S3::Client.new(
