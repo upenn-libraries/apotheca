@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   resources :alert_messages, only: %w[index update]
   resources :users, except: :destroy
-  resources :bulk_imports, except: [:edit, :destroy] do
+  resources :bulk_imports, except: [:edit, :destroy, :update] do
     member do
       patch :cancel, to: 'bulk_imports#cancel'
       get :csv, to: 'bulk_imports#csv'
