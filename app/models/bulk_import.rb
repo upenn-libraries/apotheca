@@ -20,11 +20,9 @@ class BulkImport < ApplicationRecord
     if start_date.present? && end_date.present?
       where(created_at: start_date..end_date)
     elsif start_date.present?
-      where("created_at >= ?", start_date)
+      where("bulk_imports.created_at >= ?", start_date)
     elsif end_date.present?
-      where("created_at <= ?", end_date)
-    else
-      all
+      where("bulk_imports.created_at <= ?", end_date)
     end
   }
   scope :search, ->(query) { where("original_filename ILIKE :search OR note ILIKE :search", search: "%#{query}%") }
