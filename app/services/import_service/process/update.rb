@@ -8,11 +8,8 @@ module ImportService
       def validate
         super
 
-        if unique_identifier
-          @errors << 'unique_identifier does not belong to an Item' unless find_item(unique_identifier)
-        else
-          @errors << 'unique_identifier must be provided when updating an Item'
-        end
+        @errors << 'unique_identifier must be provided when updating an Item' unless unique_identifier
+        @errors << 'unique_identifier does not belong to an Item' if unique_identifier && !find_item(unique_identifier)
       end
 
       def run

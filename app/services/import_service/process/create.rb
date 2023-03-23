@@ -111,11 +111,9 @@ module ImportService
       end
 
       def create_asset(asset)
-        create_transaction = CreateAsset.new
-        update_transaction = UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
-
-        create_transaction.call(created_by: created_by || imported_by, updated_by: imported_by, **asset) do |result|
+        CreateAsset.new.call(created_by: created_by || imported_by, updated_by: imported_by, **asset) do |result|
           result.success do |a|
+            update_transaction = UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
             update_args = {
               id: a.id,
               file: assets.file_for(asset[:original_filename]),
