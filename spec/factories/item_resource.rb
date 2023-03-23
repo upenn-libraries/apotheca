@@ -16,7 +16,7 @@ FactoryBot.define do
       { viewing_hint: 'paged' }
     end
     internal_notes { ['One note', 'Another Note'] }
-    unique_identifier { 'ark:/12345/random' }
+    unique_identifier { "#{Ezid::Client.config.default_shoulder}random" }
     created_by { 'admin@library.upenn.edu' }
     updated_by { 'admin@library.upenn.edu' }
 

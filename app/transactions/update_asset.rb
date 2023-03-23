@@ -38,7 +38,9 @@ class UpdateAsset
 
     if file
       file_resource = preservation_storage.upload(
-        file: file, resource: attributes[:resource], original_filename: file.original_filename
+        file: file,
+        resource: attributes[:resource],
+        original_filename: file.try(:original_filename) || attributes[:original_filename]
       )
 
       attributes[:preservation_file_id] = file_resource.id

@@ -43,11 +43,16 @@ describe ItemChangeSet do
     expect(change_set.errors[:published]).to include 'is not included in the list'
   end
 
-  it 'requires title' do
+  it 'requires title if bibnumber is not set' do
     change_set.validate(descriptive_metadata: { title: [] })
 
     expect(change_set.valid?).to be false
     expect(change_set.errors[:'descriptive_metadata.title']).to include 'can\'t be blank'
+  end
+
+  it 'does not require title if bibnumber is set' do
+    change_set.validate(descriptive_metadata: { title: [], bibnumber: ['123456789'] })
+    expect(change_set.valid?).to be true
   end
 
   it 'requires unique identifier to be an ARK' do

@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 # Shared context that provides mocked EZID web requests.
-shared_context 'with successful EZID responses' do
+
+# Shared contexts that provide successful EZID responses.
+
+# Stub request to successfully mint ezids.
+shared_context 'with successful requests to mint EZID' do
   before do
-    # Stub request to mint ezids
     stub_request(:post, "https://#{Ezid::Client.config.host}/shoulder/#{Ezid::Client.config.default_shoulder}")
       .with(
         basic_auth: [Ezid::Client.config.user, Ezid::Client.config.password],
@@ -14,8 +17,12 @@ shared_context 'with successful EZID responses' do
         headers: { 'Content-Type': 'text/plain; charset=UTF-8' },
         body: "success: #{Ezid::Client.config.default_shoulder}#{SecureRandom.hex(4)}"
       )
+  end
+end
 
-    # Stub request to update ezids
+# Stub request to update ezids
+shared_context 'with successful requests to update EZID' do
+  before do
     stub_request(:post, %r{#{Ezid::Client.config.host}/id/.*})
       .with(
         basic_auth: [Ezid::Client.config.user, Ezid::Client.config.password],
@@ -31,11 +38,44 @@ shared_context 'with successful EZID responses' do
   end
 end
 
-# Shared context that provide unsuccessful EZID responses.
-# EZID documentation about error reporting: https://ezid.cdlib.org/doc/apidoc.html#error-reporting
-shared_context 'with unsuccessful EZID responses' do
+shared_context 'with successful requests to lookup EZID' do
   before do
-    # Stub request to mint ezids
+    stub_request(:get, %r{#{Ezid::Client.config.host}/id/.*})
+      .with(
+        basic_auth: [Ezid::Client.config.user, Ezid::Client.config.password],
+        headers: { 'Content-Type': 'text/plain; charset=UTF-8' }
+      )
+      .to_return { |request|
+        {
+          status: 200,
+          headers: { 'Content-Type': 'text/plain; charset=UTF-8' },
+          body: "success: #{request.uri.path.split('/', 3).last}"
+        }
+      }
+  end
+end
+
+# Shared contexts that provide unsuccessful EZID responses.
+# EZID documentation about error reporting: https://ezid.cdlib.org/doc/apidoc.html#error-reporting
+
+# Stub unsuccessful request to get EZID
+shared_context 'with unsuccessful requests to lookup EZID' do
+  before do
+    stub_request(:get, %r{#{Ezid::Client.config.host}/id/.*})
+      .with(
+        basic_auth: [Ezid::Client.config.user, Ezid::Client.config.password],
+        headers: { 'Content-Type': 'text/plain; charset=UTF-8' }
+      )
+      .to_return(
+        status: 400,
+        headers: { 'Content-Type': 'text/plain; charset=UTF-8' },
+        body: 'error: bad request - no such identifier'
+      )
+  end
+end
+
+shared_context 'with unsuccessful requests to mint EZID' do
+  before do
     stub_request(:post, "https://#{Ezid::Client.config.host}/shoulder/#{Ezid::Client.config.default_shoulder}")
       .with(
         basic_auth: [Ezid::Client.config.user, Ezid::Client.config.password],
@@ -46,8 +86,11 @@ shared_context 'with unsuccessful EZID responses' do
         headers: { 'Content-Type': 'text/plain; charset=UTF-8' },
         body: 'error: bad request' # Fake error message
       )
+  end
+end
 
-    # Stub request to update ezids
+shared_context 'with unsuccessful requests to update EZID' do
+  before do
     stub_request(:post, %r{#{Ezid::Client.config.host}/id/.*})
       .with(
         basic_auth: [Ezid::Client.config.user, Ezid::Client.config.password],

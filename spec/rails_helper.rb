@@ -89,10 +89,15 @@ RSpec.configure do |config|
     cleanup_tasks
   end
 
+  config.before(:suite) do
+    TestWorkingStorage.load_example_files
+  end
+
   # Perform cleanup tasks at the end of suite in order to clean up after the last test.
   config.after(:suite) do
     cleanup_tasks
     clear_active_storage_files
+    TestWorkingStorage.clean
   end
 
   # Combine cleanup tasks

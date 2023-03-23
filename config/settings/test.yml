@@ -2,6 +2,7 @@ minio: &minio
   access_key_id: minioadmin
   secret_access_key: minioadmin
   endpoint: http://127.0.0.1:9000
+  region: us-east-1
 preservation_storage:
   <<: *minio
   bucket: preservation-test
@@ -20,3 +21,7 @@ fits:
   url: http://localhost:8080/fits
 marmite:
   url: https://marmite.library.upenn.edu:9292
+working_storage:
+  sceti_digitized:
+    <<: *minio
+    bucket: sceti-digitized-test

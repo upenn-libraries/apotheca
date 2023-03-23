@@ -2,7 +2,8 @@
 
 describe CreateItem do
   describe '#call' do
-    include_context 'with successful EZID responses'
+    include_context 'with successful requests to mint EZID'
+    include_context 'with successful requests to update EZID'
 
     let(:transaction) { described_class.new }
 

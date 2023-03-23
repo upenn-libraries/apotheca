@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# query class for searching, filtering and sorting over ItemResources
+# Query class for searching, filtering and sorting over ItemResources via Solr
 class ItemIndex
   DEFAULT_FQ = { internal_resource: ['ItemResource'] }.freeze # ensure we are returning only ItemResources
   MAPPER = Solr::QueryMaps::Item
