@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ImportService
-  # Wrapper around S3 digitization storage.
+  # Wrapper around S3 working storage.
   class S3Storage
     REQUIRED_CONFIG_KEYS = [:access_key_id, :secret_access_key, :endpoint, :region].freeze
     attr_reader :name
@@ -76,7 +76,7 @@ module ImportService
       all.key?(storage_name) && REQUIRED_CONFIG_KEYS.all? { |k| all[storage_name][k].present? }
     end
 
-    # Returns all configured digitization stores.
+    # Returns all configured working storage buckets.
     def self.all
       Settings.working_storage.to_h.with_indifferent_access
     end
