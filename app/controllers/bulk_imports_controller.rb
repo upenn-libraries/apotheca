@@ -29,7 +29,7 @@ class BulkImportsController < ApplicationController
 
     if @bulk_import.save
       @bulk_import.create_imports(csv, safe_queue_name_from(params[:bulk_import][:job_priority].to_s))
-      redirect_to bulk_imports_path, notice: 'Bulk import created'
+      redirect_to bulk_import_path(@bulk_import), notice: 'Bulk import created'
     else
       redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{@bulk_import.errors.map(&:full_message).join(', ')}"
     end

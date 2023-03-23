@@ -90,7 +90,7 @@ describe 'BulkImport Management' do
       attach_file('bulk-import-csv', csv_path)
       click_on 'Create'
 
-      import = find('.bulk-imports-list__bulk-import')
+      import = find('#bulk-import-dl')
       expect(import).to have_text 'bulk_import_data.csv'
     end
   end
