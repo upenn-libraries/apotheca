@@ -41,11 +41,13 @@ class BulkImportsController < ApplicationController
     @imports = @imports.where(state: @state).page(params[:import_page]) if @state
   end
 
-  def update; end
-
   def cancel
     @bulk_import.cancel_all(current_user)
     redirect_back_or_to bulk_import_path(@bulk_import), notice: 'All queued imports were cancelled'
+  end
+
+  def csv
+    send_data @bulk_import.csv, type: 'text/csv', filename: @bulk_import.original_filename, disposition: :download
   end
 
   private
