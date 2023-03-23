@@ -37,7 +37,7 @@ describe BulkImport, type: :model do
     end
   end
 
-  describe 'filter_created_between' do
+  describe '#filter_created_between' do
     let!(:bulk_import1) { create(:bulk_import, created_at: '2022-01-01') }
     let!(:bulk_import2) { create(:bulk_import, created_at: '2022-02-01') }
     let!(:bulk_import3) { create(:bulk_import, created_at: '2022-03-01') }
