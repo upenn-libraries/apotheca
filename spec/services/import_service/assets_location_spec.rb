@@ -2,6 +2,12 @@
 
 describe ImportService::AssetsLocation do
   describe '#valid?' do
+    it 'requires non-empty storage name' do
+      location = described_class.new(storage: '')
+      expect(location.valid?).to be false
+      expect(location.errors).to include('asset storage name is blank')
+    end
+
     it 'requires valid storage name' do
       location = described_class.new(storage: 'invalid')
       expect(location.valid?).to be false
