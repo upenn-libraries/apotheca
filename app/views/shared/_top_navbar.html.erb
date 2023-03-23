@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link <%= 'active' if request.path.starts_with?('/resources/items') %>" href="<%= items_path %>">Items</a>
+          <a class="nav-link <%= 'active' if request.path.starts_with?('/resources/items') || current_page?(root_path) %>" href="<%= items_path %>">Items</a>
         </li>
         <li class="nav-item">
           <a class="nav-link <%= 'active' if request.path.starts_with?('/bulk_imports') %>" href="<%= bulk_imports_path %>">Imports</a>
@@ -22,7 +22,7 @@
         <% end %>
         <% if can? :manage, AlertMessage %>
           <li class="nav-item">
-            <a class="nav-link <%= 'active' if request.path.starts_with?('/alerts') %>" href="<%= alert_messages_path %>">Alerts</a>
+            <a class="nav-link <%= 'active' if request.path.starts_with?('/alert_messages') %>" href="<%= alert_messages_path %>">Alerts</a>
           </li>
         <% end %>
       </ul>
