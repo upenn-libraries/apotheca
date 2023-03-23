@@ -48,10 +48,6 @@ class BulkImportsController < ApplicationController
     redirect_back_or_to bulk_import_path(@bulk_import), notice: 'All queued imports were cancelled'
   end
 
-  def csv
-    send_data @bulk_import.csv, type: 'text/csv', filename: @bulk_import.original_filename, disposition: :download
-  end
-
   private
 
   # @param [String] priority_param
