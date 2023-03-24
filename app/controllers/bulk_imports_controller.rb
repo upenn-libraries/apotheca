@@ -2,7 +2,10 @@
 
 # controller actions for BulkImport
 class BulkImportsController < ApplicationController
-  load_and_authorize_resource except: [:create]
+  load_and_authorize_resource
+  # We have to skip auto-loading for the create action because
+  # load_and_authorize_resource expects strong parameters
+  skip_load_resource only: :create
 
   include PerPage
 
@@ -20,7 +23,6 @@ class BulkImportsController < ApplicationController
   def new; end
 
   def create
-    authorize! :create, BulkImport
     @bulk_import = BulkImport.new(created_by: current_user, note: params[:bulk_import][:note])
     uploaded_file = params[:bulk_import][:csv]
     uploaded_file.tempfile.set_encoding('UTF-8')
