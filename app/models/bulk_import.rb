@@ -8,6 +8,9 @@ class BulkImport < ApplicationRecord
   QUEUED = 'queued'
   CANCELLED = 'cancelled'
 
+  PRIORITY_QUEUES = %w[high medium low].freeze
+  DEFAULT_PRIORITY = 'medium'
+
   belongs_to :created_by, class_name: 'User'
   has_many :imports, dependent: :destroy
 
@@ -34,6 +37,15 @@ class BulkImport < ApplicationRecord
       COMPLETED_WITH_ERRORS
     else
       IN_PROGRESS
+    end
+  end
+
+  # @param csv [String]
+  def create_imports(csv, queue = BulkImport::DEFAULT_PRIORITY)
+    rows = StructuredCSV.parse(csv)
+    rows.each do |row|
+      import = Import.create(bulk_import: self, import_data: row)
+      # ProcessImportJob.set(queue: queue).perform_later(import)
     end
   end
 

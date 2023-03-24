@@ -73,6 +73,28 @@ describe 'BulkImport Management' do
     end
   end
 
+  context 'when creating a new bulk import' do
+    let(:user) { create(:user, :editor) }
+
+    before do
+      sign_in user
+      visit new_bulk_import_path
+    end
+
+    it 'fills Created By with the current user' do
+      expect(page).to have_field('bulk-import-created-by', with: user.email, disabled: true)
+    end
+
+    it 'successfully creates a bulk import' do
+      csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_data.csv')
+      attach_file('bulk-import-csv', csv_path)
+      click_on 'Create'
+
+      import = find('#bulk-import-dl')
+      expect(import).to have_text 'bulk_import_data.csv'
+    end
+  end
+
   context 'when searching bulk imports' do
     let(:user) { create :user, :viewer }
     let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_export.csv') }
