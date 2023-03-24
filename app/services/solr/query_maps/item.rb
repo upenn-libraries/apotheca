@@ -3,7 +3,7 @@
 module Solr
   module QueryMaps
     module Item
-      ROWS_OPTIONS = [20, 50, 100, 250].freeze
+      ROWS_OPTIONS = [20, 50, 100, 250, 100_000].freeze
 
       # accessor for constant values
       class Type
