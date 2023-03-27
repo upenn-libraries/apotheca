@@ -45,28 +45,24 @@ class BulkExportsController < ApplicationController
   end
 
   def cancel
-    unless @bulk_export.may_cancel?
-      return redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.'
+    if !@bulk_export.may_cancel?
+      redirect_to bulk_exports_path, alert: 'Cannot cancel a bulk export that is processing.'
+    elsif @bulk_export.cancel!
+      redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
+    else
+      redirect_to bulk_export_path, alert: "An error occurred while cancelling the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
     end
-
-    unless @bulk_export.cancel!
-      return redirect_to bulk_export_path, alert: "An error occurred while cancelling the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
-    end
-
-    redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
   end
 
   def regenerate
-    unless @bulk_export.may_reprocess?
-      return redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{bulk_export.state}"
+    if !@bulk_export.may_reprocess?
+      redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{bulk_export.state}"
+    elsif @bulk_export.reprocess!
+      ProcessBulkExportJob.perform_later(@bulk_export)
+      redirect_to bulk_exports_path, notice: 'Bulk export queued for regeneration.'
+    else
+      redirect_to bulk_export_path, alert: "An error occurred while regenerating the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
     end
-
-    unless @bulk_export.reprocess!
-      return redirect_to bulk_export_path, alert: "An error occurred while regenerating the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
-    end
-
-    ProcessBulkExportJob.perform_later(@bulk_export)
-    redirect_to bulk_exports_path, notice: 'Bulk export queued for regeneration.'
   end
 
   private
