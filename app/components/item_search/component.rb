@@ -17,7 +17,7 @@ module ItemSearch
     end
 
     def rows_options
-      options_for_select(mapper::ROWS_OPTIONS, params[:rows])
+      options_for_select(mapper::ROWS_OPTIONS.excluding(mapper::ROWS_OPTIONS.max), params[:rows])
     end
 
     def sort_fields_options
