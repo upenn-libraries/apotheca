@@ -5,7 +5,6 @@ class BulkExportsController < ApplicationController
   include PerPage
 
   load_and_authorize_resource
-  before_action :set_rows_params, only: :new
 
   def index
     @users = User.with_exports
@@ -84,11 +83,5 @@ class BulkExportsController < ApplicationController
       search_params['search']['fielded'] = search_params['search']['fielded'].reject { |v| v['term'].blank? }
     end
     search_params
-  end
-
-  # When the Solr rows query parameter is not present in search_params, set its value to the maximum permitted
-  # This ensures that the BulkExport will export the maximum number of items
-  def set_rows_params
-    params[:search_params][:rows] = params[:search_params][:rows].presence || Solr::QueryMaps::Item::ROWS_OPTIONS.max
   end
 end
