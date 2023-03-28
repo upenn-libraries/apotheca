@@ -49,7 +49,7 @@ class BulkExport < ApplicationRecord
 
   # Ensure that search_params defaults to an empty hash
   def set_search_params
-    self.search_params ||= {}
+    self.search_params = search_params.presence || {}
   end
 
   def solr_items
