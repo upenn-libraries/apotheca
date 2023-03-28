@@ -81,6 +81,6 @@ class BulkExport < ApplicationRecord
 
   # @return [Integer]
   def max_rows_to_export
-    Solr::QueryMaps::Item::ROWS_OPTIONS.max
+    Solr::QueryMaps::Item::MAX_BULK_EXPORT_ROWS
   end
 end
