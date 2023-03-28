@@ -84,7 +84,7 @@ describe Solr::QueryBuilder do
     end
 
     context 'with no rows value set' do
-      let(:default_rows) { mapper::ROWS_OPTIONS.max }
+      let(:default_rows) { mapper::ROWS_OPTIONS.min }
       let(:params) do
         ActionController::Parameters.new(
           { 'page' => '2' }
