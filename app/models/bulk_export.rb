@@ -5,8 +5,6 @@ class BulkExport < ApplicationRecord
   belongs_to :created_by, class_name: 'User'
 
   has_one_attached :csv
-
-  validates :search_params, presence: true
   validates :state, presence: true
   validates :generated_at, presence: true, if: -> { csv.attached? }
   validate :restrict_number_of_bulk_exports
@@ -14,6 +12,8 @@ class BulkExport < ApplicationRecord
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
   scope :sort_by_field, ->(field, direction) { order("#{field}": direction.to_s) }
   scope :with_created_by, -> { includes(:created_by) }
+
+  after_initialize :set_search_params
 
   def run
     csv_file = nil
@@ -45,6 +45,11 @@ class BulkExport < ApplicationRecord
     if created_by.present? && (created_by.bulk_exports.count >= 10)
       errors.add(:created_by, 'The number of Bulk Exports for a user cannot exceed 10.')
     end
+  end
+
+  # Ensure that search_params defaults to an empty hash
+  def set_search_params
+    self.search_params ||= {}
   end
 
   def solr_items
