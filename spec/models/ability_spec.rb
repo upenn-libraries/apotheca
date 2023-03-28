@@ -40,9 +40,13 @@ describe 'Ability' do
     it { is_expected.to be_able_to(:read, BulkExport) }
     it { is_expected.to be_able_to(:create, BulkExport) }
     it { is_expected.to be_able_to(:update, BulkExport) }
+    it { is_expected.to be_able_to(:cancel, BulkExport) }
+    it { is_expected.to be_able_to(:regenerate, BulkExport) }
     it { is_expected.to be_able_to(:destroy, BulkExport) }
     it { is_expected.not_to be_able_to(:update, bulk_export) }
     it { is_expected.not_to be_able_to(:destroy, bulk_export) }
+    it { is_expected.not_to be_able_to(:cancel, bulk_export) }
+    it { is_expected.not_to be_able_to(:regenerate, bulk_export) }
 
     it { is_expected.not_to be_able_to(:view, User) }
   end
@@ -75,8 +79,12 @@ describe 'Ability' do
     it { is_expected.to be_able_to(:create, BulkExport) }
     it { is_expected.to be_able_to(:update, BulkExport) }
     it { is_expected.to be_able_to(:destroy, BulkExport) }
+    it { is_expected.to be_able_to(:cancel, BulkExport) }
+    it { is_expected.to be_able_to(:regenerate, BulkExport) }
     it { is_expected.not_to be_able_to(:update, bulk_export) }
     it { is_expected.not_to be_able_to(:destroy, bulk_export) }
+    it { is_expected.not_to be_able_to(:cancel, bulk_export) }
+    it { is_expected.not_to be_able_to(:regenerate, bulk_export) }
 
     it { is_expected.not_to be_able_to(:manage, User) }
   end

@@ -21,12 +21,12 @@ module BulkExportCard
 
     # @return [Boolean]
     def can_cancel?
-      ability.can?(:update, bulk_export) && bulk_export.may_cancel?
+      ability.can?(:cancel, bulk_export) && bulk_export.may_cancel?
     end
 
     # @return [Boolean]
     def can_regenerate?
-      ability.can?(:update, bulk_export) && (bulk_export.failed? || bulk_export.successful?)
+      ability.can?(:regenerate, bulk_export) && (bulk_export.failed? || bulk_export.successful?)
     end
 
     def can_delete?
