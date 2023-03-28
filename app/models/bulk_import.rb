@@ -17,13 +17,9 @@ class BulkImport < ApplicationRecord
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
   scope :filter_created_between, lambda { |start_date, end_date|
-    if start_date.present? && end_date.present?
-      where(created_at: start_date..end_date)
-    elsif start_date.present?
-      where("bulk_imports.created_at >= ?", start_date)
-    elsif end_date.present?
-      where("bulk_imports.created_at <= ?", end_date)
-    end
+    start_date = start_date.present? ? start_date.to_date.beginning_of_day : nil
+    end_date = end_date.present? ? end_date.to_date.end_of_day : nil
+    where(created_at: start_date..end_date)
   }
   scope :search, ->(query) { where("original_filename ILIKE :search OR note ILIKE :search", search: "%#{query}%") }
 
