@@ -13,7 +13,7 @@ module Solr
       @params = params
       @defaults = defaults
       @mapper = mapper
-      @rows = params[:rows] || mapper::ROWS_OPTIONS.max
+      @rows = params[:rows] || mapper::ROWS_OPTIONS.min
       @page = params[:page] || 1
     end
 
