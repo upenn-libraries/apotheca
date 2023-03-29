@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Alert management' do
+describe 'Alert Index Page' do
   before do
     sign_in user
     AlertMessage.create! [{ location: 'header' }, { location: 'home' }]
