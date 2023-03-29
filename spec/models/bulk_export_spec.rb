@@ -11,9 +11,9 @@ describe BulkExport do
     expect(bulk_export.errors['created_by']).to include 'must exist'
   end
 
-  it 'does not require search params' do
+  it 'requires search params to be a hash' do
     bulk_export = build :bulk_export, search_params: nil
-    expect(bulk_export.valid?).to be true
+    expect(bulk_export.valid?).to be false
   end
 
   it 'requires state to be set' do

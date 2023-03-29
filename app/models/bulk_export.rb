@@ -8,12 +8,11 @@ class BulkExport < ApplicationRecord
   validates :state, presence: true
   validates :generated_at, presence: true, if: -> { csv.attached? }
   validate :restrict_number_of_bulk_exports
+  validate :restrict_search_params_to_hash
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
   scope :sort_by_field, ->(field, direction) { order("#{field}": direction.to_s) }
   scope :with_created_by, -> { includes(:created_by) }
-
-  after_initialize :set_search_params
 
   def run
     csv_file = nil
@@ -47,9 +46,10 @@ class BulkExport < ApplicationRecord
     end
   end
 
-  # Ensure that search_params defaults to an empty hash
-  def set_search_params
-    self.search_params = search_params.presence || {}
+  def restrict_search_params_to_hash
+    unless search_params.is_a?(Hash)
+      errors.add(:search_params, 'must be a hash')
+    end
   end
 
   def solr_items
