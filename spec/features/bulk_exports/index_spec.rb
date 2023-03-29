@@ -172,6 +172,67 @@ describe 'Bulk Import Index Page' do
     end
   end
 
+  context 'when filtering Bulk Exports' do
+    let(:user) { create(:user, :admin) }
+    let(:other_user) { create(:user, :admin) }
+    let!(:user_export) { create(:bulk_export, created_by: user) }
+    let!(:bulk_export) { create(:bulk_export, created_by: other_user) }
+
+    before do
+      sign_in user
+      visit bulk_exports_path
+    end
+
+    it 'filters by associated user email' do
+      select user.email, from: 'Created By'
+      click_on 'Submit'
+      expect(page).to have_text(user.email, count: 2)
+      expect(page).to have_text(other_user.email, count: 1)
+    end
+  end
+
+  context 'when sorting Bulk Exports' do
+    let(:user) { create(:user, :admin) }
+    let(:first_export) { create(:bulk_export, :queued, title: 'First') }
+    let(:second_export) { create(:bulk_export, :queued, title: 'Second') }
+
+    before do
+      persist(:item_resource)
+      first_export.process!
+      second_export.process!
+      sign_in user
+      visit bulk_exports_path
+    end
+
+    it 'sorts by generated at in ascending order' do
+      select 'Generated At', from: 'Sort By'
+      select 'Ascending', from: 'Sort Direction'
+      click_on 'Submit'
+      expect(first('.card')).to have_text(first_export.title)
+    end
+
+    it 'sorts by generated at in descending order' do
+      select 'Generated At', from: 'Sort By'
+      select 'Descending', from: 'Sort Direction'
+      click_on 'Submit'
+      expect(first('.card')).to have_text(second_export.title)
+    end
+
+    it 'sorts by created at in ascending order' do
+      select 'Created At', from: 'Sort By'
+      select 'Ascending', from: 'Sort Direction'
+      click_on 'Submit'
+      expect(first('.card')).to have_text(first_export.title)
+    end
+
+    it 'sorts by created at in descending order' do
+      select 'Created At', from: 'Sort By'
+      select 'Descending', from: 'Sort Direction'
+      click_on 'Submit'
+      expect(first('.card')).to have_text(second_export.title)
+    end
+  end
+
   context 'with a viewer' do
     let(:viewer) { create(:user, :viewer) }
 
@@ -232,67 +293,6 @@ describe 'Bulk Import Index Page' do
       it 'displays the buttons' do
         expect(page).to have_button('Export')
       end
-    end
-  end
-
-  context 'when filtering Bulk Exports' do
-    let(:user) { create(:user, :admin) }
-    let(:other_user) { create(:user, :admin) }
-    let!(:user_export) { create(:bulk_export, created_by: user) }
-    let!(:bulk_export) { create(:bulk_export, created_by: other_user) }
-
-    before do
-      sign_in user
-      visit bulk_exports_path
-    end
-
-    it 'filters by associated user email' do
-      select user.email, from: 'Created By'
-      click_on 'Submit'
-      expect(page).to have_text(user.email, count: 2)
-      expect(page).to have_text(other_user.email, count: 1)
-    end
-  end
-
-  context 'when sorting Bulk Exports' do
-    let(:user) { create(:user, :admin) }
-    let(:first_export) { create(:bulk_export, :queued, title: 'First') }
-    let(:second_export) { create(:bulk_export, :queued, title: 'Second') }
-
-    before do
-      persist(:item_resource)
-      first_export.process!
-      second_export.process!
-      sign_in user
-      visit bulk_exports_path
-    end
-
-    it 'sorts by generated at in ascending order' do
-      select 'Generated At', from: 'Sort By'
-      select 'Ascending', from: 'Sort Direction'
-      click_on 'Submit'
-      expect(first('.card')).to have_text(first_export.title)
-    end
-
-    it 'sorts by generated at in descending order' do
-      select 'Generated At', from: 'Sort By'
-      select 'Descending', from: 'Sort Direction'
-      click_on 'Submit'
-      expect(first('.card')).to have_text(second_export.title)
-    end
-
-    it 'sorts by created at in ascending order' do
-      select 'Created At', from: 'Sort By'
-      select 'Ascending', from: 'Sort Direction'
-      click_on 'Submit'
-      expect(first('.card')).to have_text(first_export.title)
-    end
-
-    it 'sorts by created at in descending order' do
-      select 'Created At', from: 'Sort By'
-      select 'Descending', from: 'Sort Direction'
-      click_on 'Submit'
-      expect(first('.card')).to have_text(second_export.title)
     end
   end
 end
