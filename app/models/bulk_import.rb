@@ -19,7 +19,7 @@ class BulkImport < ApplicationRecord
   scope :filter_created_between, lambda { |start_date, end_date|
     start_date = start_date.present? ? start_date.to_date.beginning_of_day : nil
     end_date = end_date.present? ? end_date.to_date.end_of_day : nil
-    where(created_at: start_date..end_date)
+    where(created_at: start_date..end_date) if start_date || end_date
   }
   scope :search, ->(query) { where("original_filename ILIKE :search OR note ILIKE :search", search: "%#{query}%") }
 
