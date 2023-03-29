@@ -26,147 +26,149 @@ describe 'Bulk Import Index Page' do
       end
     end
 
-    context 'when viewing their queued bulk export' do
-      let!(:user_export) { create(:bulk_export, :queued, created_by: user) }
+    describe 'viewing a bulk export' do
+      context 'when it is queued' do
+        let!(:user_export) { create(:bulk_export, :queued, created_by: user) }
 
-      before { visit bulk_exports_path }
+        before { visit bulk_exports_path }
 
-      it 'displays the correct state' do
-        expect(page).to have_text(user_export.state.titleize)
-      end
+        it 'displays the correct state' do
+          expect(page).to have_text(user_export.state.titleize)
+        end
 
-      it 'displays cancel button' do
-        expect(page).to have_button('Cancel', count: 1)
-      end
+        it 'displays cancel button' do
+          expect(page).to have_button('Cancel', count: 1)
+        end
 
-      it 'does not display delete button' do
-        expect(page).not_to have_button('Delete', count: 1)
-      end
+        it 'does not display delete button' do
+          expect(page).not_to have_button('Delete', count: 1)
+        end
 
-      it 'does not display regenerate button' do
-        expect(page).not_to have_button('Regenerate')
-      end
+        it 'does not display regenerate button' do
+          expect(page).not_to have_button('Regenerate')
+        end
 
-      it 'can be cancelled' do
-        click_on 'Cancel Export'
-        expect(page).to have_text('Bulk export cancelled.')
-      end
-    end
-
-    context 'when viewing their cancelled bulk export' do
-      let!(:user_export) { create(:bulk_export, :cancelled, created_by: user) }
-
-      before { visit bulk_exports_path }
-
-      it 'displays the correct state' do
-        expect(page).to have_text(user_export.state.titleize)
-      end
-
-      it 'displays delete button' do
-        expect(page).to have_button('Delete', count: 1)
-      end
-
-      it 'does not display cancel button' do
-        expect(page).not_to have_button('Cancel')
-      end
-
-      it 'does not display regenerate button' do
-        expect(page).not_to have_button('Regenerate')
-      end
-
-      it 'can be deleted' do
-        click_on 'Delete Export'
-        expect(page).to have_text('Bulk export deleted.')
-      end
-    end
-
-    context 'when viewing their processing bulk export' do
-      let!(:user_export) { create(:bulk_export, :processing, created_by: user) }
-
-      before { visit bulk_exports_path }
-
-      it 'displays the correct state' do
-        expect(page).to have_text(user_export.state.titleize)
-      end
-
-      it 'does not display any buttons' do
-        expect(page).not_to have_button('Export')
-      end
-    end
-
-    context 'when viewing their failed bulk export' do
-      let!(:user_export) { create(:bulk_export, :failed, created_by: user) }
-
-      before { visit bulk_exports_path }
-
-      it 'displays the correct state' do
-        expect(page).to have_text(user_export.state.titleize)
-      end
-
-      it 'displays regenerate button' do
-        expect(page).to have_button('Regenerate', count: 1)
-      end
-
-      it 'displays delete button' do
-        expect(page).to have_button('Delete', count: 1)
-      end
-
-      it 'does not display cancel button' do
-        expect(page).not_to have_button('Cancel')
-      end
-
-      it 'can be deleted' do
-        click_on 'Delete Export'
-        expect(page).to have_text('Bulk export deleted.')
-      end
-
-      it 'can be regenerated' do
-        click_on 'Regenerate' do
-          expect(page).to have_text('Bulk export regenerating...')
+        it 'can be cancelled' do
+          click_on 'Cancel Export'
+          expect(page).to have_text('Bulk export cancelled.')
         end
       end
-    end
 
-    context 'when viewing their successful bulk export' do
-      let!(:user_export) { create(:bulk_export, :queued, created_by: user) }
+      context 'when it is cancelled' do
+        let!(:user_export) { create(:bulk_export, :cancelled, created_by: user) }
 
-      before do
-        user_export.process!
-        visit bulk_exports_path
+        before { visit bulk_exports_path }
+
+        it 'displays the correct state' do
+          expect(page).to have_text(user_export.state.titleize)
+        end
+
+        it 'displays delete button' do
+          expect(page).to have_button('Delete', count: 1)
+        end
+
+        it 'does not display cancel button' do
+          expect(page).not_to have_button('Cancel')
+        end
+
+        it 'does not display regenerate button' do
+          expect(page).not_to have_button('Regenerate')
+        end
+
+        it 'can be deleted' do
+          click_on 'Delete Export'
+          expect(page).to have_text('Bulk export deleted.')
+        end
       end
 
-      it 'displays the correct state' do
-        expect(page).to have_text(user_export.state.titleize)
+      context 'when it is processing' do
+        let!(:user_export) { create(:bulk_export, :processing, created_by: user) }
+
+        before { visit bulk_exports_path }
+
+        it 'displays the correct state' do
+          expect(page).to have_text(user_export.state.titleize)
+        end
+
+        it 'does not display any buttons' do
+          expect(page).not_to have_button('Export')
+        end
       end
 
-      it 'displays the correct records count' do
-        expect(page).to have_text(user_export.records_count)
+      context 'when it is failed' do
+        let!(:user_export) { create(:bulk_export, :failed, created_by: user) }
+
+        before { visit bulk_exports_path }
+
+        it 'displays the correct state' do
+          expect(page).to have_text(user_export.state.titleize)
+        end
+
+        it 'displays regenerate button' do
+          expect(page).to have_button('Regenerate', count: 1)
+        end
+
+        it 'displays delete button' do
+          expect(page).to have_button('Delete', count: 1)
+        end
+
+        it 'does not display cancel button' do
+          expect(page).not_to have_button('Cancel')
+        end
+
+        it 'can be deleted' do
+          click_on 'Delete Export'
+          expect(page).to have_text('Bulk export deleted.')
+        end
+
+        it 'can be regenerated' do
+          click_on 'Regenerate' do
+            expect(page).to have_text('Bulk export regenerating...')
+          end
+        end
       end
 
-      it 'displays link to download attached csv' do
-        expect(page).to have_link('Download CSV', count: 1)
-      end
+      context 'when it is successful' do
+        let!(:user_export) { create(:bulk_export, :queued, created_by: user) }
 
-      it 'displays regenerate button' do
-        expect(page).to have_button('Regenerate', count: 1)
-      end
+        before do
+          user_export.process!
+          visit bulk_exports_path
+        end
 
-      it 'displays delete button' do
-        expect(page).to have_button('Delete', count: 1)
-      end
+        it 'displays the correct state' do
+          expect(page).to have_text(user_export.state.titleize)
+        end
 
-      it 'does not display cancel button' do
-        expect(page).not_to have_button('Cancel')
-      end
+        it 'displays the correct records count' do
+          expect(page).to have_text(user_export.records_count)
+        end
 
-      it 'can be deleted' do
-        click_on 'Delete Export'
-        expect(page).to have_text('Bulk export deleted.')
-      end
+        it 'displays link to download attached csv' do
+          expect(page).to have_link('Download CSV', count: 1)
+        end
 
-      it 'can be regenerated' do
-        click_on 'Regenerate' do
-          expect(page).to have_text('Bulk export regenerating...')
+        it 'displays regenerate button' do
+          expect(page).to have_button('Regenerate', count: 1)
+        end
+
+        it 'displays delete button' do
+          expect(page).to have_button('Delete', count: 1)
+        end
+
+        it 'does not display cancel button' do
+          expect(page).not_to have_button('Cancel')
+        end
+
+        it 'can be deleted' do
+          click_on 'Delete Export'
+          expect(page).to have_text('Bulk export deleted.')
+        end
+
+        it 'can be regenerated' do
+          click_on 'Regenerate' do
+            expect(page).to have_text('Bulk export regenerating...')
+          end
         end
       end
     end
@@ -296,4 +298,3 @@ describe 'Bulk Import Index Page' do
     end
   end
 end
-
