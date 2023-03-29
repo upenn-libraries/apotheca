@@ -76,7 +76,7 @@ class BulkExportsController < ApplicationController
   end
 
   def clean_search_params(search_params)
-    return if search_params.blank?
+    return {} if search_params.blank?
 
     if search_params.dig('filter', 'collection')
       search_params['filter']['collection'] = search_params['filter']['collection'].reject(&:empty?)
