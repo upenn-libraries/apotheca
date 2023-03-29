@@ -39,6 +39,9 @@ Rails.application.routes.draw do
     end
   end
 
+  post 'file_listing_tool/file_list', to: 'file_listing_tool#file_list'
+  get 'file_listing_tool', to: 'file_listing_tool#tool'
+
   get 'login', to: 'login#index'
 
   authenticated do

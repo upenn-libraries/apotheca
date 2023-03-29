@@ -1,0 +1,7 @@
+<%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :json), layout: :horizontal, remote: true, html: { id: 'new-file-listing' } do |f| %>
+  <%= f.select :drive, ImportService::S3Storage.all.keys, control_col: 'col-sm-4', include_blank: true %>
+  <%= f.text_field :path, control_col: 'col-sm-4' %>
+  <%= f.form_group do %>
+    <%= f.submit 'List Filenames', class: 'btn btn-primary' %>
+  <% end %>
+<% end %>
