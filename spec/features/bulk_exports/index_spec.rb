@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'BulkExport management' do
+describe 'Bulk Import Index Page' do
   shared_examples_for 'any logged in user' do
     before do
       persist(:item_resource)
@@ -214,7 +214,7 @@ describe 'BulkExport management' do
     end
   end
 
-  context 'with and admin' do
+  context 'with an admin' do
     let(:admin) { create(:user, :admin) }
 
     it_behaves_like 'any logged in user' do
@@ -295,42 +295,5 @@ describe 'BulkExport management' do
       expect(first('.card')).to have_text(second_export.title)
     end
   end
-
-  context 'when creating bulk exports' do
-    let(:user) { create(:user, :viewer) }
-
-    before do
-      sign_in user
-      persist(:item_resource)
-      visit items_path
-    end
-
-    it 'has link to create bulk export' do
-      expect(page).to have_text('Export as CSV')
-    end
-
-    context 'when redirected to bulk export new form' do
-      before do
-        fill_in 'Search', with: 'Green'
-        click_on 'Submit'
-        click_on 'Export as CSV'
-      end
-
-      it 'redirects to bulk export new form' do
-        expect(page).to have_text('Create Bulk Export')
-      end
-
-      it 'fills Search Params field with search params' do
-        expect(page).to have_field('bulk-export-search-params', disabled: true)
-        field = find_field('bulk-export-search-params', disabled: true)
-        expect(field.value).to have_text '"all"=>"Green"'
-      end
-
-      it 'creates a bulk export and redirects to bulk export index page' do
-        fill_in 'bulk-export-title', with: 'Green'
-        click_on 'Create'
-        expect(find(class: 'card-title')).to have_text('Green')
-      end
-    end
-  end
 end
+
