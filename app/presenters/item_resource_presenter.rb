@@ -42,8 +42,8 @@ class ItemResourcePresenter < BasePresenter
 
     # Get field values as unstyled list
     #
-    # @param [String] source
-    # @param [String] field
+    # @param [String] source (ILS vs resource value)
+    # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [String (frozen)]
     def field_values(source, field)
       field_values = source == 'resource' ? object[field] : @ils_metadata[field]
@@ -56,7 +56,7 @@ class ItemResourcePresenter < BasePresenter
     end
 
     # Add bootstrap classes to identify whether field's ILS value will be used or overridden
-    # ILS value is only used if field has no resource value
+    # (ILS value only used if field has no resource value)
     #
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [String (frozen)]
@@ -67,7 +67,7 @@ class ItemResourcePresenter < BasePresenter
     # Add bootstrap classes to identify that field's resource value is given precedence over ILS value
     #
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
-    # @return [nil] if field does not have an ILS value
+    # @return [nil] if field does not have an ILS value (no highlight necessary)
     # @return [String (frozen)] if field has an ILS value
     def field_resource_class(field)
       return unless @ils_metadata
