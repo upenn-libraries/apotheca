@@ -9,14 +9,46 @@ describe 'Item management' do
     let(:item) { persist(:item_resource, :with_bibnumber) }
 
     before do
-      stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/sample-bib/marc21?update=always")
+      stub_request(:get, 'https://marmite.library.upenn.edu:9292/api/v2/records/sample-bib/marc21?update=always')
         .to_return(status: 200, body: marc_xml, headers: {})
       item # build item after Marmite request has been stubbed
-      visit items_path
     end
 
-    it 'shows ILS metadata on the index page' do
-      expect(page).to have_text 'Edgar Fahs Smith Memorial Collection'
+    context 'when on the index page' do
+      before { visit items_path }
+
+      it 'shows ILS metadata on the index page' do
+        expect(page).to have_text 'Edgar Fahs Smith Memorial Collection'
+      end
+    end
+
+    context 'when on the show page' do
+      before { visit item_path(item) }
+
+      it 'shows ILS and resource columns on descriptive metadata tab' do
+        expect(page).to have_text 'From ILS'
+        expect(page).to have_text 'From Resource'
+      end
+
+      # For all descriptive metadata tests below:
+      # Enter 9923478503503681 as item's bibnumber to view ILS test values
+      # Necessary resource values specified in item_resource factory
+
+      it 'shows that resource value has priority over ILS on descriptive metadata tab' do
+        expect(page).to have_css('.text-decoration-line-through li',
+                                 text: 'Edgar Fahs Smith Memorial Collection')
+        expect(page).to have_css('.bg-success li',
+                                 text: 'Fake Collection')
+      end
+
+      it 'prioritizes ILS value if no resource value on descriptive metadata tab' do
+        expect(page).to have_css('.bg-success li',
+                                 text: 'https://colenda.library.upenn.edu/catalog/81431-p3df6k90j')
+      end
+
+      it 'hides value row if no resource or ILS value on descriptive metadata tab' do
+        expect(page).not_to have_text('Abstract')
+      end
     end
   end
 
@@ -61,7 +93,6 @@ describe 'Item management' do
         end
       end
     end
-
   end
 
   context 'with a viewer' do
@@ -69,7 +100,6 @@ describe 'Item management' do
     let!(:item) { persist(:item_resource, :with_asset) }
 
     context 'when viewing item index page' do
-
       before { visit items_path }
 
       it 'lists Item human readable name' do
@@ -121,6 +151,14 @@ describe 'Item management' do
         within "#asset-#{item.asset_ids.first}" do
           expect(page).to have_link('front.tif', href: asset_path(item.asset_ids.first))
         end
+      end
+
+      it 'does not show ILS column on descriptive metadata tab' do
+        expect(page).not_to have_text('From ILS')
+      end
+
+      it 'does not highlight resource values on descriptive metadata tab' do
+        expect(page).not_to have_selector('.resource-value.bg-success')
       end
     end
   end
