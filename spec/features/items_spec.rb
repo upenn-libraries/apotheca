@@ -14,43 +14,41 @@ describe 'Item management' do
       item # build item after Marmite request has been stubbed
     end
 
-    it 'shows ILS metadata on the index page' do
-      visit items_path
+    context 'when on the index page' do
+      before { visit items_path }
 
-      expect(page).to have_text 'Edgar Fahs Smith Memorial Collection'
+      it 'shows ILS metadata on the index page' do
+        expect(page).to have_text 'Edgar Fahs Smith Memorial Collection'
+      end
     end
 
-    it 'shows ILS and resource columns on descriptive metadata tab' do
-      visit "#{items_path}/#{item.id}"
+    context 'when on the show page' do
+      before { visit item_path(item) }
 
-      expect(page).to have_text 'From ILS'
-      expect(page).to have_text 'From Resource'
-    end
+      it 'shows ILS and resource columns on descriptive metadata tab' do
+        expect(page).to have_text 'From ILS'
+        expect(page).to have_text 'From Resource'
+      end
 
-    # For all descriptive metadata tests below:
-    # Enter 9923478503503681 as item's bibnumber to view ILS test values
-    # Necessary resource values specified in item_resource factory
+      # For all descriptive metadata tests below:
+      # Enter 9923478503503681 as item's bibnumber to view ILS test values
+      # Necessary resource values specified in item_resource factory
 
-    it 'shows that resource value has priority over ILS on descriptive metadata tab' do
-      visit "#{items_path}/#{item.id}"
+      it 'shows that resource value has priority over ILS on descriptive metadata tab' do
+        expect(page).to have_css('.text-decoration-line-through li',
+                                 text: 'Edgar Fahs Smith Memorial Collection')
+        expect(page).to have_css('.bg-success li',
+                                 text: 'Fake Collection')
+      end
 
-      expect(page).to have_css('.ils-value.text-decoration-line-through li',
-                               text: 'Edgar Fahs Smith Memorial Collection')
-      expect(page).to have_css('.resource-value.bg-success li',
-                               text: 'Fake Collection')
-    end
+      it 'prioritizes ILS value if no resource value on descriptive metadata tab' do
+        expect(page).to have_css('.bg-success li',
+                                 text: 'https://colenda.library.upenn.edu/catalog/81431-p3df6k90j')
+      end
 
-    it 'prioritizes ILS value if no resource value on descriptive metadata tab' do
-      visit "#{items_path}/#{item.id}"
-
-      expect(page).to have_css('.ils-value.bg-success li',
-                               text: 'https://colenda.library.upenn.edu/catalog/81431-p3df6k90j')
-    end
-
-    it 'hides value row if no resource or ILS value on descriptive metadata tab' do
-      visit "#{items_path}/#{item.id}"
-
-      expect(page).not_to have_text('Abstract')
+      it 'hides value row if no resource or ILS value on descriptive metadata tab' do
+        expect(page).not_to have_text('Abstract')
+      end
     end
   end
 

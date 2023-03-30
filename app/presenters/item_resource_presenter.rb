@@ -46,10 +46,10 @@ class ItemResourcePresenter < BasePresenter
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [String (frozen)]
     def field_values(source, field)
-      field_values = source == 'resource' ? object[field] : @ils_metadata[field]
+      field_values = source == 'resource' ? object[field] : ils_metadata[field]
 
       content_tag :ul, class: 'list-unstyled mb-0' do
-        field_values&.each&.with_index do |value, i|
+        field_values&.each_with_index do |value, i|
           concat content_tag :li, value, class: i.zero? ? '' : 'pt-2'
         end
       end
@@ -70,7 +70,7 @@ class ItemResourcePresenter < BasePresenter
     # @return [nil] if field does not have an ILS value (no highlight necessary)
     # @return [String (frozen)] if field has an ILS value
     def field_resource_class(field)
-      return unless @ils_metadata
+      return unless ils_metadata
 
       'bg-success bg-opacity-10' if object[field].present?
     end
@@ -80,7 +80,7 @@ class ItemResourcePresenter < BasePresenter
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [TrueClass, FalseClass]
     def field_row_data?(field)
-      (@ils_metadata && @ils_metadata[field].present?) || object[field].present?
+      ils_metadata&.dig(field).present? || object[field].present?
     end
   end
 end

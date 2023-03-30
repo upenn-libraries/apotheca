@@ -33,13 +33,13 @@
 
             <%# ILS values %>
             <% if @item.descriptive_metadata.ils_metadata %>
-              <td class="ils-value <%= @item.descriptive_metadata.field_ils_class(f) %>">
+              <td class="<%= @item.descriptive_metadata.field_ils_class(f) %>">
                 <%= @item.descriptive_metadata.field_values('ils', f) %>
               </td>
             <% end %>
 
             <%# Resource values %>
-            <td class="resource-value <%= @item.descriptive_metadata.field_resource_class(f) %>">
+            <td class="<%= @item.descriptive_metadata.field_resource_class(f) %>">
               <%= @item.descriptive_metadata.field_values('resource', f) %>
             </td>
           </tr>
