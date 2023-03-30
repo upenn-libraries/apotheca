@@ -72,9 +72,14 @@ class BulkExportsController < ApplicationController
   end
 
   def clean_search_params(search_params)
-    search_params.delete('rows')
-    search_params['filter']['collection'] = search_params['filter']['collection'].reject(&:empty?)
-    search_params['search']['fielded'] = search_params['search']['fielded'].reject { |v| v['term'].blank? }
+    return {} if search_params.blank?
+
+    if search_params.dig('filter', 'collection')
+      search_params['filter']['collection'] = search_params['filter']['collection'].reject(&:empty?)
+    end
+    if search_params.dig('search', 'fielded')
+      search_params['search']['fielded'] = search_params['search']['fielded'].reject { |v| v['term'].blank? }
+    end
     search_params
   end
 end
