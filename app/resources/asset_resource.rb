@@ -29,6 +29,7 @@ class AssetResource < Valkyrie::Resource
   attribute :preservation_file_id, Valkyrie::Types::ID
   attribute :preservation_copies_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)
   attribute :technical_metadata, TechnicalMetadata
+  attribute :preservation_events, Valkyrie::Types::Array.of(PreservationEvent)
   attribute :label, Valkyrie::Types::String
 
   attribute :annotations, Valkyrie::Types::Array.of(Annotation) # previously, called table of contents
