@@ -13,7 +13,29 @@ module ImportService
       end
 
       def run
-        failure(details: ['Update process not yet implemented'])
+        return failure(details: @errors) unless valid? # Validate before processing data.
+
+        item = find_item(unique_identifier)
+
+        # Update Item
+        item_attributes = {
+          id: item.id,
+          human_readable_name: human_readable_name,
+          updated_by: imported_by,
+          internal_notes: internal_notes,
+          descriptive_metadata: descriptive_metadata,
+          structural_metadata: structural_metadata,
+        }.compact_blank
+
+        UpdateItem.new.call(item_attributes) do |result|
+          result.success { |i| Success(i) }
+          result.failure do |failure_hash|
+            failure(**failure_hash)
+          end
+        end
+      rescue StandardError => e
+        # Honeybadger.notify(e) # Sending full error to Honeybadger.
+        failure(exception: e)
       end
     end
   end

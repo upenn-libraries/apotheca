@@ -38,6 +38,9 @@ FactoryBot.define do
           language: [['English', Faker::Nation.language].sample(rand(1..2)).uniq]
         }
       end
+      structural_metadata do
+        { viewing_hint: [ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS].sample }
+      end
       internal_notes { Faker::Lorem.sentences(number: 2) }
       unique_identifier { "ark:/#{Faker::Number.number(digits: 8)}/random" }
       published { [true, false].sample }

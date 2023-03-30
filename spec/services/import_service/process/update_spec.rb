@@ -22,17 +22,48 @@ describe ImportService::Process::Update do
   end
 
   describe '#run?' do
-    let(:item) { persist(:item_resource) }
-    let(:process) { build(:import_process, :update, unique_identifier: item.unique_identifier) }
+    include_context 'with successful requests to update EZID'
+
+    let(:item) { persist(:item_resource, :with_faker_metadata) }
+
     let(:result) { process.run }
+    let(:updated_item) { result.value! }
 
-    it 'fails' do
-      expect(result).to be_a Dry::Monads::Failure
-    end
+    context 'when updating descriptive metadata' do
+      let(:process) do
+        build(
+          :import_process, :update,
+          unique_identifier: item.unique_identifier, structural: { viewing_direction: 'left-to-right' },
+          metadata: { collection: ['Very important new collection'], format: ['New'], language: [] }
+        )
+      end
 
-    it 'return expected failure object' do
-      expect(result.failure[:error]).to be :import_failed
-      expect(result.failure[:details]).to contain_exactly('Update process not yet implemented')
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(updated_item).to be_a ItemResource
+      end
+
+      it 'updates expected descriptive metadata' do
+        expect(updated_item.descriptive_metadata.collection).to contain_exactly('Very important new collection')
+        expect(updated_item.descriptive_metadata.format).to contain_exactly('New')
+      end
+
+      it 'does not update title' do
+        expect(updated_item.descriptive_metadata.title).to match_array(item.descriptive_metadata.title)
+      end
+
+      it 'does not update internal notes' do
+        expect(updated_item.internal_notes).to match_array(item.internal_notes)
+      end
+
+      it 'updates expected structural metadata' do
+        expect(updated_item.structural_metadata.viewing_direction).to eql 'left-to-right'
+        expect(updated_item.structural_metadata.viewing_hint).to eql item.structural_metadata.viewing_hint
+      end
+
+      it 'removes language' do
+        expect(updated_item.descriptive_metadata.language).to be_blank
+      end
     end
   end
 end
