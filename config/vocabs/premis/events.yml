@@ -1,0 +1,4 @@
+- :value: "http://id.loc.gov/vocabulary/preservation/eventType/ing"
+  :label: "ingestion"
+- :value: "http://id.loc.gov/vocabulary/preservation/eventType/mes"
+  :label: "message digest calculation"
