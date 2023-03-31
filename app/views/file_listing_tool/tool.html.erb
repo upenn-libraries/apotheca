@@ -11,6 +11,12 @@
   The filenames will be listed in alphabetical order.
 </p>
 
-<%= render 'file_listing_tool/form' %>
+<div data-controller="file-lister--file-lister">
 
+<%= render 'file_listing_tool/form' %>
 <hr />
+
+<div data-file-lister--file-lister-target="list"></div>
+
+</div>
+

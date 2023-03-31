@@ -1,7 +1,9 @@
 <%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :json), layout: :horizontal, remote: true, html: { id: 'new-file-listing' } do |f| %>
-  <%= f.select :drive, ImportService::S3Storage.all.keys, control_col: 'col-sm-4', include_blank: true %>
-  <%= f.text_field :path, control_col: 'col-sm-4' %>
+  <%= select_tag :drive, options_for_select(ImportService::S3Storage.all.keys), class:"form-select", data: {"action":"change->file-lister--file-lister#getDrive", "file-lister--file-lister-target":"select" }, include_blank: true %>
+  <%= f.text_field :path, control_col: 'col-sm-4', data: {"file-lister--file-lister-target":"path" } %>
   <%= f.form_group do %>
-    <%= f.submit 'List Filenames', class: 'btn btn-primary' %>
+    <%#= f.submit 'List Filenames', class: 'btn btn-primary' %>
+    <button type="submit", class="btn btn-primary" data-action="click->file-lister--file-lister#submit">List Filenames</button>
   <% end %>
 <% end %>
+

@@ -1,8 +1,39 @@
 # frozen_string_literal: true
 
 class FileListingToolController < ApplicationController
+  protect_from_forgery with: :null_session
   def tool; end
 
-  def file_list; end
+  def file_list
+    respond_to do |format|
+      if valid_path?
+        format.csv { send_data csv, type: 'text/csv', filename: 'structural_metadata.csv', disposition: :download }
+        format.json { render json: { filenames: filenames.join('; '), drive: params[:drive], path: params[:path] }, status: :ok }
+      else
+        format.csv {}
+        format.json { render json: { error: 'Path invalid!' }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  private
+
+  def csv
+    data = filenames.map { |f| { filename: f } }
+    Bulwark::StructuredCSV.generate(data)
+  end
+
+  def valid_path?
+    storage.valid_path?(params[:path])
+  end
+
+  def filenames
+    storage.files_at(params[:path])
+  end
+
+  def storage
+    @storage ||= ImportService::S3Storage.new(params[:drive])
+  end
 end
+
 
