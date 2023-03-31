@@ -19,7 +19,11 @@ class BulkImport < ApplicationRecord
   validates :original_filename, presence: true
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
-  scope :filter_created_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
+  scope :filter_created_between, lambda { |start_date, end_date|
+    start_date = start_date.present? ? start_date.to_date.beginning_of_day : nil
+    end_date = end_date.present? ? end_date.to_date.end_of_day : nil
+    where(created_at: start_date..end_date) if start_date || end_date
+  }
   scope :search, ->(query) { where("original_filename ILIKE :search OR note ILIKE :search", search: "%#{query}%") }
 
   paginates_per 10

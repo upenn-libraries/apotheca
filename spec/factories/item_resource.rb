@@ -82,7 +82,11 @@ FactoryBot.define do
 
     trait :with_bibnumber do
       descriptive_metadata do
-        { bibnumber: ['sample-bib'] }
+        {
+          bibnumber: ['sample-bib'],
+          abstract: [],
+          collection: ['Fake Collection']
+        }
       end
     end
   end

@@ -5,11 +5,10 @@ class BulkExport < ApplicationRecord
   belongs_to :created_by, class_name: 'User'
 
   has_one_attached :csv
-
-  validates :search_params, presence: true
   validates :state, presence: true
   validates :generated_at, presence: true, if: -> { csv.attached? }
   validate :restrict_number_of_bulk_exports
+  validate :restrict_search_params_to_hash
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
   scope :sort_by_field, ->(field, direction) { order("#{field}": direction.to_s) }
@@ -47,11 +46,18 @@ class BulkExport < ApplicationRecord
     end
   end
 
+  def restrict_search_params_to_hash
+    unless search_params.is_a?(Hash)
+      errors.add(:search_params, 'must be a hash')
+    end
+  end
+
   def solr_items
     container = Valkyrie::MetadataAdapter.find(:index_solr)
                                          .query_service
                                          .custom_queries
-                                         .item_index parameters: search_params.with_indifferent_access
+                                         .item_index parameters: search_params.update(rows: max_rows_to_export)
+                                                                              .with_indifferent_access
     container.documents
   end
 
@@ -76,5 +82,10 @@ class BulkExport < ApplicationRecord
   # @param [StringIO] csv_file
   def attach_csv_to_record(csv_file)
     csv.attach(io: csv_file, filename: sanitized_filename, content_type: 'text/csv')
+  end
+
+  # @return [Integer]
+  def max_rows_to_export
+    Solr::QueryMaps::Item::MAX_BULK_EXPORT_ROWS
   end
 end
