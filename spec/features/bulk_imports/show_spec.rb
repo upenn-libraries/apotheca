@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe 'Bulk Import Show Page' do
+  let(:user) { create(:user, role) }
+
   shared_examples_for 'any logged in user' do
     before { sign_in user }
 
@@ -131,50 +133,36 @@ describe 'Bulk Import Show Page' do
   end
 
   context 'with a viewer' do
-    let(:viewer) { create(:user, :viewer) }
+    let(:role) { :viewer }
 
-    it_behaves_like 'any logged in user' do
-      let(:user) { viewer }
-    end
+    it_behaves_like 'any logged in user'
 
-    it_behaves_like 'a user that cannot update bulk imports belonging to other users' do
-      let(:user) { viewer }
-    end
+    it_behaves_like 'a user that cannot update bulk imports belonging to other users'
   end
 
   context 'with an editor' do
-    let(:editor) { create(:user, :editor) }
+    let(:role) { :editor }
 
-    it_behaves_like 'any logged in user' do
-      let(:user) { editor }
-    end
+    it_behaves_like 'any logged in user'
 
-    it_behaves_like 'a user that cannot update bulk imports belonging to other users' do
-      let(:user) { editor }
-    end
+    it_behaves_like 'a user that cannot update bulk imports belonging to other users'
 
-    it_behaves_like 'a user that can update their own bulk imports' do
-      let(:user) { editor }
-    end
+    it_behaves_like 'a user that can update their own bulk imports'
   end
 
   context 'with an admin' do
-    let(:admin) { create(:user, :admin) }
+    let(:role) { :admin }
 
-    it_behaves_like 'any logged in user' do
-      let(:user) { admin }
-    end
+    it_behaves_like 'any logged in user'
 
-    it_behaves_like 'a user that can update their own bulk imports' do
-      let(:user) { admin }
-    end
+    it_behaves_like 'a user that can update their own bulk imports'
 
     context 'when viewing a bulk import created by another user' do
       let(:bulk_import) { create(:bulk_import) }
       let!(:queued_import) { create(:import, :queued, bulk_import: bulk_import) }
 
       before do
-        sign_in admin
+        sign_in user
         visit bulk_import_path(bulk_import)
       end
 
