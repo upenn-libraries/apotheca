@@ -204,6 +204,5 @@ title = "gitlab gitleaks config"
         '''config/initializers/devise.rb''',
         '''spec/shared_examples/ezid.rb''',
         '''spec/indexers/descriptive_metadata_spec.rb''',
-        '''app/services/import_service/s3_storage.rb''',
-        '''app/models/controlled_vocabulary.rb''',
+        '''app/services/import_service/s3_storage.rb'''
     ]

@@ -21,11 +21,14 @@ module Steps
       change_set.technical_metadata.duration  = tech_metadata.duration
       change_set.technical_metadata.sha256    = checksum
 
-      change_set.preservation_events << AssetResource::PreservationEvent.checksum(outcome: 'success', checksum: checksum.first, agent: 'TBD')
+      change_set.preservation_events << AssetResource::PreservationEvent.checksum_success(checksum: checksum.first,
+                                                                                          agent: change_set.updated_by)
 
-      Success(change_set) # TODO: ensure this trickles down through all other transactions....
+      Success(change_set)
     rescue FileCharacterization::Fits::Error => e
-      # change_set.preservation_events << AssetResource::PreservationEvent.checksum(outcome: 'fail', error: e.message, agent: 'TBD')
+      change_set.preservation_events << AssetResource::PreservationEvent.checksum_failed(error: e.message,
+                                                                                         agent: change_set.updated_by)
+
       Failure(error: :file_characterization_failed, exception: e, change_set: change_set)
     end
 

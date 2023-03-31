@@ -1,6 +1,0 @@
-- :value: "http://id.loc.gov/vocabulary/preservation/eventOutcome/fai"
-  :label: "fail"
-- :value: "http://id.loc.gov/vocabulary/preservation/eventOutcome/suc"
-  :label: "success"
-- :value: "http://id.loc.gov/vocabulary/preservation/eventOutcome/war"
-  :label: "warning"
