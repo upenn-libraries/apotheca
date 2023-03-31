@@ -73,8 +73,8 @@ describe 'Bulk Import Index Page' do
 
   context 'when searching bulk imports' do
     let(:user) { create :user, :viewer }
-    let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_export.csv') }
-    let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_export.csv', note: 'awesome note!') }
+    let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_import.csv') }
+    let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_import.csv', note: 'awesome note!') }
 
     before do
       sign_in user
@@ -86,7 +86,7 @@ describe 'Bulk Import Index Page' do
       click_on 'Submit'
       expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
       import = find('.bulk-imports-list__bulk-import')
-      expect(import).to have_text 'great_export.csv'
+      expect(import).to have_text 'great_import.csv'
     end
 
     it 'returns the result with the query in the note' do
@@ -94,14 +94,14 @@ describe 'Bulk Import Index Page' do
       click_on 'Submit'
       expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
       import = find('.bulk-imports-list__bulk-import')
-      expect(import).to have_text 'lame_export.csv'
+      expect(import).to have_text 'lame_import.csv'
     end
   end
 
   context 'when filtering bulk imports by date range' do
     let(:user) { create :user, :viewer }
-    let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_export.csv', created_at: Time.zone.local(2023, 02, 10, 12)) }
-    let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_export.csv', created_at: Time.zone.local(2023, 03, 17, 12)) }
+    let!(:first_bulk_import) { create(:bulk_import, original_filename: 'great_import.csv', created_at: Time.zone.local(2023, 02, 10, 12)) }
+    let!(:second_bulk_import) { create(:bulk_import, original_filename: 'lame_import.csv', created_at: Time.zone.local(2023, 03, 17, 12)) }
 
     before do
       sign_in user
@@ -112,7 +112,7 @@ describe 'Bulk Import Index Page' do
     it 'returns the result within the specified date rage' do
       expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
       import = find('.bulk-imports-list__bulk-import')
-      expect(import).to have_text 'lame_export.csv'
+      expect(import).to have_text 'lame_import.csv'
     end
   end
 
