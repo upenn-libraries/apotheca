@@ -237,7 +237,7 @@ describe 'Bulk Import Index Page' do
     end
   end
 
-  context 'with a viewer' do
+  context 'with a logged in viewer' do
     let(:role) { :viewer }
 
     it_behaves_like 'any logged in user'
@@ -258,7 +258,7 @@ describe 'Bulk Import Index Page' do
     end
   end
 
-  context 'with an editor' do
+  context 'with a logged in editor' do
     let(:role) { :editor }
 
     it_behaves_like 'any logged in user'
@@ -279,7 +279,7 @@ describe 'Bulk Import Index Page' do
     end
   end
 
-  context 'with an admin' do
+  context 'with a logged in admin' do
     let(:role) { :admin }
 
     it_behaves_like 'any logged in user'
