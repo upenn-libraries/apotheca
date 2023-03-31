@@ -38,7 +38,8 @@ module ImportService
     def file(key)
       tempfile = Tempfile.new
       client.get_object({ bucket: bucket, key: key }, target: tempfile.path)
-      tempfile
+
+      File.new(tempfile: tempfile, key: key)
     end
 
     # Returns true if the given path exists within the bucket. Checks for valid filepaths and directories.
@@ -69,6 +70,26 @@ module ImportService
       end
 
       keys
+    end
+
+    # Represents file retrieved from S3.
+    #
+    # Combines together a tempfile and other information about the file retrieved. This class
+    # delegates most of its behavior to the tempfile and adds in some additional methods. Was
+    # inspired by ActionDispatch::Http::UploadedFile.
+    class File
+      attr_reader :tempfile, :key
+
+      delegate_missing_to :tempfile
+
+      def initialize(tempfile:, key:)
+        @tempfile = tempfile
+        @key = key
+      end
+
+      def original_filename
+        key.split('/').last
+      end
     end
 
     # Returns true if the given store is configured.

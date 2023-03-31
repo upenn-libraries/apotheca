@@ -61,7 +61,7 @@ describe ImportService::AssetsLocation do
     end
 
     it 'returns file when file is present' do
-      expect(location.file_for('front.tif')).to be_a Tempfile
+      expect(location.file_for('front.tif')).to be_a ImportService::S3Storage::File
     end
   end
 end
