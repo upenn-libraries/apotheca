@@ -5,8 +5,11 @@ describe ImportService::S3Storage do
 
   describe '#file' do
     context 'when key is valid' do
-      it 'returns Tempfile' do
-        expect(storage.file('trade_card/front.tif')).to be_a Tempfile
+      let(:file) { storage.file('trade_card/front.tif') }
+
+      it 'returns ImportService::S3Storage::File' do
+        expect(file).to be_a ImportService::S3Storage::File
+        expect(file.original_filename).to eql 'front.tif'
       end
     end
 
