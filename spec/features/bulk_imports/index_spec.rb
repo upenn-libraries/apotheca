@@ -1,75 +1,73 @@
 # frozen_string_literal: true
 
 describe 'Bulk Import Index Page' do
-  context 'when permissions differ' do
-    let(:user) { create :user, role }
+  let(:user) { create :user, role }
 
-    before { sign_in user }
+  before { sign_in user }
 
-    context 'with a viewer' do
-      let(:role) { :viewer }
+  context 'with a viewer' do
+    let(:role) { :viewer }
 
-      before do
-        create_list(:bulk_import, 1)
-        visit bulk_imports_path
-      end
-
-      it 'lists all BulkImports' do
-        expect(page).to have_text('.csv', count: 1)
-        expect(page).to have_css('.bulk-imports-list__bulk-import', count: 1)
-      end
-
-      it 'does not show button to create new bulk import' do
-        expect(page).not_to have_link('New Bulk Import', href: new_bulk_import_path)
-      end
-
-      it 'does not show cancel buttons' do
-        expect(page).not_to have_link('Cancel')
-      end
+    before do
+      create_list(:bulk_import, 1)
+      visit bulk_imports_path
     end
 
-    context 'with an editor' do
-      let(:role) { :editor }
-      let(:bulk_import) { create(:bulk_import, created_by: user) }
-
-      before do
-        create(:import, :queued, bulk_import: bulk_import)
-        visit bulk_imports_path
-      end
-
-      it 'shows button to create new bulk import' do
-        expect(page).to have_link('New Bulk Import', href: new_bulk_import_path)
-      end
-
-      it 'shows a cancel button' do
-        expect(page).to have_button('Cancel', type: "submit")
-      end
-
-      it 'can cancel all queued imports' do
-        click_on 'Cancel'
-        expect(page).to have_text('All queued imports were cancelled')
-        expect(page).not_to have_button('Cancel')
-      end
+    it 'lists all BulkImports' do
+      expect(page).to have_text('.csv', count: 1)
+      expect(page).to have_css('.bulk-imports-list__bulk-import', count: 1)
     end
 
-    context 'with an admin' do
-      let(:role) { :admin }
-      let(:bulk_import) { create(:bulk_import) }
+    it 'does not show button to create new bulk import' do
+      expect(page).not_to have_link('New Bulk Import', href: new_bulk_import_path)
+    end
 
-      before do
-        create(:import, :queued, bulk_import: bulk_import)
-        visit bulk_imports_path
-      end
+    it 'does not show cancel buttons' do
+      expect(page).not_to have_link('Cancel')
+    end
+  end
 
-      it 'shows button to create new bulk import' do
-        expect(page).to have_link('New Bulk Import', href: new_bulk_import_path)
-      end
+  context 'with an editor' do
+    let(:role) { :editor }
+    let(:bulk_import) { create(:bulk_import, created_by: user) }
 
-      it 'can cancel others\' bulk imports' do
-        expect(page).to have_button('Cancel', type: "submit")
-        click_on 'Cancel'
-        expect(page).to have_text('All queued imports were cancelled')
-      end
+    before do
+      create(:import, :queued, bulk_import: bulk_import)
+      visit bulk_imports_path
+    end
+
+    it 'shows button to create new bulk import' do
+      expect(page).to have_link('New Bulk Import', href: new_bulk_import_path)
+    end
+
+    it 'shows a cancel button' do
+      expect(page).to have_button('Cancel', type: "submit")
+    end
+
+    it 'can cancel all queued imports' do
+      click_on 'Cancel'
+      expect(page).to have_text('All queued imports were cancelled')
+      expect(page).not_to have_button('Cancel')
+    end
+  end
+
+  context 'with an admin' do
+    let(:role) { :admin }
+    let(:bulk_import) { create(:bulk_import) }
+
+    before do
+      create(:import, :queued, bulk_import: bulk_import)
+      visit bulk_imports_path
+    end
+
+    it 'shows button to create new bulk import' do
+      expect(page).to have_link('New Bulk Import', href: new_bulk_import_path)
+    end
+
+    it 'can cancel others\' bulk imports' do
+      expect(page).to have_button('Cancel', type: "submit")
+      click_on 'Cancel'
+      expect(page).to have_text('All queued imports were cancelled')
     end
   end
 
