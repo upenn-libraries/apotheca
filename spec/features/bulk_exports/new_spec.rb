@@ -37,5 +37,16 @@ describe 'Bulk Export New Page' do
         expect(find(class: 'card-title')).to have_text('Green')
       end
     end
+
+    context 'when creating a Bulk Export without filtered search parameters' do
+      before do
+        click_on 'Export as CSV'
+        click_on 'Create'
+      end
+
+      it 'creates a Bulk Export' do
+        expect(page).to have_text('Bulk export created')
+      end
+    end
   end
 end
