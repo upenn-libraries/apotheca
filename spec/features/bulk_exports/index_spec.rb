@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Bulk Import Index Page' do
+describe 'Bulk Export Index Page' do
   let(:user) { create(:user, role) }
 
   shared_examples_for 'any logged in user' do
