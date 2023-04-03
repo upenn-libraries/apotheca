@@ -1,8 +1,12 @@
-module Premis
-  module Outcomes
-    Term = Data.define :label, :uri
+# frozen_string_literal: true
 
-    FAILURE = Term['fail', 'http://id.loc.gov/vocabulary/preservation/eventOutcome/fai']
+module Premis
+  # PREMIS Outcomes
+  # https://id.loc.gov/vocabulary/preservation/eventOutcome.html
+  module Outcomes
+    include VocabTypes
+
+    FAILURE = Term['fail',    'http://id.loc.gov/vocabulary/preservation/eventOutcome/fai']
     SUCCESS = Term['success', 'http://id.loc.gov/vocabulary/preservation/eventOutcome/suc']
     WARNING = Term['warning', 'http://id.loc.gov/vocabulary/preservation/eventOutcome/war']
   end
