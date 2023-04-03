@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["pathInput", "driveSelect", "filenameList"]
+    static targets = ["pathInput", "driveSelect", "filenameList", "fileListingForm", "driveResponse", "pathResponse", "errorMessage"]
 
     connect(event) {
         console.log('hello', this.element)
@@ -15,13 +15,33 @@ export default class extends Controller {
        return this.driveSelectTarget.value
     }
 
+    setDrive(drive){
+        this.driveResponseTarget.value = drive
+    }
+
+    setPath(path){
+        this.pathResponseTarget.value = path
+    }
+
     setList(filenames) {
-       this.filenameListTarget.innerText = filenames
+        this.clear()
+        this.filenameListTarget.innerText = filenames
+    }
+
+    setError(error){
+        this.clear()
+        this.errorMessageTarget.innerText = error
+
+    }
+
+    clear(){
+        this.filenameListTarget.innerText = ""
+        this.errorMessageTarget.innerText= ""
     }
     async submit(event){
         // TODO verify drive is selected, otherwise display error message
         event.preventDefault()
-        const res = await fetch("/file_listing_tool/file_list", {
+        const response = await fetch("/file_listing_tool/file_list", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -30,10 +50,31 @@ export default class extends Controller {
             body: JSON.stringify({drive: this.getDrive(), path: this.getPath()} )
         })
 
-        //TODO check for unsuccessful http response
-        const json = await res.json()
+        if(!response.ok) {
+            return this.setError(response.status)
+        }
 
-        //TODO handle array of filenames
-        this.setList(json.filenames)
+
+        const json = await response.json()
+
+        //TODO check for unsuccessful http response
+
+        //TODO check if there's an error on the http response
+
+        if(json.error){
+            this.setError(json.error)
+        } else if (json.filenames) {
+            //TODO handle array of filenames
+            this.setDrive(json.drive)
+            this.setPath(json.path)
+            this.setList(json.filenames)
+            this.fileListingFormTarget.hidden = false
+        } else {
+            this.setError()
+        }
+
+
+
+
     }
 }
