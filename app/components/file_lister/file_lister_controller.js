@@ -24,23 +24,25 @@ export default class extends Controller {
     }
 
     setList(filenames) {
-        this.clear()
         this.filenameListTarget.innerText = filenames
     }
 
     setError(error){
-        this.clear()
         this.errorMessageTarget.innerText = error
-
     }
 
     clear(){
         this.filenameListTarget.innerText = ""
-        this.errorMessageTarget.innerText= ""
+        this.errorMessageTarget.innerText = ""
     }
+
+    copy() {
+        navigator.clipboard.writeText(this.filenameListTarget.value)
+    }
+
     async submit(event){
-        // TODO verify drive is selected, otherwise display error message
         event.preventDefault()
+        this.clear()
         const response = await fetch("/file_listing_tool/file_list", {
             method: "POST",
             headers: {
@@ -50,31 +52,19 @@ export default class extends Controller {
             body: JSON.stringify({drive: this.getDrive(), path: this.getPath()} )
         })
 
-        if(!response.ok) {
-            return this.setError(response.status)
-        }
-
-
         const json = await response.json()
 
-        //TODO check for unsuccessful http response
-
-        //TODO check if there's an error on the http response
-
-        if(json.error){
+        if(!response.ok && json.error){
             this.setError(json.error)
-        } else if (json.filenames) {
-            //TODO handle array of filenames
+        }
+
+        if (json.filenames) {
             this.setDrive(json.drive)
             this.setPath(json.path)
             this.setList(json.filenames)
             this.fileListingFormTarget.hidden = false
         } else {
-            this.setError()
+            this.fileListingFormTarget.hidden = true
         }
-
-
-
-
     }
 }
