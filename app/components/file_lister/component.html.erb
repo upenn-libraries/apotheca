@@ -28,7 +28,7 @@
       <%= f.text_field :path, control_col: 'col-sm-4', data: {"file-lister--file-lister-target": "pathResponse"}, disabled: true %>
       <%= f.text_area :filenames, readonly: true, data: {"file-lister--file-lister-target": "filenameList"} %>
       <%= f.form_group do %>
-        <button type="button" class="btn btn-primary" id="copy-button">Copy Filenames</button>
+        <button type="button" class="btn btn-primary" id="copy-button" data-action="click->file-lister--file-lister#copy">Copy Filenames</button>
         <%= f.submit 'Export Structural Metadata CSV', class: 'btn btn-info' %>
       <% end %>
     <% end %>
