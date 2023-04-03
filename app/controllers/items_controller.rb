@@ -49,7 +49,7 @@ class ItemsController < ApplicationController
     UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **item_params) do |result|
       result.success do |resource|
         flash.notice = 'Successfully updated item.'
-        redirect_to item_path(resource)
+        redirect_to item_path(resource, anchor: params[:form])
       end
 
       result.failure do |failure|
