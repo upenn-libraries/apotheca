@@ -24,8 +24,8 @@
   <div id="file-listing" data-file-lister--file-lister-target="fileListingForm" hidden>
     <h4>Extracted Filenames</h4>
     <%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :csv), layout: :horizontal do |f| %>
-      <%= f.text_field :drive, control_col: 'col-sm-4', data: {"file-lister--file-lister-target": "driveResponse"}, disabled: true%>
-      <%= f.text_field :path, control_col: 'col-sm-4', data: {"file-lister--file-lister-target": "pathResponse"}, disabled: true %>
+      <%= f.text_field :drive, control_col: 'col-sm-4', data: {"file-lister--file-lister-target": "driveResponse"} %>
+      <%= f.text_field :path, control_col: 'col-sm-4', data: {"file-lister--file-lister-target": "pathResponse"} %>
       <%= f.text_area :filenames, readonly: true, data: {"file-lister--file-lister-target": "filenameList"} %>
       <%= f.form_group do %>
         <button type="button" class="btn btn-primary" id="copy-button" data-action="click->file-lister--file-lister#copy">Copy Filenames</button>

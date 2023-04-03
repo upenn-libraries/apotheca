@@ -20,7 +20,7 @@ class FileListingToolController < ApplicationController
 
   def csv
     data = filenames.map { |f| { filename: f } }
-    Bulwark::StructuredCSV.generate(data)
+    StructuredCSV.generate(data)
   end
 
   def valid_path?
