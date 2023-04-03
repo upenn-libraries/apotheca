@@ -1,22 +1,22 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["path", 'select', "list"]
+    static targets = ["pathInput", "driveSelect", "filenameList"]
 
     connect(event) {
         console.log('hello', this.element)
     }
 
     getPath(){
-        return this.pathTarget.value
+        return this.pathInputTarget.value
     }
 
    getDrive() {
-       return this.selectTarget.value
+       return this.driveSelectTarget.value
     }
 
     setList(filenames) {
-       this.listTarget.innerText = filenames
+       this.filenameListTarget.innerText = filenames
     }
     async submit(event){
         // TODO verify drive is selected, otherwise display error message
