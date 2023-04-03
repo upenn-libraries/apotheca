@@ -1,5 +1,5 @@
-<%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :json), layout: :horizontal, remote: true, html: { id: 'new-file-listing' } do |f| %>
-  <%= f.select :drive, options_for_select(ImportService::S3Storage.all.keys), { control_col: "col-sm-4" }, data: { "file-lister--file-lister-target":"select" } %>
+<%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :json), layout: :horizontal, html: { id: 'new-file-listing' } do |f| %>
+  <%= f.select :drive, options_for_select(ImportService::S3Storage.all.keys), { control_col: "col-sm-4", include_blank: true }, data: { "file-lister--file-lister-target":"select" } %>
   <%= f.text_field :path, control_col: 'col-sm-4', data: {"file-lister--file-lister-target":"path" } %>
   <%= f.form_group do %>
     <%= f.submit 'List Filenames', class: 'btn btn-primary', data: { "action":"click->file-lister--file-lister#submit" }%>
