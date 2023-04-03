@@ -1,0 +1,24 @@
+<h2>File Listing Tool</h2>
+
+<p>
+  List the filenames of all the files in the given directory.
+  The filenames will be listed in alphabetical order.
+</p>
+
+<div data-controller="file-lister--file-lister">
+
+  <%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :json), layout: :horizontal, html: { id: 'new-file-listing' } do |f| %>
+    <%= f.select :drive, options_for_select(ImportService::S3Storage.all.keys), { control_col: "col-sm-4", include_blank: true }, data: { "file-lister--file-lister-target": "driveSelect" } %>
+    <%= f.text_field :path, control_col: 'col-sm-4', data: { "file-lister--file-lister-target": "pathInput" } %>
+    <%= f.form_group do %>
+      <%= f.submit 'List Filenames', class: 'btn btn-primary', data: { "action": "click->file-lister--file-lister#submit" } %>
+    <% end %>
+  <% end %>
+
+  <hr/>
+
+  <div data-file-lister--file-lister-target="filenameList"></div>
+
+</div>
+
+

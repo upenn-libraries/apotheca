@@ -1,22 +1,11 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
-  <% component.with_breadcrumb(href: "/") do %>Home<% end %>
-  <% component.with_breadcrumb(href: bulk_imports_path) do %>Bulk Imports<% end %>
-  <% component.with_breadcrumb(active: true) do %>File Listing Tool<% end %>
+  <% component.with_breadcrumb(href: "/") do %>Home
+  <% end %>
+  <% component.with_breadcrumb(href: bulk_imports_path) do %>Bulk Imports
+  <% end %>
+  <% component.with_breadcrumb(active: true) do %>File Listing Tool
+  <% end %>
 <% end %>
 
-<h2>File Listing Tool</h2>
-
-<p>
-  List the filenames of all the files in the given directory.
-  The filenames will be listed in alphabetical order.
-</p>
-
-<div data-controller="file-lister--file-lister">
-
-<%= render 'file_listing_tool/form' %>
-<hr />
-
-<div data-file-lister--file-lister-target="list"></div>
-
-</div>
+<%= render(FileLister::Component.new()) %>
 
