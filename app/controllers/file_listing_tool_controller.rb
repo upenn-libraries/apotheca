@@ -6,7 +6,7 @@ class FileListingToolController < ApplicationController
 
   def file_list
     respond_to do |format|
-      if valid_path?
+      if valid_path? && valid_drive?
         format.csv { send_data csv, type: 'text/csv', filename: 'structural_metadata.csv', disposition: :download }
         format.json { render json: { filenames: filenames.join('; '), drive: params[:drive], path: params[:path] }, status: :ok }
       else
@@ -24,7 +24,11 @@ class FileListingToolController < ApplicationController
   end
 
   def valid_path?
-    storage.valid_path?(params[:path])
+    storage.valid_path?(params[:path]) if valid_drive?
+  end
+
+  def valid_drive?
+    ImportService::S3Storage.all.include?(params[:drive])
   end
 
   def filenames
@@ -32,7 +36,7 @@ class FileListingToolController < ApplicationController
   end
 
   def storage
-    @storage ||= ImportService::S3Storage.new(params[:drive])
+    @storage ||= ImportService::S3Storage.new(params[:drive]) if valid_drive?
   end
 end
 
