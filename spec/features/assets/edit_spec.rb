@@ -10,7 +10,7 @@ describe 'Asset Edit Page' do
     visit edit_asset_path(item.asset_ids.first)
   end
 
-  it 'requires a preservation file' do
+  it 'requires a preservation file when one has not been previously set' do
     fill_in 'asset-label', with: asset_label
     click_on 'Save'
     expect(page).to have_text("Preservation file can't be blank")
