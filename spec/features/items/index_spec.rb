@@ -9,7 +9,6 @@ describe 'Item Index Page' do
   end
 
   context 'without incorporated ILS metadata' do
-
     let(:role) { :viewer }
 
     before { visit items_path }
