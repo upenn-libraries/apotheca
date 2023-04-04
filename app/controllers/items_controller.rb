@@ -34,7 +34,7 @@ class ItemsController < ApplicationController
     CreateItem.new.call(created_by: current_user.email, **item_params) do |result|
       result.success do |resource|
         flash.notice = 'Successfully created item.'
-        redirect_to edit_item_path(resource)
+        redirect_to item_path(resource)
       end
 
       result.failure do |failure|
@@ -49,7 +49,7 @@ class ItemsController < ApplicationController
     UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **item_params) do |result|
       result.success do |resource|
         flash.notice = 'Successfully updated item.'
-        redirect_to edit_item_path(resource, anchor: params[:form])
+        redirect_to item_path(resource, anchor: params[:form])
       end
 
       result.failure do |failure|
