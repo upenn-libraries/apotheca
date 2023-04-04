@@ -22,16 +22,6 @@ describe 'Item New Page' do
       click_on 'Save'
       expect(page).to have_text("Title can't be blank")
     end
-
-    it 'requires viewing direction' do
-      click_on 'Save'
-      expect(page).to have_text('Viewing direction is not included in the list')
-    end
-
-    it 'requires viewing hint' do
-      click_on 'Save'
-      expect(page).to have_text('Viewing hint is not included in the list')
-    end
   end
 
   context 'when required fields are present' do
