@@ -19,11 +19,13 @@ describe 'Asset Show Page' do
       expect(page).to have_text(asset.original_filename)
     end
   end
+
   shared_examples_for 'any logged in user who can edit Assets' do
     it 'shows link to edit assets' do
       expect(page).to have_link('Edit Asset')
     end
   end
+
   shared_examples_for 'any logged in user who cannot delete Assets' do
     it 'does not show the button to delete Asset' do
       expect(page).not_to have_button('Delete Asset')
