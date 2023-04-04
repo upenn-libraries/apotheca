@@ -179,11 +179,11 @@ describe 'Bulk Export Index Page' do
   context 'when filtering Bulk Exports' do
     let(:user) { create(:user, :viewer) }
     let(:other_user) { create(:user, :admin) }
-    let!(:user_export) { create(:bulk_export, created_by: user) }
-    let!(:bulk_export) { create(:bulk_export, created_by: other_user) }
 
     before do
       sign_in user
+      create(:bulk_export, created_by: user)
+      create(:bulk_export, created_by: other_user)
       visit bulk_exports_path
     end
 
@@ -243,10 +243,9 @@ describe 'Bulk Export Index Page' do
     it_behaves_like 'any logged in user'
 
     context 'when viewing bulk exports that belong to other users' do
-      let!(:bulk_exports) { create_list(:bulk_export, 10) }
-
       before do
         sign_in user
+        create_list(:bulk_export, 10)
         visit bulk_exports_path
       end
 
@@ -262,10 +261,9 @@ describe 'Bulk Export Index Page' do
     it_behaves_like 'any logged in user'
 
     context 'when viewing bulk exports that belong to other users' do
-      let!(:bulk_exports) { create_list(:bulk_export, 10) }
-
       before do
         sign_in user
+        create_list(:bulk_export, 10)
         visit bulk_exports_path
       end
 
@@ -281,10 +279,9 @@ describe 'Bulk Export Index Page' do
     it_behaves_like 'any logged in user'
 
     context 'when viewing bulk exports that belong to other users' do
-      let!(:bulk_exports) { create_list(:bulk_export, 10) }
-
       before do
         sign_in user
+        create_list(:bulk_export, 10)
         visit bulk_exports_path
       end
 
