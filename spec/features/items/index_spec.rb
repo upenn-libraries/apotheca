@@ -8,7 +8,12 @@ describe 'Item Index Page' do
     sign_in user
   end
 
-  shared_examples_for 'any logged in user' do
+  context 'without incorporated ILS metadata' do
+
+    let(:role) { :viewer }
+
+    before { visit items_path }
+
     it 'lists Item human readable name' do
       expect(page).to have_link item.human_readable_name, href: item_path(item)
     end
@@ -21,7 +26,6 @@ describe 'Item Index Page' do
     end
   end
 
-  # we can try to reorganize the ILS metadata context into a shared example
   context 'with incorporated ILS metadata' do
     let(:user) { create(:user, :viewer) }
     let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
@@ -44,8 +48,6 @@ describe 'Item Index Page' do
 
     before { visit items_path }
 
-    it_behaves_like 'any logged in user'
-
     it 'shows link to create item' do
       expect(page).to have_link('Create Item', href: new_item_path)
     end
@@ -65,8 +67,6 @@ describe 'Item Index Page' do
     before do
       visit items_path
     end
-
-    it_behaves_like 'any logged in user'
 
     it 'does not show link to create an item' do
       visit items_path
