@@ -13,17 +13,24 @@ describe 'User Index Page' do
   end
 
   context 'with User searching and filtering' do
-    let(:user1_fname) { 'Carla' }
-    let(:user2_lname) { 'Kanning' }
-    let(:user3_fname) { 'Bob' }
-    let(:user3_lname) { 'Smith' }
+    let(:names) do
+      {
+        user1_fname: 'Carla',
+        user2_lname: 'Kanning',
+        user3_fname: 'Bob',
+        user3_lname: 'Smith'
+      }
+    end
+
     let(:user4_email) { 'jdoe@upenn.edu' }
 
-    let(:user) { create(:user, :admin, first_name: user1_fname, last_name: 'Galarza', email: 'cgalarza@upenn.edu') }
+    let(:user) do
+      create(:user, :admin, first_name: names[:user1_fname], last_name: 'Galarza', email: 'cgalarza@upenn.edu')
+    end
 
     before do
-      create(:user, :admin, first_name: 'Michael', last_name: user2_lname, email: 'mk@upenn.edu')
-      create(:user, :editor, first_name: user3_fname, last_name: user3_lname, email: 'bobs@upenn.edu')
+      create(:user, :admin, first_name: 'Michael', last_name: names[:user2_lname], email: 'mk@upenn.edu')
+      create(:user, :editor, first_name: names[:user3_fname], last_name: names[:user3_lname], email: 'bobs@upenn.edu')
       create(:user, :viewer, first_name: 'Jane', last_name: 'Doe', email: user4_email, active: 0)
 
       visit users_path
@@ -33,28 +40,28 @@ describe 'User Index Page' do
       fill_in 'Search', with: 'rl'
       click_on 'Filter'
       expect(page).to have_selector '.users-list__user', count: 1
-      expect(page).to have_text(user1_fname)
+      expect(page).to have_text(names[:user1_fname])
     end
 
     it 'searches by last name' do
       fill_in 'Search', with: 'annin'
       click_on 'Filter'
       expect(page).to have_selector '.users-list__user', count: 1
-      expect(page).to have_text user2_lname
+      expect(page).to have_text names[:user2_lname]
     end
 
     it 'searches by email' do
       fill_in 'Search', with: '@upenn'
       click_on 'Filter'
       expect(page).to have_selector '.users-list__user', count: 4
-      expect(page).to have_text user2_lname
+      expect(page).to have_text names[:user2_lname]
     end
 
     it 'searches by full name' do
       fill_in 'Search', with: 'Bob Smith'
       click_on 'Filter'
       expect(page).to have_selector '.users-list__user', count: 1
-      expect(page).to have_text([user3_fname, user3_lname].join(' '))
+      expect(page).to have_text([names[:user3_fname], names[:user3_lname]].join(' '))
     end
 
     it 'filters by status' do

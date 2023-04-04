@@ -8,7 +8,6 @@ describe 'Item Index Page' do
   end
 
   shared_examples_for 'any logged in user' do
-
     it 'lists Item human readable name' do
       expect(page).to have_link item.human_readable_name, href: item_path(item)
     end
@@ -74,4 +73,3 @@ describe 'Item Index Page' do
     end
   end
 end
-

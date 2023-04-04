@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe 'Asset Edit Page' do
-
   let(:user) { create(:user, :admin) }
   let(:item) { persist(:item_resource, :with_asset) }
   let(:asset_label) { 'Test' }
@@ -12,7 +11,7 @@ describe 'Asset Edit Page' do
   end
 
   it 'requires a preservation file' do
-    fill_in 'asset-label', with: 'Test'
+    fill_in 'asset-label', with: asset_label
     click_on 'Save'
     expect(page).to have_text("Preservation file can't be blank")
   end
@@ -30,5 +29,4 @@ describe 'Asset Edit Page' do
     expect(page).to have_text(asset_label)
     expect(page).to have_text('Successfully updated asset.')
   end
-
 end

@@ -112,7 +112,6 @@ describe 'Import Show Page' do
 
     it_behaves_like 'any user that can update their own Import'
 
-
     it 'displays button to cancel queued import that belongs to other user' do
       expect(page).to have_button('Cancel')
     end
@@ -123,5 +122,4 @@ describe 'Import Show Page' do
       expect(page).not_to have_button('Cancel')
     end
   end
-
 end

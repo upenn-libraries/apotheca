@@ -7,14 +7,12 @@ describe 'Item New Page' do
   include_context 'with successful requests to mint EZID'
   include_context 'with successful requests to update EZID'
 
-
   before do
     sign_in user
     visit new_item_path
   end
 
   context 'when required fields are blank' do
-
     it 'requires human readable name' do
       click_on 'Save'
       expect(page).to have_text("Human readable name can't be blank")
@@ -37,7 +35,6 @@ describe 'Item New Page' do
   end
 
   context 'when required fields are present' do
-
     before do
       fill_in 'item-human-readable-name', with: item.human_readable_name
       fill_in 'item-descriptive-metadata-title', with: item.descriptive_metadata.title.first

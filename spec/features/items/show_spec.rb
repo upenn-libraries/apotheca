@@ -3,19 +3,17 @@
 describe 'Item Show Page' do
   let(:user) { create(:user, role) }
 
-
   before do
     sign_in user
   end
 
   shared_examples_for 'any logged in user' do
-
     it 'shows human readable name' do
       expect(page).to have_text(item.human_readable_name)
     end
   end
-  shared_examples_for 'any user who can edit an Item' do
 
+  shared_examples_for 'any user who can edit an Item' do
     it 'shows link to edit item on descriptive metadata tab' do
       expect(page).to have_link('Edit', href: "#{items_path}/#{item.id}/edit#descriptive")
     end
@@ -73,7 +71,6 @@ describe 'Item Show Page' do
 
     before { visit item_path(item) }
 
-
     it_behaves_like 'any logged in user'
 
     it 'does not show link to edit item on descriptive metadata tab' do
@@ -122,7 +119,6 @@ describe 'Item Show Page' do
 
     before { visit item_path(item) }
 
-
     it_behaves_like 'any logged in user'
     it_behaves_like 'any user who can edit an Item'
 
@@ -133,5 +129,3 @@ describe 'Item Show Page' do
     end
   end
 end
-
-

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe 'Asset Show Page' do
-
   let(:user) { create(:user, role) }
   let(:asset) { persist(:asset_resource) }
   let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
@@ -12,7 +11,6 @@ describe 'Asset Show Page' do
   end
 
   shared_examples_for 'any logged in user' do
-
     it 'shows asset id' do
       expect(page).to have_text(asset.id)
     end
@@ -31,7 +29,6 @@ describe 'Asset Show Page' do
       expect(page).not_to have_button('Delete Asset')
     end
   end
-
 
   context 'with a logged in viewer' do
     let(:role) { :viewer }
@@ -63,6 +60,3 @@ describe 'Asset Show Page' do
     end
   end
 end
-
-
-
