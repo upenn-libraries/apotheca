@@ -2,6 +2,7 @@
 
 describe 'Item Index Page' do
   let(:user) { create(:user, role) }
+  let!(:item) { persist(:item_resource, :with_asset) }
 
   before do
     sign_in user
@@ -24,12 +25,12 @@ describe 'Item Index Page' do
   context 'with incorporated ILS metadata' do
     let(:user) { create(:user, :viewer) }
     let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
-    let(:item) { persist(:item_resource, :with_bibnumber) }
+    let(:item_with_bibnumber) { persist(:item_resource, :with_bibnumber) }
 
     before do
       stub_request(:get, 'https://marmite.library.upenn.edu:9292/api/v2/records/sample-bib/marc21?update=always')
         .to_return(status: 200, body: marc_xml, headers: {})
-      item # build item after Marmite request has been stubbed
+      item_with_bibnumber # build item after Marmite request has been stubbed
       visit items_path
     end
 
@@ -40,7 +41,6 @@ describe 'Item Index Page' do
 
   context 'with an admin' do
     let(:role) { :admin }
-    let!(:item) { persist(:item_resource, :with_asset) }
 
     before { visit items_path }
 
@@ -61,9 +61,10 @@ describe 'Item Index Page' do
 
   context 'with a viewer' do
     let(:role) { :viewer }
-    let!(:item) { persist(:item_resource, :with_asset) }
 
-    before { visit items_path }
+    before do
+      visit items_path
+    end
 
     it_behaves_like 'any logged in user'
 
