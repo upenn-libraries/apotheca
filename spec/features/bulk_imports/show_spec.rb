@@ -19,7 +19,7 @@ describe 'Bulk Import Show Page' do
 
       it 'has link to download csv' do
         href = csv_bulk_import_path(bulk_import)
-        within('#bulk-import-dl') { expect(page).to have_link('Download CSV', href:) }
+        within('#bulk-import-dl') { expect(page).to have_link('Download CSV', href: href) }
       end
 
       it 'displays the total number of imports' do
@@ -70,9 +70,11 @@ describe 'Bulk Import Show Page' do
 
     context 'when viewing a bulk import show page that belongs to another user' do
       let!(:bulk_import) { create(:bulk_import) }
-      let!(:queued_import) { create(:import, :queued, bulk_import: bulk_import) }
 
-      before { visit bulk_import_path(bulk_import) }
+      before do
+        visit bulk_import_path(bulk_import)
+        create(:import, :queued, bulk_import: bulk_import)
+      end
 
       it 'does not display a button to cancel all queued imports' do
         expect(page).not_to have_button('Cancel All Queued Imports')
@@ -113,14 +115,15 @@ describe 'Bulk Import Show Page' do
         end
         expect(page).to have_text("Import #{queued_imports.first.id} cancelled")
       end
-
     end
 
     context 'when viewing their bulk import that has no cancellable imports' do
       let(:bulk_import) { create(:bulk_import, created_by: user) }
-      let!(:import) { create(:import, :successful, bulk_import: bulk_import) }
 
-      before { visit bulk_import_path(bulk_import) }
+      before do
+        create(:import, :successful, bulk_import: bulk_import)
+        visit bulk_import_path(bulk_import)
+      end
 
       it 'does not display a button to cancel all queued imports' do
         expect(page).not_to have_button('Cancel All Queued Imports')
@@ -159,10 +162,10 @@ describe 'Bulk Import Show Page' do
 
     context 'when viewing a bulk import created by another user' do
       let(:bulk_import) { create(:bulk_import) }
-      let!(:queued_import) { create(:import, :queued, bulk_import: bulk_import) }
 
       before do
         sign_in user
+        create(:import, :queued, bulk_import: bulk_import)
         visit bulk_import_path(bulk_import)
       end
 
