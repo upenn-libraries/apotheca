@@ -39,8 +39,8 @@ describe 'Item Index Page' do
     end
   end
 
-  context 'with an admin' do
-    let(:role) { :admin }
+  context 'with an editor' do
+    let(:role) { :editor }
 
     before { visit items_path }
 
