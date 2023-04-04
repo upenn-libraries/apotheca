@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 describe Steps::AddPreservationEvents do
-  let(:resource_class) { AssetResource }
-  let(:change_set_class) { AssetChangeSet }
-
   describe '#call' do
-    let(:change_set) { described_class.new }
-
     context 'with preceding events' do
+      let(:asset) { persist(:asset_resource, :with_preservation_file) }
+      let(:change_set) { AssetChangeSet.new(asset) }
+      let(:preceding_event) { build(:preservation_event, :virus_check, :success, :user_agent, outcome_detail_note: 'No virus') }
+      let(:result) { described_class.new.call(change_set, events: preceding_event) }
 
+      it 'sets any preceding events on the change set' do
+        expect(result.value!.preservation_events).to include preceding_event
+      end
     end
 
     context 'with migration attribute on the change set' do

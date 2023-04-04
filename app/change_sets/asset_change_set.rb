@@ -43,7 +43,7 @@ class AssetChangeSet < Valkyrie::ChangeSet
   property :preservation_copies_ids, multiple: true, required: false
   property :technical_metadata, multiple: false, form: TechnicalMetadataChangeSet
   property :preservation_events, multiple: true, required: false # TODO: should be required?
-
+  property :migrated_object, multiple: false, virtual: true
   property :label, multiple: false
 
   collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource

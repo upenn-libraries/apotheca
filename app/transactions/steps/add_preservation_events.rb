@@ -13,7 +13,7 @@ module Steps
       @change_set = change_set
 
       # TODO: assume we trickle down the previosu (virus check) events as fully-formed Preservation events. We may need to set the timestamp to the value used here.
-      @change_set.preservation_events += attributes.delete :events
+      @change_set.preservation_events += Array.wrap(attributes.delete :events)
       add_action_event
       add_checksum_event
       add_filename_events if filename_changed?
@@ -24,7 +24,10 @@ module Steps
     private
 
     def add_action_event
-      note_attr = case action_event_type
+      type = action_event_type
+      return unless type # don't add an ingestion event - no file action
+
+      note_attr = case type
                   when :migration
                     { note: 'Object migrated from Bulwark to Apotheca' }
                   when :ingestion
@@ -32,14 +35,14 @@ module Steps
                   when :reingestion
                     { note: "New file ingested as #{@change_set.original_filename}" }
                   else
-                    {} # TODO: desired behavior?
+                    {} # TODO: return here somehow instead of guard above?
                   end
       event_attrs = { agent: @change_set.updated_by, timestamp: timestamp}.merge note_attr
-      @change_set.preservation_events << EVENT.ingestion(*event_attrs)
+      @change_set.preservation_events << EVENT.ingestion(**event_attrs)
     end
 
     def add_checksum_event
-      checksum = @change_set.technical_metadata.checksum.first
+      checksum = @change_set.technical_metadata.sha256.first
       @change_set.preservation_events << EVENT.checksum(
         note: "Checksum for file is #{checksum}",
         agent: @change_set.updated_by,
@@ -62,13 +65,13 @@ module Steps
 
     # @return [Symbol]
     def action_event_type
-      if @change_set.migration? # todo: configure virtual attribute?
+      if @change_set.migrated_object
         :migration
-      elsif @change_set.resource.preservation_file_id.id.blank? && @change_set.preservation_file_id.id.present?
+      elsif @change_set.resource.preservation_file_id.blank? && @change_set.preservation_file_id.present?
         # resource ID is blank but an ID is set in the ChangeSet
         :ingestion
-      elsif (@change_set.resource.preservation_file_id.id.present? && @change_set.preservation_file_id.id.present?) &&
-            (@change_set.resource.preservation_file_id.id != @change_set.preservation_file_id.id)
+      elsif (@change_set.resource.preservation_file_id.present? && @change_set.preservation_file_id.present?) &&
+            (@change_set.resource.preservation_file_id != @change_set.preservation_file_id)
         # resource ID is set and a new ID is incoming in the ChangeSet, and they aren't the same
         :reingestion
       end

@@ -12,7 +12,7 @@ module TrackedEvents
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
     def checksum(note:, agent:, timestamp:)
-      PreservationEvent.new(
+      AssetResource::PreservationEvent.new(
         event_type: Premis::Events::CHECKSUM.uri,
         timestamp: timestamp,
         outcome: Premis::Outcomes::SUCCESS.uri,
@@ -28,7 +28,7 @@ module TrackedEvents
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
     def filename_changed(agent:, note:, timestamp:)
-      PreservationEvent.new(
+      AssetResource::PreservationEvent.new(
         event_type: Premis::Events::EDIT_FILENAME.uri,
         timestamp: timestamp,
         outcome: Premis::Outcomes::SUCCESS.uri,
@@ -46,7 +46,7 @@ module TrackedEvents
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
     def ingestion(note:, agent:, timestamp:)
-      PreservationEvent.new(
+      AssetResource::PreservationEvent.new(
         event_type: Premis::Events::INGEST.uri,
         timestamp: timestamp,
         outcome: Premis::Outcomes::SUCCESS.uri,
@@ -64,7 +64,7 @@ module TrackedEvents
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
     def virus_check(outcome:, note:, agent:, timestamp:)
-      PreservationEvent.new(
+      AssetResource::PreservationEvent.new(
         event_type: Premis::Events::VIRUS_CHECK.uri,
         timestamp: timestamp,
         # outcome: Premis::Outcomes::SUCCESS.uri, # TODO: base off outcome param?
