@@ -3,15 +3,16 @@
 # Transaction that updates an Asset.
 class UpdateAsset
   include Dry::Transaction(container: Container)
-
   step :find_asset, with: 'asset_resource.find_resource'
   step :require_updated_by, with: 'change_set.require_updated_by'
+  # step :virus_check TODO: implement. pass along success/warning info for PreservationEvent ( { message:, outcome: } )
   step :store_file_in_preservation_storage
   around :cleanup, with: 'asset_resource.cleanup'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :add_technical_metadata, with: 'asset_resource.add_technical_metadata'
   step :mark_stale_derivatives
   step :unlink_stale_preservation_backup
+  step :add_preservation_events
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
   tee :generate_derivatives
