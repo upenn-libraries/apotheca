@@ -1,7 +1,7 @@
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title(tag: :h3) { 'Assets' } %>
   <%= header.with_link(href: new_asset_path(item_id: @item.id)) { 'Add Asset' } if can? :create, AssetResource %>
-  <%= header.with_link(href:  reorder_assets_item_path(@item)) { 'Arrange Assets' } if can? :update, @item.object %>
+  <%= header.with_link(href:  reorder_assets_item_path(@item)) { 'Arrange Assets' } if can? :update, @item %>
 <% end %>
 
 <div class="row">

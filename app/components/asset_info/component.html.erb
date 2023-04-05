@@ -35,7 +35,7 @@
   </div>
   <div class="col-auto">
     <ul class="list-group text-end">
-      <% if ability.can?(:update, @item.object) %>
+      <% if ability.can?(:update, @item) %>
         <li class="list-group-item list-group-item-action"><%= set_as_thumbnail %></li>
       <% end %>
       <li class="list-group-item list-group-item-action"><%= access_download_link %></li>
