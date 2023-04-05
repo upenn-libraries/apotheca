@@ -63,18 +63,20 @@ module Steps
       )
     end
 
-    # @return [Symbol]
+    # @return [Symbol | nil]
     def action_event_type
       if @change_set.migrated_object
         :migration
       elsif @change_set.resource.preservation_file_id.blank? && @change_set.preservation_file_id.present?
         # resource ID is blank but an ID is set in the ChangeSet
+        # TODO: this is not working to detect an new record. above values are equal. resource.persisted? returns true???
         :ingestion
       elsif (@change_set.resource.preservation_file_id.present? && @change_set.preservation_file_id.present?) &&
             (@change_set.resource.preservation_file_id != @change_set.preservation_file_id)
         # resource ID is set and a new ID is incoming in the ChangeSet, and they aren't the same
         :reingestion
       end
+      # no change to file - log no ingestion action
     end
 
     # @return [DateTime]

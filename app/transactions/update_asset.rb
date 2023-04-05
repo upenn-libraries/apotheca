@@ -12,7 +12,7 @@ class UpdateAsset
   step :add_technical_metadata, with: 'asset_resource.add_technical_metadata'
   step :mark_stale_derivatives
   step :unlink_stale_preservation_backup
-  step :add_preservation_events
+  step :add_preservation_events, with: 'asset_resource.add_preservation_events'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
   tee :generate_derivatives

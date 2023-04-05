@@ -57,7 +57,6 @@ module TrackedEvents
       )
     end
 
-
     # @param [Object] outcome
     # @param [String] note
     # @param [String] agent

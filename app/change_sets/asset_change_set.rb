@@ -42,7 +42,7 @@ class AssetChangeSet < Valkyrie::ChangeSet
   property :preservation_file_id, multiple: false, required: false
   property :preservation_copies_ids, multiple: true, required: false
   property :technical_metadata, multiple: false, form: TechnicalMetadataChangeSet
-  property :preservation_events, multiple: true, required: false # TODO: should be required?
+  property :preservation_events, multiple: true, required: false
   property :migrated_object, multiple: false, virtual: true
   property :label, multiple: false
 
