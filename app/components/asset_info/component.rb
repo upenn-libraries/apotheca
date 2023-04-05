@@ -56,7 +56,8 @@ module AssetInfo
         form.with_field(:thumbnail_asset_id, value: @asset.id, type: :hidden)
         form.with_submit('Set as Item Thumbnail', variant: :link,
                                                   confirm: "Are you sure you want to change this item's thumbnail?",
-                                                  class: classes)
+                                                  class: classes,
+                                                  id: 'set-as-item-thumbnail')
       end
     end
 

@@ -26,6 +26,7 @@ class ItemsController < ApplicationController
 
   def edit
     authorize! :edit, @item
+    # TODO: support ItemResourcePresenter usage
   end
 
   def create
