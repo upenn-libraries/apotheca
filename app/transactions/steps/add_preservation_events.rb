@@ -15,7 +15,7 @@ module Steps
       # TODO: assume we trickle down the previosu (virus check) events as fully-formed Preservation events. We may need to set the timestamp to the value used here.
       @change_set.preservation_events += Array.wrap(attributes.delete :events)
       add_action_event
-      add_checksum_event
+      add_checksum_event # TODO: only perform if file is provided
       add_filename_events if filename_changed?
 
       Success(change_set)
@@ -56,6 +56,7 @@ module Steps
     end
 
     def add_filename_events
+      # TODO: system filechange event on ingest should include s3 'path'
       @change_set.preservation_events << EVENT.filename_changed(
         agent: @change_set.updated_by,
         note: "File's original filename renamed from #{@change_set.resource.original_filename} to #{@change_set.original_filename}",

@@ -85,6 +85,18 @@
   <% component.with_field(label: 'Updated By', values: @asset.updated_by) %>
 <% end %>
 
+<h3 id="preservation-events" class="mb-3">Preservation Events</h3>
+<table class="table">
+  <% @asset.preservation_events.each do |event| %>
+    <tr>
+      <td><%= event.timestamp %></td>
+      <td><%= event.event_type %></td>
+      <td><%= event.outcome_detail_note %></td>
+      <td><%= event.agent %></td>
+    </tr>
+  <% end %>
+</table>
+
 <% if can? :delete, @asset  %>
   <%= render Form::Component.new(name: 'delete_asset', url: asset_path(@asset), method: :delete) do |component| %>
     <% component.with_error(@error) %>
