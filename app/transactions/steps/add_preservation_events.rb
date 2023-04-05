@@ -11,12 +11,14 @@ module Steps
     # @param [Hash] attributes
     def call(change_set, **attributes)
       @change_set = change_set
+      @action = action_event_type
 
-      # TODO: assume we trickle down the previosu (virus check) events as fully-formed Preservation events. We may need to set the timestamp to the value used here.
-      @change_set.preservation_events += Array.wrap(attributes.delete :events)
+      @change_set.preservation_events += Array.wrap(attributes.delete(:events))
       add_action_event
-      add_checksum_event # TODO: only perform if file is provided
-      add_filename_events if filename_changed?
+      if @action != :metadata_update
+        add_checksum_event
+        add_filename_events
+      end
 
       Success(change_set)
     end
@@ -24,10 +26,7 @@ module Steps
     private
 
     def add_action_event
-      type = action_event_type
-      return unless type # don't add an ingestion event - no file action
-
-      note_attr = case type
+      note_attr = case @action
                   when :migration
                     { note: 'Object migrated from Bulwark to Apotheca' }
                   when :ingestion
@@ -35,7 +34,7 @@ module Steps
                   when :reingestion
                     { note: "New file ingested as #{@change_set.original_filename}" }
                   else
-                    {} # TODO: return here somehow instead of guard above?
+                    return
                   end
       event_attrs = { agent: @change_set.updated_by, timestamp: timestamp}.merge note_attr
       @change_set.preservation_events << EVENT.ingestion(**event_attrs)
@@ -50,16 +49,10 @@ module Steps
       )
     end
 
-    # @return [TrueClass, FalseClass]
-    def filename_changed?
-      @change_set.resource.original_filename != @change_set.original_filename
-    end
-
     def add_filename_events
-      # TODO: system filechange event on ingest should include s3 'path'
       @change_set.preservation_events << EVENT.filename_changed(
         agent: @change_set.updated_by,
-        note: "File's original filename renamed from #{@change_set.resource.original_filename} to #{@change_set.original_filename}",
+        note: "File's original filename renamed from #{file_name(source: @change_set.resource)} to #{file_name(source: @change_set)}",
         timestamp: timestamp
       )
     end
@@ -70,19 +63,27 @@ module Steps
         :migration
       elsif @change_set.resource.preservation_file_id.blank? && @change_set.preservation_file_id.present?
         # resource ID is blank but an ID is set in the ChangeSet
-        # TODO: this is not working to detect an new record. above values are equal. resource.persisted? returns true???
         :ingestion
       elsif (@change_set.resource.preservation_file_id.present? && @change_set.preservation_file_id.present?) &&
             (@change_set.resource.preservation_file_id != @change_set.preservation_file_id)
         # resource ID is set and a new ID is incoming in the ChangeSet, and they aren't the same
         :reingestion
+      else
+        :metadata_update
       end
-      # no change to file - log no ingestion action
     end
 
     # @return [DateTime]
     def timestamp
       @timestamp ||= DateTime.current
+    end
+
+    # @param [AssetResource | AssetChangeSet] source
+    # @return [String]
+    def file_name(source:)
+      return source.original_filename if source.preservation_file_id.blank?
+
+      source.preservation_file_id.id.split('/').last
     end
   end
 end
