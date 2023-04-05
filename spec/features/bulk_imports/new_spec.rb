@@ -17,7 +17,7 @@ describe 'Bulk Import New Page' do
     attach_file('bulk-import-csv', csv_path)
     click_on 'Create'
 
-    import = find('#bulk-import-dl')
+    import = find_by_id('bulk-import-dl')
     expect(import).to have_text 'bulk_import_data.csv'
   end
 end
