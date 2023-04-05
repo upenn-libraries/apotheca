@@ -2,7 +2,7 @@
 <%= render(Header::Component.new) do |header| %>
 
   <%= header.with_title(tag: :h3) { 'Administrative Information' } %>
-  <%= header.with_link(href: edit_item_path(@item, anchor: 'administrative-info')) { 'Edit' } if can? :update, @item %>
+  <%= header.with_link(href: edit_item_path(@item, anchor: 'administrative-info')) { 'Edit' } if can? :update, @item.object %>
 <% end %>
 
 <%= render(StaticFields::Component.new) do |component| %>
