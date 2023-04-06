@@ -7,65 +7,32 @@ module Steps
 
     EVENT = AssetResource::PreservationEvent
 
+    # Add relevant preservation events to the ChangeSet. First by processing any preceding events set by previous
+    # transaction steps, then events related to file additions or modifications. Timestamps are consistent across all
+    # events added in the transaction to reflect the fact that they occur in a single discrete transaction.
+    # TODO: rescue exceptions?
     # @param [AssetChangeSet] change_set
-    # @param [Hash] attributes
-    def call(change_set, **attributes)
+    def call(change_set)
       @change_set = change_set
       @action = action_event_type
+      events = []
 
-      add_preceding_events events: attributes.delete(:events)
-      add_action_event
-      if @action != :metadata_update
-        add_checksum_event
-        add_filename_events
-      end
+      events += preceding_events
+      events << action_event
+      events << checksum_event
+      events << filename_event
 
-      Success(change_set)
+      @change_set.preservation_events += events.compact
+
+      Success(@change_set)
     end
 
     private
 
-    def add_action_event
-      note_attr = case @action
-                  when :migration
-                    { note: 'Object migrated from Bulwark to Apotheca' }
-                  when :ingestion
-                    { note: "Object ingested as #{@change_set.original_filename}" }
-                  when :reingestion
-                    { note: "New file ingested as #{@change_set.original_filename}" }
-                  else
-                    return
-                  end
-      event_attrs = { agent: @change_set.updated_by, timestamp: timestamp}.merge note_attr
-      @change_set.preservation_events << EVENT.ingestion(**event_attrs)
-    end
-
-    # @param [AssetResource::PreservationEvent|Array] events
-    def add_preceding_events(events:)
-      events = Array.wrap(events).each do |event|
-        event.timestamp = timestamp
-      end
-      @change_set.preservation_events += events
-    end
-
-    def add_checksum_event
-      checksum = @change_set.technical_metadata.sha256.first
-      @change_set.preservation_events << EVENT.checksum(
-        note: "Checksum for file is #{checksum}",
-        agent: @change_set.updated_by,
-        timestamp: timestamp
-      )
-    end
-
-    def add_filename_events
-      @change_set.preservation_events << EVENT.filename_changed(
-        agent: @change_set.updated_by,
-        note: "File's original filename renamed from #{file_name(source: @change_set.resource)} to #{file_name(source: @change_set)}",
-        timestamp: timestamp
-      )
-    end
-
-    # @return [Symbol | nil]
+    # Determine event type based on the change being made to the associated preservation file, which occurs prior
+    # in the transaction (see add_preservation_file method in UpdateAsset transaction). If no file change is detected,
+    # consider the action a metadata update and do not log any ingestion or related events.
+    # @return [Symbol]
     def action_event_type
       if @change_set.migrated_object
         :migration
@@ -73,7 +40,7 @@ module Steps
         # resource ID is blank but an ID is set in the ChangeSet
         :ingestion
       elsif (@change_set.resource.preservation_file_id.present? && @change_set.preservation_file_id.present?) &&
-            (@change_set.resource.preservation_file_id != @change_set.preservation_file_id)
+        (@change_set.resource.preservation_file_id != @change_set.preservation_file_id)
         # resource ID is set and a new ID is incoming in the ChangeSet, and they aren't the same
         :reingestion
       else
@@ -81,11 +48,70 @@ module Steps
       end
     end
 
+    # Events may be built earlier in the transaction and stored on the temporary events virtual attribute.
+    # Set the timestamp on any of these temporary events so that they are consistent with other events in
+    # the transaction
+    # @return [Array<AssetResource::PreservationEvent>]
+    def preceding_events
+      Array.wrap(@change_set.temporary_events).map do |event|
+        event.timestamp = timestamp
+        event
+      end
+    end
+
+    # Returns an Event for the ingestion action type - nil if no action on the file is performed
+    # @return [AssetResource::PreservationEvent | NilClass]
+    def action_event
+      note = case @action
+             when :migration then 'Object migrated from Bulwark to Apotheca'
+             when :ingestion then "Object ingested as #{@change_set.original_filename}"
+             when :reingestion then "New file ingested as #{@change_set.original_filename}"
+             else
+               return
+             end
+      event_attrs = { agent: @change_set.updated_by, timestamp: timestamp, note: note }
+      EVENT.ingestion(**event_attrs)
+    end
+
+    # Return a checksum event. This requires that technical metadata be set in a prior transaction step.
+    # See AddTechnicalMetadata step.
+    # @return [AssetResource::PreservationEvent]
+    def checksum_event
+      return if @action == :metadata_update
+
+      # TODO: throws exception if no tech md set, but at this point in the transaction, tech md should always be set
+      checksum = @change_set.technical_metadata.sha256.first
+      EVENT.checksum(
+        note: "Checksum for file is #{checksum}",
+        agent: @change_set.updated_by,
+        timestamp: timestamp
+      )
+    end
+
+    # Returns an event for a filename change. Base the detail note of the event on the type of change. Include
+    # appropriate previous and current filename values.
+    # @return [AssetResource::PreservationEvent]
+    def filename_event
+      return if @action == :metadata_update
+
+      # get current filename - in ingestion case, we want to get the original filename of the file because we have no
+      # identifier from storage yet to use as current filename
+      current_filename = @action == :ingestion ? @change_set.original_filename : file_name(source: @change_set.resource)
+      EVENT.filename_changed(
+        agent: @change_set.updated_by,
+        note: "File's original filename renamed from #{current_filename} to #{file_name(source: @change_set)}",
+        timestamp: timestamp
+      )
+    end
+
+    # Memoize a timestamp for consistency across created events
     # @return [DateTime]
     def timestamp
       @timestamp ||= DateTime.current
     end
 
+    # Returns a semi-user friendly "filename" from a change set or a resource. Could be a string filename or a UUID
+    # extracted from a Valkyrie::ID
     # @param [AssetResource | AssetChangeSet] source
     # @return [String]
     def file_name(source:)

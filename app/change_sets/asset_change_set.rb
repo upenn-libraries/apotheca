@@ -43,7 +43,14 @@ class AssetChangeSet < Valkyrie::ChangeSet
   property :preservation_copies_ids, multiple: true, required: false
   property :technical_metadata, multiple: false, form: TechnicalMetadataChangeSet
   property :preservation_events, multiple: true, required: false
+
+  # flag to indicate that this change set is being used during a migration process
   property :migrated_object, multiple: false, virtual: true
+
+  # virtual property to aggregate events before batch adding them to the change set. this ensures we
+  # can set events with identical timestamps
+  property :temporary_events, multiple: true, virtual: true
+
   property :label, multiple: false
 
   collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource
