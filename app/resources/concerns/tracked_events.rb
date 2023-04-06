@@ -62,12 +62,12 @@ module TrackedEvents
     # @param [String] agent
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def virus_check(outcome:, note:, agent:, timestamp:)
+    def virus_check(outcome:, note:, agent:, timestamp: nil)
       AssetResource::PreservationEvent.new(
         event_type: Premis::Events::VIRUS_CHECK.uri,
         timestamp: timestamp,
-        # outcome: Premis::Outcomes::SUCCESS.uri, # TODO: base off outcome param?
-        # outcome_detail_note: note,
+        outcome: outcome,
+        outcome_detail_note: note,
         agent: agent,
         agent_type: 'local',
         agent_role: agent_role(agent)

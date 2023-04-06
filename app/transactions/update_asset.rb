@@ -3,9 +3,10 @@
 # Transaction that updates an Asset.
 class UpdateAsset
   include Dry::Transaction(container: Container)
+
   step :find_asset, with: 'asset_resource.find_resource'
   step :require_updated_by, with: 'change_set.require_updated_by'
-  # step :virus_check TODO: implement. pass along success/warning info for PreservationEvent ( { message:, outcome: } )
+  step :virus_check # TODO: fully implement when virus checking is possible
   step :store_file_in_preservation_storage
   around :cleanup, with: 'asset_resource.cleanup'
   step :create_change_set, with: 'asset_resource.create_change_set'
@@ -32,6 +33,17 @@ class UpdateAsset
     end
 
     result
+  end
+
+  def virus_check(**attributes)
+    if (attributes[:file] || attributes['file']).present?
+      warning = AssetResource::PreservationEvent.virus_check outcome: Premis::Outcomes::WARNING.uri,
+                                                             note: 'Virus check not performed',
+                                                             agent: attributes[:updated_by]
+      attributes[:events] = warning
+    end
+
+    Success(attributes)
   end
 
   def store_file_in_preservation_storage(**attributes)

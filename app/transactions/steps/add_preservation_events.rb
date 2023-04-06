@@ -13,7 +13,7 @@ module Steps
       @change_set = change_set
       @action = action_event_type
 
-      @change_set.preservation_events += Array.wrap(attributes.delete(:events))
+      add_preceding_events events: attributes.delete(:events)
       add_action_event
       if @action != :metadata_update
         add_checksum_event
@@ -38,6 +38,14 @@ module Steps
                   end
       event_attrs = { agent: @change_set.updated_by, timestamp: timestamp}.merge note_attr
       @change_set.preservation_events << EVENT.ingestion(**event_attrs)
+    end
+
+    # @param [AssetResource::PreservationEvent|Array] events
+    def add_preceding_events(events:)
+      events = Array.wrap(events).each do |event|
+        event.timestamp = timestamp
+      end
+      @change_set.preservation_events += events
     end
 
     def add_checksum_event
