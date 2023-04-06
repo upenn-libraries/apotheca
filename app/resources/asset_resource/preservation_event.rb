@@ -5,7 +5,7 @@ class AssetResource
   class PreservationEvent < Valkyrie::Resource
     include TrackedEvents
 
-    attribute :identifier
+    attribute :identifier, Valkyrie::Types::String
     attribute :event_type, Valkyrie::Types::URI
     attribute :timestamp, Valkyrie::Types::DateTime
     attribute :outcome, Valkyrie::Types::URI
