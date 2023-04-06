@@ -39,7 +39,7 @@ class UpdateAsset
   def validate_file_extension(**attributes)
     file = attributes[:file] || attributes['file']
 
-    return Success(attributes) if file.blank?
+    return Success(attributes) if file.blank? || file.original_filename.blank?
 
     extension = File.extname(file.original_filename)
 
