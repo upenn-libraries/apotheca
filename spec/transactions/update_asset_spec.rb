@@ -160,22 +160,16 @@ describe UpdateAsset do
 
       it 'fails' do
         expect(result.failure?).to be true
-        expect(result.failure[:error]).to be :file_characterization_failed
+        expect(result.failure[:error]).to be :invalid_file_extension
       end
 
-      it 'returns change_set' do
-        expect(result.failure[:change_set]).to be_a AssetChangeSet
+      it 'does not return a change_set' do
+        expect(result.failure[:change_set]).to be_nil
       end
 
       it 'does not enqueue any jobs' do
         expect(GenerateDerivativesJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
         expect(PreservationBackupJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
-      end
-
-      it 'deletes the new file from preservation storage' do
-        expect {
-          Valkyrie::StorageAdapter.find_by(id: result.failure[:change_set].preservation_file_id)
-        }.to raise_error Valkyrie::StorageAdapter::FileNotFound
       end
     end
 
