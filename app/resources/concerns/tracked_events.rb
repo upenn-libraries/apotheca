@@ -13,6 +13,7 @@ module TrackedEvents
     # @return [AssetResource::PreservationEvent]
     def checksum(note:, agent:, timestamp:)
       AssetResource::PreservationEvent.new(
+        identifier: SecureRandom.uuid,
         event_type: Premis::Events::CHECKSUM.uri,
         timestamp: timestamp,
         outcome: Premis::Outcomes::SUCCESS.uri,
@@ -29,6 +30,7 @@ module TrackedEvents
     # @return [AssetResource::PreservationEvent]
     def filename_changed(agent:, note:, timestamp:)
       AssetResource::PreservationEvent.new(
+        identifier: SecureRandom.uuid,
         event_type: Premis::Events::EDIT_FILENAME.uri,
         timestamp: timestamp,
         outcome: Premis::Outcomes::SUCCESS.uri,
@@ -47,6 +49,7 @@ module TrackedEvents
     # @return [AssetResource::PreservationEvent]
     def ingestion(note:, agent:, timestamp:)
       AssetResource::PreservationEvent.new(
+        identifier: SecureRandom.uuid,
         event_type: Premis::Events::INGEST.uri,
         timestamp: timestamp,
         outcome: Premis::Outcomes::SUCCESS.uri,
@@ -64,6 +67,7 @@ module TrackedEvents
     # @return [AssetResource::PreservationEvent]
     def virus_check(outcome:, note:, agent:, timestamp: nil)
       AssetResource::PreservationEvent.new(
+        identifier: SecureRandom.uuid,
         event_type: Premis::Events::VIRUS_CHECK.uri,
         timestamp: timestamp,
         outcome: outcome,
