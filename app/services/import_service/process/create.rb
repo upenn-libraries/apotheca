@@ -117,8 +117,7 @@ module ImportService
             update_args = {
               id: a.id,
               file: assets.file_for(asset[:original_filename]),
-              updated_by: imported_by,
-              original_filename: asset[:original_filename]
+              updated_by: imported_by
             }
 
             update_transaction.call(**update_args) do |update_result|

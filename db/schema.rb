@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_10_210545) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_29_175254) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -54,7 +54,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_10_210545) do
 
   create_table "bulk_exports", force: :cascade do |t|
     t.bigint "created_by_id", null: false
-    t.jsonb "search_params"
+    t.jsonb "search_params", default: {}
     t.string "process_errors", array: true
     t.integer "duration"
     t.string "state"

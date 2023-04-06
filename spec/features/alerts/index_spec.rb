@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Alert management' do
+describe 'Alert Index Page' do
   before do
     sign_in user
     AlertMessage.create! [{ location: 'header' }, { location: 'home' }]
@@ -17,8 +17,8 @@ describe 'Alert management' do
 
     it 'can update Alerts' do
       expect(page).not_to have_text('test message')
-      find('#alert-message-active', match: :first).check
-      find('#alert-message-message', match: :first).fill_in(with: 'test message')
+      find_by_id('alert-message-active', match: :first).check
+      find_by_id('alert-message-message', match: :first).fill_in(with: 'test message')
       find_button('Save', match: :first).click
       within('.header-alert') { expect(page).to have_text('test message') }
     end

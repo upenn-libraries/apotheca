@@ -46,6 +46,10 @@ class UpdateAsset
     Success(attributes)
   end
 
+  # Stores file in preservation storage and adds in the system generated id to the list of
+  # attributes passed on to the next step.
+  #
+  # @param [ActionDispatch::Http::UploadedFile|ImportService::S3Storage::File] file
   def store_file_in_preservation_storage(**attributes)
     file = attributes.delete(:file) || attributes.delete('file')
 
@@ -53,10 +57,11 @@ class UpdateAsset
       file_resource = preservation_storage.upload(
         file: file,
         resource: attributes[:resource],
-        original_filename: file.try(:original_filename) || attributes[:original_filename]
+        original_filename: file.original_filename
       )
 
       attributes[:preservation_file_id] = file_resource.id
+      attributes[:original_filename] = file.original_filename # Explicitly set the original filename.
     end
 
     Success(attributes)
