@@ -22,6 +22,12 @@ describe 'Asset Edit Page' do
     expect(page).to have_text('Successfully updated asset.')
   end
 
+  it 'displays error message when preservation file has an unsupported file extension' do
+    attach_file 'asset-file', 'spec/fixtures/imports/bulk_import_data.csv'
+    click_on 'Save'
+    expect(page).to have_text('Invalid File Extension')
+  end
+
   it 'can update the asset' do
     fill_in 'asset-label', with: asset_label
     attach_file 'asset-file', 'spec/fixtures/files/front.tif'
