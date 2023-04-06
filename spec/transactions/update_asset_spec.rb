@@ -178,5 +178,31 @@ describe UpdateAsset do
         }.to raise_error Valkyrie::StorageAdapter::FileNotFound
       end
     end
+
+    context 'when preservation file has an unsupported file extension' do
+      # File with unsupported file extension
+      let(:file1) do
+        ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('imports/bulk_import_data.csv')),
+                                               filename: 'bulk_import_data.csv'
+      end
+      let(:asset) { persist(:asset_resource) }
+      let(:result) do
+        transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com')
+      end
+
+      it 'fails' do
+        expect(result.failure?).to be true
+        expect(result.failure[:error]).to be :invalid_file_extension
+      end
+
+      it 'does not return a changeset' do
+        expect(result.failure[:change_set]).to be_nil
+      end
+
+      it 'does not enqueue any jobs' do
+        expect(GenerateDerivativesJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
+        expect(PreservationBackupJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
+      end
+    end
   end
 end
