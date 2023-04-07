@@ -10,7 +10,15 @@ class Import < ApplicationRecord
 
   # This method will run the import and set the status of the import to a success or failure.
   def run
-    raise '#run still needs to be implemented'
+    benchmark = Benchmark.measure do
+      ImportService::Process.build(**import_data)
+    end
+    # self.generated_at = DateTime.now
+    self.duration = benchmark.total
+    success!
+  rescue StandardError => e
+    self.process_errors = [e.message]
+    failure!
   end
 
   # Determine if a user can cancel an import
