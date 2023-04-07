@@ -49,7 +49,7 @@ class BulkImport < ApplicationRecord
     rows = StructuredCSV.parse(csv)
     rows.each do |row|
       import = Import.create(bulk_import: self, import_data: row)
-      # ProcessImportJob.set(queue: queue).perform_later(import)
+      ProcessImportJob.set(queue: queue).perform_later(import)
     end
   end
 
