@@ -100,12 +100,12 @@ describe Steps::AddPreservationEvents do
         ).to be_nil
       end
     end
-  end
 
-  # return first matching event type
-  def find_event_type(events:, type:)
-    events.find do |event|
-      event.event_type.to_s == type
+    # return first matching event type
+    def find_event_type(events:, type:)
+      events.find do |event|
+        event.event_type.to_s == type
+      end
     end
   end
 end
