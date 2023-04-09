@@ -17,12 +17,12 @@ describe Steps::AddPreservationEvents do
 
     context 'with migration attribute on the change set' do
       let(:asset) { persist(:asset_resource, :with_preservation_file) }
-      let(:change_set) { AssetChangeSet.new(asset, migrated_object: true) }
+      let(:change_set) { AssetChangeSet.new(asset, migrated_from: 'Internet Archive') }
       let(:result) { described_class.new.call(change_set) }
 
       it 'sets a ingest event with migration-specific outcome_detail_note' do
         ingest_event = find_event_type events: result.value!.preservation_events, type: Premis::Events::INGEST.uri
-        expect(ingest_event.outcome_detail_note).to eq 'Object migrated from Bulwark to Apotheca'
+        expect(ingest_event.outcome_detail_note).to eq 'Object migrated from Internet Archive to Apotheca'
       end
     end
 

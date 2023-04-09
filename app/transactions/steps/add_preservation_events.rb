@@ -35,7 +35,7 @@ module Steps
     # @return [Symbol]
     # @param [Valkyrie::ChangeSet] change_set
     def action_event_type(change_set)
-      if change_set.migrated_object
+      if change_set.migrated_from.present?
         :migration
       elsif change_set.resource.preservation_file_id.blank? && change_set.preservation_file_id.present?
         # resource ID is blank but an ID is set in the ChangeSet
@@ -69,7 +69,7 @@ module Steps
     # @return [AssetResource::PreservationEvent | NilClass]
     def action_event(action, change_set, timestamp)
       note = case action
-             when :migration then 'Object migrated from Bulwark to Apotheca'
+             when :migration then "Object migrated from #{change_set.migrated_from} to #{app_name}"
              when :ingestion then "Object ingested as #{change_set.original_filename}"
              when :reingestion then "New file ingested as #{change_set.original_filename}"
              else
@@ -124,6 +124,12 @@ module Steps
       return source.original_filename if source.preservation_file_id.blank?
 
       source.preservation_file_id.id.split('/').last
+    end
+
+    # TODO: also include app version number somehow, perhaps via config setting or ENV var
+    # @return [String]
+    def app_name
+      Rails.application.class.module_parent.to_s
     end
   end
 end

@@ -4,8 +4,6 @@
 module TrackedEvents
   extend ActiveSupport::Concern
 
-  SYSTEM_AGENT = 'system_user@upenn.edu' # TODO: how will we denote a system-initiated action?
-
   class_methods do
     # @param [String] type
     # @param [String] outcome
@@ -82,7 +80,7 @@ module TrackedEvents
     def tombstone; end
 
     def agent_role(agent)
-      return Premis::Roles::IMPLEMENTER.uri unless agent == SYSTEM_AGENT
+      return Premis::Roles::IMPLEMENTER.uri unless agent == Rails.application.class.module_parent.to_s
 
       Premis::Roles::PROGRAM.uri
     end

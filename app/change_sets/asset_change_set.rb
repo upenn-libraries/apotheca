@@ -44,8 +44,8 @@ class AssetChangeSet < Valkyrie::ChangeSet
   property :technical_metadata, multiple: false, form: TechnicalMetadataChangeSet
   property :preservation_events, multiple: true, required: false
 
-  # flag to indicate that this change set is being used during a migration process
-  property :migrated_object, multiple: false, virtual: true
+  # name of source system for a migration action
+  property :migrated_from, multiple: false, virtual: true
 
   # virtual property to aggregate events before batch adding them to the change set. this ensures we
   # can set events with identical timestamps
