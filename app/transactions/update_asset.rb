@@ -40,7 +40,7 @@ class UpdateAsset
     file = attributes[:file] || attributes['file']
 
     return Success(attributes) if file.blank?
-    return Failure(error: :invalid_file_extension) if file.original_filename.blank?
+    return Failure(error: :no_original_filename) if file.original_filename.blank?
 
     extension = File.extname(file.original_filename)
 
