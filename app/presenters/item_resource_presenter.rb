@@ -2,7 +2,8 @@
 
 # Presentation logic for an ItemResource
 class ItemResourcePresenter < BasePresenter
-  # @param [Hash] ils_metadata
+  # @param [Hash|nil] ils_metadata
+  # @param [ItemResource] object
   def initialize(object:, ils_metadata: nil)
     super object: object
     @ils_metadata = ils_metadata

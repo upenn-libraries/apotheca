@@ -70,7 +70,7 @@ class ItemResource < Valkyrie::Resource
 
   # @return [TrueClass, FalseClass]
   def bibnumber?
-    descriptive_metadata.bibnumber.any?
+    descriptive_metadata&.bibnumber.try(:any?)
   end
 
   # @param [Boolean] include_assets

@@ -15,9 +15,7 @@ class ItemsController < ApplicationController
     @container = solr_query_service.custom_queries.item_index parameters: search_params
   end
 
-  def show
-    decorate_item_with_ils_metadata
-  end
+  def show; end
 
   def new; end
 
@@ -65,13 +63,6 @@ class ItemsController < ApplicationController
 
   private
 
-  def decorate_item_with_ils_metadata
-    return unless @item.bibnumber?
-
-    ils_metadata_hash = solr_query_service.custom_queries.ils_metadata_for id: @item.id
-    @item = ItemResourcePresenter.new(object: @item, ils_metadata: ils_metadata_hash)
-  end
-
   # Explicitly set the default per page for initial page load (when there are no params) only for the ItemResource
   # case. With AR models, this config can be specified in the model. I do this here to avoid setting a default app-wide
   # config that might later be altered and break proper page counts when rendering the paginator in the item index.
@@ -91,14 +82,8 @@ class ItemsController < ApplicationController
 
   # Handle Failure response from transaction. Set appropriate ivars based on Failure contents and template to render.
   def render_failure(failure, template)
-    if failure.key?(:change_set)
-      @change_set = failure[:change_set]
-      @item = ItemResourcePresenter.new object: @change_set.resource
-    else
-      load_item_and_change_set
-    end
+    load_item_and_change_set failure.try(:change_set)
     load_assets if template == :edit
-    decorate_item_with_ils_metadata if template == :show
 
     @error = failure
     @errors_for = params[:form]
@@ -106,13 +91,19 @@ class ItemsController < ApplicationController
     render template
   end
 
-  def load_item_and_change_set
-    @item = if params[:id]
-              ItemResourcePresenter.new object: pg_query_service.find_by(id: params[:id])
-            else
-              ItemResourcePresenter.new object: ItemResource.new
-            end
-    @change_set = ItemChangeSet.new(@item)
+  # Load item and change_set ivars for views. Use ItemPresenter for all views, load ILS metadata only as needed.
+  # @param [ItemChangeSet] change_set, optional
+  def load_item_and_change_set(change_set = nil)
+    resource = if change_set
+                 change_set.resource
+               elsif params[:id]
+                 pg_query_service.find_by(id: params[:id])
+               else
+                 ItemResource.new
+               end
+    ils_metadata = resource.bibnumber? ? solr_query_service.custom_queries.ils_metadata_for(id: resource.id) : nil
+    @item = ItemResourcePresenter.new object: resource, ils_metadata: ils_metadata
+    @change_set = change_set || ItemChangeSet.new(resource)
   end
 
   def load_assets
