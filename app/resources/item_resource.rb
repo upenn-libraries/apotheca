@@ -68,6 +68,11 @@ class ItemResource < Valkyrie::Resource
     thumbnail_asset_id == asset_id
   end
 
+  # @return [TrueClass, FalseClass]
+  def bibnumber?
+    descriptive_metadata.bibnumber.any?
+  end
+
   # @param [Boolean] include_assets
   def to_export(include_assets: false)
     bulk_export_hash = {

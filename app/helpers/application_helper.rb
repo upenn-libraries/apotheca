@@ -17,4 +17,11 @@ module ApplicationHelper
   def current_user_presenter
     UserPresenter.new(object: current_user) if current_user.present?
   end
+
+  # Override CanCanCan's #can? method to seamlessly handle presenter classes
+  def can?(action, object)
+    object = object.object if object.respond_to? :object
+
+    super action, object
+  end
 end

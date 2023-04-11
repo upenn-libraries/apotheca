@@ -13,7 +13,7 @@ describe 'Items Requests' do
     context 'without edit role' do
       it 'redirects viewer users to authenticated root path with authorization message' do
         sign_in create(:user, :viewer)
-        get "/resources/items/#{item.id}/edit"
+        get edit_item_path(item)
         expect(response).to redirect_to(authenticated_root_path)
         expect(flash['alert']).to include 'not authorized'
       end
@@ -22,7 +22,7 @@ describe 'Items Requests' do
     context 'with proper role' do
       it 'shows item edit form' do
         sign_in create(:user, :editor)
-        get "/resources/items/#{item.id}/edit"
+        get edit_item_path(item)
         expect(response).to have_http_status :ok
       end
     end
