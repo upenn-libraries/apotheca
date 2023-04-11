@@ -2,7 +2,8 @@
 
 # controller actions for Item stuff
 class ItemsController < ApplicationController
-  before_action :load_resources, except: :index
+  before_action :load_item_and_change_set, except: :index
+  before_action :load_assets, only: [:show, :edit]
   before_action :configure_pagination, only: :index
   before_action :store_rows, only: :index
 
@@ -88,27 +89,33 @@ class ItemsController < ApplicationController
     end
   end
 
+  # Handle Failure response from transaction. Set appropriate ivars based on Failure contents and template to render.
   def render_failure(failure, template)
     if failure.key?(:change_set)
       @change_set = failure[:change_set]
-      @item = @change_set.resource
+      @item = ItemResourcePresenter.new object: @change_set.resource
+    else
+      load_item_and_change_set
     end
+    load_assets if template == :edit
+    decorate_item_with_ils_metadata if template == :show
 
     @error = failure
     @errors_for = params[:form]
 
-    load_resources
-
     render template
   end
 
-  def load_resources
-    @item ||= if params[:id]
-                ItemResourcePresenter.new object: pg_query_service.find_by(id: params[:id])
-              else
-                ItemResourcePresenter.new object: ItemResource.new
-              end
-    @change_set ||= ItemChangeSet.new(@item)
+  def load_item_and_change_set
+    @item = if params[:id]
+              ItemResourcePresenter.new object: pg_query_service.find_by(id: params[:id])
+            else
+              ItemResourcePresenter.new object: ItemResource.new
+            end
+    @change_set = ItemChangeSet.new(@item)
+  end
+
+  def load_assets
     @arranged_assets = @item.arranged_assets
     @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids.deep_dup
   end
