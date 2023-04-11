@@ -6,7 +6,7 @@ module AssetInfo
     attr_reader :asset, :item, :index
 
     # @param [AssetResource] asset
-    # @param [ItemResourcePresenter] item
+    # @param [ItemResource] item
     # @param [User] user
     # @param [Integer] index
     def initialize(asset:, item:, user:, index: nil)
