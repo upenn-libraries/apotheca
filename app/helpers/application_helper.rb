@@ -19,9 +19,9 @@ module ApplicationHelper
   end
 
   # Override CanCanCan's #can? method to seamlessly handle presenter classes
-  def can?(action, object)
-    object = object.object if object.respond_to? :object
+  def can?(action, subject, attribute = nil, *extra_args)
+    subject = subject.object if subject.respond_to? :object
 
-    super action, object
+    super action, subject, attribute, *extra_args
   end
 end
