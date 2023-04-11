@@ -11,7 +11,6 @@ class ItemsController < ApplicationController
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
   def index
-    authorize! :read, ItemResource
     @container = solr_query_service.custom_queries.item_index parameters: search_params
   end
 
