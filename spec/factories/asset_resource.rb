@@ -11,7 +11,10 @@ FactoryBot.define do
   end
 
   trait :with_preservation_file do
-    technical_metadata { { mime_type: 'image/tiff' } }
+    technical_metadata do
+      { mime_type: 'image/tiff',
+        sha256: ['sha256checksum'] }
+    end
 
     transient do
       preservation_backup { false }

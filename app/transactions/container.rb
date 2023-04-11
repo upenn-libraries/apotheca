@@ -67,5 +67,9 @@ class Container
     register 'delete_resource' do
       Steps::DeleteResource.new
     end
+
+    register 'add_preservation_events' do
+      Steps::AddPreservationEvents.new
+    end
   end
 end

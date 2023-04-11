@@ -7,12 +7,14 @@ class UpdateAsset
   step :find_asset, with: 'asset_resource.find_resource'
   step :require_updated_by, with: 'change_set.require_updated_by'
   step :validate_file_extension
+  step :virus_check # TODO: fully implement when virus checking is possible
   step :store_file_in_preservation_storage
   around :cleanup, with: 'asset_resource.cleanup'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :add_technical_metadata, with: 'asset_resource.add_technical_metadata'
   step :mark_stale_derivatives
   step :unlink_stale_preservation_backup
+  step :add_preservation_events, with: 'asset_resource.add_preservation_events'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
   tee :generate_derivatives
@@ -49,6 +51,17 @@ class UpdateAsset
     else
       Failure(error: :invalid_file_extension)
     end
+  end
+
+  def virus_check(**attributes)
+    if (attributes[:file] || attributes['file']).present?
+      warning = AssetResource::PreservationEvent.virus_check outcome: Premis::Outcomes::WARNING.uri,
+                                                             note: 'File present but virus check not performed',
+                                                             agent: attributes[:updated_by]
+      attributes[:temporary_events] = [warning]
+    end
+
+    Success(attributes)
   end
 
   # Stores file in preservation storage and adds in the system generated id to the list of
