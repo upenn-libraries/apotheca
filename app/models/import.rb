@@ -10,15 +10,17 @@ class Import < ApplicationRecord
 
   # This method will run the import and set the status of the import to a success or failure.
   def run
+    result = nil
     benchmark = Benchmark.measure do
-      ImportService::Process.build(**import_data)
+      result = ImportService::Process.build(imported_by: bulk_import.created_by.email, **import_data).run
     end
-    # self.generated_at = DateTime.now
-    self.duration = benchmark.total
-    success!
-  rescue StandardError => e
-    self.process_errors = [e.message]
-    failure!
+    if result.success?
+      self.duration = benchmark.total
+      success!
+    else
+      self.process_errors = result.failure[:details]
+      failure!
+    end
   end
 
   # Determine if a user can cancel an import
