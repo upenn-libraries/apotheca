@@ -82,7 +82,7 @@ class ItemsController < ApplicationController
 
   # Handle Failure response from transaction. Set appropriate ivars based on Failure contents and template to render.
   def render_failure(failure, template)
-    load_item_and_change_set failure.try(:change_set)
+    load_item_and_change_set failure[:change_set]
     load_assets if template == :edit
 
     @error = failure
