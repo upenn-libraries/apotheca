@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 describe UpdateAsset do
+  shared_examples_for 'a failed asset update' do
+    it 'does not enqueue any jobs' do
+      expect(GenerateDerivativesJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
+      expect(PreservationBackupJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
+    end
+  end
   describe '#call' do
     let(:transaction) { described_class.new }
 
@@ -150,7 +156,7 @@ describe UpdateAsset do
       end
     end
 
-    context 'when adding a file and a error occurs' do
+    context 'when preservation file does not have original filename' do
       # File that does not respond to original_filename
       let(:file1) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/front.tif')) }
       let(:asset) { persist(:asset_resource) }
@@ -158,24 +164,30 @@ describe UpdateAsset do
         transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
       end
 
+      it_behaves_like 'a failed asset update'
+
       it 'fails' do
         expect(result.failure?).to be true
-        expect(result.failure[:error]).to be :file_characterization_failed
+        expect(result.failure[:error]).to be :no_original_filename
+      end
+    end
+
+    context 'when preservation file has an unsupported file extension' do
+      # File with unsupported file extension
+      let(:file1) do
+        ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('imports/bulk_import_data.csv')),
+                                               filename: 'bulk_import_data.csv'
+      end
+      let(:asset) { persist(:asset_resource) }
+      let(:result) do
+        transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com')
       end
 
-      it 'returns change_set' do
-        expect(result.failure[:change_set]).to be_a AssetChangeSet
-      end
+      it_behaves_like 'a failed asset update'
 
-      it 'does not enqueue any jobs' do
-        expect(GenerateDerivativesJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
-        expect(PreservationBackupJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
-      end
-
-      it 'deletes the new file from preservation storage' do
-        expect {
-          Valkyrie::StorageAdapter.find_by(id: result.failure[:change_set].preservation_file_id)
-        }.to raise_error Valkyrie::StorageAdapter::FileNotFound
+      it 'fails' do
+        expect(result.failure?).to be true
+        expect(result.failure[:error]).to be :invalid_file_extension
       end
     end
   end

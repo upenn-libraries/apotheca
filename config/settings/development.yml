@@ -26,3 +26,11 @@ working_storage:
   sceti_digitized:
     <<: *minio
     bucket: sceti-digitized
+supported_file_extensions:
+  - .tif
+  - .tiff
+  - .pdf
+  - .gz
+  - .wav
+  - .mov
+

@@ -112,10 +112,27 @@ class AssetsController < ApplicationController
   end
 
   def render_failure(failure, template)
-    @change_set = failure[:change_set]
+    if failure.key?(:change_set)
+      @change_set = failure[:change_set]
+      @asset = @change_set.resource
+    end
+
     @error = failure
 
+    load_resources
+
     render template
+  end
+
+  def load_resources
+    if @asset
+      @change_set = AssetChangeSet.new(@asset)
+    elsif params[:id]
+      set_asset
+      @change_set = AssetChangeSet.new(@asset)
+    else
+      @change_set = AssetChangeSet.new(AssetResource.new)
+    end
   end
 
   def asset_params

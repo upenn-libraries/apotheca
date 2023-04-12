@@ -6,6 +6,7 @@ class UpdateAsset
 
   step :find_asset, with: 'asset_resource.find_resource'
   step :require_updated_by, with: 'change_set.require_updated_by'
+  step :validate_file_extension
   step :virus_check # TODO: fully implement when virus checking is possible
   step :store_file_in_preservation_storage
   around :cleanup, with: 'asset_resource.cleanup'
@@ -33,6 +34,23 @@ class UpdateAsset
     end
 
     result
+  end
+
+  # Verify that file has original_filename that ends with a valid extension
+  # @param [ActionDispatch::Http::UploadedFile|ImportService::S3Storage::File] file
+  def validate_file_extension(**attributes)
+    file = attributes[:file] || attributes['file']
+
+    return Success(attributes) if file.blank?
+    return Failure(error: :no_original_filename) if file.original_filename.blank?
+
+    extension = File.extname(file.original_filename)
+
+    if Settings.supported_file_extensions.include?(extension.downcase)
+      Success(attributes)
+    else
+      Failure(error: :invalid_file_extension)
+    end
   end
 
   def virus_check(**attributes)
