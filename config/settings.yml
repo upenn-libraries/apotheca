@@ -1,1 +1,8 @@
 skip_ezid_metadata_update: false
+supported_file_extensions:
+  - .tif
+  - .tiff
+  - .pdf
+  - .gz
+  - .wav
+  - .mov
