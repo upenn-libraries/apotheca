@@ -6,5 +6,5 @@
                      choices: BulkImport::PRIORITY_QUEUES, value: BulkImport::DEFAULT_PRIORITY,
                      label: 'Priority') %>
 
-  <% form.with_submit('Create') %>
+  <% form.with_submit('Create', disable_with: 'Creating New Bulk Import...') %>
 <% end %>
