@@ -18,13 +18,14 @@ describe 'Ability' do
   end
 
   context 'with a viewer user' do
-    let(:user) { create :user, :viewer }
-    let(:bulk_export) { create :bulk_export }
+    let(:user) { create(:user, :viewer) }
+    let(:bulk_export) { create(:bulk_export) }
 
     it { is_expected.to be_able_to(:read, AssetResource) }
     it { is_expected.not_to be_able_to(:edit, AssetResource) }
 
     it { is_expected.not_to be_able_to(:edit, ItemResource) }
+    it { is_expected.not_to be_able_to(:reorder_assets, ItemResource) }
     it { is_expected.to be_able_to(:read, ItemResource) }
 
     it { is_expected.to be_able_to(:read, Import) }
@@ -52,10 +53,10 @@ describe 'Ability' do
   end
 
   context 'with an editor user' do
-    let(:user) { create :user, :editor }
-    let(:bulk_import) { create :bulk_import, created_by: user }
-    let(:bulk_export) { create :bulk_export }
-    let(:import) { create :import, bulk_import: bulk_import }
+    let(:user) { create(:user, :editor) }
+    let(:bulk_import) { create(:bulk_import, created_by: user) }
+    let(:bulk_export) { create(:bulk_export) }
+    let(:import) { create(:import, bulk_import: bulk_import) }
 
     it { is_expected.to be_able_to(:read, AssetResource) }
     it { is_expected.to be_able_to(:create, AssetResource) }
@@ -65,6 +66,7 @@ describe 'Ability' do
     it { is_expected.to be_able_to(:read, ItemResource) }
     it { is_expected.to be_able_to(:create, ItemResource) }
     it { is_expected.to be_able_to(:update, ItemResource) }
+    it { is_expected.to be_able_to(:reorder_assets, ItemResource) }
     it { is_expected.not_to be_able_to(:destroy, ItemResource) }
 
     it { is_expected.to be_able_to(:read, Import) }
@@ -90,7 +92,7 @@ describe 'Ability' do
   end
 
   context 'with an admin user' do
-    let(:user) { create :user, :admin }
+    let(:user) { create(:user, :admin) }
 
     it { is_expected.to be_able_to(:manage, :all) }
   end

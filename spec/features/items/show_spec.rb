@@ -15,11 +15,11 @@ describe 'Item Show Page' do
 
   shared_examples_for 'any logged in user who can edit an Item' do
     it 'shows link to edit item within descriptive metadata tab' do
-      expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#descriptive")
+      expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#descriptive-metadata")
     end
 
     it 'shows link to edit item within structural metadata tab' do
-      expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#structural")
+      expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#structural-metadata")
     end
 
     it 'shows link to edit item within administrative info tab' do

@@ -22,11 +22,11 @@ module AssetInfo
 
     # @return [Array<AssetResource::Annotation>]
     def annotations
-      @asset.annotations&.map(&:text)
+      asset.annotations&.map(&:text)
     end
 
     def thumbnail
-      if @asset.thumbnail
+      if asset.thumbnail
         tag.img src: thumbnail_path, alt: 'Thumbnail for Asset', class: 'img-thumbnail'
       else
         render(partial: 'shared/no_thumbnail')
@@ -36,24 +36,23 @@ module AssetInfo
     # @return [ActiveSupport::SafeBuffer]
     def preservation_download_link
       link_to('Download Preservation File',
-              file_asset_path(@asset, type: :preservation, disposition: :attachment),
+              file_asset_path(asset, type: :preservation, disposition: :attachment),
               class: 'stretched-link')
     end
 
     # @return [ActiveSupport::SafeBuffer]
     def access_download_link
       link_to('Download Access Copy',
-              file_asset_path(@asset, type: :access, disposition: 'attachment'),
+              file_asset_path(asset, type: :access, disposition: 'attachment'),
               class: 'stretched-link')
     end
 
     def set_as_thumbnail
       classes = ['p-0']
-      classes.push('disabled') if @item.thumbnail?(@asset.id)
-      model = @item.is_a?(BasePresenter) ? @item.object : @item
+      classes.push('disabled') if item.thumbnail?(asset.id)
 
-      render(Form::Component.new(name: 'assets', model: model)) do |form|
-        form.with_field(:thumbnail_asset_id, value: @asset.id, type: :hidden)
+      render(Form::Component.new(name: 'assets', model: item)) do |form|
+        form.with_field(:thumbnail_asset_id, value: asset.id, type: :hidden)
         form.with_submit('Set as Item Thumbnail', variant: :link,
                                                   confirm: "Are you sure you want to change this item's thumbnail?",
                                                   class: classes,
@@ -62,7 +61,7 @@ module AssetInfo
     end
 
     def thumbnail_badge
-      return unless @item.thumbnail?(@asset.id)
+      return unless item.thumbnail?(asset.id)
 
       tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status m-2'
     end
@@ -81,7 +80,7 @@ module AssetInfo
 
     # @return [String]
     def thumbnail_path
-      file_asset_path @asset, type: :thumbnail, disposition: :inline
+      file_asset_path asset, type: :thumbnail, disposition: :inline
     end
   end
 end

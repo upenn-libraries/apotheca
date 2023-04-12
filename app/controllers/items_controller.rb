@@ -2,36 +2,26 @@
 
 # controller actions for Item stuff
 class ItemsController < ApplicationController
+  before_action :load_item_and_change_set, except: :index
+  before_action :load_assets, only: [:show, :edit, :reorder_assets]
   before_action :configure_pagination, only: :index
-  before_action :load_resources, only: [:show, :edit, :destroy]
   before_action :store_rows, only: :index
+
+  authorize_resource :item_resource, parent: false
 
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
   def index
-    authorize! :read, ItemResource
     @container = solr_query_service.custom_queries.item_index parameters: search_params
   end
 
-  def show
-    authorize! :read, @item
-    decorate_item_with_ils_metadata
-  end
+  def show; end
 
-  def new
-    authorize! :new, ItemResource
-    @item = ItemResource.new
-    @change_set = ItemChangeSet.new(@item)
-  end
+  def new; end
 
-  def edit
-    authorize! :edit, @item
-    # TODO: support ItemResourcePresenter usage
-  end
+  def edit; end
 
   def create
-    authorize! :create, ItemResource
-
     CreateItem.new.call(created_by: current_user.email, **item_params) do |result|
       result.success do |resource|
         flash.notice = 'Successfully created item.'
@@ -45,8 +35,6 @@ class ItemsController < ApplicationController
   end
 
   def update
-    authorize! :edit, ItemResource
-
     UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **item_params) do |result|
       result.success do |resource|
         flash.notice = 'Successfully updated item.'
@@ -60,8 +48,6 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    authorize! :delete, ItemResource
-
     DeleteItem.new.call(id: params[:id]) do |result|
       result.success do
         flash.notice = 'Successfully deleted Item'
@@ -73,10 +59,7 @@ class ItemsController < ApplicationController
     end
   end
 
-  def reorder_assets
-    authorize! :edit, ItemResource
-    load_resources
-  end
+  def reorder_assets; end
 
   private
 
@@ -97,18 +80,40 @@ class ItemsController < ApplicationController
     end
   end
 
+  # Handle Failure response from transaction. Set appropriate ivars based on Failure contents and template to render.
   def render_failure(failure, template)
-    if failure.key?(:change_set)
-      @change_set = failure[:change_set]
-      @item = @change_set.resource
-    end
+    load_item_and_change_set failure[:change_set]
+    load_assets if template == :edit
 
     @error = failure
     @errors_for = params[:form]
 
-    load_resources
-
     render template
+  end
+
+  # Load item and change_set ivars for views. Use ItemPresenter for all views, load ILS metadata only as needed.
+  # @param [ItemChangeSet] change_set, optional
+  def load_item_and_change_set(change_set = nil)
+    resource = if change_set
+                 change_set.resource
+               elsif params[:id]
+                 pg_query_service.find_by(id: params[:id])
+               else
+                 ItemResource.new
+               end
+    ils_metadata = resource.bibnumber? ? solr_query_service.custom_queries.ils_metadata_for(id: resource.id) : nil
+    @item = ItemResourcePresenter.new object: resource, ils_metadata: ils_metadata
+    @change_set = change_set || ItemChangeSet.new(resource)
+  end
+
+  def load_assets
+    @arranged_assets = @item.arranged_assets
+    @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids.deep_dup
+  end
+
+  # @param [StandardError] exception
+  def error_redirect(exception)
+    redirect_to items_path, notice: "Problem loading page: #{exception.message}"
   end
 
   def item_params
@@ -124,6 +129,11 @@ class ItemsController < ApplicationController
     )
   end
 
+  def search_params
+    params.permit(:keyword, :rows, :page, filter: {}, sort: {}, search: {})
+  end
+
+  # TODO: this is shared with AssetsController - create a parent controller class or concern?
   # @return [Valkyrie::MetadataAdapter]
   def pg_query_service
     @pg_query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
@@ -132,29 +142,5 @@ class ItemsController < ApplicationController
   # @return [Valkyrie::MetadataAdapter]
   def solr_query_service
     @solr_query_service ||= Valkyrie::MetadataAdapter.find(:index_solr).query_service
-  end
-
-  def load_resources
-    @item ||= pg_query_service.find_by id: params[:id]
-    @change_set ||= ItemChangeSet.new(@item)
-    @arranged_assets = @item.arranged_assets
-    @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids.deep_dup
-  end
-
-  # @param [StandardError] exception
-  def error_redirect(exception)
-    redirect_to items_path, notice: "Problem loading page: #{exception.message}"
-  end
-
-  def search_params
-    params.permit(:keyword, :rows, :page, filter: {}, sort: {}, search: {})
-  end
-
-  def decorate_item_with_ils_metadata
-    ils_metadata_hash = solr_query_service.custom_queries.ils_metadata_for id: @item.id
-    @item = ItemResourcePresenter.new(
-      object: @item,
-      ils_metadata: ils_metadata_hash
-    )
   end
 end

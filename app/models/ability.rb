@@ -15,7 +15,8 @@ class Ability
     if user.viewer?
       can :read, [ItemResource, AssetResource]
     elsif user.editor?
-      can [:read, :create, :update], [ItemResource, AssetResource, ItemResourcePresenter]
+      can [:read, :create, :update], AssetResource
+      can [:read, :create, :update, :reorder_assets], ItemResource
       can [:read, :create], BulkImport
       can [:update, :cancel], BulkImport, created_by: user
       can [:update, :cancel], Import, bulk_import: { created_by: user }
