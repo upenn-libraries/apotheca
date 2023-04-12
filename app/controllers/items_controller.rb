@@ -3,7 +3,7 @@
 # controller actions for Item stuff
 class ItemsController < ApplicationController
   before_action :load_item_and_change_set, except: :index
-  before_action :load_assets, only: [:show, :edit]
+  before_action :load_assets, only: [:show, :edit, :reorder_assets]
   before_action :configure_pagination, only: :index
   before_action :store_rows, only: :index
 
