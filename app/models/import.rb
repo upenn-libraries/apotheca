@@ -16,7 +16,7 @@ class Import < ApplicationRecord
     end
     if result.success?
       self.duration = benchmark.total
-      self.resource_identifier = result.value!.id
+      self.resource_identifier = result.value!.unique_identifier
       success!
     else
       self.process_errors = result.failure[:details]
