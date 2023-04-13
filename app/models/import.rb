@@ -16,6 +16,7 @@ class Import < ApplicationRecord
     end
     if result.success?
       self.duration = benchmark.total
+      self.resource_identifier = result.value!.id
       success!
     else
       self.process_errors = result.failure[:details]
@@ -26,5 +27,9 @@ class Import < ApplicationRecord
   # Determine if a user can cancel an import
   def can_cancel?(user)
     Ability.new(user).can?(:cancel, self) && self.may_cancel?
+  end
+
+  def import_human_readable_name
+    import_data['human_readable_name']
   end
 end
