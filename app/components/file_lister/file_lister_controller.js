@@ -51,7 +51,7 @@ export default class extends Controller {
         });
 
         if(!response.ok && response.status !== 422) {
-            throw Error(`Something Went Wrong: ${response.body}`)
+            throw Error(`Something Went Wrong: ${response.status}`)
         }
 
        return await response.json();
