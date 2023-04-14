@@ -11,7 +11,8 @@ FactoryBot.define do
           title: [
             'Marian Anderson'
           ]
-        }
+        },
+        assets: { arranged_filenames: 'front.tif; back.tif', storage: 'sceti_digitized', path: 'trade_card' }
       }
     end
 
