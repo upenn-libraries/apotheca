@@ -29,7 +29,7 @@ class Import < ApplicationRecord
     Ability.new(user).can?(:cancel, self) && self.may_cancel?
   end
 
-  def import_human_readable_name
+  def human_readable_name
     import_data['human_readable_name']
   end
 end

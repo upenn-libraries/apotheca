@@ -100,7 +100,7 @@
       <tr>
         <td><%= import.id %></td>
         <td><%= import.state.titlecase %></td>
-        <td><%= import.import_human_readable_name %></td>
+        <td><%= import.human_readable_name %></td>
         <td><%= import.resource_identifier%></td>
         <td>
           <%= link_to 'Details', bulk_import_import_path(@bulk_import, import), class: 'btn btn-sm btn-primary' %>
