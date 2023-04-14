@@ -27,8 +27,7 @@ export default class extends Controller {
         this.errorMessageTarget.innerText = error;
     }
 
-    clear() {
-        this.filenameListTarget.innerText = '';
+    clearErrorMessage() {
         this.errorMessageTarget.innerText = '';
     }
 
@@ -55,7 +54,7 @@ export default class extends Controller {
 
     async submit(event) {
         event.preventDefault();
-        this.clear();
+        this.clearErrorMessage();
 
         const json = await this.getFilenames();
 
