@@ -1,14 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["pathInput", "driveSelect", "filenameList", "fileListingForm", "driveResponse", "pathResponse", "errorMessage"]
+    static targets = ["pathInput", "driveSelect", "filenameList", "extractedFilenamesForm", "extractedFilenamesDrive", "extractedFilenamesPath", "errorMessage"]
 
     setDrive(drive){
-        this.driveResponseTarget.value = drive
+        this.extractedFilenamesDriveTarget.value = drive
     }
 
     setPath(path){
-        this.pathResponseTarget.value = path
+        this.extractedFilenamesPathTarget.value = path
     }
 
     setList(filenames) {
@@ -56,9 +56,9 @@ export default class extends Controller {
             this.setDrive(json.drive)
             this.setPath(json.path)
             this.setList(json.filenames)
-            this.fileListingFormTarget.hidden = false
+            this.extractedFilenamesFormTarget.hidden = false
         } else {
-            this.fileListingFormTarget.hidden = true
+            this.extractedFilenamesFormTarget.hidden = true
         }
     }
 
