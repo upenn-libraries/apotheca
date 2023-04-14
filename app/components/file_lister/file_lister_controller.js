@@ -50,26 +50,27 @@ export default class extends Controller {
             }),
         });
 
-        const json = await response.json();
-        return json;
+        if(!response.ok && response.status !== 422) {
+            throw Error(`Something Went Wrong: ${response.body}`)
+        }
+
+       return await response.json();
     }
 
     async submit(event) {
         event.preventDefault();
         this.clearErrorMessage();
 
-        const json = await this.getFilenames();
+        try {
+            const json = await this.getFilenames();
 
-        if (json.error) {
-            this.setError(json.error);
-        }
-
-        if (json.filenames) {
+            if (json.error) throw Error(json.error);
             this.setDrive(json.drive);
             this.setPath(json.path);
             this.setList(json.filenames);
             this.extractedFilenamesFormTarget.hidden = false;
-        } else {
+        } catch(error) {
+            this.setError(error.message)
             this.extractedFilenamesFormTarget.hidden = true;
         }
     }
