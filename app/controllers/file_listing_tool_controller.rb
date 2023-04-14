@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# A tool for listing file on a specified attached drive at a specified path
 class FileListingToolController < ApplicationController
   protect_from_forgery with: :null_session
   def tool; end
