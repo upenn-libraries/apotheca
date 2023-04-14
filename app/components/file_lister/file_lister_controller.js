@@ -9,6 +9,7 @@ export default class extends Controller {
         'extractedFilenamesDrive',
         'extractedFilenamesPath',
         'errorMessage',
+        'authenticityToken',
     ];
 
     setDrive(drive) {
@@ -41,6 +42,7 @@ export default class extends Controller {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
+                'X-CSRF-Token': this.authenticityTokenTarget.value
             },
             body: JSON.stringify({
                 drive: this.driveSelectTarget.value,
