@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# job to perform and save a bulk export
+# Job to change the state of a given Import to 'processing' if eligible
 class ProcessImportJob < ApplicationJob
   queue_as :default
 
