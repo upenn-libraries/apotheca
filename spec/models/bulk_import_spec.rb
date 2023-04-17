@@ -204,7 +204,7 @@ describe BulkImport, type: :model do
 
   describe '#create_imports' do
     let(:bulk_import) { create(:bulk_import) }
-    let(:csv_data) { File.read(Rails.root.join('spec', 'fixtures', 'imports', 'bulk_import_data.csv')) }
+    let(:csv_data) { Rails.root.join('spec/fixtures/imports/bulk_import_data.csv').read }
 
     it 'creates imports and enqueues jobs' do
       expect {
