@@ -201,4 +201,17 @@ describe BulkImport, type: :model do
       end
     end
   end
+
+  describe '#create_imports' do
+    let(:bulk_import) { create(:bulk_import) }
+    let(:csv_data) { File.read(Rails.root.join('spec', 'fixtures', 'imports', 'bulk_import_data.csv')) }
+
+    it 'creates imports and enqueues jobs' do
+      expect {
+        bulk_import.create_imports(csv_data)
+      }.to change(Import, :count).by(1)
+
+      expect(ProcessImportJob).to have_been_enqueued
+    end
+  end
 end
