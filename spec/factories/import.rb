@@ -38,5 +38,19 @@ FactoryBot.define do
       duration { Faker::Number.between(from: 1, to: 3000) }
       resource_identifier { "ark:/12345/#{Faker::Number.number(digits: 8)}" }
     end
+
+    trait :with_no_assets do
+      import_data do
+        {
+          action: 'CREATE',
+          human_readable_name: 'Marian Anderson; SSID: 18792434; filename: 10-14-1.tif',
+          metadata: {
+            title: [
+              'Marian Anderson'
+            ]
+          }
+        }
+      end
+    end
   end
 end

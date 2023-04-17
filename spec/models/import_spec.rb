@@ -29,21 +29,38 @@ describe Import do
 
     let(:bulk_import) { create(:bulk_import) }
     let(:import) { create(:import, :processing, bulk_import: bulk_import) }
+    let(:invalid_import) { create(:import, :processing, :with_no_assets, bulk_import: bulk_import) }
 
-    before do
-      import.run
+    context 'when Success monad is returned' do
+      before do
+        import.run
+      end
+
+      it 'is successful' do
+        expect(import.state).to eq described_class::STATE_SUCCESSFUL.to_s
+      end
+
+      it 'calculates and stores duration' do
+        expect(import.duration).not_to be_nil
+      end
+
+      it 'sets resource identifier' do
+        expect(import.resource_identifier).not_to be_nil
+      end
     end
 
-    it 'is successful' do
-      expect(import.state).to eq described_class::STATE_SUCCESSFUL.to_s
-    end
+    context 'when Failure monad is returned' do
+      before do
+        invalid_import.run
+      end
 
-    it 'calculates and stores duration' do
-      expect(import.duration).not_to be_nil
-    end
+      it 'is not successful' do
+        expect(invalid_import.state).to eq described_class::STATE_FAILED.to_s
+      end
 
-    it 'sets resource identifier' do
-      expect(import.resource_identifier).not_to be_nil
+      it 'adds Failure monad information to process_errors' do
+        expect(invalid_import.process_errors).to eq ['assets must be provided to create an object']
+      end
     end
   end
 end
