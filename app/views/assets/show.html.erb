@@ -27,7 +27,6 @@
   </div>
   <div class="flex-grow-1 ms-3 mt-3">
     <%= render(StaticFields::Component.new) do |component| %>
-      <% component.with_field(label: 'ID', values: @asset.id, classes: %w[user-select-all font-monospace]) %>
       <% component.with_field(label: 'Label', values: @asset.label) %>
       <% component.with_field(label: 'Annotations', values: @asset.annotations.map(&:text)) %>
       <% component.with_field(label: 'Original Filename', values: @asset.original_filename, classes: ['user-select-all']) %>
