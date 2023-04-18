@@ -23,6 +23,20 @@ describe Import do
     expect(import.import_data).to be_a Hash
   end
 
+  describe '#process!' do
+    include_context 'with successful requests to mint EZID'
+    include_context 'with successful requests to update EZID'
+
+    let(:bulk_import) { create(:bulk_import) }
+    let(:import) { create(:import, :queued, bulk_import: bulk_import) }
+
+    it 'calls #run' do
+      allow(import).to receive(:run).and_call_original
+      import.process!
+      expect(import).to have_received(:run)
+    end
+  end
+
   describe '#run' do
     include_context 'with successful requests to mint EZID'
     include_context 'with successful requests to update EZID'
