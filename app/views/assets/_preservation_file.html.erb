@@ -1,4 +1,4 @@
-<h3 id="preservation-events" class="mb-3">Preservation File</h3>
+<h3 id="preservation-file" class="mb-3">Preservation File</h3>
 
 <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
   <% component.with_field(label: 'Original Filename', values: @asset.original_filename, classes: ['user-select-all']) %>

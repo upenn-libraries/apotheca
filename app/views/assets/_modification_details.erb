@@ -1,3 +1,5 @@
+<h3 id="modification-details" class="mb-3">Modification Details</h3>
+
 <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
   <% component.with_field(label: 'Date Created', values: @asset.date_created&.to_fs(:display)) %>
   <% component.with_field(label: 'Created By', values: @asset.created_by) %>
