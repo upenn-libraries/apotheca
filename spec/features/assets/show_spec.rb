@@ -28,6 +28,11 @@ describe 'Asset Show Page' do
     it 'shows button to regenerate derivatives' do
       expect(page).to have_button('Regenerate Derivatives')
     end
+
+    it 'can regenerate derivatives' do
+      click_on 'Regenerate Derivatives'
+      expect(page).to have_text('Successfully enqueued job to regenerate derivatives')
+    end
   end
 
   shared_examples_for 'any logged in user who cannot delete Assets' do
