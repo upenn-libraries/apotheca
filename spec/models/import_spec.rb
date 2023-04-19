@@ -42,10 +42,10 @@ describe Import do
     include_context 'with successful requests to update EZID'
 
     let(:bulk_import) { create(:bulk_import) }
-    let(:import) { create(:import, :processing, bulk_import: bulk_import) }
-    let(:invalid_import) { create(:import, :processing, :with_no_assets, bulk_import: bulk_import) }
 
     context 'when Success monad is returned' do
+      let(:import) { create(:import, :processing, bulk_import: bulk_import) }
+
       before do
         import.run
       end
@@ -64,6 +64,8 @@ describe Import do
     end
 
     context 'when Failure monad is returned' do
+      let(:invalid_import) { create(:import, :processing, :with_no_assets, bulk_import: bulk_import) }
+
       before do
         invalid_import.run
       end
