@@ -2,7 +2,7 @@
 
 <div class="d-flex justify-content-around my-3">
   <% if can? :update, @asset  %>
-    <%= render Form::Component.new(name: 'regenerate_derivatives', url: "/", method: :patch) do |component| %>
+    <%= render Form::Component.new(name: 'regenerate_derivatives', url: regenerate_derivatives_asset_path(@asset), method: :post) do |component| %>
       <% component.with_error(@error) %>
       <% component.with_submit('Regenerate Derivatives', confirm: 'Do you really want to regenerate derivatives for this asset?', class: %w[btn btn-primary]) %>
     <% end %>
