@@ -1,0 +1,29 @@
+<h3 id="preservation-file" class="mb-3">Preservation File</h3>
+
+<%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
+  <% component.with_field(label: 'Original Filename', values: @asset.original_filename, classes: ['user-select-all']) %>
+  <% component.with_field(label: 'File', values: @asset.preservation_file_id)  %>
+<% end %>
+
+<h3 id="technical-metadata" class="mb-3">Technical Metadata</h3>
+
+<%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
+  <% component.with_field(label: 'MIME Type', values: @asset.technical_metadata.mime_type, classes: ['user-select-all']) %>
+  <% component.with_field(label: 'Size', values: number_to_human_size(@asset.technical_metadata.size, classes: ['user-select-all'])) %>
+  <% component.with_field(label: 'Duration', values: @asset.technical_metadata.duration) %>
+  <% component.with_field(label: 'MD5 Checksum', values: @asset.technical_metadata.md5, classes: %w[user-select-all font-monospace]) %>
+  <% component.with_field(label: 'SHA256 Checksum', values: @asset.technical_metadata.sha256, classes: %w[user-select-all font-monospace]) %>
+<% end %>
+
+<h3 id="preservation-events" class="mb-3">Preservation Events</h3>
+
+<table class="table">
+  <% @asset.preservation_events.each do |event| %>
+    <tr>
+      <td><%= event.timestamp %></td>
+      <td><%= event.event_type %></td>
+      <td><%= event.outcome_detail_note %></td>
+      <td><%= event.agent %></td>
+    </tr>
+  <% end %>
+</table>

@@ -24,6 +24,10 @@ describe 'Asset Show Page' do
     it 'shows link to edit assets' do
       expect(page).to have_link('Edit Asset')
     end
+
+    it 'shows button to regenerate derivatives' do
+      expect(page).to have_button('Regenerate Derivatives')
+    end
   end
 
   shared_examples_for 'any logged in user who cannot delete Assets' do
@@ -40,6 +44,10 @@ describe 'Asset Show Page' do
 
     it 'does not show link to Edit Asset' do
       expect(page).not_to have_link('Edit Asset')
+    end
+
+    it 'does not show button to regenerate derivatives' do
+      expect(page).not_to have_button('Regenerate Derivatives')
     end
   end
 

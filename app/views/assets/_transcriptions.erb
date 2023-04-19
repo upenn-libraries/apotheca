@@ -1,0 +1,16 @@
+<h3 id="transcriptions" class="mb-3">Transcriptions</h3>
+
+<ol class="list-group list-group-numbered list-group-flush">
+<% if @asset.transcriptions.any? %>
+  <% @asset.transcriptions.each do |transcription| %>
+    <li class="list-group-item border-bottom-0">
+    <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
+      <% component.with_field(label: 'Mime Type', values: transcription.mime_type) %>
+      <% component.with_field(label: 'Contents', values: transcription.contents, classes: ['formatted-text'])  %>
+    <% end %>
+  <% end %>
+    </li>
+<% else %>
+  <p>No transcription to display</p>
+<% end %>
+</ol>
