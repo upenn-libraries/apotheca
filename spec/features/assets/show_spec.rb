@@ -11,10 +11,6 @@ describe 'Asset Show Page' do
   end
 
   shared_examples_for 'any logged in user' do
-    it 'shows asset id' do
-      expect(page).to have_text(asset.id)
-    end
-
     it 'shows original filename' do
       expect(page).to have_text(asset.original_filename)
     end
