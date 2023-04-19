@@ -206,11 +206,17 @@ describe BulkImport, type: :model do
     let(:bulk_import) { create(:bulk_import) }
     let(:csv_data) { Rails.root.join('spec/fixtures/imports/bulk_import_data.csv').read }
 
-    it 'creates imports and enqueues jobs' do
-      expect {
-        bulk_import.create_imports(csv_data)
-      }.to change(Import, :count).by(1)
+    before do
+      bulk_import.create_imports(csv_data)
+    end
 
+    it 'creates imports' do
+      bulk_import.reload
+      expect(bulk_import.imports.count).to eq(1)
+      expect(bulk_import.imports.first.human_readable_name).to eq('The Mermaids Singing are Beautiful')
+    end
+
+    it 'enqueues the job' do
       expect(ProcessImportJob).to have_been_enqueued
     end
   end
