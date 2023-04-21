@@ -32,7 +32,7 @@ class FileListingToolController < ApplicationController
   end
 
   def filenames
-    storage.files_at(params[:path])
+    storage.files_at(params[:path]).map { |file| File.basename(file) }
   end
 
   def storage
