@@ -79,4 +79,25 @@ describe Import do
       end
     end
   end
+
+  describe '#human_readable_name' do
+    let(:bulk_import) { create(:bulk_import) }
+
+    context 'when an item is associated' do
+      let(:import) { create(:import, bulk_import: bulk_import, resource_identifier: 'test_id') }
+
+      it 'returns name from associated item' do
+        persist(:item_resource, unique_identifier: 'test_id')
+        expect(import.human_readable_name).to eq('New Item')
+      end
+    end
+
+    context 'when no item is associated' do
+      let(:import) { create(:import, bulk_import: bulk_import) }
+
+      it 'returns name from import_data when item not present' do
+        expect(import.human_readable_name).to eq('Marian Anderson; SSID: 18792434; filename: 10-14-1.tif')
+      end
+    end
+  end
 end

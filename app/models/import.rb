@@ -31,10 +31,10 @@ class Import < ApplicationRecord
 
   # Return human_readable_name from ItemResource if it's been assigned or from data hash if not
   def human_readable_name
+    return import_data['human_readable_name'] unless resource_identifier
+
     query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
     item = query_service.custom_queries.find_by_unique_identifier(unique_identifier: resource_identifier)
-    return item.human_readable_name if item
-
-    import_data['human_readable_name']
+    item.human_readable_name
   end
 end
