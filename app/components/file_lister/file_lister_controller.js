@@ -2,14 +2,11 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static targets = [
-        'pathInput',
-        'driveSelect',
         'filenameList',
         'extractedFilenamesForm',
         'extractedFilenamesDrive',
         'extractedFilenamesPath',
         'errorMessage',
-        'authenticityToken',
     ];
 
     setDrive(drive) {
@@ -36,18 +33,14 @@ export default class extends Controller {
         navigator.clipboard.writeText(this.filenameListTarget.innerText);
     }
 
-    async getFilenames() {
+    async getFilenames(formData) {
         const response = await fetch('/file_listing_tool/file_list', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'X-CSRF-Token': this.authenticityTokenTarget.value
             },
-            body: JSON.stringify({
-                drive: this.driveSelectTarget.value,
-                path: this.pathInputTarget.value,
-            }),
+            body: JSON.stringify(Object.fromEntries(formData)),
         });
 
         if(!response.ok && response.status !== 422) {
@@ -61,8 +54,9 @@ export default class extends Controller {
         event.preventDefault();
         this.clearErrorMessage();
 
+        const formData = new FormData(event.target, event.submitter)
         try {
-            const json = await this.getFilenames();
+            const json = await this.getFilenames(formData);
 
             if (json.error) throw Error(json.error);
             this.setDrive(json.drive);

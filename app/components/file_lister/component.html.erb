@@ -7,13 +7,13 @@
 
 <div data-controller="file-lister--file-lister">
 
-  <%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :json), layout: :horizontal, html: { id: 'new-file-listing' } do |f| %>
-    <%= f.select :drive, options_for_select(ImportService::S3Storage.all.keys), { control_col: "col-sm-4", include_blank: true }, data: { "file-lister--file-lister-target": "driveSelect" } %>
-    <%= f.text_field :path, control_col: 'col-sm-4', data: { "file-lister--file-lister-target": "pathInput" } %>
+  <%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :json), layout: :horizontal, html: { id: 'new-file-listing' }, data: { "action": "submit->file-lister--file-lister#submit" } do |f| %>
+    <%= f.select :drive, options_for_select(ImportService::S3Storage.all.keys), { control_col: "col-sm-4", include_blank: true } %>
+    <%= f.text_field :path, control_col: 'col-sm-4' %>
     <%= f.form_group do %>
-      <%= f.submit 'List Filenames', class: 'btn btn-primary', data: { "action": "click->file-lister--file-lister#submit" } %>
+      <%= f.submit 'List Filenames', class: 'btn btn-primary' %>
     <% end %>
-    <%= hidden_field_tag :authenticity_token, form_authenticity_token, data: {"file-lister--file-lister-target": "authenticityToken"} %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <% end %>
 
   <hr/>
