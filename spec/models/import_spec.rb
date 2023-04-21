@@ -43,11 +43,15 @@ describe Import do
 
     let(:bulk_import) { create(:bulk_import) }
 
-    context 'when Success monad is returned' do
-      let(:import) { create(:import, :processing, bulk_import: bulk_import) }
-
+    shared_context 'with processing import' do
       before do
         import.run
+      end
+    end
+
+    context 'when Success monad is returned' do
+      include_context 'with processing import' do
+        let(:import) { create(:import, :processing, bulk_import: bulk_import) }
       end
 
       it 'is successful' do
@@ -64,18 +68,16 @@ describe Import do
     end
 
     context 'when Failure monad is returned' do
-      let(:invalid_import) { create(:import, :processing, :with_no_assets, bulk_import: bulk_import) }
-
-      before do
-        invalid_import.run
+      include_context 'with processing import' do
+        let(:import) { create(:import, :processing, :with_no_assets, bulk_import: bulk_import) }
       end
 
       it 'is not successful' do
-        expect(invalid_import.state).to eq described_class::STATE_FAILED.to_s
+        expect(import.state).to eq described_class::STATE_FAILED.to_s
       end
 
       it 'adds Failure monad information to process_errors' do
-        expect(invalid_import.process_errors).to eq ['assets must be provided to create an object']
+        expect(import.process_errors).to eq ['assets must be provided to create an object']
       end
     end
   end
