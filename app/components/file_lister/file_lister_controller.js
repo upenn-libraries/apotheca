@@ -33,7 +33,7 @@ export default class extends Controller {
     }
 
     copy() {
-        navigator.clipboard.writeText(this.filenameListTarget.value);
+        navigator.clipboard.writeText(this.filenameListTarget.innerText);
     }
 
     async getFilenames() {
