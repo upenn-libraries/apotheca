@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe 'file listing tool requests' do
-  let(:params) { { drive: 'sceti_digitized', path: '/' } }
 
   before do
     sign_in create(:user, :viewer)
@@ -9,6 +8,8 @@ describe 'file listing tool requests' do
   end
 
   context 'with a valid path' do
+    let(:params) { { drive: 'sceti_digitized', path: '/' } }
+
     it 'returns file list' do
       expect(response.parsed_body['filenames']).to eq('bell.wav; video.mov')
     end
