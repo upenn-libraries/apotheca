@@ -43,16 +43,12 @@ describe Import do
 
     let(:bulk_import) { create(:bulk_import) }
 
-    shared_context 'with processing import' do
-      before do
-        import.run
-      end
+    before do
+      import.run
     end
 
     context 'when Success monad is returned' do
-      include_context 'with processing import' do
-        let(:import) { create(:import, :processing, bulk_import: bulk_import) }
-      end
+      let(:import) { create(:import, :processing, bulk_import: bulk_import) }
 
       it 'is successful' do
         expect(import.state).to eq described_class::STATE_SUCCESSFUL.to_s
@@ -68,9 +64,7 @@ describe Import do
     end
 
     context 'when Failure monad is returned' do
-      include_context 'with processing import' do
-        let(:import) { create(:import, :processing, :with_no_assets, bulk_import: bulk_import) }
-      end
+      let(:import) { create(:import, :processing, :with_no_assets, bulk_import: bulk_import) }
 
       it 'is not successful' do
         expect(import.state).to eq described_class::STATE_FAILED.to_s
