@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resources :assets, except: :index do
       member do
         get 'file/:type', to: 'assets#file', as: :file
+        post :regenerate_derivatives, to: 'assets#regenerate_derivatives'
       end
     end
   end

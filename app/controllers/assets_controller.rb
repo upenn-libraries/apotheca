@@ -6,7 +6,7 @@ class AssetsController < ApplicationController
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
 
-  before_action :set_asset, only: [:show, :file, :edit, :update, :destroy]
+  before_action :set_asset, only: [:show, :file, :edit, :update, :regenerate_derivatives, :destroy]
   before_action :set_item, only: [:show, :new, :create, :edit, :update, :destroy]
 
   # respond with a 404 for missing asset files or missing Item (when required)
@@ -81,6 +81,16 @@ class AssetsController < ApplicationController
       serve_preservation_file
     else
       raise UnsupportedFileType, 'Type is not supported'
+    end
+  end
+
+  def regenerate_derivatives
+    authorize! :update, @asset
+
+    if GenerateDerivativesJob.perform_later(@asset.id.to_s)
+      redirect_to asset_path(@asset), notice: 'Successfully enqueued job to regenerate derivatives'
+    else
+      redirect_to asset_path(@asset), alert: 'An error occurred while enqueueing job to regenerate derivatives'
     end
   end
 
