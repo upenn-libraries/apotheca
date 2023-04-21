@@ -35,6 +35,6 @@ class Import < ApplicationRecord
 
     query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
     item = query_service.custom_queries.find_by_unique_identifier(unique_identifier: resource_identifier)
-    item.human_readable_name
+    item&.human_readable_name
   end
 end
