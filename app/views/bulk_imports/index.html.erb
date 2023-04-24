@@ -5,6 +5,7 @@
 
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title { 'Bulk Imports' } %>
+  <%= header.with_link(href: file_listing_tool_path) { 'File Listing Tool' } %>
   <% if can?(:create, BulkImport) %>
     <%= header.with_link(href: new_bulk_import_path) { 'New Bulk Import' } %>
   <% end %>
