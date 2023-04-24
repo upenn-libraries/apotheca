@@ -34,7 +34,7 @@ export default class extends Controller {
     }
 
     async getFilenames(formData) {
-        const response = await fetch('/file_listing_tool/file_list', {
+        const response = await fetch(event.target.action, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
