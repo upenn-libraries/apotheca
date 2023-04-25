@@ -6,8 +6,8 @@ class AssetsController < ApplicationController
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
 
-  before_action :set_asset, only: [:show, :file, :edit, :update, :regenerate_derivatives, :destroy]
-  before_action :set_item, only: [:show, :new, :create, :edit, :update, :destroy]
+  before_action :set_asset, only: %i[show file edit update regenerate_derivatives destroy]
+  before_action :set_item, only: %i[show new create edit update destroy]
 
   # respond with a 404 for missing asset files or missing Item (when required)
   rescue_from 'AssetsController::FileNotFound', 'AssetsController::ItemNotFound' do |_e|
@@ -28,6 +28,11 @@ class AssetsController < ApplicationController
     @change_set = AssetChangeSet.new(AssetResource.new)
   end
 
+  def edit
+    authorize! :new, @asset
+    @change_set = AssetChangeSet.new(@asset)
+  end
+
   def create
     authorize! :create, AssetResource
     result = build_and_attach_asset
@@ -37,11 +42,6 @@ class AssetsController < ApplicationController
     else
       render_failure(result.failure, :new)
     end
-  end
-
-  def edit
-    authorize! :new, @asset
-    @change_set = AssetChangeSet.new(@asset)
   end
 
   def update
@@ -112,7 +112,8 @@ class AssetsController < ApplicationController
     end
 
     # Add Asset to Item.
-    add_asset_result = AddAsset.new.call(id: @item.id, asset_id: update_result.value!.id, updated_by: current_user.email)
+    add_asset_result = AddAsset.new.call(id: @item.id, asset_id: update_result.value!.id,
+                                         updated_by: current_user.email)
     if add_asset_result.failure?
       DeleteAsset.new.call(id: result.value!.id)
       return add_asset_result
@@ -146,7 +147,7 @@ class AssetsController < ApplicationController
   end
 
   def asset_params
-    params.require(:asset).permit(:label, annotations: [:text], transcriptions: [:contents, :mime_type])
+    params.require(:asset).permit(:label, annotations: [:text], transcriptions: %i[contents mime_type])
   end
 
   def file_params

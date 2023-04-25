@@ -12,9 +12,9 @@ class BulkExportsController < ApplicationController
     if params.dig('filter', 'created_by').present?
       @bulk_exports = @bulk_exports.filter_created_by(params[:filter][:created_by])
     end
-    if params[:sort].present?
-      @bulk_exports = @bulk_exports.sort_by_field(params[:sort][:field], params[:sort][:direction])
-    end
+    return if params[:sort].blank?
+
+    @bulk_exports = @bulk_exports.sort_by_field(params[:sort][:field], params[:sort][:direction])
   end
 
   def new
@@ -40,7 +40,8 @@ class BulkExportsController < ApplicationController
     elsif @bulk_export.destroy
       redirect_to bulk_exports_path, notice: 'Bulk export deleted.'
     else
-      redirect_to bulk_exports_path, alert: "An error occurred while deleting the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+      redirect_to bulk_exports_path,
+                  alert: "An error occurred while deleting the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
     end
   end
 
@@ -50,7 +51,8 @@ class BulkExportsController < ApplicationController
     elsif @bulk_export.cancel!
       redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
     else
-      redirect_to bulk_export_path, alert: "An error occurred while cancelling the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+      redirect_to bulk_export_path,
+                  alert: "An error occurred while cancelling the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
     end
   end
 
@@ -61,7 +63,8 @@ class BulkExportsController < ApplicationController
       ProcessBulkExportJob.perform_later(@bulk_export)
       redirect_to bulk_exports_path, notice: 'Bulk export queued for regeneration.'
     else
-      redirect_to bulk_export_path, alert: "An error occurred while regenerating the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+      redirect_to bulk_export_path,
+                  alert: "An error occurred while regenerating the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
     end
   end
 

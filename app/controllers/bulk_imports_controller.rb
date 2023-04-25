@@ -20,6 +20,12 @@ class BulkImportsController < ApplicationController
     @bulk_imports = @bulk_imports.search(params.dig('filter', 'search')) if params.dig('filter', 'search').present?
   end
 
+  def show
+    @state = params[:import_state]
+    @imports = @bulk_import.imports.page(params[:import_page])
+    @imports = @imports.where(state: @state).page(params[:import_page]) if @state
+  end
+
   def new; end
 
   def create
@@ -33,14 +39,9 @@ class BulkImportsController < ApplicationController
       @bulk_import.create_imports(csv, safe_queue_name_from(params[:bulk_import][:job_priority].to_s))
       redirect_to bulk_import_path(@bulk_import), notice: 'Bulk import created'
     else
-      redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{@bulk_import.errors.map(&:full_message).join(', ')}"
+      redirect_to bulk_imports_path,
+                  alert: "Problem creating bulk import: #{@bulk_import.errors.map(&:full_message).join(', ')}"
     end
-  end
-
-  def show
-    @state = params[:import_state]
-    @imports = @bulk_import.imports.page(params[:import_page])
-    @imports = @imports.where(state: @state).page(params[:import_page]) if @state
   end
 
   def cancel
