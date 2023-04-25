@@ -13,7 +13,7 @@ module Tabs
       attr_reader :id, :active, :title, :count, :disabled
 
       def initialize(title:, count: nil, active: false, disabled: false)
-        @id = title.downcase.gsub(' ', '-')
+        @id = title.downcase.tr(' ', '-')
         @title = title
         @active = active
         @count = count
