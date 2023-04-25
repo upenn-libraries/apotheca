@@ -2,13 +2,13 @@
 
 module Header
   class Component < ViewComponent::Base
-    renders_one :title, ->(tag: :h1, **options, &block) do
+    renders_one :title, lambda { |tag: :h1, **options, &block|
       BaseComponent.new(tag, **options, &block)
-    end
+    }
 
-    renders_many :links, ->(href:, **options, &block) do
+    renders_many :links, lambda { |href:, **options, &block|
       options[:class] = Array.wrap(options[:class]).append('btn', 'btn-outline-primary')
       BaseComponent.new(:a, href: href, **options, &block)
-    end
+    }
   end
 end

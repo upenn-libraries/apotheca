@@ -4,11 +4,11 @@ module Form
   # Renders a form element. Has slots for fields, a submit button and an error message. If desired,
   # inputs can be grouped in sections.
   class Component < ViewComponent::Base
-    renders_many :fields, ->(*field_path, **args, &block) {
+    renders_many :fields, lambda { |*field_path, **args, &block|
       Field::Component.new(*field_path, **@field_options.merge(args), &block)
     }
 
-    renders_many :sections, ->(**options, &block) {
+    renders_many :sections, lambda { |**options, &block|
       Section::Component.new(**@field_options, **options, &block)
     }
 

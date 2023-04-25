@@ -6,7 +6,7 @@ module Form
     class Component < ViewComponent::Base
       renders_one :title, ->(**args, &block) { BaseComponent.new(:h4, **args, &block) }
 
-      renders_many :fields, ->(*field_path, **args, &block) {
+      renders_many :fields, lambda { |*field_path, **args, &block|
         Field::Component.new(*field_path, **@field_options.merge(args), &block)
       }
 
