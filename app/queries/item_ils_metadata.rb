@@ -20,9 +20,9 @@ class ItemIlsMetadata
   # @return [Hash]
   def ils_metadata_for(id:)
     doc = connection.get('select', params: {
-      q: "id:\"#{id}\"",
-      fl: DescriptiveMetadataIndexer::ILS_METADATA_JSON_FIELD, rows: 1
-    })['response']['docs'].first
+                           q: "id:\"#{id}\"",
+                           fl: DescriptiveMetadataIndexer::ILS_METADATA_JSON_FIELD, rows: 1
+                         })['response']['docs'].first
     return if doc.blank?
 
     JSON.parse doc[DescriptiveMetadataIndexer::ILS_METADATA_JSON_FIELD.to_s]
