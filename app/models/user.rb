@@ -14,8 +14,8 @@ class User < ApplicationRecord
     devise :omniauthable, omniauth_providers: []
   end
 
-  has_many :bulk_exports, foreign_key: 'created_by_id', dependent: :destroy
-  has_many :bulk_imports, foreign_key: 'created_by_id', dependent: :destroy
+  has_many :bulk_exports, foreign_key: 'created_by_id', dependent: :destroy, inverse_of: :user
+  has_many :bulk_imports, foreign_key: 'created_by_id', dependent: :destroy, inverse_of: :user
 
   before_validation :deduplicate_roles
 
