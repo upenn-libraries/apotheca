@@ -59,6 +59,23 @@ class BulkImport < ApplicationRecord
     StructuredCSV.generate(data)
   end
 
+  # @param [Tempfile] csv
+  # @return [Boolean]
+  def uploaded_csv_empty?(csv)
+    return csv.blank? if csv.blank?
+
+    csv_is_empty = true
+
+    CSV.foreach(csv, headers: true) do |row|
+      if row.fields.any?(&:present?)
+        csv_is_empty = false
+        break
+      end
+    end
+
+    csv_is_empty
+  end
+
   # @return [Integer]
   def aggregate_processing_time
     imports.sum(:duration)
