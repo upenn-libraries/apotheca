@@ -84,6 +84,20 @@ describe BulkImport, type: :model do
     end
   end
 
+  describe '#uploaded_csv_empty?' do
+    let(:bulk_import) { create(:bulk_import) }
+
+    it 'returns true if csv has no item data' do
+      csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_without_item_data.csv')
+      expect(bulk_import).to be_uploaded_csv_empty(csv_path)
+    end
+
+    it 'returns false if csv has item data' do
+      csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_data.csv')
+      expect(bulk_import).not_to be_uploaded_csv_empty(csv_path)
+    end
+  end
+
   describe '#state' do
     context 'when no imports are present' do
       let(:bulk_import) { create(:bulk_import) }
