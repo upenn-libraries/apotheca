@@ -24,12 +24,51 @@ describe ImportService::Process::Update do
   describe '#run?' do
     include_context 'with successful requests to update EZID'
 
-    let(:item) { persist(:item_resource, :with_faker_metadata) }
-
+    let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_asset) }
     let(:result) { process.run }
     let(:updated_item) { result.value! }
 
-    context 'when updating descriptive metadata' do
+    context 'when updating with missing asset information' do
+      let(:process) do
+        build(
+          :import_process, :update,
+          unique_identifier: item.unique_identifier,
+          assets: { storage: 'sceti_digitized', path: 'trade_card', arranged_filenames: 'back.tif' }
+        )
+      end
+
+      it 'fails' do
+        expect(result).to be_a Dry::Monads::Failure
+      end
+
+      it 'return expected failure object' do
+        msg = 'Missing the following assets: front.tif. All assets must be represented when updating assets'
+        expect(result.failure[:error]).to be :import_failed
+        expect(result.failure[:details]).to contain_exactly(msg)
+      end
+    end
+
+    context 'when updating item with new assets but files are missing' do
+      let(:process) do
+        build(
+          :import_process, :update,
+          unique_identifier: item.unique_identifier,
+          assets: { storage: 'sceti_digitized', path: 'trade_card/front.tif', arranged_filenames: 'front.tif;back.tif' }
+        )
+      end
+
+      it 'fails' do
+        expect(result).to be_a Dry::Monads::Failure
+      end
+
+      it 'return expected failure object' do
+        expect(result.failure[:error]).to be :import_failed
+        expect(result.failure[:details]).to contain_exactly('Files in storage missing for: back.tif')
+      end
+    end
+
+    context 'when updating an item\'s descriptive metadata' do
+      let(:item) { persist(:item_resource, ) }
       let(:process) do
         build(
           :import_process, :update,
@@ -65,5 +104,78 @@ describe ImportService::Process::Update do
         expect(updated_item.descriptive_metadata.language).to be_blank
       end
     end
+
+    context 'when adding updating existing assets and adding new assets' do
+      let(:updated_assets) do
+        updated_item.asset_ids.map do |id|
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: id)
+        end
+      end
+
+      let(:process) do
+        build(:import_process, :update, :with_asset_metadata, unique_identifier: item.unique_identifier)
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(updated_item).to be_a ItemResource
+      end
+
+      it 'updates asset metadata' do
+        front = updated_assets.find { |a| a.original_filename == 'front.tif' }
+        expect(front).to be_an AssetResource
+        expect(front.label).to eql 'Front'
+        expect(front.transcriptions.map(&:contents)).to contain_exactly('Importers')
+      end
+
+      it 'creates new asset' do
+        back = updated_assets.find { |a| a.original_filename == 'back.tif' }
+        expect(back).to be_an AssetResource
+        expect(back.label).to eql 'Back'
+        expect(back.preservation_file_id).not_to be_nil
+      end
+
+      it 'adds new asset to item' do
+        expect(updated_item.asset_ids.count).to be 2
+      end
+    end
+
+    context 'when updating existing assets and there\'s an error'
+
+    context 'when updating existing assets with a new file' do
+      let(:updated_assets) do
+        updated_item.asset_ids.map do |id|
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: id)
+        end
+      end
+
+      let(:process) do
+        build(
+          :import_process, :update,
+          unique_identifier: item.unique_identifier,
+          assets: { storage: 'sceti_digitized', path: 'updated_trade_card', arranged_filenames: 'front.tif;back.tif' }
+        )
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(updated_item).to be_a ItemResource
+      end
+
+      it 'updates front.tif' do
+        front = updated_assets.find { |a| a.original_filename == 'front.tif' }
+        expect(
+          front.technical_metadata.sha256
+        ).to eql 'e8b02e24ff4223af1f4c8a351b7dc8e4b226e4b13c7b3b3e68be827a071e120f'
+      end
+
+      it 'does not update back.tif' do
+        back = updated_assets.find { |a| a.original_filename == 'back.tif' }
+        expect(
+          back.technical_metadata.sha256
+        ).to eql '5eb074db482a9a70de866521589e19fbd1372cb18f5d0901249e7c7bca44548b'
+      end
+    end
+
   end
 end

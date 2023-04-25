@@ -57,6 +57,15 @@ FactoryBot.define do
       thumbnail_asset_id { asset.id }
     end
 
+    # Asset with preservation file
+    trait :with_full_asset do
+      with_asset
+
+      transient do
+        asset { persist(:asset_resource, :with_preservation_file, :with_metadata) }
+      end
+    end
+
     trait :with_assets_some_arranged do
       transient do
         asset1 { persist(:asset_resource, original_filename: 'page1') }

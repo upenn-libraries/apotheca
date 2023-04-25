@@ -35,7 +35,7 @@ describe ImportService::AssetsData do
     end
 
     it 'requires that duplicate files are not present in any of the storage paths' do
-      assets = described_class.new(storage: 'sceti_digitized', path: ['trade_card', 'trade_card/front.tif'])
+      assets = described_class.new(storage: 'sceti_digitized', path: ['trade_card', 'front.tif'])
       expect(assets.valid?).to be false
       expect(assets.errors).to include 'duplicate filenames found in storage location: front.tif'
     end

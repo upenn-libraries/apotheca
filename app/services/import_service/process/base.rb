@@ -54,10 +54,80 @@ module ImportService
 
       private
 
+      def query_service
+        Valkyrie::MetadataAdapter.find(:postgres).query_service
+      end
+
       # Fetches ItemResource by unique_identifier, return nil if none present.
       def find_item(unique_identifier)
-        query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
         query_service.custom_queries.find_by_unique_identifier(unique_identifier: unique_identifier)
+      end
+
+      # Creates a set of assets. If it fails to create any on asset, it returns the failure
+      # and deletes all the assets that were created up to that point.
+      #
+      # @param [Array<Hash>] assets_data
+      # @param [Hash] additional_attrs to be passed in when creating each asset
+      def batch_create_assets(assets_data, additional_attrs = {})
+        asset_list = []
+        error = nil
+
+        # Create all assets, break out of loop if there is an error making an asset.
+        assets_data.each do |asset|
+          result = create_asset(asset.merge(additional_attrs))
+
+          if result.failure?
+            result.failure[:details].prepend("Error raised when generating #{asset[:original_filename]}")
+            error = result
+            break
+          else
+            asset_list << result.value!
+          end
+        end
+
+        if error.present?
+          # if there's an error creating any Asset, fail and remove any loaded Assets
+          delete_assets(asset_list)
+          error
+        else
+          Success(asset_list)
+        end
+      end
+
+      # Creates an asset with the given attributes. An asset is first created without a file and then the asset
+      # is updated to add in the file. If an error occurs while creating or updating the asset, any necessary
+      # clean up is done and then failure is returned.
+      def create_asset(attributes)
+        CreateAsset.new.call(attributes) do |result|
+          result.success do |a|
+            update_transaction = UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
+            update_args = {
+              id: a.id,
+              file: assets.file_for(attributes[:original_filename]),
+              updated_by: imported_by
+            }
+
+            update_transaction.call(**update_args) do |update_result|
+              update_result.success { |u| Success(u) } # TODO: might want to unlink temp file here manually or do it in the transaction
+              update_result.failure do |failure_hash|
+                DeleteAsset.new.call(id: a.id)
+                failure(**failure_hash)
+              end
+            end
+          end
+
+          result.failure do |failure_hash|
+            failure(**failure_hash)
+          end
+        end
+      end
+
+      def delete_assets(asset_list)
+        asset_list.each { |a| DeleteAsset.new.call(id: a.id) }
+      end
+
+      def update_asset_transaction
+        UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
       end
 
       # Takes different failure params and returns a Failure object with two keys: error, details.

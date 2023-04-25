@@ -54,6 +54,13 @@ module ImportService
       storage.file(file_locations[filename])
     end
 
+    # Returns sha256 checksum for file in storage.
+    def checksum_for(filename)
+      raise "Could not find #{filename} in storage" unless file_locations.key?(filename)
+
+      storage.checksum_sha256(file_locations[filename])
+    end
+
     private
 
     def all_filepaths

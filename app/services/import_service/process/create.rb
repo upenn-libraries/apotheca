@@ -31,14 +31,14 @@ module ImportService
           @errors << "\"#{unique_identifier}\" is not minted" unless ark_exists?(unique_identifier)
         end
 
+        @errors << 'asset storage and path must be provided' unless assets&.location?
+
         # Validate that all filenames listed in structural metadata.
-        return unless assets&.valid?
-
-        missing = assets.missing_files
-        @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?
+        if assets&.valid? && assets&.location
+          missing = assets.all_missing_files
+          @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?
+        end
       end
-
-      # TODO: think about using structured/unstructured instead of arranged/unarranged
 
       # Runs process to create an Item.
       #
@@ -47,7 +47,10 @@ module ImportService
         return failure(details: @errors) unless valid? # Validate before processing data.
 
         # Create all the assets
-        assets_result = batch_create_assets(assets.all)
+        assets_result = batch_create_assets(
+          assets.all,
+          { created_by: created_by || imported_by, updated_by: imported_by }
+        )
 
         return assets_result if assets_result.failure?
 
@@ -79,64 +82,6 @@ module ImportService
       end
 
       private
-
-      def batch_create_assets(assets_data)
-        asset_list = []
-        error = nil
-
-        # Create all assets, break out of loop if there is an error making an asset.
-        assets_data.each do |asset|
-          result = create_asset(asset)
-
-          if result.failure?
-            result.failure[:details].prepend("Error raised when generating #{asset[:original_filename]}")
-            error = result
-            break
-          else
-            asset_list << result.value!
-          end
-        end
-
-        if error.present?
-          # if there's an error creating any Asset, fail and remove any loaded Assets
-          delete_assets(asset_list)
-          error
-        else
-          Success(asset_list)
-        end
-      end
-
-      def delete_assets(asset_list)
-        asset_list.each { |a| DeleteAsset.new.call(id: a.id) }
-      end
-
-      def create_asset(asset)
-        CreateAsset.new.call(created_by: created_by || imported_by, updated_by: imported_by, **asset) do |result|
-          result.success do |a|
-            update_transaction = UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
-            update_args = {
-              id: a.id,
-              file: assets.file_for(asset[:original_filename]),
-              updated_by: imported_by
-            }
-
-            update_transaction.call(**update_args) do |update_result|
-              # TODO: might want to unlink temp file here manually or do it in the transaction
-              update_result.success do |u|
-                Success(u)
-              end
-              update_result.failure do |failure_hash|
-                DeleteAsset.new.call(id: a.id)
-                failure(**failure_hash)
-              end
-            end
-          end
-
-          result.failure do |failure_hash|
-            failure(**failure_hash)
-          end
-        end
-      end
 
       # Queries EZID to check if a given ark already exists.
       #

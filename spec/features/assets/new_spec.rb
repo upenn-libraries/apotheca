@@ -15,7 +15,7 @@ describe 'Asset New Page' do
   end
 
   it 'can create a new asset' do
-    attach_file 'asset-file', 'spec/fixtures/files/front.tif'
+    attach_file 'asset-file', 'spec/fixtures/files/trade_card/front.tif'
     click_on 'Save'
     expect(page).to have_text('Successfully created asset')
   end

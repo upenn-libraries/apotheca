@@ -3,10 +3,13 @@
 class TestWorkingStorage
   # Move file to working storage.
   def self.load_example_files
-    s3.upload(File.new(Rails.root.join('spec/fixtures/files/front.tif')), 'trade_card/front.tif')
-    s3.upload(File.new(Rails.root.join('spec/fixtures/files/back.tif')), 'trade_card/back.tif')
-    s3.upload(File.new(Rails.root.join('spec/fixtures/files/bell.wav')), 'bell.wav')
-    s3.upload(File.new(Rails.root.join('spec/fixtures/files/video.mov')), 'video.mov')
+    base = Rails.root.join('spec/fixtures/files').to_s
+
+    Dir.glob(File.join(base, '**/*')) do |f|
+      next if File.directory?(f)
+
+      s3.upload(File.new(f), f.delete_prefix(base))
+    end
   end
 
   # Remove all files from working storage.
