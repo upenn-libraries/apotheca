@@ -32,7 +32,7 @@ module Queueable
       end
 
       event :reprocess, after_commit: :remove_values_for_display do
-        transitions from: [:successful, :failed], to: :queued
+        transitions from: %i[successful failed], to: :queued
       end
     end
   end

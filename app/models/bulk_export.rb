@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class BulkExport < ApplicationRecord
   include Queueable
 
@@ -41,15 +42,15 @@ class BulkExport < ApplicationRecord
   private
 
   def restrict_number_of_bulk_exports
-    if created_by.present? && (created_by.bulk_exports.count >= 10)
-      errors.add(:created_by, 'The number of Bulk Exports for a user cannot exceed 10.')
-    end
+    return unless created_by.present? && (created_by.bulk_exports.count >= 10)
+
+    errors.add(:created_by, 'The number of Bulk Exports for a user cannot exceed 10.')
   end
 
   def restrict_search_params_to_hash
-    unless search_params.is_a?(Hash)
-      errors.add(:search_params, 'must be a hash')
-    end
+    return if search_params.is_a?(Hash)
+
+    errors.add(:search_params, 'must be a hash')
   end
 
   def solr_items
