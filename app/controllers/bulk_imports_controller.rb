@@ -26,6 +26,11 @@ class BulkImportsController < ApplicationController
     @bulk_import = BulkImport.new(created_by: current_user, note: params[:bulk_import][:note])
     uploaded_file = params[:bulk_import][:csv]
     uploaded_file.tempfile.set_encoding('UTF-8')
+
+    if @bulk_import.uploaded_csv_empty?(uploaded_file.tempfile)
+      return redirect_to new_bulk_import_path, alert: 'Problem creating bulk import: CSV has no item data'
+    end
+
     @bulk_import.original_filename = uploaded_file.original_filename
     csv = uploaded_file.read
 
