@@ -20,7 +20,7 @@ module MetadataExtractor
           tag = element.attributes['tag'].value
           mapping_config = MarcMappings::CONTROL_FIELDS[tag]
 
-          next unless mapping_config.present?
+          next if mapping_config.blank?
 
           Array.wrap(mapping_config).each do |config|
             field = config[:field]
@@ -39,7 +39,7 @@ module MetadataExtractor
           tag = element.attributes['tag'].value
           mapping_config = MarcMappings::MARC_FIELDS[tag]
 
-          next unless mapping_config.present?
+          next if mapping_config.blank?
 
           Array.wrap(mapping_config).each do |config|
             field = config[:field]
@@ -48,8 +48,12 @@ module MetadataExtractor
             mapped_values[field] ||= []
 
             values = element.xpath('subfield')
-            values = values.select { |s| selected_subfields.include?(s.attributes['code'].value) } if selected_subfields.first != '*'
-            values = values.map { |v| v&.text&.strip }.delete_if(&:blank?)
+            if selected_subfields.first != '*'
+              values = values.select do |s|
+                selected_subfields.include?(s.attributes['code'].value)
+              end
+            end
+            values = values.map { |v| v&.text&.strip }.compact_blank!
 
             if (delimeter = config[:join])
               mapped_values[field].push values.join(delimeter)
@@ -68,12 +72,11 @@ module MetadataExtractor
 
         # Converting language codes to english name.
         languages = mapped_values.fetch('language', [])
-        mapped_values['language'] = languages.map { |l| ISO_639.find_by_code(l)&.english_name }.compact
+        mapped_values['language'] = languages.filter_map { |l| ISO_639.find_by(code: l)&.english_name }
 
         # Adding call number
         mapped_values['call_number'] = xml.xpath('//records/record/holdings/holding/call_number')
-                                           .map(&:text)
-                                           .compact
+                                          .filter_map(&:text)
 
         # Removing duplicate values from selected fields.
         %w[subject corporate_name personal_name language].each { |f| mapped_values[f]&.uniq! }
@@ -84,11 +87,12 @@ module MetadataExtractor
         # Join fields if they aren't multivalued.
         mapped_values.each do |k, v|
           next if MarcMappings::MULTIVALUED_FIELDS.include?(k)
+
           mapped_values[k] = [v.join(' ')]
         end
 
         mapped_values
-      rescue => e
+      rescue StandardError => e
         raise StandardError, "Error mapping MARC XML: #{e.class} #{e.message}", e.backtrace
       end
 
@@ -100,7 +104,7 @@ module MetadataExtractor
 
         # Checking for values in field 040 subfield e
         subfield_e = xml.xpath("//records/record/datafield[@tag=040]/subfield[@code='e']").map(&:text)
-        manuscript = true if subfield_e.any? { |s| ['appm', 'appm2', 'amremm', 'dacs', 'dcrmmss'].include? s.downcase }
+        manuscript = true if subfield_e.any? { |s| %w[appm appm2 amremm dacs dcrmmss].include? s.downcase }
 
         # Checking for value in all subfield of field 040
         all_subfields = xml.xpath('//records/record/datafield[@tag=040]/subfield').map(&:text)
@@ -114,6 +118,7 @@ module MetadataExtractor
         # Checking for `a` in 7th value of the leader field
         leader = xml.at_xpath('//records/record/leader')&.text
         return if leader.blank?
+
         leader[6] == 'a'
       end
     end

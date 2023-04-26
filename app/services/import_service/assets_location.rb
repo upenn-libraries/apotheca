@@ -18,7 +18,9 @@ module ImportService
     # information. This does not check the validity of the paths
     def valid?
       @errors << 'asset storage name is blank' if storage_name.blank?
-      @errors << "assets storage invalid: '#{storage_name}'" if storage_name.present? && !S3Storage.valid?(storage_name)
+      if storage_name.present? && S3Storage.invalid?(storage_name)
+        @errors << "assets storage invalid: '#{storage_name}'"
+      end
       @errors << 'assets must contain at least one path' if paths.empty?
 
       if valid_paths?

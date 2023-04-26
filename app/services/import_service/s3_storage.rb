@@ -3,7 +3,7 @@
 module ImportService
   # Wrapper around S3 working storage.
   class S3Storage
-    REQUIRED_CONFIG_KEYS = [:access_key_id, :secret_access_key, :endpoint, :region].freeze
+    REQUIRED_CONFIG_KEYS = %i[access_key_id secret_access_key endpoint region].freeze
     attr_reader :name
 
     def initialize(storage_name)
