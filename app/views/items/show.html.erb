@@ -21,6 +21,12 @@
     <%= render partial: 'administrative_info' %>
   <% end %>
 
+  <% if can? :update, @item  %>
+    <% component.with_tab(title: 'Actions') do %>
+      <%= render partial: 'actions' %>
+    <% end %>
+  <% end %>
+
   <% component.with_tab(title: 'Assets', count: @item.asset_count) do  %>
     <%= render partial: 'assets_list' %>
   <% end %>

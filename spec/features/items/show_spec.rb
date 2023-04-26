@@ -44,15 +44,6 @@ describe 'Item Show Page' do
     end
   end
 
-  shared_examples_for 'any logged in user who cannot delete an Item' do
-    it 'does not show link to delete an item on the administrative info tab' do
-      visit item_path(item)
-      within '#administrative-info' do
-        expect(page).not_to have_button('Delete Item')
-      end
-    end
-  end
-
   context 'with incorporated ILS metadata' do
     let(:user) { create(:user, :viewer) }
     let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
@@ -98,7 +89,6 @@ describe 'Item Show Page' do
     before { visit item_path(item) }
 
     it_behaves_like 'any logged in user'
-    it_behaves_like 'any logged in user who cannot delete an Item'
 
     it 'does not show link to edit item on descriptive metadata tab' do
       expect(page).not_to have_link('Edit', href: "#{items_path}/#{item.id}/edit#descriptive")
@@ -122,6 +112,10 @@ describe 'Item Show Page' do
 
     it 'does not show link to edit an asset within assets tab' do
       expect(page).not_to have_link('Edit Asset', href: edit_asset_path(item.asset_ids.first))
+    end
+
+    it 'does not show actions tab' do
+      expect(page).not_to have_selector('#actions')
     end
 
     it 'does not show form input to set item thumbnail' do
@@ -153,7 +147,16 @@ describe 'Item Show Page' do
 
     it_behaves_like 'any logged in user'
     it_behaves_like 'any logged in user who can edit an Item'
-    it_behaves_like 'any logged in user who cannot delete an Item'
+
+    it 'shows actions tab' do
+      expect(page).to have_selector('#actions')
+    end
+
+    it 'does not show button to delete item' do
+      within '#actions' do
+        expect(page).not_to have_button('Delete Item')
+      end
+    end
   end
 
   context 'with a logged in admin' do
@@ -165,8 +168,12 @@ describe 'Item Show Page' do
     it_behaves_like 'any logged in user'
     it_behaves_like 'any logged in user who can edit an Item'
 
-    it 'shows button to delete the item on administrative info tab' do
-      within '#administrative-info' do
+    it 'shows actions tab' do
+      expect(page).to have_selector('#actions')
+    end
+
+    it 'shows button to delete item' do
+      within '#actions' do
         expect(page).to have_button('Delete Item')
       end
     end
