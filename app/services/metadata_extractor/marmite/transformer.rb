@@ -104,7 +104,8 @@ module MetadataExtractor
 
         # Checking for values in field 040 subfield e
         subfield_e = xml.xpath("//records/record/datafield[@tag=040]/subfield[@code='e']").map(&:text)
-        manuscript = true if subfield_e.any? { |s| %w[appm appm2 amremm dacs dcrmmss].include? s.downcase }
+        values = %w[appm appm2 amremm dacs dcrmmss]
+        manuscript = true if subfield_e.any? { |s| values.include? s.downcase }
 
         # Checking for value in all subfield of field 040
         all_subfields = xml.xpath('//records/record/datafield[@tag=040]/subfield').map(&:text)
