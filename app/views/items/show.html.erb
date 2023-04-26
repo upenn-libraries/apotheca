@@ -21,7 +21,7 @@
     <%= render partial: 'administrative_info' %>
   <% end %>
 
-  <% if current_user.admin? || current_user.editor? %>
+  <% if can? :update, @item  %>
     <% component.with_tab(title: 'Actions') do %>
       <%= render partial: 'actions' %>
     <% end %>
