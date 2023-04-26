@@ -9,55 +9,56 @@
 <% end %>
 
 
-  <%= render(SummaryInfo::Component.new(cols: 4, id: 'bulk-import-dl')) do |component| %>
+<%= render(SummaryInfo::Component.new(cols: 4, id: 'bulk-import-dl')) do |component| %>
 
-    <% component.with_field('Original Filename', value_classes: 'd-flex align-items-center') do %>
-      <%= @bulk_import.original_filename || '[Unknown]' %>
-      <%= link_to(csv_bulk_import_path, title: 'Download CSV', class: 'mx-2 lh-1') do %>
-        <%= render Icon::Component.new(name: 'download', size: '22px') %>
-      <% end %>
-    <% end %>
-
-    <% component.with_field(spacer: true) %>
-
-    <% component.with_field('Total Imports') do %>
-      <%= @bulk_import.imports.count %>
-    <% end %>
-
-    <% component.with_field('Total Processing Time') do %>
-      <% if @bulk_import.state.in? [BulkImport::COMPLETED, BulkImport::COMPLETED_WITH_ERRORS] %>
-        <% processing_time = @bulk_import.aggregate_processing_time %>
-        <%= processing_time.zero? ? '[Unknown]' : distance_of_time(processing_time) %>
-      <% else %>
-        [Unknown]
-      <% end %>
-    <% end %>
-
-    <% component.with_field('Note') do %>
-      <%= @bulk_import.note || '[None]' %>
-    <% end %>
-
-    <% component.with_field('ID') do %>
-      <%= @bulk_import.id %>
-    <% end %>
-
-    <% component.with_field('Created By') do %>
-      <%= @bulk_import.created_by.email %>
-    <% end %>
-
-    <% component.with_field('Created At') do %>
-      <%= @bulk_import.created_at.to_fs(:display) %>
+  <% component.with_field('Original Filename', value_classes: 'd-flex align-items-center') do %>
+    <%= @bulk_import.original_filename || '[Unknown]' %>
+    <%= link_to(csv_bulk_import_path, title: 'Download CSV', class: 'mx-2 lh-1') do %>
+      <%= render Icon::Component.new(name: 'download', size: '22px') %>
     <% end %>
   <% end %>
 
-<div class="d-flex justify-content-between">
-<h4 class="col-9">Imports</h4>
+  <% component.with_field(spacer: true) %>
+
+  <% component.with_field('Total Imports') do %>
+    <%= @bulk_import.imports.count %>
+  <% end %>
+
+  <% component.with_field('Total Processing Time') do %>
+    <% if @bulk_import.state.in? [BulkImport::COMPLETED, BulkImport::COMPLETED_WITH_ERRORS] %>
+      <% processing_time = @bulk_import.aggregate_processing_time %>
+      <%= processing_time.zero? ? '[Unknown]' : distance_of_time(processing_time) %>
+    <% else %>
+      [Unknown]
+    <% end %>
+  <% end %>
+
+  <% component.with_field('Note') do %>
+    <%= @bulk_import.note || '[None]' %>
+  <% end %>
+
+  <% component.with_field('ID') do %>
+    <%= @bulk_import.id %>
+  <% end %>
+
+  <% component.with_field('Created By') do %>
+    <%= @bulk_import.created_by.email %>
+  <% end %>
+
+  <% component.with_field('Created At') do %>
+    <%= @bulk_import.created_at.to_fs(:display) %>
+  <% end %>
+<% end %>
+
+<div class="d-flex flex-column flex-sm-row justify-content-sm-between mb-4">
+  <h4 class="mb-3 mb-sm-0">Imports</h4>
   <% if @bulk_import.any_imports_queued? &&  can?(:cancel, @bulk_import)  %>
-<%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(@bulk_import), method: :patch) do |component| %>
-  <% component.with_submit('Cancel All Queued Imports',
-                           confirm: 'Do you really want to cancel all queued Imports?',
-                           variant: :secondary, class: 'btn-sm')
-  %>
+    <%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(@bulk_import), method: :patch) do |component| %>
+      <% component.with_submit('Cancel All Queued Imports',
+                               confirm: 'Do you really want to cancel all queued Imports?',
+                               variant: :secondary,
+                               class: 'btn-sm')
+      %>
     <% end %>
   <% end %>
 </div>
