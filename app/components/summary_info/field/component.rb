@@ -6,7 +6,10 @@ module SummaryInfo
     class Component < ViewComponent::Base
       # @param [String|NilClass] label for individual field
       # @param [TrueClass, FalseClass] spacer (blank dt and dd) for alignment purposes
-      # @param [Hash] options field_classes: field_container, label_classes: label only, value_classes: value only
+      # @param [Hash] options
+      # @option options [Array<String>] :field_classes CSS classes to apply to the field's container div
+      # @option options [Array<String>] :label_classes CSS classes to apply to the field's label dt
+      # @option options [Array<String>] :value_classes CSS classes to apply to the field's value dd
       def initialize(label = nil, spacer: false, **options)
         @label = "#{label}:" if label
         @spacer = spacer

@@ -5,7 +5,11 @@ module SummaryInfo
   class Component < ViewComponent::Base
     renders_many :fields, Field::Component
 
-    # @param [Hash] options optional 'cols' (number of columns) and 'classes' (css)
+    # @param [Hash] options
+    # @option options [Integer] :cols (3) Number of columns to divide fields into
+    # @option options [String] :id (nil) ID for CSS
+    # @option options [Array<String>] :classes CSS classes to apply to dl
+    # @option options [Array<String>] :col_classes CSS classes to apply to each column div
     def initialize(**options)
       @options = options
       @columns = @options[:cols] || 3
