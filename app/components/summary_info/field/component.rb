@@ -11,7 +11,7 @@ module SummaryInfo
       # @option options [Array<String>] :label_classes CSS classes to apply to the field's label dt
       # @option options [Array<String>] :value_classes CSS classes to apply to the field's value dd
       def initialize(label = nil, spacer: false, **options)
-        @label = "#{label}:" if label
+        @label = label
         @spacer = spacer
         @options = options
 
@@ -46,6 +46,7 @@ module SummaryInfo
 
       # Construct label
       def label
+        @label &&= "#{@label}:"
         content_tag :dt, @label, class: @label_classes
       end
 
