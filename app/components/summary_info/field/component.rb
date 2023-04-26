@@ -51,8 +51,8 @@ module SummaryInfo
 
       # Construct field label
       def label
-        @label &&= "#{@label}:"
-        content_tag :dt, @label, class: @label_classes
+        label_display = defined?(@label) ? "#{@label}:" : nil
+        content_tag :dt, label_display, class: @label_classes
       end
 
       # Construct field value
