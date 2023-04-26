@@ -9,7 +9,7 @@ module SummaryInfo
     def initialize(**options)
       @options = options
       @columns = @options[:cols] || 3
-      @id = Array.wrap(@options[:id])
+      @id = @options[:id]
 
       add_classes
     end
