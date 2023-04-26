@@ -18,18 +18,19 @@ module SummaryInfo
       add_classes
     end
 
-    # Add CSS classes to control description list display on small vs large screens
+    # Add CSS classes for display of a description list in columns as defined at component initialization
+    # Append classes to stack columns on small screens and display side-by-side on larger screens
     def add_classes
-      # Display columns stacked on small screens and side-by-sie on larger screens
+      # Description list classes
       list_classes = %w[d-flex flex-column mt-4 mb-5]
       list_classes_lg = %w[flex-lg-row justify-content-lg-between gap-lg-4]
       @list_classes = Array.wrap(@options[:classes]).push(list_classes, list_classes_lg)
 
-      # Display each column as specified
+      # Column classes
       @col_classes = Array.wrap(@options[:col_classes])
     end
 
-    # Divide fields into the specified number of columns (default: 3)
+    # Divide fields into number of columns specified at component initialization (default: 3)
     def columns
       fields.in_groups(@columns).map do |field_group|
         content_tag(:div, class: @col_classes) do
@@ -38,7 +39,7 @@ module SummaryInfo
       end
     end
 
-    # Render the description list containing columns of label/value pairs
+    # Render description list containing columns of label/value pairs
     def call
       render(BaseComponent.new(:dl, class: @list_classes, id: @id)) do
         safe_join(columns)
