@@ -28,7 +28,7 @@ class FileListingToolController < ApplicationController
   end
 
   def valid_drive?
-    ImportService::S3Storage.all.include?(params[:drive])
+    ImportService::S3Storage.valid?(params[:drive])
   end
 
   def filenames
