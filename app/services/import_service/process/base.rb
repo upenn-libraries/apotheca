@@ -39,7 +39,7 @@ module ImportService
 
         @errors << 'imported_by must always be provided' unless imported_by
 
-        @errors.concat(assets.errors) if assets&.invalid?
+        @errors.concat(assets.errors) if assets && !assets.valid?
       end
 
       # Runs validations and returns a boolean value based on the success
