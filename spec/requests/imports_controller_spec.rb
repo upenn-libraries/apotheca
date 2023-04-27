@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe 'Import requests' do
-
   context 'when viewing the Import show page' do
     let!(:bulk_import) { create(:bulk_import) }
     let!(:import) { create(:import, :queued, bulk_import: bulk_import) }
@@ -15,7 +14,6 @@ describe 'Import requests' do
     end
 
     context 'with an authorized user' do
-
       before { sign_in create(:user, :admin) }
 
       it 'shows bulk_export index page for authorized user' do

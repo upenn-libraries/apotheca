@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AlertMessage, type: :model do
+RSpec.describe AlertMessage do
   context 'when using basic attributes' do
     let(:alert_message) { create(:alert_message) }
 

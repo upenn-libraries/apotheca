@@ -6,31 +6,31 @@ describe BulkExport do
   it_behaves_like 'queueable'
 
   it 'requires created_by' do
-    bulk_export = build :bulk_export, created_by: nil
+    bulk_export = build(:bulk_export, created_by: nil)
     expect(bulk_export.valid?).to be false
     expect(bulk_export.errors['created_by']).to include 'must exist'
   end
 
   it 'requires search params to be a hash' do
-    bulk_export = build :bulk_export, search_params: nil
+    bulk_export = build(:bulk_export, search_params: nil)
     expect(bulk_export.valid?).to be false
   end
 
   it 'requires state to be set' do
-    bulk_export = build :bulk_export, state: nil
+    bulk_export = build(:bulk_export, state: nil)
     expect(bulk_export.valid?).to be false
     expect(bulk_export.errors['state']).to include "can't be blank"
   end
 
   it 'requires generated_by if csv is attached' do
-    bulk_export = build :bulk_export
+    bulk_export = build(:bulk_export)
     bulk_export.csv.attach(io: StringIO.new('contents'), filename: 'file.csv')
     expect(bulk_export.valid?).to be false
     expect(bulk_export.errors['generated_at']).to include "can't be blank"
   end
 
   describe '#csv' do
-    let(:bulk_export) { create :bulk_export, generated_at: DateTime.current }
+    let(:bulk_export) { create(:bulk_export, generated_at: DateTime.current) }
 
     it 'attaches a csv file' do
       bulk_export.csv.attach(io: StringIO.new('contents'), filename: 'file.csv')
@@ -88,7 +88,7 @@ describe BulkExport do
   end
 
   describe '#process!' do
-    let(:bulk_export) { create :bulk_export, :queued }
+    let(:bulk_export) { create(:bulk_export, :queued) }
 
     it 'calls #run' do
       allow(bulk_export).to receive(:run).and_call_original
@@ -121,7 +121,6 @@ describe BulkExport do
       it 'calls sanitized filename' do
         expect(bulk_export).to have_received(:sanitized_filename)
       end
-
     end
 
     context 'when successful and contains two search results' do
@@ -227,7 +226,7 @@ describe BulkExport do
   end
 
   context 'with associated User validation' do
-    let(:user) { create :user, :admin }
+    let(:user) { create(:user, :admin) }
 
     before { create_list(:bulk_export, 10, created_by: user) }
 

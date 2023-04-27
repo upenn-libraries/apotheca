@@ -37,7 +37,7 @@ describe MetadataExtractor::Marmite do
 
       before do
         stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
-          .to_return(status: 404, body: JSON.generate({ errors: }), headers: { 'Content-Type' => 'application/json' })
+          .to_return(status: 404, body: JSON.generate({ errors: errors }), headers: { 'Content-Type' => 'application/json' })
       end
 
       it 'raises an error with the correct message' do

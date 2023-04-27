@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ProcessImportJob, type: :job do
+describe ProcessImportJob do
   context 'when performing the job' do
     let(:bulk_import) { create(:bulk_import) }
     let(:import) { create(:import, :queued, bulk_import: bulk_import) }
@@ -23,4 +23,3 @@ describe ProcessImportJob, type: :job do
     end
   end
 end
-

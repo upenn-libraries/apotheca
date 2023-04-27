@@ -28,13 +28,13 @@ shared_context 'with successful requests to update EZID' do
         basic_auth: [Ezid::Client.config.user, Ezid::Client.config.password],
         headers: { 'Content-Type': 'text/plain; charset=UTF-8' }
       )
-      .to_return { |request|
+      .to_return do |request|
         {
           status: 200,
           headers: { 'Content-Type': 'text/plain; charset=UTF-8' },
           body: "success: #{request.uri.path.split('/', 3).last}"
         }
-      }
+      end
   end
 end
 
@@ -45,13 +45,13 @@ shared_context 'with successful requests to lookup EZID' do
         basic_auth: [Ezid::Client.config.user, Ezid::Client.config.password],
         headers: { 'Content-Type': 'text/plain; charset=UTF-8' }
       )
-      .to_return { |request|
+      .to_return do |request|
         {
           status: 200,
           headers: { 'Content-Type': 'text/plain; charset=UTF-8' },
           body: "success: #{request.uri.path.split('/', 3).last}"
         }
-      }
+      end
   end
 end
 

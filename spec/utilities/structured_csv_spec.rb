@@ -11,9 +11,9 @@ RSpec.describe StructuredCSV do
 
   let(:sorted_csv_string_data) do
     <<~CSV
-    asset.drive,asset.path,metadata.creator[1],metadata.creator[2],metadata.date[1],metadata.date[2],metadata.description[1],metadata.other data,metadata.subject[1],structural.files.number,structural.sequence[1].filename,structural.sequence[1].label,structural.sequence[1].table_of_contents[1],structural.sequence[2].filename,structural.sequence[2].label,structural.sequence[2].table_of_contents[1],unique_identifier
-    test,path/to/assets_1,"person, random first","person, random second",2020-01-01,2020-01-02,very important item,this is a test item,subject one,3,,,,,,,ark:/9999/test
-    test,path/to/assets_2,"person, random third","person, random forth",2020-02-01,,second most important item,this is a second test item,,4,front.jpeg,Front,Illuminated Image,back.jpeg,Back,Second Illuminated Image,ark:/9999/test2
+      asset.drive,asset.path,metadata.creator[1],metadata.creator[2],metadata.date[1],metadata.date[2],metadata.description[1],metadata.other data,metadata.subject[1],structural.files.number,structural.sequence[1].filename,structural.sequence[1].label,structural.sequence[1].table_of_contents[1],structural.sequence[2].filename,structural.sequence[2].label,structural.sequence[2].table_of_contents[1],unique_identifier
+      test,path/to/assets_1,"person, random first","person, random second",2020-01-01,2020-01-02,very important item,this is a test item,subject one,3,,,,,,,ark:/9999/test
+      test,path/to/assets_2,"person, random third","person, random forth",2020-02-01,,second most important item,this is a second test item,,4,front.jpeg,Front,Illuminated Image,back.jpeg,Back,Second Illuminated Image,ark:/9999/test2
     CSV
   end
 
@@ -30,7 +30,7 @@ RSpec.describe StructuredCSV do
           'description' => ['very important item'],
           'subject' => ['subject one'],
           'other data' => 'this is a test item',
-          'date' => ['2020-01-01', '2020-01-02']
+          'date' => %w[2020-01-01 2020-01-02]
         },
         'structural' => {
           'files' => { 'number' => '3' },

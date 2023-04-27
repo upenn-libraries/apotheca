@@ -15,9 +15,9 @@ describe DeleteItem do
       end
 
       it 'removes the Item' do
-        expect do
+        expect {
           query_service.find_by(id: result.value![:resource].id)
-        end.to raise_error Valkyrie::Persistence::ObjectNotFoundError
+        }.to raise_error Valkyrie::Persistence::ObjectNotFoundError
       end
     end
 

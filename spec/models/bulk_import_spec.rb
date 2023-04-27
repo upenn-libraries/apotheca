@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe BulkImport, type: :model do
+describe BulkImport do
   let(:bulk_import) do
-    build :bulk_import, imports: build_list(:import, 1)
+    build(:bulk_import, imports: build_list(:import, 1))
   end
 
   it 'has many Imports' do
@@ -43,15 +43,16 @@ describe BulkImport, type: :model do
     let!(:bulk_import3) { create(:bulk_import, created_at: '2022-03-01') }
 
     it 'filters bulk imports created between start and end date' do
-      expect(described_class.filter_created_between('2021-12-31', '2022-02-02')).to match_array([bulk_import1, bulk_import2])
+      expect(described_class.filter_created_between('2021-12-31',
+                                                    '2022-02-02')).to contain_exactly(bulk_import1, bulk_import2)
     end
 
     it 'filters bulk imports created after start date' do
-      expect(described_class.filter_created_between('2022-01-31', nil)).to match_array([bulk_import2, bulk_import3])
+      expect(described_class.filter_created_between('2022-01-31', nil)).to contain_exactly(bulk_import2, bulk_import3)
     end
 
     it 'filters bulk imports created before end date' do
-      expect(described_class.filter_created_between(nil, '2022-01-02')).to match_array([bulk_import1])
+      expect(described_class.filter_created_between(nil, '2022-01-02')).to contain_exactly(bulk_import1)
     end
   end
 
