@@ -28,7 +28,7 @@ module StructuredCSV
   end
 
   def self.parse_field(field, value, hash)
-    if /\A[^\[\]]+\./.match(field) # if matches field.second_field
+    if /\A[^\[\]]+\./.match?(field) # if matches field.second_field
       parent, child = field.split('.', 2)
       hash[parent] ||= {}
       parse_field(child, value, hash[parent])
