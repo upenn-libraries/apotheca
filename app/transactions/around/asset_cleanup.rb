@@ -5,13 +5,13 @@ module Around
   class AssetCleanup
     include Dry::Monads[:result]
 
-    def call(input, &block)
-      result = block.(Success(input))
+    def call(input)
+      result = yield(Success(input))
 
       if result.failure?
         change_set = result.failure.value.fetch(:change_set, nil)
 
-        if change_set && change_set.changed?(:preservation_file_id) && change_set.preservation_file_id.present?
+        if change_set&.changed?(:preservation_file_id) && change_set.preservation_file_id.present?
           preservation_storage.delete(id: change_set.preservation_file_id)
         end
       end
