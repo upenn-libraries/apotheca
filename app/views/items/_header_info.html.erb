@@ -1,26 +1,25 @@
-<div class="row">
-  <div class="col">
-    <dl>
-      <dt>Unique Identifier</dt>
-      <dd><%= @item.unique_identifier %></dd>
-      <dt>Number of Assets</dt>
-      <dd><%= @item.asset_count %></dd>
-    </dl>
-  </div>
-  <div class="col-3">
-    <dl>
-      <dt>Created By</dt>
-      <dd><%= @item.created_by %></dd>
-      <dt>Created At</dt>
-      <dd><%= @item.date_created&.to_fs(:display) %></dd>
-    </dl>
-  </div>
-  <div class="col-3">
-    <dl>
-      <dt>Updated By</dt>
-      <dd><%= @item.updated_by %></dd>
-      <dt>Updated At</dt>
-      <dd><%= @item.date_updated&.to_fs(:display) %></dd>
-    </dl>
-  </div>
-</div>
+<%= render(SummaryInfo::Component.new) do |component| %>
+
+  <% component.with_field('Unique Identifier') do %>
+    <%= @item.unique_identifier %>
+  <% end %>
+
+  <% component.with_field(spacer: true) %>
+
+  <% component.with_field('Created By') do %>
+    <%= @item.created_by %>
+  <% end %>
+
+  <% component.with_field('Created At') do %>
+    <%= @item.date_created&.to_fs(:display) %>
+  <% end %>
+
+  <% component.with_field('Updated By') do %>
+    <%= @item.updated_by %>
+  <% end %>
+
+  <% component.with_field('Updated At') do %>
+    <%= @item.date_updated&.to_fs(:display) %>
+  <% end %>
+
+<% end %>
