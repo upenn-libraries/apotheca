@@ -6,18 +6,15 @@ module Form
     class Component < ViewComponent::Base
       # @param [String] value
       # @param [Symbol] variant
-      # @param [String] disable_with value for disabled version of submit button when form is submitted, optional
       # @param [String, TrueClass, FalseClass] confirm can be a String message for display or just true for a standard
       # message
-      def initialize(value, variant: :primary, disable_with: 'Processing...', confirm: false, **options)
+      def initialize(value, variant: :primary, confirm: false, **options)
         @value = value
         @options = options
-        @disable_with = disable_with
         @confirm = confirm
         @options[:class] = Array.wrap(@options[:class]).push('btn', "btn-#{variant}")
         @options[:data] = @options.fetch(:data, {})
         configure_confirmation if confirm
-        configure_disable_with if disable_with
       end
 
       def configure_confirmation
@@ -25,11 +22,6 @@ module Form
         add_data_attributes(controller: 'form--submit-button--submit',
                             confirm: message,
                             action: 'click->form--submit-button--submit#confirm')
-      end
-
-      def configure_disable_with
-        disable_with_value = @disable_with.is_a?(String) ? @disable_with : 'Processing...'
-        add_data_attributes('disable-with': disable_with_value)
       end
 
       # add data attributes to options hash while maintaining order of multiple Stimulus actions
