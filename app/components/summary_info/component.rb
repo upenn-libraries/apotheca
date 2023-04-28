@@ -22,7 +22,7 @@ module SummaryInfo
     # Append classes to stack columns on small screens and display side-by-side on larger screens
     def add_classes
       # Description list classes
-      list_classes = %w[d-flex flex-column mt-4 mb-5]
+      list_classes = %w[d-flex flex-column my-3]
       list_classes_lg = %w[flex-lg-row justify-content-lg-between gap-lg-4]
       @list_classes = Array.wrap(@options[:classes]).push(list_classes, list_classes_lg)
 
