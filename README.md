@@ -2,7 +2,7 @@
 Administrative application that enables the ingestion and management of digital assets. 
 
 ## System Requirements
-- Ruby 2.7.5
+- Ruby 3.2.0
 - Postgres
 - [libvips](https://www.libvips.org/)
 - [ffmpeg](https://ffmpeg.org/) - ensure `ffmpeg` executable is on your `$PATH`
@@ -14,7 +14,7 @@ We are using docker-compose to run adjacent services required for the applicatio
 ### 1. Installing system requirements
 #### MacOS (with Homebrew)
 ```shell
-rbenv install 2.7.5
+rbenv install 3.2.0
 brew install --cask docker
 brew install libpq
 brew install vips
@@ -25,7 +25,7 @@ Note: Homebrew installation of libtiff does not seem to support tiff jpeg compre
 #### Linux
 ```shell
 sudo apt install libpq-dev ffmpeg libvips
-rbenv install 2.7.5
+rbenv install 3.2.0
 ```
 
 TODO: Add installation notes for libvips TIFF support.
