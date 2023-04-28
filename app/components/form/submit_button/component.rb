@@ -17,7 +17,7 @@ module Form
         @options[:class] = Array.wrap(@options[:class]).push('btn', "btn-#{variant}")
         @options[:data] = @options.fetch(:data, {})
         configure_confirmation if confirm
-        configure_form_disable if disable_with
+        configure_disable_with if disable_with
       end
 
       def configure_confirmation
@@ -27,11 +27,9 @@ module Form
                             action: 'click->form--submit-button--submit#confirm')
       end
 
-      def configure_form_disable
+      def configure_disable_with
         disable_with_value = @disable_with.is_a?(String) ? @disable_with : 'Processing...'
-        add_data_attributes(controller: 'form--submit-button--submit',
-                            action: 'click->form--submit-button--submit#disableSubmit',
-                            'disable-with': disable_with_value)
+        add_data_attributes('disable-with': disable_with_value)
       end
 
       # add data attributes to options hash while maintaining order of multiple Stimulus actions

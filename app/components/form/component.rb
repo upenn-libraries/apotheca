@@ -47,6 +47,8 @@ module Form
       @model = model
       @url = url
       @options = options
+      @options[:data] = @options.fetch(:data, {})
+      configure_controller
 
       # If method is not passed in, we set the appropriate method.
       @options[:method] = new_record? ? :post : :patch unless @options[:method]
@@ -98,6 +100,10 @@ module Form
       return @options[:optimistic_lock] if @options[:optimistic_lock]&.in? [true, false]
 
       @model.try :lockable?
+    end
+
+    def configure_controller
+      @options[:data].merge!(controller: 'form--form', action: 'submit->form--form#disableSubmit')
     end
   end
 end
