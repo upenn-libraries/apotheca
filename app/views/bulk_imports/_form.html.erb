@@ -1,4 +1,4 @@
-<%= render(Form::Component.new(model: @bulk_import, multipart: true, size: :sm)) do |form| %>
+<%= render(Form::Component.new(model: @bulk_import,  disable_with: 'Creating New Bulk Import...', multipart: true, size: :sm)) do |form| %>
   <% form.with_field(:created_by, type: :text, value: current_user.email, disabled: true ) %>
   <% form.with_field(:csv, type: :file, required: true) %>
   <% form.with_field(:note, type: :textarea) %>
@@ -6,5 +6,5 @@
                      choices: BulkImport::PRIORITY_QUEUES, value: BulkImport::DEFAULT_PRIORITY,
                      label: 'Priority') %>
 
-  <% form.with_submit('Create', disable_with: 'Creating New Bulk Import...') %>
+  <% form.with_submit('Create') %>
 <% end %>
