@@ -43,7 +43,7 @@ module Form
     # @option options [Hash] :input_col bootstrap column to use for all inputs
     # @option options [Symbol] :size to be used for labels and inputs
     # @option options [Boolean] :optimistic_lock override model inspection for placing of optimistic lock token
-    def initialize(name: nil, url: nil, model: nil, disable_with: 'Processing...', **options)
+    def initialize(name: nil, url: nil, model: nil, disable_with: true, **options)
       @name = name
       @model = model
       @url = url
