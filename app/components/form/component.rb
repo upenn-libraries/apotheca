@@ -106,6 +106,7 @@ module Form
 
     def configure_form_disable_with
       disable_with_value = @disable_with.is_a?(String) ? @disable_with : 'Processing...'
+      @options[:data] ||= {}
       @options[:data].merge!(controller: 'form--form',
                              action: 'submit->form--form#disableSubmit',
                              'disable-with': disable_with_value)
