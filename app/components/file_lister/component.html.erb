@@ -1,0 +1,42 @@
+<h2>File Listing Tool</h2>
+
+<p>
+  List the filenames of all the files in the given directory.
+  The filenames will be listed in alphabetical order.
+</p>
+
+<div data-controller="file-lister--file-lister">
+
+  <%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :json), layout: :horizontal, html: { id: 'new-file-listing' }, data: { "action": "submit->file-lister--file-lister#submit" } do |f| %>
+    <%= f.select :drive, options_for_select(ImportService::S3Storage.all.keys), { control_col: "col-sm-4", include_blank: true } %>
+    <%= f.text_field :path, control_col: 'col-sm-4' %>
+    <%= f.form_group do %>
+      <%= f.submit 'List Filenames', class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+  <hr/>
+
+  <div data-file-lister--file-lister-target="errorMessage"></div>
+
+  <div id="file-listing" data-file-lister--file-lister-target="extractedFilenamesForm" hidden>
+    <h4>Extracted Filenames</h4>
+    <%= bootstrap_form_tag url: file_listing_tool_file_list_path(format: :csv), layout: :horizontal do |f| %>
+      <%= f.text_field :drive, control_col: 'col-sm-4', class: 'bg-secondary bg-opacity-25', readonly: true, data: {"file-lister--file-lister-target": "extractedFilenamesDrive"} %>
+      <%= f.text_field :path, control_col: 'col-sm-4', class: 'bg-secondary bg-opacity-25', readonly: true, data: {"file-lister--file-lister-target": "extractedFilenamesPath"} %>
+      <div class="mb-3 row">
+        <%= f.label :filenames, class: "form-label col-form-label col-sm-2" %>
+        <div class="col-sm-10">
+        <span data-file-lister--file-lister-target="filenameList"></span>
+        </div>
+      </div>
+      <%= f.form_group do %>
+        <button type="button" class="btn btn-primary" id="copy-button" data-action="click->file-lister--file-lister#copy">Copy Filenames</button>
+        <%= f.submit 'Export Structural Metadata CSV', class: 'btn btn-info' %>
+      <% end %>
+    <% end %>
+  </div>
+
+</div>
+
+

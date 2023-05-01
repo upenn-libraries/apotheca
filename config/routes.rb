@@ -8,6 +8,10 @@ Rails.application.routes.draw do
 
   resources :alert_messages, only: %w[index update]
   resources :users, except: :destroy
+  scope :bulk_imports do
+    post 'file_listing_tool/file_list', to: 'file_listing_tool#file_list'
+    get 'file_listing_tool', to: 'file_listing_tool#tool'
+  end
   resources :bulk_imports, except: %i[edit destroy update] do
     member do
       patch :cancel, to: 'bulk_imports#cancel'
