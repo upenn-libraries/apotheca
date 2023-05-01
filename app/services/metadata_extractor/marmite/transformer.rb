@@ -72,8 +72,7 @@ module MetadataExtractor
 
         # Converting language codes to english name.
         languages = mapped_values.fetch('language', [])
-        # mapped_values['language'] = languages.filter_map { |l| ISO_639.find_by(code: l)&.english_name }
-        mapped_values['language'] = languages.map { |l| ISO_639.find_by_code(l)&.english_name }.compact
+        mapped_values['language'] = languages.filter_map { |l| ISO_639.find_by_code(l)&.english_name }
 
         # Adding call number
         mapped_values['call_number'] = xml.xpath('//records/record/holdings/holding/call_number')
