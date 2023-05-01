@@ -12,7 +12,8 @@ describe ProcessBulkExportJob do
 
   context 'when performing the job' do
     let(:bulk_export) { create(:bulk_export, :queued) }
-    let!(:item) { persist(:item_resource) }
+
+    before { persist(:item_resource) }
 
     it 'calls BulkExport#process!' do
       allow(bulk_export).to receive(:process!)
