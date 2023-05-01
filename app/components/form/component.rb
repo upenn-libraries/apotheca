@@ -49,7 +49,6 @@ module Form
       @url = url
       @disable_with = disable_with
       @options = options
-      @options[:data] = @options.fetch(:data, {})
       configure_form_disable_with if disable_with
 
       # If method is not passed in, we set the appropriate method.
