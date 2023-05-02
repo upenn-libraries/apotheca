@@ -16,6 +16,10 @@ class BulkImport < ApplicationRecord
 
   validates_associated :created_by, :imports
 
+  attr_accessor :csv_rows
+
+  validate :restrict_empty_csv
+
   validates :original_filename, presence: true
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
@@ -56,23 +60,6 @@ class BulkImport < ApplicationRecord
   def csv
     data = imports.map(&:import_data)
     StructuredCSV.generate(data)
-  end
-
-  # @param [Tempfile] csv
-  # @return [Boolean]
-  def uploaded_csv_empty?(csv)
-    return csv.blank? if csv.blank?
-
-    csv_is_empty = true
-
-    CSV.foreach(csv, headers: true) do |row|
-      if row.fields.any?(&:present?)
-        csv_is_empty = false
-        break
-      end
-    end
-
-    csv_is_empty
   end
 
   # @return [Integer]
@@ -119,5 +106,18 @@ class BulkImport < ApplicationRecord
   # Cancel all possible child imports
   def cancel_all(current_user)
     imports.queued.each { |import| import.cancel! if import.can_cancel?(current_user) }
+  end
+
+  private
+
+  def restrict_empty_csv
+    attribute = :csv_rows
+    type = 'has no item data'
+    return errors.add(attribute, type) if csv_rows.blank?
+
+    csv_rows.each do |row|
+      return if row.present?
+    end
+    errors.add(attribute, type)
   end
 end
