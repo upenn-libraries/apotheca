@@ -9,13 +9,4 @@ export default class extends Controller {
             event.stopImmediatePropagation();
         }
     }
-
-    disableSubmit() {
-        const disableWith = this.element.dataset.disableWith
-        // disable submit button after event fires
-        setTimeout(()=> {
-            this.element.disabled = true
-            this.element.value = disableWith
-        },0)
-    }
 }

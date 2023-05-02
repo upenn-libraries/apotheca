@@ -35,6 +35,8 @@ module Form
     # @param [String] name given to form, passed to backend to identify form
     # @param [String] url for request, optional
     # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource] model or change set that the form is representing, optional
+    # @param [String, TrueClass, FalseClass] disable_with can be a String value for disabled version of submit button,
+    # true for default value, or false to prevent disabling the submit button when the form is submitted
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
     # @option options [Symbol] :method to use for html form
     # @option options [Boolean] :multipart flag to be used when file upload present
@@ -42,11 +44,13 @@ module Form
     # @option options [Hash] :input_col bootstrap column to use for all inputs
     # @option options [Symbol] :size to be used for labels and inputs
     # @option options [Boolean] :optimistic_lock override model inspection for placing of optimistic lock token
-    def initialize(name: nil, url: nil, model: nil, **options)
+    def initialize(name: nil, url: nil, model: nil, disable_with: true, **options)
       @name = name
       @model = model
       @url = url
+      @disable_with = disable_with
       @options = options
+      configure_form_disable_with if disable_with
 
       # If method is not passed in, we set the appropriate method.
       @options[:method] = new_record? ? :post : :patch unless @options[:method]
@@ -98,6 +102,14 @@ module Form
       return @options[:optimistic_lock] if @options[:optimistic_lock]&.in? [true, false]
 
       @model.try :lockable?
+    end
+
+    def configure_form_disable_with
+      disable_with_value = @disable_with.is_a?(String) ? @disable_with : 'Processing...'
+      @options[:data] ||= {}
+      @options[:data].merge!(controller: 'form--form',
+                             action: 'submit->form--form#disableSubmit',
+                             'disable-with': disable_with_value)
     end
   end
 end
