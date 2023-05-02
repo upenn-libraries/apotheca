@@ -44,10 +44,9 @@ class BulkImport < ApplicationRecord
     end
   end
 
-  # @param csv [String]
-  def create_imports(csv, queue = BulkImport::DEFAULT_PRIORITY)
-    rows = StructuredCSV.parse(csv)
-    rows.each do |row|
+  # @param [Array<Hash>] csv_rows
+  def create_imports(csv_rows, queue = BulkImport::DEFAULT_PRIORITY)
+    csv_rows.each do |row|
       import = Import.create(bulk_import: self, import_data: row)
       ProcessImportJob.set(queue: queue).perform_later(import)
     end
