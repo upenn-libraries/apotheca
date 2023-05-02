@@ -26,7 +26,7 @@ describe 'Bulk Import New Page' do
       csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_without_item_data.csv')
       attach_file('bulk-import-csv', csv_path)
       click_on 'Create'
-      expect(page).to have_text 'Problem creating bulk import: CSV has no item data'
+      expect(page).to have_text 'Problem creating bulk import: CSV rows has no item data'
     end
   end
 end
