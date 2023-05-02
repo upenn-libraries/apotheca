@@ -18,10 +18,11 @@
 <h3 id="preservation-events" class="mb-3">Preservation Events</h3>
 
 <table class="table">
-  <% @asset.preservation_events.each do |event| %>
+  <% @asset.preservation_events.reverse.each do |event| %>
     <tr>
-      <td><%= event.timestamp %></td>
-      <td><%= event.event_type %></td>
+      <td><%= event.timestamp.in_time_zone('EST') %></td>
+      <td><%= Premis::Events.find_by(uri: event.event_type.value).label %></td>
+      <td><%= Premis::Outcomes.find_by(uri: event.outcome.value).label %></td>
       <td><%= event.outcome_detail_note %></td>
       <td><%= event.agent %></td>
     </tr>
