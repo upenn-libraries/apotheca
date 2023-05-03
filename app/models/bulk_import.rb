@@ -60,6 +60,22 @@ class BulkImport < ApplicationRecord
     StructuredCSV.generate(data)
   end
 
+  # A bulk import has an empty_csv if the parsed csv cached in csv_rows contains no item data
+  # @return [Boolean]
+  def empty_csv?
+    return true if csv_rows.blank?
+
+    empty_csv = true
+
+    csv_rows.each do |row|
+      if row.present?
+        empty_csv = false
+        break
+      end
+    end
+    empty_csv
+  end
+
   # @return [Integer]
   def aggregate_processing_time
     imports.sum(:duration)
@@ -104,19 +120,5 @@ class BulkImport < ApplicationRecord
   # Cancel all possible child imports
   def cancel_all(current_user)
     imports.queued.each { |import| import.cancel! if import.can_cancel?(current_user) }
-  end
-
-  def empty_csv?
-    return true if csv_rows.blank?
-
-    empty_csv = true
-
-    csv_rows.each do |row|
-      if row.present?
-        empty_csv = false
-        break
-      end
-    end
-    empty_csv
   end
 end
