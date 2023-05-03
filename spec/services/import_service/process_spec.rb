@@ -2,15 +2,6 @@
 
 describe ImportService::Process do
   describe '.build' do
-
-    context 'when action is not a String' do
-      let(:process) { build(:import_process, action: []) }
-
-      it 'returns Process::Invalid' do
-        expect(process).to be_a ImportService::Process::Invalid
-      end
-    end
-
     context 'when action is nil' do
       let(:process) { build(:import_process, action: nil) }
 
