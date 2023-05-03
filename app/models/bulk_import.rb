@@ -18,8 +18,6 @@ class BulkImport < ApplicationRecord
 
   attr_accessor :csv_rows
 
-  validate :restrict_empty_csv
-
   validates :original_filename, presence: true
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
@@ -108,16 +106,17 @@ class BulkImport < ApplicationRecord
     imports.queued.each { |import| import.cancel! if import.can_cancel?(current_user) }
   end
 
-  private
+  def empty_csv?
+    return true if csv_rows.blank?
 
-  def restrict_empty_csv
-    attribute = :csv_rows
-    type = 'has no item data'
-    return errors.add(attribute, type) if csv_rows.blank?
+    empty_csv = true
 
     csv_rows.each do |row|
-      return if row.present?
+      if row.present?
+        empty_csv = false
+        break
+      end
     end
-    errors.add(attribute, type)
+    empty_csv
   end
 end

@@ -31,6 +31,10 @@ class BulkImportsController < ApplicationController
     csv = uploaded_file.read
     @bulk_import.csv_rows = StructuredCSV.parse(csv)
 
+    if @bulk_import.empty_csv?
+      return redirect_to bulk_imports_path, alert: 'Problem creating bulk import: CSV has no item data'
+    end
+
     if @bulk_import.save
       @bulk_import.create_imports(@bulk_import.csv_rows, safe_queue_name_from(params[:bulk_import][:job_priority].to_s))
       redirect_to bulk_import_path(@bulk_import), notice: 'Bulk import created'
