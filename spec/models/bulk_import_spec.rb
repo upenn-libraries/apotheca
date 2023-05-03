@@ -35,16 +35,6 @@ describe BulkImport, type: :model do
         expect(bulk_import.errors.messages[:original_filename]).to include "can't be blank"
       end
     end
-
-    context 'when csv has no item data' do
-      let(:csv_data) { Rails.root.join('spec/fixtures/imports/bulk_import_without_item_data.csv').read }
-      let(:bulk_import) { build(:bulk_import, csv_rows: StructuredCSV.parse(csv_data)) }
-
-      it 'returns error' do
-        expect(bulk_import.valid?).to be false
-        expect(bulk_import.errors.messages[:csv_rows]).to include 'has no item data'
-      end
-    end
   end
 
   describe '.filter_created_between' do
@@ -91,6 +81,22 @@ describe BulkImport, type: :model do
 
     it 'returns the correct data' do
       expect(bulk_import.csv).to include import.import_data['action'], import.import_data['human_readable_name']
+    end
+  end
+
+  describe '#empty_csv?' do
+    let(:bulk_import) { create(:bulk_import) }
+
+    it 'returns true if csv has no item data' do
+      csv_data = Rails.root.join('spec/fixtures/imports/bulk_import_without_item_data.csv').read
+      bulk_import.csv_rows = StructuredCSV.parse(csv_data)
+      expect(bulk_import).to be_empty_csv
+    end
+
+    it 'returns false if csv has item data' do
+      csv_data = Rails.root.join('spec/fixtures/imports/bulk_import_data.csv').read
+      bulk_import.csv_rows = StructuredCSV.parse(csv_data)
+      expect(bulk_import).not_to be_empty_csv
     end
   end
 
@@ -213,12 +219,12 @@ describe BulkImport, type: :model do
   end
 
   describe '#create_imports' do
-    let(:bulk_import) { create(:bulk_import) }
+    let(:bulk_import) { create(:bulk_import, csv_rows: csv_rows) }
     let(:csv_data) { Rails.root.join('spec/fixtures/imports/bulk_import_data.csv').read }
     let(:csv_rows) { StructuredCSV.parse(csv_data) }
 
     before do
-      bulk_import.create_imports(csv_rows)
+      bulk_import.create_imports
     end
 
     it 'creates imports' do
