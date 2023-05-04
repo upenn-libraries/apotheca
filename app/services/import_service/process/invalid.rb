@@ -15,6 +15,8 @@ module ImportService
       def validate
         super
 
+        return @errors << "action can't be blank" if action.blank?
+
         @errors << "\"#{action}\" is not a valid import action" unless ACTIONS.include?(action)
       end
 

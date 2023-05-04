@@ -10,7 +10,7 @@ module ImportService
     def self.build(**args)
       args.deep_symbolize_keys!
 
-      case args[:action].downcase
+      case args[:action]&.downcase
       when CREATE
         Process::Create.new(**args)
       when UPDATE
