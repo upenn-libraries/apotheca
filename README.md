@@ -3,6 +3,7 @@ Administrative application that enables the ingestion and management of digital 
 
 ## System Requirements
 - Ruby 3.2.0
+- NodeJS [18.16.0](https://nodejs.org/en/download)
 - Postgres
 - [libvips](https://www.libvips.org/)
 - [ffmpeg](https://ffmpeg.org/) - ensure `ffmpeg` executable is on your `$PATH`
