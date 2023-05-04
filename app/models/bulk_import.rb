@@ -65,15 +65,10 @@ class BulkImport < ApplicationRecord
   def empty_csv?
     return true if csv_rows.blank?
 
-    empty_csv = true
-
     csv_rows.each do |row|
-      if row.present?
-        empty_csv = false
-        break
-      end
+      return false if row.present?
     end
-    empty_csv
+    true
   end
 
   # @return [Integer]
