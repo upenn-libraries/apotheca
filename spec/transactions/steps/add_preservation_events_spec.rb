@@ -6,7 +6,7 @@ describe Steps::AddPreservationEvents do
       let(:asset) { persist(:asset_resource, :with_preservation_file) }
       let(:change_set) { AssetChangeSet.new(asset, temporary_events: preceding_event) }
       let(:preceding_event) do
-        build(:preservation_event, :virus_check, :success, :user_agent, outcome_detail_note: 'No virus')
+        build(:preservation_event, :virus_check, :success, outcome_detail_note: 'No virus')
       end
       let(:result) { described_class.new.call(change_set) }
 
@@ -22,7 +22,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets a ingest event with migration-specific outcome_detail_note' do
         ingest_event = find_event_type events: result.value!.preservation_events, type: Premis::Events::INGEST.uri
-        expect(ingest_event.outcome_detail_note).to eq 'Object migrated from Internet Archive to Apotheca'
+        expect(ingest_event.outcome_detail_note).to eq 'Object migrated from Internet Archive'
       end
     end
 

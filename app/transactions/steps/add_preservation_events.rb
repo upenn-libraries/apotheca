@@ -69,13 +69,13 @@ module Steps
     # @return [AssetResource::PreservationEvent | NilClass]
     def action_event(action, change_set, timestamp)
       note = case action
-             when :migration then "Object migrated from #{change_set.migrated_from} to #{app_name}"
+             when :migration then "Object migrated from #{change_set.migrated_from}"
              when :ingestion then "Object ingested as #{change_set.original_filename}"
              when :reingestion then "New file ingested as #{change_set.original_filename}"
              else
                return
              end
-      event_attrs = { agent: change_set.updated_by, timestamp: timestamp, note: note }
+      event_attrs = { implementer: change_set.updated_by, timestamp: timestamp, note: note }
       EVENT.ingestion(**event_attrs)
     end
 
@@ -92,7 +92,7 @@ module Steps
       checksum = change_set.technical_metadata.sha256.first
       EVENT.checksum(
         note: "Checksum for file is #{checksum}",
-        agent: change_set.updated_by,
+        implementer: change_set.updated_by,
         timestamp: timestamp
       )
     end
@@ -110,7 +110,7 @@ module Steps
       # identifier from storage yet to use as current filename
       current_filename = action == :ingestion ? change_set.original_filename : file_name(change_set.resource)
       EVENT.filename_changed(
-        agent: change_set.updated_by,
+        implementer: change_set.updated_by,
         note: "File's original filename renamed from #{current_filename} to #{file_name(change_set)}",
         timestamp: timestamp
       )
@@ -124,12 +124,6 @@ module Steps
       return source.original_filename if source.preservation_file_id.blank?
 
       source.preservation_file_id.id.split('/').last
-    end
-
-    # TODO: also include app version number somehow, perhaps via config setting or ENV var
-    # @return [String]
-    def app_name
-      Rails.application.class.module_parent.to_s
     end
   end
 end
