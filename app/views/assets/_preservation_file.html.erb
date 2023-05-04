@@ -30,7 +30,7 @@
   <tbody>
     <% @asset.preservation_events.reverse.each do |event| %>
       <tr>
-        <td><%= event.timestamp.in_time_zone('EST') %></td>
+        <td><%= event.timestamp.in_time_zone('EST').to_s(:display) %></td>
         <td><%= Premis::Events.find_by(uri: event.event_type.value).label %></td>
         <td><%= Premis::Outcomes.find_by(uri: event.outcome.value).label %></td>
         <td><%= event.outcome_detail_note %></td>
