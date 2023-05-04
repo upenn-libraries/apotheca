@@ -24,9 +24,9 @@ describe DeleteAsset do
       end
 
       it 'deletes asset' do
-        expect do
+        expect {
           query_service.find_by(id: result.value![:resource].id)
-        end.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+        }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
       end
     end
 
@@ -53,21 +53,21 @@ describe DeleteAsset do
         end
 
         it 'deletes asset' do
-          expect do
+          expect {
             query_service.find_by(id: result.value![:resource].id)
-          end.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+          }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
         end
 
         it 'deletes preservation file' do
-          expect do
+          expect {
             Valkyrie::StorageAdapter.find_by(id: result.value![:resource].preservation_file_id)
-          end.to raise_error(Valkyrie::StorageAdapter::FileNotFound)
+          }.to raise_error(Valkyrie::StorageAdapter::FileNotFound)
         end
 
         it 'deletes preservation copy' do
-          expect do
+          expect {
             Valkyrie::StorageAdapter.find_by(id: result.value![:resource].preservation_copies_ids.first)
-          end.to raise_error(Valkyrie::StorageAdapter::FileNotFound)
+          }.to raise_error(Valkyrie::StorageAdapter::FileNotFound)
         end
 
         it 'is unlinked from the parent ItemResource' do

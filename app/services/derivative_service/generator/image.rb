@@ -16,7 +16,7 @@ module DerivativeService
         derivative_file = DerivativeFile.new mime_type: 'image/jpeg'
         image.jpegsave(derivative_file.path, Q: 90, strip: true)
         derivative_file
-      rescue => e
+      rescue StandardError => e
         raise Generator::Error, "Error generating image thumbnail: #{e.class} #{e.message}", e.backtrace
       end
 
@@ -37,7 +37,7 @@ module DerivativeService
         )
 
         derivative_file
-      rescue => e
+      rescue StandardError => e
         raise Generator::Error, "Error generating image access copy: #{e.class} #{e.message}", e.backtrace
       end
     end

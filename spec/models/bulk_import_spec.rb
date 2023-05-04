@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe BulkImport, type: :model do
+describe BulkImport do
   let(:bulk_import) do
-    build :bulk_import, imports: build_list(:import, 1)
+    build(:bulk_import, imports: build_list(:import, 1))
   end
 
   it 'has many Imports' do
@@ -43,22 +43,23 @@ describe BulkImport, type: :model do
     let!(:bulk_import3) { create(:bulk_import, created_at: '2022-03-01') }
 
     it 'filters bulk imports created between start and end date' do
-      expect(described_class.filter_created_between('2021-12-31', '2022-02-02')).to match_array([bulk_import1, bulk_import2])
+      expect(described_class.filter_created_between('2021-12-31',
+                                                    '2022-02-02')).to contain_exactly(bulk_import1, bulk_import2)
     end
 
     it 'filters bulk imports created after start date' do
-      expect(described_class.filter_created_between('2022-01-31', nil)).to match_array([bulk_import2, bulk_import3])
+      expect(described_class.filter_created_between('2022-01-31', nil)).to contain_exactly(bulk_import2, bulk_import3)
     end
 
     it 'filters bulk imports created before end date' do
-      expect(described_class.filter_created_between(nil, '2022-01-02')).to match_array([bulk_import1])
+      expect(described_class.filter_created_between(nil, '2022-01-02')).to contain_exactly(bulk_import1)
     end
   end
 
   describe '#aggregate_processing_time' do
-    let(:import_1) { build(:import, :successful, duration: 60) }
-    let(:import_2) { build(:import, :successful, duration: 120) }
-    let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+    let(:import1) { build(:import, :successful, duration: 60) }
+    let(:import2) { build(:import, :successful, duration: 120) }
+    let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
     it 'sums the processing time of child DigitalObjectImports' do
       expect(bulk_import.aggregate_processing_time).to eq 180
@@ -66,9 +67,9 @@ describe BulkImport, type: :model do
   end
 
   describe '#number_of_errors' do
-    let(:import_1) { build(:import, :failed) }
-    let(:import_2) { build(:import, :successful) }
-    let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+    let(:import1) { build(:import, :failed) }
+    let(:import2) { build(:import, :successful) }
+    let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
     it 'returns completed' do
       expect(bulk_import.number_of_errors).to be 1
@@ -94,9 +95,9 @@ describe BulkImport, type: :model do
     end
 
     context 'when all imports are queued' do
-      let(:import_1) { build(:import, :queued) }
-      let(:import_2) { build(:import, :queued) }
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+      let(:import1) { build(:import, :queued) }
+      let(:import2) { build(:import, :queued) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
       it 'returns queued' do
         expect(bulk_import.state).to eql BulkImport::QUEUED
@@ -104,12 +105,12 @@ describe BulkImport, type: :model do
     end
 
     context 'when any imports are processing' do
-      let(:import_1) { build(:import, :processing) }
-      let(:import_2) { build(:import, :queued) }
-      let(:import_3) { build(:import, :cancelled) }
-      let(:import_4) { build(:import, :failed) }
+      let(:import1) { build(:import, :processing) }
+      let(:import2) { build(:import, :queued) }
+      let(:import3) { build(:import, :cancelled) }
+      let(:import4) { build(:import, :failed) }
 
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2, import_3, import_4]) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2, import3, import4]) }
 
       it 'returns in progress' do
         expect(bulk_import.state).to eql BulkImport::IN_PROGRESS
@@ -117,9 +118,9 @@ describe BulkImport, type: :model do
     end
 
     context 'when imports are successful or queued' do
-      let(:import_1) { build(:import, :queued) }
-      let(:import_2) { build(:import, :successful) }
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+      let(:import1) { build(:import, :queued) }
+      let(:import2) { build(:import, :successful) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
       it 'returns in progress' do
         expect(bulk_import.state).to eql BulkImport::IN_PROGRESS
@@ -127,9 +128,9 @@ describe BulkImport, type: :model do
     end
 
     context 'when imports are cancelled or queued' do
-      let(:import_1) { build(:import, :queued) }
-      let(:import_2) { build(:import, :cancelled) }
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+      let(:import1) { build(:import, :queued) }
+      let(:import2) { build(:import, :cancelled) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
       it 'returns in progress' do
         expect(bulk_import.state).to eql BulkImport::IN_PROGRESS
@@ -137,11 +138,11 @@ describe BulkImport, type: :model do
     end
 
     context 'when all completed imports have failed but some are still running' do
-      let(:import_1) { build(:import, :failed) }
-      let(:import_2) { build(:import, :processing) }
-      let(:import_3) { build(:import, :queued) }
+      let(:import1) { build(:import, :failed) }
+      let(:import2) { build(:import, :processing) }
+      let(:import3) { build(:import, :queued) }
 
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2, import_3]) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2, import3]) }
 
       it 'returns in progress' do
         expect(bulk_import.state).to eql BulkImport::IN_PROGRESS
@@ -149,10 +150,10 @@ describe BulkImport, type: :model do
     end
 
     context 'when all imports are successful or cancelled' do
-      let(:import_1) { build(:import, :successful) }
-      let(:import_2) { build(:import, :cancelled) }
+      let(:import1) { build(:import, :successful) }
+      let(:import2) { build(:import, :cancelled) }
 
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
       it 'returns in progress' do
         expect(bulk_import.state).to eql BulkImport::COMPLETED
@@ -160,9 +161,9 @@ describe BulkImport, type: :model do
     end
 
     context 'when all imports are successful' do
-      let(:import_1) { build(:import, :successful) }
-      let(:import_2) { build(:import, :successful) }
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+      let(:import1) { build(:import, :successful) }
+      let(:import2) { build(:import, :successful) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
       it 'returns completed' do
         expect(bulk_import.state).to eql BulkImport::COMPLETED
@@ -170,9 +171,9 @@ describe BulkImport, type: :model do
     end
 
     context 'when all imports failed' do
-      let(:import_1) { build(:import, :failed) }
-      let(:import_2) { build(:import, :failed) }
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+      let(:import1) { build(:import, :failed) }
+      let(:import2) { build(:import, :failed) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
       it 'returns completed' do
         expect(bulk_import.state).to eql BulkImport::COMPLETED_WITH_ERRORS
@@ -180,11 +181,11 @@ describe BulkImport, type: :model do
     end
 
     context 'when all imports are successful, failures, or cancelled' do
-      let(:import_1) { build(:import, :failed) }
-      let(:import_2) { build(:import, :successful) }
-      let(:import_3) { build(:import, :cancelled) }
+      let(:import1) { build(:import, :failed) }
+      let(:import2) { build(:import, :successful) }
+      let(:import3) { build(:import, :cancelled) }
 
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
       it 'returns completed' do
         expect(bulk_import.state).to eql BulkImport::COMPLETED_WITH_ERRORS
@@ -192,9 +193,9 @@ describe BulkImport, type: :model do
     end
 
     context 'when all imports are cancelled' do
-      let(:import_1) { build(:import, :cancelled) }
-      let(:import_2) { build(:import, :cancelled) }
-      let(:bulk_import) { create(:bulk_import, imports: [import_1, import_2]) }
+      let(:import1) { build(:import, :cancelled) }
+      let(:import2) { build(:import, :cancelled) }
+      let(:bulk_import) { create(:bulk_import, imports: [import1, import2]) }
 
       it 'returns in progress' do
         expect(bulk_import.state).to eql BulkImport::CANCELLED

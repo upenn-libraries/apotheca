@@ -21,13 +21,13 @@ describe ImportService::AssetsLocation do
     end
 
     it 'requires valid paths' do
-      location = described_class.new(storage: 'sceti_digitized', path: ['trade_card', 'not_valid'])
+      location = described_class.new(storage: 'sceti_digitized', path: %w[trade_card not_valid])
       expect(location.valid?).to be false
       expect(location.errors).to include('asset path invalid')
     end
 
     it 'requires unique filenames across all paths' do
-      location = described_class.new(storage: 'sceti_digitized', path: ['trade_card', 'trade_card'])
+      location = described_class.new(storage: 'sceti_digitized', path: %w[trade_card trade_card])
       expect(location.valid?).to be false
       expect(location.errors).to include('duplicate filenames found in storage location: back.tif, front.tif')
     end
@@ -35,7 +35,7 @@ describe ImportService::AssetsLocation do
 
   describe '#valid_paths?' do
     context 'when one path invalid' do
-      let(:location) { described_class.new(storage: 'sceti_digitized', path: ['trade_card', 'not_valid']) }
+      let(:location) { described_class.new(storage: 'sceti_digitized', path: %w[trade_card not_valid]) }
 
       it 'returns false' do
         expect(location.valid_paths?).to be false

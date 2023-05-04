@@ -2,7 +2,7 @@
 
 # Factory for AssetResource::PreservationEventResources.
 FactoryBot.define do
-  factory :preservation_event, class: AssetResource::PreservationEvent do
+  factory :preservation_event, class: 'AssetResource::PreservationEvent' do
     identifier { Faker::Internet.uuid }
     timestamp { DateTime.current }
     agent_type { 'local' }

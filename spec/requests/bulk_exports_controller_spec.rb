@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 describe 'BulkExport requests' do
-
   context 'when viewing the index page' do
-
     context 'with an unauthorized user' do
       it 'redirects an unauthorized user' do
         get '/bulk_exports'
@@ -42,7 +40,7 @@ describe 'BulkExport requests' do
           delete "/bulk_exports/#{bulk_export.id}"
         }.not_to change(BulkExport, :count)
         expect(response).to redirect_to(root_path)
-        expect(flash['alert']).to include "You are not authorized to access this area."
+        expect(flash['alert']).to include 'You are not authorized to access this area.'
       end
     end
   end
@@ -66,7 +64,7 @@ describe 'BulkExport requests' do
         sign_in editor
         get "/bulk_exports/#{bulk_export.id}/cancel"
         expect(response).to redirect_to(root_path)
-        expect(flash['alert']).to include "You are not authorized to access this area."
+        expect(flash['alert']).to include 'You are not authorized to access this area.'
         bulk_export.reload
         expect(bulk_export.state).to eq('queued')
       end

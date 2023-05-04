@@ -14,7 +14,7 @@ describe UpdateItem do
         transaction.call(
           id: item.id,
           human_readable_name: 'Updated Item',
-          descriptive_metadata: { subject: ['Cataloging', 'Animals'] },
+          descriptive_metadata: { subject: %w[Cataloging Animals] },
           asset_ids: [asset.id],
           updated_by: 'admin@example.com'
         )
@@ -32,7 +32,7 @@ describe UpdateItem do
       it 'merges descriptive metadata' do
         expect(
           updated_item.descriptive_metadata
-        ).to include(title: ['New Item'], subject: ['Cataloging', 'Animals'])
+        ).to include(title: ['New Item'], subject: %w[Cataloging Animals])
       end
 
       it 'sets thumbnail asset id' do
@@ -45,7 +45,7 @@ describe UpdateItem do
         transaction.call(
           id: item.id,
           human_readable_name: 'Updated Item',
-          descriptive_metadata: { subject: ['Cataloging', 'Animals'] }
+          descriptive_metadata: { subject: %w[Cataloging Animals] }
         )
       end
 

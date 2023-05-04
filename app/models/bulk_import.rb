@@ -24,7 +24,7 @@ class BulkImport < ApplicationRecord
     end_date = end_date.present? ? end_date.to_date.end_of_day : nil
     where(created_at: start_date..end_date) if start_date || end_date
   }
-  scope :search, ->(query) { where("original_filename ILIKE :search OR note ILIKE :search", search: "%#{query}%") }
+  scope :search, ->(query) { where('original_filename ILIKE :search OR note ILIKE :search', search: "%#{query}%") }
 
   paginates_per 10
 

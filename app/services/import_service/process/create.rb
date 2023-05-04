@@ -32,10 +32,10 @@ module ImportService
         end
 
         # Validate that all filenames listed in structural metadata.
-        if assets&.valid?
-          missing = assets.missing_files
-          @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?
-        end
+        return unless assets&.valid?
+
+        missing = assets.missing_files
+        @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?
       end
 
       # TODO: think about using structured/unstructured instead of arranged/unarranged
@@ -121,7 +121,10 @@ module ImportService
             }
 
             update_transaction.call(**update_args) do |update_result|
-              update_result.success { |u| Success(u) } # TODO: might want to unlink temp file here manually or do it in the transaction
+              # TODO: might want to unlink temp file here manually or do it in the transaction
+              update_result.success do |u|
+                Success(u)
+              end
               update_result.failure do |failure_hash|
                 DeleteAsset.new.call(id: a.id)
                 failure(**failure_hash)

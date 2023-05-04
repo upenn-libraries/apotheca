@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'valkyrie'
 require 'shrine/storage/s3'
 require 'valkyrie/shrine/checksum/s3'

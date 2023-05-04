@@ -7,7 +7,6 @@ RSpec.describe ItemResourcePresenter do
 
   let(:item_resource) { persist(:item_resource) }
 
-
   context 'without ILS metadata' do
     let(:ils_metadata) { nil }
 

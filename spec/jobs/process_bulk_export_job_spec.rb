@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe ProcessBulkExportJob, type: :job do
-
+describe ProcessBulkExportJob do
   context 'when performing the job later' do
     let(:bulk_export) { create(:bulk_export, :queued) }
 
@@ -12,12 +11,11 @@ describe ProcessBulkExportJob, type: :job do
   end
 
   context 'when performing the job' do
-
     let(:bulk_export) { create(:bulk_export, :queued) }
-    let!(:item) { persist(:item_resource) }
+
+    before { persist(:item_resource) }
 
     it 'calls BulkExport#process!' do
-
       allow(bulk_export).to receive(:process!)
       described_class.perform_now(bulk_export)
       expect(bulk_export).to have_received(:process!)

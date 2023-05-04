@@ -55,9 +55,9 @@ module Solr
       filters = params['filter']&.to_h || {}
       filters.delete_if { |k, v| reject_filter(k, v) }
       all_filters = defaults[:fq].merge filters
-      all_filters.filter_map do |field, v|
+      all_filters.filter_map { |field, v|
         fq_condition field: field, values: v
-      end.join(' AND ') # use AND for all field values (have this attribute AND that attribute)
+      }.join(' AND ') # use AND for all field values (have this attribute AND that attribute)
     end
 
     # compose Sort param
@@ -103,9 +103,9 @@ module Solr
       solr_field = map type: :filter, field: field
       return nil unless solr_field
 
-      Array.wrap(values).compact_blank.map do |value|
+      Array.wrap(values).compact_blank.map { |value|
         "#{solr_field}: \"#{value}\""
-      end.join(' OR ').insert(0, '(').insert(-1, ')') # use OR for particular field values (this OR that collection)
+      }.join(' OR ').insert(0, '(').insert(-1, ')') # use OR for particular field values (this OR that collection)
     end
 
     # Reject values to be used in fq if they are blank, empty, or not in the configured field list

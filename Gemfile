@@ -10,7 +10,7 @@ gem 'after_commit_everywhere', '~> 1.0'
 gem 'aws-sdk-s3'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 5.2.3'
-gem "bootstrap_form", "~> 5.0"
+gem 'bootstrap_form', '~> 5.0'
 gem 'cancancan'
 gem 'capybara'
 gem 'config'

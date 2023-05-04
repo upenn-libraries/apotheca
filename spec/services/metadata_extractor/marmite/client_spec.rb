@@ -41,7 +41,8 @@ describe MetadataExtractor::Marmite::Client do
       it 'raises exception' do
         expect {
           marmite.marc21(bibnumber)
-        }.to raise_error(MetadataExtractor::Marmite::Client::Error, "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error.join(' ')}")
+        }.to raise_error(MetadataExtractor::Marmite::Client::Error,
+                         "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error.join(' ')}")
       end
     end
 
@@ -56,7 +57,8 @@ describe MetadataExtractor::Marmite::Client do
       it 'raises exception' do
         expect {
           marmite.marc21(bibnumber)
-        }.to raise_error(MetadataExtractor::Marmite::Client::Error, "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error}")
+        }.to raise_error(MetadataExtractor::Marmite::Client::Error,
+                         "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error}")
       end
     end
   end

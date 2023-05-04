@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :bulk_export do
-    association :created_by, factory: [:user, :admin]
+    association :created_by, factory: %i[user admin]
     search_params { { search: { all: 'New' } } }
     state { BulkExport::STATE_SUCCESSFUL }
 

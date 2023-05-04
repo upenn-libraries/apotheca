@@ -52,7 +52,7 @@ class ItemChangeSet < Valkyrie::ChangeSet
   validates :human_readable_name, presence: true
   validates :published, inclusion: [true, false]
   validates :thumbnail_asset_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }
-  validates :unique_identifier, presence: true, format: { with: /\Aark:\//, message: 'must be an ARK' }
+  validates :unique_identifier, presence: true, format: { with: %r{\Aark:/}, message: 'must be an ARK' }
   validate :ensure_arranged_asset_ids_are_valid
 
   # Ensuring arranged_asset_ids are also present in asset_ids.

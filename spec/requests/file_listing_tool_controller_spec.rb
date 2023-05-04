@@ -30,4 +30,3 @@ describe 'file listing tool requests' do
     end
   end
 end
-

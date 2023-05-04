@@ -102,7 +102,7 @@ describe AssetChangeSet do
         change_set.validate(transcriptions: [{ mime_type: 'text/plain' }])
       end
 
-      it 'it does not set transcription value' do
+      it 'does not set transcription value' do
         expect(change_set.valid?).to be true
         expect(change_set.transcriptions[0]).to be_nil
       end

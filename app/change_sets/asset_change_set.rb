@@ -61,7 +61,8 @@ class AssetChangeSet < Valkyrie::ChangeSet
 
   # Validations
   validates :original_filename, presence: true, if: ->(asset) { asset.preservation_file_id.present? }
-  validates :preservation_file_id, presence: true, if: ->(asset) { !asset.resource.new_record } # Preservation file should be set on update.
+  # Preservation file should be set on update.
+  validates :preservation_file_id, presence: true, if: ->(asset) { !asset.resource.new_record }
 
   def transcriptions!(collection:, index:, fragment:, **)
     if fragment['contents'].blank? && fragment[:contents].blank?

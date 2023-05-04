@@ -3,7 +3,7 @@
 # controller actions for Item stuff
 class ItemsController < ApplicationController
   before_action :load_item_and_change_set, except: :index
-  before_action :load_assets, only: [:show, :edit, :reorder_assets]
+  before_action :load_assets, only: %i[show edit reorder_assets]
   before_action :configure_pagination, only: :index
   before_action :store_rows, only: :index
 
@@ -117,7 +117,7 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.map { |f| [f, []] }.to_h
+    metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.index_with { |_f| [] }
     params.require(:item).permit(
       :human_readable_name, :thumbnail_asset_id,
       internal_notes: [],

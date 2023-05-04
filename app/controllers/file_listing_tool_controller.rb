@@ -39,5 +39,3 @@ class FileListingToolController < ApplicationController
     @storage ||= ImportService::S3Storage.new(params[:drive]) if valid_drive?
   end
 end
-
-
