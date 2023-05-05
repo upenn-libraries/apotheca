@@ -32,7 +32,7 @@
       </div>
       <%= f.form_group do %>
         <button type="button" class="btn btn-primary" id="copy-button" data-action="click->file-lister--file-lister#copy">Copy Filenames</button>
-        <%= f.submit 'Export Structural Metadata CSV', class: 'btn btn-info' %>
+        <%= f.submit 'Export Structural Metadata CSV', class: 'btn btn-info', id: 'export-button' %>
       <% end %>
     <% end %>
   </div>
