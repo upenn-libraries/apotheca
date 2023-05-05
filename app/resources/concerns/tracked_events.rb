@@ -37,18 +37,8 @@ module TrackedEvents
     # @param [String] implementer
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def preservation_file_change(implementer:, note:, timestamp:)
+    def change_filename(implementer:, note:, timestamp:)
       event type: Premis::Events::FILENAME_CHANGE.uri,
-            outcome: Premis::Outcomes::SUCCESS.uri,
-            note: note, implementer: implementer, timestamp: timestamp
-    end
-
-    # @param [String] note
-    # @param [String] implementer
-    # @param [DateTime] timestamp
-    # @return [AssetResource::PreservationEvent]
-    def original_filename_change(implementer:, note:, timestamp:)
-      event type: Premis::Events::METADATA_CHANGE.uri,
             outcome: Premis::Outcomes::SUCCESS.uri,
             note: note, implementer: implementer, timestamp: timestamp
     end

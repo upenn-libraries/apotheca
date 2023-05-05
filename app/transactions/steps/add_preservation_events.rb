@@ -21,7 +21,7 @@ module Steps
       events << action_event(action, change_set, timestamp)
       events << checksum_event(action, change_set, timestamp)
       events << preservation_file_event(action, change_set, timestamp)
-      events << original_filename_event(change_set, timestamp)
+      events << original_filename_event(action, change_set, timestamp)
 
       change_set.preservation_events += events.compact
 
@@ -99,13 +99,16 @@ module Steps
     end
 
     # Returns an event for a metadata change in the original_filename field
+    # @param [Symbol] action
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def original_filename_event(change_set, timestamp)
+    def original_filename_event(action, change_set, timestamp)
+      return unless action == :reingestion
+
       return if change_set.resource.original_filename == change_set.original_filename
 
-      EVENT.original_filename_change(
+      EVENT.change_filename(
         implementer: change_set.updated_by,
         note: I18n.t('events.original_filename.note',
                      from: change_set.resource.original_filename, to: change_set.original_filename),
@@ -125,9 +128,9 @@ module Steps
       # get current filename - in ingestion case, we want to get the original filename of the file because we have no
       # identifier from storage yet to use as current filename
       current_filename = action == :ingestion ? change_set.original_filename : file_name(change_set.resource)
-      EVENT.preservation_file_change(
+      EVENT.change_filename(
         implementer: change_set.updated_by,
-        note: I18n.t('events.preservation_file.note', from: current_filename, to: file_name(change_set)),
+        note: I18n.t('events.preservation_filename.note', from: current_filename, to: file_name(change_set)),
         timestamp: timestamp
       )
     end

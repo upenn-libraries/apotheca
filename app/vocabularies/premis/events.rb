@@ -12,8 +12,6 @@ module Premis
                                   'http://id.loc.gov/vocabulary/preservation/eventType/vir']
     FILENAME_CHANGE = Types::Term['filename change',
                                   'http://id.loc.gov/vocabulary/preservation/eventType/fil']
-    METADATA_CHANGE = Types::Term['metadata modification',
-                                  'http://id.loc.gov/vocabulary/preservation/eventType/mem']
     FIXITY =          Types::Term['fixity',
                                   'http://id.loc.gov/vocabulary/preservation/eventType/fix']
     TOMBSTONE =       Types::Term['deletion',
