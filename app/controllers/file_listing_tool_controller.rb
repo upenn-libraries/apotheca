@@ -2,6 +2,8 @@
 
 # A tool for listing file on a specified attached drive at a specified path
 class FileListingToolController < ApplicationController
+  before_action :clean_path, only: [:file_list]
+
   def tool; end
 
   def file_list
@@ -29,7 +31,7 @@ class FileListingToolController < ApplicationController
   end
 
   def valid_path?
-    storage.valid_path?(clean_path) if valid_drive?
+    storage.valid_path?(params[:path]) if valid_drive?
   end
 
   def valid_drive?
@@ -37,7 +39,7 @@ class FileListingToolController < ApplicationController
   end
 
   def filenames
-    storage.files_at(clean_path).map { |file| File.basename(file) }
+    storage.files_at(params[:path]).map { |file| File.basename(file) }
   end
 
   def storage
@@ -45,8 +47,8 @@ class FileListingToolController < ApplicationController
   end
 
   def clean_path
-    return params[:path] if params[:path][-1] == '/'
+    return if params[:path][-1] == '/'
 
-    "#{params[:path]}/"
+    params[:path] = "#{params[:path]}/"
   end
 end
