@@ -20,7 +20,7 @@ module Steps
       events += preceding_events(change_set, timestamp)
       events << action_event(action, change_set, timestamp)
       events << checksum_event(action, change_set, timestamp)
-      events << preservation_file_event(action, change_set, timestamp)
+      events << preservation_filename_event(action, change_set, timestamp)
       events << original_filename_event(action, change_set, timestamp)
 
       change_set.preservation_events += events.compact
@@ -122,7 +122,7 @@ module Steps
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def preservation_file_event(action, change_set, timestamp)
+    def preservation_filename_event(action, change_set, timestamp)
       return if action == :metadata_update
 
       # get current filename - in ingestion case, we want to get the original filename of the file because we have no
