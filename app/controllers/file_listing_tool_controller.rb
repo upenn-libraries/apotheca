@@ -14,7 +14,7 @@ class FileListingToolController < ApplicationController
           format.json { render json: { filenames: filenames.join('; '), drive: params[:drive], path: params[:path] }, status: :ok }
         else
           format.csv {}
-          format.json { render json: { filenames: 'That path has no files.', drive: params[:drive], path: params[:path] }, status: :unprocessable_entity }
+          format.json { render json: { filenames: '', drive: params[:drive], path: params[:path] }, status: :unprocessable_entity }
         end
       else
         format.csv {}
