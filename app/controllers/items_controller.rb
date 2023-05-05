@@ -61,6 +61,14 @@ class ItemsController < ApplicationController
 
   def reorder_assets; end
 
+  def refresh_ils_metadata
+    if RefreshIlsMetadataJob.perform_later(@item.id.to_s)
+      redirect_to item_path(@item), notice: 'Job to refresh ILS metadata enqueued'
+    else
+      redirect_to items_path(@item), alert: 'An error occured while enqueuing job to refresh ILS metadata'
+    end
+  end
+
   private
 
   # Explicitly set the default per page for initial page load (when there are no params) only for the ItemResource
