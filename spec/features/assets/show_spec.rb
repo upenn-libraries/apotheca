@@ -14,6 +14,10 @@ describe 'Asset Show Page' do
     it 'shows original filename' do
       expect(page).to have_text(asset.original_filename)
     end
+
+    it 'displays timestamps in the same timezone' do
+      expect(page).to have_text(asset.date_created.to_fs(:display), count: 2)
+    end
   end
 
   shared_examples_for 'any logged in user who can edit Assets' do
