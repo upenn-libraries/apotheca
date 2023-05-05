@@ -26,6 +26,10 @@ describe 'Item Show Page' do
       expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#administrative-info")
     end
 
+    it 'disables button to refresh ils metadata when item has no bibnumber' do
+      expect(page).to have_button('Refresh ILS Metadata', disabled: true)
+    end
+
     it 'shows link to add an asset within assets tab' do
       expect(page).to have_link('Add Asset', href: new_asset_path(item_id: item.id))
     end
@@ -79,6 +83,19 @@ describe 'Item Show Page' do
 
     it 'hides value row if no resource or ILS value on descriptive metadata tab' do
       expect(page).not_to have_text('Abstract')
+    end
+
+    context 'when refreshing ils metadata' do
+      let(:user) { create(:user, :editor) }
+
+      it 'enables the button to refresh ils metadata' do
+        expect(page).to have_button('Refresh ILS Metadata', disabled: false)
+      end
+
+      it 'enqueues job to refresh ils metadata' do
+        click_on 'Refresh ILS Metadata'
+        expect(page).to have_text('Job to refresh ILS metadata enqueued')
+      end
     end
   end
 
@@ -153,9 +170,7 @@ describe 'Item Show Page' do
     end
 
     it 'does not show button to delete item' do
-      within '#actions' do
-        expect(page).not_to have_button('Delete Item')
-      end
+      expect(page).not_to have_button('Delete Item')
     end
   end
 
@@ -173,9 +188,7 @@ describe 'Item Show Page' do
     end
 
     it 'shows button to delete item' do
-      within '#actions' do
-        expect(page).to have_button('Delete Item')
-      end
+      expect(page).to have_button('Delete Item')
     end
   end
 end
