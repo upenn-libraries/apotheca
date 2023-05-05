@@ -20,7 +20,8 @@ module Steps
       events += preceding_events(change_set, timestamp)
       events << action_event(action, change_set, timestamp)
       events << checksum_event(action, change_set, timestamp)
-      events << filename_event(action, change_set, timestamp)
+      events << preservation_file_event(action, change_set, timestamp)
+      events << original_filename_event(change_set, timestamp)
 
       change_set.preservation_events += events.compact
 
@@ -69,9 +70,9 @@ module Steps
     # @return [AssetResource::PreservationEvent | NilClass]
     def action_event(action, change_set, timestamp)
       note = case action
-             when :migration then "Object migrated from #{change_set.migrated_from}"
-             when :ingestion then "Object ingested as #{change_set.original_filename}"
-             when :reingestion then "New file ingested as #{change_set.original_filename}"
+             when :migration then I18n.t('events.action.migration_note', from: change_set.migrated_from)
+             when :ingestion then I18n.t('events.action.ingestion_note', filename: change_set.original_filename)
+             when :reingestion then I18n.t('events.action.reingestion_note', filename: change_set.original_filename)
              else
                return
              end
@@ -91,27 +92,42 @@ module Steps
       # TODO: throws exception if no tech md set, but at this point in the transaction, tech md should always be set
       checksum = change_set.technical_metadata.sha256.first
       EVENT.checksum(
-        note: "Checksum for file is #{checksum}",
+        note: I18n.t('events.checksum.note', checksum: checksum),
         implementer: change_set.updated_by,
         timestamp: timestamp
       )
     end
 
-    # Returns an event for a filename change. Base the detail note of the event on the type of change. Include
-    # appropriate previous and current filename values.
+    # Returns an event for a metadata change in the original_filename field
+    # @param [Valkyrie::ChangeSet] change_set
+    # @param [DateTime] timestamp
+    # @return [AssetResource::PreservationEvent]
+    def original_filename_event(change_set, timestamp)
+      return if change_set.resource.original_filename == change_set.original_filename
+
+      EVENT.original_filename_change(
+        implementer: change_set.updated_by,
+        note: I18n.t('events.original_filename.note',
+                     from: change_set.resource.original_filename, to: change_set.original_filename),
+        timestamp: timestamp
+      )
+    end
+
+    # Returns an event for a preservation file change. Base the detail note of the event on the type of change.
+    # Include appropriate previous and current filename values.
     # @param [Symbol] action
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def filename_event(action, change_set, timestamp)
+    def preservation_file_event(action, change_set, timestamp)
       return if action == :metadata_update
 
       # get current filename - in ingestion case, we want to get the original filename of the file because we have no
       # identifier from storage yet to use as current filename
       current_filename = action == :ingestion ? change_set.original_filename : file_name(change_set.resource)
-      EVENT.filename_changed(
+      EVENT.preservation_file_change(
         implementer: change_set.updated_by,
-        note: "File's original filename renamed from #{current_filename} to #{file_name(change_set)}",
+        note: I18n.t('events.preservation_file.note', from: current_filename, to: file_name(change_set)),
         timestamp: timestamp
       )
     end

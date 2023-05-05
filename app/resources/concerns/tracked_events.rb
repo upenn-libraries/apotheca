@@ -30,21 +30,27 @@ module TrackedEvents
     def checksum(note:, implementer:, timestamp:)
       event type: Premis::Events::CHECKSUM.uri,
             outcome: Premis::Outcomes::SUCCESS.uri,
-            note: note,
-            implementer: implementer,
-            timestamp: timestamp
+            note: note, implementer: implementer, timestamp: timestamp
     end
 
     # @param [String] note
     # @param [String] implementer
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def filename_changed(implementer:, note:, timestamp:)
-      event type: Premis::Events::EDIT_FILENAME.uri,
+    def preservation_file_change(implementer:, note:, timestamp:)
+      event type: Premis::Events::FILENAME_CHANGE.uri,
             outcome: Premis::Outcomes::SUCCESS.uri,
-            note: note,
-            implementer: implementer,
-            timestamp: timestamp
+            note: note, implementer: implementer, timestamp: timestamp
+    end
+
+    # @param [String] note
+    # @param [String] implementer
+    # @param [DateTime] timestamp
+    # @return [AssetResource::PreservationEvent]
+    def original_filename_change(implementer:, note:, timestamp:)
+      event type: Premis::Events::METADATA_CHANGE.uri,
+            outcome: Premis::Outcomes::SUCCESS.uri,
+            note: note, implementer: implementer, timestamp: timestamp
     end
 
     # Used for ingestion, re-ingestion and migration events
@@ -56,9 +62,7 @@ module TrackedEvents
     def ingestion(note:, implementer:, timestamp:)
       event type: Premis::Events::INGEST.uri,
             outcome: Premis::Outcomes::SUCCESS.uri,
-            note: note,
-            implementer: implementer,
-            timestamp: timestamp
+            note: note, implementer: implementer, timestamp: timestamp
     end
 
     # @param [String] outcome
@@ -68,10 +72,7 @@ module TrackedEvents
     # @return [AssetResource::PreservationEvent]
     def virus_check(outcome:, note:, implementer:, timestamp: nil)
       event type: Premis::Events::VIRUS_CHECK.uri,
-            outcome: outcome,
-            note: note,
-            implementer: implementer,
-            timestamp: timestamp
+            outcome: outcome, note: note, implementer: implementer, timestamp: timestamp
     end
 
     # TODO: these actions remain to be integrated

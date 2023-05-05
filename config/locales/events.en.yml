@@ -1,0 +1,14 @@
+en:
+  events: # "%{}"
+    action:
+      migration_note: "Object migrated from %{from}"
+      ingestion_note: "Object ingested as %{filename}"
+      reingestion_note: "New file ingested as %{filename}"
+    checksum:
+      note: "Checksum for file is %{checksum}"
+    original_filename:
+      note: "Original filename changed from %{from} to %{to}"
+    preservation_file:
+      note: "Preservation file changed from %{from} to %{to}"
+    virus_check:
+      note: "File present but virus check not performed"
