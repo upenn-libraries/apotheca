@@ -35,7 +35,7 @@ module ImportService
           # New assets
           new_filenames = import_filenames - existing_filenames
 
-          if new_filenames
+          if new_filenames.present?
             create_assets_result = create_new_assets(new_filenames)
 
             return create_assets_result if create_assets_result.failure?
@@ -118,7 +118,6 @@ module ImportService
           r = update_asset(asset: asset, **update_data)
           if r.failure?
             e = r.failure
-            byebug
             message = "Error occurred updating #{asset[:original_filename]} - #{e[:error]}"
             failure(details: [message], exception: e[:exception], change_set: e[:change_set])
           else
@@ -149,7 +148,7 @@ module ImportService
 
         # Check if the asset preservation file needs to be updated
         # TODO: need to check that there is a file present in storage before doing this check
-        if asset.technical_metadata.sha256 != assets.checksum_for(asset.original_filename)
+        if assets.location? && assets.file?(asset.original_filename) && (asset.technical_metadata.sha256 != assets.checksum_for(asset.original_filename))
           attributes[:file] = assets.file_for(asset.original_filename)
         end
 
@@ -160,7 +159,12 @@ module ImportService
 
         return Success(asset) if attributes.empty? # Don't process an update if not necessary.
 
-        update_asset_transaction.call(id: asset.id, updated_by: imported_by, **attributes)
+        update_asset_transaction.call(
+          id: asset.id,
+          updated_by: imported_by,
+          optimistic_lock_token: asset.optimistic_lock_token,
+          **attributes
+        )
       end
     end
   end

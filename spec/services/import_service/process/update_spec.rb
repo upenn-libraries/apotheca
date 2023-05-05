@@ -112,8 +112,20 @@ describe ImportService::Process::Update do
         end
       end
 
+      # Only providing the file necessary to test that not all files have to be provided.
       let(:process) do
-        build(:import_process, :update, :with_asset_metadata, unique_identifier: item.unique_identifier)
+        build(
+          :import_process, :update,
+          assets: {
+            arranged: [
+              { filename: 'front.tif', label: 'Front', transcription: ['Importers'] },
+              { filename: 'back.tif',  label: 'Back', annotation: ['mostly blank'] }
+            ],
+            storage: 'sceti_digitized',
+            path: 'trade_card/back.tif'
+          },
+          unique_identifier: item.unique_identifier
+        )
       end
 
       it 'is successful' do
@@ -140,7 +152,34 @@ describe ImportService::Process::Update do
       end
     end
 
-    context 'when updating existing assets and there\'s an error'
+    context 'when updating existing assets and there\'s an error' do
+      # Triggering an error from the UpdateAsset transaction
+      before do
+        transaction = instance_double('UpdateAsset')
+        allow(process).to receive(:update_asset_transaction).and_return(transaction)
+        allow(transaction).to receive(:call).and_return(Dry::Monads::Failure(error: :invalid_file_extension))
+      end
+
+      let(:process) do
+        build(
+          :import_process, :update,
+          unique_identifier: item.unique_identifier,
+          assets: { arranged: [{ filename: 'front.tif', label: 'Front', annotation: ['Business advertisement'] }] }
+        )
+      end
+
+      it 'fails' do
+        expect(result).to be_a Dry::Monads::Failure
+      end
+
+      it 'return expected failure object' do
+        expect(result.failure[:error]).to be :import_failed
+        expect(result.failure[:details]).to contain_exactly(
+          'An error was raised while updating one or more assets. All changes were applied except the updates to the asset(s) below. These issues should be fixed manually.',
+          'Error occurred updating front.tif - invalid_file_extension'
+        )
+      end
+    end
 
     context 'when updating existing assets with a new file' do
       let(:updated_assets) do
@@ -153,7 +192,7 @@ describe ImportService::Process::Update do
         build(
           :import_process, :update,
           unique_identifier: item.unique_identifier,
-          assets: { storage: 'sceti_digitized', path: 'updated_trade_card', arranged_filenames: 'front.tif;back.tif' }
+          assets: { storage: 'sceti_digitized', path: 'updated_trade_card', arranged_filenames: 'front.tif' }
         )
       end
 
@@ -168,14 +207,6 @@ describe ImportService::Process::Update do
           front.technical_metadata.sha256
         ).to eql 'e8b02e24ff4223af1f4c8a351b7dc8e4b226e4b13c7b3b3e68be827a071e120f'
       end
-
-      it 'does not update back.tif' do
-        back = updated_assets.find { |a| a.original_filename == 'back.tif' }
-        expect(
-          back.technical_metadata.sha256
-        ).to eql '5eb074db482a9a70de866521589e19fbd1372cb18f5d0901249e7c7bca44548b'
-      end
     end
-
   end
 end

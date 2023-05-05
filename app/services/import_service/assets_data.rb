@@ -7,7 +7,7 @@ module ImportService
 
     attr_reader :errors, :data, :location
 
-    delegate :file_for, :checksum_for, to: :location
+    delegate :file_for, :checksum_for, :file?, to: :location
 
     # Asset information can be provided in different structures. Filenames and asset metadata can be
     # provided in two ways:

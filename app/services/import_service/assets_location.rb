@@ -48,6 +48,10 @@ module ImportService
       file_locations.keys
     end
 
+    def file?(filename)
+      filenames.include?(filename)
+    end
+
     def file_for(filename)
       raise "Could not find #{filename} in storage" unless file_locations.key?(filename)
 
