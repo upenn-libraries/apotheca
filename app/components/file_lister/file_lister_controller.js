@@ -80,7 +80,6 @@ export default class extends Controller {
             } else {
                 this.enableButtons()
             }
-            console.log(json)
         } catch(error) {
             this.setError(error.message)
             this.extractedFilenamesFormTarget.hidden = true;
