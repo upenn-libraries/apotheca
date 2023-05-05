@@ -33,6 +33,16 @@ export default class extends Controller {
         navigator.clipboard.writeText(this.filenameListTarget.innerText);
     }
 
+    disableButtons() {
+        document.getElementById('copy-button').disabled = true
+        document.getElementById('export-button').disabled = true
+    }
+
+    enableButtons() {
+        document.getElementById('copy-button').disabled = false
+        document.getElementById('export-button').disabled = false
+    }
+
     async getFilenames(formData) {
         const response = await fetch(event.target.action, {
             method: 'POST',
@@ -54,6 +64,7 @@ export default class extends Controller {
         event.preventDefault();
         this.clearErrorMessage();
 
+
         const formData = new FormData(event.target, event.submitter)
         try {
             const json = await this.getFilenames(formData);
@@ -63,6 +74,13 @@ export default class extends Controller {
             this.setPath(json.path);
             this.setList(json.filenames);
             this.extractedFilenamesFormTarget.hidden = false;
+            if (!json.filenames) {
+                this.filenameListTarget.innerText = 'That path has no files. This may be the case if the specified path contains only directories.'
+                this.disableButtons()
+            } else {
+                this.enableButtons()
+            }
+            console.log(json)
         } catch(error) {
             this.setError(error.message)
             this.extractedFilenamesFormTarget.hidden = true;
