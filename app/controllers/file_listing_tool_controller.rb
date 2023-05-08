@@ -30,8 +30,8 @@ class FileListingToolController < ApplicationController
   end
 
   def valid_path?
-    path = storage.modify_path(params[:path])
-    storage.valid_path?(path) if valid_drive?
+    modified_path = storage.modify_path(params[:path])
+    storage.valid_path?(modified_path) if valid_drive?
   end
 
   def valid_drive?
