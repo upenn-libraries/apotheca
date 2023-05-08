@@ -18,7 +18,7 @@ class RefreshIlsMetadata
 
   def save(resource:)
     persisted_to_solr_index = persister.save(resource: resource)
-    Success(persisted_to_solr_index: persisted_to_solr_index)
+    Success(persisted_to_solr_index)
   rescue StandardError => e
     Failure(error: :error_persisting_to_solr_index, exception: e)
   end
