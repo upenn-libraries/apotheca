@@ -64,7 +64,6 @@ export default class extends Controller {
         event.preventDefault();
         this.clearErrorMessage();
 
-
         const formData = new FormData(event.target, event.submitter)
         try {
             const json = await this.getFilenames(formData);
