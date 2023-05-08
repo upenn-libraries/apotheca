@@ -30,7 +30,7 @@ class FileListingToolController < ApplicationController
   end
 
   def valid_path?
-    path = modify_path(params[:path])
+    path = storage.modify_path(params[:path])
     storage.valid_path?(path) if valid_drive?
   end
 
@@ -44,11 +44,5 @@ class FileListingToolController < ApplicationController
 
   def storage
     @storage ||= ImportService::S3Storage.new(params[:drive]) if valid_drive?
-  end
-
-  def modify_path(path)
-    path = path[1..] if path.start_with?('/')
-    path += '/' unless path.end_with?('/')
-    path
   end
 end
