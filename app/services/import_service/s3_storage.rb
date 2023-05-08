@@ -44,6 +44,8 @@ module ImportService
 
     # Returns true if the given path exists within the bucket. Checks for valid filepaths and directories.
     def valid_path?(path)
+      return false if %r{\.[^/]+$}.match?(path)
+
       list = client.list_objects_v2(
         bucket: bucket,
         max_keys: 1,
@@ -59,17 +61,28 @@ module ImportService
     def files_at(path)
       keys = []
       continuation_token = nil
+      modified_path = modify_path(path)
 
       loop do
         list = client.list_objects_v2(
-          bucket: bucket, prefix: path, continuation_token: continuation_token
+          bucket: bucket, prefix: modified_path, continuation_token: continuation_token
         )
-        keys.concat(list.contents.map(&:key).delete_if { |k| k.delete_prefix(path).delete_prefix('/').include?('/') })
+        keys.concat(list.contents.map(&:key).delete_if { |k| k.delete_prefix(modified_path).delete_prefix('/').include?('/') })
         continuation_token = list.next_continuation_token
         break unless list.is_truncated
       end
 
       keys
+    end
+
+    # Removes / at the beginning, adds / to the end. Helps mimic directory structure in S3.
+    #
+    # @param [String] path
+    # @return [String]
+    def modify_path(path)
+      path = path[1..] if path.start_with?('/')
+      path += '/' unless path.end_with?('/')
+      path
     end
 
     # Represents file retrieved from S3.

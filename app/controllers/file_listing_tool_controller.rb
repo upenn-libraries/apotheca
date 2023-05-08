@@ -2,7 +2,6 @@
 
 # A tool for listing file on a specified attached drive at a specified path
 class FileListingToolController < ApplicationController
-  before_action :clean_path, only: [:file_list]
 
   def tool; end
 
@@ -31,7 +30,8 @@ class FileListingToolController < ApplicationController
   end
 
   def valid_path?
-    storage.valid_path?(params[:path]) if valid_drive?
+    path = modify_path(params[:path])
+    storage.valid_path?(path) if valid_drive?
   end
 
   def valid_drive?
@@ -46,9 +46,9 @@ class FileListingToolController < ApplicationController
     @storage ||= ImportService::S3Storage.new(params[:drive]) if valid_drive?
   end
 
-  def clean_path
-    return if params[:path][-1] == '/'
-
-    params[:path] = "#{params[:path]}/"
+  def modify_path(path)
+    path = path[1..] if path.start_with?('/')
+    path += '/' unless path.end_with?('/')
+    path
   end
 end
