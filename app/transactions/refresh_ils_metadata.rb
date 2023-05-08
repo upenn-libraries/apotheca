@@ -17,6 +17,7 @@ class RefreshIlsMetadata
   end
 
   def save(resource:)
+    # the index_solr persister#save returns true if successful; it does not return the saved resource
     persisted_to_solr_index = persister.save(resource: resource)
     Success(persisted_to_solr_index)
   rescue StandardError => e
