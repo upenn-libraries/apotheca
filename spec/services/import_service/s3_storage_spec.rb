@@ -48,6 +48,12 @@ describe ImportService::S3Storage do
     end
   end
 
+  describe '#modify_path' do
+    it 'modifies path' do
+      expect(storage.modify_path('/test')).to eq('test/')
+    end
+  end
+
   describe '.valid?' do
     context 'when invalid storage name' do
       it 'returns false' do
