@@ -44,8 +44,6 @@ module ImportService
 
     # Returns true if the given path exists within the bucket. Checks for valid filepaths and directories.
     def valid_path?(path)
-      return false if %r{\.[^/]+$}.match?(path)
-
       list = client.list_objects_v2(
         bucket: bucket,
         max_keys: 1,
