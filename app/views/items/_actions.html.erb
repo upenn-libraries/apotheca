@@ -1,6 +1,20 @@
+<h3 id="actions" class="mb-3">Actions</h3>
+
+<div class="d-flex justify-content-around my-3">
+<% if can? :refresh_ils_metadata, @item  %>
+  <%= render Form::Component.new(name: 'refresh_ILS_metadata', url: refresh_ils_metadata_item_path(@item), method: :post) do |component| %>
+    <% component.with_error(@error) %>
+    <% component.with_submit('Refresh ILS Metadata',
+                             confirm: 'Do you really want to refresh ILS metadata for this item?',
+                             disabled: @item.descriptive_metadata.bibnumber.blank?,
+                             class: %w[btn btn-primary]) %>
+  <% end %>
+<% end %>
+
 <% if can? :delete, @item  %>
   <%= render Form::Component.new(name: 'delete_item', url: item_path(@item), method: :delete) do |component| %>
     <% component.with_error(@error) %>
     <% component.with_submit('Delete Item', confirm: 'Do you really want to delete this item?', class: %w[btn btn-danger]) %>
   <% end %>
 <% end %>
+</div>

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     resources :items do
       member do
         get :reorder_assets, to: 'items#reorder_assets'
+        post :refresh_ils_metadata, to: 'items#refresh_ils_metadata'
       end
     end
     resources :assets, except: :index do
