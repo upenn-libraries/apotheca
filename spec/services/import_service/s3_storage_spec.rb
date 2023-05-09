@@ -49,7 +49,7 @@ describe ImportService::S3Storage do
   end
 
   describe '#modify_path' do
-    it 'modifies path' do
+    it 'returns acceptable path' do
       expect(storage.modify_path('/test')).to eq('test/')
     end
   end
