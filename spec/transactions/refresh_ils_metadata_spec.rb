@@ -25,7 +25,7 @@ describe RefreshIlsMetadata do
       end
 
       it 're-persists item to solr index' do
-        expect(result.success[:persisted_to_solr_index]).to be true
+        expect(result.value!).to be true
       end
     end
 
