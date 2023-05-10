@@ -2,8 +2,6 @@
 
 # A tool for listing file on a specified attached drive at a specified path
 class FileListingToolController < ApplicationController
-  before_action :modify_path, only: :file_list
-
   def tool; end
 
   def file_list
@@ -18,7 +16,7 @@ class FileListingToolController < ApplicationController
         end
       else
         format.csv {}
-        format.json { render json: { error: 'Directory path invalid!' }, status: :unprocessable_entity }
+        format.json { render json: { error: 'Path invalid!' }, status: :unprocessable_entity }
       end
     end
   end
@@ -44,9 +42,5 @@ class FileListingToolController < ApplicationController
 
   def storage
     @storage ||= ImportService::S3Storage.new(params[:drive]) if valid_drive?
-  end
-
-  def modify_path
-    params[:path] = storage.modify_path(params[:path])
   end
 end
