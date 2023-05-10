@@ -74,7 +74,9 @@ module ImportService
       keys
     end
 
-    # Removes / at the beginning, adds / to the end. Helps mimic directory structure in S3.
+    # Removes / at the beginning, adds / to the end. Helps mimic directory structure in S3. Always remove / at the
+    # beginning of the string, but return if the string is a filename. This regular expression matches a string if it
+    # contains a period (.) followed by one or more characters that are not slashes (/) until the end of the string.
     #
     # @param [String] path
     # @return [String]
