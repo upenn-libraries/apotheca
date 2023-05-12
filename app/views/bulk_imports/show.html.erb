@@ -78,7 +78,7 @@
       <a
         class="nav-link <%=@state.eql?(s.name.to_s) ? 'active' : ''%><%= @bulk_import.imports.where(state: s.name.to_s).count.zero? ? 'disabled': '' %>"
          href="<%= @bulk_import.imports.where(state: s.name.to_s).count.positive? ?  url_for(import_state: s) : '' %>">
-        <%= s.name %>
+        <%= s.name.to_s.titleize %>
         <span class="badge text-bg-secondary"><%=@bulk_import.imports.where(state: s.name.to_s).count %></span>
       </a>
     </li>
