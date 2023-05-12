@@ -33,8 +33,21 @@ class Import < ApplicationRecord
   def human_readable_name
     return import_data['human_readable_name'] unless resource_identifier
 
-    query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
     item = query_service.custom_queries.find_by_unique_identifier(unique_identifier: resource_identifier)
     item&.human_readable_name
+  end
+
+  # Get associated Valkyrie::Resource id
+  # @return [Valkyrie::ID, nil]
+  def resource_id
+    return unless resource_identifier
+
+    @resource_id ||= query_service.custom_queries.find_by_unique_identifier(unique_identifier: resource_identifier)&.id
+  end
+
+  private
+
+  def query_service
+    Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
 end
