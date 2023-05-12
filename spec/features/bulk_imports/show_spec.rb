@@ -7,9 +7,12 @@ describe 'Bulk Import Show Page' do
     before { sign_in user }
 
     context 'when viewing the bulk import show page' do
+      let(:item_resource) { persist(:item_resource) }
       let(:bulk_import) { create(:bulk_import, note: 'Test') }
-      let!(:successful_imports) { create_list(:import, 5, :successful, duration: 60, bulk_import: bulk_import) }
-      let(:failed_imports) { create_list(:import, 5, :failed, bulk_import: bulk_import) }
+      let!(:successful_imports) do
+        create_list(:import, 5, :successful, duration: 60, bulk_import: bulk_import,
+                                        resource_identifier: item_resource.unique_identifier)
+      end
 
       before { visit bulk_import_path(bulk_import) }
 
@@ -51,15 +54,33 @@ describe 'Bulk Import Show Page' do
         within('#imports-table') { expect(page).to have_link('Details', count: bulk_import.imports.count) }
       end
 
+      it "links an import to it's associated resource" do
+        visit bulk_import_path(bulk_import)
+        expect(page).to have_link(item_resource.unique_identifier, href: item_path(item_resource), count: successful_imports.count)
+      end
+
+      it 'displays human readable name for successful or failed imports' do
+        failed = create(:import, :failed, bulk_import: bulk_import)
+        visit bulk_import_path(bulk_import)
+        expect(page).to have_text(item_resource.human_readable_name, count: successful_imports.count)
+        expect(page).to have_text(failed.import_data['human_readable_name'])
+      end
+
+      it 'does not display human readable name for an incomplete import' do
+        queued = create(:import, :queued, bulk_import: bulk_import)
+        visit bulk_import_path(bulk_import)
+        expect(page).not_to have_text(queued.import_data['human_readable_name'])
+      end
+
       it 'only displays imports in a particular state' do
-        click_link Import::STATE_SUCCESSFUL.to_s
-        expect(page).to have_link(Import::STATE_SUCCESSFUL.to_s, class: 'active')
+        click_link Import::STATE_SUCCESSFUL.to_s.titleize
+        expect(page).to have_link(Import::STATE_SUCCESSFUL.to_s.titleize, class: 'active')
         within('#imports-table') { expect(page).to have_link('Details', count: successful_imports.count) }
       end
 
       it 'disables tab if there are no imports in that state' do
         within('#import-states-tabs') do
-          expect(page).to have_link(Import::STATE_CANCELLED.to_s, href: '', class: 'disabled')
+          expect(page).to have_link(Import::STATE_CANCELLED.to_s.titleize, href: '', class: 'disabled')
         end
       end
     end
