@@ -101,9 +101,15 @@
     <% @imports&.each do |import| %>
       <tr>
         <td><%= import.id %></td>
-        <td><%= import.state.titlecase %></td>
-        <td><%= import.human_readable_name %></td>
-        <td><%= import.resource_identifier%></td>
+        <td><%= import.state.titleize %></td>
+        <td>
+          <% if import.may_reprocess? %>
+            <%= import.human_readable_name %>
+          <% end  %>
+        </td>
+        <td>
+          <%= import.resource_identifier && import.resource_id ? link_to(import.resource_identifier, item_path(import.resource_id))
+                                         : '[Unknown]' %>
         <td>
           <%= link_to 'Details', bulk_import_import_path(@bulk_import, import), class: 'btn btn-sm btn-primary' %>
         </td>
