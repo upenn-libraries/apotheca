@@ -33,14 +33,9 @@ export default class extends Controller {
         navigator.clipboard.writeText(this.filenameListTarget.innerText);
     }
 
-    disableButtons() {
-        document.getElementById('copy-button').disabled = true
-        document.getElementById('export-button').disabled = true
-    }
-
-    enableButtons() {
-        document.getElementById('copy-button').disabled = false
-        document.getElementById('export-button').disabled = false
+    toggleButtons(disable) {
+        document.getElementById('copy-button').disabled = disable;
+        document.getElementById('export-button').disabled = disable;
     }
 
     async getFilenames(formData) {
@@ -75,9 +70,9 @@ export default class extends Controller {
             this.extractedFilenamesFormTarget.hidden = false;
             if (!json.filenames) {
                 this.filenameListTarget.innerText = 'That path has no files. This may be the case if the specified path contains only directories.'
-                this.disableButtons()
+                this.toggleButtons(true)
             } else {
-                this.enableButtons()
+                this.toggleButtons(false)
             }
         } catch(error) {
             this.setError(error.message)
