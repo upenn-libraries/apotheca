@@ -74,7 +74,6 @@ export default class extends Controller {
             this.setList(json.filenames);
             this.extractedFilenamesFormTarget.hidden = false;
             if (!json.filenames) {
-                console.log(filenames)
                 this.filenameListTarget.innerText = 'That path has no files. This may be the case if the specified path contains only directories.'
                 this.disableButtons()
             } else {
