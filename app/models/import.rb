@@ -33,8 +33,7 @@ class Import < ApplicationRecord
   def human_readable_name
     return import_data['human_readable_name'] unless resource_identifier
 
-    item = query_service.custom_queries.find_by_unique_identifier(unique_identifier: resource_identifier)
-    item&.human_readable_name
+    resource&.human_readable_name || import_data['human_readable_name']
   end
 
   # Get associated Valkyrie::Resource
