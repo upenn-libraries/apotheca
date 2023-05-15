@@ -37,12 +37,12 @@ class Import < ApplicationRecord
     item&.human_readable_name
   end
 
-  # Get associated Valkyrie::Resource id
-  # @return [Valkyrie::ID, nil]
-  def resource_id
+  # Get associated Valkyrie::Resource
+  # @return [Valkyrie::Resource, nil]
+  def resource
     return unless resource_identifier
 
-    @resource_id ||= query_service.custom_queries.find_by_unique_identifier(unique_identifier: resource_identifier)&.id
+    @resource ||= query_service.custom_queries.find_by_unique_identifier(unique_identifier: resource_identifier)
   end
 
   private
