@@ -9,7 +9,8 @@ describe Steps::AddPreservationEvents do
     context 'with preceding events' do
       let(:change_set) { AssetChangeSet.new(asset, temporary_events: preceding_event) }
       let(:preceding_event) do
-        build(:preservation_event, :virus_check, :success, outcome_detail_note: I18n.t('events.virus_check.note'))
+        build(:preservation_event, :virus_check, :success,
+              outcome_detail_note: I18n.t('preservation_events.virus_check.note'))
       end
 
       it 'sets any preceding events on the change set' do
@@ -22,7 +23,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets a ingest event with migration-specific outcome_detail_note' do
         ingest_event = find_event_by_type events: preservation_events, type: Premis::Events::INGEST
-        expect(ingest_event.outcome_detail_note).to eq I18n.t('events.action.migration_note',
+        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.action.migration_note',
                                                               from: change_set.migrated_from)
       end
     end
@@ -39,7 +40,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets an ingest event with ingestion-specific outcome_detail_note' do
         ingest_event = find_event_by_type events: preservation_events, type: Premis::Events::INGEST
-        expect(ingest_event.outcome_detail_note).to eq I18n.t('events.action.ingestion_note',
+        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.action.ingestion_note',
                                                               filename: change_set.original_filename)
       end
 
@@ -49,7 +50,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets the correct message for the filename change event' do
         expect(preservation_file_events.first.outcome_detail_note).to eq(
-          I18n.t('events.preservation_filename.note',
+          I18n.t('preservation_events.preservation_filename.note',
                  from: change_set.original_filename, to: change_set.preservation_file_id)
         )
       end
@@ -66,7 +67,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets an ingest event with reingestion-specific outcome_detail_note' do
         ingest_event = find_event_by_type events: preservation_events, type: Premis::Events::INGEST
-        expect(ingest_event.outcome_detail_note).to eq I18n.t('events.action.reingestion_note',
+        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.action.reingestion_note',
                                                               filename: change_set.original_filename)
       end
 
@@ -77,7 +78,8 @@ describe Steps::AddPreservationEvents do
       it 'sets the correct message for the filename change event' do
         old_file_id = change_set.resource.preservation_file_id.id.split('/').last
         expect(preservation_file_events.first.outcome_detail_note).to eq(
-          I18n.t('events.preservation_filename.note', from: old_file_id, to: change_set.preservation_file_id)
+          I18n.t('preservation_events.preservation_filename.note', from: old_file_id,
+                                                                   to: change_set.preservation_file_id)
         )
       end
     end
@@ -97,7 +99,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets the correct messages for filename change events' do
         messages = filename_change_events.collect(&:outcome_detail_note)
-        expect(messages).to include I18n.t('events.original_filename.note',
+        expect(messages).to include I18n.t('preservation_events.original_filename.note',
                                            from: change_set.resource.original_filename,
                                            to: change_set.original_filename)
       end

@@ -70,9 +70,12 @@ module Steps
     # @return [AssetResource::PreservationEvent | NilClass]
     def action_event(action, change_set, timestamp)
       note = case action
-             when :migration then I18n.t('events.action.migration_note', from: change_set.migrated_from)
-             when :ingestion then I18n.t('events.action.ingestion_note', filename: change_set.original_filename)
-             when :reingestion then I18n.t('events.action.reingestion_note', filename: change_set.original_filename)
+             when :migration
+               I18n.t('preservation_events.action.migration_note', from: change_set.migrated_from)
+             when :ingestion
+               I18n.t('preservation_events.action.ingestion_note', filename: change_set.original_filename)
+             when :reingestion
+               I18n.t('preservation_events.action.reingestion_note', filename: change_set.original_filename)
              else
                return
              end
@@ -92,7 +95,7 @@ module Steps
       # TODO: throws exception if no tech md set, but at this point in the transaction, tech md should always be set
       checksum = change_set.technical_metadata.sha256.first
       EVENT.checksum(
-        note: I18n.t('events.checksum.note', checksum: checksum),
+        note: I18n.t('preservation_events.checksum.note', checksum: checksum),
         implementer: change_set.updated_by,
         timestamp: timestamp
       )
@@ -110,7 +113,7 @@ module Steps
 
       EVENT.change_filename(
         implementer: change_set.updated_by,
-        note: I18n.t('events.original_filename.note',
+        note: I18n.t('preservation_events.original_filename.note',
                      from: change_set.resource.original_filename, to: change_set.original_filename),
         timestamp: timestamp
       )
@@ -130,7 +133,8 @@ module Steps
       current_filename = action == :ingestion ? change_set.original_filename : file_name(change_set.resource)
       EVENT.change_filename(
         implementer: change_set.updated_by,
-        note: I18n.t('events.preservation_filename.note', from: current_filename, to: file_name(change_set)),
+        note: I18n.t('preservation_events.preservation_filename.note',
+                     from: current_filename, to: file_name(change_set)),
         timestamp: timestamp
       )
     end

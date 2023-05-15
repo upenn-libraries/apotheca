@@ -1,5 +1,5 @@
 en:
-  events:
+  preservation_events:
     action:
       migration_note: "Object migrated from %{from}"
       ingestion_note: "Ingested as %{filename}"
