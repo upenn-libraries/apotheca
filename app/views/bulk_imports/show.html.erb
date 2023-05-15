@@ -106,7 +106,7 @@
             <%= import.human_readable_name %>
         </td>
         <td>
-          <%= import.resource_identifier && import.resource_id ? link_to(import.resource_identifier, item_path(import.resource_id))
+          <%= import.resource_identifier && import.resource ? link_to(import.resource_identifier, item_path(import.resource))
                                          : '[Unknown]' %>
         <td>
           <%= link_to 'Details', bulk_import_import_path(@bulk_import, import), class: 'btn btn-sm btn-primary' %>
