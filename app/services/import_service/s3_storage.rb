@@ -44,11 +44,10 @@ module ImportService
 
     # Returns true if the given path exists within the bucket. Checks for valid filepaths and directories.
     def valid_path?(path)
-      modified_path = modify_path(path)
       list = client.list_objects_v2(
         bucket: bucket,
         max_keys: 1,
-        prefix: modified_path
+        prefix: modify_path(path)
       )
       list.key_count == 1
     end
