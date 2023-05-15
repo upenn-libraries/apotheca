@@ -73,7 +73,10 @@ module ImportService
       keys
     end
 
-    # Removes / at the beginning, adds / to the end. Helps mimic directory structure in S3. Always remove / at the
+    # Mimics a file directory structure in S3 by normalizing the path. This method assumes that all files have extensions. Removes / at the beginning, adds / to the end.  Always remove / at the
+```
+
+Generally, I would start a comment like this with a brief summary of that the point of this method is and then I would get into the details. I also added an additional note about our assumption that filenames have extensions. After our in-person chat, I realized that filenames don't HAVE to have extensions, but in our case they will and we can assume that. If a file didn't have a file extension we would run into other issues in the processing.
     # beginning of the string, but return if the string is a filename. This regular expression matches a string if it
     # contains a period (.) followed by one or more characters that are not slashes (/) until the end of the string.
     #
