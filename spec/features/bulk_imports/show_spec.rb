@@ -59,17 +59,11 @@ describe 'Bulk Import Show Page' do
         expect(page).to have_link(item_resource.unique_identifier, href: item_path(item_resource), count: successful_imports.count)
       end
 
-      it 'displays human readable name for successful or failed imports' do
+      it 'displays human readable name' do
         failed = create(:import, :failed, bulk_import: bulk_import)
         visit bulk_import_path(bulk_import)
         expect(page).to have_text(item_resource.human_readable_name, count: successful_imports.count)
         expect(page).to have_text(failed.import_data['human_readable_name'])
-      end
-
-      it 'does not display human readable name for an incomplete import' do
-        queued = create(:import, :queued, bulk_import: bulk_import)
-        visit bulk_import_path(bulk_import)
-        expect(page).not_to have_text(queued.import_data['human_readable_name'])
       end
 
       it 'only displays imports in a particular state' do

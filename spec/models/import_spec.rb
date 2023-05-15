@@ -97,7 +97,7 @@ describe Import do
     end
   end
 
-  describe '#resource_id' do
+  describe '#resource' do
     let(:bulk_import) { create(:bulk_import) }
 
     context 'when an item is associated' do
@@ -105,7 +105,7 @@ describe Import do
       let(:import) { create(:import, bulk_import: bulk_import, resource_identifier: item_resource.unique_identifier) }
 
       it 'returns the resource id' do
-        expect(import.resource_id).to eq(item_resource.id)
+        expect(import.resource).to eq(item_resource)
       end
     end
 
@@ -113,7 +113,7 @@ describe Import do
       let(:import) { create(:import, bulk_import: bulk_import) }
 
       it 'returns nil' do
-        expect(import.resource_id).to be_nil
+        expect(import.resource).to be_nil
       end
     end
 
