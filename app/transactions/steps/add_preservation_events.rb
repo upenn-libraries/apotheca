@@ -76,11 +76,8 @@ module Steps
                I18n.t('preservation_events.action.ingestion_note', filename: change_set.original_filename)
              when :reingestion
                I18n.t('preservation_events.action.reingestion_note', filename: change_set.original_filename)
-             else
-               return
-             end
-      event_attrs = { implementer: change_set.updated_by, timestamp: timestamp, note: note }
-      EVENT.ingestion(**event_attrs)
+             else return; end
+      EVENT.ingestion implementer: change_set.updated_by, timestamp: timestamp, note: note
     end
 
     # Return a checksum event. This requires that technical metadata be set in a prior transaction step.
@@ -107,9 +104,7 @@ module Steps
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
     def original_filename_event(action, change_set, timestamp)
-      return unless action == :reingestion
-
-      return if change_set.resource.original_filename == change_set.original_filename
+      return unless (action == :reingestion) && (change_set.changed? :original_filename)
 
       EVENT.change_filename(
         implementer: change_set.updated_by,
