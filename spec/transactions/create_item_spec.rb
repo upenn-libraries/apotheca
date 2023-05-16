@@ -34,7 +34,8 @@ describe CreateItem do
       end
 
       it 'sets ark' do
-        expect(item.unique_identifier).not_to be_nil
+        expect(item.unique_identifier).to be_a String
+        expect(item.unique_identifier).to start_with 'ark:/'
       end
 
       it 'sets updated_by' do
