@@ -42,7 +42,7 @@ module Steps
         # resource ID is blank but an ID is set in the ChangeSet
         :ingestion
       elsif (change_set.resource.preservation_file_id.present? && change_set.preservation_file_id.present?) &&
-            (change_set.resource.preservation_file_id != change_set.preservation_file_id)
+            (change_set.changed? :preservation_file_id)
         # resource ID is set and a new ID is incoming in the ChangeSet, and they aren't the same
         :reingestion
       else
