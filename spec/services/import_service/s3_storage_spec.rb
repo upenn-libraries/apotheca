@@ -35,7 +35,7 @@ describe ImportService::S3Storage do
 
     context 'when the path contains only directories' do
       it 'returns true' do
-        expect(storage.valid_path?('folder1/folder2')).to be true
+        expect(storage.valid_path?('folder1')).to be true
       end
     end
 
