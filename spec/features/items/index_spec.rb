@@ -23,6 +23,14 @@ describe 'Item Index Page' do
         expect(page).to have_selector 'tr li', text: title
       end
     end
+
+    it 'lists the items in descending order d' do
+      expect(page.find('tbody tr:nth-child(1)')).to have_text(item.unique_identifier)
+      second_item = persist(:item_resource, unique_identifier: 'second_item')
+      visit items_path do
+        expect(page.find('tbody tr:nth-child(1)')).to have_text(second_item.unique_identifier)
+      end
+    end
   end
 
   context 'with incorporated ILS metadata' do
