@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Component to render tabs
 module Tabs
+  # Renders multiple Tab components
   class Component < ViewComponent::Base
     renders_many :tabs, 'Tab'
 
@@ -9,6 +9,7 @@ module Tabs
       @id = id
     end
 
+    # Renders a single Tab component
     class Tab < ViewComponent::Base
       attr_reader :id, :active, :title, :count, :disabled
 

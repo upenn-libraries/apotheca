@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Configures application-wide actions, making them available in each of the controllers.
 class ApplicationController < ActionController::Base
   include HeaderAlert
 

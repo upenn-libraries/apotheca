@@ -1,14 +1,17 @@
 # frozen_string_literal: true
 
+# Asset attributes and helper methods
 class AssetResource < Valkyrie::Resource
   include ModificationDetails
   include Lockable
 
+  # Supplemental descriptive notes about an asset
   class Annotation < Valkyrie::Resource
     attribute :text, Valkyrie::Types::String
     # attribute :location, Valkyrie::Types::String # x,y,w,h
   end
 
+  # Data that describes the digital properties of an asset
   class TechnicalMetadata < Valkyrie::Resource
     attribute :raw, Valkyrie::Types::String
     attribute :mime_type, Valkyrie::Types::String
@@ -18,6 +21,7 @@ class AssetResource < Valkyrie::Resource
     attribute :sha256, Valkyrie::Types::String
   end
 
+  # Translation of image, video, or audio into a text format
   class Transcription < Valkyrie::Resource
     attribute :mime_type, Valkyrie::Types::String
     attribute :contents, Valkyrie::Types::String

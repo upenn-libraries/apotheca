@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module MetadataExtractor
+  # Marmite is a separate application used for creating/retrieving descriptive/structural metadata, and other variant
+  # expressions of metadata for objects with information at separate sources. This class creates a client that allows
+  # requests to Marmite
   class Marmite
     attr_reader :client
 

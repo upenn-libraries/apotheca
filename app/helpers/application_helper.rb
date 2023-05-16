@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Application-wide helper methods
 module ApplicationHelper
   # @param [String, Symbol] name
   # @return [String, nil]

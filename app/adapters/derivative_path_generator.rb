@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Generates derivative paths for use in Shrine file attachment of derivatives
+# Replaces default Valkyrie::Storage::Shrine::IDPathGenerator, uses original_filename instead of random UUID
 class DerivativePathGenerator
   def initialize(base_path: nil)
     @base_path = base_path
