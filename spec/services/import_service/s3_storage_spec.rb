@@ -58,6 +58,18 @@ describe ImportService::S3Storage do
         expect(storage.files_at('')).to contain_exactly('video.mov', 'bell.wav')
       end
     end
+
+    context 'when path contains only directories' do
+      it 'returns empty array' do
+        expect(storage.files_at('folder1')).to be_empty
+      end
+    end
+
+    context 'when path contains a filename' do
+      it 'returns the filename' do
+        expect(storage.files_at('trade_card/front.tif')).to contain_exactly('trade_card/front.tif')
+      end
+    end
   end
 
   describe '#modify_path' do
