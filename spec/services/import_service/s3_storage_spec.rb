@@ -23,13 +23,25 @@ describe ImportService::S3Storage do
   describe '#valid_path?' do
     context 'when the path is valid' do
       it 'returns true' do
-        expect(storage.valid_path?('trade_card/front.tif')).to be true
+        expect(storage.valid_path?('trade_card')).to be true
       end
     end
 
     context 'when the path is invalid' do
       it 'returns false' do
         expect(storage.valid_path?('invalid')).to be false
+      end
+    end
+
+    context 'when the path contains only directories' do
+      it 'returns true' do
+        expect(storage.valid_path?('folder1/folder2')).to be true
+      end
+    end
+
+    context 'when the path is a filename' do
+      it 'returns true' do
+        expect(storage.valid_path?('trade_card/front.tif')).to be true
       end
     end
   end
