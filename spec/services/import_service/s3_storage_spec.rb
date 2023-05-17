@@ -77,7 +77,7 @@ describe ImportService::S3Storage do
       expect(storage.modify_path('/test')).to eq('test/')
     end
 
-    it 'does not modify path when filename is present' do
+    it 'does not modify end of path when filename is present' do
       expect(storage.modify_path('/test.jpg')).to eq('test.jpg')
     end
   end
