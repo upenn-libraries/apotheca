@@ -31,9 +31,9 @@ class Import < ApplicationRecord
 
   # Return human_readable_name from ItemResource if it's been assigned or from data hash if not
   def human_readable_name
-    return import_data['human_readable_name'] unless resource_identifier
+    return resource.human_readable_name if resource.present?
 
-    resource&.human_readable_name || import_data['human_readable_name']
+    import_data['human_readable_name']
   end
 
   # Get associated Valkyrie::Resource
