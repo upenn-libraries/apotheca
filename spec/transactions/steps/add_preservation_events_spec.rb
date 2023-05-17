@@ -39,15 +39,10 @@ describe Steps::AddPreservationEvents do
       let(:asset) { build(:asset_resource, original_filename: nil) } # use build instead of persist to denote newness
       let(:update_attributes) do
         { preservation_file_id: Valkyrie::ID.new('bogus-file-id'),
-          original_filename: 'bogus-file.tif' }
+          original_filename: 'bogus-file.tif', technical_metadata: { sha256: ['bogus-sha'] } }
       end
       let(:preservation_file_events) do
         find_events_by_type(events: preservation_events, type: Premis::Events::FILENAME_CHANGE)
-      end
-
-      before do
-        # simulate add_technical_metadata execution, this allows all preservation event processing to proceed as needed
-        change_set.technical_metadata.sha256 = ['bogus-sha']
       end
 
       it 'sets an ingest event with ingestion-specific outcome_detail_note' do
