@@ -104,7 +104,7 @@ describe Import do
       let(:item_resource) { persist(:item_resource, unique_identifier: 'test_id') }
       let(:import) { create(:import, bulk_import: bulk_import, resource_identifier: item_resource.unique_identifier) }
 
-      it 'returns the resource id' do
+      it 'returns the resource' do
         expect(import.resource).to eq(item_resource)
       end
     end
@@ -116,6 +116,5 @@ describe Import do
         expect(import.resource).to be_nil
       end
     end
-
   end
 end
