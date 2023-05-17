@@ -29,7 +29,7 @@ describe 'Item Index Page' do
       expect(page).to have_select('Direction', selected: 'Descending')
     end
 
-    it 'lists the items in descending order' do
+    it 'lists the items in descending order from newest to oldest' do
       expect(page.find('tbody tr:nth-child(1)')).to have_text(item.unique_identifier)
       second_item = persist(:item_resource, unique_identifier: 'second_item')
       visit items_path do
