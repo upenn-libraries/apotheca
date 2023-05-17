@@ -8,7 +8,7 @@ module ImportService
       include Dry::Monads[:result]
 
       attr_reader :errors, :imported_by, :descriptive_metadata, :structural_metadata,
-                  :assets, :unique_identifier, :human_readable_name, :internal_notes
+                  :asset_set, :unique_identifier, :human_readable_name, :internal_notes
 
       # Initializes object to conduct import. For the time being this class will only import Items.
       #
@@ -18,7 +18,7 @@ module ImportService
       # @param [Array<String>] :internal_notes
       # @param [Hash] :metadata  # gets mapped to descriptive_metadata
       # @param [Hash] :structural  # gets mapped to structural_metadata
-      # @param [AssetsLocation] :assets
+      # @param [AssetSet] :asset_set
       def initialize(**args)
         @imported_by          = args[:imported_by]
         @unique_identifier    = args[:unique_identifier]
@@ -26,7 +26,7 @@ module ImportService
         @internal_notes       = args[:internal_notes]
         @descriptive_metadata = args.fetch(:metadata, {})
         @structural_metadata  = args.fetch(:structural, {})
-        @assets               = args[:assets].blank? ? nil : AssetsData.new(**args[:assets])
+        @asset_set            = args[:assets].blank? ? nil : AssetSet.new(**args[:assets])
         @errors               = []
       end
 
@@ -39,7 +39,7 @@ module ImportService
 
         @errors << 'imported_by must always be provided' unless imported_by
 
-        @errors.concat(assets.errors) if assets && !assets.valid?
+        @errors.concat(asset_set.errors) if asset_set && !asset_set.valid?
       end
 
       # Runs validations and returns a boolean value based on the success
@@ -66,18 +66,19 @@ module ImportService
       # Creates a set of assets. If it fails to create any on asset, it returns the failure
       # and deletes all the assets that were created up to that point.
       #
-      # @param [Array<Hash>] assets_data
+      # @param [Array<ImportService::AssetsData>] assets_data
       # @param [Hash] additional_attrs to be passed in when creating each asset
       def batch_create_assets(assets_data, additional_attrs = {})
         asset_list = []
         error = nil
 
         # Create all assets, break out of loop if there is an error making an asset.
-        assets_data.each do |asset|
-          result = create_asset(asset.merge(additional_attrs))
+        assets_data.each do |asset_data|
+          # result = asset.create_resource(additional_attrs)
+          result = create_asset(asset_data, additional_attrs)
 
           if result.failure?
-            result.failure[:details].prepend("Error raised when generating #{asset[:original_filename]}")
+            result.failure[:details].prepend("Error raised when generating #{asset_data.filename}")
             error = result
             break
           else
@@ -97,14 +98,12 @@ module ImportService
       # Creates an asset with the given attributes. An asset is first created without a file and then the asset
       # is updated to add in the file. If an error occurs while creating or updating the asset, any necessary
       # clean up is done and then failure is returned.
-      def create_asset(attributes)
-        CreateAsset.new.call(attributes) do |result|
+      def create_asset(asset_data, additional_attrs = {})
+        CreateAsset.new.call(**asset_data.resource_attributes, **additional_attrs) do |result|
           result.success do |a|
             update_transaction = UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
             update_args = {
-              id: a.id,
-              file: assets.file_for(attributes[:original_filename]),
-              updated_by: imported_by
+              id: a.id, file: asset_data.file, updated_by: imported_by
             }
 
             update_transaction.call(**update_args) do |update_result|

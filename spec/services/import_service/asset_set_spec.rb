@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ImportService::AssetsData do
+describe ImportService::AssetSet do
   describe '#valid?' do
     it 'requires that asset storage valid' do
       assets = described_class.new(storage: 'invalid')
@@ -29,7 +29,7 @@ describe ImportService::AssetsData do
     end
 
     it 'requires that path is present when storage provided' do
-      assets = described_class.new(storage: 'sceti_digitized', path:  nil)
+      assets = described_class.new(storage: 'sceti_digitized', path: nil)
       expect(assets.valid?).to be false
       expect(assets.errors).to include 'assets must contain at least one path'
     end

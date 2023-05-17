@@ -2,7 +2,7 @@
 
 module ImportService
   # Class to aggregate all the files available at the given storage locations.
-  class AssetsLocation
+  class FileLocations
     attr_reader :storage_name, :paths, :errors
 
     def initialize(options = {})
@@ -52,17 +52,10 @@ module ImportService
       filenames.include?(filename)
     end
 
-    def file_for(filename)
-      raise "Could not find #{filename} in storage" unless file_locations.key?(filename)
+    def file_location_for(filename)
+      return unless file?(filename)
 
-      storage.file(file_locations[filename])
-    end
-
-    # Returns sha256 checksum for file in storage.
-    def checksum_for(filename)
-      raise "Could not find #{filename} in storage" unless file_locations.key?(filename)
-
-      storage.checksum_sha256(file_locations[filename])
+      FileLocation.new(storage: storage, path: file_locations[filename])
     end
 
     private

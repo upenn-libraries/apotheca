@@ -68,7 +68,7 @@ describe ImportService::Process::Update do
     end
 
     context 'when updating an item\'s descriptive metadata' do
-      let(:item) { persist(:item_resource, ) }
+      let(:item) { persist(:item_resource) }
       let(:process) do
         build(
           :import_process, :update,
@@ -155,7 +155,7 @@ describe ImportService::Process::Update do
     context 'when updating existing assets and there\'s an error' do
       # Triggering an error from the UpdateAsset transaction
       before do
-        transaction = instance_double('UpdateAsset')
+        transaction = instance_double(UpdateAsset)
         allow(process).to receive(:update_asset_transaction).and_return(transaction)
         allow(transaction).to receive(:call).and_return(Dry::Monads::Failure(error: :invalid_file_extension))
       end

@@ -24,9 +24,9 @@ module ImportService
       def run
         return failure(details: @errors) unless valid? # Validate before processing data.
 
-        if assets
+        if asset_set
           existing_filenames = existing_assets.map(&:original_filename)
-          import_filenames = assets.pluck(:original_filename)
+          import_filenames = asset_set.map(&:filename)
 
           # Assets not represented in data given. All current assets must be represented in import data.
           missing_filenames = existing_filenames - import_filenames
@@ -45,7 +45,7 @@ module ImportService
           filename_to_asset = existing_assets.index_by { |a| a[:original_filename] }
                                              .merge(created_assets.index_by { |a| a[:original_filename] })
 
-          arranged_asset_ids = assets.arranged.map { |a| filename_to_asset[a[:original_filename]].id }
+          arranged_asset_ids = asset_set.arranged.map { |a| filename_to_asset[a.filename].id }
         end
 
         # Update Item
@@ -59,14 +59,14 @@ module ImportService
           structural_metadata: structural_metadata
         }.compact_blank
 
-        if assets
+        if asset_set
           item_attributes[:structural_metadata] = item_attributes.fetch(:structural_metadata, {}).merge(arranged_asset_ids: arranged_asset_ids)
           item_attributes[:asset_ids] = item.asset_ids + created_assets.map(&:id)
         end
 
         UpdateItem.new.call(item_attributes) do |result|
           result.success do |i|
-            return Success(i) unless assets.present?
+            return Success(i) unless asset_set.blank?
 
             update_result = update_existing_assets
             update_result.success? ? Success(i) : update_result
@@ -76,9 +76,9 @@ module ImportService
             failure(**failure_hash)
           end
         end
-      # rescue StandardError => e
+      rescue StandardError => e
         # Honeybadger.notify(e) # Sending full error to Honeybadger.
-        # failure(exception: e)
+        failure(exception: e)
       end
 
       private
@@ -94,15 +94,15 @@ module ImportService
       # Creates new assets and sets the `created_assets` instance variable.
       def create_new_assets(filenames)
         # If new assets are loaded require that file location is provided
-        return failure(details: ['asset storage and path must be provided to create new assets']) unless assets&.location?
+        return failure(details: ['asset storage and path must be provided to create new assets']) unless asset_set&.file_locations?
 
         # Checking that all new assets have a file present in storage
-        missing = assets.missing_files(filenames)
+        missing = asset_set.missing_files(filenames)
         return failure(details: ["Files in storage missing for: #{missing.join(', ')}"]) if missing.present?
 
         # Creating new assets
-        new_assets = filenames.map { |f| assets.find { |a| a[:original_filename] == f } }
-        result = batch_create_assets(new_assets, { created_by: imported_by })
+        new_assets_data = filenames.map { |f| asset_set.find { |a| a.filename == f } }
+        result = batch_create_assets(new_assets_data, { created_by: imported_by })
         @created_assets = result.value! if result.success?
         result
       end
@@ -114,8 +114,8 @@ module ImportService
       def update_existing_assets
         # TODO: think about structuring errors in something other than an array.
         results = existing_assets.map do |asset|
-          update_data = assets.find { |a| a[:original_filename] == asset.original_filename }
-          r = update_asset(asset: asset, **update_data)
+          asset_data = asset_set.find { |a| a.filename == asset.original_filename }
+          r = update_asset(asset: asset, asset_data: asset_data)
           if r.failure?
             e = r.failure
             message = "Error occurred updating #{asset[:original_filename]} - #{e[:error]}"
@@ -142,20 +142,20 @@ module ImportService
       # changed or if the metadata that is given is different than the metadata already assigned.
       #
       # @param [AssetResource] asset to be updated
-      # @param [Hash] data to be used to update asset
-      def update_asset(asset:, **data)
+      # @param [ImportService::AssetData] asset_data to be used to update asset
+      def update_asset(asset:, asset_data:)
         attributes = {}
 
         # Check if the asset preservation file needs to be updated
-        # TODO: need to check that there is a file present in storage before doing this check
-        if assets.location? && assets.file?(asset.original_filename) && (asset.technical_metadata.sha256 != assets.checksum_for(asset.original_filename))
-          attributes[:file] = assets.file_for(asset.original_filename)
+        if asset_data.file? && asset.technical_metadata.sha256 != asset_data.checksum_sha256
+          attributes[:file] = asset_data.file
         end
 
         # Check if the metadata needs to be updated
-        attributes[:label] = data[:label] if data.key?(:label) && (asset.label != data[:label])
-        attributes[:annotations] = data[:annotations] if data.key?(:annotations) && asset.annotations.map(&:text).difference(data[:annotations].pluck(:text))
-        attributes[:transcriptions] = data[:transcriptions] if data.key?(:transcriptions) && asset.transcriptions.map(&:content).difference(data[:transcriptions].pluck(:contents))
+        metadata = asset_data.resource_attributes
+        attributes[:label] = metadata[:label] if metadata.key?(:label) && (asset.label != metadata[:label])
+        attributes[:annotations] = metadata[:annotations] if metadata.key?(:annotations) && asset.annotations.map(&:text).difference(metadata[:annotations].pluck(:text))
+        attributes[:transcriptions] = metadata[:transcriptions] if metadata.key?(:transcriptions) && asset.transcriptions.map(&:content).difference(metadata[:transcriptions].pluck(:contents))
 
         return Success(asset) if attributes.empty? # Don't process an update if not necessary.
 

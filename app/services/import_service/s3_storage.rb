@@ -42,7 +42,6 @@ module ImportService
       File.new(tempfile: tempfile, key: key)
     end
 
-    # TODO: Ask if md5 is good enough to check if the file in working storage is different than the file already in preservation storage
     # Returns the sha256 checksum for a file at the given location. If s3 client supports calculating sha256 checksum
     # then we will retrieve it from the client, otherwise we will have to download the file and generate it ourselves.
     #

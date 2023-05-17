@@ -23,7 +23,7 @@ module ImportService
         super
 
         @errors << 'human_readable_name must be provided to create an object' unless human_readable_name
-        @errors << 'assets must be provided to create an object' unless assets
+        @errors << 'assets must be provided to create an object' unless asset_set
         @errors << 'metadata must be provided to create an object' if descriptive_metadata.blank?
 
         if unique_identifier
@@ -31,11 +31,11 @@ module ImportService
           @errors << "\"#{unique_identifier}\" is not minted" unless ark_exists?(unique_identifier)
         end
 
-        @errors << 'asset storage and path must be provided' unless assets&.location?
+        @errors << 'asset storage and path must be provided' unless asset_set&.file_locations?
 
         # Validate that all filenames listed in structural metadata.
-        if assets&.valid? && assets&.location
-          missing = assets.all_missing_files
+        if asset_set&.valid? && asset_set&.file_locations?
+          missing = asset_set.all_missing_files
           @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?
         end
       end
@@ -48,7 +48,7 @@ module ImportService
 
         # Create all the assets
         assets_result = batch_create_assets(
-          assets.all,
+          asset_set.all,
           { created_by: created_by || imported_by, updated_by: imported_by }
         )
 
@@ -56,7 +56,7 @@ module ImportService
 
         all_assets = assets_result.value!
         all_asset_map = all_assets.index_by { |a| a[:original_filename] } # filename to asset
-        arranged_assets = assets.arranged.map { |a| all_asset_map[a[:original_filename]].id }
+        arranged_assets = asset_set.arranged.map { |a| all_asset_map[a.filename].id }
 
         # Create item and attach the assets
         item_attributes = {

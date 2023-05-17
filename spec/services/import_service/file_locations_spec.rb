@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ImportService::AssetsLocation do
+describe ImportService::FileLocations do
   describe '#valid?' do
     it 'requires non-empty storage name' do
       location = described_class.new(storage: '')
@@ -48,20 +48,6 @@ describe ImportService::AssetsLocation do
 
     it 'returns all filenames available at the paths given' do
       expect(location.filenames).to contain_exactly('front.tif', 'back.tif', 'bell.wav')
-    end
-  end
-
-  describe '#file_for' do
-    let(:location) { described_class.new(storage: 'sceti_digitized', path: ['trade_card']) }
-
-    it 'raises error when file is not present' do
-      expect {
-        location.file_for('invalid_filename')
-      }.to raise_error 'Could not find invalid_filename in storage'
-    end
-
-    it 'returns file when file is present' do
-      expect(location.file_for('front.tif')).to be_a ImportService::S3Storage::File
     end
   end
 end
