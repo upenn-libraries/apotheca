@@ -32,7 +32,7 @@
   <% end %>
 
   <% component.with_field('Unique Identifier') do %>
-    <%= @import.resource_identifier || '[Unknown]' %>
+      <%= @import.resource.present? ? link_to(@import.resource_identifier, item_path(@import.resource)) : '[Unknown]'%>
   <% end %>
 
   <% component.with_field('ID') do %>
