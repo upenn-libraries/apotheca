@@ -3,12 +3,15 @@
 describe Steps::AddPreservationEvents do
   describe '#call' do
     let(:asset) { persist(:asset_resource, :with_preservation_file) }
-    let(:result) do
+    let(:change_set) {
       change_set = AssetChangeSet.new(asset)
       change_set.validate(update_attributes)
-      described_class.new.call(change_set)
+      change_set
+    }
+    let(:preservation_events) do
+      result = described_class.new.call(change_set)
+      result.value!.preservation_events
     end
-    let(:preservation_events) { result.value!.preservation_events }
 
     context 'with preceding events' do
       let(:update_attributes) { { temporary_events: preceding_event } }
@@ -33,13 +36,18 @@ describe Steps::AddPreservationEvents do
     end
 
     context 'with a newly ingested Asset' do
-      let(:asset) { build(:asset_resource, :with_preservation_file) } # use build instead of persist to denote newness
+      let(:asset) { build(:asset_resource, original_filename: nil) } # use build instead of persist to denote newness
       let(:update_attributes) do
         { preservation_file_id: Valkyrie::ID.new('bogus-file-id'),
-          original_filename: 'bogus-file.jpg' }
+          original_filename: 'bogus-file.tif' }
       end
       let(:preservation_file_events) do
         find_events_by_type(events: preservation_events, type: Premis::Events::FILENAME_CHANGE)
+      end
+
+      before do
+        # simulate add_technical_metadata execution, this allows all preservation event processing to proceed as needed
+        change_set.technical_metadata.sha256 = ['bogus-sha']
       end
 
       it 'sets an ingest event with ingestion-specific outcome_detail_note' do
@@ -48,14 +56,22 @@ describe Steps::AddPreservationEvents do
                                                               filename: update_attributes[:original_filename])
       end
 
-      it 'sets a single filename change event' do
-        expect(preservation_file_events.length).to eq 1
+      it 'sets two filename change events' do
+        expect(preservation_file_events.length).to eq 2
       end
 
-      it 'sets the correct message for the filename change event' do
-        expect(preservation_file_events.first.outcome_detail_note).to eq(
+      it 'sets the correct messages for the original_filename change event' do
+        expect(preservation_file_events.collect(&:outcome_detail_note)).to include(
           I18n.t('preservation_events.preservation_filename.note',
                  from: update_attributes[:original_filename], to: update_attributes[:preservation_file_id])
+        )
+      end
+
+      it 'sets the correct messages for the preservation filename change event' do
+        expect(preservation_file_events.collect(&:outcome_detail_note)).to include(
+          I18n.t('preservation_events.original_filename.note',
+                 from: I18n.t('preservation_events.original_filename.nil_placeholder'),
+                 to: update_attributes[:original_filename])
         )
       end
     end
@@ -91,7 +107,7 @@ describe Steps::AddPreservationEvents do
     context 'with an Asset receiving a new file via an update with a new filename' do
       let(:update_attributes) do
         { preservation_file_id: Valkyrie::ID.new('new-bogus-file-id'),
-          original_filename: 'new-bogus-file.jpg' }
+          original_filename: 'new-bogus-file.tif' }
       end
       let(:filename_change_events) do
         find_events_by_type(events: preservation_events, type: Premis::Events::FILENAME_CHANGE)

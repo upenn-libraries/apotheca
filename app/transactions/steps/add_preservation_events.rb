@@ -21,7 +21,7 @@ module Steps
       events << action_event(action, change_set, timestamp)
       events << checksum_event(action, change_set, timestamp)
       events << preservation_filename_event(action, change_set, timestamp)
-      events << original_filename_event(action, change_set, timestamp)
+      events << original_filename_event(change_set, timestamp)
 
       change_set.preservation_events += events.compact
 
@@ -99,17 +99,17 @@ module Steps
     end
 
     # Returns an event for a metadata change in the original_filename field
-    # @param [Symbol] action
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def original_filename_event(action, change_set, timestamp)
-      return unless (action == :reingestion) && (change_set.changed? :original_filename)
+    def original_filename_event(change_set, timestamp)
+      return unless change_set.changed? :original_filename
+
+      from = change_set.resource.original_filename || I18n.t('preservation_events.original_filename.nil_placeholder')
 
       EVENT.change_filename(
         implementer: change_set.updated_by,
-        note: I18n.t('preservation_events.original_filename.note',
-                     from: change_set.resource.original_filename, to: change_set.original_filename),
+        note: I18n.t('preservation_events.original_filename.note', from: from, to: change_set.original_filename),
         timestamp: timestamp
       )
     end

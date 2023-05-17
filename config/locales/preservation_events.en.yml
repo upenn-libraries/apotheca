@@ -8,6 +8,7 @@ en:
       note: "Checksum for file is %{checksum}"
     original_filename:
       note: "File's original filename changed from %{from} to %{to}"
+      nil_placeholder: "[empty]"
     preservation_filename:
       note: "Preservation file changed from %{from} to %{to}"
     virus_check:
