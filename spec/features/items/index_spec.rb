@@ -24,7 +24,12 @@ describe 'Item Index Page' do
       end
     end
 
-    it 'lists the items in descending order d' do
+    it 'selects the default sort options' do
+      expect(page).to have_select('Sort By', selected: 'Created At')
+      expect(page).to have_select('Direction', selected: 'Descending')
+    end
+
+    it 'lists the items in descending order' do
       expect(page.find('tbody tr:nth-child(1)')).to have_text(item.unique_identifier)
       second_item = persist(:item_resource, unique_identifier: 'second_item')
       visit items_path do
