@@ -60,7 +60,7 @@ describe 'Bulk Import Show Page' do
       end
 
       it 'displays human readable name' do
-        failed = create(:import, :failed, bulk_import: bulk_import)
+        failed = create(:import, :failed, import_data: { human_readable_name: Faker::Book.title }, bulk_import: bulk_import)
         visit bulk_import_path(bulk_import)
         expect(page).to have_text(item_resource.human_readable_name, count: successful_imports.count)
         expect(page).to have_text(failed.import_data['human_readable_name'])
