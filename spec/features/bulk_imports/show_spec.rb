@@ -11,7 +11,7 @@ describe 'Bulk Import Show Page' do
       let(:bulk_import) { create(:bulk_import, note: 'Test') }
       let!(:successful_imports) do
         create_list(:import, 5, :successful, duration: 60, bulk_import: bulk_import,
-                                        resource_identifier: item_resource.unique_identifier)
+                                             resource_identifier: item_resource.unique_identifier)
       end
 
       before { visit bulk_import_path(bulk_import) }
@@ -56,11 +56,13 @@ describe 'Bulk Import Show Page' do
 
       it "links an import to it's associated resource" do
         visit bulk_import_path(bulk_import)
-        expect(page).to have_link(item_resource.unique_identifier, href: item_path(item_resource), count: successful_imports.count)
+        expect(page).to have_link(item_resource.unique_identifier, href: item_path(item_resource),
+                                                                   count: successful_imports.count)
       end
 
       it 'displays human readable name' do
-        failed = create(:import, :failed, import_data: { human_readable_name: Faker::Book.title }, bulk_import: bulk_import)
+        failed = create(:import, :failed, import_data: { human_readable_name: Faker::Book.title },
+                                          bulk_import: bulk_import)
         visit bulk_import_path(bulk_import)
         expect(page).to have_text(item_resource.human_readable_name, count: successful_imports.count)
         expect(page).to have_text(failed.import_data['human_readable_name'])
