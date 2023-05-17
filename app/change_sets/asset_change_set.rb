@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-# Properties and validations for assets
+# ChangeSet for Assets
 class AssetChangeSet < Valkyrie::ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet
 
+  # ChangeSet for Annotations
   class AnnotationChangeSet < Valkyrie::ChangeSet
     property :text, multiple: false
 
     validates :text, presence: true
   end
 
+  # ChangeSet for Technical Metadata
   class TechnicalMetadataChangeSet < Valkyrie::ChangeSet
     property :raw, multiple: false
     property :mime_type, multiple: false
@@ -20,6 +22,7 @@ class AssetChangeSet < Valkyrie::ChangeSet
     property :sha256, multiple: false
   end
 
+  # ChangeSet for Transcriptions
   class TranscriptionChangeSet < Valkyrie::ChangeSet
     # For now only accepting plain text transcriptions
     VALID_MIME_TYPES = ['text/plain'].freeze
@@ -31,6 +34,7 @@ class AssetChangeSet < Valkyrie::ChangeSet
     validates :mime_type, presence: true, inclusion: VALID_MIME_TYPES
   end
 
+  # ChangeSet for Asset Derivatives
   class AssetDerivativeChangeSet < DerivativeChangeSet
     TYPES = %w[thumbnail access].freeze
 

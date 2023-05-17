@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# ChangeSet for Asset Modification Details
 module ModificationDetailsChangeSet
   extend ActiveSupport::Concern
 
