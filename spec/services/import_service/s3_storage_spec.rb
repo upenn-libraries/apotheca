@@ -27,6 +27,12 @@ describe ImportService::S3Storage do
       end
     end
 
+    context 'when path is partial of valid path' do
+      it 'returns false' do
+        expect(storage.valid_path?('tra')).to be false
+      end
+    end
+
     context 'when the path is invalid' do
       it 'returns false' do
         expect(storage.valid_path?('invalid')).to be false
