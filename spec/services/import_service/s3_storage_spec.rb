@@ -55,7 +55,13 @@ describe ImportService::S3Storage do
 
     context 'when path contains files' do
       it 'returns all files (ignoring nested files)' do
-        expect(storage.files_at('')).to contain_exactly('video.mov', 'bell.wav')
+        expect(storage.files_at('trade_card')).to contain_exactly('trade_card/back.tif', 'trade_card/front.tif')
+      end
+    end
+
+    context 'when path is partial of valid path' do
+      it 'return empty array' do
+        expect(storage.files_at('tra')).to be_empty
       end
     end
 
@@ -70,6 +76,7 @@ describe ImportService::S3Storage do
         expect(storage.files_at('trade_card/front.tif')).to contain_exactly('trade_card/front.tif')
       end
     end
+
   end
 
   describe '#modify_path' do
