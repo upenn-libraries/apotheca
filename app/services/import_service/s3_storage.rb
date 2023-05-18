@@ -65,7 +65,7 @@ module ImportService
         list = client.list_objects_v2(
           bucket: bucket, prefix: modified_path, continuation_token: continuation_token
         )
-        keys.concat(list.contents.map(&:key).delete_if { |k| k.delete_prefix(modified_path).delete_prefix('/').include?('/') })
+        keys.concat(list.contents.map(&:key).delete_if { |k| k.delete_prefix(modified_path).include?('/') })
         continuation_token = list.next_continuation_token
         break unless list.is_truncated
       end
