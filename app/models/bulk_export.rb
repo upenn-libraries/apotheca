@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A Bulk Export allows a user to export Item data that matches specific search parameters
+# A Bulk Export allows a user to export Item data as a csv
 class BulkExport < ApplicationRecord
   include Queueable
 
