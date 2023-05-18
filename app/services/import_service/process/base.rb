@@ -74,7 +74,6 @@ module ImportService
 
         # Create all assets, break out of loop if there is an error making an asset.
         assets_data.each do |asset_data|
-          # result = asset.create_resource(additional_attrs)
           result = create_asset(asset_data, additional_attrs)
 
           if result.failure?

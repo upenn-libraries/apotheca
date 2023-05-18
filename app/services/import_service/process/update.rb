@@ -66,7 +66,7 @@ module ImportService
 
         UpdateItem.new.call(item_attributes) do |result|
           result.success do |i|
-            return Success(i) unless asset_set.blank?
+            return Success(i) if asset_set.blank?
 
             update_result = update_existing_assets
             update_result.success? ? Success(i) : update_result
@@ -115,6 +115,7 @@ module ImportService
         # TODO: think about structuring errors in something other than an array.
         results = existing_assets.map do |asset|
           asset_data = asset_set.find { |a| a.filename == asset.original_filename }
+
           r = update_asset(asset: asset, asset_data: asset_data)
           if r.failure?
             e = r.failure
@@ -153,9 +154,10 @@ module ImportService
 
         # Check if the metadata needs to be updated
         metadata = asset_data.resource_attributes
+
         attributes[:label] = metadata[:label] if metadata.key?(:label) && (asset.label != metadata[:label])
         attributes[:annotations] = metadata[:annotations] if metadata.key?(:annotations) && asset.annotations.map(&:text).difference(metadata[:annotations].pluck(:text))
-        attributes[:transcriptions] = metadata[:transcriptions] if metadata.key?(:transcriptions) && asset.transcriptions.map(&:content).difference(metadata[:transcriptions].pluck(:contents))
+        attributes[:transcriptions] = metadata[:transcriptions] if metadata.key?(:transcriptions) && asset.transcriptions.map(&:contents).difference(metadata[:transcriptions].pluck(:contents))
 
         return Success(asset) if attributes.empty? # Don't process an update if not necessary.
 

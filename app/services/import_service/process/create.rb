@@ -33,7 +33,7 @@ module ImportService
 
         @errors << 'asset storage and path must be provided' unless asset_set&.file_locations?
 
-        # Validate that all filenames listed in structural metadata.
+        # Validate that all filenames are listed.
         if asset_set&.valid? && asset_set&.file_locations?
           missing = asset_set.all_missing_files
           @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?

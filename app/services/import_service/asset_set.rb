@@ -68,8 +68,7 @@ module ImportService
     def all_missing_files
       raise 'Storage and path must be provided' unless file_locations?
 
-      all_filenames = all.map(&:filename)
-      all_filenames - file_locations.filenames
+      all.reject(&:file?).map(&:filename)
     end
 
     # Returns expected files that are missing from storage.

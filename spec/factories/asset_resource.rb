@@ -12,6 +12,7 @@ FactoryBot.define do
 
   trait :with_metadata do
     label { 'Front' }
+    annotations { { text: 'Front of Card' } }
   end
 
   trait :with_preservation_file do
