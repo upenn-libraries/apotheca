@@ -95,8 +95,8 @@ class ItemResource < Valkyrie::Resource
 
     if include_assets
       bulk_export_hash[:assets] = {
-        ordered: assets_export(structural_metadata.arranged_asset_ids),
-        unordered: assets_export(unarranged_asset_ids)
+        arranged: assets_export(structural_metadata.arranged_asset_ids),
+        unarranged: assets_export(unarranged_asset_ids)
       }
     end
 
