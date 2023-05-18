@@ -155,9 +155,9 @@ describe ImportService::Process::Update do
     context 'when updating existing assets and there\'s an error' do
       # Triggering an error from the UpdateAsset transaction
       before do
-        transaction = instance_double(UpdateAsset)
-        allow(process).to receive(:update_asset_transaction).and_return(transaction)
-        allow(transaction).to receive(:call).and_return(Dry::Monads::Failure(error: :invalid_file_extension))
+        allow(
+          process.asset_set.first
+        ).to receive(:update_asset).and_return(Dry::Monads::Failure(error: :invalid_file_extension))
       end
 
       let(:process) do

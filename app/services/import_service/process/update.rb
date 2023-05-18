@@ -102,7 +102,7 @@ module ImportService
 
         # Creating new assets
         new_assets_data = filenames.map { |f| asset_set.find { |a| a.filename == f } }
-        result = batch_create_assets(new_assets_data, { created_by: imported_by })
+        result = batch_create_assets(new_assets_data, { imported_by: imported_by })
         @created_assets = result.value! if result.success?
         result
       end
@@ -116,7 +116,7 @@ module ImportService
         results = existing_assets.map do |asset|
           asset_data = asset_set.find { |a| a.filename == asset.original_filename }
 
-          r = update_asset(asset: asset, asset_data: asset_data)
+          r = asset_data.update_asset(asset: asset, imported_by: imported_by)
           if r.failure?
             e = r.failure
             message = "Error occurred updating #{asset[:original_filename]} - #{e[:error]}"
@@ -137,36 +137,6 @@ module ImportService
                             .prepend('An error was raised while updating one or more assets. All changes were applied except the updates to the asset(s) below. These issues should be fixed manually.')
           )
         end
-      end
-
-      # Update an existing asset with new metadata or file. Asset is only updated if the file in storage has
-      # changed or if the metadata that is given is different than the metadata already assigned.
-      #
-      # @param [AssetResource] asset to be updated
-      # @param [ImportService::AssetData] asset_data to be used to update asset
-      def update_asset(asset:, asset_data:)
-        attributes = {}
-
-        # Check if the asset preservation file needs to be updated
-        if asset_data.file? && asset.technical_metadata.sha256 != asset_data.checksum_sha256
-          attributes[:file] = asset_data.file
-        end
-
-        # Check if the metadata needs to be updated
-        metadata = asset_data.resource_attributes
-
-        attributes[:label] = metadata[:label] if metadata.key?(:label) && (asset.label != metadata[:label])
-        attributes[:annotations] = metadata[:annotations] if metadata.key?(:annotations) && asset.annotations.map(&:text).difference(metadata[:annotations].pluck(:text))
-        attributes[:transcriptions] = metadata[:transcriptions] if metadata.key?(:transcriptions) && asset.transcriptions.map(&:contents).difference(metadata[:transcriptions].pluck(:contents))
-
-        return Success(asset) if attributes.empty? # Don't process an update if not necessary.
-
-        update_asset_transaction.call(
-          id: asset.id,
-          updated_by: imported_by,
-          optimistic_lock_token: asset.optimistic_lock_token,
-          **attributes
-        )
       end
     end
   end

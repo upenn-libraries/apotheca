@@ -48,8 +48,7 @@ module ImportService
 
         # Create all the assets
         assets_result = batch_create_assets(
-          asset_set.all,
-          { created_by: created_by || imported_by, updated_by: imported_by }
+          asset_set.all, { created_by: created_by, imported_by: imported_by }
         )
 
         return assets_result if assets_result.failure?

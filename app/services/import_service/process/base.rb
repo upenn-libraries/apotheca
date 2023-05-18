@@ -74,11 +74,11 @@ module ImportService
 
         # Create all assets, break out of loop if there is an error making an asset.
         assets_data.each do |asset_data|
-          result = create_asset(asset_data, additional_attrs)
+          result = asset_data.create_asset(**additional_attrs)
 
           if result.failure?
-            result.failure[:details].prepend("Error raised when generating #{asset_data.filename}")
-            error = result
+            error = failure(**result.failure)
+            error.failure[:details].prepend("Error raised when generating #{asset_data.filename}")
             break
           else
             asset_list << result.value!
@@ -94,34 +94,11 @@ module ImportService
         end
       end
 
-      # Creates an asset with the given attributes. An asset is first created without a file and then the asset
-      # is updated to add in the file. If an error occurs while creating or updating the asset, any necessary
-      # clean up is done and then failure is returned.
-      def create_asset(asset_data, additional_attrs = {})
-        CreateAsset.new.call(**asset_data.resource_attributes, **additional_attrs) do |result|
-          result.success do |a|
-            update_transaction = UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
-            update_args = {
-              id: a.id, file: asset_data.file, updated_by: imported_by
-            }
-
-            update_transaction.call(**update_args) do |update_result|
-              update_result.success { |u| Success(u) } # TODO: might want to unlink temp file here manually or do it in the transaction
-              update_result.failure do |failure_hash|
-                DeleteAsset.new.call(id: a.id)
-                failure(**failure_hash)
-              end
-            end
-          end
-
-          result.failure do |failure_hash|
-            failure(**failure_hash)
-          end
-        end
-      end
-
-      def delete_assets(asset_list)
-        asset_list.each { |a| DeleteAsset.new.call(id: a.id) }
+      # Deletes all the assets given.
+      #
+      # @param [<Array<AssetResource>]
+      def delete_assets(assets)
+        assets.each { |a| DeleteAsset.new.call(id: a.id) }
       end
 
       def update_asset_transaction
