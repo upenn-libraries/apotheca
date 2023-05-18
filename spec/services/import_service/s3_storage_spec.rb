@@ -59,7 +59,7 @@ describe ImportService::S3Storage do
       end
     end
 
-    context 'when path is partial of valid path' do
+    context 'when path is partial valid path' do
       it 'return empty array' do
         expect(storage.files_at('tra')).to be_empty
       end
