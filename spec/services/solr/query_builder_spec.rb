@@ -55,7 +55,8 @@ describe Solr::QueryBuilder do
       let(:defaults) { { sort: { field: 'created_at', direction: 'desc' } } }
 
       it 'sets default sort value' do
-        expect(builder.sort).to eq('created_at_dtsi desc')
+        field = mapper::Sort.send(defaults.dig(:sort, :field))
+        expect(builder.sort).to eq("#{field} #{defaults.dig(:sort, :direction)}")
       end
     end
   end

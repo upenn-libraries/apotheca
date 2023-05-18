@@ -25,13 +25,13 @@ describe 'Item Index Page' do
     end
 
     it 'selects the default sort options' do
-      expect(page).to have_select('Sort By', selected: 'Created At')
-      expect(page).to have_select('Direction', selected: 'Descending')
+      expect(find_field('Sort By').value).to eq ItemIndex::DEFAULT_SORT[:field]
+      expect(find_field('Direction').value).to eq ItemIndex::DEFAULT_SORT[:direction]
     end
 
     it 'lists the items in descending order from newest to oldest' do
       expect(page.find('tbody tr:nth-child(1)')).to have_text(item.unique_identifier)
-      second_item = persist(:item_resource, unique_identifier: 'second_item')
+      second_item = persist(:item_resource)
       visit items_path do
         expect(page.find('tbody tr:nth-child(1)')).to have_text(second_item.unique_identifier)
       end
