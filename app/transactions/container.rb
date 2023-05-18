@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Register and organize sets of steps within different namespaces. This class provides a convenient way to retrieve
+# instances of specific steps based on their registered keys.
 class Container
   extend Dry::Core::Container::Mixin
 
