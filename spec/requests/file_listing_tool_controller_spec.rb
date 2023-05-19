@@ -29,4 +29,12 @@ describe 'file listing tool requests' do
       expect(response.parsed_body['error']).to eq('Path invalid!')
     end
   end
+
+  context 'with a valid path and no files' do
+    let(:params) { { drive: 'sceti_digitized', path: '/folder1' } }
+
+    it 'returns no files' do
+      expect(response.parsed_body['filenames']).to be_nil
+    end
+  end
 end

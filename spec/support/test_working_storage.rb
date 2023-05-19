@@ -7,6 +7,7 @@ class TestWorkingStorage
     s3.upload(File.new(Rails.root.join('spec/fixtures/files/back.tif')), 'trade_card/back.tif')
     s3.upload(File.new(Rails.root.join('spec/fixtures/files/bell.wav')), 'bell.wav')
     s3.upload(File.new(Rails.root.join('spec/fixtures/files/video.mov')), 'video.mov')
+    s3.upload(File.new(Rails.root.join('spec/fixtures/files/video.mov')), 'folder1/folder2/video.mov')
   end
 
   # Remove all files from working storage.

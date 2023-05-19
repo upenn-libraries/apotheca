@@ -23,13 +23,31 @@ describe ImportService::S3Storage do
   describe '#valid_path?' do
     context 'when the path is valid' do
       it 'returns true' do
-        expect(storage.valid_path?('trade_card/front.tif')).to be true
+        expect(storage.valid_path?('trade_card')).to be true
+      end
+    end
+
+    context 'when path is partial of valid path' do
+      it 'returns false' do
+        expect(storage.valid_path?('tra')).to be false
       end
     end
 
     context 'when the path is invalid' do
       it 'returns false' do
         expect(storage.valid_path?('invalid')).to be false
+      end
+    end
+
+    context 'when the path contains only directories' do
+      it 'returns true' do
+        expect(storage.valid_path?('folder1')).to be true
+      end
+    end
+
+    context 'when the path is a filename' do
+      it 'returns true' do
+        expect(storage.valid_path?('trade_card/front.tif')).to be true
       end
     end
   end
@@ -43,8 +61,37 @@ describe ImportService::S3Storage do
 
     context 'when path contains files' do
       it 'returns all files (ignoring nested files)' do
-        expect(storage.files_at('')).to contain_exactly('video.mov', 'bell.wav')
+        expect(storage.files_at('')).to contain_exactly('bell.wav', 'video.mov')
       end
+    end
+
+    context 'when path is partial valid path' do
+      it 'return empty array' do
+        expect(storage.files_at('tra')).to be_empty
+      end
+    end
+
+    context 'when path contains only directories' do
+      it 'returns empty array' do
+        expect(storage.files_at('folder1')).to be_empty
+      end
+    end
+
+    context 'when path contains a filename' do
+      it 'returns the filename' do
+        expect(storage.files_at('trade_card/front.tif')).to contain_exactly('trade_card/front.tif')
+      end
+    end
+
+  end
+
+  describe '#modify_path' do
+    it 'returns acceptable path' do
+      expect(storage.modify_path('/test')).to eq('test/')
+    end
+
+    it 'does not modify end of path when filename is present' do
+      expect(storage.modify_path('/test.jpg')).to eq('test.jpg')
     end
   end
 
