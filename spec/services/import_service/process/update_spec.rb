@@ -33,7 +33,7 @@ describe ImportService::Process::Update do
         build(
           :import_process, :update,
           unique_identifier: item.unique_identifier,
-          assets: { storage: 'sceti_digitized', path: 'trade_card', arranged_filenames: 'back.tif' }
+          assets: { storage: 'sceti_digitized', path: 'trade_card/original', arranged_filenames: 'back.tif' }
         )
       end
 
@@ -53,7 +53,7 @@ describe ImportService::Process::Update do
         build(
           :import_process, :update,
           unique_identifier: item.unique_identifier,
-          assets: { storage: 'sceti_digitized', path: 'trade_card/front.tif', arranged_filenames: 'front.tif;back.tif' }
+          assets: { storage: 'sceti_digitized', path: 'trade_card/original/front.tif', arranged_filenames: 'front.tif;back.tif' }
         )
       end
 
@@ -122,7 +122,7 @@ describe ImportService::Process::Update do
               { filename: 'back.tif',  label: 'Back', annotation: ['mostly blank'] }
             ],
             storage: 'sceti_digitized',
-            path: 'trade_card/back.tif'
+            path: 'trade_card/original/back.tif'
           },
           unique_identifier: item.unique_identifier
         )
@@ -192,7 +192,7 @@ describe ImportService::Process::Update do
         build(
           :import_process, :update,
           unique_identifier: item.unique_identifier,
-          assets: { storage: 'sceti_digitized', path: 'updated_trade_card', arranged_filenames: 'front.tif' }
+          assets: { storage: 'sceti_digitized', path: 'trade_card/updated', arranged_filenames: 'front.tif' }
         )
       end
 

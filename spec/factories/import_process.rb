@@ -11,7 +11,7 @@ FactoryBot.define do
       action { ImportService::Process::CREATE }
       human_readable_name { 'Trade card; J. Rosenblatt & Co.' }
       structural { { viewing_direction: 'left-to-right', viewing_hint: 'individual' } }
-      assets { { arranged_filenames: 'front.tif; back.tif', storage: 'sceti_digitized', path: 'trade_card' } }
+      assets { { arranged_filenames: 'front.tif; back.tif', storage: 'sceti_digitized', path: 'trade_card/original' } }
       metadata do
         {
           'collection' => ['Arnold and Deanne Kaplan Collection of Early American Judaica (University of Pennsylvania)'],
@@ -42,7 +42,7 @@ FactoryBot.define do
             { filename: 'back.tif',  label: 'Back', annotation: ['mostly blank'] }
           ],
           storage: 'sceti_digitized',
-          path: 'trade_card'
+          path: 'trade_card/original'
         }
       end
     end

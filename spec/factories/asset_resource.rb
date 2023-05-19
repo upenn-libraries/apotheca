@@ -31,7 +31,7 @@ FactoryBot.define do
     # Note: This does not generate derivatives.
     before(:create) do |asset, evaluator|
       uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: File.new(Rails.root.join('spec/fixtures/files/trade_card/front.tif')),
+        tempfile: File.new(Rails.root.join('spec/fixtures/files/trade_card/original/front.tif')),
         filename: asset.original_filename, type: asset.technical_metadata.mime_type
       )
       preservation_storage = Valkyrie::StorageAdapter.find(:preservation)

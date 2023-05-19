@@ -35,7 +35,7 @@ describe ImportService::AssetSet do
     end
 
     it 'requires that duplicate files are not present in any of the storage paths' do
-      assets = described_class.new(storage: 'sceti_digitized', path: %w[trade_card updated_trade_card])
+      assets = described_class.new(storage: 'sceti_digitized', path: %w[trade_card/original trade_card/updated])
       expect(assets.valid?).to be false
       expect(assets.errors).to include 'duplicate filenames found in storage location: front.tif'
     end

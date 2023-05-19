@@ -2,7 +2,7 @@
 
 describe ImportService::FileLocation do
   let(:storage) { ImportService::S3Storage.new('sceti_digitized') }
-  let(:file_location) { described_class.new(storage: storage, path: 'trade_card/front.tif') }
+  let(:file_location) { described_class.new(storage: storage, path: 'trade_card/original/front.tif') }
 
   describe '#file?' do
     it 'returns file' do
