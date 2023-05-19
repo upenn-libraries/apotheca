@@ -49,6 +49,16 @@ describe Solr::QueryBuilder do
     it 'properly sets sort value' do
       expect(builder.sort).to eq 'title_ssi asc'
     end
+
+    context 'with no sort parameters provided' do
+      let(:params) { ActionController::Parameters.new({}) }
+      let(:defaults) { { sort: { field: 'created_at', direction: 'desc' } } }
+
+      it 'sets default sort value' do
+        field = mapper::Sort.public_send(defaults.dig(:sort, :field))
+        expect(builder.sort).to eq("#{field} #{defaults.dig(:sort, :direction)}")
+      end
+    end
   end
 
   describe '#search' do

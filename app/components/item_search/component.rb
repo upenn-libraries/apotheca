@@ -21,13 +21,14 @@ module ItemSearch
     end
 
     def sort_fields_options
-      options_for_select(mapper::Sort.field_map, search_params.dig(:sort, :field))
+      options_for_select(mapper::Sort.field_map,
+                         search_params.dig(:sort, :field) || ItemIndex::DEFAULT_SORT[:field])
     end
 
     def sort_directions_options
       options_for_select(
         [%w[Descending desc], %w[Ascending asc]],
-        search_params.dig(:sort, :direction)
+        search_params.dig(:sort, :direction) || ItemIndex::DEFAULT_SORT[:direction]
       )
     end
 

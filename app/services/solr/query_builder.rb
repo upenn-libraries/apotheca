@@ -63,8 +63,8 @@ module Solr
     # compose Sort param
     # @return [String (frozen)]
     def sort
-      sort_field = params.dig :sort, :field
-      sort_direction = params.dig :sort, :direction
+      sort_field = params.dig(:sort, :field) || defaults.dig(:sort, :field)
+      sort_direction = params.dig(:sort, :direction) || defaults.dig(:sort, :direction)
       sort_field = 'score' if sort_field.blank?
       sort_field = map type: :sort, field: sort_field
       sort_direction = 'asc' if sort_direction.blank?
