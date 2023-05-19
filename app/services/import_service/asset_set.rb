@@ -64,23 +64,6 @@ module ImportService
       @unarranged ||= asset_data_objects_for(:unarranged)
     end
 
-    # Return any files that are not present in storage.
-    def all_missing_files
-      raise 'Storage and path must be provided' unless file_locations?
-
-      all.reject(&:file?).map(&:filename)
-    end
-
-    # Returns expected files that are missing from storage.
-    #
-    # @param  [Array<String>] expected_filenames
-    # @return [Array<String>] array of filenames that are missing, if no files are missing an empty array is returned
-    def missing_files(expected_filenames)
-      raise 'Storage and path must be provided' unless file_locations?
-
-      expected_filenames - file_locations.filenames
-    end
-
     private
 
     # @param [Array<Hash>] asset_data

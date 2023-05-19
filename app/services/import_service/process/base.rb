@@ -69,7 +69,7 @@ module ImportService
       # @param [Array<ImportService::AssetsData>] assets_data
       # @param [Hash] additional_attrs to be passed in when creating each asset
       def batch_create_assets(assets_data, additional_attrs = {})
-        asset_list = []
+        created = []
         error = nil
 
         # Create all assets, break out of loop if there is an error making an asset.
@@ -81,16 +81,16 @@ module ImportService
             error.failure[:details].prepend("Error raised when generating #{asset_data.filename}")
             break
           else
-            asset_list << result.value!
+            created << result.value!
           end
         end
 
         if error.present?
           # if there's an error creating any Asset, fail and remove any loaded Assets
-          delete_assets(asset_list)
+          delete_assets(created)
           error
         else
-          Success(asset_list)
+          Success(created)
         end
       end
 
@@ -99,10 +99,6 @@ module ImportService
       # @param [<Array<AssetResource>]
       def delete_assets(assets)
         assets.each { |a| DeleteAsset.new.call(id: a.id) }
-      end
-
-      def update_asset_transaction
-        UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
       end
 
       # Takes different failure params and returns a Failure object with two keys: error, details.

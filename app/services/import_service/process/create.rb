@@ -35,7 +35,7 @@ module ImportService
 
         # Validate that all filenames are listed.
         if asset_set&.valid? && asset_set&.file_locations?
-          missing = asset_set.all_missing_files
+          missing = asset_set.reject(&:file?).map(&:filename)
           @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?
         end
       end
@@ -54,7 +54,7 @@ module ImportService
         return assets_result if assets_result.failure?
 
         all_assets = assets_result.value!
-        all_asset_map = all_assets.index_by { |a| a[:original_filename] } # filename to asset
+        all_asset_map = all_assets.index_by(&:original_filename) # filename to asset
         arranged_assets = asset_set.arranged.map { |a| all_asset_map[a.filename].id }
 
         # Create item and attach the assets

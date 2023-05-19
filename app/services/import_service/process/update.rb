@@ -28,7 +28,7 @@ module ImportService
           existing_filenames = existing_assets.map(&:original_filename)
           import_filenames = asset_set.map(&:filename)
 
-          # Assets not represented in data given. All current assets must be represented in import data.
+          # All current assets must be represented in import data. Return error if assets are missing from asset_set.
           missing_filenames = existing_filenames - import_filenames
           return failure(details: ["Missing the following assets: #{missing_filenames.join(', ')}. All assets must be represented when updating assets"]) if missing_filenames.present?
 
@@ -42,8 +42,8 @@ module ImportService
           end
 
           # Map of filename to assets (includes existing and newly created assets)
-          filename_to_asset = existing_assets.index_by { |a| a[:original_filename] }
-                                             .merge(created_assets.index_by { |a| a[:original_filename] })
+          filename_to_asset = existing_assets.index_by(&:original_filename)
+                                             .merge(created_assets.index_by(&:original_filename))
 
           arranged_asset_ids = asset_set.arranged.map { |a| filename_to_asset[a.filename].id }
         end
@@ -93,15 +93,16 @@ module ImportService
 
       # Creates new assets and sets the `created_assets` instance variable.
       def create_new_assets(filenames)
-        # If new assets are loaded require that file location is provided
+        # If new assets are loaded require that file location is provided.
         return failure(details: ['asset storage and path must be provided to create new assets']) unless asset_set&.file_locations?
 
+        new_assets_data = filenames.map { |f| asset_set.find { |a| a.filename == f } }
+
         # Checking that all new assets have a file present in storage
-        missing = asset_set.missing_files(filenames)
+        missing = new_assets_data.reject(&:file?).map(&:filename)
         return failure(details: ["Files in storage missing for: #{missing.join(', ')}"]) if missing.present?
 
         # Creating new assets
-        new_assets_data = filenames.map { |f| asset_set.find { |a| a.filename == f } }
         result = batch_create_assets(new_assets_data, { imported_by: imported_by })
         @created_assets = result.value! if result.success?
         result
@@ -112,17 +113,14 @@ module ImportService
       # @return [Dry::Monads::Success] if all existing assets were updated successfully
       # @return [Dry::Monads::Failure] if any of the assets failed, failures are aggregated
       def update_existing_assets
-        # TODO: think about structuring errors in something other than an array.
         results = existing_assets.map do |asset|
           asset_data = asset_set.find { |a| a.filename == asset.original_filename }
 
-          r = asset_data.update_asset(asset: asset, imported_by: imported_by)
-          if r.failure?
-            e = r.failure
-            message = "Error occurred updating #{asset[:original_filename]} - #{e[:error]}"
-            failure(details: [message], exception: e[:exception], change_set: e[:change_set])
-          else
-            r
+          asset_data.update_asset(asset: asset, imported_by: imported_by).then do |result|
+            return result if result.success?
+
+            e = result.failure
+            failure(details: ["Error occurred updating #{asset.original_filename} - #{e.delete(:error)}"], **e)
           end
         end
 
@@ -130,10 +128,7 @@ module ImportService
           Success(results.map(&:value!))
         else
           failure(
-            error: :import_failed,
-            details: results.select(&:failure?)
-                            .map { |f| f.failure[:details] }
-                            .flatten
+            details: results.select(&:failure?).map { |f| f.failure[:details] }.flatten
                             .prepend('An error was raised while updating one or more assets. All changes were applied except the updates to the asset(s) below. These issues should be fixed manually.')
           )
         end

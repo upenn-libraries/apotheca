@@ -53,7 +53,11 @@ describe ImportService::Process::Update do
         build(
           :import_process, :update,
           unique_identifier: item.unique_identifier,
-          assets: { storage: 'sceti_digitized', path: 'trade_card/original/front.tif', arranged_filenames: 'front.tif;back.tif' }
+          assets: {
+            storage: 'sceti_digitized',
+            path: 'trade_card/original/front.tif',
+            arranged_filenames: 'front.tif;back.tif'
+          }
         )
       end
 
