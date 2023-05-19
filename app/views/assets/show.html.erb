@@ -44,7 +44,7 @@
     <%= render partial: 'preservation_file' %>
   <% end %>
 
-  <% component.with_tab(title: 'Derivatives') do %>
+  <% component.with_tab(title: 'Derivatives', count: @asset.derivatives.count, disabled: @asset.derivatives.empty?) do %>
     <%= render partial: 'derivatives' %>
   <% end %>
 
