@@ -78,7 +78,7 @@
       <a
         class="nav-link <%=@state.eql?(s.name.to_s) ? 'active' : ''%><%= @bulk_import.imports.where(state: s.name.to_s).count.zero? ? 'disabled': '' %>"
          href="<%= @bulk_import.imports.where(state: s.name.to_s).count.positive? ?  url_for(import_state: s) : '' %>">
-        <%= s.name %>
+        <%= s.name.to_s.titleize %>
         <span class="badge text-bg-secondary"><%=@bulk_import.imports.where(state: s.name.to_s).count %></span>
       </a>
     </li>
@@ -101,9 +101,13 @@
     <% @imports&.each do |import| %>
       <tr>
         <td><%= import.id %></td>
-        <td><%= import.state.titlecase %></td>
-        <td><%= import.human_readable_name %></td>
-        <td><%= import.resource_identifier%></td>
+        <td><%= import.state.titleize %></td>
+        <td>
+            <%= import.human_readable_name %>
+        </td>
+        <td>
+          <%= import.resource.present? ? link_to(import.resource_identifier, item_path(import.resource))
+                                         : '[Unknown]' %>
         <td>
           <%= link_to 'Details', bulk_import_import_path(@bulk_import, import), class: 'btn btn-sm btn-primary' %>
         </td>
@@ -116,7 +120,7 @@
             <% end %>
           <% end %>
         </td>
-      <tr>
+      </tr>
     <% end %>
     </tbody>
   </table>

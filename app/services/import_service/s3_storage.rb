@@ -68,7 +68,7 @@ module ImportService
       list = client.list_objects_v2(
         bucket: bucket,
         max_keys: 1,
-        prefix: path
+        prefix: modify_path(path)
       )
       list.key_count == 1
     end
@@ -80,17 +80,33 @@ module ImportService
     def files_at(path)
       keys = []
       continuation_token = nil
+      modified_path = modify_path(path)
 
       loop do
         list = client.list_objects_v2(
-          bucket: bucket, prefix: path, continuation_token: continuation_token
+          bucket: bucket, prefix: modified_path, continuation_token: continuation_token
         )
-        keys.concat(list.contents.map(&:key).delete_if { |k| k.delete_prefix(path).delete_prefix('/').include?('/') })
+        keys.concat(list.contents.map(&:key).delete_if { |k| k.delete_prefix(modified_path).include?('/') })
         continuation_token = list.next_continuation_token
         break unless list.is_truncated
       end
 
       keys
+    end
+
+    # Mimics a file directory structure in S3 by normalizing the path. This method assumes that all files have
+    # extensions. Removes / at the beginning, adds / to the end.  Always remove / at the beginning of the string, but
+    # return if the string is a filename. This regular expression matches a string if it contains a period (.) followed
+    # by one or more characters that are not slashes (/) until the end of the string.
+    #
+    # @param [String] path
+    # @return [String]
+    def modify_path(path)
+      path = path.delete_prefix('/')
+      return path if %r{\.[^/]+$}.match?(path)
+
+      path += '/' unless path.end_with?('/')
+      path
     end
 
     # Represents file retrieved from S3.

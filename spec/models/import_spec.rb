@@ -96,4 +96,25 @@ describe Import do
       end
     end
   end
+
+  describe '#resource' do
+    let(:bulk_import) { create(:bulk_import) }
+
+    context 'when an item is associated' do
+      let(:item_resource) { persist(:item_resource, unique_identifier: 'test_id') }
+      let(:import) { create(:import, bulk_import: bulk_import, resource_identifier: item_resource.unique_identifier) }
+
+      it 'returns the resource' do
+        expect(import.resource).to eq(item_resource)
+      end
+    end
+
+    context 'when no item is associated' do
+      let(:import) { create(:import, bulk_import: bulk_import) }
+
+      it 'returns nil' do
+        expect(import.resource).to be_nil
+      end
+    end
+  end
 end

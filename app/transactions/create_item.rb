@@ -16,7 +16,7 @@ class CreateItem
 
   def set_ark(change_set)
     if change_set.unique_identifier.blank?
-      ark = Ezid::Identifier.mint
+      ark = Ezid::Identifier.mint.to_s
       change_set.unique_identifier = ark
     end
 

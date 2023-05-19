@@ -21,8 +21,8 @@ describe ItemResource do
       end
 
       it 'returns a list of unarranged asset ids' do
-        ordered_asset_ids = resource.structural_metadata.arranged_asset_ids
-        expect(resource.unarranged_asset_ids).not_to include ordered_asset_ids
+        arranged_asset_ids = resource.structural_metadata.arranged_asset_ids
+        expect(resource.unarranged_asset_ids).not_to include arranged_asset_ids
         expect(resource.unarranged_asset_ids.length).to eq 1
       end
     end
@@ -67,19 +67,19 @@ describe ItemResource do
       end
 
       it 'returns expected data for arranged assets' do
-        expect(export[:assets][:ordered]).to eq([{ filename: 'page1', label: nil, annotations: [] }])
+        expect(export[:assets][:arranged]).to eq([{ filename: 'page1', label: nil, annotations: [] }])
       end
 
       it 'returns expected data for unarrannged assets' do
-        expect(export[:assets][:unordered]).to eq([{ filename: 'page2', label: nil, annotations: [] }])
+        expect(export[:assets][:unarranged]).to eq([{ filename: 'page2', label: nil, annotations: [] }])
       end
 
       context 'when assets not present' do
         let(:resource) { persist(:item_resource) }
 
         it 'returns an empty arrays for nested asset fields' do
-          expect(export[:assets][:ordered]).to be_empty
-          expect(export[:assets][:unordered]).to be_empty
+          expect(export[:assets][:arranged]).to be_empty
+          expect(export[:assets][:unarranged]).to be_empty
         end
       end
     end

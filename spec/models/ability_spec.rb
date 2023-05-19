@@ -26,6 +26,7 @@ describe 'Ability' do
 
     it { is_expected.not_to be_able_to(:edit, ItemResource) }
     it { is_expected.not_to be_able_to(:reorder_assets, ItemResource) }
+    it { is_expected.not_to be_able_to(:refresh_ils_metadata, ItemResource) }
     it { is_expected.to be_able_to(:read, ItemResource) }
 
     it { is_expected.to be_able_to(:read, Import) }
@@ -67,6 +68,7 @@ describe 'Ability' do
     it { is_expected.to be_able_to(:create, ItemResource) }
     it { is_expected.to be_able_to(:update, ItemResource) }
     it { is_expected.to be_able_to(:reorder_assets, ItemResource) }
+    it { is_expected.to be_able_to(:refresh_ils_metadata, ItemResource) }
     it { is_expected.not_to be_able_to(:destroy, ItemResource) }
 
     it { is_expected.to be_able_to(:read, Import) }

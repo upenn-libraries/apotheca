@@ -4,7 +4,8 @@ describe 'Import Show Page' do
   let(:user) { create(:user, role) }
 
   shared_examples_for 'any logged in user' do
-    let(:import) { create(:import, :successful, duration: 60) }
+    let(:item_resource) { persist(:item_resource) }
+    let(:import) { create(:import, :successful, duration: 60, resource_identifier: item_resource.unique_identifier) }
     let(:import_with_errors) { create(:import, :failed) }
 
     before do
@@ -20,8 +21,8 @@ describe 'Import Show Page' do
       expect(page).to have_text('1 minute')
     end
 
-    it 'displays the resource_identifier' do
-      expect(page).to have_text(import.resource_identifier)
+    it "links an import to it's associated resource" do
+      expect(page).to have_link(item_resource.unique_identifier, href: item_path(item_resource), count: 1)
     end
 
     it 'displays the id' do
