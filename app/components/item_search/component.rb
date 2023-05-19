@@ -62,7 +62,7 @@ module ItemSearch
     # @param [String, nil] selected
     def search_fields_options(selected: nil)
       options_for_select(
-        Solr::QueryMaps::Item::Search.field_map,
+        Solr::QueryMaps::Item::Search.field_map.sort,
         selected
       )
     end
