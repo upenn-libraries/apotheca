@@ -15,6 +15,14 @@ describe 'Asset Show Page' do
       expect(page).to have_text(asset.original_filename)
     end
 
+    it 'shows the amount of derivatives on the derivatives tab' do
+      expect(page).to have_button("Derivatives #{asset.derivatives.count}", exact: true)
+    end
+
+    it 'disables the derivatives tab if asset has no derivatives' do
+      expect(page).to have_button("Derivatives #{asset.derivatives.count}", exact: true, class: 'disabled')
+    end
+
     it 'displays timestamps in the same timezone' do
       expect(page).to have_text(asset.date_created.to_fs(:display), count: 2)
     end
