@@ -2,7 +2,7 @@
 
 # Base component that accepts options that in the future could be converted to appropriate
 # Bootstrap v5 classes and attributes. Options that are not converted to Bootstrap attributes are
-# passed onto content_tag.
+# passed onto tag.public_send.
 class BaseComponent < ViewComponent::Base
   def initialize(tag, **options)
     @tag = tag
@@ -10,6 +10,6 @@ class BaseComponent < ViewComponent::Base
   end
 
   def call
-    content_tag @tag, content, **@options
+    tag.public_send(@tag, content, **@options)
   end
 end

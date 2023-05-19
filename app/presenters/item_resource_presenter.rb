@@ -49,9 +49,9 @@ class ItemResourcePresenter < BasePresenter
     def field_values(source, field)
       field_values = source == 'resource' ? object[field] : ils_metadata[field]
 
-      content_tag :ul, class: 'list-unstyled mb-0' do
+      tag.ul(class: 'list-unstyled mb-0') do
         field_values&.each_with_index do |value, i|
-          concat content_tag :li, value, class: i.zero? ? '' : 'pt-2'
+          concat tag.li(value, class: i.zero? ? '' : 'pt-2')
         end
       end
     end

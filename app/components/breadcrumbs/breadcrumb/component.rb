@@ -16,7 +16,7 @@ module Breadcrumbs
       def call
         render(BaseComponent.new(:li, **@options)) do
           if @href
-            content_tag(:a, href: @href) { content }
+            tag.a(href: @href) { content }
           else
             content
           end

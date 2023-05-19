@@ -33,7 +33,7 @@ module SummaryInfo
     # Divide fields into number of columns specified at component initialization (default: 3)
     def columns
       fields.in_groups(@columns).map do |field_group|
-        content_tag(:div, class: @col_classes) do
+        tag.div(class: @col_classes) do
           safe_join(field_group)
         end
       end
