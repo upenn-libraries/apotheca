@@ -17,9 +17,7 @@ module Breadcrumbs
 
     def call
       render(BaseComponent.new(:nav, 'aria-label': 'breadcrumb', **@options)) do
-        tag.ol(class: 'breadcrumb py-2 px-3') do
-          safe_join(breadcrumbs)
-        end
+        tag.ol(class: 'breadcrumb py-2 px-3') { safe_join(breadcrumbs) }
       end
     end
   end
