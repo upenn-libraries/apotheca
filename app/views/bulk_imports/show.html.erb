@@ -1,6 +1,6 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
   <% component.with_breadcrumb(href: "/") do %>Home<% end %>
-  <% component.with_breadcrumb(href: bulk_imports_path) do %>Imports<% end %>
+  <% component.with_breadcrumb(href: bulk_imports_path) do %>Bulk Imports<% end %>
   <% component.with_breadcrumb(active: true) do %> <%= @bulk_import.id %><% end %>
 <% end %>
 
