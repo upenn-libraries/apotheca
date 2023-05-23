@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# ChangeSet for Assets
+# ChangeSet for AssetResource
 class AssetChangeSet < Valkyrie::ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet

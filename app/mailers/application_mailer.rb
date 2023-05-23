@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Send emails from the application using mailer classes and views
+# Parent class for all Mailers. Sets defaults.
 class ApplicationMailer < ActionMailer::Base
   default from: 'from@example.com'
   layout 'mailer'

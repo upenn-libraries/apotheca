@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Tabs
-  # Renders multiple Tab components
+  # Renders a tabbed interface. Contains multiple Tab subcomponents.
   class Component < ViewComponent::Base
     renders_many :tabs, 'Tab'
 

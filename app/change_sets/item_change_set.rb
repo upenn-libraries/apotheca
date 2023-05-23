@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# ChangeSet for Items
+# ChangeSet for ItemResource
 class ItemChangeSet < Valkyrie::ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet

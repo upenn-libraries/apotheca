@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Asset attributes and helper methods
+# Asset model; contains attributes and helper methods
 class AssetResource < Valkyrie::Resource
   include ModificationDetails
   include Lockable
