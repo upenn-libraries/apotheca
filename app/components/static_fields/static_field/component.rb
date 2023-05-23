@@ -20,7 +20,7 @@ module StaticFields
       # @param [Integer] index
       def value_element(value:, index:)
         col_classes = index.zero? ? ['col-sm-9'] : %w[offset-sm-3 col-sm-9]
-        content_tag :dd, value, class: col_classes.push(classes)
+        tag.dd(value, class: col_classes.push(classes))
       end
     end
   end

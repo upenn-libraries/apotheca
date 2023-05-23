@@ -50,7 +50,7 @@ module Form
           when :file
             file_field_tag @field, **@options
           when :readonly
-            content_tag :input, nil, type: :text, value: @value, **@options
+            tag.input(type: :text, value: @value, **@options)
           when :email
             email_field_tag @field, @value, **@options
           end

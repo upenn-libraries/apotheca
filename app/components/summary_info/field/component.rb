@@ -52,12 +52,12 @@ module SummaryInfo
       # Construct field label
       def label
         label_display = @label ? "#{@label}:" : nil
-        content_tag :dt, label_display, class: @label_classes
+        tag.dt(label_display, class: @label_classes)
       end
 
       # Construct field value
       def value
-        content_tag :dd, content, class: @value_classes
+        tag.dd(content, class: @value_classes)
       end
 
       # Display field label and value inside a container div
