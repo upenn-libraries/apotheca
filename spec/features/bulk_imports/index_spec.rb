@@ -83,7 +83,7 @@ describe 'Bulk Import Index Page' do
 
     it 'returns the result with the query in the original_filename' do
       fill_in 'Search', with: 'great'
-      click_on 'Submit'
+      click_on 'Filter'
       expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
       import = find('.bulk-imports-list__bulk-import')
       expect(import).to have_text 'great_import.csv'
@@ -91,7 +91,7 @@ describe 'Bulk Import Index Page' do
 
     it 'returns the result with the query in the note' do
       fill_in 'Search', with: 'awesome'
-      click_on 'Submit'
+      click_on 'Filter'
       expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
       import = find('.bulk-imports-list__bulk-import')
       expect(import).to have_text 'lame_import.csv'
@@ -129,7 +129,7 @@ describe 'Bulk Import Index Page' do
 
     it 'filters by associated user email' do
       select user.email, from: 'Created By'
-      click_on 'Submit'
+      click_on 'Filter'
       expect(page).to have_text(user.email, count: 2)
       expect(page).to have_text(other_user.email, count: 1)
     end
