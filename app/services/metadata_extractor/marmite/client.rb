@@ -2,6 +2,9 @@
 
 module MetadataExtractor
   class Marmite
+    # Marmite is a separate application used for creating/retrieving descriptive/structural metadata, and other variant
+    # expressions of metadata for objects with information at separate sources. This class creates a client that allows
+    # requests to Marmite
     class Client
       class Error < StandardError; end
 

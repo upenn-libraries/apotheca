@@ -2,6 +2,7 @@
 
 module MetadataExtractor
   class Marmite
+    # Transforms MARC XML into descriptive metadata
     class Transformer
       attr_reader :xml
 

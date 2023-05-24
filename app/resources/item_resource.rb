@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+# Item model; contains attributes and helper methods
 class ItemResource < Valkyrie::Resource
   include ModificationDetails
   include Lockable
 
+  # Metadata that describes ItemResources for search and discovery
   class DescriptiveMetadata < Valkyrie::Resource
     # All descriptive metadata fields
     FIELDS = %i[
@@ -21,6 +23,7 @@ class ItemResource < Valkyrie::Resource
     end
   end
 
+  # Data about how a ItemResource's assets are organized
   class StructuralMetadata < Valkyrie::Resource
     attribute :viewing_direction, Valkyrie::Types::String
     attribute :viewing_hint, Valkyrie::Types::String

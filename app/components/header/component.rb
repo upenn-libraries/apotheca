@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Header
+  # Renders a title and associated actions of a page or tab
   class Component < ViewComponent::Base
     renders_one :title, lambda { |tag: :h1, **options, &block|
       BaseComponent.new(tag, **options, &block)

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# ChangeSet for the ModificationDetails nested resource
 module ModificationDetailsChangeSet
   extend ActiveSupport::Concern
 

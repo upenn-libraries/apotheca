@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Stores the `per_page` value selected by the user in the rails session and extracts the `per_page` value from the session if none is provided.
 module PerPage
   extend ActiveSupport::Concern
 

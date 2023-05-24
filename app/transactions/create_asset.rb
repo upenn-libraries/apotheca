@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Transaction that creates an asset with the given attributes.
 class CreateAsset
   include Dry::Transaction(container: Container)
 

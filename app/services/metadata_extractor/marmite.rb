@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module MetadataExtractor
+  # Retrieve MARC XML from Marmite and transform it into descriptive metadata
   class Marmite
     attr_reader :client
 
