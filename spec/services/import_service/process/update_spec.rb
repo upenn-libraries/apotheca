@@ -21,7 +21,7 @@ describe ImportService::Process::Update do
     end
   end
 
-  describe '#run?' do
+  describe '#run' do
     include_context 'with successful requests to update EZID'
 
     let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_asset) }

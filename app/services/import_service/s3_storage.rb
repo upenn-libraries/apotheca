@@ -34,7 +34,7 @@ module ImportService
 
     # Returns file at the given location.
     #
-    # @return [Tempfile]
+    # @return [ImportService::S3Storage::File] 
     def file(key)
       tempfile = Tempfile.new
       client.get_object(bucket: bucket, key: key, response_target: tempfile.path)
