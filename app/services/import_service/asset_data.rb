@@ -66,7 +66,7 @@ module ImportService
       attributes = {}
 
       # Check if the asset preservation file needs to be updated
-      attributes[:file] = file if file? && asset.technical_metadata.sha256 != checksum_sha256
+      attributes[:file] = file if file? && (asset.technical_metadata.sha256 != checksum_sha256)
 
       # Check if the metadata needs to be updated
       new_attr = resource_attributes
