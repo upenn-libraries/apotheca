@@ -10,7 +10,7 @@
           <a class="nav-link <%= 'active' if request.path.starts_with?('/resources/items') || current_page?(root_path) %>" href="<%= items_path %>">Items</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= 'active' if request.path.starts_with?('/bulk_imports') %>" href="<%= bulk_imports_path %>">Imports</a>
+          <a class="nav-link <%= 'active' if request.path.starts_with?('/bulk_imports') %>" href="<%= bulk_imports_path %>">Bulk Imports</a>
         </li>
         <li class="nav-item">
           <a class="nav-link <%= 'active' if request.path.starts_with?('/bulk_exports') %>" href="<%= bulk_exports_path %>">Exports</a>
