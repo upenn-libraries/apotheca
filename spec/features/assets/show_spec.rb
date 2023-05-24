@@ -26,6 +26,10 @@ describe 'Asset Show Page' do
     it 'displays timestamps in the same timezone' do
       expect(page).to have_text(asset.date_created.to_fs(:display), count: 2)
     end
+
+    it 'shows download button for preservation file' do
+      expect(page).to have_link('Download Preservation File')
+    end
   end
 
   shared_examples_for 'any logged in user who can edit Assets' do

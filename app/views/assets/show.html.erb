@@ -8,6 +8,7 @@
 
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title(tag: :h2) { 'Asset: ' + @asset.display_title } %>
+  <%= header.with_link(href: file_asset_path(@asset, type: :preservation, disposition: :attachment)) { 'Download Preservation File' } %>
   <%= header.with_link(href: edit_asset_path(@asset)) { 'Edit Asset' } if can? :update, @asset%>
 <% end %>
 
