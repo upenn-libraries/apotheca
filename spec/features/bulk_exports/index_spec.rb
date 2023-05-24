@@ -21,7 +21,7 @@ describe 'Bulk Export Index Page' do
 
       it 'stores per page value across requests' do
         select '25', from: 'Per Page'
-        click_on 'Submit'
+        click_on 'Filter'
         click_on 'Items'
         click_on 'Exports'
         expect(page).to have_select('Per Page', selected: '25')
@@ -189,7 +189,7 @@ describe 'Bulk Export Index Page' do
 
     it 'filters by associated user email' do
       select user.email, from: 'Created By'
-      click_on 'Submit'
+      click_on 'Filter'
       expect(page).to have_text(user.email, count: 2)
       expect(page).to have_text(other_user.email, count: 1)
     end
@@ -211,28 +211,28 @@ describe 'Bulk Export Index Page' do
     it 'sorts by generated at in ascending order' do
       select 'Generated At', from: 'Sort By'
       select 'Ascending', from: 'Sort Direction'
-      click_on 'Submit'
+      click_on 'Filter'
       expect(first('.card')).to have_text(first_export.title)
     end
 
     it 'sorts by generated at in descending order' do
       select 'Generated At', from: 'Sort By'
       select 'Descending', from: 'Sort Direction'
-      click_on 'Submit'
+      click_on 'Filter'
       expect(first('.card')).to have_text(second_export.title)
     end
 
     it 'sorts by created at in ascending order' do
       select 'Created At', from: 'Sort By'
       select 'Ascending', from: 'Sort Direction'
-      click_on 'Submit'
+      click_on 'Filter'
       expect(first('.card')).to have_text(first_export.title)
     end
 
     it 'sorts by created at in descending order' do
       select 'Created At', from: 'Sort By'
       select 'Descending', from: 'Sort Direction'
-      click_on 'Submit'
+      click_on 'Filter'
       expect(first('.card')).to have_text(second_export.title)
     end
   end
