@@ -4,11 +4,18 @@
 
 <%= form_with url: item_path(item), method: :patch, data: { controller: 'asset-arrange--arrangement' } do %>
   <%= hidden_field_tag :form, 'assets' %>
-  <%= unarranged_section %>
-  <hr>
-  <%= arranged_section %>
-  <div class="mt-2">
-    <%= submit %>
-    <%= reset %>
+  <%# Margin and padding are to leave room for the fixed button bar %>
+  <div class="mb-5 pb-5">
+    <div class="mb-5 mb-sm-0 pb-5 pb-sm-0">
+      <%= unarranged_section %>
+      <hr>
+      <%= arranged_section %>
+    </div>
   </div>
+  <nav class="navbar fixed-bottom bg-light px-3 py-4 p-sm-3 shadow border-top">
+    <div class="container-fluid d-flex flex-column-reverse flex-sm-row justify-content-md-end align-items-stretch align-items-md-center gap-4 px-0 px-sm-3 ">
+      <%= reset %>
+      <%= submit %>
+    </div>
+  </nav>
 <% end %>
