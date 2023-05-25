@@ -2,7 +2,7 @@
 
 module ImportService
   # Class to aggregate all the files available at the given storage locations.
-  class AssetsLocation
+  class FileLocations
     attr_reader :storage_name, :paths, :errors
 
     def initialize(options = {})
@@ -14,8 +14,8 @@ module ImportService
       @errors = []
     end
 
-    # Check that the configuration contains all the necessary
-    # information. This does not check the validity of the paths
+    # Check that the configuration contains all the necessary information. This does not check the
+    #  validity of the paths.
     def valid?
       @errors << 'asset storage name is blank' if storage_name.blank?
       @errors << "assets storage invalid: '#{storage_name}'" if storage_name.present? && !S3Storage.valid?(storage_name)
@@ -28,7 +28,11 @@ module ImportService
         @errors << 'asset path invalid'
       end
 
-      errors.empty?
+      errors.blank?
+    end
+
+    def invalid?
+      !valid?
     end
 
     def storage
@@ -48,10 +52,14 @@ module ImportService
       file_locations.keys
     end
 
-    def file_for(filename)
-      raise "Could not find #{filename} in storage" unless file_locations.key?(filename)
+    def file?(filename)
+      filenames.include?(filename)
+    end
 
-      storage.file(file_locations[filename])
+    def file_location_for(filename)
+      return unless file?(filename)
+
+      FileLocation.new(storage: storage, path: file_locations[filename])
     end
 
     private

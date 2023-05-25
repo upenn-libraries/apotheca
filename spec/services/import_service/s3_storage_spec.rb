@@ -5,7 +5,7 @@ describe ImportService::S3Storage do
 
   describe '#file' do
     context 'when key is valid' do
-      let(:file) { storage.file('trade_card/front.tif') }
+      let(:file) { storage.file('trade_card/original/front.tif') }
 
       it 'returns ImportService::S3Storage::File' do
         expect(file).to be_a ImportService::S3Storage::File
@@ -23,7 +23,7 @@ describe ImportService::S3Storage do
   describe '#valid_path?' do
     context 'when the path is valid' do
       it 'returns true' do
-        expect(storage.valid_path?('trade_card')).to be true
+        expect(storage.valid_path?('trade_card/original')).to be true
       end
     end
 
@@ -41,13 +41,13 @@ describe ImportService::S3Storage do
 
     context 'when the path contains only directories' do
       it 'returns true' do
-        expect(storage.valid_path?('folder1')).to be true
+        expect(storage.valid_path?('trade_card')).to be true
       end
     end
 
     context 'when the path is a filename' do
       it 'returns true' do
-        expect(storage.valid_path?('trade_card/front.tif')).to be true
+        expect(storage.valid_path?('trade_card/original/front.tif')).to be true
       end
     end
   end
@@ -73,16 +73,17 @@ describe ImportService::S3Storage do
 
     context 'when path contains only directories' do
       it 'returns empty array' do
-        expect(storage.files_at('folder1')).to be_empty
+        expect(storage.files_at('trade_card')).to be_empty
       end
     end
 
     context 'when path contains a filename' do
       it 'returns the filename' do
-        expect(storage.files_at('trade_card/front.tif')).to contain_exactly('trade_card/front.tif')
+        expect(
+          storage.files_at('trade_card/original/front.tif')
+        ).to contain_exactly('trade_card/original/front.tif')
       end
     end
-
   end
 
   describe '#modify_path' do

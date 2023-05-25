@@ -17,7 +17,7 @@ describe 'Asset Edit Page' do
   end
 
   it 'can attach the preservation file' do
-    attach_file 'asset-file', 'spec/fixtures/files/front.tif'
+    attach_file 'asset-file', 'spec/fixtures/files/trade_card/original/front.tif'
     click_on 'Save'
     expect(page).to have_text('Successfully updated asset.')
   end
@@ -30,7 +30,7 @@ describe 'Asset Edit Page' do
 
   it 'can update the asset' do
     fill_in 'asset-label', with: asset_label
-    attach_file 'asset-file', 'spec/fixtures/files/front.tif'
+    attach_file 'asset-file', 'spec/fixtures/files/trade_card/original/front.tif'
     click_on 'Save'
     expect(page).to have_text(asset_label)
     expect(page).to have_text('Successfully updated asset.')

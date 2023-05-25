@@ -71,7 +71,8 @@ describe Import do
       end
 
       it 'adds Failure monad information to process_errors' do
-        expect(import.process_errors).to eq ['assets must be provided to create an object']
+        expect(import.process_errors).to contain_exactly('assets must be provided to create an object',
+                                                         'asset storage and path must be provided')
       end
     end
   end

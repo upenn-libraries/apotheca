@@ -27,7 +27,7 @@ describe ImportService::Process::Create do
     end
 
     it 'requires all files to be present in storage' do
-      assets = { storage: 'sceti_digitized', path: 'trade_card', arranged_filenames: 'new.tif; front.tif' }
+      assets = { storage: 'sceti_digitized', path: 'trade_card/original', arranged_filenames: 'new.tif; front.tif' }
       process = build(:import_process, :create, assets: assets)
       expect(process.valid?).to be false
       expect(process.errors).to include('assets contains the following invalid filenames: new.tif')

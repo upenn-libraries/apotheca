@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ImportService::AssetsLocation do
+describe ImportService::FileLocations do
   describe '#valid?' do
     it 'requires non-empty storage name' do
       location = described_class.new(storage: '')
@@ -21,13 +21,13 @@ describe ImportService::AssetsLocation do
     end
 
     it 'requires valid paths' do
-      location = described_class.new(storage: 'sceti_digitized', path: %w[trade_card not_valid])
+      location = described_class.new(storage: 'sceti_digitized', path: %w[trade_card/original not_valid])
       expect(location.valid?).to be false
       expect(location.errors).to include('asset path invalid')
     end
 
     it 'requires unique filenames across all paths' do
-      location = described_class.new(storage: 'sceti_digitized', path: %w[trade_card trade_card])
+      location = described_class.new(storage: 'sceti_digitized', path: %w[trade_card/original trade_card/original])
       expect(location.valid?).to be false
       expect(location.errors).to include('duplicate filenames found in storage location: back.tif, front.tif')
     end
@@ -44,24 +44,10 @@ describe ImportService::AssetsLocation do
   end
 
   describe '#filenames' do
-    let(:location) { described_class.new(storage: 'sceti_digitized', path: ['trade_card', 'bell.wav']) }
+    let(:location) { described_class.new(storage: 'sceti_digitized', path: ['trade_card/original', 'bell.wav']) }
 
     it 'returns all filenames available at the paths given' do
       expect(location.filenames).to contain_exactly('front.tif', 'back.tif', 'bell.wav')
-    end
-  end
-
-  describe '#file_for' do
-    let(:location) { described_class.new(storage: 'sceti_digitized', path: ['trade_card']) }
-
-    it 'raises error when file is not present' do
-      expect {
-        location.file_for('invalid_filename')
-      }.to raise_error 'Could not find invalid_filename in storage'
-    end
-
-    it 'returns file when file is present' do
-      expect(location.file_for('front.tif')).to be_a ImportService::S3Storage::File
     end
   end
 end

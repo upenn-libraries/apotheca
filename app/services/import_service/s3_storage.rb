@@ -34,12 +34,33 @@ module ImportService
 
     # Returns file at the given location.
     #
-    # @return [Tempfile]
+    # @return [ImportService::S3Storage::File]
     def file(key)
       tempfile = Tempfile.new
-      client.get_object({ bucket: bucket, key: key }, target: tempfile.path)
+      client.get_object(bucket: bucket, key: key, response_target: tempfile.path)
 
       File.new(tempfile: tempfile, key: key)
+    end
+
+    # Returns the sha256 checksum for a file at the given location. If s3 client supports calculating sha256 checksum
+    # then we will retrieve it from the client, otherwise we will have to download the file and generate it ourselves.
+    #
+    # @param [String] key
+    # @return [String] sha256 checksum
+    def checksum_sha256(key)
+      response = client.head_object(bucket: bucket, key: key, checksum_mode: 'ENABLED')
+      checksum = response.checksum_sha256
+
+      # Minio does not support trailing checksums yet, but there is work being done to implement them. For now,
+      # we will manually calculate the sha256 checksum.
+      if checksum.blank?
+        f = file(key)
+        checksum = Digest::SHA256.file(f.path)
+        f.close
+        f.unlink
+      end
+
+      checksum
     end
 
     # Returns true if the given path exists within the bucket. Checks for valid filepaths and directories.

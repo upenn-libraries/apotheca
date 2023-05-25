@@ -12,7 +12,7 @@ FactoryBot.define do
             'Marian Anderson'
           ]
         },
-        assets: { arranged_filenames: 'front.tif; back.tif', storage: 'sceti_digitized', path: 'trade_card' }
+        assets: { arranged_filenames: 'front.tif; back.tif', storage: 'sceti_digitized', path: 'trade_card/original' }
       }
     end
 

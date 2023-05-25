@@ -19,7 +19,7 @@ describe FileCharacterization::Fits do
     context 'with tiff file' do
       subject(:metadata) { fits.examine(contents: file_contents, filename: 'front.tif') }
 
-      let(:file_contents) { File.read(file_fixture('files/front.tif')) }
+      let(:file_contents) { File.read(file_fixture('files/trade_card/original/front.tif')) }
 
       it { is_expected.to be_an_instance_of FileCharacterization::Fits::Metadata }
 

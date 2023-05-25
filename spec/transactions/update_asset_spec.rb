@@ -11,7 +11,10 @@ describe UpdateAsset do
     let(:transaction) { described_class.new }
 
     let(:file1) do
-      ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/front.tif')), filename: 'front.tif'
+      ActionDispatch::Http::UploadedFile.new(
+        tempfile: File.open(file_fixture('files/trade_card/original/front.tif')),
+        filename: 'front.tif'
+      )
     end
     let(:file2) do
       ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/bell.wav')), filename: 'bell.wav'
@@ -158,7 +161,7 @@ describe UpdateAsset do
 
     context 'when preservation file does not have original filename' do
       # File that does not respond to original_filename
-      let(:file1) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/front.tif')) }
+      let(:file1) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/trade_card/original/front.tif')) }
       let(:asset) { persist(:asset_resource) }
       let(:result) do
         transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module ImportService
-  # Object containing asset location, metadata and structure.
-  class AssetsData
-    attr_reader :errors, :data, :location
+  # Object containing the file location, metadata and structure for a set of assets
+  class AssetSet
+    include Enumerable
 
-    delegate :file_for, to: :location
+    attr_reader :errors, :data, :file_locations
 
     # Asset information can be provided in different structures. Filenames and asset metadata can be
     # provided in two ways:
@@ -17,7 +17,7 @@ module ImportService
     #   { storage: 'sceti-completed-n', path: 'object_3' }
     def initialize(**args)
       @data = args.deep_symbolize_keys.compact_blank # Store raw asset data provided.
-      @location = AssetsLocation.new(**args)
+      @file_locations = args.key?(:path) || args.key?(:storage) ? FileLocations.new(**args) : nil
 
       @errors = []
     end
@@ -38,9 +38,22 @@ module ImportService
         @errors << 'no assets defined'
       end
 
-      @errors.concat(location.errors) unless location.valid?
+      @errors.concat(file_locations.errors) if file_locations&.invalid?
 
       errors.empty?
+    end
+
+    def invalid?
+      !valid?
+    end
+
+    # Allow enumerating over all the asset data hashes.
+    def each(&)
+      all.each(&)
+    end
+
+    def file_locations?
+      file_locations.present?
     end
 
     def all
@@ -48,17 +61,11 @@ module ImportService
     end
 
     def arranged
-      @arranged ||= data_for(:arranged)
+      @arranged ||= asset_data_objects_for(:arranged)
     end
 
     def unarranged
-      @unarranged ||= data_for(:unarranged)
-    end
-
-    # Return any files that are not present in storage.
-    def missing_files
-      all_filenames = all.pluck(:original_filename)
-      all_filenames - location.filenames
+      @unarranged ||= asset_data_objects_for(:unarranged)
     end
 
     private
@@ -69,27 +76,27 @@ module ImportService
       asset_data.all? { |a| a.key?(:filename) }
     end
 
-    # Extracts and normalizes the data for the given asset type.
+    # Creating AssetData objects for a given asset type.
     #
     # @param [Symbol] type of asset
-    def data_for(type)
+    def asset_data_objects_for(type)
       if data.key?(:"#{type}_filenames")
         filenames = data[:"#{type}_filenames"]
-        filenames.blank? ? [] : filenames.split(';').map(&:strip).map { |f| { original_filename: f } }
+        filenames.blank? ? [] : filenames.split(';').map(&:strip).map { |f| asset_data_object(filename: f) }
       elsif data.key?(type.to_sym)
-        data[type.to_sym].map { |a| normalize_data(a) }
+        data[type.to_sym].map { |a| asset_data_object(**a) }
       else
         []
       end
     end
 
-    # Convert asset data provided in CSV to the fields/format expected by the asset model.
-    def normalize_data(asset)
-      asset = asset.deep_dup
-      asset[:original_filename] = asset.delete(:filename)
-      asset[:annotations]       = asset.delete(:annotation)&.map { |t| { text: t } }
-      asset[:transcriptions]    = asset.delete(:transcription)&.map { |t| { mime_type: 'text/plain', contents: t } }
-      asset
+    def asset_data_object(**attributes)
+      metadata = attributes.deep_dup
+
+      AssetData.new(
+        file_location: file_locations&.file_location_for(metadata[:filename]),
+        **metadata
+      )
     end
   end
 end
