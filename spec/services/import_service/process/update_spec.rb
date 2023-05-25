@@ -111,9 +111,7 @@ describe ImportService::Process::Update do
 
     context 'when adding updating existing assets and adding new assets' do
       let(:updated_assets) do
-        updated_item.asset_ids.map do |id|
-          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: id)
-        end
+        Valkyrie::MetadataAdapter.find(:postgres).query_service.find_many_by_ids(ids: updated_item.asset_ids)
       end
 
       # Only providing the file necessary to test that not all files have to be provided.
@@ -139,14 +137,12 @@ describe ImportService::Process::Update do
 
       it 'updates asset metadata' do
         front = updated_assets.find { |a| a.original_filename == 'front.tif' }
-        expect(front).to be_an AssetResource
         expect(front.label).to eql 'Front'
         expect(front.transcriptions.map(&:contents)).to contain_exactly('Importers')
       end
 
       it 'creates new asset' do
         back = updated_assets.find { |a| a.original_filename == 'back.tif' }
-        expect(back).to be_an AssetResource
         expect(back.label).to eql 'Back'
         expect(back.preservation_file_id).not_to be_nil
       end

@@ -60,7 +60,8 @@ module ImportService
         }.compact_blank
 
         if asset_set
-          item_attributes[:structural_metadata] = item_attributes.fetch(:structural_metadata, {}).merge(arranged_asset_ids: arranged_asset_ids)
+          item_attributes[:structural_metadata] = item_attributes.fetch(:structural_metadata, {})
+                                                                 .merge(arranged_asset_ids: arranged_asset_ids)
           item_attributes[:asset_ids] = item.asset_ids + created_assets.map(&:id)
         end
 

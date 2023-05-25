@@ -38,9 +38,13 @@ module ImportService
         @errors << 'no assets defined'
       end
 
-      @errors.concat(file_locations.errors) if file_locations && !file_locations.valid?
+      @errors.concat(file_locations.errors) if file_locations&.invalid?
 
       errors.empty?
+    end
+
+    def invalid?
+      !valid?
     end
 
     # Allow enumerating over all the asset data hashes.
