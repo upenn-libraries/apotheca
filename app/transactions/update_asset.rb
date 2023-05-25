@@ -56,8 +56,8 @@ class UpdateAsset
   def virus_check(**attributes)
     if (attributes[:file] || attributes['file']).present?
       warning = AssetResource::PreservationEvent.virus_check outcome: Premis::Outcomes::WARNING.uri,
-                                                             note: 'File present but virus check not performed',
-                                                             agent: attributes[:updated_by]
+                                                             note: I18n.t('preservation_events.virus_check.note'),
+                                                             implementer: attributes[:updated_by]
       attributes[:temporary_events] = [warning]
     end
 

@@ -8,81 +8,70 @@ module TrackedEvents
     # @param [String] type
     # @param [String] outcome
     # @param [String] note
-    # @param [String] agent
+    # @param [String] implementer
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def event(type:, outcome:, note:, agent:, timestamp:)
+    def event(type:, outcome:, note:, implementer:, timestamp:)
       AssetResource::PreservationEvent.new(
         identifier: SecureRandom.uuid,
         event_type: type,
         timestamp: timestamp,
         outcome: outcome,
         outcome_detail_note: note,
-        agent: agent,
-        agent_type: 'local',
-        agent_role: agent_role(agent)
+        implementer: implementer,
+        program: apotheca
       )
     end
 
     # @param [String] note
-    # @param [String] agent
+    # @param [String] implementer
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def checksum(note:, agent:, timestamp:)
+    def checksum(note:, implementer:, timestamp:)
       event type: Premis::Events::CHECKSUM.uri,
             outcome: Premis::Outcomes::SUCCESS.uri,
-            note: note,
-            agent: agent,
-            timestamp: timestamp
+            note: note, implementer: implementer, timestamp: timestamp
     end
 
     # @param [String] note
-    # @param [String] agent
+    # @param [String] implementer
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def filename_changed(agent:, note:, timestamp:)
-      event type: Premis::Events::EDIT_FILENAME.uri,
+    def change_filename(implementer:, note:, timestamp:)
+      event type: Premis::Events::FILENAME_CHANGE.uri,
             outcome: Premis::Outcomes::SUCCESS.uri,
-            note: note,
-            agent: agent,
-            timestamp: timestamp
+            note: note, implementer: implementer, timestamp: timestamp
     end
 
     # Used for ingestion, re-ingestion and migration events
     #
     # @param [String] note
-    # @param [String] agent
+    # @param [String] implementer
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def ingestion(note:, agent:, timestamp:)
+    def ingestion(note:, implementer:, timestamp:)
       event type: Premis::Events::INGEST.uri,
             outcome: Premis::Outcomes::SUCCESS.uri,
-            note: note,
-            agent: agent,
-            timestamp: timestamp
+            note: note, implementer: implementer, timestamp: timestamp
     end
 
     # @param [String] outcome
     # @param [String] note
-    # @param [String] agent
+    # @param [String] implementer
     # @param [DateTime|nil] timestamp
     # @return [AssetResource::PreservationEvent]
-    def virus_check(outcome:, note:, agent:, timestamp: nil)
+    def virus_check(outcome:, note:, implementer:, timestamp: nil)
       event type: Premis::Events::VIRUS_CHECK.uri,
-            outcome: outcome,
-            note: note,
-            agent: agent,
-            timestamp: timestamp
+            outcome: outcome, note: note, implementer: implementer, timestamp: timestamp
     end
 
     # TODO: these actions remain to be integrated
     def fixity; end
     def tombstone; end
 
-    def agent_role(agent)
-      return Premis::Roles::IMPLEMENTER.uri unless agent == Rails.application.class.module_parent.to_s
-
-      Premis::Roles::PROGRAM.uri
+    # @return [String]
+    def apotheca
+      Rails.application.class.module_parent_name.to_s
     end
   end
 end

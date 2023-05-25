@@ -10,8 +10,7 @@ class AssetResource
     attribute :timestamp, Valkyrie::Types::DateTime
     attribute :outcome, Valkyrie::Types::URI
     attribute :outcome_detail_note, Valkyrie::Types::String
-    attribute :agent, Valkyrie::Types::String
-    attribute :agent_type, Valkyrie::Types::String
-    attribute :agent_role, Valkyrie::Types::URI
+    attribute :implementer, Valkyrie::Types::String
+    attribute :program, Valkyrie::Types::String
   end
 end

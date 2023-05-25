@@ -5,7 +5,8 @@ FactoryBot.define do
   factory :preservation_event, class: 'AssetResource::PreservationEvent' do
     identifier { Faker::Internet.uuid }
     timestamp { DateTime.current }
-    agent_type { 'local' }
+    implementer { Faker::Internet.email }
+    program { Rails.application.class.module_parent_name.to_s }
 
     trait :success do
       outcome { Premis::Outcomes::SUCCESS.uri }
@@ -33,16 +34,6 @@ FactoryBot.define do
 
     trait :checksum do
       event_type { Premis::Events::CHECKSUM.uri }
-    end
-
-    trait :system_agent do
-      agent { 'system@agent.com' }
-      agent_role { Premis::Roles::PROGRAM.uri }
-    end
-
-    trait :user_agent do
-      agent { Faker::Internet.email }
-      agent_role { Premis::Roles::IMPLEMENTER.uri }
     end
   end
 end

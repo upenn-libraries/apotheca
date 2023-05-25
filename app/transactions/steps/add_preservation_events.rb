@@ -20,7 +20,8 @@ module Steps
       events += preceding_events(change_set, timestamp)
       events << action_event(action, change_set, timestamp)
       events << checksum_event(action, change_set, timestamp)
-      events << filename_event(action, change_set, timestamp)
+      events << preservation_filename_event(action, change_set, timestamp)
+      events << original_filename_event(change_set, timestamp)
 
       change_set.preservation_events += events.compact
 
@@ -41,7 +42,7 @@ module Steps
         # resource ID is blank but an ID is set in the ChangeSet
         :ingestion
       elsif (change_set.resource.preservation_file_id.present? && change_set.preservation_file_id.present?) &&
-            (change_set.resource.preservation_file_id != change_set.preservation_file_id)
+            (change_set.changed? :preservation_file_id)
         # resource ID is set and a new ID is incoming in the ChangeSet, and they aren't the same
         :reingestion
       else
@@ -69,14 +70,14 @@ module Steps
     # @return [AssetResource::PreservationEvent | NilClass]
     def action_event(action, change_set, timestamp)
       note = case action
-             when :migration then "Object migrated from #{change_set.migrated_from} to #{app_name}"
-             when :ingestion then "Object ingested as #{change_set.original_filename}"
-             when :reingestion then "New file ingested as #{change_set.original_filename}"
-             else
-               return
-             end
-      event_attrs = { agent: change_set.updated_by, timestamp: timestamp, note: note }
-      EVENT.ingestion(**event_attrs)
+             when :migration
+               I18n.t('preservation_events.action.migration_note', from: change_set.migrated_from)
+             when :ingestion
+               I18n.t('preservation_events.action.ingestion_note', filename: change_set.original_filename)
+             when :reingestion
+               I18n.t('preservation_events.action.reingestion_note', filename: change_set.original_filename)
+             else return; end
+      EVENT.ingestion implementer: change_set.updated_by, timestamp: timestamp, note: note
     end
 
     # Return a checksum event. This requires that technical metadata be set in a prior transaction step.
@@ -91,27 +92,44 @@ module Steps
       # TODO: throws exception if no tech md set, but at this point in the transaction, tech md should always be set
       checksum = change_set.technical_metadata.sha256.first
       EVENT.checksum(
-        note: "Checksum for file is #{checksum}",
-        agent: change_set.updated_by,
+        note: I18n.t('preservation_events.checksum.note', checksum: checksum),
+        implementer: change_set.updated_by,
         timestamp: timestamp
       )
     end
 
-    # Returns an event for a filename change. Base the detail note of the event on the type of change. Include
-    # appropriate previous and current filename values.
+    # Returns an event for a metadata change in the original_filename field
+    # @param [Valkyrie::ChangeSet] change_set
+    # @param [DateTime] timestamp
+    # @return [AssetResource::PreservationEvent]
+    def original_filename_event(change_set, timestamp)
+      return unless change_set.changed? :original_filename
+
+      from = change_set.resource.original_filename || I18n.t('preservation_events.original_filename.nil_placeholder')
+
+      EVENT.change_filename(
+        implementer: change_set.updated_by,
+        note: I18n.t('preservation_events.original_filename.note', from: from, to: change_set.original_filename),
+        timestamp: timestamp
+      )
+    end
+
+    # Returns an event for a preservation file change. Base the detail note of the event on the type of change.
+    # Include appropriate previous and current filename values.
     # @param [Symbol] action
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def filename_event(action, change_set, timestamp)
+    def preservation_filename_event(action, change_set, timestamp)
       return if action == :metadata_update
 
       # get current filename - in ingestion case, we want to get the original filename of the file because we have no
       # identifier from storage yet to use as current filename
       current_filename = action == :ingestion ? change_set.original_filename : file_name(change_set.resource)
-      EVENT.filename_changed(
-        agent: change_set.updated_by,
-        note: "File's original filename renamed from #{current_filename} to #{file_name(change_set)}",
+      EVENT.change_filename(
+        implementer: change_set.updated_by,
+        note: I18n.t('preservation_events.preservation_filename.note',
+                     from: current_filename, to: file_name(change_set)),
         timestamp: timestamp
       )
     end
@@ -124,12 +142,6 @@ module Steps
       return source.original_filename if source.preservation_file_id.blank?
 
       source.preservation_file_id.id.split('/').last
-    end
-
-    # TODO: also include app version number somehow, perhaps via config setting or ENV var
-    # @return [String]
-    def app_name
-      Rails.application.class.module_parent.to_s
     end
   end
 end
