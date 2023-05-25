@@ -18,7 +18,7 @@ module AssetArrange
     end
 
     def submit
-      submit_tag 'Save Arrangement', class: 'btn btn-primary'
+      submit_tag 'Save Arrangement', class: 'btn btn-primary flex-grow-1 flex-md-grow-0'
     end
 
     def reset
