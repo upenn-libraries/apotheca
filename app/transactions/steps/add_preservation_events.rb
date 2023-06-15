@@ -90,7 +90,7 @@ module Steps
       return if action == :metadata_update
 
       # TODO: throws exception if no tech md set, but at this point in the transaction, tech md should always be set
-      checksum = change_set.technical_metadata.sha256.first
+      checksum = change_set.technical_metadata.sha256
       EVENT.checksum(
         note: I18n.t('preservation_events.checksum.note', checksum: checksum),
         implementer: change_set.updated_by,

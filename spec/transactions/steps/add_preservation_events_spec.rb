@@ -39,7 +39,7 @@ describe Steps::AddPreservationEvents do
       let(:asset) { build(:asset_resource, original_filename: nil) } # use build instead of persist to denote newness
       let(:update_attributes) do
         { preservation_file_id: Valkyrie::ID.new('bogus-file-id'),
-          original_filename: 'bogus-file.tif', technical_metadata: { sha256: ['bogus-sha'] } }
+          original_filename: 'bogus-file.tif', technical_metadata: { sha256: 'bogus-sha' } }
       end
       let(:preservation_file_events) do
         find_events_by_type(events: preservation_events, type: Premis::Events::FILENAME_CHANGE)
@@ -49,6 +49,12 @@ describe Steps::AddPreservationEvents do
         ingest_event = find_event_by_type events: preservation_events, type: Premis::Events::INGEST
         expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.action.ingestion_note',
                                                               filename: update_attributes[:original_filename])
+      end
+
+      it 'sets an checksum event' do
+        event = find_event_by_type events: preservation_events, type: Premis::Events::CHECKSUM
+        expect(event.outcome_detail_note).to eq I18n.t('preservation_events.checksum.note',
+                                                       checksum: update_attributes[:technical_metadata][:sha256])
       end
 
       it 'sets two filename change events' do
