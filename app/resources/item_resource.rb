@@ -5,24 +5,6 @@ class ItemResource < Valkyrie::Resource
   include ModificationDetails
   include Lockable
 
-  # Metadata that describes ItemResources for search and discovery
-  class DescriptiveMetadata < Valkyrie::Resource
-    # All descriptive metadata fields
-    FIELDS = %i[
-      title abstract description call_number collection contributor personal_name corporate_name
-      coverage creator date format geographic_subject subject identifier includes item_type
-      language notes provenance publisher relation rights source bibnumber
-    ].freeze
-
-    FIELDS.each do |field|
-      attribute field, Valkyrie::Types::Array.of(Valkyrie::Types::String)
-    end
-
-    def to_export
-      attributes.slice(*FIELDS)
-    end
-  end
-
   # Data about how a ItemResource's assets are organized
   class StructuralMetadata < Valkyrie::Resource
     attribute :viewing_direction, Valkyrie::Types::Strict::String.optional
