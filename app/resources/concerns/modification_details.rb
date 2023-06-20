@@ -13,8 +13,8 @@ module ModificationDetails
     attribute :date_created, Valkyrie::Types::DateTime # Original date item was created.
 
     # Store the emails of the users that created and updated this item.
-    attribute :created_by, Valkyrie::Types::String
-    attribute :updated_by, Valkyrie::Types::String
+    attribute :created_by, Valkyrie::Types::Strict::String
+    attribute :updated_by, Valkyrie::Types::Strict::String
   end
 
   # Aliasing date_updated to return the updated_at date.

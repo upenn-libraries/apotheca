@@ -25,23 +25,23 @@ class ItemResource < Valkyrie::Resource
 
   # Data about how a ItemResource's assets are organized
   class StructuralMetadata < Valkyrie::Resource
-    attribute :viewing_direction, Valkyrie::Types::String
-    attribute :viewing_hint, Valkyrie::Types::String
+    attribute :viewing_direction, Valkyrie::Types::Strict::String.optional
+    attribute :viewing_hint, Valkyrie::Types::Strict::String.optional
 
     # List assets in the order that they should be displayed. May not include all assets.
     attribute :arranged_asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
   end
 
-  attribute :unique_identifier, Valkyrie::Types::String
-  attribute :human_readable_name, Valkyrie::Types::String
+  attribute :unique_identifier, Valkyrie::Types::Strict::String
+  attribute :human_readable_name, Valkyrie::Types::Strict::String
   attribute :thumbnail_asset_id, Valkyrie::Types::ID # ID of asset that should be thumbnail
-  attribute :internal_notes, Valkyrie::Types::Array.of(Valkyrie::Types::String)
+  attribute :internal_notes, Valkyrie::Types::Array.of(Valkyrie::Types::Strict::String)
   attribute :descriptive_metadata, DescriptiveMetadata
   attribute :structural_metadata, StructuralMetadata
 
-  attribute :published, Valkyrie::Types::Bool
-  attribute :first_published_at, Valkyrie::Types::DateTime
-  attribute :last_published_at, Valkyrie::Types::DateTime
+  attribute :published, Valkyrie::Types::Strict::Bool
+  attribute :first_published_at, Valkyrie::Types::Strict::DateTime.optional
+  attribute :last_published_at, Valkyrie::Types::Strict::DateTime.optional
 
   # Asset IDs
   attribute :asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).optional

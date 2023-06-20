@@ -17,7 +17,7 @@ module Steps
       change_set.technical_metadata.size      = tech_metadata.size
       change_set.technical_metadata.md5       = tech_metadata.md5
       change_set.technical_metadata.duration  = tech_metadata.duration
-      change_set.technical_metadata.sha256    = file.checksum digests: [Digest::SHA256.new]
+      change_set.technical_metadata.sha256    = file.checksum(digests: [Digest::SHA256.new]).first
 
       Success(change_set)
     rescue FileCharacterization::Fits::Error => e
