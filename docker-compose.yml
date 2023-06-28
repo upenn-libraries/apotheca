@@ -29,7 +29,7 @@ services:
       - "-c"
       - "precreate-core apotheca_dev /apotheca_config; precreate-core apotheca_test /apotheca_config; solr-foreground;"
   fits:
-    image: harvardlts/fitsservlet_container:latest
+    image: gitlab.library.upenn.edu/dld/digital-repository/fits-servlet:6d13f419
     ports:
       - "8080:8080"
 

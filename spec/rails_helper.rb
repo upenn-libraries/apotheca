@@ -51,6 +51,9 @@ RSpec.configure do |config|
   # Adding Valkyrie persist strategy for FactoryBot
   FactoryBot.register_strategy(:persist, ValkyriePersistStrategy)
 
+  # Skipping tests that do not run properly on ARM Architectures.
+  config.filter_run_excluding(:skip_on_arm) if /^(arm64|aarch64)/.match?(RUBY_PLATFORM)
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
