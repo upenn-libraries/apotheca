@@ -87,7 +87,10 @@ describe FileCharacterization::Fits do
         expect(metadata.size).to be  480_754
       end
 
-      it 'returns duration' do
+      # Skipping this test on ARM architecture because the MediaInfo binary used by FITS does not support
+      # Linux-based ARM Architectures. It would be hard to fix this problem now, we should wait until the
+      # Ubuntu version of MediaInfo supports ARM.
+      it 'returns duration', skip_on_arm: true do
         expect(metadata.duration).to eql '1.134 s'
       end
 
