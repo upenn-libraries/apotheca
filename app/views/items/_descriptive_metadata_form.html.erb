@@ -3,8 +3,9 @@
 <%= render(Form::Component.new(url: item_path(@item), model: @change_set, name: 'descriptive-metadata', size: :sm)) do |form| %>
   <% form.with_error(@error) if @errors_for == 'descriptive-metadata' %>
 
-  <% ItemResource::DescriptiveMetadata::FIELDS.each do |field| %>
-    <% form.with_field(:descriptive_metadata, field, type: :text) %>
+  <% ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field, type| %>
+    next if type == :name_type
+    <% form.with_field(:descriptive_metadata, field, type: type) %>
   <% end %>
 
   <% form.with_submit('Save') %>

@@ -1,0 +1,35 @@
+<div data-controller="form--field--multivalued--list">
+  <% inputs.each do |input| %>
+    <div data-form--field--multivalued--list-target="input" class="d-flex mb-1 align-items-center">
+      <div class="flex-grow-1"><%= input %></div>
+      <div class="ps-2">
+        <button
+          type="button"
+          class="btn btn-danger btn-sm"
+          data-form--field--multivalued--list-target="remove"
+          data-action="form--field--multivalued--list#removeInput">-</button>
+        <button
+          type="button"
+          class="btn btn-success btn-sm"
+          data-action="form--field--multivalued--list#addInput">+</button>
+      </div>
+    </div>
+  <% end %>
+
+  <template data-form--field--multivalued--list-target="template">
+    <div data-form--field--multivalued--list-target="input" class="d-flex mb-1 align-items-center">
+      <div class="flex-grow-1"><%= template %></div>
+      <div class="ps-2">
+        <button
+          type="button"
+          class="btn btn-danger btn-sm"
+          data-form--field--multivalued--list-target="remove"
+          data-action="form--field--multivalued--list#removeInput">-</button>
+        <button
+          type="button"
+          class="btn btn-success btn-sm"
+          data-action="form--field--multivalued--list#addInput">+</button>
+      </div>
+    </div>
+  </template>
+</div>

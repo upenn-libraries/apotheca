@@ -38,6 +38,8 @@ module Form
           render(Select::Component.new(**@options))
         when :hidden
           render(Hidden::Component.new(**@options.except(:label, :size, :label_col, :input_col)))
+        when :term
+          render(Term::Component.new(**@options))
         else
           render(FormControl::Component.new(type: @type, **@options))
         end

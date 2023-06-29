@@ -2,23 +2,21 @@
 
 module Form
   module Field
-    module FormControl
-      # Component that provides a single interface to create Bootstrap form control
-      # fields (which includes text and file fields). Support multivalued fields.
+    module Term
+      # Input for controlled term fields. Supports multivalued fields.
       class Component < ViewComponent::Base
-        def initialize(type:, field:, **options)
-          @type = type
-          @field = field
-
-          @label_col = options.delete(:label_col)
-          @input_col = options.delete(:input_col)
+        def initialize(field:, **options)
+          @field     = field
           @value     = options.delete(:value)
           @size      = options.delete(:size)
           @label     = options.delete(:label)
 
+          @label_col = options.delete(:label_col)
+          @input_col = options.delete(:input_col)
+
           # Options for input
           @options = options
-          @options[:class] = Array.wrap(@options[:class]).append(*input_classes)
+          @options[:class] = Array.wrap(@options[:class]).append('form-control')
         end
 
         def call
@@ -41,7 +39,7 @@ module Form
                   multivalued.with_input { input_element(v) }
                 end
 
-                multivalued.with_template { input_element(nil) }
+                multivalued.with_template { input_element({ label: nil, uri: nil }) }
               end
             else
               input_element(@value)
@@ -49,25 +47,18 @@ module Form
           end
         end
 
-        def input_element(val)
-          case @type
-          when :text
-            text_field_tag @field, val, **@options
-          when :textarea
-            text_area_tag @field, val, **@options
-          when :file
-            file_field_tag @field, **@options
-          when :readonly
-            tag.input(type: :text, value: val, **@options)
-          when :email
-            email_field_tag @field, val, **@options
+        def input_element(v)
+          render(ColumnComponent.new(:div, class: input_group_classes)) do
+            tag.span('Label', class: 'input-group-text') +
+              text_field_tag("#{@field}[label]", v[:label], **@options) +
+                tag.span('URI', class: 'input-group-text') +
+                  text_field_tag("#{@field}[uri]", v[:uri], **@options)
           end
         end
 
-        def input_classes
-          classes = ['form-control']
-          classes << "form-control-#{@size}"  if @size
-          classes << 'form-control-plaintext' if @type == :readonly
+        def input_group_classes
+          classes = ['input-group']
+          classes << "input-group-#{@size}" if @size
           classes
         end
       end

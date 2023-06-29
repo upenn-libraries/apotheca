@@ -10,8 +10,9 @@
   <% form.with_section do |section| %>
     <% section.with_title { 'Descriptive Metadata' } %>
 
-    <% ItemResource::DescriptiveMetadata::FIELDS.each do |field_name| %>
-      <% section.with_field(:descriptive_metadata, field_name, type: :text) %>
+    <% ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field_name, type| %>
+      <% next if type == :name_type %>
+      <% section.with_field(:descriptive_metadata, field_name, type: type) %>
     <% end %>
   <% end %>
 

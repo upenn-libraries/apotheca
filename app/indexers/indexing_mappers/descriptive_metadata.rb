@@ -15,19 +15,14 @@ module IndexingMappers
     end
 
     # @return [Hash{Symbol->Unknown}]
-    def abstract
-      { abstract_tsim: data[:abstract],
-        abstract_tesim: data[:abstract] }
+    def alt_title
+      { alt_title_tsim: data[:alt_title],
+        alt_title_tesim: data[:alt_title] }
     end
 
     # @return [Hash{Symbol->Unknown}]
     def bibnumber
-      { bibnumber_ss: data[:bibnumber] }
-    end
-
-    # @return [Hash{Symbol->Unknown}]
-    def call_number
-      { call_number_tsim: data[:call_number] }
+      { bibnumber_ss: data[:bibnumber].first }
     end
 
     # @return [Hash{Symbol->Unknown}]
@@ -38,28 +33,9 @@ module IndexingMappers
     end
 
     # @return [Hash{Symbol->Unknown}]
-    def contributor
-      { contributor_tsim: data[:contributor],
-        contributor_tesim: data[:contributor] }
-    end
-
-    # @return [Hash{Symbol->Unknown}]
-    def corporate_name
-      { corporate_name_tsim: data[:corporate_name],
-        corporate_name_tesim: data[:corporate_name],
-        corporate_name_ssim: data[:corporate_name] }
-    end
-
-    # @return [Hash{Symbol->Unknown}]
     def coverage
       { coverage_tsim: data[:coverage],
         coverage_tesim: data[:coverage] }
-    end
-
-    # @return [Hash{Symbol->Unknown}]
-    def creator
-      { creator_tsim: data[:creator],
-        creator_tesim: data[:creator] }
     end
 
     # @return [Hash{Symbol->Unknown}]
@@ -74,17 +50,22 @@ module IndexingMappers
         description_tesim: data[:description] }
     end
 
+    def extent
+      { extent_tsim: data[:extent],
+        extent_tesim: data[:extent] }
+    end
+
     # TODO: uh oh, see Kernel#format
     # @return [Hash{Symbol->Unknown}]
     def format
-      { format_ssim: data[:format] }
+      { format_ssim: data[:format].pluck(:label) }
     end
 
     # @return [Hash{Symbol->Unknown}]
     def geographic_subject
-      { geographic_subject_tsim: data[:geographic_subject],
-        geographic_subject_tesim: data[:geographic_subject],
-        geographic_subject_ssim: data[:geographic_subject] }
+      { geographic_subject_tsim: data[:geographic_subject].pluck(:label),
+        geographic_subject_tesim: data[:geographic_subject].pluck(:label),
+        geographic_subject_ssim: data[:geographic_subject].pluck(:label) }
     end
 
     # @return [Hash{Symbol->Unknown}]
@@ -92,33 +73,41 @@ module IndexingMappers
       { identifier_ssim: data[:identifier] }
     end
 
-    def includes
-      { includes_tsim: data[:includes],
-        includes_tesim: data[:includes] }
-    end
-
     # @return [Hash{Symbol->Unknown}]
     def item_type
-      { item_type_ssim: data[:item_type],
-        item_type_ssi: data[:item_type].try(:first) }
+      { item_type_ssim: data[:item_type].pluck(:label),
+        item_type_ssi: data.dig(:item_type, 0, :label) }
     end
 
     # @return [Hash{Symbol->Unknown}]
     def language
-      { language_ssim: data[:language] }
+      { language_ssim: data[:language].pluck(:label) }
     end
 
     # @return [Hash{Symbol->Unknown}]
-    def notes
-      { notes_tsim: data[:notes],
-        notes_tesim: data[:notes] }
+    def location
+      { location_tsim: data[:location].pluck(:label),
+        location_tesim: data[:location].pluck(:label),
+        location_ssim: data[:location].pluck(:label) }
+    end
+
+    # TODO: Should roles be indexed?
+    # @return [Hash{Symbol->Unknown}]
+    def name
+      { name_tsim: data[:name].pluck(:label),
+        name_tesim: data[:name].pluck(:label),
+        name_ssim: data[:name].pluck(:label) }
     end
 
     # @return [Hash{Symbol->Unknown}]
-    def personal_name
-      { personal_name_tsim: data[:personal_name],
-        personal_name_tesim: data[:personal_name],
-        personal_name_ssim: data[:personal_name] }
+    def note
+      { note_tsim: data[:note],
+        note_tesim: data[:note] }
+    end
+
+    # @return [Hash{Symbol->Unknown}]
+    def physical_location
+      { call_number_tsim: data[:call_number] }
     end
 
     # @return [Hash{Symbol->Unknown}]
@@ -141,20 +130,20 @@ module IndexingMappers
 
     # @return [Hash{Symbol->Unknown}]
     def rights
-      { rights_tsim: data[:rights],
-        rights_tesim: data[:rights] }
+      { rights_tsim: data[:rights].pluck(:label),
+        rights_tesim: data[:rights].pluck(:label) }
     end
 
-    # @return [Hash{Symbol->Unknown}]
-    def source
-      { source_tsim: data[:source] }
+    def rights_note
+      { rights_note_tsim: data[:rights_note],
+        rights_note_tesim: data[:rights_note] }
     end
 
     # @return [Hash{Symbol->Unknown}]
     def subject
-      { subject_tsim: data[:subject],
-        subject_tesim: data[:subject],
-        subject_ssim: data[:subject] }
+      { subject_tsim: data[:subject].pluck(:label),
+        subject_tesim: data[:subject].pluck(:label),
+        subject_ssim: data[:subject].pluck(:label) }
     end
 
     # @return [Hash{Symbol->Unknown}]

@@ -22,11 +22,11 @@ class ItemResourcePresenter < BasePresenter
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::TextHelper
     include ActionView::Context
-    attr_accessor :ils_metadata
+    attr_accessor :ils_metadata, :resource_json_metadata
 
     # define accessors for descriptive metadata fields that first look in ILS metadata, if present
     # This sort-of duplicates the logic in DescriptiveMetadataIndexer#merged_metadata_sources
-    ItemResource::DescriptiveMetadata::FIELDS.each do |field|
+    ItemResource::DescriptiveMetadata::Fields.all.each do |field|
       define_method field do
         return ils_metadata[field] if ils_metadata.present? && ils_metadata[field].present?
 
@@ -39,6 +39,7 @@ class ItemResourcePresenter < BasePresenter
     def initialize(object:, ils_metadata: nil)
       super object: object
       @ils_metadata = ils_metadata&.with_indifferent_access
+      @resource_json_metadata = object.to_export.with_indifferent_access
     end
 
     # Get field values as unstyled list
@@ -47,12 +48,20 @@ class ItemResourcePresenter < BasePresenter
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [String (frozen)]
     def field_values(source, field)
-      field_values = source == 'resource' ? object[field] : ils_metadata[field]
+      field_values = source == 'resource' ? resource_json_metadata[field] : ils_metadata[field]
 
       tag.ul(class: 'list-unstyled mb-0') do
         field_values&.each_with_index do |value, i|
-          concat tag.li(value, class: i.zero? ? '' : 'pt-2')
+          concat tag.li(class: i.zero? ? '' : 'pt-2') { field_display(value) }
         end
+      end
+    end
+
+    def field_display(value)
+      if value.is_a?(Hash)
+        safe_join([value[:label], tag.span(value[:uri], class: 'px-1 small text-secondary')])
+      else
+        value
       end
     end
 

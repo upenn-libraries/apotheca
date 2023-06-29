@@ -24,7 +24,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
 
   # @return [Array]
   def fields
-    ItemResource::DescriptiveMetadata::FIELDS
+    ItemResource::DescriptiveMetadata::Fields.all
   end
 
   # @return [Hash]
@@ -42,7 +42,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
   # @return [Hash]
   def merged_metadata_sources
     fields.index_with do |field|
-      val = descriptive_metadata.public_send(field)
+      val = descriptive_metadata[field]
       if val.blank? && bibnumber_present?
         ils_descriptive_metadata[field.to_s]
       else
@@ -54,18 +54,18 @@ class DescriptiveMetadataIndexer < BaseIndexer
   # @return [Hash]
   def extracted_metadata
     MetadataExtractor::Marmite.new(url: Settings.marmite.url)
-                              .descriptive_metadata(resource.descriptive_metadata.bibnumber.first)
+                              .descriptive_metadata(resource.descriptive_metadata[:bibnumber].first)
   end
 
-  # @return [ItemResource::DescriptiveMetadata]
+  # @return [Hash]
   def descriptive_metadata
-    @descriptive_metadata ||= resource.try :descriptive_metadata
+    @descriptive_metadata ||= resource.try(:descriptive_metadata).try(:to_export)
   end
 
   # @return [TrueClass, FalseClass]
   def bibnumber_present?
     return false unless descriptive_metadata
 
-    descriptive_metadata.bibnumber.first.present? # all desc md is multivalued
+    descriptive_metadata.dig(:bibnumber, 0).present? # all desc md is multivalued
   end
 end
