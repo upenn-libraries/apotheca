@@ -106,7 +106,7 @@ module IndexingMappers
 
     # @return [Hash{Symbol->Unknown}]
     def physical_location
-      { call_number_tsim: data[:call_number] }
+      { physical_location_tsim: data[:physical_location] }
     end
 
     # @return [Hash{Symbol->Unknown}]

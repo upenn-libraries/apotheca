@@ -183,29 +183,27 @@
   <copyField source="internal_notes_tsim" dest="admin_search_tmiv"/>
   <copyField source="unique_identifier_tsim" dest="admin_search_tmiv"/>
   <!-- from DescriptiveMetadata -->
-  <copyField source="abstract_tsim" dest="admin_search_tmiv"/>
+  <copyField source="alt_title_tsim" dest="admin_search_tmiv"/>
   <copyField source="bibnumber_ss" dest="admin_search_tmiv"/>
-  <copyField source="call_number_tsim" dest="admin_search_tmiv"/>
   <copyField source="collection_tsim" dest="admin_search_tmiv"/>
-  <copyField source="contributor_tsim" dest="admin_search_tmiv"/>
-  <copyField source="corporate_name_tsim" dest="admin_search_tmiv"/>
   <copyField source="coverage_tsim" dest="admin_search_tmiv"/>
-  <copyField source="creator_tsim" dest="admin_search_tmiv"/>
   <copyField source="date_tsim" dest="admin_search_tmiv"/>
-  <copyField source="format_ssim" dest="admin_search_tmiv"/>
   <copyField source="description_tsim" dest="admin_search_tmiv"/>
+  <copyField source="extent_tsim" dest="admin_search_tmiv"/>
   <copyField source="geographic_subject_tsim" dest="admin_search_tmiv"/>
   <copyField source="identifier_ssim" dest="admin_search_tmiv"/>
-  <copyField source="includes_tsim" dest="admin_search_tmiv"/>
   <copyField source="item_type_ssim" dest="admin_search_tmiv"/>
   <copyField source="language_ssim" dest="admin_search_tmiv"/>
-  <copyField source="notes_tsim" dest="admin_search_tmiv"/>
-  <copyField source="personal_name_tsim" dest="admin_search_tmiv"/>
+  <copyField source="location_ssim" dest="admin_search_tmiv"/>
+  <copyField source="name_tsim" dest="admin_search_tmiv"/>
+  <copyField source="note_tsim" dest="admin_search_tmiv"/>
+  <copyField source="physical_format_ssim" dest="admin_search_tmiv"/>
+  <copyField source="physical_location_tsim" dest="admin_search_tmiv"/>
   <copyField source="provenance_tsim" dest="admin_search_tmiv"/>
   <copyField source="publisher_tsim" dest="admin_search_tmiv"/>
   <copyField source="relation_tsim" dest="admin_search_tmiv"/>
   <copyField source="rights_tsim" dest="admin_search_tmiv"/>
-  <copyField source="source_tsim" dest="admin_search_tmiv"/>
+  <copyField source="rights_note_tsim" dest="admin_search_tmiv"/>
   <copyField source="subject_tsim" dest="admin_search_tmiv"/>
   <copyField source="title_tsim" dest="admin_search_tmiv"/>
 

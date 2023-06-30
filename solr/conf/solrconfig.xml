@@ -37,57 +37,54 @@
 
         <str name="qf">
           id
-          abstract_tsim
+          alt_title_tsim
           bibnumber_ss
-          call_number_tsim
           collection_tsim
-          contributor_tsim
-          corporate_name_tsim
           coverage_tsim
-          creator_tsim
           date_tsim
-          format_ssim
           description_tsim
+          extent_tsim
           geographic_subject_tsim
           identifier_ssim
-          includes_tsim
           item_type_ssim
           language_ssim
-          notes_tsim
-          personal_name_tsim
+          location_tsim
+          name_tsim
+          note_tsim
+          physical_format_ssim
+          physical_location_tsim
           provenance_tsim
           publisher_tsim
           relation_tsim
           rights_tsim
-          source_tsim
+          rights_note_tsim
           subject_tsim
           title_tsim
           admin_search_tmiv
         </str>
         <str name="pf">
-          abstract_tsim
+          id
+          alt_title_tsim
           bibnumber_ss
-          call_number_tsim
           collection_tsim
-          contributor_tsim
-          corporate_name_tsim
           coverage_tsim
-          creator_tsim
           date_tsim
-          format_ssim
           description_tsim
+          extent_tsim
           geographic_subject_tsim
           identifier_ssim
-          includes_tsim
           item_type_ssim
           language_ssim
-          notes_tsim
-          personal_name_tsim
+          location_tsim
+          name_tsim
+          note_tsim
+          physical_format_ssim
+          physical_location_tsim
           provenance_tsim
           publisher_tsim
           relation_tsim
           rights_tsim
-          source_tsim
+          rights_note_tsim
           subject_tsim
           title_tsim
           admin_search_tmiv
@@ -104,12 +101,11 @@
        <str name="facet.field">created_by_ssi</str>
        <str name="facet.field">updated_by_ssi</str>
        <str name="facet.field">collection_ssim</str>
-       <str name="facet.field">corporate_name_ssim</str>
-       <str name="facet.field">format_ssim</str>
+       <str name="facet.field">physical_format_ssim</str>
        <str name="facet.field">geographic_subject_ssim</str>
        <str name="facet.field">item_type_ssim</str>
        <str name="facet.field">language_ssim</str>
-       <str name="facet.field">personal_name_ssim</str>
+       <str name="facet.field">name_ssim</str>
        <str name="facet.field">subject_ssim</str>
        <str name="facet.field">internal_resource_ssim</str>
      </lst>
