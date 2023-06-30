@@ -23,7 +23,7 @@ class ItemResource
         provenance:         TEXT,
         publisher:          TEXT,
         relation:           TEXT,
-        format:             TERM,
+        physical_format:    TERM,
         item_type:          TERM,
         subject:            TERM,
         geographic_subject: TERM,

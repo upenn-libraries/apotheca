@@ -55,12 +55,6 @@ module IndexingMappers
         extent_tesim: data[:extent] }
     end
 
-    # TODO: uh oh, see Kernel#format
-    # @return [Hash{Symbol->Unknown}]
-    def format
-      { format_ssim: data[:format].pluck(:label) }
-    end
-
     # @return [Hash{Symbol->Unknown}]
     def geographic_subject
       { geographic_subject_tsim: data[:geographic_subject].pluck(:label),
@@ -103,6 +97,11 @@ module IndexingMappers
     def note
       { note_tsim: data[:note],
         note_tesim: data[:note] }
+    end
+
+    # @return [Hash{Symbol->Unknown}]
+    def physical_format
+      { physical_format_ssim: data[:physical_format].pluck(:label) }
     end
 
     # @return [Hash{Symbol->Unknown}]
