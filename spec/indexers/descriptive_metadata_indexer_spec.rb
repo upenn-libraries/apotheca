@@ -9,7 +9,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     let(:resource) { persist(:item_resource) }
 
     it 'has solr fields for all descriptive metadata fields' do
-      ItemResource::DescriptiveMetadata::FIELDS.each do |f|
+      ItemResource::DescriptiveMetadata::Fields.all.each do |f|
         expect(result.keys).to include(/#{f}/)
       end
     end

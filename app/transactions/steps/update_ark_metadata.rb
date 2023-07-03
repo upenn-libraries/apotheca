@@ -8,9 +8,9 @@ module Steps
     def call(resource)
       return Success(resource) if Settings.skip_ezid_metadata_update
 
-      # TODO: This is the metadata that we use now, but we should probably revisit.
+      # TODO: This needs to be updated to use the new metadata schema.
       erc_metadata = {
-        erc_who: resource.descriptive_metadata.creator.join('; '),
+        # erc_who: resource.descriptive_metadata.name.join('; '),
         erc_what: resource.descriptive_metadata.title.join('; '),
         erc_when: resource.descriptive_metadata.date.join('; ')
       }

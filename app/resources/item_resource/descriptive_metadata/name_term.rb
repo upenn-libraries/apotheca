@@ -8,7 +8,7 @@ class ItemResource
 
       def to_export
         super.tap do |hash|
-          hash[:role] = role.to_export
+          hash[:role] = role.map(&:to_export)
         end
       end
     end

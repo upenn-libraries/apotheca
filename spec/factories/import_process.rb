@@ -15,16 +15,23 @@ FactoryBot.define do
       metadata do
         {
           'collection' => ['Arnold and Deanne Kaplan Collection of Early American Judaica (University of Pennsylvania)'],
-          'call_number' => ['Arc.MS.56'],
-          'item_type' => ['Trade cards'],
-          'language' => ['English'],
+          'physical_location' => ['Arc.MS.56'],
+          'item_type' => [{ label: 'Trade cards' }],
+          'language' => [{ label: 'English' }],
           'date' => ['undated'],
-          'corporate_name' => ['J. Rosenblatt & Co.'],
-          'geographic_subject' => ['Baltimore, Maryland, United States', 'Maryland, United States'],
-          'description' => ['J. Rosenblatt & Co.: Importers: Earthenware, China, Majolica, Novelties',
-                            '32 South Howard Street, Baltimore, MD'],
-          'rights' => ['http://rightsstatements.org/page/NoC-US/1.0/?'],
-          'subject' => ['House furnishings', 'Jewish merchants', 'Trade cards (advertising)'],
+          'name' => [{ label: 'J. Rosenblatt & Co.' }],
+          'geographic_subject' => [
+            { label: 'Baltimore, Maryland, United States' },
+            { label: 'Maryland, United States' }
+          ],
+          'description' => [
+            'J. Rosenblatt & Co.: Importers: Earthenware, China, Majolica, Novelties',
+            '32 South Howard Street, Baltimore, MD'
+          ],
+          'rights' => [{ label: 'No Copyright', uri: 'http://rightsstatements.org/page/NoC-US/1.0/?' }],
+          'subject' => [
+            { label: 'House furnishings' }, { label: 'Jewish merchants' }, { label: 'Trade cards (advertising)' }
+          ],
           'title' => ['Trade card; J. Rosenblatt & Co.; Baltimore, Maryland, United States; undated;']
         }
       end

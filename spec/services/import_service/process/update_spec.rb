@@ -77,7 +77,7 @@ describe ImportService::Process::Update do
         build(
           :import_process, :update,
           unique_identifier: item.unique_identifier, structural: { viewing_direction: 'left-to-right' },
-          metadata: { collection: ['Very important new collection'], format: ['New'], language: [] }
+          metadata: { collection: ['Very important new collection'], physical_format: [{ label: 'New' }], language: [] }
         )
       end
 
@@ -88,7 +88,7 @@ describe ImportService::Process::Update do
 
       it 'updates expected descriptive metadata' do
         expect(updated_item.descriptive_metadata.collection).to contain_exactly('Very important new collection')
-        expect(updated_item.descriptive_metadata.format).to contain_exactly('New')
+        expect(updated_item.descriptive_metadata.physical_format.pluck(:label)).to contain_exactly('New')
       end
 
       it 'does not update title' do

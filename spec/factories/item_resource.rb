@@ -24,18 +24,18 @@ FactoryBot.define do
       users = (0..5).map { Faker::Internet.email }
       human_readable_name { Faker::Book.title }
       descriptive_metadata do
-        format_type = [['Book', 'Manuscript', 'Audio Recording', 'Video Recording', 'Ancient Utensil'].sample]
+        format_type = ['Book', 'Manuscript', 'Audio Recording', 'Video Recording', 'Ancient Utensil'].sample
         {
           title: [human_readable_name],
           description: Faker::Lorem.paragraphs,
-          call_number: [Faker::IDNumber.spanish_foreign_citizen_number],
+          physical_location: [Faker::IDNumber.spanish_foreign_citizen_number],
           collection: ["#{Faker::GreekPhilosophers.name} collection"],
-          date: [Faker::Date.backward],
-          format: format_type,
-          subject: (0..rand(1..5)).to_a.map { Faker::Educator.subject },
+          date: [Faker::Date.backward.to_s],
+          physical_format: [{ label: format_type }],
+          subject: (0..rand(1..5)).to_a.map { { label: Faker::Educator.subject } },
           identifier: [Faker::Code.isbn],
-          item_type: format_type,
-          language: [['English', Faker::Nation.language].sample(rand(1..2)).uniq]
+          item_type: [{ label: format_type }],
+          language: [{ label: 'English' }, { label: Faker::Nation.language }]
         }
       end
       structural_metadata do
