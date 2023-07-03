@@ -106,7 +106,8 @@ describe Import do
       let(:import) { create(:import, bulk_import: bulk_import, resource_identifier: item_resource.unique_identifier) }
 
       it 'returns the resource' do
-        expect(import.resource).to eq(item_resource)
+        expect(import.resource).to be_an ItemResource
+        expect(import.resource.id).to eq(item_resource.id)
       end
     end
 
