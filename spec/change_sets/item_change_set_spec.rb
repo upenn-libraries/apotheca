@@ -171,7 +171,7 @@ describe ItemChangeSet do
           expect(metadata.name).to be_blank
         end
 
-        it 'keeps subjects' do
+        it 'keeps title' do
           expect(metadata.title.length).to be 1
         end
       end
@@ -191,7 +191,7 @@ describe ItemChangeSet do
         expect(change_set.errors[:'descriptive_metadata.subject']).to contain_exactly('missing value')
       end
 
-      it 'adds expected error for name' do
+      it 'adds expected errors for name' do
         expect(
           change_set.errors[:'descriptive_metadata.name']
         ).to contain_exactly('missing value', 'role missing value')
