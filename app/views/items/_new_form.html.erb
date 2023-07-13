@@ -11,7 +11,9 @@
     <% section.with_title { 'Descriptive Metadata' } %>
 
     <% ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field, type| %>
-      <% section.with_field(:descriptive_metadata, field, type: :descriptive_metadata, config: { type: type }) %>
+      <% config = type == :name ? { type: :term, subfields: { role: { type: :term }} } : { type: type } %>
+
+      <% section.with_field(:descriptive_metadata, field, type: :descriptive_metadata, config: config ) %>
     <% end %>
   <% end %>
 

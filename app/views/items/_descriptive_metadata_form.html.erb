@@ -4,14 +4,9 @@
   <% form.with_error(@error) if @errors_for == 'descriptive-metadata' %>
 
   <% ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field, type| %>
-    <% if type == :name %>
-      <% form.with_field(:descriptive_metadata, field,
-                         type: :descriptive_metadata,
-                         config: { type: :term, subfields: { role: { type: :term }} }) %>
+    <% config = type == :name ? { type: :term, subfields: { role: { type: :term }} } : { type: type } %>
 
-    <% else %>
-      <% form.with_field(:descriptive_metadata, field, type: :descriptive_metadata, config: { type: type }) %>
-    <% end %>
+    <% form.with_field(:descriptive_metadata, field, type: :descriptive_metadata, config: config ) %>
   <% end %>
 
   <% form.with_submit('Save') %>
