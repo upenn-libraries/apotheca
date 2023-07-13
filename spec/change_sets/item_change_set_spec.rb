@@ -120,22 +120,82 @@ describe ItemChangeSet do
   end
 
   context 'when mass assigning descriptive metadata' do
-    before do
-      change_set.validate(
-        descriptive_metadata: { title: [{ value: 'Some Great Item' }], date: [{ value: '2022-02-02' }] }
-      )
+    let(:metadata) { change_set.descriptive_metadata }
+
+    context 'with valid data' do
+      before do
+        change_set.validate(
+          descriptive_metadata: {
+            title: [{ value: 'Some Great Item' }],
+            date: [{ value: '2022-02-02' }],
+            name: [
+              {
+                value: 'Random, Person',
+                uri: 'https://example.com/random-person',
+                role: [{ value: 'creator' }]
+              }
+            ]
+          }
+        )
+      end
+
+      it 'is valid' do
+        expect(change_set.valid?).to be true
+      end
+
+      it 'sets title' do
+        expect(metadata.title.pluck(:value)).to match_array 'Some Great Item'
+      end
+
+      it 'sets date' do
+        expect(metadata.date.pluck(:value)).to match_array '2022-02-02'
+      end
+
+      it 'sets name' do
+        expect(metadata.name.first.value).to eq 'Random, Person'
+        expect(metadata.name.first.uri).to eq 'https://example.com/random-person'
+      end
+
+      it 'sets role' do
+        expect(metadata.name.first.role.first.value).to eq 'creator'
+      end
+
+      context 'when removing a value' do
+        before do
+          change_set.validate(
+            descriptive_metadata: { name: [] }
+          )
+        end
+
+        it 'removes names' do
+          expect(metadata.name).to be_blank
+        end
+
+        it 'keeps subjects' do
+          expect(metadata.title.length).to be 1
+        end
+      end
     end
 
-    it 'is valid' do
-      expect(change_set.valid?).to be true
-    end
+    context 'with invalid data' do
+      before do
+        change_set.validate(
+          descriptive_metadata: {
+            subject: [{ uri: 'https://example.com/unicorn' }],
+            name: [{ uri: 'https://example.com/random-person', role: [{ uri: 'https://example.com/creator' }] }]
+          }
+        )
+      end
 
-    it 'sets title' do
-      expect(change_set.descriptive_metadata.title.pluck(:value)).to match_array 'Some Great Item'
-    end
+      it 'adds expected error for subject' do
+        expect(change_set.errors[:'descriptive_metadata.subject']).to contain_exactly('missing value')
+      end
 
-    it 'sets date' do
-      expect(change_set.descriptive_metadata.date.pluck(:value)).to match_array '2022-02-02'
+      it 'adds expected error for name' do
+        expect(
+          change_set.errors[:'descriptive_metadata.name']
+        ).to contain_exactly('missing value', 'role missing value')
+      end
     end
   end
 
