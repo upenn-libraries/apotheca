@@ -3,8 +3,10 @@
 class ItemResource
   class DescriptiveMetadata < Valkyrie::Resource
     # Name field that includes label, uri and a list of roles (which are also controlled terms).
-    class NameTerm < ControlledTerm
-      attribute :role, Valkyrie::Types::Array.of(ControlledTerm)
+    class NameField < TermField
+      transform_keys(&:to_sym)
+
+      attribute :role, Valkyrie::Types::Array.of(TermField)
 
       def to_export
         super.tap do |hash|

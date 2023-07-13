@@ -99,7 +99,7 @@ describe BulkExport do
 
   describe '#run' do
     let!(:item1) do
-      persist(:item_resource, descriptive_metadata: { title: 'The New Catcher In The Rye' },
+      persist(:item_resource, descriptive_metadata: { title: [{ value: 'The New Catcher In The Rye' }] },
                               human_readable_name: 'Item')
     end
     let!(:item2) { persist(:item_resource) }
@@ -145,8 +145,8 @@ describe BulkExport do
       end
 
       it 'generates csv with correct data' do
-        expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
-        expect(bulk_export.csv.download).to include(item2.descriptive_metadata.title.first)
+        expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first.value)
+        expect(bulk_export.csv.download).to include(item2.descriptive_metadata.title.first.value)
       end
 
       it 'generates csv with the correct filename' do
@@ -164,8 +164,8 @@ describe BulkExport do
       end
 
       it 'generates csv data for one search result' do
-        expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first)
-        expect(bulk_export.csv.download).not_to include(item2.descriptive_metadata.title.first)
+        expect(bulk_export.csv.download).to include(item1.descriptive_metadata.title.first.value)
+        expect(bulk_export.csv.download).not_to include(item2.descriptive_metadata.title.first.value)
       end
     end
 

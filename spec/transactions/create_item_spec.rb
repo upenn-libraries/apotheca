@@ -13,7 +13,7 @@ describe CreateItem do
       let(:result) do
         transaction.call(
           human_readable_name: 'New Item',
-          descriptive_metadata: { title: ['A New Item'] },
+          descriptive_metadata: { title: [{ value: 'A New Item' }] },
           created_by: 'admin@example.com',
           asset_ids: [asset.id]
         )
@@ -30,7 +30,7 @@ describe CreateItem do
 
       it 'sets attributes' do
         expect(item.human_readable_name).to eql 'New Item'
-        expect(item.descriptive_metadata.title).to contain_exactly 'A New Item'
+        expect(item.descriptive_metadata.title.pluck(:value)).to contain_exactly 'A New Item'
       end
 
       it 'sets ark' do
@@ -51,7 +51,7 @@ describe CreateItem do
       subject(:result) do
         transaction.call(
           human_readable_name: 'New Item',
-          descriptive_metadata: { title: ['A New Item'] }
+          descriptive_metadata: { title: [{ value: 'A New Item' }] }
         )
       end
 

@@ -51,7 +51,7 @@ describe ItemChangeSet do
   end
 
   it 'does not require title if bibnumber is set' do
-    change_set.validate(descriptive_metadata: { title: [], bibnumber: ['123456789'] })
+    change_set.validate(descriptive_metadata: { title: [], bibnumber: [{ value: '123456789' }] })
     expect(change_set.valid?).to be true
   end
 
@@ -122,7 +122,7 @@ describe ItemChangeSet do
   context 'when mass assigning descriptive metadata' do
     before do
       change_set.validate(
-        descriptive_metadata: { title: ['Some Great Item'], date: ['2022-02-02'] }
+        descriptive_metadata: { title: [{ value: 'Some Great Item' }], date: [{ value: '2022-02-02' }] }
       )
     end
 
@@ -131,11 +131,11 @@ describe ItemChangeSet do
     end
 
     it 'sets title' do
-      expect(change_set.descriptive_metadata.title).to match_array 'Some Great Item'
+      expect(change_set.descriptive_metadata.title.pluck(:value)).to match_array 'Some Great Item'
     end
 
     it 'sets date' do
-      expect(change_set.descriptive_metadata.date).to match_array '2022-02-02'
+      expect(change_set.descriptive_metadata.date.pluck(:value)).to match_array '2022-02-02'
     end
   end
 

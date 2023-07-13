@@ -13,7 +13,7 @@ describe 'Item Edit Page' do
   end
 
   it 'can update descriptive metadata' do
-    fill_in 'item-descriptive-metadata-abstract', with: data
+    fill_in 'item-descriptive-metadata-description', with: data
     first(:button, 'Save').click
     expect(page).to have_text('Successfully updated item')
   end

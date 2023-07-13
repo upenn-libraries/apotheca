@@ -58,11 +58,25 @@ class ItemResourcePresenter < BasePresenter
     end
 
     def field_display(value)
-      if value.is_a?(Hash)
-        safe_join([value[:label], tag.span(value[:uri], class: 'px-1 small text-secondary')])
-      else
-        value
+      subfields = [value[:value]]
+      subfields << tag.span(value[:uri], class: 'px-1 small text-secondary') if value[:uri]
+
+      # TODO: This needs a refactor
+      value.except(:value, :uri).each do |k, v|
+        subfields << tag.table(class: ['table', 'table-borderless', 'mb-0']) do
+          tag.tbody do
+            tag.tr do
+              tag.th(k.to_s.titleize, scope: :row) + tag.td do
+                tag.ul(class: 'list-unstyled mb-0') do
+                  safe_join(v.map { |t| tag.li(field_display(t)) })
+                end
+              end
+            end
+          end
+        end
       end
+
+      safe_join(subfields)
     end
 
     # Add bootstrap classes to identify whether field's ILS value will be used or overridden

@@ -48,7 +48,7 @@ describe ItemResource do
       end
 
       it 'returns expected nested data' do
-        expect(export[:metadata][:title].first).to eql('New Item')
+        expect(export.dig(:metadata, :title, 0, :value)).to eql('New Item')
         expect(export[:structural][:viewing_hint]).to eql('paged')
       end
 

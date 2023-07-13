@@ -1,8 +1,8 @@
-<div data-controller="form--field--multivalued--list">
+<div class="row" data-controller="form--field--multivalued--list">
   <% inputs.each do |input| %>
-    <div data-form--field--multivalued--list-target="input" class="d-flex mb-1 align-items-center">
+    <div data-form--field--multivalued--list-target="input" class="col-12 d-flex mb-1 align-items-start">
       <div class="flex-grow-1"><%= input %></div>
-      <div class="ps-2">
+      <div class="ps-2 flex-shrink-0">
         <button
           type="button"
           class="btn btn-danger btn-sm"
@@ -17,9 +17,9 @@
   <% end %>
 
   <template data-form--field--multivalued--list-target="template">
-    <div data-form--field--multivalued--list-target="input" class="d-flex mb-1 align-items-center">
+    <div data-form--field--multivalued--list-target="input" class="col-12 d-flex mb-1 align-items-start">
       <div class="flex-grow-1"><%= template %></div>
-      <div class="ps-2">
+      <div class="ps-2 flex-shrink-0">
         <button
           type="button"
           class="btn btn-danger btn-sm"

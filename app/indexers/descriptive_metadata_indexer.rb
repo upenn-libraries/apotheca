@@ -54,7 +54,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
   # @return [Hash]
   def extracted_metadata
     MetadataExtractor::Marmite.new(url: Settings.marmite.url)
-                              .descriptive_metadata(resource.descriptive_metadata[:bibnumber].first)
+                              .descriptive_metadata(resource.descriptive_metadata.bibnumber.first.value)
   end
 
   # @return [Hash]
@@ -66,6 +66,6 @@ class DescriptiveMetadataIndexer < BaseIndexer
   def bibnumber_present?
     return false unless descriptive_metadata
 
-    descriptive_metadata.dig(:bibnumber, 0).present? # all desc md is multivalued
+    descriptive_metadata.dig(:bibnumber, 0, :value).present? # all desc md is multivalued
   end
 end

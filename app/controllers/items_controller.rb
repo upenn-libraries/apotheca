@@ -128,9 +128,11 @@ class ItemsController < ApplicationController
     metadata_fields = ItemResource::DescriptiveMetadata::Fields::CONFIG.transform_values do |type|
       case type
       when :text
-        []
+        [:value]
       when :term
-        [:label, :uri]
+        [:value, :uri]
+      when :name
+        [:value, :uri, { role: [:value, :uri] }]
       end
     end
 

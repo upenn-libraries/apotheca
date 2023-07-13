@@ -6,13 +6,13 @@ class ItemResource
     module Fields
       TEXT = :text
       TERM = :term
-      NAME_TERM = :name_term
+      NAME = :name
 
       CONFIG = {
         title:              TEXT,
         alt_title:          TEXT,
         description:        TEXT,
-        name:               NAME_TERM,
+        name:               NAME,
         collection:         TEXT,
         coverage:           TEXT,
         date:               TEXT,
@@ -50,23 +50,13 @@ class ItemResource
     end
 
     Fields::CONFIG.each do |field, type|
-      type_klass = case type
-                   when Fields::TEXT
-                     Valkyrie::Types::Strict::String
-                   when Fields::TERM
-                     ControlledTerm
-                   when Fields::NAME_TERM
-                     NameTerm
-                   end
-
-      attribute field, Valkyrie::Types::Array.of(type_klass)
+      klass = "#{name}::#{type.to_s.titlecase}Field".constantize
+      attribute field, Valkyrie::Types::Array.of(klass)
     end
 
     def to_export
       attributes.slice(*Fields.all).transform_values do |v|
-        v.map do |i|
-          i.is_a?(String) ? i : i.to_export
-        end
+        v.map(&:to_export)
       end
     end
   end

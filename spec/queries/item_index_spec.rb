@@ -8,8 +8,8 @@ RSpec.describe ItemIndex do
   end
 
   before do
-    persist(:item_resource, descriptive_metadata: { title: 'Cheesy Item', collection: 'Collection B' })
-    persist(:item_resource, descriptive_metadata: { title: 'Crunchy Item', collection: 'Collection A' })
+    persist(:item_resource, descriptive_metadata: { title: [{ value: 'Cheesy Item'}], collection: [{ value: 'Collection B' }] })
+    persist(:item_resource, descriptive_metadata: { title: [{ value: 'Crunchy Item'}], collection: [{ value: 'Collection A' }] })
   end
 
   describe '#item_index' do
@@ -21,7 +21,7 @@ RSpec.describe ItemIndex do
 
       it 'returns result from title field' do
         expect(items.count).to eq 1
-        expect(items.first.descriptive_metadata.title).to match_array 'Crunchy Item'
+        expect(items.first.descriptive_metadata.title.pluck(:value)).to match_array 'Crunchy Item'
       end
     end
 
@@ -30,7 +30,7 @@ RSpec.describe ItemIndex do
 
       it 'returns result properly ordered' do
         expect(items.count).to eq 2
-        expect(items.first.descriptive_metadata.title).to match_array 'Cheesy Item'
+        expect(items.first.descriptive_metadata.title.pluck(:value)).to match_array 'Cheesy Item'
       end
     end
 
@@ -39,7 +39,7 @@ RSpec.describe ItemIndex do
 
       it 'returns result properly ordered' do
         expect(items.count).to eq 2
-        expect(items.first.descriptive_metadata.title).to match_array 'Crunchy Item'
+        expect(items.first.descriptive_metadata.title.pluck(:value)).to match_array 'Crunchy Item'
       end
     end
 
@@ -48,7 +48,7 @@ RSpec.describe ItemIndex do
 
       it 'returns only Collection A item' do
         expect(items.count).to eq 1
-        expect(items.first.descriptive_metadata.collection).to match_array 'Collection A'
+        expect(items.first.descriptive_metadata.collection.pluck(:value)).to match_array 'Collection A'
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe ItemIndex do
 
       it 'returns Collection A and Collection B items' do
         expect(items.count).to eq 2
-        returned_collections = items.collect { |i| i.descriptive_metadata.collection }.flatten
+        returned_collections = items.collect { |i| i.descriptive_metadata.collection.pluck(:value) }.flatten
         expect(returned_collections).to match_array collections
       end
     end

@@ -9,7 +9,7 @@ FactoryBot.define do
         human_readable_name: 'Marian Anderson; SSID: 18792434; filename: 10-14-1.tif',
         metadata: {
           title: [
-            'Marian Anderson'
+            { value: 'Marian Anderson' }
           ]
         },
         assets: { arranged_filenames: 'front.tif; back.tif', storage: 'sceti_digitized', path: 'trade_card/original' }
@@ -46,7 +46,7 @@ FactoryBot.define do
           human_readable_name: 'Marian Anderson; SSID: 18792434; filename: 10-14-1.tif',
           metadata: {
             title: [
-              'Marian Anderson'
+              { value: 'Marian Anderson' }
             ]
           }
         }

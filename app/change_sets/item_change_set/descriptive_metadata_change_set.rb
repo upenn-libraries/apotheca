@@ -3,31 +3,33 @@
 class ItemChangeSet
   # ChangeSet for ItemResource::DescriptiveMetadata nested resource.
   class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
-    ItemResource::DescriptiveMetadata::Fields.text_fields.each do |field|
-      property field, multiple: true
+    ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field, type|
+      klass = "ItemResource::DescriptiveMetadata::#{type.to_s.titlecase}Field".constantize
+
+      property field, multiple: true, required: false, type: Valkyrie::Types::Array(klass), default: []
 
       # Remove blank values from array.
       define_method "#{field}=" do |values|
-        super(values&.compact_blank)
+        super(compact_value(values))
       end
+
+      validates field, each_object: { required: [:value] }
     end
 
-    ItemResource::DescriptiveMetadata::Fields.term_fields.each do |field|
-      collection field, multiple: true, required: false, form: ControlledTermChangeSet, populator: :term!
+    # Validating that each :role included with a :name contains a :value
+    validate :validate_roles
+
+    def validate_roles
+      errors.add(:name, 'role missing value') unless name.map(&:role).flatten.all? { |r| r[:value].present? }
     end
 
-    collection :name, multiple: true, form: NameTermChangeSet,
-                      populate_if_empty: ItemResource::DescriptiveMetadata::NameTerm
-
-    validates :title, presence: true, if: ->(metadata) { metadata.bibnumber.blank? }
-
-    def term!(collection:, index:, fragment:, **)
-      if fragment['label'].blank? && fragment[:label].blank? && fragment['uri'].blank? && fragment[:uri].blank?
-        skip!
-      elsif (item = collection[index])
-        item
+    def compact_value(value)
+      if value.is_a? Array
+        value.map { |v| compact_value(v) }.compact_blank
+      elsif value.is_a? Hash
+        value.transform_values! { |v| compact_value(v) }.compact_blank
       else
-        collection.insert(index, ItemResource::DescriptiveMetadata::ControlledTerm.new)
+        value
       end
     end
   end

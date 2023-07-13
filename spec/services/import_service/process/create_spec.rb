@@ -77,7 +77,7 @@ describe ImportService::Process::Create do
       it 'creates expected Item' do
         expect(item.human_readable_name).to eql 'Trade card; J. Rosenblatt & Co.'
         expect(
-          item.descriptive_metadata.collection.first
+          item.descriptive_metadata.collection.first.value
         ).to eql 'Arnold and Deanne Kaplan Collection of Early American Judaica (University of Pennsylvania)'
       end
 

@@ -10,7 +10,7 @@ FactoryBot.define do
   factory :item_resource do
     human_readable_name { 'New Item' }
     descriptive_metadata do
-      { title: ['New Item'] }
+      { title: [{ value: 'New Item' }] }
     end
     structural_metadata do
       { viewing_hint: 'paged' }
@@ -26,16 +26,16 @@ FactoryBot.define do
       descriptive_metadata do
         format_type = ['Book', 'Manuscript', 'Audio Recording', 'Video Recording', 'Ancient Utensil'].sample
         {
-          title: [human_readable_name],
-          description: Faker::Lorem.paragraphs,
-          physical_location: [Faker::IDNumber.spanish_foreign_citizen_number],
-          collection: ["#{Faker::GreekPhilosophers.name} collection"],
-          date: [Faker::Date.backward.to_s],
-          physical_format: [{ label: format_type }],
-          subject: (0..rand(1..5)).to_a.map { { label: Faker::Educator.subject } },
-          identifier: [Faker::Code.isbn],
-          item_type: [{ label: format_type }],
-          language: [{ label: 'English' }, { label: Faker::Nation.language }]
+          title: [{ value: human_readable_name }],
+          description: Faker::Lorem.paragraphs.map { |p| { value: p }},
+          physical_location: [{ value: Faker::IDNumber.spanish_foreign_citizen_number }],
+          collection: [{ value: "#{Faker::GreekPhilosophers.name} collection" }],
+          date: [{ value: Faker::Date.backward.to_s }],
+          physical_format: [{ value: format_type }],
+          subject: (0..rand(1..5)).to_a.map { { value: Faker::Educator.subject } },
+          identifier: [{ value: Faker::Code.isbn }],
+          item_type: [{ value: format_type }],
+          language: [{ value: 'English' }, { value: Faker::Nation.language }]
         }
       end
       structural_metadata do
@@ -95,9 +95,9 @@ FactoryBot.define do
     trait :with_bibnumber do
       descriptive_metadata do
         {
-          bibnumber: ['sample-bib'],
+          bibnumber: [{ value: 'sample-bib' }],
           abstract: [],
-          collection: ['Fake Collection']
+          collection: [{ value: 'Fake Collection' }]
         }
       end
     end
