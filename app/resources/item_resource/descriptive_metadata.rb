@@ -34,16 +34,6 @@ class ItemResource
         bibnumber:          TEXT
       }.freeze
 
-      # Free text descriptive metadata fields
-      def self.text_fields
-        CONFIG.select { |_, t| t == TEXT }.keys
-      end
-
-      # Controlled term descriptive metadata fields
-      def self.term_fields
-        CONFIG.select { |_, t| t == TERM }.keys
-      end
-
       def self.all
         CONFIG.keys
       end
