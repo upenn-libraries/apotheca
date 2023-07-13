@@ -2,7 +2,7 @@
 
 class ItemResource
   class DescriptiveMetadata < Valkyrie::Resource
-    # Name field that includes label, uri and a list of roles (which are also controlled terms).
+    # Name field that includes value, uri and a list of roles (which are also controlled terms).
     class NameField < TermField
       transform_keys(&:to_sym)
 

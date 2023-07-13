@@ -2,7 +2,7 @@
 
 class ItemResource
   class DescriptiveMetadata < Valkyrie::Resource
-    # Resource storing label and uri to represent a controlled terms.
+    # Resource text value in hash to support additional nested values in the future..
     class TextField < Valkyrie::Resource
       transform_keys(&:to_sym)
 

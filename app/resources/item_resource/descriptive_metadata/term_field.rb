@@ -2,7 +2,7 @@
 
 class ItemResource
   class DescriptiveMetadata < Valkyrie::Resource
-    # Resource storing label and uri to represent a controlled terms.
+    # Resource storing value and uri to represent a controlled terms.
     class TermField < Valkyrie::Resource
       transform_keys(&:to_sym)
 

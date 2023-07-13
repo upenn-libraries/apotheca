@@ -16,13 +16,15 @@ class ItemChangeSet
       validates field, each_object: { required: [:value] }
     end
 
-    validate :validate_roles # Validating that each :role included with a :name contains a :value
+    validate :validate_roles
     validates :title, length: { minimum: 1, message: 'can\'t be blank' }, if: ->(metadata) { metadata.bibnumber.blank? }
 
+    # Validating that each :role included with a :name contains a :value
     def validate_roles
       errors.add(:name, 'role missing value') unless name.map(&:role).flatten.all? { |r| r[:value].present? }
     end
 
+    # Recursively removes empty values from nested array and hashes.
     def compact_value(value)
       if value.is_a? Array
         value.map { |v| compact_value(v) }.compact_blank

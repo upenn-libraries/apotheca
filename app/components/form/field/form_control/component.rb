@@ -4,7 +4,7 @@ module Form
   module Field
     module FormControl
       # Component that provides a single interface to create Bootstrap form control
-      # fields (which includes text and file fields). Support multivalued fields.
+      # fields (which includes text and file fields). Supports multivalued fields.
       class Component < ViewComponent::Base
         def initialize(type:, field:, **options)
           @type = type
