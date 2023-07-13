@@ -197,6 +197,32 @@ describe ItemChangeSet do
         ).to contain_exactly('missing value', 'role missing value')
       end
     end
+
+    context 'with empty values' do
+      before do
+        change_set.validate(
+          descriptive_metadata: {
+            title: [{ value: 'Some Great Item' }],
+            date: [{ value: '' }],
+            name: [
+              {
+                value: '',
+                uri: '',
+                role: [{ value: '' }]
+              }
+            ]
+          }
+        )
+      end
+
+      it 'removes blank date values' do
+        expect(metadata.date).to be_blank
+      end
+
+      it 'removes name values' do
+        expect(metadata.name).to be_blank
+      end
+    end
   end
 
   context 'with asset ids' do
