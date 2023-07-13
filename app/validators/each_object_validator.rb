@@ -6,8 +6,7 @@ class EachObjectValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, values)
     Array.wrap(values).each_with_index do |value, i|
-      # Check that each required fields are present.
-
+      # Check that each required field is present.
       Array.wrap(options[:required]).each do |required_key|
         next if value[required_key].present?
 
