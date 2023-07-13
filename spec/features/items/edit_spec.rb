@@ -12,7 +12,7 @@ describe 'Item Edit Page' do
     visit edit_item_path(item)
   end
 
-  it 'can update descriptive metadata' do
+  it 'can update descriptive metadata' do # TODO: This test requires javascript.
     fill_in 'item-descriptive-metadata-description', with: data
     first(:button, 'Save').click
     expect(page).to have_text('Successfully updated item')

@@ -117,7 +117,7 @@ describe ImportService::Process::Create do
     end
 
     context 'when creating an item with a metadata error' do
-      let(:process) { build(:import_process, :create, metadata: { subjects: [{ label: 'Trade Cards' }] }) }
+      let(:process) { build(:import_process, :create, metadata: { subjects: [{ value: 'Trade Cards' }] }) }
 
       it 'fails' do
         expect(result).to be_a Dry::Monads::Failure

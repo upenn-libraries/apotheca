@@ -27,13 +27,14 @@ describe 'Item New Page' do
   context 'when required fields are present' do
     before do
       fill_in 'item-human-readable-name', with: item.human_readable_name
-      fill_in 'item-descriptive-metadata-title', with: item.descriptive_metadata.title.first
+      fill_in 'item-descriptive-metadata-title', with: item.descriptive_metadata.title.first.value
       select ItemChangeSet::StructuralMetadataChangeSet::VIEWING_HINTS.first,
              from: 'item-structural-metadata-viewing-hint'
       select ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS.first,
              from: 'item-structural-metadata-viewing-direction'
     end
 
+    # FIXME: need javascript for this test
     it 'can create a new item' do
       click_on 'Save'
       expect(page).to have_text('Successfully created item')

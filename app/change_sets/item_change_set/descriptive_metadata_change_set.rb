@@ -16,8 +16,8 @@ class ItemChangeSet
       validates field, each_object: { required: [:value] }
     end
 
-    # Validating that each :role included with a :name contains a :value
-    validate :validate_roles
+    validate :validate_roles # Validating that each :role included with a :name contains a :value
+    validates :title, length: { minimum: 1, message: 'can\'t be blank' }, if: ->(metadata) { metadata.bibnumber.blank? }
 
     def validate_roles
       errors.add(:name, 'role missing value') unless name.map(&:role).flatten.all? { |r| r[:value].present? }

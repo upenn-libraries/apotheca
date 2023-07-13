@@ -18,7 +18,7 @@ describe 'Item Index Page' do
     end
 
     it 'lists all Item title values' do
-      titles = item.descriptive_metadata.title
+      titles = item.descriptive_metadata.title.pluck(:value)
       titles.each do |title|
         expect(page).to have_selector 'tr li', text: title
       end

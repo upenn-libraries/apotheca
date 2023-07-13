@@ -69,7 +69,7 @@ describe Solr::QueryBuilder do
           'fielded' => [
             { field: 'date', term: '1999', opr: '' },
             { field: 'subject', term: 'Ruby', opr: 'required' },
-            { field: 'creator', term: '', opr: 'excluded' }
+            { field: 'name', term: '', opr: 'excluded' }
           ]
         } }
       ).permit!
