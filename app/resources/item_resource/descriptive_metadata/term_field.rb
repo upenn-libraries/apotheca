@@ -10,7 +10,10 @@ class ItemResource
       attribute :uri, Valkyrie::Types::URI
 
       def to_export
-        attributes.slice(:value, :uri)
+        {
+          value: value,
+          uri: uri.to_s
+        }
       end
     end
   end

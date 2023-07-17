@@ -196,6 +196,7 @@
   <copyField source="language_ssim" dest="admin_search_tmiv"/>
   <copyField source="location_ssim" dest="admin_search_tmiv"/>
   <copyField source="name_tsim" dest="admin_search_tmiv"/>
+  <copyField source="name_role_tsim" dest="admin_search_tmiv"/>
   <copyField source="note_tsim" dest="admin_search_tmiv"/>
   <copyField source="physical_format_ssim" dest="admin_search_tmiv"/>
   <copyField source="physical_location_tsim" dest="admin_search_tmiv"/>

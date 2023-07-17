@@ -85,12 +85,23 @@ module IndexingMappers
         location_ssim: data[:location]&.pluck(:value) }
     end
 
-    # TODO: Should roles be indexed?
     # @return [Hash{Symbol->Unknown}]
     def name
+      name_with_role = data[:name]&.map do |n|
+        roles = n[:role]&.pluck(:value).join(', ')
+        roles = "(#{roles})" if roles.present?
+
+        [n[:value], roles].join(' ')
+      end
+
+      all_roles = data[:name]&.pluck(:role)&.flatten
+
       { name_tsim: data[:name]&.pluck(:value),
         name_tesim: data[:name]&.pluck(:value),
-        name_ssim: data[:name]&.pluck(:value) }
+        name_ssim: data[:name]&.pluck(:value),
+        name_role_tsim: all_roles&.pluck(:value),
+        name_role_tesim: all_roles&.pluck(:value),
+        name_with_role_ss: name_with_role }
     end
 
     # @return [Hash{Symbol->Unknown}]

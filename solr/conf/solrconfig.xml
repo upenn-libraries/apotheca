@@ -50,6 +50,7 @@
           language_ssim
           location_tsim
           name_tsim
+          name_role_tsim
           note_tsim
           physical_format_ssim
           physical_location_tsim
@@ -77,6 +78,7 @@
           language_ssim
           location_tsim
           name_tsim
+          name_role_tsim
           note_tsim
           physical_format_ssim
           physical_location_tsim
