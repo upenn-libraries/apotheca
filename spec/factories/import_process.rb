@@ -14,18 +14,27 @@ FactoryBot.define do
       assets { { arranged_filenames: 'front.tif; back.tif', storage: 'sceti_digitized', path: 'trade_card/original' } }
       metadata do
         {
-          'collection' => ['Arnold and Deanne Kaplan Collection of Early American Judaica (University of Pennsylvania)'],
-          'call_number' => ['Arc.MS.56'],
-          'item_type' => ['Trade cards'],
-          'language' => ['English'],
-          'date' => ['undated'],
-          'corporate_name' => ['J. Rosenblatt & Co.'],
-          'geographic_subject' => ['Baltimore, Maryland, United States', 'Maryland, United States'],
-          'description' => ['J. Rosenblatt & Co.: Importers: Earthenware, China, Majolica, Novelties',
-                            '32 South Howard Street, Baltimore, MD'],
-          'rights' => ['http://rightsstatements.org/page/NoC-US/1.0/?'],
-          'subject' => ['House furnishings', 'Jewish merchants', 'Trade cards (advertising)'],
-          'title' => ['Trade card; J. Rosenblatt & Co.; Baltimore, Maryland, United States; undated;']
+          'collection' => [
+            { value: 'Arnold and Deanne Kaplan Collection of Early American Judaica (University of Pennsylvania)' }
+          ],
+          'physical_location' => [{ value: 'Arc.MS.56' }],
+          'item_type' => [{ value: 'Trade cards' }],
+          'language' => [{ value: 'English' }],
+          'date' => [{ value: 'undated' }],
+          'name' => [{ value: 'J. Rosenblatt & Co.' }],
+          'geographic_subject' => [
+            { value: 'Baltimore, Maryland, United States' },
+            { value: 'Maryland, United States' }
+          ],
+          'description' => [
+            { value: 'J. Rosenblatt & Co.: Importers: Earthenware, China, Majolica, Novelties' },
+            { value: '32 South Howard Street, Baltimore, MD' }
+          ],
+          'rights' => [{ value: 'No Copyright', uri: 'http://rightsstatements.org/page/NoC-US/1.0/?' }],
+          'subject' => [
+            { value: 'House furnishings' }, { value: 'Jewish merchants' }, { value: 'Trade cards (advertising)' }
+          ],
+          'title' => [{ value: 'Trade card; J. Rosenblatt & Co.; Baltimore, Maryland, United States; undated;' }]
         }
       end
     end

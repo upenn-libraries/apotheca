@@ -50,38 +50,36 @@ module Solr
         UPDATED_BY = :updated_by_ssi
         COLLECTION = :collection_ssim
         CORPORATE_NAME = :corporate_name_ssim
-        FORMAT = :format_ssim
+        PHYSICAL_FORMAT = :physical_format_ssim
         GEOGRAPHIC_SUBJECT = :geographic_subject_ssim
         ITEM_TYPE = :item_type_ssim
         LANGUAGE = :language_ssim
-        PERSONAL_NAME = :personal_name_ssim
+        NAME = :name_ssim
         SUBJECT = :subject_ssim
       end
 
       class Search < Type
-        ABSTRACT = :abstract_tsim
+        ALT_TITLE = :alt_title_tsim
         BIBNUMBER = :bibnumber_ss
-        CALL_NUMBER = :call_number_tsim
         COLLECTION = :collection_tsim
-        CONTRIBUTOR = :contributor_tsim
-        CORPORATE_NAME = :corporate_name_tsim
         COVERAGE = :coverage_tsim
-        CREATOR = :creator_tsim
         DATE = :date_tsim
         DESCRIPTION = :description_tsim
-        FORMAT = :format_ssim
+        EXTENT = :extent_tsim
         GEOGRAPHIC_SUBJECT = :geographic_subject_tsim
         IDENTIFIER = :identifier_ssim
-        INCLUDES = :includes_tsim
         ITEM_TYPE = :item_type_ssim
         LANGUAGE = :language_ssim
-        NOTES = :notes_tsim
-        PERSONAL_NAME = :personal_name_tsim
+        LOCATION = :location_tsim
+        NAME = :name_tsim
+        NOTE = :note_tsim
+        PHYSICAL_FORMAT = :physical_format_ssim
+        PHYSICAL_LOCATION = :physical_format_tsim
         PROVENANCE = :provenance_tsim
         PUBLISHER = :publisher_tsim
         RELATION = :relation_tsim
         RIGHTS = :rights_tsim
-        SOURCE = :source_tsim
+        RIGHTS_NOTE = :rights_tsim
         SUBJECT = :subject_tsim
         TITLE = :title_tsim
       end

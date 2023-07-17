@@ -25,7 +25,7 @@
     </thead>
 
     <tbody>
-      <% ItemResource::DescriptiveMetadata::FIELDS.each do |f| %>
+      <% ItemResource::DescriptiveMetadata::Fields.all.each do |f| %>
         <% if @item.descriptive_metadata.field_row_data?(f) %>
           <tr>
             <%# Field name %>

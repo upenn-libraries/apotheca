@@ -4,7 +4,7 @@ module Form
   module Field
     module FormControl
       # Component that provides a single interface to create Bootstrap form control
-      # fields (which includes text and file fields).
+      # fields (which includes text and file fields). Supports multivalued fields.
       class Component < ViewComponent::Base
         def initialize(type:, field:, **options)
           @type = type
@@ -34,25 +34,33 @@ module Form
         end
 
         def input
-          render(ColumnComponent.new(:div, col: @input_col)) { input_element }
+          render(ColumnComponent.new(:div, col: @input_col)) do
+            if @value.is_a? Array
+              render(Multivalued::Component.new) do |multivalued|
+                @value.each do |v|
+                  multivalued.with_input { input_element(v) }
+                end
+
+                multivalued.with_template { input_element(nil) }
+              end
+            else
+              input_element(@value)
+            end
+          end
         end
 
-        def input_element
+        def input_element(val)
           case @type
           when :text
-            if @value.is_a? Array
-              render Input::Multivalued::Component.new(value: @value, field: @field, **@options)
-            else
-              text_field_tag @field, @value, **@options
-            end
+            text_field_tag @field, val, **@options
           when :textarea
-            text_area_tag @field, @value, **@options
+            text_area_tag @field, val, **@options
           when :file
             file_field_tag @field, **@options
           when :readonly
-            tag.input(type: :text, value: @value, **@options)
+            tag.input(type: :text, value: val, **@options)
           when :email
-            email_field_tag @field, @value, **@options
+            email_field_tag @field, val, **@options
           end
         end
 

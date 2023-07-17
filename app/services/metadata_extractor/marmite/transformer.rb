@@ -92,7 +92,8 @@ module MetadataExtractor
           mapped_values[k] = [v.join(' ')]
         end
 
-        mapped_values
+        # FIXME: Adding this line so its compatible with the new metadata schema. This is not a permanent solution!!!
+        mapped_values.transform_values { |values| values.map { |v| { 'value' => v } } }
       rescue StandardError => e
         raise StandardError, "Error mapping MARC XML: #{e.class} #{e.message}", e.backtrace
       end

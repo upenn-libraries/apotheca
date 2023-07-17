@@ -6,16 +6,38 @@ RSpec.describe DescriptiveMetadataIndexer do
   let(:result) { indexer.to_solr }
 
   context 'when an item does not have a bibnumber' do
-    let(:resource) { persist(:item_resource) }
+    let(:metadata) do
+      {
+        title: [{ value: 'New Item' }],
+        name: [
+          {
+            value: 'Random, Person',
+            uri: 'https://example.com/random_person',
+            role: [{ value: 'creator', uri: 'https://example.com/creator' }]
+          }
+        ]
+      }
+    end
+
+    let(:resource) { persist(:item_resource, descriptive_metadata: metadata) }
 
     it 'has solr fields for all descriptive metadata fields' do
-      ItemResource::DescriptiveMetadata::FIELDS.each do |f|
+      ItemResource::DescriptiveMetadata::Fields.all.each do |f|
         expect(result.keys).to include(/#{f}/)
       end
     end
 
-    it 'has values from the Resource' do
-      expect(result[:title_tsi]).to eq resource.descriptive_metadata.title.first
+    it 'has indexed title from the Resource' do
+      expect(result[:title_tsi]).to eq resource.descriptive_metadata.title.first.value
+    end
+
+    it 'has indexed names from the Resource' do
+      expect(result[:name_tsim]).to contain_exactly('Random, Person')
+      expect(result[:name_with_role_ss]).to contain_exactly('Random, Person (creator)')
+    end
+
+    it 'has indexed roles from the Resource' do
+      expect(result[:name_role_tsim]).to contain_exactly('creator')
     end
 
     it 'has solr fields with JSON representation of source metadata' do
@@ -25,7 +47,10 @@ RSpec.describe DescriptiveMetadataIndexer do
   end
 
   context 'when an item has a bibnumber' do
-    let(:resource) { persist(:item_resource, descriptive_metadata: { title: 'Test Item', bibnumber: '123' }) }
+    let(:resource) do
+      persist(:item_resource,
+              descriptive_metadata: { title: [{ value: 'Test Item' }], bibnumber: [{ value: '123' }] })
+    end
     # this is taken from spec/services/metadata_extractor/marmite/client_spec.rb
     # TODO: perhaps use a shared context, or a stub/mock of the service injected into the indexer?
     let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
@@ -41,7 +66,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     end
 
     it 'has field values that prefer values from the Resource' do
-      expect(result[:title_tsi]).to eq resource.descriptive_metadata.title.first
+      expect(result[:title_tsi]).to eq resource.descriptive_metadata.title.first.value
     end
 
     it 'has values from MARC metadata when Resource fields are blank' do

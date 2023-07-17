@@ -77,7 +77,7 @@ describe ImportService::Process::Create do
       it 'creates expected Item' do
         expect(item.human_readable_name).to eql 'Trade card; J. Rosenblatt & Co.'
         expect(
-          item.descriptive_metadata.collection.first
+          item.descriptive_metadata.collection.first.value
         ).to eql 'Arnold and Deanne Kaplan Collection of Early American Judaica (University of Pennsylvania)'
       end
 
@@ -117,7 +117,7 @@ describe ImportService::Process::Create do
     end
 
     context 'when creating an item with a metadata error' do
-      let(:process) { build(:import_process, :create, metadata: { subjects: ['Trade Cards'] }) }
+      let(:process) { build(:import_process, :create, metadata: { subjects: [{ value: 'Trade Cards' }] }) }
 
       it 'fails' do
         expect(result).to be_a Dry::Monads::Failure

@@ -28,7 +28,7 @@ describe MetadataExtractor::Marmite do
 
       it 'returns descriptive metadata' do
         expect(metadata).to be_a Hash
-        expect(metadata['item_type']).to eql ['Books']
+        expect(metadata['item_type'].pluck('value')).to eql ['Books']
       end
     end
 

@@ -125,7 +125,17 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    metadata_fields = ItemResource::DescriptiveMetadata::FIELDS.index_with { |_f| [] }
+    metadata_fields = ItemResource::DescriptiveMetadata::Fields::CONFIG.transform_values do |type|
+      case type
+      when :text
+        [:value]
+      when :term
+        [:value, :uri]
+      when :name
+        [:value, :uri, { role: [:value, :uri] }]
+      end
+    end
+
     params.require(:item).permit(
       :human_readable_name, :thumbnail_asset_id,
       internal_notes: [],

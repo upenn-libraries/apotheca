@@ -15,7 +15,7 @@ RSpec.describe ItemResourcePresenter do
     end
 
     it 'delegates descriptive metadata field calls to the Resource' do
-      ItemResource::DescriptiveMetadata::FIELDS.each do |field|
+      ItemResource::DescriptiveMetadata::Fields.all.each do |field|
         expect(
           presenter.descriptive_metadata.public_send(field)
         ).to eq item_resource.descriptive_metadata.public_send(field)

@@ -33,14 +33,14 @@
           <td>
             <ul class="list-unstyled mb-0">
               <% item.descriptive_metadata.title.each.with_index do |t, i| %>
-                <%= tag.li(t, class: i.zero? ? '' : 'pt-2') %>
+                <%= tag.li(t[:value], class: i.zero? ? '' : 'pt-2') %>
               <% end %>
             </ul>
           </td>
           <td>
             <ul class="list-unstyled mb-0">
               <% item.descriptive_metadata.collection.each.with_index do |c, i| %>
-                <%= tag.li(c, class: i.zero? ? '' : 'pt-2') %>
+                <%= tag.li(c[:value], class: i.zero? ? '' : 'pt-2') %>
               <% end %>
             </ul>
           </td>

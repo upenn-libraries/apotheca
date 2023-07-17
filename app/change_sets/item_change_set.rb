@@ -5,20 +5,6 @@ class ItemChangeSet < Valkyrie::ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet
 
-  # ChangeSet for Descriptive Metadata
-  class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
-    ItemResource::DescriptiveMetadata::FIELDS.each do |field|
-      property field, multiple: true
-
-      # Remove blank values from array.
-      define_method "#{field}=" do |values|
-        super(values&.compact_blank)
-      end
-    end
-
-    validates :title, presence: true, if: ->(metadata) { metadata.bibnumber.blank? }
-  end
-
   # ChangeSet for Structural Metadata
   class StructuralMetadataChangeSet < Valkyrie::ChangeSet
     VIEWING_DIRECTIONS = %w[right-to-left left-to-right top-to-bottom bottom-to-top].freeze
