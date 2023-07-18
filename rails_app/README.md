@@ -101,9 +101,6 @@ bundle exec rubocop
 bundle exec rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
 ```
 
-## Staging/Production Deployment
-WIP
-
 ## Basic Operations
 ### Create an Item and Asset with transactions
 
