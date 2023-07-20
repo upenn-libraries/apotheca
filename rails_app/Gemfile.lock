@@ -123,6 +123,9 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    cuprite (0.14.3)
+      capybara (~> 3.0)
+      ferrum (~> 0.13.0)
     date (3.3.3)
     declarative (0.0.20)
     deep_merge (1.2.2)
@@ -211,6 +214,11 @@ GEM
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
     faraday-net_http (3.0.2)
+    ferrum (0.13)
+      addressable (~> 2.5)
+      concurrent-ruby (~> 1.1)
+      webrick (~> 1.7)
+      websocket-driver (>= 0.6, < 0.8)
     ffi (1.15.5)
     globalid (1.1.0)
       activesupport (>= 5.0)
@@ -474,6 +482,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    webrick (1.8.1)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -498,6 +507,7 @@ DEPENDENCIES
   cancancan
   capybara
   config
+  cuprite
   devise
   dotiw
   dry-monads
