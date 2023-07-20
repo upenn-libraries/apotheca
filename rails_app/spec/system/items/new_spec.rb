@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Item New Page' do
   let(:user) { create(:user, :admin) }
   let(:item) { build(:item_resource) }
