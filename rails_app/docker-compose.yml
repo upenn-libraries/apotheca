@@ -32,6 +32,15 @@ services:
     image: gitlab.library.upenn.edu/dld/digital-repository/fits-servlet:6d13f419
     ports:
       - "8080:8080"
+  chrome:
+    image: browserless/chrome:1.59-puppeteer-1.20.0
+    ports:
+      - "3333:3333"
+    volumes:
+      - .:/app:cached
+    environment:
+      PORT: 3333
+      CONNECTION_TIMEOUT: 600000
 
 volumes:
   db_data:
