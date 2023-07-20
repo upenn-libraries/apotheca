@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Bulk Export New Page' do
   context 'when creating a bulk export' do
     let(:user) { create(:user, :viewer) }
