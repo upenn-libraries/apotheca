@@ -8,9 +8,9 @@ class ItemResource
 
       attribute :role, Valkyrie::Types::Array.of(TermField)
 
-      def to_export
+      def to_json_export
         super.tap do |hash|
-          hash[:role] = role.map(&:to_export)
+          hash[:role] = role.map(&:to_json_export)
         end
       end
     end

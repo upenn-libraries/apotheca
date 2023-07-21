@@ -44,9 +44,9 @@ class ItemResource
       attribute field, Valkyrie::Types::Array.of(klass)
     end
 
-    def to_export
+    def to_json_export
       attributes.slice(*Fields.all).transform_values do |v|
-        v.map(&:to_export)
+        v.map(&:to_json_export)
       end
     end
   end

@@ -59,11 +59,11 @@ class ItemResource < Valkyrie::Resource
   end
 
   # @param [Boolean] include_assets
-  def to_export(include_assets: false)
+  def to_json_export(include_assets: false)
     bulk_export_hash = {
       unique_identifier: unique_identifier,
       human_readable_name: human_readable_name,
-      metadata: descriptive_metadata.to_export,
+      metadata: descriptive_metadata.to_json_export,
       created_at: created_at&.to_fs(:display),
       created_by: created_by,
       updated_at: updated_at&.to_fs(:display),
