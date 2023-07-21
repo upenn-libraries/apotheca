@@ -21,7 +21,7 @@ describe MetadataExtractor::Marmite::Client do
       let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
 
       before do
-        stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
+        stub_request(:get, "#{url}/api/v2/records/#{bibnumber}/marc21?update=always")
           .to_return(status: 200, body: marc_xml, headers: {})
       end
 
@@ -34,7 +34,7 @@ describe MetadataExtractor::Marmite::Client do
       let(:marmite_error) { ["Record #{bibnumber} in marc21 format not found"] }
 
       before do
-        stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
+        stub_request(:get, "#{url}/api/v2/records/#{bibnumber}/marc21?update=always")
           .to_return(status: 404, body: JSON.generate(errors: marmite_error), headers: {})
       end
 
@@ -50,7 +50,7 @@ describe MetadataExtractor::Marmite::Client do
       let(:marmite_error) { 'Internal Server Error' }
 
       before do
-        stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
+        stub_request(:get, "#{url}/api/v2/records/#{bibnumber}/marc21?update=always")
           .to_return(status: 500, body: marmite_error, headers: {})
       end
 
@@ -69,7 +69,7 @@ describe MetadataExtractor::Marmite::Client do
     it 'correctly creates url' do
       expect(
         marmite.send(:url_for, 'cool/new/path?query=keyword')
-      ).to eql 'https://marmite.library.upenn.edu:9292/cool/new/path?query=keyword'
+      ).to eql "#{url}/cool/new/path?query=keyword"
     end
 
     context 'when error parsing url' do

@@ -33,7 +33,7 @@ RSpec.describe DescriptiveMetadataIndexer do
 
     it 'has indexed names from the Resource' do
       expect(result[:name_tsim]).to contain_exactly('Random, Person')
-      expect(result[:name_with_role_ss]).to contain_exactly('Random, Person (creator)')
+      expect(result[:name_with_role_ssm]).to contain_exactly('Random, Person (creator)')
     end
 
     it 'has indexed roles from the Resource' do
@@ -61,7 +61,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     end
 
     before do
-      stub_request(:get, 'https://marmite.library.upenn.edu:9292/api/v2/records/123/marc21?update=always')
+      stub_request(:get, "#{Settings.marmite.url}/api/v2/records/123/marc21?update=always")
         .to_return(status: 200, body: marc_xml, headers: {})
     end
 
@@ -70,8 +70,8 @@ RSpec.describe DescriptiveMetadataIndexer do
     end
 
     it 'has values from MARC metadata when Resource fields are blank' do
-      expect(result[:personal_name_tsim]).to eq ['Feyerabend, Johann, 1550-1599, printer.']
-      expect(result[:subject_tsim]).to match_array(expected_subjects)
+      expect(result[:name_tsim]).to match_array ['Ercker, Lazarus, -1594.', 'Feyerabend, Johann, 1550-1599,']
+      expect(result[:subject_tsim]).to match_array expected_subjects
     end
 
     it 'has solr fields with JSON representation of source metadata' do

@@ -44,7 +44,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
     fields.index_with do |field|
       val = descriptive_metadata[field]
       if val.blank? && bibnumber_present?
-        ils_descriptive_metadata[field.to_s]
+        ils_descriptive_metadata[field]
       else
         val
       end
