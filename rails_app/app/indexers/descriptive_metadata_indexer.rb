@@ -59,7 +59,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
 
   # @return [Hash]
   def descriptive_metadata
-    @descriptive_metadata ||= resource.try(:descriptive_metadata).try(:to_export)
+    @descriptive_metadata ||= resource.try(:descriptive_metadata).try(:to_json_export)
   end
 
   # @return [TrueClass, FalseClass]

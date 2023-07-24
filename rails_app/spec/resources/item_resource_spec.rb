@@ -37,9 +37,9 @@ describe ItemResource do
     end
   end
 
-  describe '#to_export' do
+  describe '#to_json_export' do
     context 'when not including assets' do
-      subject(:export) { resource.to_export }
+      subject(:export) { resource.to_json_export }
 
       let(:resource) { persist(:item_resource) }
 
@@ -58,7 +58,7 @@ describe ItemResource do
     end
 
     context 'when including assets' do
-      subject(:export) { resource.to_export(include_assets: true) }
+      subject(:export) { resource.to_json_export(include_assets: true) }
 
       let(:resource) { persist(:item_resource, :with_assets_some_arranged) }
 
