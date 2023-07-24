@@ -8,12 +8,16 @@ module Steps
     def call(resource)
       return Success(resource) if Settings.skip_ezid_metadata_update
 
-      # TODO: This needs to be updated to use the new metadata schema.
+      # TODO: This needs to use the metadata that is pulled from the ILS.
       erc_metadata = {
-        # erc_who: resource.descriptive_metadata.name.join('; '),
-        erc_what: resource.descriptive_metadata.title.join('; '),
-        erc_when: resource.descriptive_metadata.date.join('; ')
-      }
+        '_profile' => 'dc',
+        'dc.creator' => resource.descriptive_metadata&.name&.pluck(:value)&.join('; '),
+        'dc.title' => resource.descriptive_metadata&.title&.pluck(:value)&.join('; '),
+        'dc.publisher' => resource.descriptive_metadata&.publisher&.pluck(:value)&.join('; '),
+        'dc.date' => resource.descriptive_metadata&.date&.pluck(:value)&.join('; '),
+        'dc.type' => resource.descriptive_metadata&.item_type&.pluck(:value)&.join('; ')
+      }.compact_blank
+
       begin
         # NOTE: EZID library retries requests twice before raising an error.
         Ezid::Identifier.modify(resource.unique_identifier, erc_metadata)
