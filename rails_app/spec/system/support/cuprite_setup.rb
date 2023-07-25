@@ -7,7 +7,7 @@ require 'capybara/cuprite'
 
 # Parse URL
 # NOTE: REMOTE_CHROME_HOST should be added to Webmock/VCR allowlist if you use any of those.
-REMOTE_CHROME_URL = ENV.fetch('CHROME_URL', nil)
+REMOTE_CHROME_URL = ENV.fetch('CHROME_URL', 'http://localhost:3333')
 REMOTE_CHROME_HOST, REMOTE_CHROME_PORT =
   if REMOTE_CHROME_URL
     URI.parse(REMOTE_CHROME_URL).then do |uri|
@@ -59,3 +59,23 @@ end
 
 # Configure Capybara to use :better_cuprite driver by default
 Capybara.default_driver = Capybara.javascript_driver = :better_cuprite
+
+module CupriteHelpers
+  # Drop #pause anywhere in a test to stop the execution.
+  # Useful when you want to checkout the contents of a web page in the middle of a test
+  # running in a headful mode.
+  def pause
+    page.driver.pause
+  end
+
+  def debug(binding = nil)
+    $stdout.puts "🔎 Open Chrome inspector at http://localhost:3333"
+    return binding.break if binding
+
+    page.driver.pause
+  end
+end
+
+RSpec.configure do |config|
+  config.include CupriteHelpers, type: :system
+end

@@ -16,8 +16,10 @@ Capybara.save_path = ENV.fetch('CAPYBARA_ARTIFACTS', './tmp/capybara')
 
 # Make server accessible from the outside world
 Capybara.server_host = '0.0.0.0'
+
 # Use a hostname that could be resolved in the internal Docker network
 # Capybara.app_host = "http://#{`hostname`.strip&.downcase || '0.0.0.0'}"
+Capybara.app_host = 'http://host.docker.internal'
 
 RSpec.configure do |config|
   # Make sure this hook runs before others
