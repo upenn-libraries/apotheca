@@ -25,7 +25,7 @@ module MetadataExtractor
           role_subfield = datafield.tag == '111' || datafield.tag == '711' ? 'j' : 'e'
 
           extracted_values.tap do |values|
-            if role = datafield.subfield_at(role_subfield)
+            if (role = datafield.subfield_at(role_subfield))
               values[:role] = [{ value: role }]
             end
           end
@@ -48,7 +48,7 @@ module MetadataExtractor
 
         # Applying some minor transformation to ensure the date value follows the EDTF spec.
         def self.convert_to_edtf(_, extracted_values)
-          return {} if extracted_values[:value].match? /\Auuuu\Z/
+          return {} if extracted_values[:value].match?(/\Auuuu\Z/)
 
           extracted_values[:value] = extracted_values[:value].tr('u', 'X')
           extracted_values
@@ -70,7 +70,8 @@ module MetadataExtractor
         map_datafield '245', to: :title, value: { subfields: %w[a b f g h k n p s], join: SPACE }
         map_datafield '246', to: :alt_title, value: { subfields: %w[a b n p], join: SPACE }
         map_datafield '260', to: :publisher, value: { subfields: 'b' }
-        map_datafield '264', to: :publisher, value: { subfields: 'b' }, if: ->(datafield) { datafield.indicator2 == '1' }
+        map_datafield '264', to: :publisher, value: { subfields: 'b' },
+                             if: ->(datafield) { datafield.indicator2 == '1' }
         map_datafield '300', to: :extent, value: { subfields: %w[a b c e g] }
         map_datafield '336', to: :item_type, value: { subfields: 'a' },
                              if: ->(datafield) { datafield.subfield_at('2') == 'rdacontent' },
@@ -90,7 +91,8 @@ module MetadataExtractor
         map_datafield '648', to: :coverage, value: { subfields: %w[a y], join: ' -- ' }, uri: { subfields: '0' }
         map_datafield '650', to: :subject, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
         map_datafield '650', to: :coverage, value: { subfields: 'y' }
-        map_datafield '651', to: :geographic_subject, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
+        map_datafield '651', to: :geographic_subject, value: { subfields: A_TO_Z, join: ' -- ' },
+                             uri: { subfields: '0' }
         map_datafield '651', to: :coverage, value: { subfields: 'y' }
         map_datafield '655', to: :physical_format, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
         map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
@@ -99,7 +101,8 @@ module MetadataExtractor
                              custom: method(:add_role_to_name)
         map_datafield '711', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
-        map_datafield '752', to: :location, value: { subfields: %w[a b c d f g h], join: ' -- ' }, uri: { subfields: '0' }
+        map_datafield '752', to: :location, value: { subfields: %w[a b c d f g h], join: ' -- ' },
+                             uri: { subfields: '0' }
         map_datafield '773', to: :collection, value: { subfields: 't' }
         map_datafield '856', to: :relation, value: { subfields: %w[u z], join: ': ' }
         map_datafield '880', to: :title, value: { subfields: %w[a b f g h k n p s] }, if: method(:transliterated_title?)
@@ -110,7 +113,6 @@ module MetadataExtractor
         map_datafield 'AVA', to: :physical_location, value: { subfields: %w[b j], join: SPACE },
                              if: ->(datafield) { datafield.subfield_at('8').present? },
                              custom: method(:appending_call_number)
-
       end
     end
   end

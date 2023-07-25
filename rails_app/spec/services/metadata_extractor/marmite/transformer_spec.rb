@@ -25,7 +25,10 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           location: [{ value: 'Germany -- Frankfurt am Main.' }],
           publisher: [{ value: 'Durch Johan Feyerabendt' }],
           relation: [{ value: 'Facsimile: https://colenda.library.upenn.edu/catalog/81431-p3df6k90j' }],
-          provenance: [{ value: 'Smith, Edgar Fahs, 1854-1928 (autograph, 1917)' }, { value: 'Wright, H. (autograph, 1870)' }],
+          provenance: [
+            { value: 'Smith, Edgar Fahs, 1854-1928 (autograph, 1917)' },
+            { value: 'Wright, H. (autograph, 1870)' }
+          ],
           subject: [
             { value: 'Metallurgy -- Early works to 1800', uri: 'http://id.loc.gov/authorities/subjects/sh2008107709' },
             { value: 'Metallurgy', uri: 'http://id.worldcat.org/fast/1018005' },
@@ -35,7 +38,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           date: [{ value: '1598' }],
           name: [
             { value: 'Ercker, Lazarus, -1594', uri: 'http://id.loc.gov/authorities/names/n85215805' },
-            { value: 'Feyerabend, Johann, 1550-1599', uri: 'http://id.loc.gov/authorities/names/nr95034041', role: [{ value: 'printer.' }] },
+            { value: 'Feyerabend, Johann, 1550-1599', uri: 'http://id.loc.gov/authorities/names/nr95034041',
+              role: [{ value: 'printer.' }] }
           ],
           collection: [{ value: 'Edgar Fahs Smith Memorial Collection (University of Pennsylvania)' }],
           physical_location: [{ value: 'KislakCntr scsmith Folio TN664 .E7 1598' }],
@@ -60,7 +64,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           language: [{ value: 'Latin', uri: 'https://id.loc.gov/vocabulary/iso639-2/lat' }],
           extent: [{ value: '10 leaves :paper ;263 x 190 mm bound to 218 x 155 mm' }],
           name: [
-            { value: 'Sigebert, of Gembloux, approximately 1030-1112', uri: 'http://id.loc.gov/authorities/names/n87881954' },
+            { value: 'Sigebert, of Gembloux, approximately 1030-1112',
+              uri: 'http://id.loc.gov/authorities/names/n87881954' },
             { value: 'Sigebert, of Gembloux, approximately 1030-1112' }
           ],
           note: [

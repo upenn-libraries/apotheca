@@ -79,6 +79,7 @@ module MetadataExtractor
           def type
             :controlfield
           end
+
           # Return an array of the values at the given locations.
           #
           # @param chars [Array|String]

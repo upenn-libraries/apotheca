@@ -38,29 +38,39 @@ module MetadataExtractor
           end
         end
 
-        # Strip punctuation from selected fields.
-        # TODO: Could make this into a config value.
-        %i[subject geographic_subject physical_format publisher name].each do |f|
-          next unless mapped_values.key?(f)
-
-          mapped_values[f] = mapped_values[f]&.map do |h|
-            h[:value] = h[:value].sub(/\s*[,;]\s*\Z/, '') # Remove trailing commas and semicolons
-            h[:value] = h[:value].sub(/(?<![A-Z])\s*\.\s*\Z/, '') # Remove periods that are not preceded by a capital letter (could be an abbreviation).
-            h
-          end
-        end
-
-        # Removing duplicate values from selected fields.
-        # TODO: Could make this into a config value.
-        %i[subject name language].each do |f|
-          next unless mapped_values.key?(f)
-
-          mapped_values[f]&.uniq!
-        end
+        # TODO: Could make these into a config value.
+        strip_punctuation!(mapped_values, %i[subject geographic_subject physical_format publisher name])
+        remove_duplicates!(mapped_values, %i[subject name language])
 
         mapped_values
       rescue StandardError => e
         raise StandardError, "Error mapping MARC XML: #{e.class} #{e.message}", e.backtrace
+      end
+
+      private
+
+      # Strip punctuation from selected fields.
+      def strip_punctuation!(mapped_values, fields)
+        fields.each do |f|
+          next unless mapped_values.key?(f)
+
+          mapped_values[f]&.each do |h|
+            # Remove trailing commas and semicolons
+            h[:value].sub!(/\s*[,;]\s*\Z/, '')
+
+            # Remove periods that are not preceded by a capital letter (could be an abbreviation).
+            h[:value].sub!(/(?<![A-Z])\s*\.\s*\Z/, '')
+          end
+        end
+      end
+
+      # Removing duplicate values from selected fields.
+      def remove_duplicates!(mapped_values, fields)
+        fields.each do |f|
+          next unless mapped_values.key?(f)
+
+          mapped_values[f]&.uniq!
+        end
       end
     end
   end
