@@ -4,6 +4,7 @@ module MetadataExtractor
   class Marmite
     class Transformer
       class DefaultMappingRules
+        # Mapping for RDA content type to DCMI type.
         module RDAContentTypeToDCMIType
           DATASET         = { value: 'Dataset',        uri: 'http://purl.org/dc/dcmitype/Dataset'        }.freeze
           IMAGE           = { value: 'Image',          uri: 'http://purl.org/dc/dcmitype/Image'          }.freeze

@@ -55,9 +55,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     # TODO: perhaps use a shared context, or a stub/mock of the service injected into the indexer?
     let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
     let(:expected_subjects) do
-      ['Metallurgy -- Early works to 1800.',
-       'Assaying -- Early works to 1800.',
-       'Assaying.', 'Metallurgy.']
+      ['Metallurgy -- Early works to 1800', 'Assaying -- Early works to 1800', 'Assaying', 'Metallurgy']
     end
 
     before do
@@ -70,7 +68,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     end
 
     it 'has values from MARC metadata when Resource fields are blank' do
-      expect(result[:name_tsim]).to match_array ['Ercker, Lazarus, -1594.', 'Feyerabend, Johann, 1550-1599,']
+      expect(result[:name_tsim]).to contain_exactly('Ercker, Lazarus, -1594', 'Feyerabend, Johann, 1550-1599')
       expect(result[:subject_tsim]).to match_array expected_subjects
     end
 

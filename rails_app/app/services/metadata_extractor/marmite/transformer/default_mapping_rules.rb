@@ -3,11 +3,14 @@
 module MetadataExtractor
   class Marmite
     class Transformer
+      # Default mappings rules for converting Penn's MARC XML to Apotheca's descriptive metadata schema.
+      # @see MappingRules
       class DefaultMappingRules < MappingRules
         SPACE = ' '
         ALL = '*'
         A_TO_Z = ('a'..'z').to_a
 
+        # Mapping language to standardized ISO639 english name and URI.
         def self.language_transformation(_, extracted_values)
           code = extracted_values[:value]
           if (language = ISO_639.find_by_code(code))
@@ -17,6 +20,7 @@ module MetadataExtractor
           end
         end
 
+        # Adding role value to name.
         def self.add_role_to_name(datafield, extracted_values)
           role_subfield = datafield.tag == '111' || datafield.tag == '711' ? 'j' : 'e'
 
@@ -27,7 +31,7 @@ module MetadataExtractor
           end
         end
 
-        # Appending call number to the end of the value.
+        # Appending call number to the end of the value manually because currently the order of the fields is preserved.
         def self.appending_call_number(datafield, extracted_values)
           extracted_values.tap do |values|
             values[:value] << " #{datafield.subfield_at('d')}"
@@ -36,13 +40,21 @@ module MetadataExtractor
 
         # Return true if field contains a transliterated title
         def self.transliterated_title?(datafield)
-          index = datafield.subfield_at('6')&.match(/^245-(\d{2})$/)
+          index = datafield.subfield_at('6')&.match(/\A245-(\d{2})\Z/)
           return false unless index
 
           datafield.parent.xpath("datafield[@tag='245']/subfield[@code='6' and text()='880-#{index[1]}']").present?
         end
 
-        map_controlfield '008', to: :date, value: { chars: (7..10).to_a }
+        # Applying some minor transformation to ensure the date value follows the EDTF spec.
+        def self.convert_to_edtf(_, extracted_values)
+          return {} if extracted_values[:value].match? /\Auuuu\Z/
+
+          extracted_values[:value] = extracted_values[:value].tr('u', 'X')
+          extracted_values
+        end
+
+        map_controlfield '008', to: :date, value: { chars: (7..10).to_a }, custom: method(:convert_to_edtf)
         map_controlfield '008', to: :language, value: { chars: (35..37).to_a }, custom: method(:language_transformation)
 
         # Separate mappings for language ensure the language codes aren't appended together
@@ -95,7 +107,6 @@ module MetadataExtractor
         # Mapping holdings information located in an Alma-specific datafield.
         # Documentation about the subfields available:
         # https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw==/
-        # TODO: Update mapping in Confluence.
         map_datafield 'AVA', to: :physical_location, value: { subfields: %w[b j], join: SPACE },
                              if: ->(datafield) { datafield.subfield_at('8').present? },
                              custom: method(:appending_call_number)

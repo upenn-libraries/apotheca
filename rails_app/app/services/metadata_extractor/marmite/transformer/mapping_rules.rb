@@ -15,9 +15,8 @@ module MetadataExtractor
       #   - can contain a `:if` key, containing a lambda that returns a truthy or falsey value, the lambda is passed
       #       the datafield or controlfield extracted from the xml document
       #   - can contain a `:custom` key, containing a lambda that applies additional transformations to the extracted
-      #       values. The lambda is passed the datafield/controlfield, the extracted_values and the document. It must
-      #       return the extracted values with any transformations applied.
-
+      #       values. The lambda is passed the datafield/controlfield and the extracted_values. It must return the
+      #       extracted values with any transformations applied.
       class MappingRules
         class << self
           def rules

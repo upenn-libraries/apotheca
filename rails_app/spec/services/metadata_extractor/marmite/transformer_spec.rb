@@ -23,19 +23,19 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           extent: [{ value: '4 unnumbered leaves, 134 leaves, 4 unnumbered leaves :illustrations ;31 cm (folio)' }],
           item_type: [{ value: 'Text', uri: 'http://purl.org/dc/dcmitype/Text' }],
           location: [{ value: 'Germany -- Frankfurt am Main.' }],
-          publisher: [{ value: 'Durch Johan Feyerabendt,' }],
+          publisher: [{ value: 'Durch Johan Feyerabendt' }],
           relation: [{ value: 'Facsimile: https://colenda.library.upenn.edu/catalog/81431-p3df6k90j' }],
           provenance: [{ value: 'Smith, Edgar Fahs, 1854-1928 (autograph, 1917)' }, { value: 'Wright, H. (autograph, 1870)' }],
           subject: [
-            { value: 'Metallurgy -- Early works to 1800.', uri: 'http://id.loc.gov/authorities/subjects/sh2008107709' },
-            { value: 'Metallurgy.', uri: 'http://id.worldcat.org/fast/1018005' },
-            { value: 'Assaying -- Early works to 1800.' },
-            { value: 'Assaying.', uri: 'http://id.worldcat.org/fast/818995' }
+            { value: 'Metallurgy -- Early works to 1800', uri: 'http://id.loc.gov/authorities/subjects/sh2008107709' },
+            { value: 'Metallurgy', uri: 'http://id.worldcat.org/fast/1018005' },
+            { value: 'Assaying -- Early works to 1800' },
+            { value: 'Assaying', uri: 'http://id.worldcat.org/fast/818995' }
           ],
           date: [{ value: '1598' }],
           name: [
-            { value: 'Ercker, Lazarus, -1594.', uri: 'http://id.loc.gov/authorities/names/n85215805' },
-            { value: 'Feyerabend, Johann, 1550-1599,', uri: 'http://id.loc.gov/authorities/names/nr95034041', role: [{ value: 'printer.' }] },
+            { value: 'Ercker, Lazarus, -1594', uri: 'http://id.loc.gov/authorities/names/n85215805' },
+            { value: 'Feyerabend, Johann, 1550-1599', uri: 'http://id.loc.gov/authorities/names/nr95034041', role: [{ value: 'printer.' }] },
           ],
           collection: [{ value: 'Edgar Fahs Smith Memorial Collection (University of Pennsylvania)' }],
           physical_location: [{ value: 'KislakCntr scsmith Folio TN664 .E7 1598' }],
@@ -60,8 +60,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           language: [{ value: 'Latin', uri: 'https://id.loc.gov/vocabulary/iso639-2/lat' }],
           extent: [{ value: '10 leaves :paper ;263 x 190 mm bound to 218 x 155 mm' }],
           name: [
-            { value: 'Sigebert, of Gembloux, approximately 1030-1112.', uri: 'http://id.loc.gov/authorities/names/n87881954' },
-            { value: 'Sigebert, of Gembloux, approximately 1030-1112.' }
+            { value: 'Sigebert, of Gembloux, approximately 1030-1112', uri: 'http://id.loc.gov/authorities/names/n87881954' },
+            { value: 'Sigebert, of Gembloux, approximately 1030-1112' }
           ],
           note: [
             { value: 'Ms. gathering.' },
@@ -76,16 +76,16 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           ],
           physical_location: [{ value: 'KislakCntr scmss Folio GrC St812 Ef512g' }],
           physical_format: [
-            { value: 'Chronicles.', uri: 'http://vocab.getty.edu/aat/300026361' },
-            { value: 'Manuscripts, Latin.' },
-            { value: 'Manuscripts, Renaissance.' }
+            { value: 'Chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
+            { value: 'Manuscripts, Latin' },
+            { value: 'Manuscripts, Renaissance' }
           ],
           provenance: [{ value: 'Sold by Bernard M. Rosenthal (New York), 1964.' }],
           relation: [{ value: 'Digital facsimile for browsing (Colenda): https://colenda.library.upenn.edu/catalog/81431-p3833nf29' }],
           coverage: [{ value: 'Early works to 1800.' }],
           subject: [
-            { value: 'World history -- Early works to 1800.', uri: 'http://id.loc.gov/authorities/subjects/sh85148202' },
-            { value: 'World history.', uri: 'http://id.worldcat.org/fast/1181345' }
+            { value: 'World history -- Early works to 1800', uri: 'http://id.loc.gov/authorities/subjects/sh85148202' },
+            { value: 'World history', uri: 'http://id.worldcat.org/fast/1181345' }
           ],
           alt_title: [{ value: 'Initium Chronici Siceberti.' }],
           title: [{ value: '[Partial copy of Chronicon].' }]
@@ -160,89 +160,23 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
     end
   end
 
-  describe '.book?' do
-    let(:nokogiri_xml) do
-      document = Nokogiri::XML(xml)
-      document.remove_namespaces!
-      document
+  context 'when MARC XML contains approximate date value' do
+    let(:xml) do
+      <<~XML
+        <?xml version="1.0"?>
+        <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+          <marc:record>
+            <marc:controlfield tag="001">9940417313503681</marc:controlfield>
+            <marc:controlfield tag="008">030101q10uu11uuxx 000 0 heb d</marc:controlfield>
+          </marc:record>
+        </marc:records>
+      XML
     end
 
-    context 'when 7th value in leader field is an `a`' do
-      let(:xml) do
-        <<~XML
-          <?xml version="1.0"?>
-          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
-            <marc:record>
-              <marc:leader>03167cam a2200517Ia 4500</marc:leader>
-            </marc:record>
-          </marc:records>
-        XML
-      end
-
-      it 'returns true' do
-        expect(transformer.send(:book?)).to be true
-      end
-    end
-  end
-
-  describe '.manuscript?' do
-    let(:nokogiri_xml) do
-      document = Nokogiri::XML(xml)
-      document.remove_namespaces!
-      document
-    end
-
-    context 'when PAULM is present in 040 field' do
-      let(:xml) do
-        <<~XML
-          <?xml version="1.0"?>
-          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
-            <marc:record>
-              <marc:datafield ind1=" " ind2=" " tag="040">
-                <marc:subfield code="a">PAULM</marc:subfield>
-              </marc:datafield>
-            </marc:record>
-          </marc:records>
-        XML
-      end
-
-      it 'returns true' do
-        expect(transformer.send(:manuscript?)).to be true
-      end
-    end
-
-    context 'when appm2 is present in field 040 subfield e' do
-      let(:xml) do
-        <<~XML
-          <?xml version="1.0"?>
-          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
-            <marc:record>
-              <marc:datafield ind1=" " ind2=" " tag="040">
-                <marc:subfield code="e">appm2</marc:subfield>
-              </marc:datafield>
-            </marc:record>
-          </marc:records>
-        XML
-      end
-
-      it 'returns true' do
-        expect(transformer.send(:manuscript?)).to be true
-      end
-    end
-
-    context 'when field 040 is empty' do
-      let(:xml) do
-        <<~XML
-          <?xml version="1.0"?>
-          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
-            <marc:record/>
-          </marc:records>
-        XML
-      end
-
-      it 'returns false' do
-        expect(transformer.send(:manuscript?)).to be false
-      end
+    it 'converts date to EDFT' do
+      expect(
+        transformer.to_descriptive_metadata[:date].pluck(:value)
+      ).to contain_exactly('10XX')
     end
   end
 end

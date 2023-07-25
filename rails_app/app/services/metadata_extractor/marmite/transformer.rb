@@ -2,8 +2,8 @@
 
 module MetadataExtractor
   class Marmite
-    # Transforms MARC XML into json-based descriptive metadata. The mapping rules specify what mappings actually are,
-    # this class implements the mapping configuration.
+    # Transforms MARC XML into json-based descriptive metadata. The mapping rules specify what mappings actually are.
+    # This class reads in the MARC XML and extracts the data based on the mapping rules given.
     class Transformer
       attr_reader :marc, :mappings
 
@@ -38,49 +38,29 @@ module MetadataExtractor
           end
         end
 
-        # TODO: Is this mapping still needed?
-        # Adding item_type when conditions are met
-        # if manuscript?
-        #   mapped_values[:item_type] = [{ value: 'Manuscripts' }] # TODO: need a URI
-        # elsif book?
-        #   mapped_values[:item_type] = [{ value: 'Books' }] # TODO: need a URI
-        # end
+        # Strip punctuation from selected fields.
+        # TODO: Could make this into a config value.
+        %i[subject geographic_subject physical_format publisher name].each do |f|
+          next unless mapped_values.key?(f)
+
+          mapped_values[f] = mapped_values[f]&.map do |h|
+            h[:value] = h[:value].sub(/\s*[,;]\s*\Z/, '') # Remove trailing commas and semicolons
+            h[:value] = h[:value].sub(/(?<![A-Z])\s*\.\s*\Z/, '') # Remove periods that are not preceded by a capital letter (could be an abbreviation).
+            h
+          end
+        end
 
         # Removing duplicate values from selected fields.
-        %i[subject name language].each { |f| mapped_values[f]&.uniq! }
+        # TODO: Could make this into a config value.
+        %i[subject name language].each do |f|
+          next unless mapped_values.key?(f)
 
-        # TODO: might need to strip punctuation from values.
+          mapped_values[f]&.uniq!
+        end
 
         mapped_values
       rescue StandardError => e
         raise StandardError, "Error mapping MARC XML: #{e.class} #{e.message}", e.backtrace
-      end
-
-      private
-
-      # Returns true if the MARC data describes the item as a Manuscript
-      def manuscript?
-        manuscript = false
-
-        # Checking for values in field 040 subfield e
-        subfield_e = marc.xpath("//records/record/datafield[@tag=040]/subfield[@code='e']").map(&:text)
-        values = %w[appm appm2 amremm dacs dcrmmss]
-        manuscript = true if subfield_e.any? { |s| values.include? s.downcase }
-
-        # Checking for value in all subfield of field 040
-        all_subfields = marc.xpath('//records/record/datafield[@tag=040]/subfield').map(&:text)
-        manuscript = true if all_subfields.any? { |s| s.casecmp('paulm').zero? }
-
-        manuscript
-      end
-
-      # Returns true if the MARC data describes the item as a Book
-      def book?
-        # Checking for `a` in 7th value of the leader field
-        leader = marc.at_xpath('//records/record/leader')&.text
-        return if leader.blank?
-
-        leader[6] == 'a'
       end
     end
   end
