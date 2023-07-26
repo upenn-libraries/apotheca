@@ -54,7 +54,7 @@ describe 'Item Show Page' do
     let(:item) { persist(:item_resource, :with_bibnumber) }
 
     before do
-      stub_request(:get, 'https://marmite.library.upenn.edu:9292/api/v2/records/sample-bib/marc21?update=always')
+      stub_request(:get, "#{Settings.marmite.url}/api/v2/records/sample-bib/marc21?update=always")
         .to_return(status: 200, body: marc_xml, headers: {})
       item # build item after Marmite request has been stubbed
       visit item_path(item)

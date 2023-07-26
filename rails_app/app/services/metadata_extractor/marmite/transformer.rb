@@ -2,127 +2,75 @@
 
 module MetadataExtractor
   class Marmite
-    # Transforms MARC XML into descriptive metadata
+    # Transforms MARC XML into json-based descriptive metadata. The mapping rules specify what mappings actually are.
+    # This class reads in the MARC XML and extracts the data based on the mapping rules given.
     class Transformer
-      attr_reader :xml
+      attr_reader :marc, :mappings
 
-      def initialize(marc_xml)
-        @xml = Nokogiri::XML(marc_xml)
-        @xml.remove_namespaces!
+      # @param marc_xml [String]
+      # @param mappings [MetadataExtractor::Marmite::Transformer::MappingRules]
+      def initialize(marc_xml, mappings: DefaultMappingRules)
+        @marc = MARCDocument.new(marc_xml)
+        @mappings = mappings
       end
 
-      # Converts marc xml (provided by Marmite) to PQC fields.
-      # TODO: This should be broken up in smaller methods.
+      # Converts MARC XML (provided by Marmite) to descriptive metadata fields.
       def to_descriptive_metadata
         mapped_values = {}
 
         # Map control fields
-        xml.xpath('//records/record/controlfield').each do |element|
-          tag = element.attributes['tag'].value
-          mapping_config = MarcMappings::CONTROL_FIELDS[tag]
+        (marc.controlfields + marc.datafields).each do |marc_field|
+          mappings.rules_for(marc_field.type, marc_field.tag).each do |config|
+            field = config[:to] # descriptive metadata field name
 
-          next if mapping_config.blank?
+            next if config[:if] && !config[:if].call(marc_field)
 
-          Array.wrap(mapping_config).each do |config|
-            field = config[:field]
+            values = config.slice(:value, :uri)
+                           .transform_values { |c| marc_field.values_at(**c.except(:join)).join(c[:join]) }
+                           .compact_blank
+
+            values = config[:custom].call(marc_field, values) if config[:custom]
+
+            next if values.blank?
 
             mapped_values[field] ||= []
-
-            text = element.text
-            text = config[:chars].map { |i| text.slice(i) }.join if config[:chars]
-
-            mapped_values[field].push(text)
+            mapped_values[field] << values
           end
         end
 
-        # Map MARC fields
-        xml.xpath('//records/record/datafield').each do |element|
-          tag = element.attributes['tag'].value
-          mapping_config = MarcMappings::MARC_FIELDS[tag]
+        # TODO: Could make these into a config value.
+        strip_punctuation!(mapped_values, %i[subject geographic_subject physical_format publisher name])
+        remove_duplicates!(mapped_values, %i[subject name language])
 
-          next if mapping_config.blank?
-
-          Array.wrap(mapping_config).each do |config|
-            field = config[:field]
-            selected_subfields = Array.wrap(config[:subfields])
-
-            mapped_values[field] ||= []
-
-            values = element.xpath('subfield')
-            if selected_subfields.first != '*'
-              values = values.select do |s|
-                selected_subfields.include?(s.attributes['code'].value)
-              end
-            end
-            values = values.map { |v| v&.text&.strip }.compact_blank!
-
-            if (delimeter = config[:join])
-              mapped_values[field].push values.join(delimeter)
-            else
-              mapped_values[field].concat values
-            end
-          end
-        end
-
-        # Adding item_type when conditions are met
-        if manuscript?
-          mapped_values['item_type'] = ['Manuscripts']
-        elsif book?
-          mapped_values['item_type'] = ['Books']
-        end
-
-        # Converting language codes to english name.
-        languages = mapped_values.fetch('language', [])
-        mapped_values['language'] = languages.filter_map { |l| ISO_639.find_by_code(l)&.english_name }
-
-        # Adding call number
-        mapped_values['call_number'] = xml.xpath('//records/record/holdings/holding/call_number')
-                                          .filter_map(&:text)
-
-        # Removing duplicate values from selected fields.
-        %w[subject corporate_name personal_name language].each { |f| mapped_values[f]&.uniq! }
-
-        # Cleanup
-        mapped_values.transform_values! { |values| values.map(&:strip).compact_blank }.compact_blank!
-
-        # Join fields if they aren't multivalued.
-        mapped_values.each do |k, v|
-          next if MarcMappings::MULTIVALUED_FIELDS.include?(k)
-
-          mapped_values[k] = [v.join(' ')]
-        end
-
-        # FIXME: Adding this line so its compatible with the new metadata schema. This is not a permanent solution!!!
-        mapped_values.transform_values { |values| values.map { |v| { 'value' => v } } }
+        mapped_values
       rescue StandardError => e
         raise StandardError, "Error mapping MARC XML: #{e.class} #{e.message}", e.backtrace
       end
 
       private
 
-      # Returns true if the MARC data describes the item as a Manuscript
-      def manuscript?
-        manuscript = false
+      # Strip punctuation from selected fields.
+      def strip_punctuation!(mapped_values, fields)
+        fields.each do |f|
+          next unless mapped_values.key?(f)
 
-        # Checking for values in field 040 subfield e
-        subfield_e = xml.xpath("//records/record/datafield[@tag=040]/subfield[@code='e']").map(&:text)
-        values = %w[appm appm2 amremm dacs dcrmmss]
-        manuscript = true if subfield_e.any? { |s| values.include? s.downcase }
+          mapped_values[f]&.each do |h|
+            # Remove trailing commas and semicolons
+            h[:value].sub!(/\s*[,;]\s*\Z/, '')
 
-        # Checking for value in all subfield of field 040
-        all_subfields = xml.xpath('//records/record/datafield[@tag=040]/subfield').map(&:text)
-        manuscript = true if all_subfields.any? { |s| s.casecmp('paulm').zero? }
-
-        manuscript
+            # Remove periods that are not preceded by a capital letter (could be an abbreviation).
+            h[:value].sub!(/(?<![A-Z])\s*\.\s*\Z/, '')
+          end
+        end
       end
 
-      # Returns true if the MARC data describes the item as a Book
-      def book?
-        # Checking for `a` in 7th value of the leader field
-        leader = xml.at_xpath('//records/record/leader')&.text
-        return if leader.blank?
+      # Removing duplicate values from selected fields.
+      def remove_duplicates!(mapped_values, fields)
+        fields.each do |f|
+          next unless mapped_values.key?(f)
 
-        leader[6] == 'a'
+          mapped_values[f]&.uniq!
+        end
       end
     end
   end

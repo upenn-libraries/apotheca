@@ -88,20 +88,20 @@ module IndexingMappers
     # @return [Hash{Symbol->Unknown}]
     def name
       name_with_role = data[:name]&.map do |n|
-        roles = n[:role]&.pluck(:value).join(', ')
+        roles = n[:role]&.pluck(:value)&.join(', ')
         roles = "(#{roles})" if roles.present?
 
         [n[:value], roles].join(' ')
       end
 
-      all_roles = data[:name]&.pluck(:role)&.flatten
+      all_roles = data[:name]&.pluck(:role)&.flatten&.compact_blank&.pluck(:value)
 
       { name_tsim: data[:name]&.pluck(:value),
         name_tesim: data[:name]&.pluck(:value),
         name_ssim: data[:name]&.pluck(:value),
-        name_role_tsim: all_roles&.pluck(:value),
-        name_role_tesim: all_roles&.pluck(:value),
-        name_with_role_ss: name_with_role }
+        name_role_tsim: all_roles,
+        name_role_tesim: all_roles,
+        name_with_role_ssm: name_with_role }
     end
 
     # @return [Hash{Symbol->Unknown}]

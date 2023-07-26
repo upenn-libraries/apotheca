@@ -15,4 +15,7 @@
 # These inflection rules are supported:
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'CSV'
+  inflect.acronym 'MARC'
+  inflect.acronym 'RDA'
+  inflect.acronym 'DCMI'
 end

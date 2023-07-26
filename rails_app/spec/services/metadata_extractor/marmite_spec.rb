@@ -22,13 +22,13 @@ describe MetadataExtractor::Marmite do
 
     context 'when record is found' do
       before do
-        stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
+        stub_request(:get, "#{Settings.marmite.url}/api/v2/records/#{bibnumber}/marc21?update=always")
           .to_return(status: 200, body: marc_xml, headers: {})
       end
 
       it 'returns descriptive metadata' do
         expect(metadata).to be_a Hash
-        expect(metadata['item_type'].pluck('value')).to eql ['Books']
+        expect(metadata[:item_type].pluck(:value)).to eql ['Text']
       end
     end
 
@@ -36,8 +36,9 @@ describe MetadataExtractor::Marmite do
       let(:errors) { ["Bib not found in Alma for #{bibnumber}"] }
 
       before do
-        stub_request(:get, "https://marmite.library.upenn.edu:9292/api/v2/records/#{bibnumber}/marc21?update=always")
-          .to_return(status: 404, body: JSON.generate({ errors: errors }), headers: { 'Content-Type' => 'application/json' })
+        stub_request(:get, "#{Settings.marmite.url}/api/v2/records/#{bibnumber}/marc21?update=always")
+          .to_return(status: 404, body: JSON.generate({ errors: errors }),
+                     headers: { 'Content-Type' => 'application/json' })
       end
 
       it 'raises an error with the correct message' do
