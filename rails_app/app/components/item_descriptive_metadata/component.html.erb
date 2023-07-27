@@ -21,20 +21,20 @@
 
     <tbody>
     <% ItemResource::DescriptiveMetadata::Fields.all.each do |f| %>
-      <% if @descriptive_metadata_presenter.field_row_data?(f) %>
+      <% if field_row_data?(f) %>
         <tr>
           <%# Field name %>
           <th scope='row'><%= f.to_s.titleize %></th>
 
           <%# ILS values %>
           <% if @descriptive_metadata_presenter.ils_metadata %>
-            <td class="<%= @descriptive_metadata_presenter.field_ils_class(f) %>">
+            <td class="<%= field_ils_class(f) %>">
               <%= field_values('ils', f) %>
             </td>
           <% end %>
 
           <%# Resource values %>
-          <td class="<%= @descriptive_metadata_presenter.field_resource_class(f) %>">
+          <td class="<%= field_resource_class(f) %>">
             <%= field_values('resource', f) %>
           </td>
         </tr>

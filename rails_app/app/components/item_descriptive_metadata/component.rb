@@ -43,6 +43,34 @@ module ItemDescriptiveMetadata
 
       safe_join(subfields)
     end
+
+    # Add bootstrap classes to identify whether field's ILS value will be used or overridden
+    # (ILS value only used if field has no resource value)
+    #
+    # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
+    # @return [String (frozen)]
+    def field_ils_class(field)
+      @descriptive_metadata_presenter.ils_metadata && @descriptive_metadata_presenter.object[field].empty? ? 'bg-success bg-opacity-10' : 'opacity-75 text-decoration-line-through'
+    end
+
+    # Add bootstrap classes to identify that field's resource value is given precedence over ILS value
+    #
+    # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
+    # @return [nil] if field does not have an ILS value (no highlight necessary)
+    # @return [String (frozen)] if field has an ILS value
+    def field_resource_class(field)
+      return unless @descriptive_metadata_presenter.ils_metadata
+
+      'bg-success bg-opacity-10' if object[field].present?
+    end
+
+    # Check if field has either ILS or resource value (otherwise won't be displayed)
+    #
+    # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
+    # @return [TrueClass, FalseClass]
+    def field_row_data?(field)
+      @descriptive_metadata_presenter.ils_metadata&.dig(field).present? || @descriptive_metadata_presenter.object[field].present?
+    end
   end
 end
 
