@@ -29,13 +29,13 @@
           <%# ILS values %>
           <% if @descriptive_metadata_presenter.ils_metadata %>
             <td class="<%= @descriptive_metadata_presenter.field_ils_class(f) %>">
-              <%= @descriptive_metadata_presenter.field_values('ils', f) %>
+              <%= field_values('ils', f) %>
             </td>
           <% end %>
 
           <%# Resource values %>
           <td class="<%= @descriptive_metadata_presenter.field_resource_class(f) %>">
-            <%= @descriptive_metadata_presenter.field_values('resource', f) %>
+            <%= field_values('resource', f) %>
           </td>
         </tr>
       <% end %>
