@@ -61,7 +61,7 @@ module ItemDescriptiveMetadata
     def field_resource_class(field)
       return unless @descriptive_metadata_presenter.ils_metadata
 
-      'bg-success bg-opacity-10' if object[field].present?
+      'bg-success bg-opacity-10' if @descriptive_metadata_presenter.object[field].present?
     end
 
     # Check if field has either ILS or resource value (otherwise won't be displayed)
