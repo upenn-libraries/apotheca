@@ -42,11 +42,7 @@ Capybara.register_driver(:better_cuprite) do |app|
       # smooth scrolling for ARM systems moves too slow causing elements to remain outside of viewport during testing
       # resulting in failing tests
       # See: https://codemeister.dev/capybara-cuprite-and-a-slow-scrolling-chrome-arm
-      browser_options: if remote_chrome
-                         { 'no-sandbox' => nil, 'disable-smooth-scrolling' => true }
-                       else
-                         { 'disable-smooth-scrolling' => true }
-                       end,
+      browser_options: remote_chrome ? { 'no-sandbox' => nil } : {},
       # Increase Chrome startup wait time (required for stable CI builds)
       process_timeout: 10,
       # Enable debugging capabilities
