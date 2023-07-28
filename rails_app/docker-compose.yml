@@ -43,6 +43,7 @@ services:
       CONNECTION_TIMEOUT: 600000
       KEEP_ALIVE: true
       FUNCTION_ENABLE_INCOGNITO_MODE: true
+      ALLOW_FILE_PROTOCOL: true
 
 volumes:
   db_data:
