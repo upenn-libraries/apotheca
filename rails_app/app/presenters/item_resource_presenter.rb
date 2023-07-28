@@ -41,6 +41,5 @@ class ItemResourcePresenter < BasePresenter
       @ils_metadata = ils_metadata&.with_indifferent_access
       @resource_json_metadata = object.to_json_export.with_indifferent_access
     end
-
   end
 end

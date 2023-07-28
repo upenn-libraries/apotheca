@@ -22,6 +22,9 @@ module ItemDescriptiveMetadata
     end
 
 
+    # Display field values with secondary URI formatting. Recursively display subfield values.
+    # @param [Hash] value
+    # @return [Array] value string and URI html
     def field_display(value)
       subfields = [value[:value]]
       subfields << tag.span(value[:uri], class: 'px-1 small text-secondary') if value[:uri]
