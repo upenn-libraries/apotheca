@@ -6,6 +6,19 @@ module ItemDescriptiveMetadata
       @descriptive_metadata_presenter = descriptive_metadata_presenter
     end
 
+    # Helper method to generate a list of items
+    #
+    # @param [Array] items
+    # @param [String] list_class
+    # @return [String] html unordered list
+    def list_of_values(items, list_class = nil)
+      tag.ul(class: 'list-unstyled mb-0') do
+        items&.each_with_index do |item, index|
+          concat tag.li(class: index.zero? ? '' : list_class) { yield(item) }
+        end
+      end
+    end
+
     # Get field values as unstyled list
     #
     # @param [String] source (ILS vs resource value)
@@ -14,15 +27,16 @@ module ItemDescriptiveMetadata
     def field_values(source, field)
       field_values = source == 'resource' ? @descriptive_metadata_presenter.resource_json_metadata[field] : @descriptive_metadata_presenter.ils_metadata[field]
 
-      tag.ul(class: 'list-unstyled mb-0') do
-        field_values&.each_with_index do |value, i|
-          concat tag.li(class: i.zero? ? '' : 'pt-2') { field_display(value) }
-        end
+      list_of_values(field_values, 'pt-2') do |value|
+        field_display(value)
       end
     end
 
 
     # Display field values with secondary URI formatting. Recursively display subfield values.
+    # For example, this is what the value hash looks like:
+    # {value: 'John Smith', uri: 'john.com', role:[{value: 'Author', uri: 'john.com/author'}]}
+    #
     # @param [Hash] value
     # @return [Array] value string and URI html
     def field_display(value)
@@ -35,8 +49,8 @@ module ItemDescriptiveMetadata
           tag.tbody do
             tag.tr do
               tag.th(k.to_s.titleize, scope: :row) + tag.td do
-                tag.ul(class: 'list-unstyled mb-0') do
-                  safe_join(v.map { |t| tag.li(field_display(t)) })
+                list_of_values(v) do |t|
+                  field_display(t)
                 end
               end
             end
@@ -53,7 +67,11 @@ module ItemDescriptiveMetadata
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [String (frozen)]
     def field_ils_class(field)
-      @descriptive_metadata_presenter.ils_metadata && @descriptive_metadata_presenter.object[field].empty? ? 'bg-success bg-opacity-10' : 'opacity-75 text-decoration-line-through'
+      if @descriptive_metadata_presenter.ils_metadata && @descriptive_metadata_presenter.object[field].empty?
+        'bg-success bg-opacity-10'
+      else
+        'opacity-75 text-decoration-line-through'
+      end
     end
 
     # Add bootstrap classes to identify that field's resource value is given precedence over ILS value
