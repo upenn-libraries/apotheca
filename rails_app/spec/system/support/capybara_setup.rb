@@ -24,24 +24,14 @@ Capybara.server_host = '0.0.0.0'
 # Capybara.app_host = "http://#{`hostname`.strip&.downcase || '0.0.0.0'}"
 Capybara.app_host = 'http://host.docker.internal'
 
-module CapybaraHelpers
-  # JS confirm modal not rendering properly in headless browser causing Capybara#accept_confirm to fail.
-  # This method simulates accepting confirmation by ensuring window.confirm() returns true.
-  # Expects a block whose actions will trigger the display modal to appear.
-  def accept_confirm_modal(&block)
-    execute_script('window.confirm = function() { return true }')
-    yield block
-  end
-end
-
 RSpec.configure do |config|
+  # Not loading Bootstrap Icons from CDN to prevent inconsistent errors from accept_confirm
+  config.before(:each, type: :system) do
+    page.driver.browser.url_blacklist = ['https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css']
+  end
   # Make sure this hook runs before others
   config.prepend_before(:each, type: :system) do
     # Use JS driver always
     driven_by Capybara.javascript_driver
-  end
-
-  RSpec.configure do |config|
-    config.include CapybaraHelpers, type: :system
   end
 end
