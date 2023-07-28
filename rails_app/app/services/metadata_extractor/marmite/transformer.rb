@@ -71,24 +71,24 @@ module MetadataExtractor
 
           mapped_values[f] = mapped_values[f].group_by { |i| i.except(:uri) }
                                              .values
-                                             .sum([]) { |values| selected_preferred_values(values) }
+                                             .sum([]) { |values| preferred_values(values) }
         end
       end
 
-      # Selecting preferred values in a list of values. It first removes any duplicates and returns the value if
-      # there is only one. Preferring values with LOC URIs, followed by values with any URI.
-      def selected_preferred_values(values)
+      # Selecting preferred values in a list of descriptive metadata values. It first removes any duplicates
+      # and returns the value if there is only one. Preferring values with LOC URIs, followed by values with any URI.
+      def preferred_values(values)
         values = values.uniq
 
         return values if values.count == 1
 
-        if (v1 = values.select { |v| v[:uri]&.starts_with?(%r{https*://id\.loc\.gov/}) })
-          v1
-        elsif (v2 = values.select { |v| v[:uri].present? })
-          v2
-        else
-          values
-        end
+        loc_headings = values.select { |v| v[:uri]&.starts_with?(%r{https*://id\.loc\.gov/}) }
+        return loc_headings if loc_headings.present?
+
+        with_uri = values.select { |v| v[:uri].present? }
+        return with_uri if with_uri.present?
+
+        values
       end
     end
   end

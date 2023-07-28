@@ -2,6 +2,7 @@
 
 RSpec.describe MetadataExtractor::Marmite::Transformer do
   let(:transformer) { described_class.new(xml) }
+  let(:xml) { '' }
 
   describe '#to_descriptive_metadata' do
     context 'when record is a book' do
@@ -162,25 +163,68 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
         ).to contain_exactly('Keian Taiheiki', '慶安太平記')
       end
     end
+
+    context 'when MARC XML contains approximate date value' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:controlfield tag="001">9940417313503681</marc:controlfield>
+              <marc:controlfield tag="008">030101q10uu11uuxx 000 0 heb d</marc:controlfield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'converts date to EDFT' do
+        expect(
+          transformer.to_descriptive_metadata[:date].pluck(:value)
+        ).to contain_exactly('10XX')
+      end
+    end
   end
 
-  context 'when MARC XML contains approximate date value' do
-    let(:xml) do
-      <<~XML
-        <?xml version="1.0"?>
-        <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
-          <marc:record>
-            <marc:controlfield tag="001">9940417313503681</marc:controlfield>
-            <marc:controlfield tag="008">030101q10uu11uuxx 000 0 heb d</marc:controlfield>
-          </marc:record>
-        </marc:records>
-      XML
+  describe '#remove_duplicates!' do
+    let(:creator) { { value: 'Random, Person', role: [{ value: 'creator' }] } }
+    let(:creator_with_uri) { { value: 'Random, Person', uri: 'https://example.com/random-person', role: [{ value: 'creator' }] } }
+    let(:illustrator) { { value: 'Random, Person', role: [{ value: 'illustrator' }] } }
+
+    it 'removes duplicate values that have the same role' do
+      values = { name: [creator, creator_with_uri] }
+      transformer.send(:remove_duplicates!, values, [:name])
+      expect(values[:name]).to contain_exactly(creator_with_uri)
     end
 
-    it 'converts date to EDFT' do
+    it 'does not remove duplicate values that have different roles' do
+      values = { name: [creator, creator_with_uri, illustrator] }
+      transformer.send(:remove_duplicates!, values, [:name])
+      expect(values[:name]).to contain_exactly(creator_with_uri, illustrator)
+    end
+  end
+
+  describe '#preferred_values' do
+    let(:with_loc_uri) { { value: 'World history', uri: 'http://id.loc.gov/authorities/subjects/sh85148201' } }
+    let(:with_fast_uri) { { value: 'World history', uri: 'http://id.worldcat.org/fast/1181345'} }
+    let(:with_upenn_uri) { { value: 'World history', uri: 'http://id.library.upenn.edu/world-history' } }
+    let(:without_uri) { { value: 'World history' } }
+
+    it 'prefers LOC URIs over other authorities' do
       expect(
-        transformer.to_descriptive_metadata[:date].pluck(:value)
-      ).to contain_exactly('10XX')
+        transformer.send(:preferred_values, [with_loc_uri, with_fast_uri, without_uri])
+      ).to contain_exactly(with_loc_uri)
+    end
+
+    it 'prefers values with URI over values without URIs' do
+      expect(
+        transformer.send(:preferred_values, [with_fast_uri, with_upenn_uri, without_uri])
+      ).to contain_exactly(with_fast_uri, with_upenn_uri)
+    end
+
+    it 'removes duplicate' do
+      expect(
+        transformer.send(:preferred_values, [without_uri, without_uri])
+      ).to contain_exactly(without_uri)
     end
   end
 end
