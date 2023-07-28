@@ -47,7 +47,7 @@ describe 'Asset Show Page' do
 
     it 'can regenerate derivatives' do
       click_on 'Actions'
-      accept_confirm_modal do
+      accept_confirm do
         click_on 'Regenerate Derivatives'
       end
       expect(page).to have_text('Successfully enqueued job to regenerate derivatives')

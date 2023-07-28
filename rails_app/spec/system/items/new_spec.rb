@@ -36,7 +36,6 @@ describe 'Item New Page' do
              from: 'item-structural-metadata-viewing-direction'
     end
 
-    # FIXME: need javascript for this test
     it 'can create a new item' do
       click_on 'Save'
       expect(page).to have_text('Successfully created item')

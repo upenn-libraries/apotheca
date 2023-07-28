@@ -53,7 +53,7 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be cancelled' do
-          accept_confirm_modal { click_on 'Cancel Export' }
+          accept_confirm { click_on 'Cancel Export' }
           expect(page).to have_text('Bulk export cancelled.')
         end
       end
@@ -80,7 +80,7 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          accept_confirm_modal { click_on 'Delete Export' }
+          accept_confirm { click_on 'Delete Export' }
           expect(page).to have_text('Bulk export deleted.')
         end
       end
@@ -121,12 +121,12 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          accept_confirm_modal { click_on 'Delete Export' }
+          accept_confirm { click_on 'Delete Export' }
           expect(page).to have_text('Bulk export deleted.')
         end
 
         it 'can be regenerated' do
-          accept_confirm_modal { click_on 'Regenerate' }
+          accept_confirm { click_on 'Regenerate' }
           expect(page).to have_text('Bulk export queued for regeneration')
         end
       end
@@ -164,12 +164,12 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          accept_confirm_modal { click_on 'Delete Export' }
+          accept_confirm { click_on 'Delete Export' }
           expect(page).to have_text('Bulk export deleted.')
         end
 
         it 'can be regenerated' do
-          accept_confirm_modal { click_on 'Regenerate' }
+          accept_confirm { click_on 'Regenerate' }
           expect(page).to have_text('Bulk export queued for regeneration')
         end
       end

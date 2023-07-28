@@ -104,7 +104,7 @@ describe 'Item Show Page' do
 
       it 'enqueues job to refresh ils metadata' do
         click_on 'Actions'
-        accept_confirm_modal { click_on 'Refresh ILS Metadata' }
+        accept_confirm { click_on 'Refresh ILS Metadata' }
         expect(page).to have_text('Job to refresh ILS metadata enqueued')
       end
     end
