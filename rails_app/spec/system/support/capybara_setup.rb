@@ -10,6 +10,7 @@ Capybara.default_max_wait_time = 2
 # That makes tests less dependent on slightly UI changes.
 Capybara.default_normalize_ws = true
 
+# Disable CSS transitions
 Capybara.disable_animation = true
 
 # Where to store system tests artifacts (e.g. screenshots, downloaded files, etc.).
