@@ -17,7 +17,7 @@ describe 'Asset New Page' do
   end
 
   it 'can create a new asset' do
-    attach_file 'asset-file', File.expand_path('spec/fixtures/files/trade_card/original/front.tif')
+    attach_file 'asset-file', Rails.root.join('spec/fixtures/files/trade_card/original/front.tif')
     click_on 'Save'
     expect(page).to have_text('Successfully created asset')
   end
