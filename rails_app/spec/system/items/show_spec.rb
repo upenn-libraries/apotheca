@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Item Show Page' do
   let(:user) { create(:user, role) }
 
@@ -19,30 +21,37 @@ describe 'Item Show Page' do
     end
 
     it 'shows link to edit item within structural metadata tab' do
+      click_on 'Structural Metadata'
       expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#structural-metadata")
     end
 
     it 'shows link to edit item within administrative info tab' do
+      click_on 'Administrative Info'
       expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#administrative-info")
     end
 
     it 'disables button to refresh ils metadata when item has no bibnumber' do
+      click_on 'Actions'
       expect(page).to have_button('Refresh ILS Metadata', disabled: true)
     end
 
     it 'shows link to add an asset within assets tab' do
+      click_on 'Assets'
       expect(page).to have_link('Add Asset', href: new_asset_path(item_id: item.id))
     end
 
     it 'shows link to arrange assets within assets tab' do
+      click_on 'Assets'
       expect(page).to have_link('Arrange Assets', href: reorder_assets_item_path(id: item.id))
     end
 
     it 'shows button to edit an asset within assets tab' do
+      click_on 'Assets'
       expect(page).to have_link('Edit Asset', href: edit_asset_path(item.asset_ids.first))
     end
 
     it 'shows form input to set item thumbnail' do
+      click_on 'Assets'
       set_thumbnail_input = find('input', id: 'set-as-item-thumbnail')
       expect(set_thumbnail_input.value).to eq('Set as Item Thumbnail')
     end
@@ -89,11 +98,13 @@ describe 'Item Show Page' do
       let(:user) { create(:user, :editor) }
 
       it 'enables the button to refresh ils metadata' do
+        click_on 'Actions'
         expect(page).to have_button('Refresh ILS Metadata', disabled: false)
       end
 
       it 'enqueues job to refresh ils metadata' do
-        click_on 'Refresh ILS Metadata'
+        click_on 'Actions'
+        accept_confirm { click_on 'Refresh ILS Metadata' }
         expect(page).to have_text('Job to refresh ILS metadata enqueued')
       end
     end
@@ -141,7 +152,7 @@ describe 'Item Show Page' do
 
     it 'links title of asset to asset show page' do
       visit item_path(item)
-
+      click_on 'Assets'
       within "#asset-#{item.asset_ids.first}" do
         expect(page).to have_link('front.tif', href: asset_path(item.asset_ids.first))
       end
@@ -166,7 +177,7 @@ describe 'Item Show Page' do
     it_behaves_like 'any logged in user who can edit an Item'
 
     it 'shows actions tab' do
-      expect(page).to have_selector('#actions')
+      expect(page).to have_selector('#actions-tab')
     end
 
     it 'does not show button to delete item' do
@@ -184,10 +195,11 @@ describe 'Item Show Page' do
     it_behaves_like 'any logged in user who can edit an Item'
 
     it 'shows actions tab' do
-      expect(page).to have_selector('#actions')
+      expect(page).to have_selector('#actions-tab')
     end
 
     it 'shows button to delete item' do
+      click_on 'Actions'
       expect(page).to have_button('Delete Item')
     end
   end

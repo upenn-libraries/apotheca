@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Bulk Export Index Page' do
   let(:user) { create(:user, role) }
 
@@ -51,7 +53,7 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be cancelled' do
-          click_on 'Cancel Export'
+          accept_confirm { click_on 'Cancel Export' }
           expect(page).to have_text('Bulk export cancelled.')
         end
       end
@@ -78,7 +80,7 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          click_on 'Delete Export'
+          accept_confirm { click_on 'Delete Export' }
           expect(page).to have_text('Bulk export deleted.')
         end
       end
@@ -119,14 +121,13 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          click_on 'Delete Export'
+          accept_confirm { click_on 'Delete Export' }
           expect(page).to have_text('Bulk export deleted.')
         end
 
         it 'can be regenerated' do
-          click_on 'Regenerate' do
-            expect(page).to have_text('Bulk export regenerating...')
-          end
+          accept_confirm { click_on 'Regenerate' }
+          expect(page).to have_text('Bulk export queued for regeneration')
         end
       end
 
@@ -163,14 +164,13 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          click_on 'Delete Export'
+          accept_confirm { click_on 'Delete Export' }
           expect(page).to have_text('Bulk export deleted.')
         end
 
         it 'can be regenerated' do
-          click_on 'Regenerate' do
-            expect(page).to have_text('Bulk export regenerating...')
-          end
+          accept_confirm { click_on 'Regenerate' }
+          expect(page).to have_text('Bulk export queued for regeneration')
         end
       end
     end

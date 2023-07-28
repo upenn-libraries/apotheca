@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Item Index Page' do
   let(:user) { create(:user, role) }
   let!(:item) { persist(:item_resource, :with_asset) }

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Asset New Page' do
   let(:user) { create(:user, :admin) }
   let(:item) { persist(:item_resource) }
@@ -15,7 +17,7 @@ describe 'Asset New Page' do
   end
 
   it 'can create a new asset' do
-    attach_file 'asset-file', 'spec/fixtures/files/trade_card/original/front.tif'
+    attach_file 'asset-file', Rails.root.join('spec/fixtures/files/trade_card/original/front.tif')
     click_on 'Save'
     expect(page).to have_text('Successfully created asset')
   end
