@@ -38,9 +38,9 @@ module MetadataExtractor
           end
         end
 
-        # TODO: Could make these into a config value.
-        strip_punctuation!(mapped_values, %i[subject geographic_subject physical_format publisher name])
-        remove_duplicates!(mapped_values, %i[subject name language])
+        strip_punctuation!(mapped_values, %i[collection title subject geographic_subject physical_format publisher name coverage])
+        mapped_values[:name]&.each { |n| strip_punctuation!(n, %i[role]) } # Strip punctuation from roles.
+        remove_duplicates!(mapped_values, %i[subject name language physical_format coverage])
 
         mapped_values
       rescue StandardError => e
@@ -56,7 +56,7 @@ module MetadataExtractor
 
           mapped_values[f]&.each do |h|
             # Remove trailing commas and semicolons
-            h[:value].sub!(/\s*[,;]\s*\Z/, '')
+            h[:value].sub!(%r{\s*[,;/:]\s*\Z}, '')
 
             # Remove periods that are not preceded by a capital letter (could be an abbreviation).
             h[:value].sub!(/(?<![A-Z])\s*\.\s*\Z/, '')
@@ -69,8 +69,26 @@ module MetadataExtractor
         fields.each do |f|
           next unless mapped_values.key?(f)
 
-          mapped_values[f]&.uniq!
+          mapped_values[f] = mapped_values[f].group_by { |i| i.except(:uri) }
+                                             .values
+                                             .sum([]) { |values| preferred_values(values) }
         end
+      end
+
+      # Selecting preferred values in a list of descriptive metadata values. It first removes any duplicates
+      # and returns the value if there is only one. Preferring values with LOC URIs, followed by values with any URI.
+      def preferred_values(values)
+        values = values.uniq
+
+        return values if values.count == 1
+
+        loc_headings = values.select { |v| v[:uri]&.starts_with?(%r{https*://id\.loc\.gov/}) }
+        return loc_headings if loc_headings.present?
+
+        with_uri = values.select { |v| v[:uri].present? }
+        return with_uri if with_uri.present?
+
+        values
       end
     end
   end

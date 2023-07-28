@@ -31,10 +31,11 @@ module MetadataExtractor
           end
         end
 
-        # Appending call number to the end of the value manually because currently the order of the fields is preserved.
-        def self.appending_call_number(datafield, extracted_values)
+        # Adding location to the beginning of the value manually because currently the order of the fields is preserved.
+        def self.prefixing_with_location(datafield, extracted_values)
           extracted_values.tap do |values|
-            values[:value] << " #{datafield.subfield_at('d')}"
+            subfield_j = datafield.subfield_at('q')
+            values[:value] = "#{subfield_j}, #{values[:value]}" if subfield_j
           end
         end
 
@@ -67,12 +68,12 @@ module MetadataExtractor
                              custom: method(:add_role_to_name)
         map_datafield '111', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
-        map_datafield '245', to: :title, value: { subfields: %w[a b f g h k n p s], join: SPACE }
+        map_datafield '245', to: :title, value: { subfields: %w[a b f g n p s], join: SPACE }
         map_datafield '246', to: :alt_title, value: { subfields: %w[a b n p], join: SPACE }
         map_datafield '260', to: :publisher, value: { subfields: 'b' }
         map_datafield '264', to: :publisher, value: { subfields: 'b' },
                              if: ->(datafield) { datafield.indicator2 == '1' }
-        map_datafield '300', to: :extent, value: { subfields: %w[a b c e g] }
+        map_datafield '300', to: :extent, value: { subfields: %w[a b c e g], join: SPACE }
         map_datafield '336', to: :item_type, value: { subfields: 'a' },
                              if: ->(datafield) { datafield.subfield_at('2') == 'rdacontent' },
                              custom: ->(_, values) { RDAContentTypeToDCMIType::MAP.fetch(values[:value], {}) }
@@ -105,14 +106,14 @@ module MetadataExtractor
                              uri: { subfields: '0' }
         map_datafield '773', to: :collection, value: { subfields: 't' }
         map_datafield '856', to: :relation, value: { subfields: %w[u z], join: ': ' }
-        map_datafield '880', to: :title, value: { subfields: %w[a b f g h k n p s] }, if: method(:transliterated_title?)
+        map_datafield '880', to: :title, value: { subfields: %w[a b f g n p s] }, if: method(:transliterated_title?)
 
         # Mapping holdings information located in an Alma-specific datafield.
         # Documentation about the subfields available:
         # https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw==/
-        map_datafield 'AVA', to: :physical_location, value: { subfields: %w[b j], join: SPACE },
+        map_datafield 'AVA', to: :physical_location, value: { subfields: %w[c d], join: ', ' },
                              if: ->(datafield) { datafield.subfield_at('8').present? },
-                             custom: method(:appending_call_number)
+                             custom: method(:prefixing_with_location)
       end
     end
   end
