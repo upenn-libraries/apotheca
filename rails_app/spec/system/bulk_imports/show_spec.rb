@@ -123,14 +123,14 @@ describe 'Bulk Import Show Page' do
       end
 
       it 'can cancel all queued imports' do
-        accept_confirm('Do you really want to cancel all queued Imports?') { click_on 'Cancel All Queued Imports' }
+        accept_confirm_modal { click_on 'Cancel All Queued Imports' }
         expect(page).to have_text('All queued imports were cancelled')
         expect(page).not_to have_button('Cancel')
       end
 
       it 'can cancel an individual Import' do
         within '#imports-table > tbody > tr:first-child' do
-          accept_confirm('Do you really want to cancel this Import?') { click_on 'Cancel' }
+          accept_confirm_modal { click_on 'Cancel' }
         end
         expect(page).to have_text("Import #{queued_imports.first.id} cancelled")
       end

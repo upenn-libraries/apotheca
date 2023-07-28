@@ -47,7 +47,7 @@ describe 'Bulk Import Index Page' do
     end
 
     it 'can cancel all queued imports' do
-      accept_confirm('Do you really want to cancel all queued Imports?') { click_on 'Cancel' }
+      accept_confirm_modal { click_on 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
       expect(page).not_to have_button('Cancel')
     end
@@ -68,7 +68,7 @@ describe 'Bulk Import Index Page' do
 
     it 'can cancel others\' bulk imports' do
       expect(page).to have_button('Cancel', type: 'submit')
-      accept_confirm('Do you really want to cancel all queued Imports?') { click_on 'Cancel' }
+      accept_confirm_modal { click_on 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
     end
   end
