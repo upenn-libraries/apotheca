@@ -38,6 +38,8 @@ services:
       - "3333:3333"
     volumes:
       - "${PWD}:${PWD}:cached"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       PORT: 3333
       CONNECTION_TIMEOUT: 600000
