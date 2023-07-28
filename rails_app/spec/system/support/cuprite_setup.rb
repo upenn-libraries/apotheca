@@ -39,9 +39,6 @@ Capybara.register_driver(:better_cuprite) do |app|
     app,
     **{
       window_size: [1200, 800],
-      # smooth scrolling for ARM systems moves too slow causing elements to remain outside of viewport during testing
-      # resulting in failing tests
-      # See: https://codemeister.dev/capybara-cuprite-and-a-slow-scrolling-chrome-arm
       browser_options: remote_chrome ? { 'no-sandbox' => nil } : {},
       # Increase Chrome startup wait time (required for stable CI builds)
       process_timeout: 10,
