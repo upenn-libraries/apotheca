@@ -156,7 +156,13 @@ title = "gitlab gitleaks config"
             '''(?i)(primary[-_]key)''',
             '''(?i)(omniauth)''',
             '''(?i)(header\[\:key\])''',
-            '''(?i)(\?\<key\>)'''
+            '''(?i)(\?\<key\>)''',
+            '''(?i)(_password_v)''',
+            '''(?i)(\"password\")''',
+            '''(?i)(key(\s+)?(\=|\:)(\s+)?key)''',
+            '''(?i)(config.ssh.insert_key)''',
+            '''(?i)(minioadmin)''',
+            '''(?i)(MINIO_SECRET_ACCESS_KEY)'''
         ]
 
 [[rules]]
