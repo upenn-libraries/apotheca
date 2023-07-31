@@ -2,8 +2,8 @@
 
 module ItemDescriptiveMetadata
   class Component < ViewComponent::Base
-    def initialize(descriptive_metadata_presenter:)
-      @descriptive_metadata_presenter = descriptive_metadata_presenter
+    def initialize(descriptive_metadata:)
+      @descriptive_metadata = descriptive_metadata
     end
 
     # Helper method to generate a list of items
@@ -25,9 +25,15 @@ module ItemDescriptiveMetadata
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [String (frozen)]
     def field_values(source, field)
-      field_values = source == 'resource' ? @descriptive_metadata_presenter.resource_json_metadata[field] : @descriptive_metadata_presenter.ils_metadata[field]
+      field_values = if source == 'resource'
+                       @descriptive_metadata.resource_json_metadata[field]
+                     else
+                       @descriptive_metadata.ils_metadata[field]
+                     end
 
-      list_of_values(field_values, 'pt-2')
+      tag.td(class: field_class(source, field)) do
+        list_of_values(field_values, 'pt-2')
+      end
     end
 
 
@@ -41,9 +47,8 @@ module ItemDescriptiveMetadata
       subfields = [value[:value]]
       subfields << tag.span(value[:uri], class: 'px-1 small text-secondary') if value[:uri]
 
-      # TODO: This needs a refactor
       value.except(:value, :uri).each do |k, v|
-        subfields << tag.table(class: ['table', 'table-borderless', 'mb-0']) do
+        subfields << tag.table(class: %w[table table-borderless mb-0]) do
           tag.tbody do
             tag.tr do
               tag.th(k.to_s.titleize, scope: :row) + tag.td do
@@ -57,36 +62,34 @@ module ItemDescriptiveMetadata
       safe_join(subfields)
     end
 
-    # Add bootstrap classes to identify whether field's ILS value will be used or overridden
+    # Add bootstrap classes to identify whether field's ILS value will be used or overridden by resource value
     # (ILS value only used if field has no resource value)
     #
-    # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
-    # @return [String (frozen)]
-    def field_ils_class(field)
-      if @descriptive_metadata_presenter.ils_metadata && @descriptive_metadata_presenter.object[field].empty?
-        'bg-success bg-opacity-10'
-      else
+    # @param [String] source
+    # @param [String] field
+    # @return [String] class for field
+    # @return [nil] if field does not have an ILS value (no highlight necessary)
+    def field_class(source, field)
+      if source == 'ils'
+        if @descriptive_metadata.ils_metadata && @descriptive_metadata.object[field].empty?
+          return 'bg-success bg-opacity-10'
+        end
+
         'opacity-75 text-decoration-line-through'
+      else
+        return unless @descriptive_metadata.ils_metadata
+
+        'bg-success bg-opacity-10' if @descriptive_metadata.object[field].present?
       end
     end
 
-    # Add bootstrap classes to identify that field's resource value is given precedence over ILS value
-    #
-    # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
-    # @return [nil] if field does not have an ILS value (no highlight necessary)
-    # @return [String (frozen)] if field has an ILS value
-    def field_resource_class(field)
-      return unless @descriptive_metadata_presenter.ils_metadata
-
-      'bg-success bg-opacity-10' if @descriptive_metadata_presenter.object[field].present?
-    end
 
     # Check if field has either ILS or resource value (otherwise won't be displayed)
     #
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [TrueClass, FalseClass]
     def field_row_data?(field)
-      @descriptive_metadata_presenter.ils_metadata&.dig(field).present? || @descriptive_metadata_presenter.object[field].present?
+      @descriptive_metadata.ils_metadata&.dig(field).present? || @descriptive_metadata.object[field].present?
     end
   end
 end

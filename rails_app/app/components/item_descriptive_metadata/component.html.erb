@@ -7,13 +7,13 @@
         Field
       </th>
 
-      <% if @descriptive_metadata_presenter.ils_metadata %>
+      <% if @descriptive_metadata.ils_metadata %>
         <th scope='col' class='col-5'>
           From ILS
         </th>
       <% end %>
 
-      <th scope='col' class="<%= @descriptive_metadata_presenter.ils_metadata ? 'col-5' : 'col-10' %>">
+      <th scope='col' class="<%= @descriptive_metadata.ils_metadata ? 'col-5' : 'col-10' %>">
         From Resource
       </th>
     </tr>
@@ -27,16 +27,12 @@
           <th scope='row'><%= f.to_s.titleize %></th>
 
           <%# ILS values %>
-          <% if @descriptive_metadata_presenter.ils_metadata %>
-            <td class="<%= field_ils_class(f) %>">
-              <%= field_values('ils', f) %>
-            </td>
+          <% if @descriptive_metadata.ils_metadata %>
+            <%= field_values('ils', f) %>
           <% end %>
 
           <%# Resource values %>
-          <td class="<%= field_resource_class(f) %>">
-            <%= field_values('resource', f) %>
-          </td>
+          <%= field_values('resource', f) %>
         </tr>
       <% end %>
     <% end %>

@@ -3,4 +3,4 @@
   <%= header.with_link(href: edit_item_path(@item, anchor: 'descriptive-metadata')) { 'Edit' } if can? :update, @item %>
 <% end %>
 
-<%= render(ItemDescriptiveMetadata::Component.new(descriptive_metadata_presenter: @item.descriptive_metadata)) %>
+<%= render(ItemDescriptiveMetadata::Component.new(descriptive_metadata: @item.descriptive_metadata)) %>
