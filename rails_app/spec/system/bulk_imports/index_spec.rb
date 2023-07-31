@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Bulk Import Index Page' do
   let(:user) { create(:user, role) }
 
@@ -45,7 +47,7 @@ describe 'Bulk Import Index Page' do
     end
 
     it 'can cancel all queued imports' do
-      click_on 'Cancel'
+      accept_confirm { click_on 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
       expect(page).not_to have_button('Cancel')
     end
@@ -66,7 +68,7 @@ describe 'Bulk Import Index Page' do
 
     it 'can cancel others\' bulk imports' do
       expect(page).to have_button('Cancel', type: 'submit')
-      click_on 'Cancel'
+      accept_confirm { click_on 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
     end
   end

@@ -39,7 +39,7 @@ class ItemResourcePresenter < BasePresenter
     def initialize(object:, ils_metadata: nil)
       super object: object
       @ils_metadata = ils_metadata&.with_indifferent_access
-      @resource_json_metadata = object.to_export.with_indifferent_access
+      @resource_json_metadata = object.to_json_export.with_indifferent_access
     end
 
     # Get field values as unstyled list

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Item Index Page' do
   let(:user) { create(:user, role) }
   let!(:item) { persist(:item_resource, :with_asset) }
@@ -44,14 +46,14 @@ describe 'Item Index Page' do
     let(:item_with_bibnumber) { persist(:item_resource, :with_bibnumber) }
 
     before do
-      stub_request(:get, 'https://marmite.library.upenn.edu:9292/api/v2/records/sample-bib/marc21?update=always')
+      stub_request(:get, "#{Settings.marmite.url}/api/v2/records/sample-bib/marc21?update=always")
         .to_return(status: 200, body: marc_xml, headers: {})
       item_with_bibnumber # build item after Marmite request has been stubbed
       visit items_path
     end
 
     it 'shows ILS metadata on the index page' do
-      expect(page).to have_text 'Edgar Fahs Smith Memorial Collection'
+      expect(page).to have_text 'Edgar Fahs Smith Memorial Collection (University of Pennsylvania)'
     end
   end
 

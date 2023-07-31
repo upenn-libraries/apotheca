@@ -9,7 +9,7 @@ class ItemResource
       attribute :value, Valkyrie::Types::Strict::String
       attribute :uri, Valkyrie::Types::URI
 
-      def to_export
+      def to_json_export
         {
           value: value,
           uri: uri.to_s

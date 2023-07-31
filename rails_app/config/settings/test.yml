@@ -20,7 +20,7 @@ solr:
 fits:
   url: http://localhost:8080/fits
 marmite:
-  url: https://marmite.library.upenn.edu:9292
+  url: http://colenda-dev.library.upenn.int:9292
 working_storage:
   sceti_digitized:
     <<: *minio

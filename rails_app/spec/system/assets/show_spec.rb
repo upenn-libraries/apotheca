@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'system_helper'
+
 describe 'Asset Show Page' do
   let(:user) { create(:user, role) }
   let(:asset) { persist(:asset_resource) }
@@ -28,6 +30,7 @@ describe 'Asset Show Page' do
     end
 
     it 'shows download button for preservation file' do
+      click_on 'Preservation File'
       expect(page).to have_link('Download Preservation File')
     end
   end
@@ -38,11 +41,15 @@ describe 'Asset Show Page' do
     end
 
     it 'shows button to regenerate derivatives' do
+      click_on 'Actions'
       expect(page).to have_button('Regenerate Derivatives')
     end
 
     it 'can regenerate derivatives' do
-      click_on 'Regenerate Derivatives'
+      click_on 'Actions'
+      accept_confirm do
+        click_on 'Regenerate Derivatives'
+      end
       expect(page).to have_text('Successfully enqueued job to regenerate derivatives')
     end
   end
@@ -83,6 +90,7 @@ describe 'Asset Show Page' do
     it_behaves_like 'any logged in user who can edit Assets'
 
     it 'shows the button to delete an Asset' do
+      click_on 'Actions'
       expect(page).to have_button('Delete Asset')
     end
   end

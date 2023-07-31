@@ -44,7 +44,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
     fields.index_with do |field|
       val = descriptive_metadata[field]
       if val.blank? && bibnumber_present?
-        ils_descriptive_metadata[field.to_s]
+        ils_descriptive_metadata[field]
       else
         val
       end
@@ -59,7 +59,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
 
   # @return [Hash]
   def descriptive_metadata
-    @descriptive_metadata ||= resource.try(:descriptive_metadata).try(:to_export)
+    @descriptive_metadata ||= resource.try(:descriptive_metadata).try(:to_json_export)
   end
 
   # @return [TrueClass, FalseClass]

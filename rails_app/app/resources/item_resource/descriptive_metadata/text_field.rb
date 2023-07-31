@@ -8,7 +8,7 @@ class ItemResource
 
       attribute :value, Valkyrie::Types::Strict::String
 
-      def to_export
+      def to_json_export
         attributes.slice(:value)
       end
     end

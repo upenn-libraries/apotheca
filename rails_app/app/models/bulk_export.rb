@@ -68,7 +68,7 @@ class BulkExport < ApplicationRecord
   # @return StringIO
   def bulk_export_csv(items:, include_assets:)
     data = items.map do |item|
-      item.to_export(include_assets: include_assets)
+      item.to_json_export(include_assets: include_assets)
     end
     string = StructuredCSV.generate(data)
     StringIO.new(string)
