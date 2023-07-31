@@ -14,7 +14,7 @@ module ItemDescriptiveMetadata
     def list_of_values(items, list_class = nil)
       tag.ul(class: 'list-unstyled mb-0') do
         items&.each_with_index do |item, index|
-          concat tag.li(class: index.zero? ? '' : list_class) { yield(item) }
+          concat tag.li(class: index.zero? ? '' : list_class) { field_display(item) }
         end
       end
     end
@@ -27,9 +27,7 @@ module ItemDescriptiveMetadata
     def field_values(source, field)
       field_values = source == 'resource' ? @descriptive_metadata_presenter.resource_json_metadata[field] : @descriptive_metadata_presenter.ils_metadata[field]
 
-      list_of_values(field_values, 'pt-2') do |value|
-        field_display(value)
-      end
+      list_of_values(field_values, 'pt-2')
     end
 
 
@@ -49,9 +47,7 @@ module ItemDescriptiveMetadata
           tag.tbody do
             tag.tr do
               tag.th(k.to_s.titleize, scope: :row) + tag.td do
-                list_of_values(v) do |t|
-                  field_display(t)
-                end
+                list_of_values(v)
               end
             end
           end
