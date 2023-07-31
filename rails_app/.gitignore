@@ -32,3 +32,6 @@ config/environments/*.local.yml
 
 .byebug_history
 coverage
+
+# Ignore development bundle files
+vendor/bundle
