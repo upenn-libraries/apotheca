@@ -1,0 +1,27 @@
+---
+- name: Create fits dir
+  ansible.builtin.file:
+    path: "{{ project_root ~ '/fits' }}"
+    state: directory
+    mode: 0440
+
+- name: Copy base docker-compose files
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: "{{ project_root ~ '/fits/' }}"
+    mode: 0440
+  loop:
+    - "docker-compose.yml"
+
+- name: Deploy FITS environment
+  community.docker.docker_stack:
+    name: "apotheca"
+    compose:
+      - "{{ project_root ~ '/fits/docker-compose.yml' }}"
+    state: present
+  changed_when: false
+  environment:
+    FITS_IMAGE_NAME: "{{ fits.image.name }}"
+    FITS_IMAGE_TAG: "{{ fits.image.tag }}"
+    FITS_REPLICAS: "{{ fits.replicas }}"
+  no_log: true

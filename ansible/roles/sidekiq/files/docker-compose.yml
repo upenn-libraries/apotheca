@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  sidekiq:
+    image: ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
+    command: ["bundle", "exec", "sidekiq", "-c", "2"]
+    deploy:
+      placement:
+        constraints:
+          - "node.labels.sidekiq == true"
+      replicas: ${REPLICAS}
+      update_config:
+        order: "start-first"
+        parallelism: 1
+    environment:
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_PASSWORD: /run/secrets/database_password
+      DATABASE_USER: ${DATABASE_USER}
+      APP_URL: ${APP_URL}
+      RAILS_ENV: ${APP_RAILS_ENV}
+      REDIS_SIDEKIQ_USER: ${REDIS_SIDEKIQ_USER}
+      REDIS_URL: "redis://redis:${REDIS_PORT}/0"
+      SOLR_URL: "http://solr:8983/solr/${SOLR_CORE_NAME}"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "ps aux | grep '[s]idekiq 6' || exit 1",
+        ]
+      interval: 30s
+      retries: 3
+      start_period: 1m
+      timeout: 30s
+    logging:
+      driver: json-file
+      options:
+        max-file: "3"
+        max-size: "10m"
+    networks:
+      - database
+      - redis
+      - traefik
+    secrets:
+      - database_password
+      - redis_sidekiq_password
+networks:
+  database:
+    external: true
+  redis:
+    external: true
+  traefik:
+    external: true
+
+secrets:
+  database_password:
+    external: true
+    name: ${DATABASE_PASSWORD}
+  redis_sidekiq_password:
+    external: true
+    name: ${REDIS_SIDEKIQ_PASSWORD}

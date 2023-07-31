@@ -1,0 +1,7 @@
+---
+clamav:
+  image:
+    name: "clamav/clamav"
+    tag: "1.1"
+  port: "8080"
+  replicas: 1

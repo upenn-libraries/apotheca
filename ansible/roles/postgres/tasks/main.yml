@@ -1,0 +1,72 @@
+---
+- name: Create postgres dir
+  ansible.builtin.file:
+    path: "{{ project_root ~ '/postgres' }}"
+    state: directory
+    mode: 0440
+
+- name: Create versioned docker secret
+  community.docker.docker_secret:
+    name: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
+    data: "{{ postgres.versioned_secrets.password.value }}"
+    state: present
+  no_log: false
+
+# Execute development steps
+- name: Copy base and dev docker-compose files
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: "{{ project_root ~ '/postgres/' }}"
+    mode: 0440
+  when: is_development | default (false, true)
+  loop:
+    - "docker-compose.yml"
+    - "docker-compose.dev.yml"
+  tags: dev_environment
+
+- name: Deploy Postgres development environment
+  community.docker.docker_stack:
+    name: "apotheca"
+    compose:
+      - "{{ project_root ~ '/postgres/docker-compose.yml' }}"
+      - "{{ project_root ~ '/postgres/docker-compose.dev.yml' }}"
+    state: present
+  changed_when: false
+  environment:
+    POSTGRES_DB: "{{ postgres.database }}"
+    POSTGRES_IMAGE_NAME: "{{ postgres.image.name }}"
+    POSTGRES_IMAGE_TAG: "{{ postgres.image.tag }}"
+    POSTGRES_LOG_CONNECTIONS: "{{ postgres.dev_env.log_connections }}"
+    POSTGRES_LOG_DISCONNECTIONS: "{{ postgres.dev_env.log_disconnections }}"
+    POSTGRES_LOG_STATEMENT: "{{ postgres.dev_env.log_statement }}"
+    POSTGRES_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
+    POSTGRES_USER: "{{ postgres.user }}"
+    REPLICAS: "{{ postgres.replicas }}"
+  no_log: true
+  when: is_development | default (false, true)
+  tags: dev_environment
+
+# Execute staging/production steps
+- name: Copy docker-compose file
+  ansible.builtin.copy:
+    src: "files/docker-compose.yml"
+    dest: "{{ project_root ~ '/postgres/' }}"
+    mode: 0440
+  when: not is_development | default (false, true)
+
+- name: Deploy Postgres production environment
+  community.docker.docker_stack:
+    name: "apotheca"
+    compose:
+      - "{{ project_root ~ '/postgres/docker-compose.yml' }}"
+    state: present
+  changed_when: false
+  environment:
+    POSTGRES_DB: "{{ postgres.database }}"
+    POSTGRES_IMAGE_NAME: "{{ postgres.image.name }}"
+    POSTGRES_IMAGE_TAG: "{{ postgres.image.tag }}"
+    POSTGRES_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
+    POSTGRES_USER: "{{ postgres.user }}"
+    REPLICAS: "{{ postgres.replicas }}"
+  no_log: true
+  when: not is_development | default (false, true)

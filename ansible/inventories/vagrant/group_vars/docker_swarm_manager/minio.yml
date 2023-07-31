@@ -1,0 +1,9 @@
+---
+minio:
+  access_key_id: "minioadmin"
+  image:
+    name: "minio/minio"
+    tag: "latest"
+  replicas: 1
+  secret_access_key: "minioadmin"
+  url: "minio-dev.library.upenn.edu"

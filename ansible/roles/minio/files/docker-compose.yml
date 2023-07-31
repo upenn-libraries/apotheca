@@ -1,0 +1,54 @@
+
+version: "3.8"
+
+services:
+  minio:
+    image: ${MINIO_IMAGE_NAME}:${MINIO_IMAGE_TAG}
+    command: [ "minio", "server", "--console-address", ":9001", "/data" ]
+    deploy:
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.minio.entrypoints=web"
+        - "traefik.http.routers.minio.rule=Host(`${MINIO_SERVER_URL}`)"
+        - "traefik.http.routers.minio.service=minio"
+        - "traefik.http.services.minio.loadbalancer.server.port=9000"
+
+        - "traefik.http.routers.minio.middlewares=minio_https"
+        - "traefik.http.middlewares.minio_https.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.minio_https.redirectscheme.permanent=true"
+
+        - "traefik.http.routers.minio_secure.entrypoints=websecure"
+        - "traefik.http.routers.minio_secure.rule=Host(`${MINIO_SERVER_URL}`)"
+        - "traefik.http.routers.minio_secure.service=minio_secure"
+        - "traefik.http.services.minio_secure.loadbalancer.server.port=9000"
+
+        - "traefik.http.routers.minio_secure.tls=true"
+        - "traefik.http.routers.minio_secure.tls.certresolver=letsencrypt"
+      placement:
+        constraints:
+          - "node.labels.minio == true"
+      replicas: ${MINIO_REPLICAS}
+      update_config:
+        order: "start-first"
+        parallelism: 1
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_ACCESS_KEY}
+      MINIO_SERVER_URL: https://${MINIO_SERVER_URL}
+    logging:
+      driver: json-file
+      options:
+        max-file: "3"
+        max-size: "10m"
+    networks:
+      - traefik
+    volumes:
+      - minio_data:/data
+
+networks:
+  traefik:
+    external: true
+
+volumes:
+  minio_data:

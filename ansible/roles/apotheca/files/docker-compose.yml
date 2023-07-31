@@ -1,0 +1,76 @@
+version: '3.7'
+
+services:
+  apotheca:
+    image: ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
+    command: ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:${APP_PORT}"]
+    deploy:
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.apotheca.entrypoints=web"
+        - "traefik.http.routers.apotheca.rule=Host(`${APP_URL}`)"
+        - "traefik.http.routers.apotheca.service=apotheca"
+        - "traefik.http.services.apotheca.loadbalancer.server.port=${APP_PORT}"
+
+        - "traefik.http.routers.apotheca.middlewares=apotheca_https"
+        - "traefik.http.middlewares.apotheca_https.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.apotheca_https.redirectscheme.permanent=true"
+
+        - "traefik.http.routers.apotheca_secure.entrypoints=websecure"
+        - "traefik.http.routers.apotheca_secure.rule=Host(`${APP_URL}`)"
+        - "traefik.http.routers.apotheca_secure.service=apotheca_secure"
+        - "traefik.http.services.apotheca_secure.loadbalancer.server.port=${APP_PORT}"
+
+        - "traefik.http.routers.apotheca_secure.tls=true"
+        - "traefik.http.routers.apotheca_secure.tls.certresolver=letsencrypt"
+      placement:
+        constraints:
+          - "node.labels.apotheca == true"
+      replicas: ${APP_REPLICAS}
+      update_config:
+        order: "start-first"
+        parallelism: 1
+    environment:
+      APP_URL: ${APP_URL}
+      DATABASE_HOST: "postgres"
+      DATABASE_NAME: "${DATABASE_NAME}"
+      DATABASE_PASSWORD: "/run/secrets/database_password"
+      DATABASE_USER: "${DATABASE_USER}"
+      RAILS_ENV: "${RAILS_ENV}"
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_SERVE_STATIC_FILES: "true"
+      SOLR_BACKUP_LOCATION: "solr/backups"
+      SOLR_URL: "${SOLR_URL}"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsSL localhost:${APP_PORT} || exit 1",
+        ]
+      interval: 10s
+      retries: 6
+      start_period: 10s
+      timeout: 10s
+    networks:
+      - database
+      - traefik
+    secrets:
+      - database_password
+      # - source: master_key
+      #   target: /app/config/credentials/${RAILS_ENV}.key
+      #   mode: 0440
+
+networks:
+  database:
+    external: true
+  traefik:
+    external: true
+
+secrets:
+  database_password:
+    external: true
+    name: ${DATABASE_PASSWORD}
+  # master_key:
+  #   external: true
+  #   name: ${MASTER_KEY}

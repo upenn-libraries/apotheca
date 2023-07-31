@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE_NAME}:${POSTGRES_IMAGE_TAG}
+    deploy:
+      placement:
+        constraints:
+          - node.labels.postgres == true
+      replicas: ${REPLICAS}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_database_password
+      POSTGRES_USER: ${POSTGRES_USER}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    logging:
+      driver: json-file
+      options:
+        max-file: '3'
+        max-size: '10m'
+    networks:
+      - database
+    secrets:
+      - postgres_database_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  database:
+    driver: overlay
+    name: database
+    attachable: true
+
+secrets:
+  postgres_database_password:
+    external: true
+    name: ${POSTGRES_PASSWORD}
+
+volumes:
+  postgres_data:

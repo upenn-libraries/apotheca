@@ -1,0 +1,6 @@
+---
+chrome:
+  image:
+    name: "browserless/chrome"
+    tag: "1.59-puppeteer-1.20.0"
+  port: 3333

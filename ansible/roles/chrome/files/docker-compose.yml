@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  chrome:
+    image: ${CHROME_IMAGE_NAME}:${CHROME_IMAGE_TAG}
+    # Mount application source code to support file uploading
+    # (otherwise Chrome won't be able to find files).
+    # NOTE: Make sure you use absolute paths in `#attach_file`.
+    # NOTE: This app is unlikely to have file uploads, so don't mount
+    environment:
+      # By default, it uses 3000, which is typically used by Rails.
+      PORT: ${CHROME_PORT}
+      # Set connection timeout to avoid timeout exception during debugging
+      # https://docs.browserless.io/docs/docker.html#connection-timeout
+      CONNECTION_TIMEOUT: 600000
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  apotheca:
+    environment:
+      APP_UID: ${UID:-1000}
+      APP_GID: ${GID:-1000}
+      CHROME_URL: "http://chrome:${CHROME_PORT}"
+    healthcheck:
+      retries: 20
+      start_period: 5m
+    volumes:
+      - /apotheca/ansible/roles/apotheca/files/src/:/home/app

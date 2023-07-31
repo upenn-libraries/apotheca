@@ -1,0 +1,9 @@
+---
+apotheca_build_docker_image: false
+apotheca_image_name: "apotheca"
+apotheca_image_registry: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
+apotheca_image_tag: "main-development"
+apotheca_port: 3000
+apotheca_rails_env: "development"
+apotheca_replicas: 1
+apotheca_url: "apotheca-dev.library.upenn.edu"

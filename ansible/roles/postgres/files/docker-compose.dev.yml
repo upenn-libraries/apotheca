@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  postgres:
+    command: [
+      "postgres",
+      "-c",
+      "log_statement=${POSTGRES_LOG_STATEMENT}",
+      "-c",
+      "log_connections=${POSTGRES_LOG_CONNECTIONS}",
+      "-c",
+      "log_disconnections=${POSTGRES_LOG_DISCONNECTIONS}"
+    ]

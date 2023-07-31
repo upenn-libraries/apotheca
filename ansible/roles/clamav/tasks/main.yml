@@ -1,0 +1,27 @@
+---
+- name: Create clamav dir
+  ansible.builtin.file:
+    path: "{{ project_root ~ '/clamav' }}"
+    state: directory
+    mode: 0440
+
+- name: Copy base docker-compose files
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: "{{ project_root ~ '/clamav/' }}"
+    mode: 0440
+  loop:
+    - "docker-compose.yml"
+
+- name: Deploy ClamAV environment
+  community.docker.docker_stack:
+    name: "apotheca"
+    compose:
+      - "{{ project_root ~ '/clamav/docker-compose.yml' }}"
+    state: present
+  changed_when: false
+  environment:
+    CLAMAV_IMAGE_NAME: "{{ clamav.image.name }}"
+    CLAMAV_IMAGE_TAG: "{{ clamav.image.tag }}"
+    CLAMAV_REPLICAS: "{{ clamav.replicas }}"
+  no_log: true

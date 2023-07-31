@@ -1,0 +1,35 @@
+---
+- name: Create minio dir
+  ansible.builtin.file:
+    path: "{{ project_root ~ '/minio' }}"
+    state: directory
+    mode: 0440
+
+# Execute development steps
+- name: Copy base docker-compose files
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: "{{ project_root ~ '/minio/' }}"
+    mode: 0440
+  when: is_development | default (false, true)
+  loop:
+    - "docker-compose.yml"
+  tags: dev_environment
+
+- name: Deploy Minio development environment
+  community.docker.docker_stack:
+    name: "apotheca"
+    compose:
+      - "{{ project_root ~ '/minio/docker-compose.yml' }}"
+    state: present
+  changed_when: false
+  environment:
+    MINIO_IMAGE_NAME: "{{ minio.image.name }}"
+    MINIO_IMAGE_TAG: "{{ minio.image.tag }}"
+    MINIO_ACCESS_KEY_ID: "{{ minio.access_key_id }}"
+    MINIO_SECRET_ACCESS_KEY: "{{ minio.secret_access_key }}"
+    MINIO_REPLICAS: "{{ minio.replicas }}"
+    MINIO_SERVER_URL: "{{ minio.url }}"
+  no_log: true
+  when: is_development | default (false, true)
+  tags: dev_environment

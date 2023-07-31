@@ -1,0 +1,14 @@
+---
+solr_collections:
+  - name: apotheca
+    configset: apotheca
+    replicas: 3
+    shards: 1
+
+solr_configsets:
+  - name: "apotheca"
+    path: "roles/apotheca/files/src/solr/conf/"
+
+solr_docker_image_tag: 9.1.1
+
+solr_proxy_host: "apotheca-dev.library.upenn.int"
