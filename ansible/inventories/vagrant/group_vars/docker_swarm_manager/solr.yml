@@ -1,6 +1,10 @@
 ---
 solr_collections:
-  - name: apotheca
+  - name: apotheca-dev
+    configset: apotheca
+    replicas: 3
+    shards: 1
+  - name: apotheca-test
     configset: apotheca
     replicas: 3
     shards: 1
