@@ -42,6 +42,7 @@ services:
       RAILS_SERVE_STATIC_FILES: "true"
       SOLR_BACKUP_LOCATION: "solr/backups"
       SOLR_URL: "${SOLR_URL}"
+      SOLR_TEST_URL: "${SOLR_TEST_URL}"
     healthcheck:
       test:
         [

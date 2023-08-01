@@ -16,7 +16,7 @@ iiif_derivative_storage:
   <<: *minio
   bucket: iiif-derivatives-test
 solr:
-  url: http://127.0.0.1:8983/solr/apotheca_test
+  url: <%= ENV['SOLR_TEST_URL'] %>
 fits:
   url: http://localhost:8080/fits
 marmite:

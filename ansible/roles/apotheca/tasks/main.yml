@@ -70,6 +70,7 @@
     REDIS_PORT: "{{ redis.port }}"
     REPLICAS: "{{ sidekiq.replicas }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
+    SOLR_TEST_URL: "{{ apotheca_solr_test_url }}"
   changed_when: false
   no_log: true
   when: is_development | default (false, true)
