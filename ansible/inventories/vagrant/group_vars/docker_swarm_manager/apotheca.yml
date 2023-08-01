@@ -7,4 +7,4 @@ apotheca_port: 3000
 apotheca_rails_env: "development"
 apotheca_replicas: 1
 apotheca_url: "apotheca-dev.library.upenn.edu"
-apotheca_solr_url: "http://solr-1:8983/solr/apotheca"
+apotheca_solr_url: "http://solr-1:8983/solr/apotheca-dev"
