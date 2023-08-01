@@ -80,6 +80,7 @@ COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
 RUN apt-get update && apt-get install -y \
     build-essential \
+    curl \
     ffmpeg \
     git \
     gosu \
@@ -134,6 +135,7 @@ COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
 RUN apt-get update && apt-get install -y \
     build-essential \
+    curl \
     ffmpeg \
     git \
     gosu \
