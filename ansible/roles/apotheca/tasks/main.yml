@@ -53,6 +53,7 @@
     name: "apotheca"
     compose:
       - "{{ role_path ~ '/files/docker-compose.yml' }}"
+      - "{{ role_path ~ '/files/docker-compose.dev.yml' }}"
     state: present
   environment:
     APP_IMAGE_NAME: "{{ apotheca_image_name }}"
