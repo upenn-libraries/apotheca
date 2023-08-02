@@ -36,7 +36,6 @@ module ItemDescriptiveMetadata
       end
     end
 
-
     # Display field values with secondary URI formatting. Recursively display subfield values.
     # For example, this is what the value hash looks like:
     # {value: 'John Smith', uri: 'john.com', role:[{value: 'Author', uri: 'john.com/author'}]}
@@ -83,12 +82,11 @@ module ItemDescriptiveMetadata
       end
     end
 
-
     # Check if field has either ILS or resource value (otherwise won't be displayed)
     #
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [TrueClass, FalseClass]
-    def field_row_data?(field)
+    def field_data_present?(field)
       @descriptive_metadata.ils_metadata&.dig(field).present? || @descriptive_metadata.object[field].present?
     end
   end
