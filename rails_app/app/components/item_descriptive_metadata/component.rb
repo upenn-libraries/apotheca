@@ -70,16 +70,14 @@ module ItemDescriptiveMetadata
     # @return [String] class for field
     # @return [nil] if field does not have an ILS value (no highlight necessary)
     def field_class(source, field)
+      return unless @descriptive_metadata.ils_metadata
+
       if source == 'ils'
-        if @descriptive_metadata.ils_metadata && @descriptive_metadata.object[field].empty?
-          return 'bg-success bg-opacity-10'
-        end
+        return 'bg-success bg-opacity-10' if @descriptive_metadata.object[field].empty?
 
         'opacity-75 text-decoration-line-through'
-      else
-        return unless @descriptive_metadata.ils_metadata
-
-        'bg-success bg-opacity-10' if @descriptive_metadata.object[field].present?
+      elsif @descriptive_metadata.object[field].present?
+        'bg-success bg-opacity-10'
       end
     end
 
