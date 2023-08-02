@@ -24,12 +24,13 @@
     state: present
   changed_when: false
   environment:
+    MINIO_ACCESS_KEY_ID: "{{ minio.access_key_id }}"
+    MINIO_CONSOLE_URL: "{{ minio.console_url }}"
     MINIO_IMAGE_NAME: "{{ minio.image.name }}"
     MINIO_IMAGE_TAG: "{{ minio.image.tag }}"
-    MINIO_ACCESS_KEY_ID: "{{ minio.access_key_id }}"
     MINIO_SECRET_ACCESS_KEY: "{{ minio.secret_access_key }}"
     MINIO_REPLICAS: "{{ minio.replicas }}"
-    MINIO_SERVER_URL: "{{ minio.url }}"
+    MINIO_SERVER_URL: "{{ minio.server_url }}"
   no_log: true
   when: is_development | default (false, true)
   tags: dev_environment

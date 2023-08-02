@@ -1,9 +1,10 @@
 ---
 minio:
   access_key_id: "minioadmin"
+  console_url: "console.minio-dev.library.upenn.edu"
   image:
     name: "minio/minio"
     tag: "latest"
   replicas: 1
   secret_access_key: "minioadmin"
-  url: "minio-dev.library.upenn.edu"
+  server_url: "minio-dev.library.upenn.edu"
