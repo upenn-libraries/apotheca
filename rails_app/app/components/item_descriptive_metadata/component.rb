@@ -9,9 +9,10 @@ module ItemDescriptiveMetadata
     # Helper method to generate a list of items
     #
     # @param [Array] items
-    # @param [String] list_class
+    # @param [TrueClass, FalseClass] add_top_padding
     # @return [String] html unordered list
-    def list_of_values(items, list_class = nil)
+    def list_of_values(items, add_top_padding: false)
+      list_class = add_top_padding ? 'pt-2' : ''
       tag.ul(class: 'list-unstyled mb-0') do
         items&.each_with_index do |item, index|
           concat tag.li(class: index.zero? ? '' : list_class) { field_display(item) }
@@ -32,7 +33,7 @@ module ItemDescriptiveMetadata
                      end
 
       tag.td(class: field_class(source, field)) do
-        list_of_values(field_values, 'pt-2')
+        list_of_values(field_values, add_top_padding: true)
       end
     end
 
