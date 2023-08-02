@@ -7,9 +7,6 @@ Development occurs within a robust vagrant environment. Setup and initialization
 
 Information about the Rails application can be found [here](rails_app/README.md).
 
-## Overview
-This repository includes the infrastructure and application code that supports the PACSCL/Penn Libraries Finding Aids discovery site. Development occurs within a robust vagrant environment. Setup and initialization of this environment, as well as information about the deployed staging and production environments, is contained here. Information about the Rails app can be found [here](/ansible/roles/finding_aid_discovery/files/src/README.md).
-
 ## Development
 
 > Caveat: The vagrant development environment has only been tested in the local environments our developers currently have. This currently includes Linux, Intel-based Macs and M1 Macs.
@@ -72,10 +69,12 @@ When running the development environment you can access the traefik web ui by na
 #### Rails Application
 For information about the Rails application, see the [README](/rails_app/README.md) in the Rails application root. This includes information about running the test suite, performing harvesting, development styleguide and general application information.
 
-#### Minio (WIP)
+#### Minio
 In development, Minio is used to mimic S3-compatible object storage. In staging/production, the application will use an external service like AWS S3, Wasabi, etc.
 
-To access the Minio UI, navigate to [minio-dev.library.upenn.edu](minio-dev.library.upenn.edu)
+The Minio API is available at [http://minio-dev.library.upenn.edu](http://minio-dev.library.upenn.edu).
+
+To access the Minio UI, navigate to [http://console.minio-dev.library.upenn.edu/](http://console.minio-dev.library.upenn.edu/)
 
 #### Solr
 Solr is running in [CloudMode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode) which uses Apache Zookeeper to provide centralized cluster management. Additionally, [ZooNavigator](https://github.com/elkozmon/zoonavigator) is used to manage the Zookeeper cluster.
