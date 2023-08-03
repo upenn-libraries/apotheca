@@ -72,6 +72,8 @@
     REPLICAS: "{{ sidekiq.replicas }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
     SOLR_TEST_URL: "{{ apotheca_solr_test_url }}"
+    FITS_PORT: "{{ fits.port }}"
+    MINIO_PORT: "{{ minio.port }}"
   changed_when: false
   no_log: true
   when: is_development | default (false, true)
@@ -107,6 +109,7 @@
     REDIS_PORT: "{{ redis.port }}"
     REPLICAS: "{{ sidekiq.replicas }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
+    FITS_PORT: "{{ fits.port }}"
   changed_when: false
   no_log: true
   when: not is_development | default (false, true)

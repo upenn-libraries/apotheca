@@ -21,8 +21,7 @@ Capybara.save_path = ENV.fetch('CAPYBARA_ARTIFACTS', './tmp/capybara')
 Capybara.server_host = '0.0.0.0'
 
 # Use a hostname that could be resolved in the internal Docker network
-# Capybara.app_host = "http://#{`hostname`.strip&.downcase || '0.0.0.0'}"
-Capybara.app_host = 'http://host.docker.internal'
+Capybara.app_host = "http://#{`hostname`.strip&.downcase || '0.0.0.0'}"
 
 RSpec.configure do |config|
   # Not loading Bootstrap Icons from CDN to prevent inconsistent errors from accept_confirm

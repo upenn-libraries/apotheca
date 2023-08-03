@@ -2,5 +2,5 @@
 chrome:
   image:
     name: "browserless/chrome"
-    tag: "1.59-puppeteer-1.20.0"
+    tag: "latest"
   port: 3333

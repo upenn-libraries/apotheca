@@ -1,7 +1,7 @@
 minio: &minio
   access_key_id: minioadmin
   secret_access_key: minioadmin
-  endpoint: http://127.0.0.1:9000
+  endpoint: <%= ENV['MINIO_URL'] %>
   region: us-east-1
 preservation_storage:
   <<: *minio
@@ -18,7 +18,7 @@ iiif_derivative_storage:
 solr:
   url: <%= ENV['SOLR_TEST_URL'] %>
 fits:
-  url: http://localhost:8080/fits
+  url: <%= ENV['FITS_URL'] %>
 marmite:
   url: http://colenda-dev.library.upenn.int:9292
 working_storage:
