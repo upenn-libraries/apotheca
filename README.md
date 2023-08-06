@@ -61,9 +61,9 @@ You may ssh into the Vagrant VM by running:
 vagrant ssh
 ```
 
-#### Traefik (Are this instructions still accurate?)
+#### Traefik
 
-When running the development environment you can access the traefik web ui by navigating to: [https://apotheca-dev.library.upenn.edu:8080/#](https://apotheca-dev.library.upenn.edu:8080/#). The username and password are located in [ansible/inventories/vagrant/group_vars/docker_swarm_manager/traefik.yml](ansible/inventories/vagrant/group_vars/docker_swarm_manager/traefik.yml)
+When running the development environment you can access the traefik web ui by navigating to: [https://traefik-dev.library.upenn.edu:8080/#](https://traefik-dev.library.upenn.edu:8080/#).
 
 
 #### Rails Application
@@ -74,13 +74,13 @@ In development, Minio is used to mimic S3-compatible object storage. In staging/
 
 The Minio API is available at [http://minio-dev.library.upenn.edu](http://minio-dev.library.upenn.edu).
 
-To access the Minio UI, navigate to [http://console.minio-dev.library.upenn.edu/](http://console.minio-dev.library.upenn.edu/)
+To access the Minio UI, navigate to [http://minio-console-dev.library.upenn.edu/](http://minio-console-dev.library.upenn.edu/)
 
 #### Solr
 Solr is running in [CloudMode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode) which uses Apache Zookeeper to provide centralized cluster management. Additionally, [ZooNavigator](https://github.com/elkozmon/zoonavigator) is used to manage the Zookeeper cluster.
 
 ##### ZooNavigator
-To access zoonavigator, go to: [https://apotheca-dev.library.upenn.int/zoonavigator/](https://apotheca-dev.library.upenn.int/zoonavigator/)
+To access ZooNavigator, go to: [https://apotheca-dev.library.upenn.int/zoonavigator/](https://apotheca-dev.library.upenn.int/zoonavigator/)
 
 ##### Admin UI
 To access the Admin UI of one of the three Solr instances running in the development environment navigate to the following URL swapping `{NUM}` with the number of the instance you're trying access:

@@ -15,7 +15,7 @@ services:
         - "traefik.http.routers.minio-console.service=minio-console"
         - "traefik.http.services.minio-console.loadbalancer.server.port=9001"
 
-        # APi
+        # API
         - "traefik.http.routers.minio.rule=Host(`${MINIO_SERVER_URL}`)"
         - "traefik.http.routers.minio.entrypoints=web"
         - "traefik.http.routers.minio.service=minio"
@@ -30,8 +30,6 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_ACCESS_KEY_ID}
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET_ACCESS_KEY}
-      MINIO_DOMAIN: ${MINIO_SERVER_URL}
-      MINIO_SERVER_URL: http://${MINIO_SERVER_URL}
       MINIO_BROWSER_REDIRECT_URL: http://${MINIO_CONSOLE_URL}
     logging:
       driver: json-file

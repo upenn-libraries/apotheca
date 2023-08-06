@@ -35,14 +35,14 @@
         name: postgres
       tags: postgres
     - ansible.builtin.import_role:
+        name: minio
+      tags: minio
+    - ansible.builtin.import_role:
         name: apotheca
       tags: apotheca
     # - ansible.builtin.import_role:
     #     name: sidekiq
     #   tags: sidekiq
-    - ansible.builtin.import_role:
-        name: minio
-      tags: minio
     - ansible.builtin.import_role:
         name: chrome
       tags: chrome

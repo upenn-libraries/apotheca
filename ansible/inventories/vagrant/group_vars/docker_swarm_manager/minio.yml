@@ -1,7 +1,7 @@
 ---
 minio:
   access_key_id: "minioadmin"
-  console_url: "console.minio-dev.library.upenn.edu"
+  console_url: "minio-console-dev.library.upenn.edu"
   image:
     name: "minio/minio"
     tag: "latest"
