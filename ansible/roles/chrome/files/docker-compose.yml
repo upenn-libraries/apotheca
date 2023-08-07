@@ -12,6 +12,10 @@ services:
     # Mount application source code to support file uploading
     # (otherwise Chrome won't be able to find files).
     # NOTE: Make sure you use absolute paths in `#attach_file`
+    ports:
+      - target: ${CHROME_PORT}
+        published: ${CHROME_PORT}
+        mode: host
     volumes:
       - /apotheca/ansible/roles/apotheca/files/src/:/home/app
     networks:
