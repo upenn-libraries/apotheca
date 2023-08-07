@@ -1,73 +1,44 @@
 # Apotheca
-Administrative application that enables the ingestion and management of digital assets. 
 
-## System Requirements
-- Ruby 3.2.0
-- NodeJS [18.16.0](https://nodejs.org/en/download)
-- Postgres
-- [libvips](https://www.libvips.org/)
-- [ffmpeg](https://ffmpeg.org/) - ensure `ffmpeg` executable is on your `$PATH`
-- Docker for [MacOS](https://docs.docker.com/desktop/install/mac-install/) or [Linux](https://docs.docker.com/engine/install/)
+## Overview
+The administrative application that enables the ingestion and management of digital assets. This application provides a web UI and a bulk import process for staff to load content. It stores preservation copies in two cloud storage solutions, extracts technical metadata, creates derivatives and publishes the content out to our discovery interface.
 
-## Local Development and Test Environment
-We are using docker-compose to run adjacent services required for the application to run. The application will run directly on your machine.
+## Local Development Environment
 
-### 1. Installing system requirements
-#### MacOS (with Homebrew)
-```shell
-rbenv install 3.2.0
-brew install --cask docker
-brew install libpq
-brew install vips
-brew install ffmpeg
+Our local development environment uses vagrant in order to set up a consistent environment with the required services. Please see the [root README for instructions](../README.md#development)  on how to set up this environment.
+
+The **Rails application** will be available at [https://apotheca-dev.library.upenn.edu](https://apotheca-dev.library.upenn.edu).
+
+The **Minio console** will be available at [http://minio-console-dev.library.upenn.edu](http://minio-console-dev.library.upenn.edu). Log-in with `minioadmin/minioadmin`
+
+The **Solr admin console** for the first instance will be available at [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/).
+
+### Interacting with the Application
+
+Once your local development environment is set up you can ssh into the vagrant box to interact with the application:
+
+1. Enter the Vagrant VM by running `vagrant ssh` in the `/vagrant` directory
+2. Start a shell in the `apotheca` container:
 ```
-Note: Homebrew installation of libtiff does not seem to support tiff jpeg compression.
-
-#### Linux
-```shell
-sudo apt install libpq-dev ffmpeg libvips
-rbenv install 3.2.0
+  docker exec -it apotheca_apotheca.1.{whatever} sh
 ```
 
-TODO: Add installation notes for libvips TIFF support.
+### Generate Example Items
 
-### 2. Install gems
-```shell
-bundle install
+To generate some example items in a local development environment:
+
+1. Start a shell in the finding aids discovery app, see [interacting-with-the-application](#interacting-with-the-application)
+2. Run rake tasks:
+```bash
+bundle exec rake apotheca:generate_samples
 ```
 
-### 3a. Run application in development
-```shell
-rake apotheca:start
-rails s
-```
+### Running Test Suite
 
-### 3b. Run application tests
-```shell
-rake apotheca:start
-rspec
-```
+In order to run the test suite (currently):
 
-### 3c. Generate Sample Data
-```shell
-rake apotheca:generate_samples
-```
-
-### 4. Stop running services
-```shell
-rake apotheca:stop
-```
-
-### 5. Destroy services (clears all data)
-```shell
-rake apotheca:destroy
-```
-
-### Interacting directly with services
-#### Minio
-Visit http://localhost:9001/login and log-in with credentials in `config/settings/development.yml`
-#### Solr
-Is available at http://localhost:8983
+1. Start a shell in the finding aids discovery app, see [interacting-with-the-application](#interacting-with-the-application)
+2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
 
 ## Configuration/Settings
 Application-wide configuration is centralized in `config/settings` and `config/settings.yml`. Access to configuration is provided via the `Settings` object instantiated by the [config](https://github.com/rubyconfig/config) gem. For example, to retrieve the preservation storage configuration run:
