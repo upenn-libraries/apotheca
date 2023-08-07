@@ -1,0 +1,42 @@
+<div class="table-responsive">
+  <table class="table">
+
+    <thead>
+    <tr>
+      <th scope='col' class='col'>
+        Field
+      </th>
+
+      <% if @descriptive_metadata.ils_metadata %>
+        <th scope='col' class='col-5'>
+          From ILS
+        </th>
+      <% end %>
+
+      <th scope='col' class="<%= @descriptive_metadata.ils_metadata ? 'col-5' : 'col-10' %>">
+        From Resource
+      </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% ItemResource::DescriptiveMetadata::Fields.all.each do |f| %>
+      <% if field_data_present?(f) %>
+        <tr>
+          <%# Field name %>
+          <th scope='row'><%= f.to_s.titleize %></th>
+
+          <%# ILS values %>
+          <% if @descriptive_metadata.ils_metadata %>
+            <%= field_values(ILS, f) %>
+          <% end %>
+
+          <%# Resource values %>
+          <%= field_values(RESOURCE, f) %>
+        </tr>
+      <% end %>
+    <% end %>
+    </tbody>
+
+  </table>
+</div>
