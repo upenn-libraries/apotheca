@@ -26,6 +26,9 @@ if [ "$1" = "bundle" -a "$2" = "exec" -a "$3" = "puma" ] || [ "$1" = "bundle" -a
         bundle exec rake db:migrate
 
         if [ "${RAILS_ENV}" = "development" ]; then
+            bundle exec rake db:create RAILS_ENV=test
+            bundle exec rake db:migrate RAILS_ENV=test
+
             bundle exec rake apotheca:create_buckets
             bundle exec rake apotheca:create_buckets RAILS_ENV=test
         fi
