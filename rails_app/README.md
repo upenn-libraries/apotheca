@@ -27,7 +27,7 @@ Once your local development environment is set up you can ssh into the vagrant b
 
 To generate some example items in a local development environment:
 
-1. Start a shell in the finding aids discovery app, see [interacting-with-the-application](#interacting-with-the-application)
+1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
 2. Run rake tasks:
 ```bash
 bundle exec rake apotheca:generate_samples
@@ -37,7 +37,7 @@ bundle exec rake apotheca:generate_samples
 
 In order to run the test suite (currently):
 
-1. Start a shell in the finding aids discovery app, see [interacting-with-the-application](#interacting-with-the-application)
+1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
 2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
 
 ## Configuration/Settings
