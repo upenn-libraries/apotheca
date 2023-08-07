@@ -28,11 +28,11 @@
 
           <%# ILS values %>
           <% if @descriptive_metadata.ils_metadata %>
-            <%= field_values('ils', f) %>
+            <%= field_values(ILS, f) %>
           <% end %>
 
           <%# Resource values %>
-          <%= field_values('resource', f) %>
+          <%= field_values(RESOURCE, f) %>
         </tr>
       <% end %>
     <% end %>

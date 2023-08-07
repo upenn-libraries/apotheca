@@ -2,6 +2,9 @@
 
 module ItemDescriptiveMetadata
   class Component < ViewComponent::Base
+    ILS = 'ils'
+    RESOURCE = 'resource'
+
     def initialize(descriptive_metadata:)
       @descriptive_metadata = descriptive_metadata
     end
@@ -26,20 +29,16 @@ module ItemDescriptiveMetadata
     # @param [String] field from ItemResource::DescriptiveMetadata::FIELDS
     # @return [String (frozen)]
     def field_values(source, field)
-      field_values = if source == 'resource'
-                       @descriptive_metadata.resource_json_metadata[field]
-                     else
-                       @descriptive_metadata.ils_metadata[field]
-                     end
+      values = @descriptive_metadata.send("#{source}_metadata")[field]
 
       tag.td(class: field_class(source, field)) do
-        list_of_values(field_values, add_top_padding: true)
+        list_of_values(values, add_top_padding: true)
       end
     end
 
     # Display field values with secondary URI formatting. Recursively display subfield values.
     # For example, this is what the value hash looks like:
-    # {value: 'John Smith', uri: 'john.com', role:[{value: 'Author', uri: 'john.com/author'}]}
+    #   {value: 'John Smith', uri: 'john.com', role:[{value: 'Author', uri: 'john.com/author'}]}
     #
     # @param [Hash] value
     # @return [Array] value string and URI html
@@ -72,11 +71,11 @@ module ItemDescriptiveMetadata
     def field_class(source, field)
       return unless @descriptive_metadata.ils_metadata
 
-      if source == 'ils'
-        return 'bg-success bg-opacity-10' if @descriptive_metadata.object[field].empty?
+      values = @descriptive_metadata.send("#{source}_metadata")[field]
 
+      if source == ILS && @descriptive_metadata.object[field].present?
         'opacity-75 text-decoration-line-through'
-      elsif @descriptive_metadata.object[field].present?
+      elsif values.present?
         'bg-success bg-opacity-10'
       end
     end

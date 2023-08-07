@@ -22,7 +22,7 @@ class ItemResourcePresenter < BasePresenter
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::TextHelper
     include ActionView::Context
-    attr_accessor :ils_metadata, :resource_json_metadata
+    attr_accessor :ils_metadata, :resource_metadata
 
     # define accessors for descriptive metadata fields that first look in ILS metadata, if present
     # This sort-of duplicates the logic in DescriptiveMetadataIndexer#merged_metadata_sources
@@ -39,7 +39,7 @@ class ItemResourcePresenter < BasePresenter
     def initialize(object:, ils_metadata: nil)
       super object: object
       @ils_metadata = ils_metadata&.with_indifferent_access
-      @resource_json_metadata = object.to_json_export.with_indifferent_access
+      @resource_metadata = object.to_json_export.with_indifferent_access
     end
   end
 end
