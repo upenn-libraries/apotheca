@@ -1,0 +1,7 @@
+---
+- name: Create a symlink to the app
+  ansible.builtin.file:
+    src: "../../../../rails_app"
+    dest: "{{ role_path + '/files/src' }}"
+    state: link
+    force: true

@@ -1,0 +1,11 @@
+---
+minio:
+  access_key_id: "minioadmin"
+  console_url: "minio-console-dev.library.upenn.edu"
+  image:
+    name: "minio/minio"
+    tag: "latest"
+  port: 9000
+  replicas: 1
+  secret_access_key: "minioadmin"
+  server_url: "minio-dev.library.upenn.edu"

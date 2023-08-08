@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  sidekiq:
+    environment:
+      APP_UID: ${UID:-1000}
+      APP_GID: ${GID:-1000}
+    volumes:
+      - /apotheca/ansible/roles/apotheca/files/src/:/home/app

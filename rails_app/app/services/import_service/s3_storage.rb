@@ -105,7 +105,7 @@ module ImportService
       path = path.delete_prefix('/')
       return path if %r{\.[^/]+$}.match?(path)
 
-      path += '/' unless path.end_with?('/')
+      path += '/' if path.present? && !path.end_with?('/')
       path
     end
 

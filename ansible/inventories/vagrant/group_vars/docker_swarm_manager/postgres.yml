@@ -1,0 +1,16 @@
+---
+postgres:
+  database: "apotheca_dev"
+  dev_env:
+    log_connections: "on"
+    log_disconnections: "on"
+    log_statement: "all"
+  image:
+    name: "postgres"
+    tag: "15.2-alpine"
+  replicas: 1
+  versioned_secrets:
+    password:
+      value: "123456abcde"
+      version: 1
+  user: "rails"

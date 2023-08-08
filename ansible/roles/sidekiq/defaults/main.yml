@@ -1,0 +1,3 @@
+---
+sidekiq:
+  replicas: 1

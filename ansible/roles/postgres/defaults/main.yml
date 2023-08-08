@@ -1,0 +1,16 @@
+---
+postgres:
+  database: "my_db"
+  dev_env:
+    log_connections: "on"
+    log_disconnections: "on"
+    log_statement: "all"
+  image:
+    name: "postgres"
+    tag: "15.0-alpine"
+  replicas: 1
+  secrets:
+    password:
+      value: "password"
+      version: 1
+  user: "my_user"

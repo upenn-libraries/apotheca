@@ -1,0 +1,23 @@
+---
+- name: "Install deps"
+  block:
+    - name: "Install deps with package manager"
+      ansible.builtin.package:
+        name:
+          - python3-pip
+        state: present
+
+    - name: "Install deps with python2"
+      ansible.builtin.pip:
+        name:
+          - jmespath
+  vars:
+    ansible_python_interpreter: "/usr/bin/python2"
+
+- name: "Install deps with default python interpreter: python3"
+  ansible.builtin.pip:
+    name:
+      - jsondiff
+      - passlib
+      - pyyaml
+      - hvac
