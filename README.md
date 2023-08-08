@@ -13,7 +13,6 @@ Information about the Rails application can be found [here](rails_app/README.md)
 
 In order to use the integrated development environment you will need to install [Vagrant](https://www.vagrantup.com/docs/installation) [do *not* use the Vagrant version that may be available for your distro repository - explicitly follow instructions at the Vagrant homepage] and the appropriate virtualization software. If you are running Linux or Mac x86 then install [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads), if you are using a Mac with ARM processors then install [Parallels](https://www.parallels.com/).
 
-**Is this still necessary?**
 You may need to update the VirtualBox configuration for the creation of a host-only network. This can be done by creating a file `/etc/vbox/networks.conf` containing:
 
 ```
@@ -80,7 +79,7 @@ To access the Minio UI, navigate to [http://minio-console-dev.library.upenn.edu/
 Solr is running in [CloudMode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode) which uses Apache Zookeeper to provide centralized cluster management. Additionally, [ZooNavigator](https://github.com/elkozmon/zoonavigator) is used to manage the Zookeeper cluster.
 
 ##### ZooNavigator
-To access ZooNavigator, go to: [https://apotheca-dev.library.upenn.int/zoonavigator/](https://apotheca-dev.library.upenn.int/zoonavigator/)
+To access ZooNavigator, go to: [https://apotheca-dev.library.upenn.int/zoonavigator/](https://apotheca-dev.library.upenn.int/zoonavigator/). Currently, ZooNavigator won't work on ARM machines because an ARM-compatible image is not available.
 
 ##### Admin UI
 To access the Admin UI of one of the three Solr instances running in the development environment navigate to the following URL swapping `{NUM}` with the number of the instance you're trying access:
@@ -88,6 +87,9 @@ To access the Admin UI of one of the three Solr instances running in the develop
 http://apotheca-dev.library.upenn.int/solr{NUM}/#/
 ```
 Example: [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/)
+
+#### Chrome
+To access browserless Chrome, go to: [http://apotheca-dev.library.upenn.int:3333/](http://apotheca-dev.library.upenn.int:3333/)
 
 ## Deployment (WIP)
 Gitlab automatically deploys to both our staging and production environment under certain conditions.
