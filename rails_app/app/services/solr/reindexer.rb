@@ -70,7 +70,7 @@ module Solr
         single_index_persist(record)
       rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
         logger.error("Could not index #{record.id} due to #{e.class}")
-        # Honeybadger.notify(e, context: { record_id: record.id })
+        Honeybadger.notify(e, context: { record_id: record.id })
       end
 
       def multi_index_persist(records)

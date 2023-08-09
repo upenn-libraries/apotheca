@@ -78,7 +78,7 @@ module ImportService
           end
         end
       rescue StandardError => e
-        # Honeybadger.notify(e) # Sending full error to Honeybadger.
+        Honeybadger.notify(e) # Sending full error to Honeybadger.
         failure(exception: e)
       end
 
