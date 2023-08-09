@@ -79,7 +79,7 @@ class UpdateAsset
       )
 
       attributes[:preservation_file_id] = file_resource.id
-      attributes[:original_filename] = file.original_filename # Explicitly set the original filename.
+      attributes[:original_filename] = file.original_filename unless attributes[:migrated_from].present? # Explicitly set the original filename.
     end
 
     Success(attributes)

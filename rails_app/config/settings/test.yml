@@ -32,3 +32,5 @@ supported_file_extensions:
   - .gz
   - .wav
   - .mov
+migration:
+  colenda_url: https://colenda-dev.library.upenn.edu

@@ -6,9 +6,14 @@ module ImportService
     class Update < Base
       attr_reader :created_assets
 
+      # Initializes object to update item.
+      #
+      # @param (see Base#initialize)
+      # @param [Hash] :asset # gets converted to an AssetSet
       def initialize(**args)
         super
 
+        @asset_set = args[:assets].blank? ? nil : AssetSet.new(**args[:assets])
         @created_assets = []
       end
 

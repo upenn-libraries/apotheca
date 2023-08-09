@@ -6,15 +6,17 @@ module ImportService
     class Create < Base
       attr_reader :created_by
 
-      # Initializes object to conduct import. For the time being this class will only import Items.
+      # Initializes object to create item.
       #
       # @param (see Base#initialize)
+      # @param [Hash] :asset # gets converted to an AssetSet
       # @param [String] :created_by
       def initialize(**args)
         super
 
-        # TODO: created_at, thumbnail
+        # TODO: thumbnail
         @created_by = args[:created_by]
+        @asset_set  = args[:assets].blank? ? nil : AssetSet.new(**args[:assets])
         # @publish    = args.fetch(:publish, 'false').casecmp('true').zero?
       end
 
@@ -78,19 +80,6 @@ module ImportService
       rescue StandardError => e
         # Honeybadger.notify(e) # Sending full error to Honeybadger.
         failure(exception: e)
-      end
-
-      private
-
-      # Queries EZID to check if a given ark already exists.
-      #
-      # @return true if ark exists
-      # @return false if ark does not exist
-      def ark_exists?(ark)
-        Ezid::Identifier.find(ark)
-        true
-      rescue StandardError # EZID gem raises unexpected errors when ark isn't found.
-        false
       end
     end
   end

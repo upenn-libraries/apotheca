@@ -18,7 +18,6 @@ module ImportService
       # @param [Array<String>] :internal_notes
       # @param [Hash] :metadata  # gets mapped to descriptive_metadata
       # @param [Hash] :structural  # gets mapped to structural_metadata
-      # @param [AssetSet] :asset_set
       def initialize(**args)
         @imported_by          = args[:imported_by]
         @unique_identifier    = args[:unique_identifier]
@@ -26,7 +25,6 @@ module ImportService
         @internal_notes       = args[:internal_notes]
         @descriptive_metadata = args.fetch(:metadata, {})
         @structural_metadata  = args.fetch(:structural, {})
-        @asset_set            = args[:assets].blank? ? nil : AssetSet.new(**args[:assets])
         @errors               = []
       end
 
@@ -112,6 +110,18 @@ module ImportService
         details.concat(validation_errors.map { |e| [error, e].compact.join(': ') }) if validation_errors.present?
 
         Failure.new(error: :import_failed, details: details)
+      end
+
+
+      # Queries EZID to check if a given ark already exists.
+      #
+      # @return true if ark exists
+      # @return false if ark does not exist
+      def ark_exists?(ark)
+        Ezid::Identifier.find(ark)
+        true
+      rescue StandardError # EZID gem raises unexpected errors when ark isn't found.
+        false
       end
     end
   end
