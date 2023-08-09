@@ -42,7 +42,7 @@ describe 'Item Index Page' do
 
   context 'with incorporated ILS metadata' do
     let(:user) { create(:user, :viewer) }
-    let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+    let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/non-book-1.xml')) }
     let(:item_with_bibnumber) { persist(:item_resource, :with_bibnumber) }
 
     before do
@@ -52,8 +52,13 @@ describe 'Item Index Page' do
       visit items_path
     end
 
-    it 'shows ILS metadata on the index page' do
-      expect(page).to have_text 'Edgar Fahs Smith Memorial Collection (University of Pennsylvania)'
+    it 'show ILS title' do
+      expect(page).to have_text 'An account of the Epidemic Fever as it occurred in Botetourt County Virginia during the summer of the year eighteen hundred and twenty-one'
+    end
+
+    it 'shows resource collection' do
+      expect(page).not_to have_text 'University of Pennsylvania Medical Dissertation Digital Library'
+      expect(page).to have_text 'Fake Collection'
     end
   end
 
