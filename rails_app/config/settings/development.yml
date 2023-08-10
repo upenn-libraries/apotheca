@@ -20,7 +20,7 @@ solr:
 fits:
   url: <%= ENV['FITS_URL'] %>
 marmite:
-  url: http://colenda-dev.library.upenn.int:9292
+  url: http://mdproc.library.upenn.edu:9292
 skip_ezid_metadata_update: true
 working_storage:
   sceti_digitized:
