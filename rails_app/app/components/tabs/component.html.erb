@@ -10,7 +10,9 @@
 
 <div class="tab-content" id="<%= @id %>Content">
   <% tabs.each do |tab| %>
-    <div class="m-3 tab-pane fade <%= tab.active ? 'show active' : '' %>" id="<%= tab.id %>" role="tabpanel" aria-labelledby="<%= tab.id %>-tab">
+    <div class="m-3 tab-pane fade <%= tab.active ? 'show active' : '' %>" id="<%= tab.id %>"
+         role="tabpanel"
+         aria-labelledby="<%= tab.id %>-tab">
       <%= tab %>
     </div>
   <% end %>

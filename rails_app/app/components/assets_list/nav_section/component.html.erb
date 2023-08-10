@@ -1,0 +1,20 @@
+<div id="<%= type %>-asset-list" class="nav-asset-list">
+  <a href="#<%= title_href %>"
+     class="nav-link parent"
+     data-action="click->assets-list--scroll#scrollToTop" >
+    <%= title %>
+  </a>
+
+  <% if @assets.any? %>
+    <nav class="nav-asset-sublist nav nav-pills flex-column">
+      <% @assets.each do |asset| %>
+        <a id="<%= "asset-link-#{asset.id}" %>"
+           data-action="click->assets-list--scroll#scrollToTop"
+           class="nav-link child ms-3 my-1"
+           href="#<%= "asset-title-#{asset.id}" %>">
+          <%= asset.display_title.truncate(30) %>
+        </a>
+      <% end %>
+    </nav>
+  <% end %>
+</div>

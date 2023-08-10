@@ -1,0 +1,10 @@
+  <section class="assets-cards-section">
+    <h4 id="<%= type %>-assets" class="my-3 mb-5"><%= title %></h4>
+    <% if @assets&.any? %>
+      <% @assets.each_with_index do |asset, i| %>
+        <%= render(AssetInfo::Component.new(asset: asset, item: @item.object, user: @user, index: i)) %>
+      <% end %>
+    <% else %>
+      <p>No <%= type %> assets</p>
+    <% end %>
+  </section>
