@@ -87,7 +87,7 @@ module MetadataExtractor
         map_datafield '546', to: :note, value: { subfields: %w[a b], join: SPACE }
         map_datafield '561', to: :provenance, value: { subfields: 'a' }
         map_datafield '590', to: :note, value: { subfields: 'a' }
-        map_datafield '600', to: :subject, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
+        map_datafield '600', to: :subject, value: { subfields: A_TO_Z, join: SPACE }, uri: { subfields: '0' }
         map_datafield '610', to: :subject, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
         map_datafield '648', to: :coverage, value: { subfields: %w[a y], join: ' -- ' }, uri: { subfields: '0' }
         map_datafield '650', to: :subject, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
@@ -98,14 +98,14 @@ module MetadataExtractor
         map_datafield '655', to: :physical_format, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
         map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
-        map_datafield '710', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
+        map_datafield '710', to: :name, value: { subfields: %w[a b d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '711', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '752', to: :location, value: { subfields: %w[a b c d f g h], join: ' -- ' },
                              uri: { subfields: '0' }
         map_datafield '773', to: :collection, value: { subfields: 't' }
-        map_datafield '856', to: :relation, value: { subfields: %w[u z], join: ': ' }
+        map_datafield '856', to: :relation, value: { subfields: %w[u z 3], join: ': ' }
         map_datafield '880', to: :title, value: { subfields: %w[a b f g n p s] }, if: method(:transliterated_title?)
 
         # Mapping holdings information located in an Alma-specific datafield.
