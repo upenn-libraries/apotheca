@@ -44,7 +44,7 @@ module ItemDescriptiveMetadata
     # @return [Array] value string and URI html
     def field_display(value)
       subfields = [value[:value]]
-      subfields << tag.span(value[:uri], class: 'px-1 small text-secondary text-nowrap ') if value[:uri]
+      subfields << tag.span(value[:uri], class: 'px-2 small text-secondary text-nowrap ') if value[:uri]
 
       value.except(:value, :uri).each do |k, v|
         subfields << tag.table(class: %w[table table-borderless mb-0]) do
