@@ -30,7 +30,9 @@ class BulkExport < ApplicationRecord
     attach_csv_to_record(csv_file)
     success!
   rescue StandardError => e
-    self.process_errors = [e.message] # TODO: this error also needs to be sent to HoneyBadger
+    Honeybadger.notify(e)
+    self.process_errors = [e.message]
+
     csv.purge if csv.attached?
     failure!
   end
