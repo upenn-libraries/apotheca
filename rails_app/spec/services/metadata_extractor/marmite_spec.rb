@@ -18,12 +18,10 @@ describe MetadataExtractor::Marmite do
 
     let(:marmite) { described_class.new(url: url) }
     let(:bibnumber) { 'sample-bib' }
-    let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
 
     context 'when record is found' do
-      before do
-        stub_request(:get, "#{Settings.marmite.url}/api/v2/records/#{bibnumber}/marc21?update=always")
-          .to_return(status: 200, body: marc_xml, headers: {})
+      include_context 'with successful Marmite request' do
+        let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
       end
 
       it 'returns descriptive metadata' do

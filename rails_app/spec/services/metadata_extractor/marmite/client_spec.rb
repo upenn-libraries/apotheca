@@ -15,18 +15,15 @@ describe MetadataExtractor::Marmite::Client do
 
   describe '#marc21' do
     let(:marmite) { described_class.new(url: url) }
-    let(:bibnumber) { 'sample_bib' }
+    let(:bibnumber) { 'sample-bib' }
 
     context 'when request is successful' do
-      let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
-
-      before do
-        stub_request(:get, "#{url}/api/v2/records/#{bibnumber}/marc21?update=always")
-          .to_return(status: 200, body: marc_xml, headers: {})
+      include_context 'with successful Marmite request' do
+        let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
       end
 
       it 'returns expected MARC XML' do
-        expect(marmite.marc21(bibnumber)).to eql marc_xml
+        expect(marmite.marc21(bibnumber)).to eql xml
       end
     end
 

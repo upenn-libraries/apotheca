@@ -58,14 +58,15 @@ describe 'Item Show Page' do
   end
 
   context 'with incorporated ILS metadata' do
+    include_context 'with successful Marmite request' do
+      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+    end
+
     let(:user) { create(:user, :viewer) }
-    let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
     let(:item) { persist(:item_resource, :with_bibnumber) }
 
     before do
-      stub_request(:get, "#{Settings.marmite.url}/api/v2/records/sample-bib/marc21?update=always")
-        .to_return(status: 200, body: marc_xml, headers: {})
-      item # build item after Marmite request has been stubbed
+      item
       visit item_path(item)
     end
 
