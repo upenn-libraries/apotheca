@@ -73,20 +73,12 @@ In development, Minio is used to mimic S3-compatible object storage. In staging/
 
 The Minio API is available at [http://minio-dev.library.upenn.edu](http://minio-dev.library.upenn.edu).
 
-To access the Minio UI, navigate to [http://minio-console-dev.library.upenn.edu/](http://minio-console-dev.library.upenn.edu/)
+To access the Minio UI, navigate to [http://minio-console-dev.library.upenn.edu/](http://minio-console-dev.library.upenn.edu/) and log-in as the `minioadmin` user with the password `minioadmin`.
 
 #### Solr
-Solr is running in [CloudMode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode) which uses Apache Zookeeper to provide centralized cluster management. Additionally, [ZooNavigator](https://github.com/elkozmon/zoonavigator) is used to manage the Zookeeper cluster.
+Solr is running in [CloudMode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode) which uses Apache Zookeeper to provide centralized cluster management. Additionally, [ZooNavigator](https://github.com/elkozmon/zoonavigator) is used to manage the Zookeeper cluster in deployed environments.
 
-##### ZooNavigator
-To access ZooNavigator, go to: [https://apotheca-dev.library.upenn.int/zoonavigator/](https://apotheca-dev.library.upenn.int/zoonavigator/). Currently, ZooNavigator won't work on ARM machines because an ARM-compatible image is not available.
-
-##### Admin UI
-To access the Admin UI of one of the three Solr instances running in the development environment navigate to the following URL swapping `{NUM}` with the number of the instance you're trying access:
-```
-http://apotheca-dev.library.upenn.int/solr{NUM}/#/
-```
-Example: [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/)
+To access the Solr Admin UI, navigate to: [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/)
 
 #### Chrome
 To access browserless Chrome, go to: [http://apotheca-dev.library.upenn.int:3333/](http://apotheca-dev.library.upenn.int:3333/)

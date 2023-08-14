@@ -19,6 +19,7 @@
     - ansible.builtin.import_role:
         name: zoonavigator
       tags: zoonavigator
+      when: not is_development | default (false, true)
     - ansible.builtin.import_role:
         name: solr
       tags: solr
