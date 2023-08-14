@@ -12,16 +12,16 @@ module Form
         @value = value
         @options = options
         @confirm = confirm
+        @message = @confirm.is_a?(String) ? @confirm : 'Are you sure?'
+        @id = "submit_button_component_#{object_id}"
         @options[:class] = Array.wrap(@options[:class]).push('btn', "btn-#{variant}")
         @options[:data] = @options.fetch(:data, {})
         configure_confirmation if confirm
       end
 
       def configure_confirmation
-        message = @confirm.is_a?(String) ? @confirm : 'Are you sure?'
-        add_data_attributes(controller: 'form--submit-button--submit',
-                            confirm: message,
-                            action: 'click->form--submit-button--submit#confirm')
+        add_data_attributes('bs-toggle': 'modal',
+                            'bs-target': "##{@id}")
       end
 
       # add data attributes to options hash while maintaining order of multiple Stimulus actions
@@ -29,10 +29,6 @@ module Form
         @options[:data].merge!(attributes) do |k, old_value, new_value|
           k == :action ? "#{old_value} #{new_value}" : new_value
         end
-      end
-
-      def call
-        submit_tag @value, **@options
       end
     end
   end
