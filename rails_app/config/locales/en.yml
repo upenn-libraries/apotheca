@@ -18,18 +18,17 @@ en:
         placeholder_message: "Drag an Asset here to order it."
   confirm_messages:
     item:
-      refresh_ILS: "Do you really want to refresh ILS metadata for this item?"
-      delete: "Do you really want to delete this item?"
+      refresh_ILS: "Your current ILS metadata will be updated."
+      delete: "You will permanently delete this item."
     bulk_import:
-      cancel_all: "Do you really want to cancel all queued Imports?"
+      cancel_all: "You will permanently cancel all queued imports."
     import:
-      cancel: "Do you really want to cancel this Import?"
+      cancel: "You will permanently cancel this import."
     bulk_export:
-      regenerate: "Do you really want to regenerate this bulk export?"
-      cancel: "Do you really want to cancel this bulk export?"
-      delete: "Do you really want to delete this bulk export?"
+      regenerate: "Your current bulk export will be regenerated."
+      cancel: "You will permanently cancel this bulk export."
+      delete: "You will permanently delete this bulk export."
     asset:
-      regenerate_derivatives: "Do you really want to regenerate derivatives for this asset?"
-      delete: "Do you really want to delete this asset?"
-    asset_info:
-      change_thumbnail: "Are you sure you want to change this item's thumbnail?"
+      regenerate_derivatives: "Your current derivatives for this asset will be regenerated."
+      delete: "You will permanently delete this asset."
+      change_thumbnail: "Your current thumbnail will be replaced."
