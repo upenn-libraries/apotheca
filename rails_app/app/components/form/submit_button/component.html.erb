@@ -9,10 +9,10 @@
           <h1 class="modal-title fs-5" id="confirmationModalLabel"><%= @value %></h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body"><%= @message %></div>
+        <div class="modal-body text-start"><%= @message %></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="confirm-submit btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+          <button type="submit" class="btn btn-primary <%= color_button %>" data-bs-dismiss="modal"><%= @value.split.first %></button>
         </div>
       </div>
     </div>
