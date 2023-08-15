@@ -19,6 +19,12 @@ module Form
         configure_confirmation if confirm
       end
 
+      def color_button
+        actions = %w[delete cancel]
+        action = @value.split.first.downcase
+        actions.include?(action) ? 'btn-danger' : ''
+      end
+
       def configure_confirmation
         add_data_attributes('bs-toggle': 'modal',
                             'bs-target': "##{@id}")
