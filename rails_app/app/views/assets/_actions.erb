@@ -4,14 +4,14 @@
   <% if can? :update, @asset  %>
     <%= render Form::Component.new(name: 'regenerate_derivatives', url: regenerate_derivatives_asset_path(@asset), method: :post) do |component| %>
       <% component.with_error(@error) %>
-      <% component.with_submit('Regenerate Derivatives', confirm: 'Do you really want to regenerate derivatives for this asset?', class: %w[btn btn-primary]) %>
+      <% component.with_submit('Regenerate Derivatives', confirm: I18n.t('confirm_messages.asset.regenerate_derivatives'), class: %w[btn btn-primary]) %>
     <% end %>
   <% end %>
 
   <% if can? :delete, @asset  %>
     <%= render Form::Component.new(name: 'delete_asset', url: asset_path(@asset), method: :delete) do |component| %>
       <% component.with_error(@error) %>
-      <% component.with_submit('Delete Asset', confirm: 'Do you really want to delete this asset?', class: %w[btn btn-danger]) %>
+      <% component.with_submit('Delete Asset', confirm: I18n.t('confirm_messages.asset.delete'), class: %w[btn btn-danger]) %>
     <% end %>
   <% end %>
 </div>

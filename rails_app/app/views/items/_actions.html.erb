@@ -5,7 +5,7 @@
   <%= render Form::Component.new(name: 'refresh_ILS_metadata', url: refresh_ils_metadata_item_path(@item), method: :post) do |component| %>
     <% component.with_error(@error) %>
     <% component.with_submit('Refresh ILS Metadata',
-                             confirm: 'Do you really want to refresh ILS metadata for this item?',
+                             confirm: I18n.t('confirm_messages.item.refresh_ILS'),
                              disabled: @item.descriptive_metadata.bibnumber.blank?,
                              class: %w[btn btn-primary]) %>
   <% end %>
@@ -14,7 +14,7 @@
 <% if can? :delete, @item  %>
   <%= render Form::Component.new(name: 'delete_item', url: item_path(@item), method: :delete) do |component| %>
     <% component.with_error(@error) %>
-    <% component.with_submit('Delete Item', confirm: 'Do you really want to delete this item?', class: %w[btn btn-danger]) %>
+    <% component.with_submit('Delete Item', confirm: I18n.t('confirm_messages.item.delete'), class: %w[btn btn-danger]) %>
   <% end %>
 <% end %>
 </div>

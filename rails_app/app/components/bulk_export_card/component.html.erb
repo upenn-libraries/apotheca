@@ -30,21 +30,21 @@
         <td>
           <% if can_regenerate?%>
             <%= render Form::Component.new(name: 'regenerate_bulk_export', url: regenerate_bulk_export_path(@bulk_export), method: :get) do |component| %>
-              <% component.with_submit('Regenerate Export', confirm: 'Do you really want to regenerate this bulk export?', variant: 'outline-primary') %>
+              <% component.with_submit('Regenerate Export', confirm: I18n.t('confirm_messages.bulk_export.regenerate'), variant: 'outline-primary') %>
             <% end %>
           <% end %>
         </td>
         <td>
           <% if can_cancel? %>
             <%= render Form::Component.new(name: 'cancel_bulk_export', url: cancel_bulk_export_path(@bulk_export), method: :get) do |component| %>
-              <% component.with_submit('Cancel Export', confirm: 'Do you really want to cancel this bulk export?', variant: 'outline-secondary') %>
+              <% component.with_submit('Cancel Export', confirm: I18n.t('confirm_messages.bulk_export.cancel'), variant: 'outline-secondary') %>
             <% end %>
           <% end %>
         </td>
         <td>
           <% if can_delete? %>
             <%= render Form::Component.new(name: 'delete_bulk_export', url: bulk_export_path(@bulk_export), method: :delete) do |component| %>
-              <% component.with_submit('Delete Export', confirm: 'Do you really want to delete this bulk export?', variant: 'danger') %>
+              <% component.with_submit('Delete Export', confirm: I18n.t('confirm_messages.bulk_export.delete'), variant: 'danger') %>
             <% end %>
           <% end %>
         </td>
