@@ -124,7 +124,7 @@ describe 'Bulk Import Show Page' do
 
       it 'can cancel all queued imports' do
         click_on 'Cancel All Queued Imports'
-        click_on 'Cancel'
+        within('div.modal-content') { click_on 'Cancel' }
         expect(page).to have_text('All queued imports were cancelled')
         expect(page).not_to have_button('Cancel')
       end
@@ -133,7 +133,7 @@ describe 'Bulk Import Show Page' do
         within '#imports-table > tbody > tr:first-child' do
           click_on 'Cancel'
         end
-        click_on 'Confirm'
+        within('div.modal-content') { click_on 'Cancel' }
         expect(page).to have_text("Import #{queued_imports.first.id} cancelled")
       end
     end

@@ -48,7 +48,7 @@ describe 'Bulk Import Index Page' do
 
     it 'can cancel all queued imports' do
       click_on 'Cancel'
-      click_on 'Cancel'
+      within('div.modal-content') { click_on 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
       expect(page).not_to have_button('Cancel')
     end
@@ -68,8 +68,9 @@ describe 'Bulk Import Index Page' do
     end
 
     it 'can cancel others\' bulk imports' do
-      expect(page).to have_button('Cancel', type: 'submit')
+      expect(page).to have_button('Cancel')
       click_on 'Cancel'
+      within('div.modal-content') { click_on 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
     end
   end

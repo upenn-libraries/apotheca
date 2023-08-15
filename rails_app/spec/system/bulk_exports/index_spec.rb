@@ -82,6 +82,7 @@ describe 'Bulk Export Index Page' do
 
         it 'can be deleted' do
           click_on 'Delete Export'
+          click_on 'Delete'
           expect(page).to have_text('Bulk export deleted.')
         end
       end
@@ -128,7 +129,8 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be regenerated' do
-          accept_confirm { click_on 'Regenerate' }
+          click_on 'Regenerate Export'
+          click_on 'Regenerate'
           expect(page).to have_text('Bulk export queued for regeneration')
         end
       end
@@ -172,6 +174,7 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be regenerated' do
+          click_on 'Regenerate Export'
           click_on 'Regenerate'
           expect(page).to have_text('Bulk export queued for regeneration')
         end
