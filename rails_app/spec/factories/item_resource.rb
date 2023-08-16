@@ -97,6 +97,7 @@ FactoryBot.define do
         {
           bibnumber: [{ value: 'sample-bib' }],
           abstract: [],
+          date: [{ value: '1900' }, { value: '1475' }],
           collection: [{ value: 'Fake Collection' }]
         }
       end

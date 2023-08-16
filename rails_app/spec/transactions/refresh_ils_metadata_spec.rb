@@ -2,22 +2,14 @@
 
 describe RefreshIlsMetadata do
   describe '#call' do
-    let(:transaction) { described_class.new }
-
-    shared_context 'build item with bibnumber' do
-      let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
-      let(:item) { persist(:item_resource, :with_bibnumber) }
-
-      before do
-        stub_request(:get, "#{Settings.marmite.url}/api/v2/records/sample-bib/marc21?update=always")
-          .to_return(status: 200, body: marc_xml, headers: {})
-        item # build item after Marmite request has been stubbed
-      end
+    include_context 'with successful Marmite request' do
+      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
     end
 
-    context 'when bibnumber present' do
-      include_context 'build item with bibnumber'
+    let(:transaction) { described_class.new }
 
+    context 'when bibnumber present' do
+      let(:item) { persist(:item_resource, :with_bibnumber) }
       let(:result) { transaction.call(id: item.id.to_s) }
 
       it 'succeeds' do
@@ -30,8 +22,7 @@ describe RefreshIlsMetadata do
     end
 
     context 'when persisting a resource raises an error' do
-      include_context 'build item with bibnumber'
-
+      let(:item) { persist(:item_resource, :with_bibnumber) }
       let(:result) { transaction.call(id: item.id.to_s) }
 
       before do

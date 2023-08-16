@@ -8,19 +8,33 @@ module Steps
     def call(resource)
       return Success(resource) if Settings.skip_ezid_metadata_update
 
-      # TODO: This needs to be updated to use the new metadata schema.
-      erc_metadata = {
-        # erc_who: resource.descriptive_metadata.name.join('; '),
-        erc_what: resource.descriptive_metadata.title.join('; '),
-        erc_when: resource.descriptive_metadata.date.join('; ')
-      }
-      begin
-        # NOTE: EZID library retries requests twice before raising an error.
-        Ezid::Identifier.modify(resource.unique_identifier, erc_metadata)
-        Success(resource)
-      rescue StandardError => e
-        Failure(error: :failed_to_update_ezid_metadata, exception: e)
-      end
+      presenter = item_presenter(resource) # Using presenter that contains ILS metadata and resource metadata.
+
+      dc_metadata = {
+        '_profile'     => 'dc',
+        'dc.creator'   => presenter.descriptive_metadata&.name&.pluck(:value)&.join('; '),
+        'dc.title'     => presenter.descriptive_metadata&.title&.pluck(:value)&.join('; '),
+        'dc.publisher' => presenter.descriptive_metadata&.publisher&.pluck(:value)&.join('; '),
+        'dc.date'      => presenter.descriptive_metadata&.date&.pluck(:value)&.join('; '),
+        'dc.type'      => presenter.descriptive_metadata&.item_type&.pluck(:value)&.join('; ')
+      }.compact_blank
+
+      # NOTE: EZID library retries requests twice before raising an error.
+      Ezid::Identifier.modify(resource.unique_identifier, dc_metadata)
+      Success(resource)
+    rescue StandardError => e
+      Failure(error: :failed_to_update_ezid_metadata, exception: e)
+    end
+
+    private
+
+    def item_presenter(resource)
+      ils_metadata = resource.bibnumber? ? query_service.custom_queries.ils_metadata_for(id: resource.id) : nil
+      ItemResourcePresenter.new(object: resource, ils_metadata: ils_metadata)
+    end
+
+    def query_service
+      Valkyrie::MetadataAdapter.find(:index_solr).query_service
     end
   end
 end

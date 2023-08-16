@@ -47,24 +47,17 @@ RSpec.describe DescriptiveMetadataIndexer do
   end
 
   context 'when an item has a bibnumber' do
-    let(:resource) do
-      persist(:item_resource,
-              descriptive_metadata: { title: [{ value: 'Test Item' }], bibnumber: [{ value: '123' }] })
+    include_context 'with successful Marmite request' do
+      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
     end
-    # this is taken from spec/services/metadata_extractor/marmite/client_spec.rb
-    # TODO: perhaps use a shared context, or a stub/mock of the service injected into the indexer?
-    let(:marc_xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+
+    let(:resource) { persist(:item_resource, :with_bibnumber) }
     let(:expected_subjects) do
       ['Metallurgy -- Early works to 1800', 'Assaying -- Early works to 1800', 'Assaying', 'Metallurgy']
     end
 
-    before do
-      stub_request(:get, "#{Settings.marmite.url}/api/v2/records/123/marc21?update=always")
-        .to_return(status: 200, body: marc_xml, headers: {})
-    end
-
     it 'has field values that prefer values from the Resource' do
-      expect(result[:title_tsi]).to eq resource.descriptive_metadata.title.first.value
+      expect(result[:collection_tsim]).to contain_exactly resource.descriptive_metadata.collection.first.value
     end
 
     it 'has values from MARC metadata when Resource fields are blank' do
