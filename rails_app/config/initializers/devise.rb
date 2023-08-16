@@ -273,6 +273,15 @@ Devise.setup do |config|
   # up on your models and hooks.
   config.omniauth :developer, fields: [:email]
 
+  idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
+  idp_metadata = idp_metadata_parser.parse_remote_to_hash("https://idp.pennkey.upenn.edu/idp/shibboleth")
+  # Penn shib attributes: https://www.isc.upenn.edu/how-to/shibboleth-attributes-available-penn
+  saml_config = idp_metadata.merge({
+    sp_entity_id: ENV.fetch('SHIB_SP_ENTITY_ID', 'test')
+  })
+
+  config.omniauth :saml, saml_config
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

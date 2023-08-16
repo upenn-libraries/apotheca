@@ -9,9 +9,9 @@ class User < ApplicationRecord
 
   devise :rememberable, :timeoutable
   if Rails.env.development?
-    devise :omniauthable, omniauth_providers: [:developer]
+    devise :omniauthable, omniauth_providers: [:developer, :saml]
   else
-    devise :omniauthable, omniauth_providers: []
+    devise :omniauthable, omniauth_providers: [:saml]
   end
 
   has_many :bulk_exports, foreign_key: 'created_by_id', dependent: :destroy, inverse_of: :created_by
@@ -32,13 +32,27 @@ class User < ApplicationRecord
   scope :with_exports, -> { joins(:bulk_exports).distinct }
   scope :with_imports, -> { joins(:bulk_imports).distinct }
 
-  def self.from_omniauth(auth)
+  def self.from_omniauth_saml(auth)
+    where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
+      user.email = auth.info.email
+      user.first_name = auth.info.first_name # || auth.info.name.split(',').second.strip ?
+      user.last_name = auth.info.last_name # || auth.info.name.split(',').first.strip ?
+      user.active = true
+      user.roles << VIEWER_ROLE
+    end
+  end
+
+  # @param [OmniAuth::AuthHash] auth
+  # @return [User]
+  def self.from_omniauth_developer(auth)
+    return unless Rails.env.development?
+
     where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
       user.email = auth.info.email
       user.first_name = 'A.'
       user.last_name = 'Developer'
       user.active = true
-      user.roles << 'admin'
+      user.roles << ADMIN_ROLE
     end
   end
 
