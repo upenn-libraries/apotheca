@@ -54,7 +54,7 @@ describe 'Bulk Export Index Page' do
 
         it 'can be cancelled' do
           click_on 'Cancel Export'
-          click_on 'Cancel'
+          within('div.modal-content') { click_on 'Cancel' }
           expect(page).to have_text('Bulk export cancelled.')
         end
       end
@@ -82,7 +82,7 @@ describe 'Bulk Export Index Page' do
 
         it 'can be deleted' do
           click_on 'Delete Export'
-          click_on 'Delete'
+          within('div.modal-content') { click_on 'Delete' }
           expect(page).to have_text('Bulk export deleted.')
         end
       end
@@ -124,13 +124,13 @@ describe 'Bulk Export Index Page' do
 
         it 'can be deleted' do
           click_on 'Delete Export'
-          click_on 'Delete'
+          within('div.modal-content') { click_on 'Delete' }
           expect(page).to have_text('Bulk export deleted.')
         end
 
         it 'can be regenerated' do
           click_on 'Regenerate Export'
-          click_on 'Regenerate'
+          within('div.modal-content') { click_on 'Regenerate' }
           expect(page).to have_text('Bulk export queued for regeneration')
         end
       end
@@ -169,13 +169,13 @@ describe 'Bulk Export Index Page' do
 
         it 'can be deleted' do
           click_on 'Delete Export'
-          click_on 'Delete'
+          within('div.modal-content') { click_on 'Delete' }
           expect(page).to have_text('Bulk export deleted.')
         end
 
         it 'can be regenerated' do
           click_on 'Regenerate Export'
-          click_on 'Regenerate'
+          within('div.modal-content') { click_on 'Regenerate' }
           expect(page).to have_text('Bulk export queued for regeneration')
         end
       end
