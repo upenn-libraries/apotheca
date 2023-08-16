@@ -10,7 +10,7 @@ class ItemResource
 
       def to_json_export
         super.tap do |hash|
-          hash[:role] = role.map(&:to_json_export)
+          hash[:role] = role.map(&:to_json_export) if role.present?
         end
       end
     end
