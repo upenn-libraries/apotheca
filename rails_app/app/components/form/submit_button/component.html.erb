@@ -1,7 +1,6 @@
-
 <div>
   <!-- Bootstrap Modal -->
-  <div class="modal fade"  id=<%= @id %> data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
+  <div class="modal fade" id=<%= @id %> data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
        aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -17,9 +16,10 @@
       </div>
     </div>
   </div>
+  <!-- If a confirmation modal is presented, clicking the confirmation button inside of the modal will submit the form. -->
   <% if @confirm %>
-    <%= button_tag @value, type: 'button', **@options%>
-    <% else %>
-    <%= submit_tag @value, **@options%>
-<% end %>
+    <%= button_tag @value, type: 'button', **@options %>
+  <% else %>
+    <%= submit_tag @value, **@options %>
+  <% end %>
 </div>
