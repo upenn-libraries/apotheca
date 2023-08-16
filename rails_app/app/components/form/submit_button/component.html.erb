@@ -11,7 +11,7 @@
         <div class="modal-body text-start"><%= @message %></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Not now</button>
-          <button type="submit" class="btn btn-primary <%= color_button %>" data-bs-dismiss="modal"><%= @value.split.first %></button>
+          <button type="submit" class="btn btn-<%= @variant %>" data-bs-dismiss="modal"><%= @value.split.first %></button>
         </div>
       </div>
     </div>

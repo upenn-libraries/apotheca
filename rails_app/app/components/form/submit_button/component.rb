@@ -16,13 +16,12 @@ module Form
         @id = "submit_button_component_#{object_id}"
         @options[:class] = Array.wrap(@options[:class]).push('btn', "btn-#{variant}")
         @options[:data] = @options.fetch(:data, {})
+        @variant = normalize_variant(variant)
         configure_confirmation if confirm
       end
 
-      def color_button
-        actions = %w[delete cancel]
-        action = @value.split.first.downcase
-        actions.include?(action) ? 'btn-danger' : ''
+      def normalize_variant(variant)
+        variant.to_s.gsub('outline-', '').gsub('secondary', 'primary')
       end
 
       def configure_confirmation
