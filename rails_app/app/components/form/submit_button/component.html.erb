@@ -1,0 +1,25 @@
+<div>
+  <!-- Bootstrap Modal -->
+  <div class="modal fade" id=<%= @id %> data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
+       aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="confirmationModalLabel"><%= "#{@value}?" %></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-start"><%= @message %></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Not now</button>
+          <button type="submit" class="btn btn-<%= @variant %>" data-bs-dismiss="modal"><%= @value.split.first %></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- If a confirmation modal is presented, clicking the confirmation button inside of the modal will submit the form. -->
+  <% if @confirm %>
+    <%= button_tag @value, type: 'button', **@options %>
+  <% else %>
+    <%= submit_tag @value, **@options %>
+  <% end %>
+</div>

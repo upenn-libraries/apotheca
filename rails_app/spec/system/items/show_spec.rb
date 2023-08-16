@@ -50,10 +50,9 @@ describe 'Item Show Page' do
       expect(page).to have_link('Edit Asset', href: edit_asset_path(item.asset_ids.first))
     end
 
-    it 'shows form input to set item thumbnail' do
+    it 'shows button to set item thumbnail' do
       click_on 'Assets'
-      set_thumbnail_input = find('input', id: 'set-as-item-thumbnail')
-      expect(set_thumbnail_input.value).to eq('Set as Item Thumbnail')
+      expect(page).to have_button('Set as Item Thumbnail')
     end
   end
 
@@ -105,7 +104,8 @@ describe 'Item Show Page' do
 
       it 'enqueues job to refresh ils metadata' do
         click_on 'Actions'
-        accept_confirm { click_on 'Refresh ILS Metadata' }
+        click_on 'Refresh ILS Metadata'
+        within('div.modal-content') { click_on 'Refresh' }
         expect(page).to have_text('Job to refresh ILS metadata enqueued')
       end
     end

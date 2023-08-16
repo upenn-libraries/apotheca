@@ -16,3 +16,19 @@ en:
         title: "Arranged"
         message: ""
         placeholder_message: "Drag an Asset here to order it."
+  confirm_messages:
+    item:
+      refresh_ILS: "Your current ILS metadata will be updated."
+      delete: "You will permanently delete this item."
+    bulk_import:
+      cancel_all: "You will permanently cancel all queued imports."
+    import:
+      cancel: "You will permanently cancel this import."
+    bulk_export:
+      regenerate: "Your current bulk export will be regenerated."
+      cancel: "You will permanently cancel this bulk export."
+      delete: "You will permanently delete this bulk export."
+    asset:
+      regenerate_derivatives: "Your current derivatives for this asset will be regenerated."
+      delete: "You will permanently delete this asset."
+      change_thumbnail: "Your current thumbnail will be replaced."
