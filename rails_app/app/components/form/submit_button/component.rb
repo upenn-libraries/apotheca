@@ -21,7 +21,7 @@ module Form
       end
 
       def normalize_variant(variant)
-        variant.to_s.gsub('outline-', '').gsub('secondary', 'primary')
+        variant.to_s.gsub('outline-', '').gsub(/secondary|link/, 'primary')
       end
 
       def configure_confirmation
