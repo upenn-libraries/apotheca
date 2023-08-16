@@ -45,7 +45,7 @@
                 <%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(bulk_import), method: :patch) do |component| %>
                   <% component.with_submit('Cancel',
                                            confirm: I18n.t('confirm_messages.bulk_import.cancel_all'),
-                                           variant: :secondary, class: 'btn-sm')
+                                           variant: :danger, class: 'btn-sm')
                   %>
                 <% end %>
               <% end %>

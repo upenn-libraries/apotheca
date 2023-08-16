@@ -37,7 +37,7 @@
         <td>
           <% if can_cancel? %>
             <%= render Form::Component.new(name: 'cancel_bulk_export', url: cancel_bulk_export_path(@bulk_export), method: :get) do |component| %>
-              <% component.with_submit('Cancel Export', confirm: I18n.t('confirm_messages.bulk_export.cancel'), variant: 'outline-secondary') %>
+              <% component.with_submit('Cancel Export', confirm: I18n.t('confirm_messages.bulk_export.cancel'), variant: 'danger') %>
             <% end %>
           <% end %>
         </td>
