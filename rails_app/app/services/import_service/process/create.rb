@@ -39,9 +39,10 @@ module ImportService
           @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?
         end
 
-        puts asset_set.file_locations.filenames
-
-        # puts asset_set.all.first.file_location
+        # Validate that provided thumbnail exists
+        if thumbnail.present? && asset_set.file_locations.filenames.exclude?(thumbnail)
+          @errors << "provided thumbnail doesn't exist"
+        end
       end
 
       # Runs process to create an Item.
