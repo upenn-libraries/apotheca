@@ -18,18 +18,7 @@ class UsersController < ApplicationController
     @user = UserPresenter.new object: @user
   end
 
-  def new; end
-
   def edit; end
-
-  def create
-    @user = User.new user_params
-    if @user.save
-      redirect_to user_path(@user), notice: 'User created'
-    else
-      render :new, alert: "Problem creating user: #{@user.errors.map(&:full_message).join(', ')}"
-    end
-  end
 
   def update
     @user.update user_params

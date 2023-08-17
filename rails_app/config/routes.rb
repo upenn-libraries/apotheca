@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   end
 
   resources :alert_messages, only: %w[index update]
-  resources :users, except: :destroy
+  resources :users, only: %w[index show edit update]
   scope :bulk_imports do
     post 'file_listing_tool/file_list', to: 'file_listing_tool#file_list'
     get 'file_listing_tool', to: 'file_listing_tool#tool'
