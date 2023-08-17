@@ -21,8 +21,8 @@ class User < ApplicationRecord
 
   validate :require_only_one_role
   validates :roles, inclusion: ROLES
-  validates :email, presence: true, uniqueness: true
-  validates :uid, uniqueness: { scope: :provider }, if: :provider_provided?
+  validates :email, uniqueness: { scope: :provider }, presence: true
+  validates :uid, uniqueness: { scope: :provider }, presence: true
 
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
@@ -33,10 +33,10 @@ class User < ApplicationRecord
   scope :with_imports, -> { joins(:bulk_imports).distinct }
 
   def self.from_omniauth_saml(auth)
-    where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
-      user.email = auth.info.email
-      user.first_name = auth.info.first_name # || auth.info.name.split(',').second.strip ?
-      user.last_name = auth.info.last_name # || auth.info.name.split(',').first.strip ?
+    where(provider: auth.provider, uid: auth.info.uid, active: true).first_or_create do |user|
+      user.email = auth.info.email.presence || auth.info.uid
+      user.first_name = auth.info.first_name
+      user.last_name = auth.info.last_name
       user.active = true
       user.roles << VIEWER_ROLE
     end
@@ -47,10 +47,10 @@ class User < ApplicationRecord
   def self.from_omniauth_developer(auth)
     return unless Rails.env.development?
 
-    where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
+    where(provider: auth.provider, uid: auth.uid, email: auth.info.email, active: true).first_or_create do |user|
       user.email = auth.info.email
-      user.first_name = 'A.'
-      user.last_name = 'Developer'
+      user.first_name = 'DEVELOPER'
+      user.last_name = 'ACCOUNT'
       user.active = true
       user.roles << ADMIN_ROLE
     end

@@ -3,6 +3,19 @@
 require './spec/support/valkyrie_persist_strategy'
 
 namespace :apotheca do
+  desc 'Promote a SAML user to ADMIN'
+  task adminify: :environment do
+    user = User.find_by(provider: 'saml', uid: ENV['UID'])
+    unless user.present?
+      puts 'User from UID does not exist as a SAML provider user'
+      return
+    end
+
+    user.roles = Array.wrap(User::ADMIN_ROLE)
+    user.save
+    puts "User #{user.uid} adminified!"
+  end
+
   desc 'Reindex Resources'
   task reindex: :environment do
     Solr::Reindexer.reindex_all

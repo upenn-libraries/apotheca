@@ -2,7 +2,13 @@
 
 FactoryBot.define do
   factory :user do
-    email { Faker::Internet.unique.email }
+    transient do
+      identifier { Faker::Internet.unique.email }
+    end
+
+    provider { 'test' }
+    uid { identifier }
+    email { identifier }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
 
