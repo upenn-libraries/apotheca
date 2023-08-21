@@ -46,7 +46,7 @@ module Form
       end
 
       def generate_id(name)
-        name.gsub(/(\[|\]|_)+/, '-').chomp('-')
+        name.to_s.gsub(/(\[|\]|_)+/, '-').chomp('-')
       end
 
       def extract_value

@@ -5,6 +5,7 @@
 
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title { 'Users' } %>
+  <%= header.with_link(href: new_user_path) { 'Add User' } %>
 <% end %>
 
 <%= render 'filters' %>

@@ -4,6 +4,10 @@
   <% component.with_breadcrumb(active: true) do %>New<% end %>
 <% end %>
 
-<h2>New User</h2>
+<h2>Add User</h2>
 
-<%= render 'form' %>
+<%= render(Form::Component.new(model: @user, input_col: { sm: 6 })) do |form| %>
+  <% form.with_field(:pennkey, type: :text, field: :pennkey, label: 'Penn Key', value: nil) %>
+  <% form.with_field(:roles, type: :select, value: User::VIEWER_ROLE, choices: User::ROLES, label: 'Role') %>
+  <% form.with_submit('Add') %>
+<% end %>

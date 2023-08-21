@@ -18,6 +18,18 @@ class UsersController < ApplicationController
     @user = UserPresenter.new object: @user
   end
 
+  def new; end
+
+  def create
+    email = "#{params[:pennkey]}@upenn.edu"
+    @user = User.new provider: 'saml', uid: email, email: email, active: true, roles: user_params.roles
+    if @user.save
+      redirect_to user_path(@user), notice: 'User granted access'
+    else
+      render :edit, alert: "Problem adding user: #{@user.errors.map(&:full_message).join(', ')}"
+    end
+  end
+
   def edit; end
 
   def update

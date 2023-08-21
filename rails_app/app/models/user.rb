@@ -33,13 +33,13 @@ class User < ApplicationRecord
   scope :with_imports, -> { joins(:bulk_imports).distinct }
 
   def self.from_omniauth_saml(auth)
-    where(provider: auth.provider, uid: auth.info.uid, active: true).first_or_create do |user|
-      user.email = auth.info.email.presence || auth.info.uid
+    user = find_by(provider: auth.provider, uid: auth.info.uid, active: true)
+    if user.active? && (user.first_name.blank? || user.last_name.blank?)
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
-      user.active = true
-      user.roles << VIEWER_ROLE
+      user.email = auth.info.email
     end
+    user
   end
 
   # @param [OmniAuth::AuthHash] auth
