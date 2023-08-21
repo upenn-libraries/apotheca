@@ -4,16 +4,14 @@ require './spec/support/valkyrie_persist_strategy'
 
 namespace :apotheca do
   desc 'Promote a SAML user to ADMIN'
-  task adminify: :environment do
-    user = User.find_by(provider: 'saml', uid: ENV['UID'])
-    unless user.present?
-      puts 'User from UID does not exist as a SAML provider user'
-      return
+  task create_admin_stub: :environment do
+    unless ENV['UID'].present?
+      puts 'Specify the Penn Key to create stub user in an "UID" environment variable'
     end
 
-    user.roles = Array.wrap(User::ADMIN_ROLE)
-    user.save
-    puts "User #{user.uid} adminified!"
+    id = "#{ENV['UID']}@upenn.edu"
+    user = User.create!(provider: 'saml', uid: id, email: id, roles: [User::ADMIN_ROLE])
+    puts "User #{user.uid} created!"
   end
 
   desc 'Reindex Resources'
