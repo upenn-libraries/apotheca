@@ -9,4 +9,8 @@ class ApplicationController < ActionController::Base
   rescue_from 'CanCan::AccessDenied' do |_e|
     redirect_to root_path, alert: 'You are not authorized to access this area.'
   end
+
+  def after_sign_out_path_for(current_user)
+    'https://idp.pennkey.upenn.edu/logout'
+  end
 end
