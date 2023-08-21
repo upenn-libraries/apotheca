@@ -6,7 +6,7 @@ namespace :apotheca do
   desc 'Promote a SAML user to ADMIN'
   task create_admin_stub: :environment do
     unless ENV['UID'].present?
-      puts 'Specify the Penn Key to create stub user in an "UID" environment variable'
+      puts 'Specify a Penn Key in an "UID" environment variable to create a stub user'
     end
 
     id = "#{ENV['UID']}@upenn.edu"
