@@ -51,7 +51,7 @@ class User < ApplicationRecord
   def self.from_omniauth_developer(auth)
     return unless Rails.env.development?
 
-    where(provider: auth.provider, uid: auth.uid, email: auth.info.email, active: true).first_or_create do |user|
+    where(provider: auth.provider, uid: auth.uid, email: auth.info.email).first_or_create do |user|
       user.email = auth.info.email
       user.first_name = 'DEVELOPER'
       user.last_name = 'ACCOUNT'
