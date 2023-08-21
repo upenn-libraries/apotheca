@@ -6,6 +6,8 @@ class UsersController < ApplicationController
 
   load_and_authorize_resource
 
+  before_action :require_pennkey, only: :create
+
   def index
     @users = User.page(params[:page]).per(per_page)
     @users = @users.users_search(params[:users_search]) if params[:users_search].present?
@@ -22,11 +24,13 @@ class UsersController < ApplicationController
 
   def create
     email = "#{params[:pennkey]}@upenn.edu"
-    @user = User.new provider: 'saml', uid: email, email: email, active: true, roles: user_params.roles
+    @user = User.new(provider: 'saml', uid: email, email: email, active: true, roles: user_params[:roles])
     if @user.save
-      redirect_to user_path(@user), notice: 'User granted access'
+      flash.notice = "User access granted for #{user.uid}"
+      redirect_to user_path(@user)
     else
-      render :edit, alert: "Problem adding user: #{@user.errors.map(&:full_message).join(', ')}"
+      flash.alert = "Problem adding user: #{@user.errors.map(&:full_message).join(', ')}"
+      render :edit
     end
   end
 
@@ -35,9 +39,11 @@ class UsersController < ApplicationController
   def update
     @user.update user_params
     if @user.save
-      redirect_to user_path(@user), notice: 'User updated'
+      flash.notice = 'User updated'
+      redirect_to user_path(@user)
     else
-      render :edit, alert: "Problem updating user: #{@user.errors.map(&:full_message).join(', ')}"
+      flash.alert = "Problem updating user: #{@user.errors.map(&:full_message).join(', ')}"
+      render :edit
     end
   end
 
@@ -47,5 +53,12 @@ class UsersController < ApplicationController
     safe_params = params.require(:user).permit(:first_name, :last_name, :email, :active, :roles)
     safe_params[:roles] = Array.wrap(safe_params[:roles]) # roles is expected to be multivalued
     safe_params
+  end
+
+  def require_pennkey
+    unless params[:pennkey].present?
+      flash.alert = 'A Penn Key must be provided'
+      render :new
+    end
   end
 end

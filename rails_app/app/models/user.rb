@@ -32,9 +32,13 @@ class User < ApplicationRecord
   scope :with_exports, -> { joins(:bulk_exports).distinct }
   scope :with_imports, -> { joins(:bulk_imports).distinct }
 
+  # @param [OmniAuth::AuthHash] auth
+  # @return [User, nil]
   def self.from_omniauth_saml(auth)
     user = find_by(provider: auth.provider, uid: auth.info.uid, active: true)
-    if user.active? && (user.first_name.blank? || user.last_name.blank?)
+
+    # if user exists, is active but without name values, they are probably a stub user. update the info
+    if user&.active? && (user.first_name.blank? || user.last_name.blank?)
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
       user.email = auth.info.email

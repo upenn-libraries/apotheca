@@ -47,4 +47,39 @@ describe User do
     user.save
     expect(user.roles).to eq ['admin']
   end
+
+  describe '.from_omniauth_saml' do
+    context 'with a stub PennKey user' do
+      let(:user) { create(:user, :stub, :admin, uid: 'stub@upenn.edu', email: 'stub@upenn.edu')}
+      let(:auth_info) do
+        OpenStruct.new({ provider: user.provider,
+                              info: OpenStruct.new({ uid: user.uid, first_name: 'F', last_name: 'L' }) })
+      end
+
+      it 'returns a user with updated name attributes' do
+        returned_user = described_class.from_omniauth_saml(auth_info)
+        expect(returned_user).to eq returned_user
+        expect(returned_user).to be_changed
+      end
+    end
+
+    context 'with an existing PennKey user' do
+      let(:user) { create(:user, :admin, email: 'test@upenn.edu', uid: 'test@upenn.edu') }
+      let(:auth_info) { OpenStruct.new({ provider: user.provider, info: OpenStruct.new({ uid: user.uid }) }) }
+
+      it 'returns an unmodified, persisted User' do
+        returned_user = described_class.from_omniauth_saml(auth_info)
+        expect(returned_user).to eq returned_user
+        expect(returned_user).not_to be_changed
+      end
+    end
+
+    context 'with a PennKey user not configured for access' do
+      let(:auth_info) { OpenStruct.new({ provider: 'test', info: OpenStruct.new({ uid: 'zzzzzzz' }) }) }
+
+      it 'returns a nil user' do
+        expect(described_class.from_omniauth_saml(auth_info)).to be_nil
+      end
+    end
+  end
 end

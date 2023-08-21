@@ -23,5 +23,11 @@ FactoryBot.define do
     trait :admin do
       roles { [User::ADMIN_ROLE] }
     end
+
+    trait :stub do
+      first_name { nil }
+      last_name { nil }
+      active { true }
+    end
   end
 end
