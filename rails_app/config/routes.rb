@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   devise_scope :user do
@@ -43,6 +45,10 @@ Rails.application.routes.draw do
         post :regenerate_derivatives, to: 'assets#regenerate_derivatives'
       end
     end
+  end
+
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
   end
 
   get 'login', to: 'login#index'
