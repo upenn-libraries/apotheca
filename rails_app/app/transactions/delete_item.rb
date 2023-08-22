@@ -13,7 +13,7 @@ class DeleteItem
   # @param [ItemResource] resource
   # @param [TrueClass, FalseClass] async
   def delete_assets(resource:, async: true)
-    method = async ? 'perform_later' : 'perform_now'
+    method = async ? 'perform_async' : 'perform_inline'
     resource.asset_ids&.each do |asset_id|
       RemoveAssetJob.send(method, asset_id.to_s)
     end

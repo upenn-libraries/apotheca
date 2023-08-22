@@ -50,7 +50,7 @@ class BulkImport < ApplicationRecord
   def create_imports(queue = BulkImport::DEFAULT_PRIORITY)
     csv_rows.each do |row|
       import = Import.create(bulk_import: self, import_data: row)
-      ProcessImportJob.set(queue: queue).perform_later(import)
+      ProcessImportJob.set(queue: "import_#{queue}").perform_async(import.id)
     end
   end
 

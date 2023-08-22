@@ -26,7 +26,7 @@ class BulkExportsController < ApplicationController
     @bulk_export.created_by = current_user
     @bulk_export.search_params = clean_search_params(JSON.parse(params[:bulk_export][:search_params]))
     if @bulk_export.save
-      ProcessBulkExportJob.perform_later(@bulk_export)
+      ProcessBulkExportJob.perform_async(@bulk_export.id)
       redirect_to bulk_exports_path, notice: 'Bulk export created'
     else
       redirect_to bulk_exports_path,
@@ -60,7 +60,7 @@ class BulkExportsController < ApplicationController
     if !@bulk_export.may_reprocess?
       redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{bulk_export.state}"
     elsif @bulk_export.reprocess!
-      ProcessBulkExportJob.perform_later(@bulk_export)
+      ProcessBulkExportJob.perform_async(@bulk_export.id)
       redirect_to bulk_exports_path, notice: 'Bulk export queued for regeneration.'
     else
       redirect_to bulk_export_path,
