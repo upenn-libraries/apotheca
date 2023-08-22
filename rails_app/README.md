@@ -40,6 +40,9 @@ In order to run the test suite (currently):
 1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
 2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
 
+## Sidekiq and ActiveJob
+We use Sidekiq to run all of our jobs in `development`, `staging` and `production`. In `test`, we use test appropriate adapters. All of our custom jobs are written with `Sidekiq::Job` to provide better performance. We don't use `ActiveJob::Base` when writing custom jobs. While we don't directly use `ActiveJob`, it is configured to use Sidekiq in case we decide to use built-in jobs like sending emails.
+
 ## Configuration/Settings
 Application-wide configuration is centralized in `config/settings` and `config/settings.yml`. Access to configuration is provided via the `Settings` object instantiated by the [config](https://github.com/rubyconfig/config) gem. For example, to retrieve the preservation storage configuration run:
 
