@@ -284,7 +284,8 @@ Devise.setup do |config|
       first_name: ['urn:oid:2.5.4.42'], # givenName from directory, unless blocked
       last_name: ['urn:oid:2.5.4.4'], # surname from directory, unless blocked
       full_name: ['urn:oid:2.16.840.1.113730.3.1.241'] # computed from directory info
-    }
+    },
+    allowed_clock_drift: 1.second # see: https://github.com/SAML-Toolkits/ruby-saml#clock-drift
   }
 
   # ==> Warden configuration

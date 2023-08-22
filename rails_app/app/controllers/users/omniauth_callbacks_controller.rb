@@ -3,7 +3,7 @@
 module Users
   # custom OmniAuth callbacks
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-    skip_before_action :verify_authenticity_token, only: [:developer, :saml]
+    skip_before_action :verify_authenticity_token, only: [:developer, :saml, :failure]
 
     def saml
       @user = User.from_omniauth_saml(request.env['omniauth.auth'])
@@ -16,6 +16,8 @@ module Users
     end
 
     def failure
+      flash.alert 'Problem with authentication, try again.'
+      # TODO: push notification to Honeybadger
       redirect_to root_path
     end
 
