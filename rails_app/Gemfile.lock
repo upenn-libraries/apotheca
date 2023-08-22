@@ -383,6 +383,11 @@ GEM
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
+    rspec-sidekiq (4.0.0)
+      rspec-core (~> 3.0)
+      rspec-expectations (~> 3.0)
+      rspec-mocks (~> 3.0)
+      sidekiq (>= 5, < 8)
     rspec-support (3.11.0)
     rubocop (1.48.1)
       json (~> 2.3)
@@ -538,6 +543,7 @@ DEPENDENCIES
   rails (~> 7.0.1)
   rsolr
   rspec-rails (~> 5.0)
+  rspec-sidekiq
   ruby-vips
   sassc-rails
   sidekiq
