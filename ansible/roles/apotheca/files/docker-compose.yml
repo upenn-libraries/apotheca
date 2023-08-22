@@ -40,6 +40,9 @@ services:
       RAILS_ENV: "${RAILS_ENV}"
       RAILS_LOG_TO_STDOUT: "true"
       RAILS_SERVE_STATIC_FILES: "true"
+      REDIS_URL: "redis://redis:${REDIS_PORT}/0"
+      REDIS_SIDEKIQ_USER: "${REDIS_SIDEKIQ_USER}"
+      REDIS_SIDEKIQ_PASSWORD: "${REDIS_SIDEKIQ_PASSWORD}"
       SOLR_BACKUP_LOCATION: "solr/backups"
       SOLR_URL: "${SOLR_URL}"
       FITS_URL: "http://fits:${FITS_PORT}/fits"
@@ -55,6 +58,7 @@ services:
       timeout: 10s
     networks:
       - database
+      - redis
       - traefik
     secrets:
       - database_password
@@ -64,6 +68,8 @@ services:
 
 networks:
   database:
+    external: true
+  redis:
     external: true
   traefik:
     external: true

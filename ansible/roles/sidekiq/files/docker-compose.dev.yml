@@ -5,5 +5,6 @@ services:
     environment:
       APP_UID: ${UID:-1000}
       APP_GID: ${GID:-1000}
+      MINIO_URL: "http://minio:${MINIO_PORT}"
     volumes:
       - /apotheca/ansible/roles/apotheca/files/src/:/home/app

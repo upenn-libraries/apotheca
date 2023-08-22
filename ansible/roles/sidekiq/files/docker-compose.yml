@@ -3,7 +3,7 @@ version: "3.8"
 services:
   sidekiq:
     image: ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
-    command: ["bundle", "exec", "sidekiq", "-c", "2"]
+    command: ["bundle", "exec", "sidekiq", "-q", "high", "-q", "medium", "-q", "import_high", "-q", "import_medium", "-q", "import_low", "-q", "low", "-c", "5"]
     deploy:
       placement:
         constraints:
@@ -19,13 +19,15 @@ services:
       APP_URL: ${APP_URL}
       RAILS_ENV: ${APP_RAILS_ENV}
       REDIS_SIDEKIQ_USER: ${REDIS_SIDEKIQ_USER}
+      REDIS_SIDEKIQ_PASSWORD: ${REDIS_SIDEKIQ_PASSWORD}
       REDIS_URL: "redis://redis:${REDIS_PORT}/0"
-      SOLR_URL: "http://solr:8983/solr/${SOLR_CORE_NAME}"
+      SOLR_URL: "${SOLR_URL}"
+      FITS_URL: "http://fits:${FITS_PORT}/fits"
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "ps aux | grep '[s]idekiq 6' || exit 1",
+          "ps aux | grep '[s]idekiq 7' || exit 1",
         ]
       interval: 30s
       retries: 3
