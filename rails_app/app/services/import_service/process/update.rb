@@ -18,6 +18,8 @@ module ImportService
 
         @errors << 'unique_identifier must be provided when updating an Item' unless unique_identifier
         @errors << 'unique_identifier does not belong to an Item' if unique_identifier && item.nil?
+
+        @errors << "provided thumbnail doesn't exist" if filename_to_asset.keys.exclude?(thumbnail)
       end
 
       # Runs process to update Item and update or create Assets as appropriate.
@@ -41,15 +43,12 @@ module ImportService
             return create_assets_result if create_assets_result.failure?
           end
 
-          # Map of filename to assets (includes existing and newly created assets)
-          filename_to_asset = existing_assets.index_by(&:original_filename)
-                                             .merge(created_assets.index_by(&:original_filename))
-
           arranged_asset_ids = asset_set.arranged.map { |a| filename_to_asset[a.filename].id }
         end
 
         # Update Item
         item_attributes = {
+          thumbnail_asset_id: filename_to_asset[thumbnail]&.id,
           id: item.id,
           optimistic_lock_token: item.optimistic_lock_token,
           human_readable_name: human_readable_name,
@@ -90,6 +89,15 @@ module ImportService
 
       def existing_assets
         @existing_assets ||= query_service.find_many_by_ids(ids: item.asset_ids || [])
+      end
+
+      def filename_to_asset
+        if asset_set
+          existing_assets.index_by(&:original_filename)
+                         .merge(created_assets.index_by(&:original_filename))
+        else
+          existing_assets.index_by(&:original_filename)
+        end
       end
 
       # Creates new assets and sets the `created_assets` instance variable.
