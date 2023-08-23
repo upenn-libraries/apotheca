@@ -40,7 +40,7 @@ services:
       RAILS_ENV: "${RAILS_ENV}"
       RAILS_LOG_TO_STDOUT: "true"
       RAILS_SERVE_STATIC_FILES: "true"
-      SHIB_SP_ENTITY_ID: "${SHIB_SP_ENTITY_ID}"
+      SHIB_SP_ENTITY_ID: "https://${APP_URL}/shibboleth"
       SOLR_BACKUP_LOCATION: "solr/backups"
       SOLR_URL: "${SOLR_URL}"
       FITS_URL: "http://fits:${FITS_PORT}/fits"

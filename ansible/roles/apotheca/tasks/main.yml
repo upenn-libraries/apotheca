@@ -70,7 +70,6 @@
     REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
     REDIS_PORT: "{{ redis.port }}"
     REPLICAS: "{{ sidekiq.replicas }}"
-    SHIB_SP_ENTITY_ID: "{{ apotheca_shib_sp_entity_id }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
     SOLR_TEST_URL: "{{ apotheca_solr_test_url }}"
     FITS_PORT: "{{ fits.port }}"
@@ -109,7 +108,6 @@
     REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
     REDIS_PORT: "{{ redis.port }}"
     REPLICAS: "{{ sidekiq.replicas }}"
-    SHIB_SP_ENTITY_ID: "{{ apotheca_shib_sp_entity_id }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
     FITS_PORT: "{{ fits.port }}"
   changed_when: false

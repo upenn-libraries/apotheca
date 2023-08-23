@@ -9,5 +9,4 @@ apotheca_replicas: 1
 apotheca_url: "apotheca-dev.library.upenn.edu"
 apotheca_solr_url: "http://solr-1:8983/solr/apotheca-dev"
 apotheca_solr_test_url: "http://solr-1:8983/solr/apotheca-test"
-apotheca_shib_sp_entity_id: "https://apotheca-dev.library.upenn.edu/shibboleth"
 
