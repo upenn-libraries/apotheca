@@ -6,7 +6,7 @@ redis_connection = {
   password: 'password'
 }
 
-Sidekiq.default_job_options = { retry: 3 }
+Sidekiq.default_job_options = { retry: 3, backtrace: 5 }
 
 Sidekiq.configure_server do |config|
   config.redis = redis_connection
