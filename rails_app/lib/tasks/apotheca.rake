@@ -5,7 +5,7 @@ require './spec/support/valkyrie_persist_strategy'
 namespace :apotheca do
   desc 'Promote a SAML user to ADMIN'
   task create_admin_stub: :environment do
-    unless ENV['UID'].present?
+    if ENV['UID'].blank?
       puts 'Specify a Penn Key in an "UID" environment variable to create a stub user'
     end
 

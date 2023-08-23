@@ -1,4 +1,5 @@
 <%= render(Form::Component.new(model: @user, input_col: { sm: 6 })) do |form| %>
+  <% form.with_field(:uid, type: :text, label: 'PennKey') %>
   <% form.with_field(:email, type: :email) %>
   <% form.with_field(:first_name, type: :text) %>
   <% form.with_field(:last_name, type: :text) %>

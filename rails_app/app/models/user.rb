@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   devise :rememberable, :timeoutable
   if Rails.env.development?
-    devise :omniauthable, omniauth_providers: [:developer, :saml]
+    devise :omniauthable, omniauth_providers: %i[developer saml]
   else
     devise :omniauthable, omniauth_providers: [:saml]
   end
@@ -36,13 +36,11 @@ class User < ApplicationRecord
   # @return [User, nil]
   def self.from_omniauth_saml(auth)
     user = find_by(provider: auth.provider, uid: auth.info.uid, active: true)
+    return nil unless user
 
-    # if user exists, is active but without name values, they are probably a stub user. update the info
-    if user&.active? && (user.first_name.blank? || user.last_name.blank?)
-      user.first_name = auth.info.first_name
-      user.last_name = auth.info.last_name
-      user.email = auth.info.email
-    end
+    user.first_name = auth.info.first_name
+    user.last_name = auth.info.last_name
+    user.email = auth.info.email
     user
   end
 
@@ -51,8 +49,11 @@ class User < ApplicationRecord
   def self.from_omniauth_developer(auth)
     return unless Rails.env.development?
 
-    where(provider: auth.provider, uid: auth.uid, email: auth.info.email).first_or_create do |user|
-      user.email = auth.info.email
+    # we require an email, this is a good enough guess until we get a value from the IdP
+    email = "#{auth.info.uid}@upenn.edu"
+    where(provider: auth.provider, uid: auth.info.uid, email: email).first_or_create do |user|
+      user.uid = auth.info.uid
+      user.email = email
       user.first_name = 'DEVELOPER'
       user.last_name = 'ACCOUNT'
       user.active = true
@@ -87,10 +88,5 @@ class User < ApplicationRecord
     elsif roles.empty?
       errors.add(:roles, 'must be set for a User')
     end
-  end
-
-  # @return [TrueClass, FalseClass]
-  def provider_provided?
-    provider.present?
   end
 end

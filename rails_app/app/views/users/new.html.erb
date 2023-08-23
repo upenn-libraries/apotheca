@@ -6,8 +6,9 @@
 
 <h2>Add User</h2>
 
-<%= render(Form::Component.new(model: @user, input_col: { sm: 6 })) do |form| %>
-  <% form.with_field(:pennkey, type: :text, field: :pennkey, label: 'Penn Key', value: nil) %>
-  <% form.with_field(:roles, type: :select, value: User::VIEWER_ROLE, choices: User::ROLES, label: 'Role') %>
-  <% form.with_submit('Add') %>
-<% end %>
+<div class="alert alert-warning">
+  Only a PennKey value is required here. Any other values provided here will be overwritten with data from the PennKey
+  server when the user logs in.
+</div>
+
+<%= render 'form' %>
