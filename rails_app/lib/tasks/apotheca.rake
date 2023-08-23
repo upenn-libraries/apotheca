@@ -5,11 +5,12 @@ require './spec/support/valkyrie_persist_strategy'
 namespace :apotheca do
   desc 'Promote a SAML user to ADMIN'
   task create_admin_stub: :environment do
-    if ENV['UID'].blank?
+    if ENV.fetch('UID', nil).blank?
       puts 'Specify a Penn Key in an "UID" environment variable to create a stub user'
+      return
     end
 
-    id = "#{ENV['UID']}@upenn.edu"
+    id = "#{ENV.fetch('UID', nil)}@upenn.edu"
     user = User.create!(provider: 'saml', uid: id, email: id, roles: [User::ADMIN_ROLE])
     puts "User #{user.uid} created!"
   end
