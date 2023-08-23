@@ -16,8 +16,8 @@ module Users
     end
 
     def failure
-      flash.alert 'Problem with authentication, try again.'
-      # TODO: push notification to Honeybadger
+      flash.alert = 'Problem with authentication, try again.'
+      Honeybadger.notify 'Omniauth failure'
       redirect_to root_path
     end
 
