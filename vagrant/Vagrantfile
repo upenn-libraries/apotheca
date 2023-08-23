@@ -56,6 +56,7 @@ Vagrant.configure("2") do |config|
         # push the first interface far out enough to minimize potential conflict with docker swarm
         # which defaults to 10.0.0.0/8 for networks/containers
         vb.customize ["modifyvm", :id, "--natnet1", "10.252/16"]
+        vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 2000]
       end
 
       # Parallels provider
