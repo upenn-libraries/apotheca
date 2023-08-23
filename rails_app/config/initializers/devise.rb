@@ -285,7 +285,9 @@ Devise.setup do |config|
       last_name: ['urn:oid:2.5.4.4'], # surname from directory, unless blocked
       full_name: ['urn:oid:2.16.840.1.113730.3.1.241'] # computed from directory info
     },
-    allowed_clock_drift: 1.second # see: https://github.com/SAML-Toolkits/ruby-saml#clock-drift
+    # see: https://github.com/SAML-Toolkits/ruby-saml#clock-drift for why this is needed and for GitLab's discussion
+    # see: https://gitlab.com/gitlab-org/gitlab/-/issues/13653#note_491162899
+    allowed_clock_drift: 2.second
   }
 
   # ==> Warden configuration
