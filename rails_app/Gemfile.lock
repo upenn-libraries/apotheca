@@ -526,9 +526,9 @@ DEPENDENCIES
   importmap-rails
   iso-639
   kaminari
-  omniauth
+  omniauth (~> 2.0)
   omniauth-rails_csrf_protection
-  omniauth-saml
+  omniauth-saml (~> 2.0)
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.1)

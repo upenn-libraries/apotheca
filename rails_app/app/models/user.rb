@@ -35,7 +35,7 @@ class User < ApplicationRecord
   # @param [OmniAuth::AuthHash] auth
   # @return [User, nil]
   def self.from_omniauth_saml(auth)
-    user = find_by(provider: auth.provider, uid: auth.info.uid.gsub('@upenn.edu',''), email: auth.info.uid, active: true)
+    user = find_by(provider: auth.provider, uid: auth.info.uid.gsub('@upenn.edu', ''), email: auth.info.uid, active: true)
     return nil unless user
 
     user.first_name = auth.info.first_name
