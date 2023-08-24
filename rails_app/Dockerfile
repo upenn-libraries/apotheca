@@ -37,6 +37,9 @@ RUN apt-get update && apt-get install -y \
     git \
     libpq-dev \
     libvips \
+    clamav \
+    clamav-daemon \
+    clamdscan \
     postgresql \
     postgresql-contrib && \
     bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
@@ -87,6 +90,9 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libvips \
     nodejs \
+    clamav \
+    clamav-daemon \
+    clamdscan \
     postgresql \
     postgresql-contrib && \
   chmod +x /usr/local/bin/docker-entrypoint.sh && \
@@ -142,6 +148,9 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libvips \
     nodejs \
+    clamav \
+    clamav-daemon \
+    clamdscan \
     postgresql \
     postgresql-contrib && \
   chmod +x /usr/local/bin/docker-entrypoint.sh && \

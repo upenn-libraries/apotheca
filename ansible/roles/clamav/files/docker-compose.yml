@@ -16,9 +16,14 @@ services:
       options:
         max-file: "3"
         max-size: "10m"
+    volumes:
+      - clamav_data:/var/lib/clamav
     networks:
       - traefik
 
 networks:
   traefik:
     external: true
+
+volumes:
+  clamav_data:
