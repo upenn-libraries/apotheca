@@ -5,7 +5,7 @@ Clamby.configure({
   daemonize: true,
   config_file: Rails.root.join('clamd.conf'),
   error_clamscan_missing: true,
-  error_clamscan_client_error: false,
+  error_clamscan_client_error: true,
   error_file_missing: true,
   error_file_virus: false,
   fdpass: true,
