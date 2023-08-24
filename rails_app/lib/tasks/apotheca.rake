@@ -10,8 +10,8 @@ namespace :apotheca do
       return
     end
 
-    id = "#{ENV.fetch('UID', nil)}@upenn.edu"
-    user = User.create!(provider: 'saml', uid: id, email: id, roles: [User::ADMIN_ROLE])
+    email = "#{ENV.fetch('UID')}@upenn.edu"
+    user = User.create!(provider: 'saml', uid: ENV.fetch('UID'), email: email, roles: [User::ADMIN_ROLE], active: true)
     puts "User #{user.uid} created!"
   end
 

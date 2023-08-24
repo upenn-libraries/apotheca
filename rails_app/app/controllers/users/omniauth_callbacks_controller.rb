@@ -30,13 +30,11 @@ module Users
         redirect_to login_path, notice: 'Contact a site administrator for access.'
       elsif !user.active?
         redirect_to login_path, notice: 'Your account is inactive, contact a site administrator to regain access.'
-      elsif (user.changed? && user.save) || user.persisted?
+      elsif user.save
         sign_in_and_redirect user, event: :authentication
         set_flash_message(:notice, :success, kind: kind) if is_navigational_format?
       else
-        # problem saving - show validation errors
-        set_flash_message(:notice, :failure, kind: kind,
-                          reason: user.errors.to_a.join(', ')) if is_navigational_format?
+        set_flash_message(:notice, :failure, kind: kind, reason: user.errors.to_a.join(', ')) if is_navigational_format?
         redirect_to login_path
       end
     end
