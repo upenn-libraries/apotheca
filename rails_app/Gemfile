@@ -12,6 +12,7 @@ gem 'bootsnap', require: false
 gem 'bootstrap', '~> 5.2.3'
 gem 'bootstrap_form', '~> 5.0'
 gem 'cancancan'
+gem 'clamby'
 gem 'config'
 gem 'devise'
 gem 'dotiw'
