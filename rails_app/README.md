@@ -40,6 +40,13 @@ In order to run the test suite (currently):
 1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
 2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
 
+### Working with PennKey Auth
+
+In development, two authentication providers are available:
+1. Developer Authentication - enter a fake PennKey and you're in. This looks for an existing developer-provider user and logs that user in. Upon creation, these users have the `ADMIN_ROLE`.
+2. PennKey Authentication - selecting this will authenticate via Penn's IdP. Another admin user will have to create a user stub via the UI. In deployed environments, the rake task `apotheca:create_admin_stub UID=your_pennkey` can be used to initialize a stub admin user.
+This makes it possible to use your PennKey in development but also to create additional users to test out authorization functionality.
+
 ## Configuration/Settings
 Application-wide configuration is centralized in `config/settings` and `config/settings.yml`. Access to configuration is provided via the `Settings` object instantiated by the [config](https://github.com/rubyconfig/config) gem. For example, to retrieve the preservation storage configuration run:
 

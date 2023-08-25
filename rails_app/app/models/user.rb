@@ -9,9 +9,9 @@ class User < ApplicationRecord
 
   devise :rememberable, :timeoutable
   if Rails.env.development?
-    devise :omniauthable, omniauth_providers: [:developer]
+    devise :omniauthable, omniauth_providers: %i[developer saml]
   else
-    devise :omniauthable, omniauth_providers: []
+    devise :omniauthable, omniauth_providers: [:saml]
   end
 
   has_many :bulk_exports, foreign_key: 'created_by_id', dependent: :destroy, inverse_of: :created_by
@@ -21,8 +21,8 @@ class User < ApplicationRecord
 
   validate :require_only_one_role
   validates :roles, inclusion: ROLES
-  validates :email, presence: true, uniqueness: true
-  validates :uid, uniqueness: { scope: :provider }, if: :provider_provided?
+  validates :email, uniqueness: { scope: :provider }, presence: true
+  validates :uid, uniqueness: { scope: :provider }, presence: true
 
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
@@ -32,13 +32,32 @@ class User < ApplicationRecord
   scope :with_exports, -> { joins(:bulk_exports).distinct }
   scope :with_imports, -> { joins(:bulk_imports).distinct }
 
-  def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid, active: true).first_or_create do |user|
-      user.email = auth.info.email
-      user.first_name = 'A.'
-      user.last_name = 'Developer'
+  # @param [OmniAuth::AuthHash] auth
+  # @return [User, nil]
+  def self.from_omniauth_saml(auth)
+    user = find_by(provider: auth.provider, uid: auth.info.uid.gsub('@upenn.edu', ''), email: auth.info.uid)
+    return nil unless user
+
+    user.first_name = auth.info.first_name
+    user.last_name = auth.info.last_name
+    user.email = auth.info.email
+    user
+  end
+
+  # @param [OmniAuth::AuthHash] auth
+  # @return [User]
+  def self.from_omniauth_developer(auth)
+    return unless Rails.env.development?
+
+    # we require an email, this is a good enough guess until we get a value from the IdP
+    email = "#{auth.info.uid}@upenn.edu"
+    where(provider: auth.provider, uid: auth.info.uid, email: email).first_or_create do |user|
+      user.uid = auth.info.uid
+      user.email = email
+      user.first_name = 'DEVELOPER'
+      user.last_name = 'ACCOUNT'
       user.active = true
-      user.roles << 'admin'
+      user.roles << ADMIN_ROLE
     end
   end
 
@@ -69,10 +88,5 @@ class User < ApplicationRecord
     elsif roles.empty?
       errors.add(:roles, 'must be set for a User')
     end
-  end
-
-  # @return [TrueClass, FalseClass]
-  def provider_provided?
-    provider.present?
   end
 end

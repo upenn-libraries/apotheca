@@ -1,4 +1,10 @@
+<div class="alert alert-warning">
+  Only a PennKey value is required here. Any other values provided will be overwritten with data from the PennKey
+  server when the user logs in.
+</div>
+
 <%= render(Form::Component.new(model: @user, input_col: { sm: 6 })) do |form| %>
+  <% form.with_field(:uid, type: :text, label: 'PennKey') %>
   <% form.with_field(:email, type: :email) %>
   <% form.with_field(:first_name, type: :text) %>
   <% form.with_field(:last_name, type: :text) %>

@@ -20,30 +20,36 @@ class UsersController < ApplicationController
 
   def new; end
 
-  def edit; end
-
   def create
-    @user = User.new user_params
+    @user.update(user_params)
+    @user.email = "#{user_params[:uid]}@upenn.edu"
+    @user.provider = 'saml'
     if @user.save
-      redirect_to user_path(@user), notice: 'User created'
+      flash.notice = "User access granted for #{@user.uid}"
+      redirect_to user_path(@user)
     else
-      render :new, alert: "Problem creating user: #{@user.errors.map(&:full_message).join(', ')}"
+      flash.alert = "Problem adding user: #{@user.errors.map(&:full_message).join(', ')}"
+      render :edit
     end
   end
+
+  def edit; end
 
   def update
     @user.update user_params
     if @user.save
-      redirect_to user_path(@user), notice: 'User updated'
+      flash.notice = 'User updated'
+      redirect_to user_path(@user)
     else
-      render :edit, alert: "Problem updating user: #{@user.errors.map(&:full_message).join(', ')}"
+      flash.alert = "Problem updating user: #{@user.errors.map(&:full_message).join(', ')}"
+      render :edit
     end
   end
 
   private
 
   def user_params
-    safe_params = params.require(:user).permit(:first_name, :last_name, :email, :active, :roles)
+    safe_params = params.require(:user).permit(:first_name, :last_name, :uid, :email, :active, :roles)
     safe_params[:roles] = Array.wrap(safe_params[:roles]) # roles is expected to be multivalued
     safe_params
   end

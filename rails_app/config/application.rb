@@ -37,5 +37,13 @@ module Apotheca
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Rails 7 raises an exception on attempts to redirect to an external URL, but
+    # we need this to redirect to IdP logout page after Devise logout
+    # Alternative would be to monkeypatch Devise::SessionsController#respond_to_on_destroy
+    # Devise Issue: https://github.com/heartcombo/devise/pull/5462
+    # Rails Issue: https://github.com/rails/rails/issues/39643
+    # Related CVE: https://discuss.rubyonrails.org/t/cve-2023-22797-possible-open-redirect-vulnerability-in-action-pack/82120
+    config.action_controller.raise_on_open_redirects = false
   end
 end
