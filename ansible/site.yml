@@ -29,9 +29,9 @@
     - ansible.builtin.import_role:
         name: fits
       tags: fits
-    # - ansible.builtin.import_role:
-    #     name: clamav
-    #   tags: clamav
+    - ansible.builtin.import_role:
+        name: clamav
+      tags: clamav
     - ansible.builtin.import_role:
         name: postgres
       tags: postgres

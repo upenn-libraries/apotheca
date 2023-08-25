@@ -11,6 +11,10 @@
 
 <%= render(StaticFields::Component.new) do |component| %>
   <%= component.with_field(
+        label: 'PennKey',
+        values: @user.uid
+      ) %>
+  <%= component.with_field(
         label: 'Email',
         values: @user.email
       ) %>
