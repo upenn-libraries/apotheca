@@ -9,7 +9,7 @@ module ImportService
       # Initializes object to create item.
       #
       # @param (see Base#initialize)
-      # @param [Hash] :asset # gets converted to an AssetSet
+      # @param [Hash] :assets # gets converted to an AssetSet
       # @param [String] :created_by
       def initialize(**args)
         super

@@ -102,7 +102,8 @@ describe ImportService::Process::Migrate do
           physical_location: [{ value: 'Arc.MS.2' }],
           collection: [{ value: 'Issac Leeser Collection at the Herbert D. Katz Center for Advanced Judaic Studies (University of Pennsylvania)' }],
           date: [{ value: '1866-02-17' }],
-          physical_format: [{ value: 'Letter' }, { value: 'Letters' }],
+          extent: [{ value: 'Letter' }],
+          physical_format: [{ value: 'Letters' }],
           geographic_subject: [
             { value: 'United States -- Texas -- Belton' },
             { value: 'United States -- Texas' },
@@ -125,7 +126,7 @@ describe ImportService::Process::Migrate do
             { value: 'Transfer of Custody from the Hebrew Education Society, 10 March 1913, to the Library of the Dropsie College for Hebrew and Cognate Learning.' }
           ],
           relation: [{ value: 'https://franklin.library.upenn.edu/catalog/FRANKLIN_9924408973503681' }],
-          rights: [{ value: 'No Copyright', uri: 'http://rightsstatements.org/page/NoC-US/1.0/' }],
+          rights: [{ value: 'No Copyright - United States', uri: 'http://rightsstatements.org/vocab/NoC-US/1.0/' }],
           title: [{ value: 'Letter; Sampson, E.; Leeser, I., Rev.; Belton, TX; 17 February 1866' }]
         }
       end

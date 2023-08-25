@@ -16,11 +16,11 @@ describe ImportService::MigrationAssetSet do
 
     it 'requires that paths are valid' do
       asset_set = described_class.new(
-        storage: 'ceph_test', bucket: 'sceti_digitized_test',
+        storage: 'ceph_test', bucket: 'sceti-digitized-test',
         arranged: [{ filename: 'front.tif', path: 'invalid/something', checksum: '123' }]
       )
       expect(asset_set.valid?).to be false
-      expect(asset_set.errors).to include 'asset path invalid'
+      expect(asset_set.errors).to include 'path invalid for front.tif'
     end
     
     it 'requires unarranged asset to have path' do

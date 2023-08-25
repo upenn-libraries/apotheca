@@ -68,7 +68,6 @@ module ImportService
         arranged_assets = asset_set.arranged.map { |a| all_asset_map[a.filename].id }
 
         # Create item and attach the assets
-        # TODO: Add internal note saying: 'Item imported from Colenda/Bulwark on XXXX'
         item_attributes = {
           unique_identifier: unique_identifier,
           human_readable_name: human_readable_name,
@@ -77,7 +76,7 @@ module ImportService
           updated_by: imported_by,
           first_published_at: first_published_at,
           last_published_at: last_published_at,
-          internal_notes: internal_notes,
+          internal_notes: ["Item Imported from Colenda on #{DateTime.current}"],
           descriptive_metadata: descriptive_metadata.to_apotheca_metadata,
           structural_metadata: structural_metadata.merge({ arranged_asset_ids: arranged_assets }),
           asset_ids: all_assets.map(&:id)
