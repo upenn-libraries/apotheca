@@ -3,6 +3,18 @@
 require './spec/support/valkyrie_persist_strategy'
 
 namespace :apotheca do
+  desc 'Promote a SAML user to ADMIN'
+  task create_admin_stub: :environment do
+    if ENV.fetch('UID', nil).blank?
+      puts 'Specify a Penn Key in an "UID" environment variable to create a stub user'
+      return
+    end
+
+    email = "#{ENV.fetch('UID')}@upenn.edu"
+    user = User.create!(provider: 'saml', uid: ENV.fetch('UID'), email: email, roles: [User::ADMIN_ROLE], active: true)
+    puts "User #{user.uid} created!"
+  end
+
   desc 'Reindex Resources'
   task reindex: :environment do
     Solr::Reindexer.reindex_all
