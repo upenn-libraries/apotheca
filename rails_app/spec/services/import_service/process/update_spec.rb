@@ -8,6 +8,8 @@ describe ImportService::Process::Update do
   end
 
   describe '#valid?' do
+    let(:item) { persist(:item_resource) }
+
     it 'requires a unique_identifier' do
       process = build(:import_process, :update, unique_identifier: nil)
       expect(process.valid?).to be false
@@ -18,6 +20,19 @@ describe ImportService::Process::Update do
       process = build(:import_process, :update, unique_identifier: 'ark:/99999/fk4invalid')
       expect(process.valid?).to be false
       expect(process.errors).to include 'unique_identifier does not belong to an Item'
+    end
+
+    it 'validates item thumbnail when assets are present' do
+      process = build(:import_process, :update, :with_asset_metadata,
+                      thumbnail: 'test.tif')
+      expect(process.valid?).to be false
+      expect(process.errors).to include 'provided thumbnail does not exist in provided assets'
+    end
+
+    it 'validated item thumbnail when assets are not present' do
+      process = build(:import_process, :update, thumbnail: 'test.tif', unique_identifier: item.unique_identifier)
+      expect(process.valid?).to be false
+      expect(process.errors).to include 'provided thumbnail does not exist in existing assets'
     end
   end
 
@@ -211,6 +226,27 @@ describe ImportService::Process::Update do
         expect(
           front.technical_metadata.sha256
         ).to eql 'e8b02e24ff4223af1f4c8a351b7dc8e4b226e4b13c7b3b3e68be827a071e120f'
+      end
+    end
+
+    context 'when updating the thumbnail' do
+      let(:item) { persist(:item_resource, :with_assets_some_arranged) }
+      let(:process) do
+        build(:import_process, :update, unique_identifier: item.unique_identifier, thumbnail: 'page2')
+      end
+      let(:updated_assets) do
+        updated_item.asset_ids.map do |id|
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: id)
+        end
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(updated_item).to be_a ItemResource
+      end
+
+      it 'updates the thumbnail' do
+        expect(updated_item.thumbnail_asset_id).to eq item.asset_ids.last
       end
     end
   end
