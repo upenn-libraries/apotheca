@@ -19,12 +19,19 @@ module ImportService
         @errors << 'unique_identifier must be provided when updating an Item' unless unique_identifier
         @errors << 'unique_identifier does not belong to an Item' if unique_identifier && item.nil?
 
-        @errors << "provided thumbnail doesn't exist" if filename_to_asset.keys.exclude?(thumbnail)
+        # ensure that a user-specified thumbnail exists in the asset set (incoming assets) or the existing assets
+        if thumbnail.present? && asset_set.present? && asset_set.file_locations.filenames.exclude?(thumbnail)
+          @errors << 'provided thumbnail does not exist in provided assets'
+        elsif thumbnail.present? && @errors.empty? && existing_assets.map(&:original_filename).exclude?(thumbnail)
+          @errors << 'provided thumbnail does not exist in existing assets'
+        end
       end
 
       # Runs process to update Item and update or create Assets as appropriate.
       def run
         return failure(details: @errors) unless valid? # Validate before processing data.
+
+        filename_to_asset = existing_assets.index_by(&:original_filename)
 
         if asset_set
           existing_filenames = existing_assets.map(&:original_filename)
@@ -42,6 +49,9 @@ module ImportService
 
             return create_assets_result if create_assets_result.failure?
           end
+
+          # Map of filename to assets (includes existing and newly created assets)
+          filename_to_asset = filename_to_asset.merge(created_assets.index_by(&:original_filename))
 
           arranged_asset_ids = asset_set.arranged.map { |a| filename_to_asset[a.filename].id }
         end
@@ -89,15 +99,6 @@ module ImportService
 
       def existing_assets
         @existing_assets ||= query_service.find_many_by_ids(ids: item.asset_ids || [])
-      end
-
-      def filename_to_asset
-        if asset_set
-          existing_assets.index_by(&:original_filename)
-                         .merge(created_assets.index_by(&:original_filename))
-        else
-          existing_assets.index_by(&:original_filename)
-        end
       end
 
       # Creates new assets and sets the `created_assets` instance variable.
