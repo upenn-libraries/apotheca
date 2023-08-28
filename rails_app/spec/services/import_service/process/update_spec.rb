@@ -22,14 +22,14 @@ describe ImportService::Process::Update do
       expect(process.errors).to include 'unique_identifier does not belong to an Item'
     end
 
-    it 'validates item thumbnail when assets are present' do
+    it 'requires provided item thumbnail to exist when assets are present' do
       process = build(:import_process, :update, :with_asset_metadata,
                       thumbnail: 'test.tif')
       expect(process.valid?).to be false
       expect(process.errors).to include 'provided thumbnail does not exist in provided assets'
     end
 
-    it 'validated item thumbnail when assets are not present' do
+    it 'requires provided item thumbnail to exist when assets are not present' do
       process = build(:import_process, :update, thumbnail: 'test.tif', unique_identifier: item.unique_identifier)
       expect(process.valid?).to be false
       expect(process.errors).to include 'provided thumbnail does not exist in existing assets'
