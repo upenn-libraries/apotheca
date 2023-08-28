@@ -33,6 +33,13 @@ describe ImportService::Process::Create do
       expect(process.errors).to include('assets contains the following invalid filenames: new.tif')
     end
 
+    it 'requires provided item thumbnail to exist' do
+      process = build(:import_process, :create, :with_asset_metadata,
+                      thumbnail: 'test.tif')
+      expect(process.valid?).to be false
+      expect(process.errors).to include "provided thumbnail doesn't exist"
+    end
+
     context 'with a unique_identifier already in use' do
       include_context 'with successful requests to lookup EZID'
 
@@ -156,6 +163,19 @@ describe ImportService::Process::Create do
           'Error raised when generating front.tif',
           'File characterization failed: Could not successfully characterize contents: Unexpected Error'
         )
+      end
+    end
+
+    context 'when creating an item with a specified thumbnail' do
+      let(:process) { build(:import_process, :create, thumbnail: 'back.tif') }
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'sets thumbnail' do
+        expect(item.thumbnail_asset_id).to eq item.asset_ids.last
       end
     end
   end
