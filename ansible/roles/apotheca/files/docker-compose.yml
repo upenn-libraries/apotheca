@@ -63,6 +63,7 @@ services:
       - traefik
     secrets:
       - database_password
+      - redis_sidekiq_password
       # - source: master_key
       #   target: /app/config/credentials/${RAILS_ENV}.key
       #   mode: 0440
@@ -79,6 +80,9 @@ secrets:
   database_password:
     external: true
     name: ${DATABASE_PASSWORD}
+  redis_sidekiq_password:
+    external: true
+    name: ${REDIS_SIDEKIQ_PASSWORD}
   # master_key:
   #   external: true
   #   name: ${MASTER_KEY}
