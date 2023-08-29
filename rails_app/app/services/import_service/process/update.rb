@@ -38,7 +38,7 @@ module ImportService
 
           if missing_filenames.present?
             return failure(
-              error: 'All assets must be represented when updating assets. The following assets are missing:',
+              error: 'All assets must be represented when updating assets; the following assets are missing:',
               details: missing_filenames
             )
           end

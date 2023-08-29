@@ -42,7 +42,7 @@ describe ImportService::Process::Update do
       end
 
       it 'return expected failure object' do
-        msg = ['All assets must be represented when updating assets. The following assets are missing:', "\t- front.tif"]
+        msg = ['All assets must be represented when updating assets; the following assets are missing:', "\tfront.tif"]
         expect(result.failure[:error]).to be :import_failed
         expect(result.failure[:details]).to match_array(msg)
       end
