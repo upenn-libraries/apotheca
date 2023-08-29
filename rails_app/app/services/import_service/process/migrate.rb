@@ -104,7 +104,7 @@ module ImportService
 
         response = Faraday.get(uri.to_s)
 
-        return failure(error: 'Error extracting data from Colenda', details: [response.body]) unless response.success?
+        return failure(error: 'Error extracting data from Colenda:', details: [response.body]) unless response.success?
 
         data = JSON.parse(response.body).deep_symbolize_keys
 

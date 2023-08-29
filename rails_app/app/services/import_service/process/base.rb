@@ -76,7 +76,11 @@ module ImportService
 
           if result.failure?
             error = failure(**result.failure)
-            error.failure[:details].prepend("Error raised when generating #{asset_data.filename}")
+            # Adding additional error message
+            error = failure(
+              error: "Following error(s) raised when generating #{asset_data.filename}:",
+              details: error.failure[:details]
+            )
             break
           else
             created << result.value!
@@ -99,19 +103,27 @@ module ImportService
         assets.each { |a| DeleteAsset.new.call(id: a.id) }
       end
 
-      # Takes different failure params and returns a Failure object with two keys: error, details.
+      # Takes different failure params and returns a Failure object with two keys: error, details. The details
+      # array can contain some plain text formatting for display purposes.
       #
-      # @param [Array] error
+      # @param [String|Symbol] error
+      # @param [Array<String>] details
+      # @param [Valkyrie::ChangeSet] change_set
+      # @param [Exception] exception
       def failure(error: nil, details: [], change_set: nil, exception: nil)
         error = error.try(:to_s).try(:humanize)
         validation_errors = change_set.try(:errors).try(:full_messages)
 
-        details.push([error, exception.message].compact.join(': ')) if exception
-        details.concat(validation_errors.map { |e| [error, e].compact.join(': ') }) if validation_errors.present?
+        details.push(exception&.message) if exception
+        details.concat(validation_errors) if validation_errors.present?
+
+        if error
+          # Display the details as nested below the error.
+          details = details.map { |d| "\t" + d }.prepend(error)
+        end
 
         Failure.new(error: :import_failed, details: details)
       end
-
 
       # Queries EZID to check if a given ark already exists.
       #

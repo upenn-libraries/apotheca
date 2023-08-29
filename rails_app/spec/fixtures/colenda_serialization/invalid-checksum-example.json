@@ -1,0 +1,32 @@
+{
+  "human_readable_name": "Sample Item",
+  "unique_identifier": "ark:/99999/fk4j407t8m",
+  "created_at": "2022-04-06T08:16:42.000-04:00",
+  "created_by": "persing@upenn.edu",
+  "first_published_at": "2022-04-06T08:17:24.000-04:00",
+  "last_published_at": "2022-04-06T08:17:24.000-04:00",
+  "published": true,
+  "descriptive_metadata": {
+    "title": [
+      "Sample Item"
+    ]
+  },
+  "structural_metadata": {
+    "viewing_hint": null,
+    "viewing_direction": "left-to-right"
+  },
+  "assets": {
+    "bucket": "sceti-digitized-test",
+    "arranged": [
+      {
+        "filename": "front.tif",
+        "label": "1",
+        "annotation": [],
+        "transcription": [],
+        "checksum": "64422ae7a35fc318b4c3999365a9decbeaf4d60ddc51ff5ee23dd70b179da73b",
+        "path": "trade_card/original/front.tif"
+      }
+    ],
+    "unarranged": []
+  }
+}

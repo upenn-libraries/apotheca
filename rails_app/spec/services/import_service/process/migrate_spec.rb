@@ -82,8 +82,6 @@ describe ImportService::Process::Migrate do
         expect(process.valid?).to be false
         expect(process.errors).to include('metadata must be provided to migrate an object')
       end
-
-      # TODO: test migration asset errors
     end
   end
 
@@ -180,6 +178,29 @@ describe ImportService::Process::Migrate do
           expect(asset.annotations).to be_empty
           expect(asset.transcriptions.map(&:contents)).to contain_exactly(asset_metadata[:transcription][0])
         end
+      end
+    end
+    
+    context 'when migrating an item with invalid checksums' do
+      let(:body) do
+        JSON.parse(File.read(file_fixture('colenda_serialization/invalid-checksum-example.json'))).deep_symbolize_keys
+      end
+
+      before do
+        stub_request(:get, "#{Settings.migration.colenda_url}/migration/#{CGI.escape(body[:unique_identifier])}/serialized")
+          .to_return(status: 200, body: body.to_json, headers: {})
+      end
+
+      it 'fails' do
+        expect(result).to be_a Dry::Monads::Failure
+      end
+
+      it 'return expected failure object' do
+        expect(result.failure[:error]).to be :import_failed
+        expect(result.failure[:details]).to contain_exactly(
+                                              'Following error(s) raised when generating front.tif:',
+                                              "\tExpected checksum does not match"
+                                            )
       end
     end
   end

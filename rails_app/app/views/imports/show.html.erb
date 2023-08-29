@@ -50,11 +50,11 @@
 
 <% unless @import.process_errors.blank? %>
   <h4>Errors</h4>
-  <ul class="list-group mb-3">
-    <% @import.process_errors.each do |error| %>
-      <li class="list-group-item list-group-item-warning"><%= error %></li>
-    <% end %>
-  </ul>
+  <div class="card text-bg-warning border-light bg-opacity-25 mb-3">
+    <div class="card-body">
+      <div class="formatted-text"><%= @import.process_errors.join("\n") %></div>
+    </div>
+  </div>
 <% end %>
 
 <h4>Import Data</h4>

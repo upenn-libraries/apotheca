@@ -56,6 +56,10 @@ class AssetChangeSet < Valkyrie::ChangeSet
   # can set events with identical timestamps
   property :temporary_events, multiple: true, virtual: true
 
+  # Virtual property to hold expected_checksum that will be used the validate the checksum after file is ingested. Should
+  # only be provided when ingesting a new file.
+  property :expected_checksum, multiple: false, virtual: true
+
   property :label, multiple: false
 
   collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource

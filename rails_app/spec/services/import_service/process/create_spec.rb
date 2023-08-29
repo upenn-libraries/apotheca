@@ -125,7 +125,7 @@ describe ImportService::Process::Create do
 
       it 'returns expected failure object' do
         expect(result.failure[:error]).to be :import_failed
-        expect(result.failure[:details]).to contain_exactly('Validation failed: Title can\'t be blank')
+        expect(result.failure[:details]).to contain_exactly('Validation failed', "\tTitle can't be blank")
       end
 
       it 'does not leave orphaned assets or items' do
@@ -153,8 +153,9 @@ describe ImportService::Process::Create do
       it 'return expected failure object' do
         expect(result.failure[:error]).to be :import_failed
         expect(result.failure[:details]).to contain_exactly(
-          'Error raised when generating front.tif',
-          'File characterization failed: Could not successfully characterize contents: Unexpected Error'
+          'Following error(s) raised when generating front.tif:',
+          "\tFile characterization failed",
+          "\t\tCould not successfully characterize contents: Unexpected Error"
         )
       end
     end
