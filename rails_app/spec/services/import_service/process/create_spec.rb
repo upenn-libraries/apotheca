@@ -175,7 +175,7 @@ describe ImportService::Process::Create do
       end
 
       it 'sets thumbnail' do
-        expect(item.thumbnail_asset_id).to eq item.asset_ids.last
+        expect(item.thumbnail_asset_id).to eq item.structural_metadata.arranged_asset_ids.last
       end
     end
   end
