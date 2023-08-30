@@ -230,7 +230,7 @@ describe ImportService::Process::Update do
     end
 
     context 'when updating the thumbnail' do
-      let(:item) { persist(:item_resource, :with_assets_arranged) }
+      let(:item) { persist(:item_resource, :with_assets_all_arranged) }
       let(:process) do
         build(:import_process, :update, unique_identifier: item.unique_identifier, thumbnail: 'page2')
       end
