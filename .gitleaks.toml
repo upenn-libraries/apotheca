@@ -190,9 +190,11 @@ title = "gitlab gitleaks config"
         '''087bd7e8cd7552e179ff09577f9efb1bebccebea''',
         '''0a8ed9041cdc62669ed7fbde4264a9ca6ee3f157''',
         '''30f51eab47bd0762645f1f1bf1c37b1e72923b9e''',
+        '''8021b87027a59e32470acd502b19d9785d76e6b5''',
         '''90ea635e03f561217d91198e07c573252589c685''',
         '''07bd81bb4e18887a855d12c35bd6b5847111c99e''',
         '''d8da0792ab6856474eaad296c890b301d0ac3dd9''',
+        '''e720df5acd1f8b483e58b1c51f1945bae9be1c30'''
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',

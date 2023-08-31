@@ -54,11 +54,11 @@ describe UpdateAsset do
       end
 
       it 'enqueues job to generate derivatives' do
-        expect(GenerateDerivativesJob).to have_been_enqueued.with(updated_asset.id.to_s)
+        expect(GenerateDerivativesJob).to have_enqueued_sidekiq_job.with(updated_asset.id.to_s)
       end
 
       it 'enqueues job to backup preservation file' do
-        expect(PreservationBackupJob).to have_been_enqueued.with(updated_asset.id.to_s)
+        expect(PreservationBackupJob).to have_enqueued_sidekiq_job.with(updated_asset.id.to_s)
       end
     end
 
@@ -119,11 +119,13 @@ describe UpdateAsset do
       end
 
       it 'enqueues job to generate derivatives twice' do
-        expect(GenerateDerivativesJob).to have_been_enqueued.with(updated_asset.id.to_s).exactly(:twice)
+        updated_asset
+        expect(GenerateDerivativesJob.jobs.count { |j| j['args'].eql? [updated_asset.id.to_s] }).to be 2
       end
 
       it 'enqueues job to backup preservation file twice' do
-        expect(PreservationBackupJob).to have_been_enqueued.with(updated_asset.id.to_s).exactly(:twice)
+        updated_asset
+        expect(PreservationBackupJob.jobs.count { |j| j['args'].eql? [updated_asset.id.to_s] }).to be 2
       end
     end
 

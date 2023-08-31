@@ -9,6 +9,8 @@ Our local development environment uses vagrant in order to set up a consistent e
 
 The **Rails application** will be available at [https://apotheca-dev.library.upenn.edu](https://apotheca-dev.library.upenn.edu).
 
+The **Sidekiq Web UI** will be available at [http://apotheca-dev.library.upenn.edu/sidekiq](http://apotheca-dev.library.upenn.edu/sidekiq).
+
 The **Minio console** will be available at [http://minio-console-dev.library.upenn.edu](http://minio-console-dev.library.upenn.edu). Log-in with `minioadmin/minioadmin`
 
 The **Solr admin console** for the first instance will be available at [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/).
@@ -39,6 +41,11 @@ In order to run the test suite (currently):
 
 1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
 2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
+
+## Sidekiq and ActiveJob
+We use Sidekiq to run all of our jobs in `development`, `staging` and `production`. In `test`, we use test appropriate adapters. All of our custom jobs are written with `Sidekiq::Job` to provide better performance. We don't use `ActiveJob::Base` when writing custom jobs. While we don't directly use `ActiveJob`, it is configured to use Sidekiq in case we decide to use built-in jobs like sending emails.
+
+The Sidekiq Web UI is available at `/sidekiq`.
 
 ### Working with PennKey Auth
 

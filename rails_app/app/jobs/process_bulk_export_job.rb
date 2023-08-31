@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
-# job to perform and save a bulk export
-class ProcessBulkExportJob < ApplicationJob
-  queue_as :default
+# Job to perform and save a bulk export.
+class ProcessBulkExportJob
+  include Sidekiq::Job
 
-  def perform(bulk_export)
+  sidekiq_options queue: :medium
+
+  def perform(bulk_export_id)
+    bulk_export = BulkExport.find(bulk_export_id) # Will raise an error if missing.
+
     return if bulk_export.cancelled?
 
     bulk_export.process!

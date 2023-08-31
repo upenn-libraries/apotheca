@@ -110,7 +110,7 @@ class UpdateAsset
     return if resource.preservation_file_id.blank?
     return if resource.derivatives.present? && resource.derivatives.none?(&:stale)
 
-    method = async ? 'perform_later' : 'perform_now'
+    method = async ? 'perform_async' : 'perform_inline'
     GenerateDerivativesJob.send(method, resource.id.to_s)
   end
 
@@ -118,7 +118,7 @@ class UpdateAsset
   def preservation_backup(resource)
     return if resource.preservation_file_id.blank? || resource.preservation_copies_ids.present?
 
-    PreservationBackupJob.perform_later(resource.id.to_s)
+    PreservationBackupJob.perform_async(resource.id.to_s)
   end
 
   private

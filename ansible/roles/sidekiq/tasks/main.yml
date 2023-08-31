@@ -36,6 +36,8 @@
     REDIS_PORT: "{{ redis.port }}"
     REPLICAS: "{{ sidekiq.replicas }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
+    FITS_PORT: "{{ fits.port }}"
+    MINIO_PORT: "{{ minio.port }}"
   no_log: true
   when: is_development | default (false) == true
   tags: dev_environment
@@ -70,5 +72,6 @@
     REDIS_PORT: "{{ redis.port }}"
     REPLICAS: "{{ sidekiq.replicas }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
+    FITS_PORT: "{{ fits.port }}"
   no_log: true
   when: not is_development | default (false) == true

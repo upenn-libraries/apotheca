@@ -87,7 +87,7 @@ class AssetsController < ApplicationController
   def regenerate_derivatives
     authorize! :update, @asset
 
-    if GenerateDerivativesJob.perform_later(@asset.id.to_s)
+    if GenerateDerivativesJob.perform_async(@asset.id.to_s)
       redirect_to asset_path(@asset), notice: 'Successfully enqueued job to regenerate derivatives'
     else
       redirect_to asset_path(@asset), alert: 'An error occurred while enqueueing job to regenerate derivatives'

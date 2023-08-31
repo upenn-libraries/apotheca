@@ -120,6 +120,7 @@ GEM
     config (4.0.0)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
+    connection_pool (2.4.1)
     content_disposition (1.0.0)
     crack (0.4.5)
       rexml
@@ -349,6 +350,8 @@ GEM
       link_header (~> 0.0, >= 0.0.8)
     rdf-vocab (3.2.6)
       rdf (~> 3.2, >= 3.2.4)
+    redis-client (0.15.0)
+      connection_pool
     reform (2.6.2)
       disposable (>= 0.5.0, < 1.0.0)
       representable (>= 3.1.1, < 4)
@@ -384,6 +387,11 @@ GEM
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
+    rspec-sidekiq (4.0.0)
+      rspec-core (~> 3.0)
+      rspec-expectations (~> 3.0)
+      rspec-mocks (~> 3.0)
+      sidekiq (>= 5, < 8)
     rspec-support (3.11.0)
     rubocop (1.48.1)
       json (~> 2.3)
@@ -429,6 +437,11 @@ GEM
     shrine (3.4.0)
       content_disposition (~> 1.0)
       down (~> 5.1)
+    sidekiq (7.1.2)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      rack (>= 2.2.4)
+      redis-client (>= 0.14.0)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -539,8 +552,10 @@ DEPENDENCIES
   rails (~> 7.0.1)
   rsolr
   rspec-rails (~> 5.0)
+  rspec-sidekiq
   ruby-vips
   sassc-rails
+  sidekiq
   simplecov
   sprockets-rails
   stimulus-rails

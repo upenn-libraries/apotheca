@@ -235,7 +235,7 @@ describe BulkImport do
     end
 
     it 'enqueues the job' do
-      expect(ProcessImportJob).to have_been_enqueued
+      expect(ProcessImportJob).to have_enqueued_sidekiq_job.with(any_args)
     end
   end
 end
