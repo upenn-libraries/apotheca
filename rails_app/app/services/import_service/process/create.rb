@@ -38,6 +38,11 @@ module ImportService
           missing = asset_set.reject(&:file?).map(&:filename)
           @errors << "assets contains the following invalid filenames: #{missing.join(', ')}" if missing.present?
         end
+
+        # Validate that provided thumbnail exists
+        if thumbnail.present? && asset_set.file_locations.filenames.exclude?(thumbnail)
+          @errors << "provided thumbnail doesn't exist"
+        end
       end
 
       # Runs process to create an Item.
@@ -59,6 +64,7 @@ module ImportService
 
         # Create item and attach the assets
         item_attributes = {
+          thumbnail_asset_id: all_asset_map[thumbnail]&.id,
           human_readable_name: human_readable_name,
           created_by: created_by || imported_by,
           updated_by: imported_by,

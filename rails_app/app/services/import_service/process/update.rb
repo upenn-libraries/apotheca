@@ -18,11 +18,20 @@ module ImportService
 
         @errors << 'unique_identifier must be provided when updating an Item' unless unique_identifier
         @errors << 'unique_identifier does not belong to an Item' if unique_identifier && item.nil?
+
+        # ensure that a user-specified thumbnail exists in the asset set (incoming assets) or the existing assets
+        if thumbnail.present? && asset_set.present? && asset_set.file_locations.filenames.exclude?(thumbnail)
+          @errors << 'provided thumbnail does not exist in provided assets'
+        elsif thumbnail.present? && @errors.empty? && existing_assets.map(&:original_filename).exclude?(thumbnail)
+          @errors << 'provided thumbnail does not exist in existing assets'
+        end
       end
 
       # Runs process to update Item and update or create Assets as appropriate.
       def run
         return failure(details: @errors) unless valid? # Validate before processing data.
+
+        filename_to_asset = existing_assets.index_by(&:original_filename)
 
         if asset_set
           existing_filenames = existing_assets.map(&:original_filename)
@@ -42,14 +51,14 @@ module ImportService
           end
 
           # Map of filename to assets (includes existing and newly created assets)
-          filename_to_asset = existing_assets.index_by(&:original_filename)
-                                             .merge(created_assets.index_by(&:original_filename))
+          filename_to_asset = filename_to_asset.merge(created_assets.index_by(&:original_filename))
 
           arranged_asset_ids = asset_set.arranged.map { |a| filename_to_asset[a.filename].id }
         end
 
         # Update Item
         item_attributes = {
+          thumbnail_asset_id: filename_to_asset[thumbnail]&.id,
           id: item.id,
           optimistic_lock_token: item.optimistic_lock_token,
           human_readable_name: human_readable_name,
