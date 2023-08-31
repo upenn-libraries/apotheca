@@ -61,7 +61,7 @@ class UpdateAsset
       return Failure(error: :expected_checksum_does_not_match) if change_set.expected_checksum != change_set.technical_metadata.sha256
     end
 
-    return Success(change_set)
+    Success(change_set)
   end
 
   def virus_check(**attributes)

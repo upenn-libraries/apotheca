@@ -11,7 +11,7 @@ module ImportService
     # Asset information when migrating assets should be provided in the following format:
     #   {
     #      storage: 'ceph',
-    #      bucket: arkblahblah',
+    #      bucket: 'arkblahblah',
     #      arranged: [
     #        { filename: 'file1.tif', label: '1', path: 'file1.tif' },
     #        { filename: 'file2.tif', label: '2', path: 'file2.tif' }

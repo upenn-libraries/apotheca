@@ -18,7 +18,7 @@ module ImportService
       'creativecommons.org/licenses/by-nc-sa/3.0' => 'Attribution-NonCommercial-ShareAlike 3.0 Unported',
       'creativecommons.org/licenses/by-nc/4.0' => 'Attribution-NonCommercial 4.0 International',
       'creativecommons.org/publicdomain/mark/1.0' => 'Public Domain Mark 1.0'
-    }
+    }.freeze
 
     attr_reader :errors, :original_metadata
 
@@ -123,7 +123,7 @@ module ImportService
       new_fields[:rights_note] = rights - rights_uris
       new_fields[:rights] = rights_uris.map do |uri|
         uri = normalize_rights_uri(uri)
-        value = RIGHTS_URI_TO_VALUE.find { |u,_| uri.match?(/https?:\/\/#{u}\/?/) }[1]
+        value = RIGHTS_URI_TO_VALUE.find { |u, _| uri.match?(/https?:\/\/#{u}\/?/) }[1]
         { value: value, uri: uri }
       end
 
