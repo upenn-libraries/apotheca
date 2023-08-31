@@ -23,7 +23,7 @@ module ImportService
     attr_reader :errors, :original_metadata
 
     def initialize(metadata)
-      @original_metadata = metadata.deep_symbolize_keys
+      @original_metadata = metadata
       @errors = []
     end
 
