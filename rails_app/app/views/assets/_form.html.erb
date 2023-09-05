@@ -16,7 +16,8 @@
                           field: "asset[transcriptions][][mime_type]",
                           label: 'Mime Type',
                           type: :select,
-                          choices: AssetChangeSet::TranscriptionChangeSet::VALID_MIME_TYPES) %>
+                          include_blank: true,
+                          choices: AssetChangeSet::TRANSCRIPTION_MIME_TYPES) %>
 
     <% section.with_field(value: @change_set.transcriptions.first&.contents,
                           field: "asset[transcriptions][][contents]",

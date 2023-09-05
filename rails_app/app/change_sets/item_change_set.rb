@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 # ChangeSet for ItemResource
-class ItemChangeSet < Valkyrie::ChangeSet
+class ItemChangeSet < ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet
 
   # ChangeSet for Structural Metadata
-  class StructuralMetadataChangeSet < Valkyrie::ChangeSet
+  class StructuralMetadataChangeSet < ChangeSet
     VIEWING_DIRECTIONS = %w[right-to-left left-to-right top-to-bottom bottom-to-top].freeze
     VIEWING_HINTS = %w[individual paged].freeze
 

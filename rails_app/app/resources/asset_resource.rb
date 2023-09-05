@@ -7,6 +7,8 @@ class AssetResource < Valkyrie::Resource
 
   # Supplemental descriptive notes about an asset
   class Annotation < Valkyrie::Resource
+    transform_keys(&:to_sym)
+
     attribute :text, Valkyrie::Types::Strict::String
     # attribute :location, Valkyrie::Types::String # x,y,w,h
   end
@@ -23,6 +25,8 @@ class AssetResource < Valkyrie::Resource
 
   # Translation of image, video, or audio into a text format
   class Transcription < Valkyrie::Resource
+    transform_keys(&:to_sym)
+
     attribute :mime_type, Valkyrie::Types::Strict::String
     attribute :contents, Valkyrie::Types::Strict::String
     # attribute :type, ORC, caption, human transcribed
@@ -41,8 +45,6 @@ class AssetResource < Valkyrie::Resource
   attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
   attribute :transcriptions, Valkyrie::Types::Array.of(Transcription)
-
-  # attribute :preservation_metadata
 
   # @return [DerivativeResource]
   def thumbnail
