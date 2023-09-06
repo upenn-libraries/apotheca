@@ -18,7 +18,7 @@ class UpdateAsset
   step :add_preservation_events, with: 'asset_resource.add_preservation_events'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
-  tee :generate_derivatives
+  step :generate_derivatives
   tee :preservation_backup
 
   # Wrapping save method in order to delete the old preservation file if a file update is successful.
@@ -123,6 +123,8 @@ class UpdateAsset
 
     method = async ? 'perform_async' : 'perform_inline'
     GenerateDerivativesJob.send(method, resource.id.to_s)
+  rescue StandardError => e
+    Failure(error: :error_generating_derivative, exception: e)
   end
 
   # Enqueue job to backup to S3 if backup is not present.
