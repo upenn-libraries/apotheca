@@ -26,10 +26,10 @@ working_storage:
   sceti_digitized:
     <<: *minio
     bucket: sceti-digitized
-  ceph_dev:
+  ceph:
     access_key_id: fake-id
     secret_access_key: fake-key
-    endpoint: https://ceph-dev.library.upenn.edu
+    endpoint: https://ceph.library.upenn.edu
     region: us-east-1
 supported_file_extensions:
   - .tif
@@ -39,6 +39,6 @@ supported_file_extensions:
   - .wav
   - .mov
 migration:
-  storage: ceph_dev
-  colenda_url: https://colenda-dev.library.upenn.edu
+  storage: ceph
+  colenda_url: https://colenda.library.upenn.edu
 
