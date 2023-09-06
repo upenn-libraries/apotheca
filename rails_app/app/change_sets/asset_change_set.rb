@@ -41,6 +41,9 @@ class AssetChangeSet < ChangeSet
 
   property :label, multiple: false
 
+  # Letting derivatives be defined as a `collection` because derivatives are always set via the setter and not the
+  # `validate` method therefore we don't run into problems when deleting derivatives. More information about this
+  # can be found here: https://gitlab.library.upenn.edu/dld/digital-repository/apotheca/-/issues/202
   collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource
 
   property :transcriptions, multiple: true, required: false, default: [],
