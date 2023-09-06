@@ -1,37 +1,20 @@
 # frozen_string_literal: true
 
 # ChangeSet for AssetResource
-class AssetChangeSet < Valkyrie::ChangeSet
+class AssetChangeSet < ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet
 
-  # ChangeSet for Annotations
-  class AnnotationChangeSet < Valkyrie::ChangeSet
-    property :text, multiple: false
-
-    validates :text, presence: true
-  end
+  TRANSCRIPTION_MIME_TYPES = ['text/plain'].freeze
 
   # ChangeSet for Technical Metadata
-  class TechnicalMetadataChangeSet < Valkyrie::ChangeSet
+  class TechnicalMetadataChangeSet < ChangeSet
     property :raw, multiple: false
     property :mime_type, multiple: false
     property :size, multiple: false
     property :duration, multiple: false
     property :md5, multiple: false
     property :sha256, multiple: false
-  end
-
-  # ChangeSet for Transcriptions
-  class TranscriptionChangeSet < Valkyrie::ChangeSet
-    # For now only accepting plain text transcriptions
-    VALID_MIME_TYPES = ['text/plain'].freeze
-
-    property :mime_type, multiple: false, required: true
-    property :contents, multiple: false, required: true
-
-    validates :contents, presence: true
-    validates :mime_type, presence: true, inclusion: VALID_MIME_TYPES
   end
 
   # ChangeSet for Asset Derivatives
@@ -62,34 +45,32 @@ class AssetChangeSet < Valkyrie::ChangeSet
 
   property :label, multiple: false
 
+  # Letting derivatives be defined as a `collection` because derivatives are always set via the setter and not the
+  # `validate` method therefore we don't run into problems when deleting derivatives. More information about this
+  # can be found here: https://gitlab.library.upenn.edu/dld/digital-repository/apotheca/-/issues/202
   collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource
 
-  collection :transcriptions, multiple: true, form: TranscriptionChangeSet, populator: :transcriptions!
+  property :transcriptions, multiple: true, required: false, default: [],
+           type: Valkyrie::Types::Array(AssetResource::Transcription)
 
-  collection :annotations, multiple: true, form: AnnotationChangeSet, populator: :annotations!
+  property :annotations, multiple: true, required: false, default: [],
+           type: Valkyrie::Types::Array(AssetResource::Annotation)
 
   # Validations
   validates :original_filename, presence: true, if: ->(asset) { asset.preservation_file_id.present? }
-  # Preservation file should be set on update.
+  #   File should be set on update.
   validates :preservation_file_id, presence: true, if: ->(asset) { !asset.resource.new_record }
+  validates :annotations, each_object: { text: { required: true } }
+  validates :transcriptions, each_object: {
+    contents:  { required: true },
+    mime_type: { required: true, accepted_values: TRANSCRIPTION_MIME_TYPES }
+  }
 
-  def transcriptions!(collection:, index:, fragment:, **)
-    if fragment['contents'].blank? && fragment[:contents].blank?
-      skip!
-    elsif (item = collection[index])
-      item
-    else
-      collection.insert(index, AssetResource::Transcription.new)
-    end
+  def annotations=(values)
+    super(compact_value(values))
   end
 
-  def annotations!(collection:, index:, fragment:, **)
-    if fragment['text'].blank? && fragment[:text].blank?
-      skip!
-    elsif (item = collection[index])
-      item
-    else
-      collection.insert(index, AssetResource::Annotation.new)
-    end
+  def transcriptions=(values)
+    super(compact_value(values))
   end
 end

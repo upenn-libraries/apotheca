@@ -53,9 +53,7 @@ describe AssetChangeSet do
   context 'when assigning transcription' do
     context 'with all required fields' do
       before do
-        change_set.validate(
-          transcriptions: [{ mime_type: 'text/plain', contents: 'Importers' }]
-        )
+        change_set.validate(transcriptions: [{ mime_type: 'text/plain', contents: 'Importers' }])
       end
 
       it 'is valid' do
@@ -71,6 +69,31 @@ describe AssetChangeSet do
       end
     end
 
+    context 'with removed transcriptions' do
+      let(:asset_resource) do
+        persist(
+          :asset_resource,
+          transcriptions: [
+            { mime_type: 'text/plain', contents: 'first transcription' },
+            { mime_type: 'text/plain', contents: 'second transcription' }
+          ]
+        )
+      end
+
+      before do
+        change_set.validate(transcriptions: [{ mime_type: 'text/plain', contents: 'second transcription' }])
+      end
+
+      it 'is valid' do
+        expect(change_set.valid?).to be true
+      end
+
+      it 'removes transcription' do
+        expect(change_set.transcriptions.length).to be 1
+        expect(change_set.transcriptions[0].contents).to eql 'second transcription'
+      end
+    end
+
     context 'with missing mime_type' do
       before do
         change_set.validate(
@@ -80,7 +103,7 @@ describe AssetChangeSet do
 
       it 'is not valid' do
         expect(change_set.valid?).to be false
-        expect(change_set.errors[:'transcriptions.mime_type']).to include 'can\'t be blank'
+        expect(change_set.errors[:transcriptions]).to include 'missing mime_type'
       end
     end
 
@@ -93,7 +116,7 @@ describe AssetChangeSet do
 
       it 'is not valid' do
         expect(change_set.valid?).to be false
-        expect(change_set.errors[:'transcriptions.mime_type']).to include 'is not included in the list'
+        expect(change_set.errors[:transcriptions]).to include 'mime_type contains invalid value'
       end
     end
 
@@ -102,9 +125,30 @@ describe AssetChangeSet do
         change_set.validate(transcriptions: [{ mime_type: 'text/plain' }])
       end
 
-      it 'does not set transcription value' do
+      it 'is not valid' do
+        expect(change_set.valid?).to be false
+        expect(change_set.errors[:transcriptions]).to include 'missing contents'
+      end
+    end
+  end
+
+  context 'when assigning annotations' do
+    context 'with removed annotations' do
+      let(:asset_resource) do
+        persist(:asset_resource, annotations: [{ text: 'first annotation' }, { text: 'second annotation' }])
+      end
+
+      before do
+        change_set.validate(annotations: [{ text: 'second annotation' }])
+      end
+
+      it 'is valid' do
         expect(change_set.valid?).to be true
-        expect(change_set.transcriptions[0]).to be_nil
+      end
+
+      it 'removes annotation' do
+        expect(change_set.annotations.length).to be 1
+        expect(change_set.annotations[0].text).to eql 'second annotation'
       end
     end
   end

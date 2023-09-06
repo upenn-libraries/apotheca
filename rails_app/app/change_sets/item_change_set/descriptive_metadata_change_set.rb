@@ -2,7 +2,7 @@
 
 class ItemChangeSet
   # ChangeSet for ItemResource::DescriptiveMetadata nested resource.
-  class DescriptiveMetadataChangeSet < Valkyrie::ChangeSet
+  class DescriptiveMetadataChangeSet < ChangeSet
     ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field, type|
       klass = "ItemResource::DescriptiveMetadata::#{type.to_s.titlecase}Field".constantize
 
@@ -13,7 +13,7 @@ class ItemChangeSet
         super(compact_value(values))
       end
 
-      validates field, each_object: { required: [:value] }
+      validates field, each_object: { value: { required: true } }
     end
 
     validate :validate_roles
@@ -22,17 +22,6 @@ class ItemChangeSet
     # Validating that each :role included with a :name contains a :value
     def validate_roles
       errors.add(:name, 'role missing value') unless name.map(&:role).flatten.all? { |r| r[:value].present? }
-    end
-
-    # Recursively removes empty values from nested array and hashes.
-    def compact_value(value)
-      if value.is_a? Array
-        value.map { |v| compact_value(v) }.compact_blank
-      elsif value.is_a? Hash
-        value.transform_values! { |v| compact_value(v) }.compact_blank
-      else
-        value
-      end
     end
   end
 end
