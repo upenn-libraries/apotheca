@@ -2,6 +2,7 @@
    Date: YYYY-MM-DD
 
    Status: `Proposed` `Accepted` `Rejected` `Deprecated` `Superseded`
+
 # 2. Context
 
     What is the issue that we're seeing that is motivating this decision or change? 

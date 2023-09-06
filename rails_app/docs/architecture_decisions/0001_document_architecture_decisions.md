@@ -1,7 +1,8 @@
-# 1. Title
+# 1. Document Architecture Decisions
    Date: 2022-08-29
 
    Status: `Accepted`
+
 # 2. Context
 
 Applications increase in complexity over time. Staff developers come and go. Memory fades. It will
