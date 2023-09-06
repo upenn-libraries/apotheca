@@ -6,9 +6,14 @@ module ImportService
     class Update < Base
       attr_reader :created_assets
 
+      # Initializes object to update item.
+      #
+      # @param (see Base#initialize)
+      # @param [Hash] :asset # gets converted to an AssetSet
       def initialize(**args)
         super
 
+        @asset_set = args[:assets].blank? ? nil : AssetSet.new(**args[:assets])
         @created_assets = []
       end
 
@@ -39,7 +44,13 @@ module ImportService
 
           # All current assets must be represented in import data. Return error if assets are missing from asset_set.
           missing_filenames = existing_filenames - import_filenames
-          return failure(details: ["Missing the following assets: #{missing_filenames.join(', ')}. All assets must be represented when updating assets"]) if missing_filenames.present?
+
+          if missing_filenames.present?
+            return failure(
+              error: 'All assets must be represented when updating assets; the following assets are missing:',
+              details: missing_filenames
+            )
+          end
 
           # New assets
           new_filenames = import_filenames - existing_filenames
@@ -130,7 +141,7 @@ module ImportService
             return result if result.success?
 
             e = result.failure
-            failure(details: ["Error occurred updating #{asset.original_filename} - #{e.delete(:error)}"], **e)
+            failure(error: "Error occurred updating #{asset.original_filename}: #{e.delete(:error)}", **e)
           end
         end
 
@@ -138,8 +149,8 @@ module ImportService
           Success(results.map(&:value!))
         else
           failure(
+            error: 'All changes were applied except the updates to the asset(s) below; these issues must be fixed manually:',
             details: results.select(&:failure?).map { |f| f.failure[:details] }.flatten
-                            .prepend('An error was raised while updating one or more assets. All changes were applied except the updates to the asset(s) below. These issues should be fixed manually.')
           )
         end
       end

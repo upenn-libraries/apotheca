@@ -6,9 +6,9 @@ module ImportService
     REQUIRED_CONFIG_KEYS = %i[access_key_id secret_access_key endpoint region].freeze
     attr_reader :name
 
-    def initialize(storage_name)
+    def initialize(storage_name, bucket = nil)
       @name = storage_name
-      # TODO: Optional bucket param
+      @bucket = bucket
     end
 
     def config
@@ -70,7 +70,8 @@ module ImportService
         max_keys: 1,
         prefix: modify_path(path)
       )
-      list.key_count == 1
+      # Ceph doesn't return key_count in response body.
+      (list.key_count || list.contents.count) == 1
     end
 
     # Returns all the files available at the given path. Ignores subdirectories.

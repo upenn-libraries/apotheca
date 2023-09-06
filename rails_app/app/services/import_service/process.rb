@@ -5,7 +5,8 @@ module ImportService
   class Process
     CREATE = 'create'
     UPDATE = 'update'
-    ACTIONS = [CREATE, UPDATE].freeze
+    MIGRATE = 'migrate'
+    ACTIONS = [CREATE, UPDATE, MIGRATE].freeze
 
     def self.build(**args)
       args.deep_symbolize_keys!
@@ -15,6 +16,8 @@ module ImportService
         Process::Create.new(**args)
       when UPDATE
         Process::Update.new(**args)
+      when MIGRATE
+        Process::Migrate.new(**args)
       else
         Process::Invalid.new(**args)
       end

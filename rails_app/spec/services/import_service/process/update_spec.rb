@@ -57,9 +57,9 @@ describe ImportService::Process::Update do
       end
 
       it 'return expected failure object' do
-        msg = 'Missing the following assets: front.tif. All assets must be represented when updating assets'
+        msg = ['All assets must be represented when updating assets; the following assets are missing:', "\tfront.tif"]
         expect(result.failure[:error]).to be :import_failed
-        expect(result.failure[:details]).to contain_exactly(msg)
+        expect(result.failure[:details]).to match_array(msg)
       end
     end
 
@@ -195,8 +195,8 @@ describe ImportService::Process::Update do
       it 'return expected failure object' do
         expect(result.failure[:error]).to be :import_failed
         expect(result.failure[:details]).to contain_exactly(
-          'An error was raised while updating one or more assets. All changes were applied except the updates to the asset(s) below. These issues should be fixed manually.',
-          'Error occurred updating front.tif - invalid_file_extension'
+          'All changes were applied except the updates to the asset(s) below; these issues must be fixed manually:',
+          "\tError occurred updating front.tif: invalid file extension"
         )
       end
     end

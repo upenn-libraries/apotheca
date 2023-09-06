@@ -18,7 +18,6 @@ module ImportService
       # @param [Array<String>] :internal_notes
       # @param [Hash] :metadata  # gets mapped to descriptive_metadata
       # @param [Hash] :structural  # gets mapped to structural_metadata
-      # @param [AssetSet] :asset_set
       def initialize(**args)
         @thumbnail            = args[:thumbnail]
         @imported_by          = args[:imported_by]
@@ -27,7 +26,6 @@ module ImportService
         @internal_notes       = args[:internal_notes]
         @descriptive_metadata = args.fetch(:metadata, {})
         @structural_metadata  = args.fetch(:structural, {})
-        @asset_set            = args[:assets].blank? ? nil : AssetSet.new(**args[:assets])
         @errors               = []
       end
 
@@ -79,7 +77,11 @@ module ImportService
 
           if result.failure?
             error = failure(**result.failure)
-            error.failure[:details].prepend("Error raised when generating #{asset_data.filename}")
+            # Adding additional error message
+            error = failure(
+              error: "Following error(s) raised when generating #{asset_data.filename}:",
+              details: error.failure[:details]
+            )
             break
           else
             created << result.value!
@@ -102,17 +104,37 @@ module ImportService
         assets.each { |a| DeleteAsset.new.call(id: a.id) }
       end
 
-      # Takes different failure params and returns a Failure object with two keys: error, details.
+      # Takes different failure params and returns a Failure object with two keys: error, details. The details
+      # array can contain some plain text formatting for display purposes.
       #
-      # @param [Array] error
+      # @param [String|Symbol] error
+      # @param [Array<String>] details
+      # @param [Valkyrie::ChangeSet] change_set
+      # @param [Exception] exception
       def failure(error: nil, details: [], change_set: nil, exception: nil)
         error = error.try(:to_s).try(:humanize)
         validation_errors = change_set.try(:errors).try(:full_messages)
 
-        details.push([error, exception.message].compact.join(': ')) if exception
-        details.concat(validation_errors.map { |e| [error, e].compact.join(': ') }) if validation_errors.present?
+        details.push(exception&.message) if exception
+        details.concat(validation_errors) if validation_errors.present?
+
+        if error
+          # Display the details as nested below the error.
+          details = details.map { |d| "\t" + d }.prepend(error)
+        end
 
         Failure.new(error: :import_failed, details: details)
+      end
+
+      # Queries EZID to check if a given ark already exists.
+      #
+      # @return true if ark exists
+      # @return false if ark does not exist
+      def ark_exists?(ark)
+        Ezid::Identifier.find(ark)
+        true
+      rescue StandardError # EZID gem raises unexpected errors when ark isn't found.
+        false
       end
     end
   end

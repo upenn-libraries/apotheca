@@ -43,6 +43,10 @@ FactoryBot.define do
       action { ImportService::Process::UPDATE }
     end
 
+    trait :migrate do
+      action { ImportService::Process::MIGRATE }
+    end
+
     trait :with_asset_metadata do
       assets do
         {

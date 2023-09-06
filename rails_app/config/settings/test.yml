@@ -25,6 +25,8 @@ working_storage:
   sceti_digitized:
     <<: *minio
     bucket: sceti-digitized-test
+  ceph_test:
+    <<: *minio
 supported_file_extensions:
   - .tif
   - .tiff
@@ -32,3 +34,6 @@ supported_file_extensions:
   - .gz
   - .wav
   - .mov
+migration:
+  storage: ceph_test
+  colenda_url: https://colenda-dev.library.upenn.edu

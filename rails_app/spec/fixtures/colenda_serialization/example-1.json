@@ -1,0 +1,97 @@
+{
+  "human_readable_name": "Leeser letter; Sampson, E.; Leeser, I., Rev.; Belton, TX; 17 February 1866",
+  "unique_identifier": "ark:/99999/fk4j407t8m",
+  "created_at": "2022-04-06T08:16:42.000-04:00",
+  "created_by": "persing@upenn.edu",
+  "first_published_at": "2022-04-06T08:17:24.000-04:00",
+  "last_published_at": "2022-04-06T08:17:24.000-04:00",
+  "published": true,
+  "descriptive_metadata": {
+    "call_number": [
+      "Arc.MS.2"
+    ],
+    "collection": [
+      "Issac Leeser Collection at the Herbert D. Katz Center for Advanced Judaic Studies (University of Pennsylvania)"
+    ],
+    "date": [
+      "1866-02-17"
+    ],
+      "format": [
+      "Letter"
+    ],
+    "geographic_subject": [
+      "United States -- Texas -- Belton",
+      "United States -- Texas",
+      "United States -- Pennsylvania -- Philadelphia",
+      "United States -- Pennsylvania"
+    ],
+    "identifier": [
+      "LSDCBx3FF1_14"
+    ],
+    "item_type": [
+      "Letters"
+    ],
+    "language": [
+      "English"
+    ],
+    "notes": [
+      "2 pages on 1 sheet",
+      "Issac Leeser Collection at the Herbert D. Katz Center for Advanced Judaic Studies (University of Pennsylvania)"
+    ],
+    "personal_name": [
+      "Sampson, E.",
+      "Sampson, E.",
+      null,
+      "Leeser, I., Rev.",
+      "Rev. I. Leeser"
+    ],
+    "provenance": [
+      "Transfer of Custody from the Hebrew Education Society, 10 March 1913, to the Library of the Dropsie College for Hebrew and Cognate Learning."
+    ],
+    "relation": [
+      "https://franklin.library.upenn.edu/catalog/FRANKLIN_9924408973503681"
+    ],
+    "rights": [
+      "http://rightsstatements.org/page/NoC-US/1.0/?"
+    ],
+    "title": [
+      "Letter; Sampson, E.; Leeser, I., Rev.; Belton, TX; 17 February 1866"
+    ]
+  },
+  "structural_metadata": {
+    "viewing_hint": null,
+    "viewing_direction": "left-to-right"
+  },
+  "assets": {
+    "bucket": "sceti-digitized-test",
+    "arranged": [
+      {
+        "filename": "ilcajs_b3f1_0014_1r.tif",
+        "label": "1",
+        "annotation": [
+
+        ],
+        "transcription": [
+          "Belton, Bell Co. Texas\nFeby 17th 1866\nRev. I. Leeser,\nPhiladelphia,\nDear Sir,\nMany years have elapsed since I had the pleasure of addressing you, and now do so to ascertain whether you are still publishing your Portu-guese Hebrew & English Prayer Books and Pentateuch—together with a Jewish version of the Bible in English, and if yea, you will please send me a catalogue  of prices of the same.\nYou will also inform me how I am to get the money (if I should order any of the books) to you. When I hear from you will inform how to forward to me such"
+        ],
+        "checksum": "0929169032ec29557bf85b05b82923fdb75694393e34f652b8955912376e1e0b",
+        "path": "trade_card/original/front.tif"
+      },
+      {
+        "filename": "ilcajs_b3f1_0014_1v.tif",
+        "label": "2",
+        "annotation": [
+
+        ],
+        "transcription": [
+          "that I may desire.\nVery Respectfully\nyours\nE. Sampson."
+        ],
+        "checksum": "5eb074db482a9a70de866521589e19fbd1372cb18f5d0901249e7c7bca44548b",
+        "path": "trade_card/original/back.tif"
+      }
+    ],
+    "unarranged": [
+
+    ]
+  }
+}

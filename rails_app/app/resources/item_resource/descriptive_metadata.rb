@@ -45,9 +45,9 @@ class ItemResource
     end
 
     def to_json_export
-      attributes.slice(*Fields.all).transform_values do |v|
-        v.map(&:to_json_export)
-      end
+      attributes.slice(*Fields.all)
+                .transform_values { |v| v.map(&:to_json_export) }
+                .compact_blank
     end
   end
 end

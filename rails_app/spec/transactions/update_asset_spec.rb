@@ -7,6 +7,7 @@ describe UpdateAsset do
       expect(PreservationBackupJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
     end
   end
+
   describe '#call' do
     let(:transaction) { described_class.new }
 
@@ -193,6 +194,20 @@ describe UpdateAsset do
       it 'fails' do
         expect(result.failure?).to be true
         expect(result.failure[:error]).to be :invalid_file_extension
+      end
+    end
+
+    context 'when expected_checksum does not match ingested file' do
+      let(:asset) { persist(:asset_resource) }
+      let(:result) do
+        transaction.call(id: asset.id, file: file1, expected_checksum: '1234', updated_by: 'test@example.com')
+      end
+
+      it_behaves_like 'a failed asset update'
+
+      it 'fails' do
+        expect(result.failure?).to be true
+        expect(result.failure[:error]).to be :expected_checksum_does_not_match
       end
     end
   end

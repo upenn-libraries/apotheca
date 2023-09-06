@@ -9,8 +9,9 @@ module ImportService
 
     delegate :file, :checksum_sha256, to: :file_location
 
-    def initialize(file_location: nil, **metadata)
+    def initialize(file_location: nil, checksum: nil, **metadata)
       @file_location = file_location
+      @expected_checksum = checksum
       @metadata = metadata
     end
 
@@ -26,10 +27,10 @@ module ImportService
     # Create assets with the metadata and file information stored in this object. An asset is first
     # created without a file and then the asset is updated to add in the file. If an error occurs
     # while creating or updating the asset, any necessary clean up is done and then failure is returned.
-    def create_asset(imported_by:, created_by: nil, **additional_attrs)
+    def create_asset(imported_by:, created_by: nil, migrated_from: nil, **additional_attrs)
       CreateAsset.new.call(**resource_attributes, **additional_attrs, created_by: created_by || imported_by) do |result|
         result.success do |a|
-          update_transaction.call(id: a.id, file: file, updated_by: imported_by).tap do |update_result|
+          update_transaction.call(id: a.id, file: file, expected_checksum: @expected_checksum, migrated_from: migrated_from, updated_by: imported_by).tap do |update_result|
             # Delete asset if update failed, then return update_result value
             DeleteAsset.new.call(id: a.id) if update_result.failure?
           end
