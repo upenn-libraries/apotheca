@@ -15,7 +15,7 @@ The descriptive metadata schema in this application will define each top level f
 ```json
 {
    "title": [{ "value": "Rondo for the piano forte : introduced in the German comedy of The three suitors" }],
-   "subject" [{ "value": "Rondos (Piano)", "uri": "http://id.loc.gov/authorities/subjects/sh85115272" }],
+   "subject": [{ "value": "Rondos (Piano)", "uri": "http://id.loc.gov/authorities/subjects/sh85115272" }],
    "name": [
      {
        "value": "Holst, M. (Matthias), 1767-1854.", 
