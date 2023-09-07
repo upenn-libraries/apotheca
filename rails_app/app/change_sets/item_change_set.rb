@@ -19,7 +19,15 @@ class ItemChangeSet < ChangeSet
 
     # Allow emptying of asset arrangement by submitting a blank array
     def arranged_asset_ids=(values)
-      super(values.compact_blank)
+      super(compact_value(values))
+    end
+
+    def viewing_direction=(value)
+      super(compact_value(value))
+    end
+
+    def viewing_hint=(value)
+      super(compact_value(value))
     end
   end
 
@@ -27,7 +35,7 @@ class ItemChangeSet < ChangeSet
   property :unique_identifier, multiple: false, required: false
   property :human_readable_name, multiple: false, required: true
   property :thumbnail_asset_id, multiple: false, required: true
-  property :internal_notes, multiple: true, required: false # TODO: do we need to remove empty values like we do for DescriptiveMetadata fields?
+  property :internal_notes, multiple: true, required: false
   property :descriptive_metadata, multiple: false, required: true, form: DescriptiveMetadataChangeSet
   property :structural_metadata, multiple: false, required: true, form: StructuralMetadataChangeSet
 
@@ -50,5 +58,9 @@ class ItemChangeSet < ChangeSet
     return if structural_metadata.arranged_asset_ids.all? { |a| asset_ids&.include?(a) }
 
     errors.add(:'structural_metadata.arranged_asset_ids', 'are not all included in asset_ids')
+  end
+
+  def internal_notes=(values)
+    super(compact_value(values))
   end
 end
