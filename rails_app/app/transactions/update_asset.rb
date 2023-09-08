@@ -121,12 +121,14 @@ class UpdateAsset
     return Success(resource) if resource.preservation_file_id.blank?
     return Success(resource) if resource.derivatives.present? && resource.derivatives.none?(&:stale)
 
-    method = async ? 'perform_async' : 'perform_inline'
-    GenerateDerivativesJob.send(method, resource.id.to_s)
-
-    Success(resource)
-  rescue StandardError => e
-    Failure(error: :error_generating_derivative, exception: e)
+    # Calling transaction directly instead of using `perform_inline` so that we can return the failure/success
+    # monad from the transaction.
+    if async
+      GenerateDerivativesJob.perform_async(resource.id.to_s)
+      Success(resource)
+    else
+      GenerateDerivatives.new.call(id: resource.id.to_s)
+    end
   end
 
   # Enqueue job to backup to S3 if backup is not present.
