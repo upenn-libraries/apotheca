@@ -19,11 +19,13 @@ class GenerateDerivatives
 
   # @param [AssetChangeSet] change_set
   def generate_derivatives(change_set)
-    Failure(error: :missing_mime_type) unless change_set.technical_metadata.mime_type
+    return Failure(error: :missing_mime_type) unless change_set.technical_metadata.mime_type
 
     file = preservation_storage.find_by id: change_set.preservation_file_id
     change_set.derivatives = derivatives_for file: file, change_set: change_set
     Success(change_set)
+  rescue StandardError => e
+    Failure(error: :error_generating_derivative, exception: e)
   end
 
   private

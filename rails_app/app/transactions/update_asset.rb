@@ -18,7 +18,7 @@ class UpdateAsset
   step :add_preservation_events, with: 'asset_resource.add_preservation_events'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
-  tee :generate_derivatives
+  step :generate_derivatives
   tee :preservation_backup
 
   # Wrapping save method in order to delete the old preservation file if a file update is successful.
@@ -118,11 +118,17 @@ class UpdateAsset
   # @param [Valkyrie::Resource] resource
   # @param [Boolean] async runs process asynchronously
   def generate_derivatives(resource, async: true)
-    return if resource.preservation_file_id.blank?
-    return if resource.derivatives.present? && resource.derivatives.none?(&:stale)
+    return Success(resource) if resource.preservation_file_id.blank?
+    return Success(resource) if resource.derivatives.present? && resource.derivatives.none?(&:stale)
 
-    method = async ? 'perform_async' : 'perform_inline'
-    GenerateDerivativesJob.send(method, resource.id.to_s)
+    # Calling transaction directly instead of using `perform_inline` so that we can return the failure/success
+    # monad from the transaction.
+    if async
+      GenerateDerivativesJob.perform_async(resource.id.to_s)
+      Success(resource)
+    else
+      GenerateDerivatives.new.call(id: resource.id.to_s)
+    end
   end
 
   # Enqueue job to backup to S3 if backup is not present.
