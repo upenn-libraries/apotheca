@@ -141,7 +141,9 @@ module ImportService
             return result if result.success?
 
             e = result.failure
-            failure(error: "Error occurred updating #{asset.original_filename}: #{e.delete(:error)}", **e)
+            error = e.delete(:error)
+            error = error.to_s.humanize if error.is_a? Symbol
+            failure(error: "Error occurred updating #{asset.original_filename}: #{error}", **e)
           end
         end
 
@@ -149,7 +151,7 @@ module ImportService
           Success(results.map(&:value!))
         else
           failure(
-            error: 'All changes were applied except the updates to the asset(s) below; these issues must be fixed manually:',
+            error: 'All changes were applied except the updates to the asset(s) below. These issues must be fixed manually:',
             details: results.select(&:failure?).map { |f| f.failure[:details] }.flatten
           )
         end

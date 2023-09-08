@@ -112,7 +112,7 @@ module ImportService
       # @param [Valkyrie::ChangeSet] change_set
       # @param [Exception] exception
       def failure(error: nil, details: [], change_set: nil, exception: nil)
-        error = error.try(:to_s).try(:humanize)
+        error = error.to_s.humanize if error.is_a? Symbol
         validation_errors = change_set.try(:errors).try(:full_messages)
 
         details.push(exception&.message) if exception

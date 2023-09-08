@@ -195,8 +195,8 @@ describe ImportService::Process::Update do
       it 'return expected failure object' do
         expect(result.failure[:error]).to be :import_failed
         expect(result.failure[:details]).to contain_exactly(
-          'All changes were applied except the updates to the asset(s) below; these issues must be fixed manually:',
-          "\tError occurred updating front.tif: invalid file extension"
+          'All changes were applied except the updates to the asset(s) below. These issues must be fixed manually:',
+          "\tError occurred updating front.tif: Invalid file extension"
         )
       end
     end

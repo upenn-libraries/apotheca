@@ -118,11 +118,13 @@ class UpdateAsset
   # @param [Valkyrie::Resource] resource
   # @param [Boolean] async runs process asynchronously
   def generate_derivatives(resource, async: true)
-    return if resource.preservation_file_id.blank?
-    return if resource.derivatives.present? && resource.derivatives.none?(&:stale)
+    return Success(resource) if resource.preservation_file_id.blank?
+    return Success(resource) if resource.derivatives.present? && resource.derivatives.none?(&:stale)
 
     method = async ? 'perform_async' : 'perform_inline'
     GenerateDerivativesJob.send(method, resource.id.to_s)
+
+    Success(resource)
   rescue StandardError => e
     Failure(error: :error_generating_derivative, exception: e)
   end
