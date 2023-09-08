@@ -4,22 +4,17 @@
     path: "{{ project_root ~ '/sidekiq' }}"
     state: directory
 
-- name: Copy base and dev docker-compose files
+- name: Copy base docker-compose files
   copy:
-    src: "../files/{{ item }}"
-    dest: "{{ project_root ~ '/sidekiq/' }}"
-  when: is_development | default (false) == true
-  loop:
-    - "docker-compose.yml"
-    - "docker-compose.dev.yml"
-  tags: dev_environment
+    content: "{{ lookup('template', 'docker-compose.yml.j2', template_vars={'item': item} ) | from_yaml }}"
+    dest: "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
+  loop: "{{ sidekiq.instances }}"
 
 - name: Deploy Sidekiq development environment
   docker_stack:
     name: "apotheca"
     compose:
-      - "{{ project_root ~ '/sidekiq/docker-compose.yml' }}"
-      - "{{ project_root ~ '/sidekiq/docker-compose.dev.yml' }}"
+      - "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
     state: present
   changed_when: false
   environment:
@@ -34,28 +29,19 @@
     REDIS_SIDEKIQ_USER: "sidekiq"
     REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
     REDIS_PORT: "{{ redis.port }}"
-    REPLICAS: "{{ sidekiq.replicas }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
     FITS_PORT: "{{ fits.port }}"
     MINIO_PORT: "{{ minio.port }}"
   no_log: true
   when: is_development | default (false) == true
+  loop: "{{ sidekiq.instances }}"
   tags: dev_environment
-
-# Execute staging/production steps
-- name: Copy docker-compose file
-  copy:
-    src: "../files/{{ item }}"
-    dest: "{{ project_root ~ '/sidekiq/' }}"
-  when: not is_development | default (false) == true
-  loop:
-    - "docker-compose.yml"
 
 - name: Deploy Sidekiq
   docker_stack:
     name: "apotheca"
     compose:
-      - "{{ project_root ~ '/sidekiq/docker-compose.yml' }}"
+      - "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
     state: present
   changed_when: false
   environment:
@@ -70,8 +56,8 @@
     REDIS_SIDEKIQ_USER: "sidekiq"
     REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
     REDIS_PORT: "{{ redis.port }}"
-    REPLICAS: "{{ sidekiq.replicas }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
     FITS_PORT: "{{ fits.port }}"
   no_log: true
   when: not is_development | default (false) == true
+  loop: "{{ sidekiq.instances }}"
