@@ -1,3 +1,17 @@
 ---
 sidekiq:
-  replicas: 1
+  instances:
+    - name: default
+      queues:
+        - high
+        - medium
+        - low
+      concurrency: 5
+      replicas: 1
+    - name: import
+      queues:
+        - import_high
+        - import_medium
+        - import_low
+      concurrency: 5
+      replicas: 1

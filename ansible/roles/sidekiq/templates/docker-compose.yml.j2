@@ -1,18 +1,23 @@
 version: "3.8"
 
 services:
-  sidekiq:
+  sidekiq-{{ item.name }}:
     image: ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
-    command: ["bundle", "exec", "sidekiq", "-q", "high", "-q", "medium", "-q", "import_high", "-q", "import_medium", "-q", "import_low", "-q", "low", "-c", "5"]
+    command: ["bundle", "exec", "sidekiq", {{ item.queues | map('regex_replace', '^(.*)$', '"-q", "\\1"') | join(', ') }}, "-c", "{{ item.concurrency }}"]
     deploy:
       placement:
         constraints:
           - "node.labels.sidekiq == true"
-      replicas: ${REPLICAS}
+      replicas: {{ item.replicas }}
       update_config:
         order: "start-first"
         parallelism: 1
     environment:
+{% if is_development == true %}
+      APP_UID: ${UID:-1000}
+      APP_GID: ${GID:-1000}
+      MINIO_URL: "http://minio:${MINIO_PORT}"
+{% endif %}
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_PASSWORD: /run/secrets/database_password
       DATABASE_USER: ${DATABASE_USER}
@@ -42,6 +47,10 @@ services:
       - database
       - redis
       - traefik
+{% if is_development == true %}
+    volumes:
+      - /apotheca/ansible/roles/apotheca/files/src/:/home/app
+{% endif %}
     secrets:
       - database_password
       - redis_sidekiq_password
