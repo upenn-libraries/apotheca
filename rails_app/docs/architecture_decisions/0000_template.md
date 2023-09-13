@@ -1,15 +1,16 @@
-# 1. Title
-   Date: YYYY-MM-DD
+# Title
 
-   Status: `Proposed` `Accepted` `Rejected` `Deprecated` `Superseded`
-# 2. Context
+## Date
+YYYY-MM-DD
 
-    What is the issue that we're seeing that is motivating this decision or change? 
+## Status
+`Proposed` `Accepted` `Rejected` `Deprecated` `Superseded`
 
-# 3. Decision
+## Context
+What is the issue that we're seeing that is motivating this decision or change? 
 
-    What is the change that we're proposing and/or doing?
+## Decision
+What is the change that we're proposing and/or doing?
 
-# 4. Consequences
-
-    What becomes easier or more difficult to do because of this change?
+## Consequences
+What becomes easier or more difficult to do because of this change?
