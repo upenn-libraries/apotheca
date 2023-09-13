@@ -28,7 +28,7 @@ The descriptive metadata schema in this application will define each top level f
 
 ## Consequences
 1. Bulk import headers
-   * The column headers for bulk import will get longer. Each descriptive metadata field will have to end in the `.value` or `.uri`.
+   * The CSV column headers for bulk import will get longer. Each descriptive metadata field will have to end in the `.value` or `.uri`.
    * The added complexity of the metadata schema could make it harder to train staff.
 2. Adding subfields
    * It will be easier to add subfields if necesary. For example, imagine a case were we wanted to add a `type` subfield for each identifier, the new schema structure could support that without much of a hassel. Or imagine the case where we needed to add a `uri` subfield to a metadata field that was not original supporting URIs.
