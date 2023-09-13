@@ -9,10 +9,10 @@ shared_examples_for 'a ModificationDetailsChangeSet' do
     expect(change_set.updated_by).not_to be_nil
   end
 
-  it 'sets date_created' do
-    change_set.validate(date_created: DateTime.current)
+  it 'sets first_date_created' do
+    change_set.validate(first_created_at: DateTime.current)
 
-    expect(change_set.date_created).not_to be_nil
+    expect(change_set.first_created_at).not_to be_nil
   end
 
   it 'requires created_by' do
