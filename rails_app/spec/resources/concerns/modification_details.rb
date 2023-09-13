@@ -2,20 +2,21 @@
 
 shared_examples_for 'ModificationDetails' do |factory|
   describe '#date_created' do
-    context 'when date_created is set' do
-      let(:date_created) { DateTime.new(2000, 2, 1) }
-      let(:resource) { persist(factory, date_created: date_created) }
+    context 'when first_created_at is set' do
+      let(:first_created_at) { DateTime.new(2000, 2, 1) }
+      let(:resource) { persist(factory, first_created_at: first_created_at) }
 
-      it 'returns date_created date' do
-        expect(resource.date_created).to eql date_created
+      it 'returns first_created_at date' do
+        expect(resource.date_created).to eql first_created_at
       end
     end
 
-    context 'when created_by date is set' do
+    context 'when only created_at date is set' do
       let(:resource) { persist(factory) }
 
-      it 'returns created_by date' do
-        expect(resource.date_created).not_to be_nil
+      it 'returns created_at date' do
+        expect(resource.first_created_at).to be_nil
+        expect(resource.date_created).to eql resource.created_at
       end
     end
   end

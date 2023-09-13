@@ -148,7 +148,7 @@ describe ImportService::Process::Migrate do
       end
 
       it 'migrated created_at' do
-        expect(item.date_created).to eql DateTime.parse('2022-04-06T08:16:42.000-04:00')
+        expect(item.first_created_at).to eql DateTime.parse('2022-04-06T08:16:42.000-04:00')
       end
 
       it 'migrates publishing dates' do

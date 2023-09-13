@@ -5,7 +5,7 @@ module ModificationDetailsChangeSet
   extend ActiveSupport::Concern
 
   included do
-    property :date_created, multiple: false, required: false
+    property :first_created_at, multiple: false, required: false
     property :created_by, multiple: false, required: true
     property :updated_by, multiple: false, required: true
 

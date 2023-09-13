@@ -56,7 +56,7 @@ module ImportService
         # Create all the assets
         assets_result = batch_create_assets(
           asset_set.all,
-          { migrated_from: 'Colenda', date_created: created_at, created_by: created_by, imported_by: imported_by }
+          { migrated_from: 'Colenda', first_created_at: created_at, created_by: created_by, imported_by: imported_by }
         )
 
         return assets_result if assets_result.failure?
@@ -72,7 +72,7 @@ module ImportService
           unique_identifier: unique_identifier,
           human_readable_name: human_readable_name,
           created_by: created_by,
-          date_created: created_at,
+          first_created_at: created_at,
           updated_by: imported_by,
           first_published_at: first_published_at,
           last_published_at: last_published_at,
