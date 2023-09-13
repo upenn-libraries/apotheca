@@ -25,7 +25,6 @@ class AssetChangeSet < ChangeSet
   end
 
   # Defining Fields
-  property :alternate_ids, multiple: true, required: false
   property :original_filename, multiple: false, required: true
   property :preservation_file_id, multiple: false, required: false
   property :preservation_copies_ids, multiple: true, required: false
