@@ -11,11 +11,11 @@ class Import < ApplicationRecord
   # Run the import and set the status of the import to a success or failure
   def run
     result = nil
-    benchmark = Benchmark.measure do
+    elapsed_time = Benchmark.realtime do
       result = ImportService::Process.build(imported_by: bulk_import.created_by.email, **import_data).run
     end
     if result.success?
-      self.duration = benchmark.total
+      self.duration = elapsed_time
       self.resource_identifier = result.value!.unique_identifier
       success!
     else

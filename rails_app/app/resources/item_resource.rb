@@ -16,7 +16,7 @@ class ItemResource < Valkyrie::Resource
 
   attribute :unique_identifier, Valkyrie::Types::Strict::String
   attribute :human_readable_name, Valkyrie::Types::Strict::String
-  attribute :thumbnail_asset_id, Valkyrie::Types::ID # ID of asset that should be thumbnail
+  attribute :thumbnail_asset_id, Valkyrie::Types::Params::ID # ID of asset that should be thumbnail
   attribute :internal_notes, Valkyrie::Types::Array.of(Valkyrie::Types::Strict::String)
   attribute :descriptive_metadata, DescriptiveMetadata
   attribute :structural_metadata, StructuralMetadata
