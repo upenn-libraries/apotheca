@@ -117,6 +117,8 @@ rspec_app_test:
     FF_NETWORK_PER_BUILD: "true"
     FITS_URL: "http://fits:8080/fits"
     SOLR_TEST_URL: "http://solr:8983/solr/apotheca-test"
+    MINIO_ROOT_USER: "minioadmin"
+    MINIO_ROOT_PASSWORD: "minioadmin"
     MINIO_URL: "http://minio:9000"
     POSTGRES_DB: "apotheca_test"
     POSTGRES_PASSWORD: "rspec_test"
