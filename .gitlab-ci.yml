@@ -97,7 +97,8 @@ rspec_app_test:
       alias: chrome
     - name: gitlab.library.upenn.edu/dld/digital-repository/fits-servlet:main
       alias: fits
-    - minio/minio:latest
+    - name: minio/minio:latest
+      alias: minio
     - postgres:14
     - name: bitnami/solr:9.1.1
       alias: solr
