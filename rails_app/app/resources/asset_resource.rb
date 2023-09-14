@@ -37,7 +37,7 @@ class AssetResource < Valkyrie::Resource
   attribute :preservation_copies_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)
   attribute :technical_metadata, TechnicalMetadata
   attribute :preservation_events, Valkyrie::Types::Array.of(PreservationEvent)
-  attribute :label, Valkyrie::Types::Strict::String.optional
+  attribute :label, Dry::Types['params.nil'] | Valkyrie::Types::Strict::String
 
   attribute :annotations, Valkyrie::Types::Array.of(Annotation) # previously, called table of contents
 

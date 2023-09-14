@@ -72,8 +72,4 @@ class AssetChangeSet < ChangeSet
   def transcriptions=(values)
     super(compact_value(values))
   end
-
-  def label=(value)
-    super(compact_value(value))
-  end
 end
