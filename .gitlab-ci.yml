@@ -99,6 +99,7 @@ rspec_app_test:
       alias: fits
     - name: minio/minio:latest
       alias: minio
+      command: [ "minio", "server", "/data" ]
     - postgres:14
     - name: bitnami/solr:9.1.1
       alias: solr
