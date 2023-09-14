@@ -43,9 +43,9 @@ describe UpdateAsset do
       end
 
       it 'sets technical metadata' do
-        expect(
-          updated_asset.technical_metadata
-        ).to include(mime_type: 'image/tiff', size: 291_455, md5: 'c2c44072c0ec08013cff72aa7dc8d405')
+        expect(updated_asset.technical_metadata).to include(mime_type: 'image/tiff', size: 291_455,
+                                                            duration: nil, width: 400, height: 238,
+                                                            md5: 'c2c44072c0ec08013cff72aa7dc8d405')
       end
 
       it 'sets sha256 checksum' do
@@ -91,9 +91,9 @@ describe UpdateAsset do
       end
 
       it 'updates technical metadata' do
-        expect(
-          updated_asset.technical_metadata
-        ).to include(mime_type: 'audio/x-wave', size: 30_804, md5: '79a2f8e83b4babe41ba0b5458e3d1e4a')
+        expect(updated_asset.technical_metadata).to include(mime_type: 'audio/x-wave', size: 30_804,
+                                                            duration: 0.17, width: nil, height: nil,
+                                                            md5: '79a2f8e83b4babe41ba0b5458e3d1e4a')
       end
 
       it 'updates preservation_file_id and stores new file' do
