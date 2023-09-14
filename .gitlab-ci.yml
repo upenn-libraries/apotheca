@@ -128,9 +128,12 @@ rspec_app_test:
     SOLR_COLLECTION: "apotheca-test"
     SOLR_ENABLE_AUTHENTICATION: "no"
     SOLR_ENABLE_CLOUD_MODE: "yes"
+    SOLR_HOST: "solr"
     SOLR_TEST_URL: "http://solr:8983/solr/apotheca-test"
     SOLR_URL: "http://solr:8983/solr/apotheca-core"
     SOLR_ZK_HOSTS: "zookeeper:2181"
+    ZOO_LISTEN_ALLIPS_ENABLED: "true"
+    ZOO_SERVERS: "zookeeper:2888:3888"
   script:
     - cd ${CI_PROJECT_DIR}/rails_app/
     - bundle add rspec_junit_formatter
