@@ -141,7 +141,8 @@ rspec_app_test:
     - bundle add rspec_junit_formatter
     - bundle exec rake db:migrate
     - bundle exec rake apotheca:create_buckets
-    # - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
+    - sleep 300
+    - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
   needs:
     - amend_tmp_base_dev_images
   coverage: '/\(\d+.\d+\%\) covered/'
