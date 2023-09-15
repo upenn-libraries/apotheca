@@ -15,6 +15,8 @@ module Steps
       change_set.technical_metadata.raw       = tech_metadata.raw
       change_set.technical_metadata.mime_type = tech_metadata.mime_type
       change_set.technical_metadata.size      = tech_metadata.size
+      change_set.technical_metadata.width     = tech_metadata.width
+      change_set.technical_metadata.height    = tech_metadata.height
       change_set.technical_metadata.md5       = tech_metadata.md5
       change_set.technical_metadata.duration  = tech_metadata.duration
       change_set.technical_metadata.sha256    = file.checksum(digests: [Digest::SHA256.new]).first
