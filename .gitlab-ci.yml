@@ -106,12 +106,17 @@ rspec_app_test:
     - postgres:14
     - name: bitnami/solr:9.1.1
       alias: solr
-    - name: bitnami/zookeeper:3.8.1
-      alias: zookeeper
+      command: ["bash", "-c", "mkdir -p /bitnami/solr/server/solr/configsets/apotheca && cp -fr rails_app/solr/. /bitnami/solr/server/solr/configsets/apotheca/ && /opt/bitnami/scripts/solr/run.sh"]
+      variables:
+        SOLR_CLOUD_BOOTSTRAP: "yes"
+        SOLR_ENABLE_AUTHENTICATION: "no"
+        SOLR_HOST: "solr"
+        SOLR_MODE: "solrcloud"
+        SOLR_OPTS: "-Dsolr.disableConfigSetsCreateAuthChecks=true"
+        ZK_CREATE_CHROOT: "true"
   extends:
     - .rspec
   variables:
-    ALLOW_ANONYMOUS_LOGIN: "yes"
     APP_URL: "apotheca.test.com"
     CHROME_URL: "http://chrome:3000"
     DATABASE_NAME: "apotheca_test"
@@ -127,21 +132,20 @@ rspec_app_test:
     POSTGRES_USER: "rspec_test"
     RAILS_ENV: "test"
     RAILS_SYSTEM_TESTING_SCREENSHOT_HTML: "1"
-    SOLR_CLOUD_BOOTSTRAP: "yes"
-    SOLR_COLLECTION: "apotheca-test"
-    SOLR_ENABLE_AUTHENTICATION: "no"
-    SOLR_ENABLE_CLOUD_MODE: "yes"
-    SOLR_HOST: "solr"
     SOLR_TEST_URL: "http://solr:8983/solr/apotheca-test"
-    SOLR_ZK_HOSTS: "zookeeper:2181"
-    ZOO_LISTEN_ALLIPS_ENABLED: "true"
-    ZOO_SERVERS: "zookeeper:2888:3888"
   script:
     - cd ${CI_PROJECT_DIR}/rails_app/
     - bundle add rspec_junit_formatter
     - bundle exec rake db:migrate
     - bundle exec rake apotheca:create_buckets
-    - sleep 300s
+    - >
+      for ((i = 0; i <= 9; i += 1)); do
+        curl --silent "http://solr:8983/api/" "-H" "'Content-type:application/json'" && break
+        echo "Waiting for solr api to be ready"
+        sleep "30s"
+      done
+    - curl -v "http://solr:8983/solr/admin/configs?action=CREATE&name=apotheca&baseConfigSet=_default&configSetProp.immutable=false&wt=xml&omitHeader=true"
+    - curl -v "http://solr:8983/solr/admin/collections?action=CREATE&name=apotheca-test&collection.configName=apotheca&numShards=1"
     - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
   needs:
     - amend_tmp_base_dev_images
