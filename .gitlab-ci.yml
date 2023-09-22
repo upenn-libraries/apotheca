@@ -240,7 +240,7 @@ trivy_app_container_scanning:
   needs:
     - amend_prod_image
   variables:
-    CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-production
+    CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}
   tags:
     - build
   allow_failure: true
