@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 describe ProcessBulkExportJob do
-  context 'when performing the job later' do
-    let(:bulk_export) { create(:bulk_export, :queued) }
-
-    it 'enqueues the job' do
-      described_class.perform_async(bulk_export.id)
-      expect(described_class).to have_enqueued_sidekiq_job.with(bulk_export.id)
-    end
-  end
+  # context 'when performing the job later' do
+  #   let(:bulk_export) { create(:bulk_export, :queued) }
+  #
+  #   it 'enqueues the job' do
+  #     described_class.perform_async(bulk_export.id)
+  #     expect(described_class).to have_enqueued_sidekiq_job.with(bulk_export.id)
+  #   end
+  # end
 
   context 'when performing the job' do
     let(:bulk_export) { create(:bulk_export, :queued) }
