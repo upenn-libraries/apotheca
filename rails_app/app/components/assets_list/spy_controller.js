@@ -10,7 +10,13 @@ export default class extends Controller {
      * offcanvasNavScroller = .offcanvas-body
      * offcanvasSpiedElementScroller = document.body
      */
-    static targets = ['spy', 'spiedElement', 'oncanvasNavScroller', 'offcanvasHeader', 'offcanvasNavScroller'];
+    static targets = [
+        'spy',
+        'spiedElement',
+        'oncanvasNavScroller',
+        'offcanvasHeader',
+        'offcanvasNavScroller'
+    ];
 
     /**
      * Initializes necessary variables for scrollspy implementation
@@ -93,6 +99,14 @@ export default class extends Controller {
         this.refreshScrollSpy();
     };
 
+    // Tab header is sticky-top when scrolled past the page header
+    isStickyHeader() {
+        if (!this.tabHeader) {
+            return false;
+        }
+        return window.scrollY > this.tabHeader.offsetTop - 1;
+    }
+
     // Monitor active scrollspy items
     monitorActive() {
         const newActiveParent = document.querySelector('.nav-link.parent.active');
@@ -153,7 +167,9 @@ export default class extends Controller {
     // scroll in from bottom if goes out the bottom
     keepActiveItemInView() {
         const item = this.activeItem;
-        let container = this.offcanvasShown ? this.offcanvasNavScroller : this.oncanvasNavScroller;
+        let container = this.offcanvasShown
+            ? this.offcanvasNavScroller
+            : this.oncanvasNavScroller;
 
         if (!item || !container) return;
 
@@ -162,20 +178,28 @@ export default class extends Controller {
 
         const containerTop = containerRect.top;
         const containerBottom = Math.min(containerRect.bottom, window.innerHeight);
-
-        const isAboveSidebar =
-            this.offcanvasShown ?
-                itemRect.top < this.offcanvasHeaderTarget.offsetHeight + 16 :
-                itemRect.top < containerTop;
-        const isBelowSidebar = itemRect.bottom > containerBottom;
         const containerVisibleHeight = containerBottom - containerTop;
 
+        // Determine when the active nav item is above or below the visible
+        // bounds of the sidebar in order to scroll it back within view
+        const isAboveSidebar = this.offcanvasShown
+            ? itemRect.top < this.offcanvasHeaderTarget.offsetHeight + 16
+            : this.isStickyHeader()
+                ? itemRect.top < (containerTop + this.tabHeader.offsetHeight)
+                : itemRect.top < containerTop;
+
+        const isBelowSidebar = itemRect.bottom > containerBottom;
+
         if (isAboveSidebar) {
-            container.scrollTop = item.offsetTop;
+            // The tab header is sticky once a user scrolls past the main page
+            // header, so his accounts for the tab's height in calculating scroll
+            container.scrollTop = this.isStickyHeader()
+                ? item.offsetTop - this.tabHeader.offsetHeight
+                : item.offsetTop;
 
             // If the main scroller is scrolled all the way to its top,
             // force the sidebar to scroll to its top too
-            if (container.scrollTop < (this.tabHeader.offsetHeight + item.offsetHeight)) {
+            if (this.spiedElement.scrollTop < 20) {
                 container.scrollTo({top: 0, behavior: 'smooth'});
             }
         } else if (isBelowSidebar) {

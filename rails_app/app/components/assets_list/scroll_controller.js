@@ -32,14 +32,6 @@ export default class extends Controller {
         document.addEventListener('hidden.bs.offcanvas', () => this.offcanvasHiddenHandler());
     }
 
-    // Tab header is sticky-top when scrolled past the page header
-    // isStickyHeader() {
-    //     if (!this.tabHeader) {
-    //         return false;
-    //     }
-    //     return window.scrollY > this.tabHeader.getBoundingClientRect().top;
-    // }
-
     // Keep track of when the offcanvas menu is shown or hidden
     offcanvasShownHandler = () => {
         this.offcanvasShown = true;
