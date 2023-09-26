@@ -19,11 +19,10 @@
     @media (min-width: 992px) {
       overflow: auto;
     }
+  }
 
-    /* Set min-height on last card section to ensure scrollspy can reach last item */
-    .spy .asset-row:last-of-type {
-      min-height: 75vh;
-    }
+  &.spy #assets-cards .asset-row:last-of-type {
+    min-height: 75vh;
   }
 
   #assets-sidebar {
