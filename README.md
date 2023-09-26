@@ -69,7 +69,7 @@ When running the development environment you can access the traefik web ui by na
 For information about the Rails application, see the [README](/rails_app/README.md) in the Rails application root. This includes information about running the test suite, performing harvesting, development styleguide and general application information.
 
 #### Minio
-In development, Minio is used to mimic S3-compatible object storage. In staging/production, the application will use an external service like AWS S3, Wasabi, etc.
+In development, Minio is used to mimic S3-compatible object storage. In staging/production, the application will use an external services like AWS S3 and Wasabi.
 
 The Minio API is available at [http://minio-dev.library.upenn.edu](http://minio-dev.library.upenn.edu).
 
