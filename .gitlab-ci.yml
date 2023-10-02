@@ -113,7 +113,7 @@ rspec_app_test:
         POSTGRES_USER: "rspec_test"
     - name: bitnami/solr:9.3.0
       alias: solr
-      command: ["bash", "-c", "mkdir -p /bitnami/solr/server/solr/configsets/apotheca && cp -fr ${CI_PROJECT_DIR}/rails_app/solr/. /bitnami/solr/server/solr/configsets/apotheca/ && /opt/bitnami/scripts/solr/run.sh"]
+#      command: ["bash", "-c", "mkdir -p /bitnami/solr/server/solr/configsets/apotheca && cp -fr ${CI_PROJECT_DIR}/rails_app/solr/. /bitnami/solr/server/solr/configsets/apotheca/ && /opt/bitnami/scripts/solr/run.sh"]
       variables:
         SOLR_CLOUD_BOOTSTRAP: "yes"
         SOLR_ENABLE_AUTHENTICATION: "no"
@@ -147,7 +147,7 @@ rspec_app_test:
         echo "Waiting for solr api to be ready"
         sleep "30s"
       done
-    - (zip -r - solr/conf/*) | curl -X POST --header "Content-Type:application/octet-stream" --data-binary @- "http://solr:8983/solr/admin/configs?action=UPLOAD&name=apotheca"
+    - (zip -r - ./solr/conf) | curl -X POST --header "Content-Type:application/octet-stream" --data-binary @- "http://solr:8983/solr/admin/configs?action=UPLOAD&name=apotheca"
     - curl -v http://solr:8983/solr/admin/configs?action=LIST&omitHeader=true
     #    - curl -v "http://solr:8983/solr/admin/configs?action=CREATE&name=apotheca&baseConfigSet=_default&configSetProp.immutable=false&wt=xml&omitHeader=true"
     - curl -v "http://solr:8983/solr/admin/collections?action=CREATE&name=apotheca-test&collection.configName=apotheca&numShards=1"
