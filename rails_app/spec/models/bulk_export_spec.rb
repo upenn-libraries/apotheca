@@ -47,6 +47,11 @@ describe BulkExport do
 
       before { bulk_export.run }
 
+      # TODO: NEED TO REMOVE THIS TEST.
+      it 'no errors' do
+        expect(bulk_export.process_errors).to be_blank
+      end
+
       it 'generates the correct filename' do
         expect(bulk_export.csv.filename.to_s).to eq("#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
       end
