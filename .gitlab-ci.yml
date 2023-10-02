@@ -245,7 +245,6 @@ trivy_app_container_scanning:
     CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}
   tags:
     - build
-  allow_failure: true
 # -- End - SAST images
 
 # -- Start - Copy app docker images
