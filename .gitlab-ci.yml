@@ -96,7 +96,7 @@ rspec_app_test:
   stage: test
   image: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-development
   services:
-    - name: browserless/chrome:1.59-puppeteer-1.20.0
+    - name: browserless/chrome:latest
       alias: chrome
     - name: gitlab.library.upenn.edu/dld/digital-repository/fits-servlet:main
       alias: fits
