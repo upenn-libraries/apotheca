@@ -172,7 +172,6 @@ rspec_app_test:
         - rails_app/spec/**/**.rb
   tags:
     - build
-  allow_failure: true
 
 rubocop_app_test:
   stage: test
