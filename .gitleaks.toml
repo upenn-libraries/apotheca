@@ -162,7 +162,8 @@ title = "gitlab gitleaks config"
             '''(?i)(key(\s+)?(\=|\:)(\s+)?key)''',
             '''(?i)(config.ssh.insert_key)''',
             '''(?i)(minioadmin)''',
-            '''(?i)(MINIO_SECRET_ACCESS_KEY)'''
+            '''(?i)(MINIO_SECRET_ACCESS_KEY)''',
+            '''(?i)((rspec_)?test)'''
         ]
 
 [[rules]]
@@ -196,7 +197,8 @@ title = "gitlab gitleaks config"
         '''d8da0792ab6856474eaad296c890b301d0ac3dd9''',
         '''e720df5acd1f8b483e58b1c51f1945bae9be1c30''',
         '''d074854650c6d8a6451621a99cfcbe80694a7fcc''',
-        '''7bccadbbdba6883f84ecc32d1e8eb78dd61c6f8f'''
+        '''7bccadbbdba6883f84ecc32d1e8eb78dd61c6f8f''',
+        '''ab78a18bdd0edd13fd04f1756d418482f6a2ce17'''
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
@@ -205,6 +207,7 @@ title = "gitlab gitleaks config"
     regexes = [
         # Values set by Ansible variables
         '''{{ *[\S]+ *}}''',
+        '''{{ *[\S]+(\s~\s)?[[\S]+ }}''',
         # Values set by environment variables
         '''ENV\[['"][\S]+['"]\]''',
         # AWS Secrets Manager resource for vault password
