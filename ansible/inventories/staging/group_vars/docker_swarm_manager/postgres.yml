@@ -1,0 +1,12 @@
+---
+postgres:
+  database: "apotheca"
+  image:
+    name: "postgres"
+    tag: "15.2-alpine"
+  replicas: 1
+  versioned_secrets:
+    password:
+      value: "{{ apotheca_vault_values.secrets.database_password }}"
+      version: "{{ apotheca_vault_values.metadata.version }}"
+  user: "rails"
