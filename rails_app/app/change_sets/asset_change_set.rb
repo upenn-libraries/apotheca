@@ -12,6 +12,8 @@ class AssetChangeSet < ChangeSet
     property :raw, multiple: false
     property :mime_type, multiple: false
     property :size, multiple: false
+    property :width, multiple: false
+    property :height, multiple: false
     property :duration, multiple: false
     property :md5, multiple: false
     property :sha256, multiple: false
@@ -25,7 +27,6 @@ class AssetChangeSet < ChangeSet
   end
 
   # Defining Fields
-  property :alternate_ids, multiple: true, required: false
   property :original_filename, multiple: false, required: true
   property :preservation_file_id, multiple: false, required: false
   property :preservation_copies_ids, multiple: true, required: false
@@ -72,9 +73,5 @@ class AssetChangeSet < ChangeSet
 
   def transcriptions=(values)
     super(compact_value(values))
-  end
-
-  def label=(value)
-    super(compact_value(value))
   end
 end

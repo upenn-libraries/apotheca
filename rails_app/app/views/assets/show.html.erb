@@ -12,7 +12,7 @@
 <% end %>
 
 <div class="align-self-center mb-2">
-  <%= render(StatusBadge::Component.new(test: @asset.preservation_copies_ids.any?, truthy: 'Backed up to Cloud Storage', falsey: 'Not in Cloud Storage')) %>
+  <%= render(StatusBadge::Component.new(test: @asset.preservation_copies_ids.any?, truthy: 'Backed Up', falsey: 'Not Backed Up')) %>
   <%= render(StatusBadge::Component.new(test: @asset.thumbnail, truthy: 'Thumbnail', falsey: 'No Thumbnail')) %>
   <%= render(StatusBadge::Component.new(test: @asset.access, truthy: 'Access Copy', falsey: 'No Access Copy')) %>
 </div>

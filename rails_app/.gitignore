@@ -35,3 +35,6 @@ coverage
 
 # Ignore development bundle files
 vendor/bundle
+
+# Ignore env credential keys
+config/credentials/*.key

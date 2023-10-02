@@ -18,7 +18,9 @@ class AssetResource < Valkyrie::Resource
     attribute :raw, Valkyrie::Types::Strict::String.optional
     attribute :mime_type, Valkyrie::Types::Strict::String.optional
     attribute :size, Valkyrie::Types::Strict::Integer.optional # Size in Bytes
-    attribute :duration, Valkyrie::Types::Strict::String.optional
+    attribute :width, Valkyrie::Types::Strict::Integer.optional # in pixels
+    attribute :height, Valkyrie::Types::Strict::Integer.optional # in pixels
+    attribute :duration, Valkyrie::Types::Strict::Float.optional # in seconds
     attribute :md5, Valkyrie::Types::Strict::String.optional
     attribute :sha256, Valkyrie::Types::String.optional
   end
@@ -32,13 +34,12 @@ class AssetResource < Valkyrie::Resource
     # attribute :type, ORC, caption, human transcribed
   end
 
-  attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
   attribute :original_filename, Valkyrie::Types::Strict::String.optional
   attribute :preservation_file_id, Valkyrie::Types::ID
   attribute :preservation_copies_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)
   attribute :technical_metadata, TechnicalMetadata
   attribute :preservation_events, Valkyrie::Types::Array.of(PreservationEvent)
-  attribute :label, Valkyrie::Types::Strict::String.optional
+  attribute :label, Dry::Types['params.nil'] | Valkyrie::Types::Strict::String
 
   attribute :annotations, Valkyrie::Types::Array.of(Annotation) # previously, called table of contents
 
