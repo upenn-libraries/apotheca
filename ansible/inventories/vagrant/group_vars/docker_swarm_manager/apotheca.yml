@@ -9,4 +9,8 @@ apotheca_replicas: 1
 apotheca_url: "apotheca-dev.library.upenn.edu"
 apotheca_solr_url: "http://solr-1:8983/solr/apotheca-dev"
 apotheca_solr_test_url: "http://solr-1:8983/solr/apotheca-test"
+apotheca_versioned_secrets:
+  rails_master_key:
+    value: "d387ab7464fc5b8bb2e5c0dcd4105355"
+    version: "1"
 
