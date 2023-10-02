@@ -137,7 +137,7 @@ rspec_app_test:
     RAILS_SYSTEM_TESTING_SCREENSHOT_HTML: "1"
     SOLR_TEST_URL: "http://solr:8983/solr/apotheca-test"
   script:
-    - apt-get update && apt-get install zip
+    - apt-get update && apt-get -y install zip
     - cd ${CI_PROJECT_DIR}/rails_app/
     - bundle add rspec_junit_formatter
     - bundle exec rake db:migrate
