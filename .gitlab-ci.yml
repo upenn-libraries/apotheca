@@ -149,7 +149,7 @@ rspec_app_test:
       done
     - curl -v "http://solr:8983/solr/admin/configs?action=CREATE&name=apotheca&baseConfigSet=_default&configSetProp.immutable=false&wt=xml&omitHeader=true"
     - curl -v "http://solr:8983/solr/admin/collections?action=CREATE&name=apotheca-test&collection.configName=apotheca&numShards=1"
-    - bundle exec rspec --format documentation --format RspecJunitFormatter --out rspec.xml RAILS_ENV=test
+    - RAILS_ENV=test bundle exec rspec --format documentation --format RspecJunitFormatter --out rspec.xml
   needs:
     - amend_tmp_base_dev_images
   coverage: '/\(\d+.\d+\%\) covered/'
