@@ -5,9 +5,13 @@ sidekiq:
       queues:
         - high
         - medium
+        - low
+      concurrency: 5
+      replicas: 1
+    - name: import
+      queues:
         - import_high
         - import_medium
         - import_low
-        - low
       concurrency: 5
       replicas: 1
