@@ -1,31 +1,35 @@
-minio: &minio
-  access_key_id: minioadmin
-  secret_access_key: minioadmin
-  endpoint: <%= ENV['MINIO_URL'] %>
+aws: &aws
+  access_key_id: placeholder
+  secret_access_key: placeholder
+  endpoint: placeholder
+  region: us-east-1
+wasabi: &wasabi
+  access_key_id: placeholder
+  secret_access_key: placeholder
+  endpoint: placeholder
   region: us-east-1
 preservation_storage:
-  <<: *minio
-  bucket: preservation-dev
+  <<: *aws
+  bucket: preservation-staging
 preservation_copy_storage:
-  <<: *minio
-  bucket: preservation-copy-dev
+  <<: *wasabi
+  bucket: preservation-copy-staging
 derivative_storage:
-  <<: *minio
-  bucket: derivatives-dev
+  <<: *aws
+  bucket: derivatives-staging
 iiif_derivative_storage:
-  <<: *minio
-  bucket: iiif-derivatives-dev
+  <<: *aws
+  bucket: iiif-derivatives-staging
 solr:
   url: <%= ENV['SOLR_URL'] %>
 fits:
   url: <%= ENV['FITS_URL'] %>
 marmite:
   url: http://mdproc.library.upenn.edu:9292
-skip_ezid_metadata_update: true
 working_storage:
   sceti_digitized:
-    <<: *minio
-    bucket: sceti-digitized
+    <<: *aws
+    bucket: sceti-short-term
   ceph:
     access_key_id: fake-id
     secret_access_key: fake-key
