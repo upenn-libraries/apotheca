@@ -25,7 +25,7 @@ if [ "$1" = "bundle" -a "$2" = "exec" -a "$3" = "puma" ] || [ "$1" = "bundle" -a
     if [ "$1" = "bundle" -a "$2" = "exec" -a "$3" = "puma" ]; then
         bundle exec rake db:migrate
 
-        if [ "${RAILS_ENV}" = "development" ]; then
+        if [ "${RAILS_ENV}" = "development" ] || [ "${RAILS_ENV}" = "test" ]; then
             bundle exec rake db:create RAILS_ENV=test
             bundle exec rake db:migrate RAILS_ENV=test
 

@@ -17,7 +17,12 @@ end
 require 'webmock/rspec'
 WebMock.disable_net_connect!(
   allow_localhost: true,
-  allow: [Settings.minio.endpoint, /#{Settings.solr.url}/, /#{Settings.fits.url}/, 'chrome:3333']
+  allow: [
+    Settings.minio.endpoint,
+    /#{Settings.solr.url}/,
+    /#{Settings.fits.url}/,
+    /#{ENV.fetch('CHROME_URL', 'http://chrome:3000')}/
+  ]
 )
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
