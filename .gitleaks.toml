@@ -215,7 +215,7 @@ title = "gitlab gitleaks config"
         '''optimistic_lock_token'''
     ]
     paths = [
-        '''config/settings/(development|test).yml''',
+        '''config/settings/(development|test|staging).yml''',
         '''solr/conf/schema.xml''',
         '''config/initializers/ezid.rb''',
         '''config/initializers/devise.rb''',
