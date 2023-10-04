@@ -42,7 +42,7 @@ export default class extends Controller {
         // we stretch that section to allow for scrolling the page to the top
         const lastAsset = document.querySelector('#assets-list-container.spy ' +
             '#assets-cards .assets-cards-section:last-of-type .asset-row:last-of-type');
-        if (lastAsset.nextElementSibling.tagName === 'HR') {
+        if (lastAsset && lastAsset.nextElementSibling.tagName === 'HR') {
             lastAsset.nextElementSibling.remove();
         }
     }
