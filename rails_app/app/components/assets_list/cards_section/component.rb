@@ -2,12 +2,14 @@
 
 module AssetsList
   module CardsSection
-    # Component for arrangement section, holding Asset cards
+    # Component for section of asset cards, arranged or unarranged
     class Component < ViewComponent::Base
       attr_reader :arranged
 
-      # @param [Array<AssetResource>] assets
-      # @param [TrueClass, FalseClass] arranged
+      # @param [Object] item
+      # @param [Object] user
+      # @param [Object] assets
+      # @param [Object] arranged
       def initialize(item:, user:, assets:, arranged:)
         @item = item
         @user = user

@@ -2,7 +2,7 @@
 
 module AssetsList
   module NavSection
-    # Component for arrangement section, holding Asset cards
+    # Component for assets nav sidebar section, containing links to asset cards
     class Component < ViewComponent::Base
       attr_reader :assets, :arranged
 
@@ -13,16 +13,19 @@ module AssetsList
         @arranged = arranged
       end
 
+      # Title of the section, eg: "Arranged"
       def title
         t(:title, scope: [:assets, :arrangement, type])
       end
 
+      # Link to the nav section title's accompanying title in the main content
       def title_href
         "#{type}-assets"
       end
 
       private
 
+      # Arranged vs unarranged assets section
       def type
         arranged ? :arranged : :unarranged
       end
