@@ -48,6 +48,19 @@ export default class extends Controller {
     }
 
     /**
+     * Calculate the height of an element including padding, borders, and margins
+     *
+     * @param element
+     */
+    getOuterHeight(element) {
+        // Get the css styles that have been applied to the element
+        const computedStyles = window.getComputedStyle(element);
+
+        // Calculate its total height, including margins
+        return element.offsetHeight + parseInt(computedStyles.marginTop) + parseInt(computedStyles.marginBottom);
+    }
+
+    /**
      * Determines if element has been scrolled past
      * (gone out the top of its container)
      *
@@ -85,7 +98,7 @@ export default class extends Controller {
             // the height of the sticky tab header that appears
             window.scrollTo({
                 behavior: 'smooth',
-                top: targetTitle.getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.tabHeader.offsetHeight,
+                top: targetTitle.getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.getOuterHeight(this.tabHeader),
             });
         } else {
             // If on a larger screen, check if the page header is still visible
@@ -103,8 +116,8 @@ export default class extends Controller {
                 // the container
                 this.mainContent?.scrollTo({
                     behavior: 'smooth',
-                    top: targetTitle.offsetTop - this.tabHeader.offsetHeight
-                })
+                    top: targetTitle.offsetTop - this.getOuterHeight(this.tabHeader)
+                });
             }
         }
     }
