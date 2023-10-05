@@ -1,3 +1,18 @@
+#
+# Settings/Configuration for test environment.
+#
+
+# Internal Services
+solr:
+  url: <%= ENV['SOLR_URL'] %>
+fits:
+  url: <%= ENV['FITS_URL'] %>
+
+# External Services
+marmite:
+  url: http://mdproc.library.upenn.edu:9292
+
+# File Storage
 aws: &aws
   access_key_id: placeholder
   secret_access_key: placeholder
@@ -20,12 +35,8 @@ derivative_storage:
 iiif_derivative_storage:
   <<: *aws
   bucket: iiif-derivatives-staging
-solr:
-  url: <%= ENV['SOLR_URL'] %>
-fits:
-  url: <%= ENV['FITS_URL'] %>
-marmite:
-  url: http://mdproc.library.upenn.edu:9292
+
+# Bulk Import/Migration
 working_storage:
   sceti_digitized:
     <<: *aws
