@@ -4,6 +4,8 @@
 
 # Internal Services
 solr:
+  user: 'admin'
+  password: 'test'
   url: <%= ENV['SOLR_URL'] %>
 fits:
   url: <%= ENV['FITS_URL'] %>

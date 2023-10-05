@@ -16,9 +16,13 @@ Rails.application.config.to_prepare do
   indexers = [ItemIndexer, DescriptiveMetadataIndexer]
 
   # To use the solr adapter you must add gem 'rsolr' to your Gemfile
+  solr_url = URI.parse(Settings.solr.url)
+  solr_url.user = Settings.solr.user
+  solr_url.password = Settings.solr.password
+
   Valkyrie::MetadataAdapter.register(
     Valkyrie::Persistence::Solr::MetadataAdapter.new(
-      connection: RSolr.connect(url: Settings.solr.url),
+      connection: RSolr.connect(url: solr_url.to_s),
       resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(*indexers),
       write_only: true
     ),
