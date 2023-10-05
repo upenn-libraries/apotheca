@@ -37,33 +37,47 @@ module AssetInfo
     def preservation_download_link
       link_to('Download Preservation File',
               file_asset_path(asset, type: :preservation, disposition: :attachment),
-              class: 'stretched-link')
+              class: 'stretched-link list-group-item list-group-item-action')
     end
 
     # @return [ActiveSupport::SafeBuffer]
     def access_download_link
       link_to('Download Access Copy',
               file_asset_path(asset, type: :access, disposition: 'attachment'),
-              class: 'stretched-link')
+              class: 'stretched-link list-group-item list-group-item-action')
+    end
+
+    def thumbnail_form_classes
+      form_classes = %w[list-group-item list-group-item-action]
+      form_classes.push('disabled') if item.thumbnail?(asset.id)
+
+      form_classes
+    end
+
+    def thumbnail_submit_classes
+      submit_classes = %w[p-0 text-decoration-none link-dark text-wrap text-start]
+      submit_classes.push('disabled') if item.thumbnail?(asset.id)
+
+      submit_classes
     end
 
     def set_as_thumbnail
-      classes = ['p-0']
-      classes.push('disabled') if item.thumbnail?(asset.id)
-
-      render(Form::Component.new(name: 'assets', model: item)) do |form|
+      render(Form::Component.new(name: 'assets',
+                                 model: item,
+                                 class: thumbnail_form_classes, label_col: '0', input_col: 'auto')) do |form|
         form.with_field(:thumbnail_asset_id, value: asset.id, type: :hidden)
-        form.with_submit('Set as Item Thumbnail', variant: :link,
-                                                  confirm: I18n.t('confirm_messages.asset.change_thumbnail'),
-                                                  class: classes,
-                                                  id: 'set-as-item-thumbnail')
+        form.with_submit('Set as Item Thumbnail',
+                         variant: :link,
+                         confirm: I18n.t('confirm_messages.asset.change_thumbnail'),
+                         class: thumbnail_submit_classes,
+                         id: 'set-as-item-thumbnail')
       end
     end
 
     def thumbnail_badge
       return unless item.thumbnail?(asset.id)
 
-      tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status m-2'
+      tag.span 'Currently Set as Thumbnail', class: 'badge bg-secondary thumbnail-status align-self-center'
     end
 
     # @return [String]

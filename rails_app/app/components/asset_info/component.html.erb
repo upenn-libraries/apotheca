@@ -1,26 +1,31 @@
-<div id="<%= "asset-#{asset.id}" %>" class="row pb-2">
+<div id="<%= "asset-#{asset.id}" %>" class="asset-row row d-block d-xl-flex pb-2">
   <div class="col">
-    <div class="row">
-      <div class="col-sm-12">
-        <h5 class="d-inline"><%= link_to asset.display_title, asset_path(asset)  %></h5><%= thumbnail_badge %>
+    <div class="row align-items-center mb-3 mb-xxl-3 gy-2">
+      <div class="col-auto">
+        <h5 id="<%= "asset-title-#{asset.id}" %>" class="mb-0">
+          <%= link_to asset.display_title, asset_path(asset), class: 'text-wrap-all' %>
+        </h5>
+      </div>
+      <div class="col">
+          <%= thumbnail_badge %>
       </div>
     </div>
-    <div class="row">
+    <div class="row gy-3 mb-2">
       <div class="col-auto">
         <%= thumbnail %>
       </div>
       <div class="col">
-        <dl class="row">
-          <dt class="col-sm-4">ID</dt>
-          <dd class="col-sm-8 user-select-all"><%= asset.id %></dd>
-          <dt class="col-sm-4">Label</dt>
-          <dd class="col-sm-8 user-select-all"><%= asset.label || '[None]' %></dd>
-          <dt class="col-sm-4 ">Size</dt>
-          <dd class="col-sm-8 user-select-all"><%= size || '[None]' %></dd>
-          <dt class="col-sm-4">MIME Type</dt>
-          <dd class="col-sm-8 user-select-all"><%= mime_type || '[None]' %></dd>
-          <dt class="col-sm-4">Annotations</dt>
-          <dd class="col-sm-8">
+        <dl class="row d-block d-xxl-flex">
+          <dt class="col-xxl-3">ID</dt>
+          <dd class="col-xxl-9 user-select-all text-wrap-all"><%= asset.id %></dd>
+          <dt class="col-xxl-3">Label</dt>
+          <dd class="col-xxl-9 user-select-all text-wrap"><%= asset.label || '[None]' %></dd>
+          <dt class="col-xxl-3">Size</dt>
+          <dd class="col-xxl-9 user-select-all"><%= size || '[None]' %></dd>
+          <dt class="col-xxl-3">MIME Type</dt>
+          <dd class="col-xxl-9 user-select-all"><%= mime_type || '[None]' %></dd>
+          <dt class="col-xxl-3">Annotations</dt>
+          <dd class="col-xxl-9">
             <% if annotations.empty? %>
               [None]
             <% else %>
@@ -34,17 +39,17 @@
     </div>
   </div>
   <div class="col-auto">
-    <ul class="list-group text-end">
+    <div class="list-group">
       <% if ability.can?(:update, @item) %>
-        <li class="list-group-item list-group-item-action"><%= set_as_thumbnail %></li>
+        <%= set_as_thumbnail %>
       <% end %>
-      <li class="list-group-item list-group-item-action"><%= access_download_link %></li>
-      <li class="list-group-item list-group-item-action"><%= preservation_download_link %></li>
-      <li class="list-group-item list-group-item-action"><%= link_to 'More Details', asset_path(asset), class: 'stretched-link' %></li>
+      <%= access_download_link %>
+      <%= preservation_download_link %>
+      <%= link_to 'More Details', asset_path(asset), class: 'stretched-link list-group-item list-group-item-action' %>
       <% if ability.can?(:update, @asset) %>
-        <li class="list-group-item list-group-item-action"><%= link_to 'Edit Asset', edit_asset_path(asset), class: 'stretched-link' %></li>
+        <%= link_to 'Edit Asset', edit_asset_path(asset), class: 'stretched-link list-group-item list-group-item-action' %>
       <% end %>
-    </ul>
+    </div>
   </div>
 </div>
-<hr>
+<hr class="my-4">

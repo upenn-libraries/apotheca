@@ -1,46 +1,17 @@
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title(tag: :h3) { 'Assets' } %>
   <%= header.with_link(href: new_asset_path(item_id: @item.id)) { 'Add Asset' } if can? :create, AssetResource %>
-  <%= header.with_link(href:  reorder_assets_item_path(@item)) { 'Arrange Assets' } if can? :update, @item %>
+  <%= header.with_link(href: reorder_assets_item_path(@item)) { 'Arrange Assets' } if can? :update, @item %>
+  <%= header.with_link(href: '#assets-sidebar',
+                       'class': 'd-lg-none',
+                       'aria-controls': 'assets-sidebar',
+                       'data-bs-toggle': 'offcanvas',
+                       'role': 'button') { 'All Assets' } %>
 <% end %>
 
-<div class="row">
-  <div class="col-auto">
-    <nav id="asset-list" class="flex-column align-items-stretch pe-4 border-end sticky-top">
-      <nav class="nav nav-pills flex-column">
-        <a class="nav-link" href="#arranged-assets">Arranged</a>
-        <nav class="nav nav-pills flex-column">
-          <% @arranged_assets.each do |a| %>
-            <a class="nav-link ms-3 my-1" href="#<%= "asset-#{a.id}" %>"><%= a.display_title.truncate(20) %></a>
-          <% end %>
-        </nav>
-        <a class="nav-link" href="#unarranged-assets">Unarranged</a>
-        <nav class="nav nav-pills flex-column">
-          <% @unarranged_assets.each do |a| %>
-            <a class="nav-link ms-3 my-1" href="#<%= "asset-#{a.id}" %>"><%= a.display_title.truncate(20) %></a>
-          <% end %>
-        </nav>
-      </nav>
-    </nav>
-  </div>
-  <div class="col">
-    <div id="assets-cards" data-bs-smooth-scroll="true" tabindex="0">
-      <h4 id="arranged-assets" class="mb-3">Arranged</h4>
-      <% if @arranged_assets&.any? %>
-        <% @arranged_assets.each_with_index do |asset, i| %>
-          <%= render(AssetInfo::Component.new(asset: asset, item: @item.object, user: current_user, index: i)) %>
-        <% end %>
-      <% else %>
-        <p>No arranged assets</p>
-      <% end %>
-      <h4 id="unarranged-assets">Unarranged</h4>
-      <% if @unarranged_assets&.any? %>
-        <% @unarranged_assets.each_with_index do |asset, i| %>
-          <%= render(AssetInfo::Component.new(asset: asset, item: @item.object, user: current_user, index: i)) %>
-        <% end %>
-      <% else %>
-        <p>No unarranged assets</p>
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render(AssetsList::Component.new(item: @item, user: current_user)) do |component| %>
+  <%= component.with_arranged_cards_section(assets: @arranged_assets) %>
+  <%= component.with_unarranged_cards_section(assets: @unarranged_assets) %>
+  <%= component.with_arranged_nav_section(assets: @arranged_assets) %>
+  <%= component.with_unarranged_nav_section(assets: @unarranged_assets) %>
+<% end %>

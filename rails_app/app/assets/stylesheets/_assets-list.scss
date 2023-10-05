@@ -1,0 +1,38 @@
+// Assets tab on Item Show page
+#assets-list-container {
+  /*
+  Bootstrap doesn't include min-height options or responsive
+  classes for overflow behavior
+  */
+  height: 100%;
+  overflow: auto;
+  scroll-margin-top: 60px;
+
+  @media (min-width: 992px) {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #assets-cards {
+    /* More overflow settings */
+    overflow: visible;
+    @media (min-width: 992px) {
+      overflow: auto;
+    }
+  }
+
+  &.spy #assets-cards .assets-cards-section:last-of-type .asset-row:last-of-type {
+    min-height: 75vh;
+  }
+
+  #assets-sidebar {
+
+    #assets-nav {
+      /* Keep scrollspy nav item active until another item is reached */
+      .stay-active {
+        color: var(--bs-nav-pills-link-active-color);
+        background-color: var(--bs-nav-pills-link-active-bg);
+      }
+    }
+  }
+}

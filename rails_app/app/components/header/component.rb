@@ -8,7 +8,7 @@ module Header
     }
 
     renders_many :links, lambda { |href:, **options, &block|
-      options[:class] = Array.wrap(options[:class]).append('btn', 'btn-outline-primary')
+      options[:class] = Array.wrap(options[:class]).append('btn', 'btn-outline-primary', 'mb-1')
       BaseComponent.new(:a, href: href, **options, &block)
     }
   end
