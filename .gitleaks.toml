@@ -196,7 +196,8 @@ title = "gitlab gitleaks config"
         '''d8da0792ab6856474eaad296c890b301d0ac3dd9''',
         '''e720df5acd1f8b483e58b1c51f1945bae9be1c30''',
         '''d074854650c6d8a6451621a99cfcbe80694a7fcc''',
-        '''7bccadbbdba6883f84ecc32d1e8eb78dd61c6f8f'''
+        '''7bccadbbdba6883f84ecc32d1e8eb78dd61c6f8f''',
+        '''9be45c3952b92070f203b2aaee77545d1c68d6fc'''
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
@@ -216,6 +217,7 @@ title = "gitlab gitleaks config"
         '''solr/conf/schema.xml''',
         '''config/initializers/ezid.rb''',
         '''config/initializers/devise.rb''',
+        '''config/initializers/sidekiq.rb''',
         '''spec/shared_examples/ezid.rb''',
         '''spec/indexers/descriptive_metadata_spec.rb''',
         '''app/services/import_service/s3_storage.rb'''
