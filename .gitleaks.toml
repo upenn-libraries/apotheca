@@ -216,6 +216,7 @@ title = "gitlab gitleaks config"
     ]
     paths = [
         '''config/settings/(development|test|staging|production).yml''',
+        '''config/(settings|honeybadger).yml''',
         '''solr/conf/schema.xml''',
         '''config/initializers/(ezid|devise|sidekiq|valkyrie).rb''',
         '''spec/indexers/descriptive_metadata_spec.rb''',
