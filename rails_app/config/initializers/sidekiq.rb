@@ -2,9 +2,9 @@
 Rails.application.config.to_prepare do
   unless Rails.env.test?
     redis_connection = {
-      url: ENV.fetch('REDIS_URL', 'localhost:6379'),
-      username: ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq'),
-      password: DockerSecrets.lookup(:redis_sidekiq_password)
+      url: Settings.redis.url,
+      username: Settings.redis.username,
+      password: Settings.redis.password
     }
 
     Sidekiq.default_job_options = { retry: 3, backtrace: 5 }
