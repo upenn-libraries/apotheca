@@ -20,6 +20,7 @@ gem 'dry-monads'
 gem 'dry-transaction'
 gem 'ezid-client'
 gem 'factory_bot_rails'
+gem 'faker'
 gem 'honeybadger'
 gem 'importmap-rails'
 gem 'iso-639'
@@ -44,7 +45,6 @@ gem 'view_component'
 
 group :development, :test do
   gem 'byebug'
-  gem 'faker'
   gem 'rspec-rails', '~> 5.0'
 end
 
