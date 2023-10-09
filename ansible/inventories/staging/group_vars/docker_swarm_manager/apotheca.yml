@@ -18,3 +18,6 @@ apotheca_versioned_secrets:
   solr_password:
     value: "{{ apotheca_vault_values.secret.solr_password }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
+  honeybadger_api_key:
+    value: "{{ apotheca_vault_values.secret.honeybadger_api_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
