@@ -1,12 +1,11 @@
-[development]
-swarm-01 ansible_host=127.0.0.1 ansible_connection=local
+[staging]
+swarm-01
 
 [docker_engine:children]
-development
+staging
 
 [docker_engine:vars]
-ansible_user=vagrant
 ansible_python_interpreter="/usr/bin/python3"
 
 [docker_swarm_manager]
-swarm-01 swarm_labels='["apotheca", "chrome", "clamav", "fits", "minio", "postgres", "redis", "sidekiq", "solr-1", "solr-2", "solr-3", "traefik" ,"zookeeper-1", "zookeeper-2", "zookeeper-3", "zoonavigator"]'
+swarm-01 swarm_labels='["apotheca", "clamav", "fits", "postgres", "redis", "sidekiq", "solr-1", "solr-2", "solr-3", "traefik" ,"zookeeper-1", "zookeeper-2", "zookeeper-3", "zoonavigator"]'
