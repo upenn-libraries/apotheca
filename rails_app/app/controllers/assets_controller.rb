@@ -202,6 +202,13 @@ class AssetsController < ApplicationController
     raise ItemNotFound, e
   end
 
+  # @return [nil]
+  def validate_file_size
+    return if file_params.blank?
+
+    raise UnsupportedFileSize if file_params[:file].size > 2.gigabytes
+  end
+
   # @return [Valkyrie::MetadataAdapter]
   def metadata_adapter
     @metadata_adapter ||= Valkyrie::MetadataAdapter.find(:postgres)
