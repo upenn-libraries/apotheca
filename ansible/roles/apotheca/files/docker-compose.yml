@@ -63,7 +63,7 @@ services:
       - traefik
     secrets:
       - database_password
-      - source: master_key
+      - source: rails_master_key
         target: /home/app/config/credentials/${RAILS_ENV}.key
         uid: "1000"
         gid: "1000"
@@ -85,9 +85,9 @@ secrets:
   database_password:
     external: true
     name: ${DATABASE_PASSWORD}
-  master_key:
+  rails_master_key:
     external: true
-    name: ${MASTER_KEY}
+    name: ${RAILS_MASTER_KEY}
   redis_sidekiq_password:
     external: true
     name: ${REDIS_SIDEKIQ_PASSWORD}
