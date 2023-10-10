@@ -54,6 +54,9 @@ services:
     secrets:
       - database_password
       - redis_sidekiq_password
+      - solr_username
+      - solr_password
+      - honeybadger_api_key
 networks:
   database:
     external: true
@@ -69,3 +72,12 @@ secrets:
   redis_sidekiq_password:
     external: true
     name: ${REDIS_SIDEKIQ_PASSWORD}
+  solr_username:
+    external: true
+    name: ${SOLR_USERNAME}
+  solr_password:
+    external: true
+    name: ${SOLR_PASSWORD}
+  honeybadger_api_key:
+    external: true
+    name: ${HONEYBADGER_API_KEY}

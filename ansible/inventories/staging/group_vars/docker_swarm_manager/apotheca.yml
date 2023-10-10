@@ -11,3 +11,12 @@ apotheca_versioned_secrets:
   rails_master_key:
     value: "{{ apotheca_vault_values.secret.rails_master_key }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
+  solr_username:
+    value: "{{ apotheca_vault_values.secret.solr_username }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  solr_password:
+    value: "{{ apotheca_vault_values.secret.solr_password }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  honeybadger_api_key:
+    value: "{{ apotheca_vault_values.secret.honeybadger_api_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"

@@ -114,7 +114,7 @@ rspec_app_test:
       alias: solr
       variables:
         SOLR_CLOUD_BOOTSTRAP: "yes"
-        SOLR_ENABLE_AUTHENTICATION: "no"
+        SOLR_ENABLE_AUTHENTICATION: "yes"
         SOLR_HOST: "solr"
         SOLR_JAVA_MEM: "-Xms4g -Xmx4g"
         SOLR_MODE: "solrcloud"

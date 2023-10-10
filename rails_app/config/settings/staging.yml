@@ -4,8 +4,8 @@
 
 # Internal Services
 solr:
-  user: <%= ENV['SOLR_USER'] %>
-  password: <%= DockerSecrets.lookup(:database_password) %>
+  user: <%= DockerSecrets.lookup(:solr_username) %>
+  password: <%= DockerSecrets.lookup(:solr_password) %>
   url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
 fits:
   url: <%= ENV.fetch('FITS_URL', 'http://fits') %>

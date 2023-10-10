@@ -13,4 +13,12 @@ apotheca_versioned_secrets:
   rails_master_key:
     value: "d387ab7464fc5b8bb2e5c0dcd4105355"
     version: "1"
-
+  solr_username:
+    value: "{{ solr_custom_env_variables.SOLR_ADMIN_USERNAME }}"
+    version: "1"
+  solr_password:
+    value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
+    version: "1"
+  honeybadger_api_key:
+    value: "123456"
+    version: "1"
