@@ -28,12 +28,12 @@ honeybadger:
 aws: &aws
   access_key_id: placeholder
   secret_access_key: placeholder
-  endpoint: placeholder
+  endpoint: <%= ENV.fetch('AWS_URL', 'http://aws_endpoint_placeholder') %>
   region: us-east-1
 wasabi: &wasabi
   access_key_id: placeholder
   secret_access_key: placeholder
-  endpoint: placeholder
+  endpoint: <%= ENV.fetch('WASBI_URL', 'http://wasabi_endpoint_placeholder') %>
   region: us-east-1
 preservation_storage:
   <<: *aws
