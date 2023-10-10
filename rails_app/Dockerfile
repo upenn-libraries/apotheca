@@ -97,6 +97,10 @@ RUN apt-get update && apt-get install -y \
     mkdir -p ${PROJECT_ROOT}/tmp/pids && \
     rm -rf /var/lib/apt/lists/*
 
+COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
 RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
@@ -105,10 +109,7 @@ RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
     find . -type f -exec chmod 644 {} + && \
     find bin -type f -exec chmod 744 {} + && \
     chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
-    chmod +x ${PROJECT_ROOT}/docker-entrypoint.sh && \
     chown -R app:app .
-
-COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
@@ -159,6 +160,10 @@ RUN apt-get update && apt-get install -y \
     mkdir -p ${PROJECT_ROOT}/tmp/pids && \
     rm -rf /var/lib/apt/lists/*
 
+COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
 RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
@@ -167,10 +172,7 @@ RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
     find . -type f -exec chmod 644 {} + && \
     find bin -type f -exec chmod 744 {} + && \
     chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
-    chmod +x ${PROJECT_ROOT}/docker-entrypoint.sh && \
     chown -R app:app .
-
-COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
