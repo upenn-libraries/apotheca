@@ -5,6 +5,7 @@ class AssetsController < ApplicationController
   class FileNotFound < StandardError; end
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
+  class UnsupportedFileSize < StandardError; end
 
   before_action :set_asset, only: %i[show file edit update regenerate_derivatives destroy]
   before_action :set_item, only: %i[show new create edit update destroy]
