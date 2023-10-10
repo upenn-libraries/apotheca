@@ -34,7 +34,8 @@ if [ "$1" = "bundle" -a "$2" = "exec" -a "$3" = "puma" ] || [ "$1" = "bundle" -a
         fi
     fi
 
-    chown -R app:app .
+    # chown all files except keys
+    find . -type f \( ! -name "*.key" \) -exec chown app:app {} \;
 
     # run the application as the app user
     exec gosu app "$@"
