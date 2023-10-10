@@ -19,9 +19,6 @@ include:
       - ".trivy_container_scanning.yml"
   - template: "Workflows/MergeRequest-Pipelines.gitlab-ci.yml"
 
-variables:
-  CI_DEBUG_SERVICES: "true"
-
 stages:
   - build_and_push:tmp_base_image
   - build_and_push:tmp_dev_image
@@ -181,11 +178,7 @@ rubocop_app_test:
   extends:
     - .rubocop
   before_script:
-    # - cd ${CI_PROJECT_DIR}/rails_app/
-    - cd /home/app
-    - ls -la
-    - echo ${CI_REGISTRY_IMAGE}
-    - ls -la /home/app/vendor/bundle/ruby/3.2.0/bin/
+    - cd ${CI_PROJECT_DIR}/rails_app/
   rules:
     - if: $DISABLE_RUBOCOP == "true"
       when: never

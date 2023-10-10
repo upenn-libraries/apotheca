@@ -52,13 +52,10 @@ RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     bundle config set without "development:test:assets"; \
     fi && \
     MAKE="make -j $(nproc)" bundle install && \
-    chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
     rm -rf ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/cache/*.gem && \
     find ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/gems/ \( -name "*.c" -o -name "*.o" \) -delete
 
 COPY . .
-
-RUN chmod +x ./docker-entrypoint.sh
 
 
 # Development Stage ----------------------------------
@@ -107,6 +104,8 @@ RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
     find . -type d -exec chmod 755 {} + && \
     find . -type f -exec chmod 644 {} + && \
     find bin -type f -exec chmod 744 {} + && \
+    chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
+    chmod +x ${PROJECT_ROOT}/docker-entrypoint.sh && \
     chown -R app:app .
 
 COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
@@ -167,6 +166,8 @@ RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
     find . -type d -exec chmod 755 {} + && \
     find . -type f -exec chmod 644 {} + && \
     find bin -type f -exec chmod 744 {} + && \
+    chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
+    chmod +x ${PROJECT_ROOT}/docker-entrypoint.sh && \
     chown -R app:app .
 
 COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
