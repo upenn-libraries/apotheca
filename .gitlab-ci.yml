@@ -181,7 +181,8 @@ rubocop_app_test:
   extends:
     - .rubocop
   before_script:
-    - cd ${CI_PROJECT_DIR}/rails_app/
+    # - cd ${CI_PROJECT_DIR}/rails_app/
+    - cd /home/app
   rules:
     - if: $DISABLE_RUBOCOP == "true"
       when: never
