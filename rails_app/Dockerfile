@@ -167,7 +167,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
 RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
-    SECRET_KEY_BASE=x bundle exec rake assets:precompile --trace && \
+    SECRET_KEY_BASE=x bundle exec rake assets:precompile && \
     find . -type d -exec chmod 755 {} + && \
     find . -type f -exec chmod 644 {} + && \
     find bin -type f -exec chmod 744 {} + && \
