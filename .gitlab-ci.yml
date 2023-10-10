@@ -185,6 +185,7 @@ rubocop_app_test:
     - cd /home/app
     - ls -la
     - echo ${CI_REGISTRY_IMAGE}
+    - ls -la /home/app/vendor/bundle/ruby/3.2.0/bin/
   rules:
     - if: $DISABLE_RUBOCOP == "true"
       when: never
