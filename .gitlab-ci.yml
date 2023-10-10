@@ -184,6 +184,7 @@ rubocop_app_test:
     # - cd ${CI_PROJECT_DIR}/rails_app/
     - cd /home/app
     - ls -la
+    - echo ${CI_REGISTRY_IMAGE}
   rules:
     - if: $DISABLE_RUBOCOP == "true"
       when: never
