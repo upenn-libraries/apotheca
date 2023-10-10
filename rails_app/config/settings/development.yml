@@ -6,9 +6,9 @@
 solr:
   user: <%= DockerSecrets.lookup(:solr_username) %>
   password: <%= DockerSecrets.lookup(:solr_password) %>
-  url: <%= ENV['SOLR_URL'] %>
+  url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
 fits:
-  url: <%= ENV['FITS_URL'] %>
+  url: <%= ENV.fetch('FITS_URL', 'http://fits') %>
 redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
@@ -28,7 +28,7 @@ marmite:
 minio: &minio
   access_key_id: minioadmin
   secret_access_key: minioadmin
-  endpoint: <%= ENV['MINIO_URL'] %>
+  endpoint: <%= ENV.fetch('MINIO_URL', 'http://minio:9000') %>
   region: us-east-1
 preservation_storage:
   <<: *minio

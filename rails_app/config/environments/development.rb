@@ -74,5 +74,5 @@ Rails.application.configure do
 
   config.active_storage.service = :local
 
-  config.hosts << ENV.fetch('APP_URL')
+  config.hosts << ENV.fetch('APP_URL', 'apotheca-dev.library.upenn.edu')
 end
