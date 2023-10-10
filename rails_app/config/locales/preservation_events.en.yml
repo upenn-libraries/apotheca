@@ -12,4 +12,7 @@ en:
     preservation_filename:
       note: "Preservation file changed from %{from} to %{to}"
     virus_check:
-      note: "File present but virus check not performed"
+      success:
+        note: "File scanned, virus not found"
+      failure:
+        note: "File scanned, virus detected and file deleted"
