@@ -147,8 +147,8 @@ rspec_app_test:
         sleep "30s"
       done
     - (cd ./solr/conf && zip -r - *) > configset.zip
-    - curl -X POST --header "Content-Type:application/octet-stream" --data-binary @configset.zip "http://solr:8983/solr/admin/configs?action=UPLOAD&name=apotheca"
-    - curl -v "http://solr:8983/solr/admin/collections?action=CREATE&name=apotheca-test&collection.configName=apotheca&numShards=1"
+    - curl -X POST --user "admin:Bitnami" --header "Content-Type:application/octet-stream" --data-binary @configset.zip "http://solr:8983/solr/admin/configs?action=UPLOAD&name=apotheca"
+    - curl -v --user "admin:Bitnami" "http://solr:8983/solr/admin/collections?action=CREATE&name=apotheca-test&collection.configName=apotheca&numShards=1"
     - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
   needs:
     - amend_tmp_base_dev_images
