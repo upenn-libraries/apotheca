@@ -8,3 +8,11 @@ skip_swarm: false
 skip_group: false
 skip_docker_py: false
 skip_docker_compose: false
+
+# This is required for lsof to work properly in docker container on RHEL
+docker_daemon_config:
+  default-ulimits:
+    nofile:
+      Name: "nofile"
+      Hard: 1048576
+      Soft: 1048576
