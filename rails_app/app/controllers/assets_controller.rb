@@ -9,6 +9,7 @@ class AssetsController < ApplicationController
 
   before_action :set_asset, only: %i[show file edit update regenerate_derivatives destroy]
   before_action :set_item, only: %i[show new create edit update destroy]
+  before_action :validate_file_size, only: %i[create update]
 
   # respond with a 404 for missing asset files or missing Item (when required)
   rescue_from 'AssetsController::FileNotFound', 'AssetsController::ItemNotFound' do |_e|
