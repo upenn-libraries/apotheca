@@ -21,6 +21,10 @@ class AssetsController < ApplicationController
     head :bad_request
   end
 
+  rescue_from 'AssetsController::UnsupportedFileSize' do |_e|
+    redirect_back_or_to item_path(@item), alert: I18n.t('assets.file.size')
+  end
+
   def show
     authorize! :show, @asset
   end
