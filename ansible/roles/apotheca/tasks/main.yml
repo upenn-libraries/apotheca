@@ -83,12 +83,21 @@
   when: is_development | default (false, true)
   tags: dev_environment
 
+# Execute staging/production steps
+- name: Copy docker-compose file
+  copy:
+    src: "../files/{{ item }}"
+    dest: "{{ project_root ~ '/apotheca/' }}"
+  when: not is_development | default (false) == true
+  loop:
+    - "docker-compose.yml"
+
 # Execute staging/production env steps
 - name: Deploy apotheca
   community.docker.docker_stack:
     name: "apotheca"
     compose:
-      - "{{ role_path ~ '/files/docker-compose.yml' }}"
+      - "{{ project_root ~ '/apotheca/docker-compose.yml' }}"
     state: present
   environment:
     APP_IMAGE_NAME: "{{ apotheca_image_name }}"
@@ -99,7 +108,7 @@
     DATABASE_NAME: "{{ postgres.database }}"
     DATABASE_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
     DATABASE_USER: "{{ postgres.user }}"
-    MASTER_KEY: "{{ 'apotheca_master_key_v' ~ apotheca_versioned_secrets.rails_master_key.version }}"
+    MASTER_KEY: "{{ 'apotheca_rails_master_key_v' ~ apotheca_versioned_secrets.rails_master_key.version }}"
     RAILS_ENV: "{{ apotheca_rails_env }}"
     REDIS_SIDEKIQ_USER: "sidekiq"
     REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
@@ -112,6 +121,6 @@
 
 - name: Recursively remove project directory
   ansible.builtin.file:
-    path: "{{ apotheca_repo_src_path }}"
+    path: "{{ project_root ~ '/apotheca' }}"
     state: absent
   when: not is_development | default (false, true)

@@ -64,7 +64,7 @@ services:
     secrets:
       - database_password
       - source: master_key
-        target: /app/config/credentials/${RAILS_ENV}.key
+        target: /home/app/config/credentials/${RAILS_ENV}.key
         mode: 0440
       - redis_sidekiq_password
 
