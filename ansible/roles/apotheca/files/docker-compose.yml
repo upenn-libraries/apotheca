@@ -65,6 +65,8 @@ services:
       - database_password
       - source: master_key
         target: /home/app/config/credentials/${RAILS_ENV}.key
+        uid: "1000"
+        gid: "1000"
         mode: 0440
       - redis_sidekiq_password
 
