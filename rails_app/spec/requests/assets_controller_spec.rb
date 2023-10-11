@@ -43,4 +43,21 @@ describe 'Asset requests' do
       end
     end
   end
+
+  context 'when uploading files' do
+    let(:asset) { persist :asset_resource }
+    let(:item) { persist :item_resource }
+    let(:file) { fixture_file_upload(Rails.root.join('spec/fixtures/files/trade_card/original/front.tif')) }
+
+    before do
+      sign_in create(:user, :admin)
+      allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
+      allow(file).to receive(:size).and_return(3.gigabytes)
+    end
+
+    it 'does not load files larger than 2 gb' do
+      post assets_path, params: { item_id: item.id, id: asset.id, asset: { file: file } }
+      expect(flash[:alert]).to include(I18n.t('assets.file.size'))
+    end
+  end
 end
