@@ -20,7 +20,7 @@ class DeleteItem
       RemoveAssetJob.perform_bulk(asset_ids)
     else
       asset_ids.each do |id|
-        RemoveAssetJob.perform_inline(id)
+        RemoveAssetJob.perform_inline(id.first)
       end
     end
   end
