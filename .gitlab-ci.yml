@@ -31,7 +31,7 @@ stages:
   - sast
   - copy_docker_images
   - remove_tmp_registry
-  # - deploy
+  - deploy
 
 # -- Start - build and push base image
 build_and_push_base_app_image:
@@ -272,21 +272,21 @@ remove_tmp_registry:
 # -- End - remove tmp registry repository
 
 # Deploy staging
-# deploy_staging:
-#   stage: deploy
-#   extends:
-#     - .deploy
-#   variables:
-#     IMAGE_TAG: staging
-#   environment:
-#     name: staging
-#     url: https://test.com
-#   needs:
-#     - copy_app_docker_images
-#   only:
-#     - main
-#   tags:
-#     - deploy
+deploy_staging:
+  stage: deploy
+  extends:
+    - .deploy
+  variables:
+    IMAGE_TAG: ${CI_COMMIT_SHORT_SHA}
+  environment:
+    name: staging
+    url: http://apothe-stg01.library.upenn.int
+  needs:
+    - copy_app_docker_images
+  only:
+    - main
+  tags:
+    - deploy
 
 # Deploy production
 # deploy_production:
