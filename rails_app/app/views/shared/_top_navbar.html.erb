@@ -34,7 +34,7 @@
         <% if can? :manage, :all %>
           <li class="nav-item">
             <a class="nav-link"
-               href="<%= sidekiq_web_path %>" target="_blank">Sidekiq <i class="bi bi-box-arrow-up-right"></i></a>
+               href="<%= sidekiq_web_path %>" target="_blank">Sidekiq <%= render Icon::Component.new(name: 'box-arrow-up-right') %></a>
           </li>
         <% end %>
       </ul>
