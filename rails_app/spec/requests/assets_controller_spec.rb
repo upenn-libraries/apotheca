@@ -55,8 +55,13 @@ describe 'Asset requests' do
       allow(file).to receive(:size).and_return(3.gigabytes)
     end
 
-    it 'does not load files larger than 2 gb' do
+    it 'does not load files larger than 2 gb when creating an asset' do
       post assets_path, params: { item_id: item.id, id: asset.id, asset: { file: file } }
+      expect(flash[:alert]).to include(I18n.t('assets.file.size'))
+    end
+
+    it 'does not load files larger than 2 gb when updating an asset' do
+      patch asset_path(asset), params: { item_id: item.id, id: asset.id, asset: { file: file } }
       expect(flash[:alert]).to include(I18n.t('assets.file.size'))
     end
   end
