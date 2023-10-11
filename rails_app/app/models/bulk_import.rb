@@ -48,10 +48,11 @@ class BulkImport < ApplicationRecord
 
   # @param [String] queue
   def create_imports(queue = BulkImport::DEFAULT_PRIORITY)
-    csv_rows.each do |row|
-      import = Import.create(bulk_import: self, import_data: row)
-      ProcessImportJob.set(queue: "import_#{queue}").perform_async(import.id)
+    import_params = csv_rows.map do |row|
+      import = Import.create!(bulk_import: self, import_data: row)
+      Array.wrap(import.id)
     end
+    ProcessImportJob.set(queue: "import_#{queue}").perform_bulk(import_params)
   end
 
   # @return [StringIO]
