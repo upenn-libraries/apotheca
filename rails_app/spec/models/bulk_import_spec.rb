@@ -235,7 +235,9 @@ describe BulkImport do
     end
 
     it 'enqueues the job' do
-      expect(ProcessImportJob).to have_enqueued_sidekiq_job.with(any_args)
+      bulk_import.reload
+      expect(ProcessImportJob).to have_enqueued_sidekiq_job.with(bulk_import.imports.first.id)
+                                                           .on("import_#{BulkImport::DEFAULT_PRIORITY}")
     end
   end
 end

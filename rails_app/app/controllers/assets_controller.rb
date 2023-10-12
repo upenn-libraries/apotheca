@@ -2,12 +2,18 @@
 
 # actions for Assets
 class AssetsController < ApplicationController
+
+  # Files uploaded through web ui cannot exceed 2 gigabytes measured in base 10. We declare this constant because the
+  # numeric helpers Rails uses to measure file size return results in binary.
+  FILE_SIZE_LIMIT = 2_000_000_000
   class FileNotFound < StandardError; end
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
+  class UnsupportedFileSize < StandardError; end
 
   before_action :set_asset, only: %i[show file edit update regenerate_derivatives destroy]
   before_action :set_item, only: %i[show new create edit update destroy]
+  before_action :validate_file_size, only: %i[create update]
 
   # respond with a 404 for missing asset files or missing Item (when required)
   rescue_from 'AssetsController::FileNotFound', 'AssetsController::ItemNotFound' do |_e|
@@ -17,6 +23,10 @@ class AssetsController < ApplicationController
   # respond with a 500 for unsupported type requests
   rescue_from 'AssetsController::UnsupportedFileType' do |_e|
     head :bad_request
+  end
+
+  rescue_from 'AssetsController::UnsupportedFileSize' do |_e|
+    redirect_back_or_to item_path(@item), alert: I18n.t('assets.file.size')
   end
 
   def show
@@ -199,6 +209,13 @@ class AssetsController < ApplicationController
             end
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
     raise ItemNotFound, e
+  end
+
+  # @return [nil]
+  def validate_file_size
+    return if file_params.blank?
+
+    raise UnsupportedFileSize if file_params[:file].size >= FILE_SIZE_LIMIT
   end
 
   # @return [Valkyrie::MetadataAdapter]
