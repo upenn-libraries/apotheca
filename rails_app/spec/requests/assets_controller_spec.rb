@@ -52,15 +52,15 @@ describe 'Asset requests' do
     before do
       sign_in create(:user, :admin)
       allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
-      allow(file).to receive(:size).and_return(3.gigabytes)
+      allow(file).to receive(:size).and_return(AssetsController::FILE_SIZE_LIMIT)
     end
 
-    it 'does not load files larger than 2 gb when creating an asset' do
+    it 'does not load files 2 gb or larger when creating an asset' do
       post assets_path, params: { item_id: item.id, id: asset.id, asset: { file: file } }
       expect(flash[:alert]).to include(I18n.t('assets.file.size'))
     end
 
-    it 'does not load files larger than 2 gb when updating an asset' do
+    it 'does not load files 2 gb or larger when updating an asset' do
       patch asset_path(asset), params: { item_id: item.id, id: asset.id, asset: { file: file } }
       expect(flash[:alert]).to include(I18n.t('assets.file.size'))
     end
