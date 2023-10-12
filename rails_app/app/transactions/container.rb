@@ -66,6 +66,10 @@ class Container
       Around::AssetCleanup.new
     end
 
+    register 'backup_cleanup' do
+      Around::PreservationBackupCleanup.new
+    end
+
     register 'delete_resource' do
       Steps::DeleteResource.new
     end
