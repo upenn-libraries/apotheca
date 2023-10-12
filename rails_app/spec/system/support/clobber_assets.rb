@@ -14,17 +14,12 @@ RSpec.configure do |config|
 
     $stdout.puts "\n🔨  Clobbering assets.\n"
 
-    original_stdout = $stdout.clone
-
     start = Time.current
     begin
-      $stdout.reopen(File.new('/dev/null', 'w'))
-
       require 'rake'
       Rails.application.load_tasks
       Rake::Task['assets:clobber'].invoke
     ensure
-      $stdout.reopen(original_stdout)
       $stdout.puts "Finished in #{(Time.current - start).round(2)} seconds"
     end
   end
