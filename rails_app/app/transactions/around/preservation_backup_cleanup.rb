@@ -5,7 +5,6 @@ module Around
     include Dry::Monads[:result]
 
     def call(input)
-      binding.b
       result = yield(Success(input))
 
       if result.failure?
