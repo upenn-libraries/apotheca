@@ -19,6 +19,3 @@ apotheca_versioned_secrets:
   solr_password:
     value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
     version: "1"
-  honeybadger_api_key:
-    value: "123456"
-    version: "1"

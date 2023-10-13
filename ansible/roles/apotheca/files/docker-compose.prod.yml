@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  apotheca:
+    secrets:
+      - honeybadger_api_key
+      - aws_endpoint
+      - aws_access_key_id
+      - aws_secret_access_key
+      - ceph_endpoint
+      - ceph_access_key_id
+      - ceph_secret_access_key
+
+secrets:
+  honeybadger_api_key:
+    external: true
+    name: ${HONEYBADGER_API_KEY}
+  aws_endpoint:
+    external: true
+    name: ${AWS_ENDPOINT}
+  aws_access_key_id:
+    external: true
+    name: ${AWS_ACCESS_KEY_ID}
+  aws_secret_access_key:
+    external: true
+    name: ${AWS_SECRET_ACCESS_KEY}
+  ceph_endpoint:
+    external: true
+    name: ${CEPH_ENDPOINT}
+  ceph_access_key_id:
+    external: true
+    name: ${CEPH_ACCESS_KEY_ID}
+  ceph_secret_access_key:
+    external: true
+    name: ${CEPH_SECRET_ACCESS_KEY}

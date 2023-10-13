@@ -20,3 +20,21 @@ apotheca_versioned_secrets:
   honeybadger_api_key:
     value: "{{ apotheca_vault_values.secret.honeybadger_api_key }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
+  aws_endpoint:
+    value: "{{ apotheca_vault_values.secret.aws_endpoint }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  aws_access_key_id:
+    value: "{{ apotheca_vault_values.secret.aws_access_key_id }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  aws_secret_access_key:
+    value: "{{ apotheca_vault_values.secret.aws_secret_access_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ceph_endpoint:
+    value: "{{ apotheca_vault_values.secret.ceph_endpoint }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ceph_access_key_id:
+    value: "{{ apotheca_vault_values.secret.ceph_access_key_id }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ceph_secret_access_key:
+    value: "{{ apotheca_vault_values.secret.ceph_secret_access_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"

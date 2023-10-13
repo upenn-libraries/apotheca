@@ -33,7 +33,6 @@
     SOLR_URL: "{{ apotheca_solr_url }}"
     SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
     SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
-    HONEYBADGER_API_KEY: "{{ 'apotheca_honeybadger_api_key_v' ~ apotheca_versioned_secrets.honeybadger_api_key.version }}"
     FITS_PORT: "{{ fits.port }}"
     MINIO_PORT: "{{ minio.port }}"
   no_log: true
@@ -65,6 +64,12 @@
     SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
     SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
     HONEYBADGER_API_KEY: "{{ 'apotheca_honeybadger_api_key_v' ~ apotheca_versioned_secrets.honeybadger_api_key.version }}"
+    AWS_ENDPOINT: "{{ 'apotheca_aws_endpoint_v' ~ apotheca_versioned_secrets.aws_endpoint.version }}"
+    AWS_ACCESS_KEY_ID: "{{ 'apotheca_aws_access_key_id_v' ~ apotheca_versioned_secrets.aws_access_key_id.version }}"
+    AWS_SECRET_ACCESS_KEY: "{{ 'apotheca_aws_secret_access_key_v' ~ apotheca_versioned_secrets.aws_secret_access_key.version }}"
+    CEPH_ENDPOINT: "{{ 'apotheca_ceph_endpoint_v' ~ apotheca_versioned_secrets.ceph_endpoint.version }}"
+    CEPH_ACCESS_KEY_ID: "{{ 'apotheca_ceph_access_key_id_v' ~ apotheca_versioned_secrets.ceph_access_key_id.version }}"
+    CEPH_SECRET_ACCESS_KEY: "{{ 'apotheca_ceph_secret_access_key_v' ~ apotheca_versioned_secrets.ceph_secret_access_key.version }}"
     FITS_PORT: "{{ fits.port }}"
   no_log: true
   when: not is_development | default (false) == true

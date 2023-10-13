@@ -26,9 +26,9 @@ honeybadger:
 
 # File Storage
 aws: &aws
-  access_key_id: placeholder
-  secret_access_key: placeholder
-  endpoint: <%= ENV.fetch('AWS_URL', 'http://placeholder') %>
+  access_key_id: <%= DockerSecrets.lookup(:aws_access_key_id) %>
+  secret_access_key: <%= DockerSecrets.lookup(:aws_secret_access_key) %>
+  endpoint: <%= DockerSecrets.lookup(:aws_endpoint) %>
   region: us-east-1
 wasabi: &wasabi
   access_key_id: placeholder
@@ -54,9 +54,9 @@ working_storage:
     <<: *aws
     bucket: sceti-short-term
   ceph:
-    access_key_id: fake-id
-    secret_access_key: fake-key
-    endpoint: https://ceph.library.upenn.edu
+    access_key_id: <%= DockerSecrets.lookup(:ceph_access_key_id) %>
+    secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
+    endpoint: <%= DockerSecrets.lookup(:ceph_endpoint) %>
     region: us-east-1
 migration:
   storage: ceph

@@ -71,7 +71,6 @@ services:
       - redis_sidekiq_password
       - solr_username
       - solr_password
-      - honeybadger_api_key
     volumes:
       - app_storage:/home/app/storage
 
@@ -99,9 +98,6 @@ secrets:
   solr_password:
     external: true
     name: ${SOLR_PASSWORD}
-  honeybadger_api_key:
-    external: true
-    name: ${HONEYBADGER_API_KEY}
 
 volumes:
   app_storage:
