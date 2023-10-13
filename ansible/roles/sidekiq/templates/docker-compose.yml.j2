@@ -3,7 +3,7 @@ version: "3.8"
 services:
   sidekiq-{{ item.name }}:
     image: ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
-    command: ["bundle", "exec", "sidekiq", "{{ item.queues | map('regex_replace', '^(.*)$', '\\\"-q\\\", \\\"\\1\\\"') | join(', ') }}", "-c", "{{ item.concurrency }}"]
+    command: ["bundle", "exec", "sidekiq", {{ item.queues | map('regex_replace', '^(.*)$', '"-q", "\\1"') | join(', ') }}, "-c", "{{ item.concurrency }}"]
     deploy:
       placement:
         constraints:
