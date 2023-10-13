@@ -56,7 +56,7 @@ working_storage:
   ceph:
     access_key_id: <%= DockerSecrets.lookup(:ceph_access_key_id) %>
     secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
-    endpoint: <%= DockerSecrets.lookup(:ceph_endpoint) %>
+    endpoint: <%= DockerSecrets.lookup(:ceph_endpoint, 'http://ceph_endpoint_placeholder') %>
     region: us-east-1
 migration:
   storage: ceph
