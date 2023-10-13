@@ -129,6 +129,9 @@ GEM
       capybara (~> 3.0)
       ferrum (~> 0.13.0)
     date (3.3.3)
+    debug (1.8.0)
+      irb (>= 1.5.0)
+      reline (>= 0.3.1)
     declarative (0.0.20)
     deep_merge (1.2.2)
     devise (4.8.1)
@@ -234,6 +237,10 @@ GEM
     importmap-rails (1.0.3)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
+    io-console (0.6.0)
+    irb (1.8.1)
+      rdoc
+      reline (>= 0.3.8)
     iso-639 (0.3.5)
     jmespath (1.6.2)
     json (2.6.3)
@@ -308,6 +315,8 @@ GEM
       ast (~> 2.4.1)
     pg (1.3.4)
     popper_js (2.11.6)
+    psych (5.1.0)
+      stringio
     public_suffix (5.0.3)
     puma (5.6.7)
       nio4r (~> 2.0)
@@ -350,6 +359,8 @@ GEM
       link_header (~> 0.0, >= 0.0.8)
     rdf-vocab (3.2.6)
       rdf (~> 3.2, >= 3.2.4)
+    rdoc (6.5.0)
+      psych (>= 4.0.0)
     redis-client (0.17.0)
       connection_pool
     reform (2.6.2)
@@ -360,6 +371,8 @@ GEM
       activemodel (>= 5.0)
       reform (>= 2.3.1, < 3.0.0)
     regexp_parser (2.8.1)
+    reline (0.3.9)
+      io-console (~> 0.5)
     representable (3.2.0)
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
@@ -457,6 +470,7 @@ GEM
       sprockets (>= 3.0.0)
     stimulus-rails (1.0.4)
       railties (>= 6.0.0)
+    stringio (3.0.8)
     thor (1.2.2)
     tilt (2.0.10)
     timeout (0.3.1)
@@ -533,6 +547,7 @@ DEPENDENCIES
   clamby
   config
   cuprite
+  debug (~> 1.8)
   devise
   dotiw
   dry-monads

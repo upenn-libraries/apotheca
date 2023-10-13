@@ -45,6 +45,7 @@ gem 'view_component'
 
 group :development, :test do
   gem 'byebug'
+  gem 'debug', '~> 1.8'
   gem 'rspec-rails', '~> 5.0'
 end
 
