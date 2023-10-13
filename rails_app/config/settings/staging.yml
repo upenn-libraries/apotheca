@@ -28,7 +28,7 @@ honeybadger:
 aws: &aws
   access_key_id: <%= DockerSecrets.lookup(:aws_access_key_id) %>
   secret_access_key: <%= DockerSecrets.lookup(:aws_secret_access_key) %>
-  endpoint: <%= DockerSecrets.lookup(:aws_endpoint) %>
+  endpoint: <%= DockerSecrets.lookup(:aws_endpoint, 'http://aws_endpoint_placeholder') %>
   region: us-east-1
 wasabi: &wasabi
   access_key_id: placeholder
