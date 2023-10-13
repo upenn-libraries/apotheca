@@ -3,12 +3,11 @@ version: "3.8"
 services:
   sidekiq-{{ item.name }}:
     image: ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
-    command: ["bundle", "exec", "sidekiq", {{ item.queues | map('regex_replace', '^(.*)$', '"-q", "\\1"') | join(', ') }}, "-c", "{{ item.concurrency }}"]
+    command: ["bundle", "exec", "sidekiq", "{{ item.queues | map('regex_replace', '^(.*)$', '\\\"-q\\\", \\\"\\1\\\"') | join(', ') }}", "-c", "{{ item.concurrency }}"]
     deploy:
       placement:
         constraints:
           - "node.labels.sidekiq == true"
-      replicas: {{ item.replicas }}
       update_config:
         order: "start-first"
         parallelism: 1
@@ -47,10 +46,6 @@ services:
       - database
       - redis
       - traefik
-{% if is_development == true %}
-    volumes:
-      - /apotheca/ansible/roles/apotheca/files/src/:/home/app
-{% endif %}
     secrets:
       - database_password
       - source: rails_master_key
@@ -62,6 +57,12 @@ services:
       - solr_username
       - solr_password
       - honeybadger_api_key
+    volumes:
+      - app_storage:/home/app/storage
+{% if is_development == true %}
+      - /apotheca/ansible/roles/apotheca/files/src/:/home/app
+{% endif %}
+
 networks:
   database:
     external: true
@@ -89,3 +90,8 @@ secrets:
   honeybadger_api_key:
     external: true
     name: ${HONEYBADGER_API_KEY}
+
+volumes:
+  app_storage:
+    external: true
+    name: app_storage
