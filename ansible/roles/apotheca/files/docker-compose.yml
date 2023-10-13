@@ -71,8 +71,6 @@ services:
       - redis_sidekiq_password
       - solr_username
       - solr_password
-    volumes:
-      - app_storage:/home/app/storage
 
 networks:
   database:
@@ -98,7 +96,3 @@ secrets:
   solr_password:
     external: true
     name: ${SOLR_PASSWORD}
-
-volumes:
-  app_storage:
-    name: app_storage

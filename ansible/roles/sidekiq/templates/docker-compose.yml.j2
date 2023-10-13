@@ -66,9 +66,10 @@ services:
       - ceph_secret_access_key
 {% endif %}
     volumes:
-      - app_storage:/home/app/storage
 {% if is_development == true %}
       - /apotheca/ansible/roles/apotheca/files/src/:/home/app
+{% else %}
+      - app_storage:/home/app/storage
 {% endif %}
 
 networks:
@@ -117,9 +118,9 @@ secrets:
   ceph_secret_access_key:
     external: true
     name: ${CEPH_SECRET_ACCESS_KEY}
-{% endif %}
 
 volumes:
   app_storage:
     external: true
     name: app_storage
+{% endif %}
