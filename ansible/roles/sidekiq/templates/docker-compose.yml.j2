@@ -58,7 +58,7 @@ services:
       - solr_password
 {% if is_development == false %}
       - honeybadger_api_key
-      - aws_endpoint
+      - aws_region
       - aws_access_key_id
       - aws_secret_access_key
       - ceph_endpoint
@@ -100,9 +100,9 @@ secrets:
   honeybadger_api_key:
     external: true
     name: ${HONEYBADGER_API_KEY}
-  aws_endpoint:
+  aws_region:
     external: true
-    name: ${AWS_ENDPOINT}
+    name: ${AWS_REGION}
   aws_access_key_id:
     external: true
     name: ${AWS_ACCESS_KEY_ID}

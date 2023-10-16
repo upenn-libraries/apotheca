@@ -20,8 +20,8 @@ apotheca_versioned_secrets:
   honeybadger_api_key:
     value: "{{ apotheca_vault_values.secret.honeybadger_api_key }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
-  aws_endpoint:
-    value: "{{ apotheca_vault_values.secret.aws_endpoint }}"
+  aws_region:
+    value: "{{ apotheca_vault_values.secret.aws_region }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
   aws_access_key_id:
     value: "{{ apotheca_vault_values.secret.aws_access_key_id }}"
