@@ -5,25 +5,6 @@ services:
     image: ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
     command: ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:${APP_PORT}"]
     deploy:
-      labels:
-        - "traefik.enable=true"
-
-        - "traefik.http.routers.apotheca.entrypoints=web"
-        - "traefik.http.routers.apotheca.rule=Host(`${APP_URL}`)"
-        - "traefik.http.routers.apotheca.service=apotheca"
-        - "traefik.http.services.apotheca.loadbalancer.server.port=${APP_PORT}"
-
-        - "traefik.http.routers.apotheca.middlewares=apotheca_https"
-        - "traefik.http.middlewares.apotheca_https.redirectscheme.scheme=https"
-        - "traefik.http.middlewares.apotheca_https.redirectscheme.permanent=true"
-
-        - "traefik.http.routers.apotheca_secure.entrypoints=websecure"
-        - "traefik.http.routers.apotheca_secure.rule=Host(`${APP_URL}`)"
-        - "traefik.http.routers.apotheca_secure.service=apotheca_secure"
-        - "traefik.http.services.apotheca_secure.loadbalancer.server.port=${APP_PORT}"
-
-        - "traefik.http.routers.apotheca_secure.tls=true"
-        - "traefik.http.routers.apotheca_secure.tls.certresolver=letsencrypt"
       placement:
         constraints:
           - "node.labels.apotheca == true"

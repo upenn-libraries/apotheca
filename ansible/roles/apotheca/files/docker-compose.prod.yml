@@ -2,6 +2,14 @@ version: "3.8"
 
 services:
   apotheca:
+    deploy:
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.apotheca.entrypoints=web"
+        - "traefik.http.routers.apotheca.rule=Host(`${APP_URL}`)"
+        - "traefik.http.routers.apotheca.service=apotheca"
+        - "traefik.http.services.apotheca.loadbalancer.server.port=${APP_PORT}"
     secrets:
       - honeybadger_api_key
       - aws_region
