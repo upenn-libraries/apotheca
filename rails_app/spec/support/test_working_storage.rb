@@ -18,6 +18,6 @@ class TestWorkingStorage
   end
 
   def self.s3
-    Shrine::Storage::S3.new(public: true, force_path_style: true, **Settings.working_storage.sceti_digitized)
+    Shrine::Storage::S3.new(**Settings.working_storage.sceti_digitized)
   end
 end

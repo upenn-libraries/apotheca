@@ -3,7 +3,7 @@
 module ImportService
   # Wrapper around S3 working storage.
   class S3Storage
-    REQUIRED_CONFIG_KEYS = %i[access_key_id secret_access_key endpoint region].freeze
+    REQUIRED_CONFIG_KEYS = %i[access_key_id secret_access_key region].freeze
     attr_reader :name
 
     def initialize(storage_name, bucket = nil)
@@ -12,17 +12,11 @@ module ImportService
     end
 
     def config
-      @config ||= self.class.all[name]
+      @config ||= self.class.all[name].to_h.deep_symbolize_keys
     end
 
     def client
-      @client ||= Aws::S3::Client.new(
-        access_key_id: config[:access_key_id],
-        secret_access_key: config[:secret_access_key],
-        endpoint: config[:endpoint],
-        region: config[:region],
-        force_path_style: true
-      )
+      @client ||= Aws::S3::Client.new(**config.except(:bucket))
     end
 
     # Bucket name.

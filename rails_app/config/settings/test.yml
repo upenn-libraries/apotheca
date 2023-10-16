@@ -30,6 +30,7 @@ minio: &minio
   secret_access_key: minioadmin
   endpoint: <%= ENV['MINIO_URL'] %>
   region: us-east-1
+  force_path_style: true
 preservation_storage:
   <<: *minio
   bucket: preservation-test

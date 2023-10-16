@@ -35,27 +35,28 @@ wasabi: &wasabi
   region: us-east-1
 preservation_storage:
   <<: *aws
-  bucket: preservation-staging
+  bucket: upennlib-apotheca-preservation-staging
 preservation_copy_storage:
   <<: *wasabi
-  bucket: preservation-copy-staging
+  bucket: upennlib-apotheca-preservation-copy-staging
 derivative_storage:
   <<: *aws
-  bucket: derivatives-staging
+  bucket: upennlib-apotheca-derivatives-staging
 iiif_derivative_storage:
   <<: *aws
-  bucket: iiif-derivatives-staging
+  bucket: upennlib-apotheca-iiif-derivatives-staging
 
 # Bulk Import/Migration
 working_storage:
   sceti_digitized:
     <<: *aws
-    bucket: sceti-short-term
+    bucket: upennlib-sceti-short-term
   ceph:
     access_key_id: <%= DockerSecrets.lookup(:ceph_access_key_id) %>
     secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
     endpoint: <%= DockerSecrets.lookup(:ceph_endpoint, 'http://ceph_endpoint_placeholder') %>
     region: us-east-1
+    force_path_style: true
 migration:
   storage: ceph
   colenda_url: https://colenda.library.upenn.edu

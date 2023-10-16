@@ -78,14 +78,7 @@ namespace :apotheca do
                Settings.working_storage.sceti_digitized]
 
     configs.each do |config|
-      client = Aws::S3::Client.new(
-        credentials: Aws::Credentials.new(
-          config[:access_key_id], config[:secret_access_key]
-        ),
-        endpoint: config[:endpoint],
-        force_path_style: true,
-        region: 'us-east-1' # Default
-      )
+      client = Aws::S3::Client.new(**config.to_h.except(:bucket))
 
       # Create preservation bucket if it's not already present.
       begin

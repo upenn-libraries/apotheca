@@ -56,6 +56,7 @@ working_storage:
     secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
     endpoint: <%= DockerSecrets.lookup(:ceph_endpoint, 'http://ceph_endpoint_placeholder') %>
     region: us-east-1
+    force_path_style: true
 migration:
   storage: ceph
   colenda_url: https://colenda.library.upenn.edu

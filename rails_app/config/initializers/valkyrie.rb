@@ -42,31 +42,11 @@ Rails.application.config.to_prepare do
 
   ### STORAGE ADAPTERS ###
 
-  preservation_storage_config = Settings.preservation_storage.to_h.merge(
-    force_path_style: true,
-    public: true # Adds public-read acl to all objects
-  )
-
-  preservation_copy_storage_config = Settings.preservation_copy_storage.to_h.merge(
-    force_path_style: true,
-    public: true # Adds public-read acl to all objects
-  )
-
-  derivatives_storage_config = Settings.derivative_storage.to_h.merge(
-    force_path_style: true,
-    public: true # Adds public-read acl to all objects
-  )
-
-  iiif_derivatives_storage_config = Settings.iiif_derivative_storage.to_h.merge(
-    force_path_style: true,
-    public: true # Adds public-read acl to all objects
-  )
-
   Shrine.storages = {
-    preservation: Shrine::Storage::S3.new(**preservation_storage_config),
-    preservation_copy: Shrine::Storage::S3.new(**preservation_copy_storage_config),
-    derivatives: Shrine::Storage::S3.new(**derivatives_storage_config),
-    iiif_derivatives: Shrine::Storage::S3.new(**iiif_derivatives_storage_config)
+    preservation: Shrine::Storage::S3.new(**Settings.preservation_storage),
+    preservation_copy: Shrine::Storage::S3.new(**Settings.preservation_copy_storage),
+    derivatives: Shrine::Storage::S3.new(**Settings.derivative_storage),
+    iiif_derivatives: Shrine::Storage::S3.new(**Settings.iiif_derivative_storage)
   }
 
   Valkyrie::StorageAdapter.register(
