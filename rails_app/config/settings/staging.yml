@@ -37,7 +37,7 @@ preservation_storage:
   <<: *aws
   bucket: upennlib-apotheca-preservation-staging
 preservation_copy_storage:
-  <<: *wasabi
+  <<: *aws
   bucket: upennlib-apotheca-preservation-copy-staging
 derivative_storage:
   <<: *aws
