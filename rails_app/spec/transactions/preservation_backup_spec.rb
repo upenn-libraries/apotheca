@@ -37,6 +37,7 @@ describe PreservationBackup do
       end
 
       it 'cleans up the uploaded file' do
+        expect(result.failure[:change_set].preservation_copies_ids.first).not_to be_nil
         expect {
           Valkyrie::StorageAdapter.find_by(id: result.failure[:change_set].preservation_copies_ids.first)
         }.to raise_error Valkyrie::StorageAdapter::FileNotFound

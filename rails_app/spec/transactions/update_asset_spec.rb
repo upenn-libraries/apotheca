@@ -224,6 +224,7 @@ describe UpdateAsset do
       it_behaves_like 'a failed asset update'
 
       it 'cleans up the uploaded file' do
+        expect(result.failure[:change_set].preservation_file_id).not_to be_nil
         expect {
           Valkyrie::StorageAdapter.find_by(id: result.failure[:change_set].preservation_file_id)
         }.to raise_error Valkyrie::StorageAdapter::FileNotFound
