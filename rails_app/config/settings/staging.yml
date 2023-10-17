@@ -48,7 +48,7 @@ iiif_derivative_storage:
 
 # Bulk Import/Migration
 working_storage:
-  sceti_digitized:
+  sceti_short_term:
     <<: *aws
     bucket: upennlib-sceti-short-term
   ceph:
