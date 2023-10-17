@@ -26,5 +26,21 @@ describe PreservationBackup do
         ).to be_a Valkyrie::StorageAdapter::File
       end
     end
+
+    context 'when preservation backup fails' do
+      let(:asset) { persist(:asset_resource, :with_preservation_file) }
+
+      before do
+        step_double = instance_double('Steps::Validate')
+        allow(Steps::Validate).to receive(:new).and_return(step_double)
+        allow(step_double).to receive(:call) { |change_set| Dry::Monads::Failure.new(error: :step_failed, change_set: change_set) }
+      end
+
+      it 'cleans up the uploaded file' do
+        expect {
+          Valkyrie::StorageAdapter.find_by(id: result.failure[:change_set].preservation_copies_ids.first)
+        }.to raise_error Valkyrie::StorageAdapter::FileNotFound
+      end
+    end
   end
 end

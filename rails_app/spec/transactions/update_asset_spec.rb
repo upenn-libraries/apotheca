@@ -210,5 +210,24 @@ describe UpdateAsset do
         expect(result.failure[:error]).to be :expected_checksum_does_not_match
       end
     end
+
+    context 'when asset update fails' do
+      let(:asset) { persist(:asset_resource) }
+      let(:result) { transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com') }
+
+      before do
+        step_double = instance_double('Steps::Validate')
+        allow(Steps::Validate).to receive(:new).and_return(step_double)
+        allow(step_double).to receive(:call) { |change_set| Dry::Monads::Failure.new(error: :step_failed, change_set: change_set) }
+      end
+
+      it_behaves_like 'a failed asset update'
+
+      it 'cleans up the uploaded file' do
+        expect {
+          Valkyrie::StorageAdapter.find_by(id: result.failure[:change_set].preservation_file_id)
+        }.to raise_error Valkyrie::StorageAdapter::FileNotFound
+      end
+    end
   end
 end
