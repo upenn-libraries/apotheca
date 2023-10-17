@@ -61,3 +61,6 @@ migration:
   storage: ceph
   colenda_url: https://colenda.library.upenn.edu
 
+# Item/Asset Resource Configuration
+skip_ezid_metadata_update: true
+
