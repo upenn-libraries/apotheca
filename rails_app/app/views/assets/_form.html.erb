@@ -25,7 +25,7 @@
                           type: :textarea) %>
   <% end %>
 
-  <% form.section do |section| %>
+  <% form.with_section do |section| %>
     <% section.with_title { 'Preservation File' } %>
 
     <% if @change_set.resource.preservation_file_id.present? %>
