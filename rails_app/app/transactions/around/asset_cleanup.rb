@@ -14,6 +14,10 @@ module Around
         if change_set&.changed?(:preservation_file_id) && change_set.preservation_file_id.present?
           preservation_storage.delete(id: change_set.preservation_file_id)
         end
+
+        if change_set&.changed?(:preservation_copies_ids) && change_set.preservation_copies_ids.present?
+          preservation_copy_storage.delete(id: change_set.preservation_copies_ids.first)
+        end
       end
 
       result
@@ -21,6 +25,10 @@ module Around
 
     def preservation_storage
       Valkyrie::StorageAdapter.find(:preservation)
+    end
+
+    def preservation_copy_storage
+      Valkyrie::StorageAdapter.find(:preservation_copy)
     end
   end
 end
