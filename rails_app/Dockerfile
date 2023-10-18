@@ -28,31 +28,32 @@ ENV BUNDLE_APP_CONFIG="${PROJECT_ROOT}/.bundle"
 
 WORKDIR ${PROJECT_ROOT}
 
+# Install build packages
+RUN apt-get update && apt-get install -y \
+      build-essential \
+      ffmpeg \
+      git \
+      libpq-dev \
+      libvips \
+      clamav \
+      clamav-daemon \
+      clamdscan \
+      postgresql \
+      postgresql-contrib && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY Gemfile* ./
 
-# # Install build packages
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    ffmpeg \
-    git \
-    libpq-dev \
-    libvips \
-    clamav \
-    clamav-daemon \
-    clamdscan \
-    postgresql \
-    postgresql-contrib && \
-    bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
+RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     set -eux; \
     if [ "${RAILS_ENV}" = "development" ]; then \
     bundle config set with "development:test:assets"; \
     else \
     bundle config set without "development:test:assets"; \
     fi && \
-    bundle install -j$(nproc) --retry 3 && \
+    MAKE="make -j $(nproc)" bundle install && \
     rm -rf ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/cache/*.gem && \
-    find ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/gems/ \( -name "*.c" -o -name "*.o" \) -delete && \
-    rm -rf /var/lib/apt/lists/*
+    find ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/gems/ \( -name "*.c" -o -name "*.o" \) -delete
 
 COPY . .
 
@@ -78,32 +79,37 @@ ENV PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin:${PATH}"
 
 WORKDIR ${PROJECT_ROOT}
 
-COPY ./docker-entrypoint.sh /usr/local/bin/
+RUN apt-get update && apt-get install -y \
+      build-essential \
+      curl \
+      ffmpeg \
+      git \
+      gosu \
+      libpq-dev \
+      libvips \
+      nodejs \
+      clamav \
+      clamav-daemon \
+      clamdscan \
+      postgresql \
+      postgresql-contrib && \
+    addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
+    mkdir -p ${PROJECT_ROOT}/tmp/pids && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    ffmpeg \
-    git \
-    gosu \
-    libpq-dev \
-    libvips \
-    nodejs \
-    clamav \
-    clamav-daemon \
-    clamdscan \
-    postgresql \
-    postgresql-contrib && \
-  chmod +x /usr/local/bin/docker-entrypoint.sh && \
-  addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
-  mkdir -p ${PROJECT_ROOT}/tmp/pids && \
-  find . -type d -exec chmod 755 {} + && \
-  find . -type f -exec chmod 644 {} + && \
-  find bin -type f -exec chmod 744 {} + && \
-  chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
-  chown -R app:app . && \
-  rm -rf /var/lib/apt/lists/*
+RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
+    SECRET_KEY_BASE=x bundle exec rake assets:precompile && \
+    find . -type d -exec chmod 755 {} + && \
+    find . -type f -exec chmod 644 {} + && \
+    find bin -type f -exec chmod 744 {} + && \
+    chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
+    chown -R app:app .
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
@@ -136,32 +142,37 @@ ENV RAILS_SERVE_STATIC_FILES=true
 
 WORKDIR ${PROJECT_ROOT}
 
-COPY ./docker-entrypoint.sh /usr/local/bin/
+RUN apt-get update && apt-get install -y \
+      build-essential \
+      curl \
+      ffmpeg \
+      git \
+      gosu \
+      libpq-dev \
+      libvips \
+      nodejs \
+      clamav \
+      clamav-daemon \
+      clamdscan \
+      postgresql \
+      postgresql-contrib && \
+    addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
+    mkdir -p ${PROJECT_ROOT}/tmp/pids && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    ffmpeg \
-    git \
-    gosu \
-    libpq-dev \
-    libvips \
-    nodejs \
-    clamav \
-    clamav-daemon \
-    clamdscan \
-    postgresql \
-    postgresql-contrib && \
-  chmod +x /usr/local/bin/docker-entrypoint.sh && \
-  addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
-  # SECRET_KEY_BASE=x APP_URL=x rails assets:precompile && \
-  mkdir -p ${PROJECT_ROOT}/tmp/pids && \
-  find . -type d -exec chmod 755 {} + && \
-  find . -type f -exec chmod 644 {} + && \
-  find bin -type f -exec chmod 744 {} + && \
-  chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
-  chown -R app:app .
+RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
+    SECRET_KEY_BASE=x bundle exec rake assets:precompile && \
+    find . -type d -exec chmod 755 {} + && \
+    find . -type f -exec chmod 644 {} + && \
+    find bin -type f -exec chmod 744 {} + && \
+    chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
+    chown -R app:app .
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 

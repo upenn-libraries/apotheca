@@ -162,7 +162,8 @@ title = "gitlab gitleaks config"
             '''(?i)(key(\s+)?(\=|\:)(\s+)?key)''',
             '''(?i)(config.ssh.insert_key)''',
             '''(?i)(minioadmin)''',
-            '''(?i)(MINIO_SECRET_ACCESS_KEY)'''
+            '''(?i)(MINIO_SECRET_ACCESS_KEY)''',
+            '''(?i)((rspec_)?test)'''
         ]
 
 [[rules]]
@@ -208,17 +209,16 @@ title = "gitlab gitleaks config"
         '''{{ *[\S]+ *}}''',
         # Values set by environment variables
         '''ENV\[['"][\S]+['"]\]''',
+        '''{{ *[\S]+(\s~\s)?[[\S]+ }}''',
         # AWS Secrets Manager resource for vault password
         '''AnsibleVaultPassword''',
         '''optimistic_lock_token'''
     ]
     paths = [
-        '''config/settings/(development|test).yml''',
+        '''config/settings/(development|test|staging|production).yml''',
+        '''config/(settings|honeybadger).yml''',
         '''solr/conf/schema.xml''',
-        '''config/initializers/ezid.rb''',
-        '''config/initializers/devise.rb''',
-        '''config/initializers/sidekiq.rb''',
-        '''spec/shared_examples/ezid.rb''',
+        '''config/initializers/(ezid|devise|sidekiq|valkyrie).rb''',
         '''spec/indexers/descriptive_metadata_spec.rb''',
         '''app/services/import_service/s3_storage.rb'''
     ]

@@ -10,7 +10,7 @@ FactoryBot.define do
     trait :create do
       action { ImportService::Process::CREATE }
       human_readable_name { 'Trade card; J. Rosenblatt & Co.' }
-      structural { { viewing_direction: 'left-to-right', viewing_hint: 'individual' } }
+      structural { { viewing_direction: 'left-to-right', viewing_hint: 'individuals' } }
       assets { { arranged_filenames: 'front.tif; back.tif', storage: 'sceti_digitized', path: 'trade_card/original' } }
       metadata do
         {
