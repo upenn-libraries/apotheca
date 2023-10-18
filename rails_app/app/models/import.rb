@@ -14,8 +14,10 @@ class Import < ApplicationRecord
     elapsed_time = Benchmark.realtime do
       result = ImportService::Process.build(imported_by: bulk_import.created_by.email, **import_data).run
     end
+
+    self.duration = elapsed_time
+
     if result.success?
-      self.duration = elapsed_time
       self.resource_identifier = result.value!.unique_identifier
       success!
     else
