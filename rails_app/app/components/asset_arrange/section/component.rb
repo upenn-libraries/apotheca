@@ -32,7 +32,7 @@ module AssetArrange
       # @param [AssetResource] asset
       # @return [String]
       def asset_description_text(asset)
-        text = "#{asset.display_title} (#{number_to_human_size(asset.technical_metadata.size)} #{asset.technical_metadata.mime_type})"
+        text = "#{asset.display_title} (#{number_to_human_size(asset.technical_metadata.size, base: 1000)} #{asset.technical_metadata.mime_type})"
         text = text.dup.prepend("#{asset.label} - ") if asset.label.present?
         text
       end

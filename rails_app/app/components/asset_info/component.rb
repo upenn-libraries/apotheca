@@ -82,7 +82,7 @@ module AssetInfo
 
     # @return [String]
     def size
-      number_to_human_size asset.technical_metadata.size
+      number_to_human_size asset.technical_metadata.size, base: 1000
     end
 
     # @return [String]
