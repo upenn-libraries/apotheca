@@ -212,7 +212,8 @@ title = "gitlab gitleaks config"
         '''{{ *[\S]+(\s~\s)?[[\S]+ }}''',
         # AWS Secrets Manager resource for vault password
         '''AnsibleVaultPassword''',
-        '''optimistic_lock_token'''
+        '''optimistic_lock_token''',
+        '''Ezid::Client.config.password'''
     ]
     paths = [
         '''config/settings/(development|test|staging|production).yml''',
