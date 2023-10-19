@@ -128,7 +128,7 @@ GEM
       xpath (~> 3.2)
     clamby (1.6.10)
     concurrent-ruby (1.2.2)
-    config (4.2.1)
+    config (5.0.0)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
     connection_pool (2.4.1)
@@ -575,7 +575,7 @@ DEPENDENCIES
   cancancan
   capybara
   clamby
-  config
+  config (~> 5.0)
   cuprite
   debug (~> 1.8)
   devise
