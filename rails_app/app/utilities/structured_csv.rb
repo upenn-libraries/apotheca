@@ -27,7 +27,7 @@ module StructuredCSV
     header_count_map = Hash.new(0)
     headers.each { |e| header_count_map[e] += 1 }
     duplicated_headers = header_count_map.select { |_h, c| c > 1 }
-    return unless duplicated_headers.any?
+    return if duplicated_headers.empty? # no duplicates found
 
     raise CSV::MalformedCSVError.new "CSV contains duplicated column names (#{duplicated_headers.keys.join(', ')})", 1
   end
