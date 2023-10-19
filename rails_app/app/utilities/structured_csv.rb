@@ -16,7 +16,20 @@ module StructuredCSV
   # @return [Array<Hash>]
   def self.parse(csv_data)
     rows = CSV.parse(csv_data, headers: true)
+    validate_headers!(rows.headers)
     rows.map { |row| parse_row(row) }
+  end
+
+  # Check if the headers from the parsed CSV include duplicates. Raise an exception if so with a message including the
+  # duplicated fields.
+  # @param [Array] headers
+  def self.validate_headers!(headers)
+    header_count_map = Hash.new(0)
+    headers.each { |e| header_count_map[e] += 1 }
+    duplicated_headers = header_count_map.select { |_h, c| c > 1 }
+    return unless duplicated_headers.any?
+
+    raise CSV::MalformedCSVError.new "CSV contains duplicated column names (#{duplicated_headers.keys.join(', ')})", 1
   end
 
   def self.parse_row(hash)
