@@ -38,6 +38,7 @@
     - ansible.builtin.import_role:
         name: minio
       tags: minio
+      when: is_development | default (false, true)
     - ansible.builtin.import_role:
         name: apotheca
       tags: apotheca
@@ -47,6 +48,7 @@
     - ansible.builtin.import_role:
         name: chrome
       tags: chrome
+      when: is_development | default (false, true)
   post_tasks:
     - name: Recursively remove project directory
       ansible.builtin.file:

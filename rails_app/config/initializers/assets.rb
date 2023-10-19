@@ -6,9 +6,10 @@
 Rails.application.config.assets.version = '1.0'
 
 # Add additional assets to the asset load path.
-# FIXME: We need to add `app` to the assets paths so that component javascript is added to the importmap.
-#        While this isn't the best solution its the one that works for now.
-Rails.application.config.assets.paths << Rails.root.join('app')
+#
+# We need to add `app/components` to the assets paths so sprockets knows to compile
+# the `.js` files in that directory.
+Rails.application.config.assets.paths << Rails.root.join('app/components')
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets

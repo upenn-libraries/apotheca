@@ -70,6 +70,10 @@ describe Import do
         expect(import.state).to eq described_class::STATE_FAILED.to_s
       end
 
+      it 'calculates and stores duration' do
+        expect(import.duration).not_to be_nil
+      end
+
       it 'adds Failure monad information to process_errors' do
         expect(import.process_errors).to contain_exactly('assets must be provided to create an object',
                                                          'asset storage and path must be provided')

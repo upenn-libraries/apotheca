@@ -54,6 +54,7 @@ Rails.application.configure do
 
   # Use a real queuing backend for Active Job.
   config.active_job.queue_adapter = :sidekiq
+  config.active_job.default_queue_name = :medium
 
   config.action_mailer.perform_caching = false
 
@@ -83,4 +84,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Configure active storage
+  config.active_storage.service = :local
 end
