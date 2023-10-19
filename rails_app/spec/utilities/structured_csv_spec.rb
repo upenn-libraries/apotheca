@@ -79,7 +79,7 @@ RSpec.describe StructuredCSV do
       it 'raises an exception' do
         expect {
           described_class.parse(csv_string_data)
-        }.to raise_error CSV::MalformedCSVError, /CSV contains duplicated column names (unique_identifier)/
+        }.to raise_error CSV::MalformedCSVError, /CSV contains duplicated column names \(unique_identifier\)/
       end
     end
   end
