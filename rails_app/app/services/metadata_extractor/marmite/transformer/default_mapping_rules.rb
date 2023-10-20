@@ -41,7 +41,7 @@ module MetadataExtractor
 
         # Return true if field contains a transliterated title
         def self.transliterated_title?(datafield)
-          index = datafield.subfield_at('6')&.match(/\A245-(\d{2})\Z/)
+          index = datafield.subfield_at('6')&.match(/\A245-(\d{2})/)
           return false unless index
 
           datafield.parent.xpath("datafield[@tag='245']/subfield[@code='6' and text()='880-#{index[1]}']").present?

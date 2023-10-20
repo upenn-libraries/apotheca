@@ -149,7 +149,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
                 <marc:subfield code="a">Keian Taiheiki.</marc:subfield>
               </marc:datafield>
               <marc:datafield ind1="0" ind2="0" tag="880">
-                <marc:subfield code="6">245-01</marc:subfield>
+                <marc:subfield code="6">245-01//r</marc:subfield>
                 <marc:subfield code="a">慶安太平記</marc:subfield>
                </marc:datafield>
             </marc:record>
