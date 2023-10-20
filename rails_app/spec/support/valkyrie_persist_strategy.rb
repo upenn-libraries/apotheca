@@ -6,6 +6,8 @@
 # doesn't return the new object. After persisting a resource, Valkyrie returns a new resource with the
 # internal fields set. This conversation describes the problem we were running into with more
 # detail: https://github.com/thoughtbot/factory_bot/pull/1437
+#
+# Additionally, this strategy persists any changes made in the after_create callback.
 class ValkyriePersistStrategy
   DEFAULT_PERSISTER = :postgres_solr_persister
 
@@ -13,7 +15,7 @@ class ValkyriePersistStrategy
     runner.run
   end
 
-  # allow users to override the persister in the evaluator?
+  # TODO: allow users to override the persister in the evaluator?
   # @param [FactoryBot::Evaluation] evaluation
   def result(evaluation)
     instance = evaluation.object
@@ -21,7 +23,7 @@ class ValkyriePersistStrategy
     evaluation.notify(:before_create, instance)
     new_instance = persist(instance)
     evaluation.notify(:after_create, new_instance)
-    new_instance
+    persist(new_instance)
   end
 
   def persist(resource)

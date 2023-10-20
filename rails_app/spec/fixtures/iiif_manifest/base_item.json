@@ -1,0 +1,99 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/manifest",
+  "@type": "sc:Manifest",
+  "label":"New Item",
+  "attribution": "Provided by the University of Pennsylvania Libraries.",
+  "viewingHint": "individuals",
+  "viewingDirection": "left-to-right",
+  "structures": [
+    {
+      "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/range/r1",
+      "@type": "sc:Range",
+      "label": "Front",
+      "ranges":[
+        {
+          "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/range/r1-1",
+          "@type": "sc:Range",
+          "label": "Front of Card",
+          "canvases": ["https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/canvas/p1"]
+        }
+      ]
+    }
+  ],
+  "sequences":[
+    {
+      "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/sequence/normal",
+      "@type": "sc:Sequence",
+      "label": "Current order",
+      "canvases":[
+        {
+          "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/canvas/p1",
+          "@type": "sc:Canvas",
+          "label": "Front",
+          "height": 238,
+          "width": 400,
+          "images":[
+            {
+              "@type":"oa:Annotation",
+              "motivation":"sc:painting",
+              "resource": {
+                "@id": "https://serverless_iiif.libary.upenn.edu/f2f6368b-bcc8-41b6-9981-4d9fb13ed630%2Faccess/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 400,
+                "height": 238,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://serverless_iiif.libary.upenn.edu/f2f6368b-bcc8-41b6-9981-4d9fb13ed630%2Faccess",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/canvas/p1"
+            }
+          ],
+          "rendering": [
+            {
+              "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/assets/f2f6368b-bcc8-41b6-9981-4d9fb13ed630/preservation-file",
+              "label":"Original File - 285 KB",
+              "format":"image/tiff"
+            }
+          ]
+        },
+        {
+          "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/canvas/p2",
+          "@type": "sc:Canvas",
+          "label": "p. 2",
+          "height": 238,
+          "width": 400,
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource":{
+                "@id": "https://serverless_iiif.libary.upenn.edu/50e168dd-992b-4de4-b7c2-5e0e61b37d6a%2Faccess/full/!200,200/0/default.jpg",
+                "@type": "dctypes:Image",
+                "format": "image/jpeg",
+                "width": 400,
+                "height": 238,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://serverless_iiif.libary.upenn.edu/50e168dd-992b-4de4-b7c2-5e0e61b37d6a%2Faccess",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              },
+              "on": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/canvas/p2"
+            }
+          ],
+          "rendering": [
+            {
+              "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/assets/50e168dd-992b-4de4-b7c2-5e0e61b37d6a/preservation-file",
+              "label": "Original File - 285 KB",
+              "format": "image/tiff"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -26,7 +26,7 @@ class ItemResource < Valkyrie::Resource
   attribute :last_published_at, Valkyrie::Types::Strict::DateTime.optional
 
   # Asset IDs
-  attribute :asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).optional
+  attribute :asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::Params::ID).optional
 
   # @return [Integer]
   def asset_count
