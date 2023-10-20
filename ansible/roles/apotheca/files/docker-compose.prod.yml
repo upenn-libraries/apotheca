@@ -10,6 +10,11 @@ services:
         - "traefik.http.routers.apotheca.rule=Host(`${APP_URL}`)"
         - "traefik.http.routers.apotheca.service=apotheca"
         - "traefik.http.services.apotheca.loadbalancer.server.port=${APP_PORT}"
+    healthcheck:
+      interval: 10s
+      retries: 6
+      start_period: 60s
+      timeout: 120s
     secrets:
       - honeybadger_api_key
       - aws_region
