@@ -25,6 +25,29 @@ describe ImportService::ColendaMetadata do
       described_class.new(original_metadata).to_apotheca_metadata
     end
 
+    context 'when blank values present' do
+      let(:original_metadata) do
+        { notes: ['First Note', ''], subject: [nil, ' '] }
+      end
+
+      it 'removes empty values' do
+        expect(new_metadata[:note]).to contain_exactly({ value: 'First Note' })
+        expect(new_metadata[:subject]).to be_nil
+      end
+    end
+
+    context 'when type and item_type present' do
+      let(:original_metadata) do
+        { item_type: ['Photographs', 'Book'], type: ['PhotoBook'] }
+      end
+
+      it 'combines values in type and item_type' do
+        expect(new_metadata[:physical_format]).to contain_exactly(
+          { value: 'Photographs' }, { value: 'Book' }, { value: 'PhotoBook' }
+        )
+      end
+    end
+
     context 'when multiple titles present' do
       let(:original_metadata) do
         { title: ['First Title', 'Second Title'] }
