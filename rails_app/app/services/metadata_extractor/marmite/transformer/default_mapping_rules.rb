@@ -68,7 +68,7 @@ module MetadataExtractor
                              custom: method(:add_role_to_name)
         map_datafield '111', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
-        map_datafield '245', to: :title, value: { subfields: %w[a b f g n p s], join: SPACE }
+        map_datafield '245', to: :title, value: { subfields: %w[a b f g k n p s], join: SPACE }
         map_datafield '246', to: :alt_title, value: { subfields: %w[a b n p], join: SPACE }
         map_datafield '260', to: :publisher, value: { subfields: 'b' }
         map_datafield '264', to: :publisher, value: { subfields: 'b' },
@@ -106,7 +106,7 @@ module MetadataExtractor
                              uri: { subfields: '0' }
         map_datafield '773', to: :collection, value: { subfields: 't' }
         map_datafield '856', to: :relation, value: { subfields: %w[u z 3], join: ': ' }
-        map_datafield '880', to: :title, value: { subfields: %w[a b f g n p s] }, if: method(:transliterated_title?)
+        map_datafield '880', to: :title, value: { subfields: %w[a b f g k n p s] }, if: method(:transliterated_title?)
 
         # Mapping holdings information located in an Alma-specific datafield.
         # Documentation about the subfields available:
