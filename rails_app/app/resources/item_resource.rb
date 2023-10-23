@@ -28,6 +28,9 @@ class ItemResource < Valkyrie::Resource
   # Asset IDs
   attribute :asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::Params::ID).optional
 
+  # Item-level derivatives, like IIIF Manifest.
+  attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
+
   # @return [Integer]
   def asset_count
     Array.wrap(asset_ids).length
@@ -56,6 +59,11 @@ class ItemResource < Valkyrie::Resource
   # @return [TrueClass, FalseClass]
   def bibnumber?
     descriptive_metadata&.bibnumber.try(:any?)
+  end
+
+  # @return [DerivativeResource]
+  def iiif_manifest
+    derivatives.find(&:iiif_manifest?)
   end
 
   # @param [Boolean] include_assets

@@ -43,6 +43,9 @@ derivative_storage:
 iiif_derivative_storage:
   <<: *minio
   bucket: iiif-derivatives-test
+iiif_manifest_storage:
+  <<: *minio
+  bucket: iiif-manifest-test
 
 # Bulk Import/Migration
 working_storage:

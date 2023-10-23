@@ -1,5 +1,7 @@
 module IIIFService
   class ManifestGenerator
+    class MissingDerivative < StandardError; end
+
     attr_reader :item
 
     # @param [ItemResource]
@@ -16,7 +18,7 @@ module IIIFService
     # @return [NilClass] if no images are present
     # @return [String] iiif v2 manifest json
     def v2_manifest
-      return nil if arranged_assets.any?(:image?)
+      return nil unless arranged_assets.any?(&:image?)
 
       manifest = IIIF::Presentation::Manifest.new({
         '@id' => uri(base_uri, 'manifest'),
@@ -32,6 +34,8 @@ module IIIFService
       )
 
       arranged_assets.select(&:image?).map.with_index do |asset, i|
+        raise MissingDerivative, "Derivatives missing for #{asset.original_filename}" unless asset.access
+
         index = i + 1
 
         # Adding canvas that contains image as an image annotation.

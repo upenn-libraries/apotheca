@@ -45,6 +45,9 @@ derivative_storage:
 iiif_derivative_storage:
   <<: *aws
   bucket: iiif-derivatives-staging
+iiif_manifest_storage:
+  <<: *aws
+  bucket: iiif-manifest-staging
 
 # Bulk Import/Migration
 working_storage:

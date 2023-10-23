@@ -46,7 +46,8 @@ Rails.application.config.to_prepare do
     preservation: Shrine::Storage::S3.new(**Settings.preservation_storage),
     preservation_copy: Shrine::Storage::S3.new(**Settings.preservation_copy_storage),
     derivatives: Shrine::Storage::S3.new(**Settings.derivative_storage),
-    iiif_derivatives: Shrine::Storage::S3.new(**Settings.iiif_derivative_storage)
+    iiif_derivatives: Shrine::Storage::S3.new(**Settings.iiif_derivative_storage),
+    iiif_manifests: Shrine::Storage::S3.new(**Settings.iiif_manifest_storage)
   }
 
   Valkyrie::StorageAdapter.register(
@@ -69,6 +70,12 @@ Rails.application.config.to_prepare do
     Valkyrie::Storage::Shrine.new(
       Shrine.storages[:iiif_derivatives], nil, DerivativePathGenerator, identifier_prefix: 'iiif_derivatives'
     ), :iiif_derivatives
+  )
+
+  Valkyrie::StorageAdapter.register(
+    Valkyrie::Storage::Shrine.new(
+      Shrine.storages[:iiif_manifests], nil, DerivativePathGenerator, identifier_prefix: 'iiif_manifests'
+    ), :iiif_manifests
   )
 
   # Register custom queries for Solr
