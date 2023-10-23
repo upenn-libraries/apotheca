@@ -2,7 +2,7 @@
   "@context": "http://iiif.io/api/presentation/2/context.json",
   "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/manifest",
   "@type": "sc:Manifest",
-  "label":"New Item",
+  "label": "New Item",
   "attribution": "Provided by the University of Pennsylvania Libraries.",
   "viewingHint": "individuals",
   "viewingDirection": "left-to-right",
@@ -55,8 +55,8 @@
           "rendering": [
             {
               "@id": "https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/assets/f2f6368b-bcc8-41b6-9981-4d9fb13ed630/preservation-file",
-              "label":"Original File - 285 KB",
-              "format":"image/tiff"
+              "label": "Original File - 285 KB",
+              "format": "image/tiff"
             }
           ]
         },
