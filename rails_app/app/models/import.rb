@@ -22,7 +22,8 @@ class Import < ApplicationRecord
       success!
     else
       self.process_errors = result.failure[:details]
-      Honeybadger.notify("#{result.failure[:error]}: #{result.failure[:details].join('; ')}")
+      Honeybadger.notify("#{result.failure[:error]}: #{result.failure[:details].join('; ')}",
+                         context: self.attributes)
       failure!
     end
   end
