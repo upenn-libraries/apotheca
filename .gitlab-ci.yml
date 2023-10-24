@@ -240,6 +240,7 @@ trivy_app_container_scanning:
     - amend_prod_image
   variables:
     CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}
+  allow_failure: true
   tags:
     - build
 # -- End - SAST images

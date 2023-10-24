@@ -6,7 +6,7 @@ module ImportService
     VALID_FIELDS = %i[
       item_type abstract call_number collection contributor corporate_name coverage creator date description format
       geographic_subject identifier includes language notes personal_name provenance publisher relation rights source
-      subject title bibnumber
+      subject title bibnumber type
     ].freeze
 
     RIGHTS_URI_TO_VALUE = {
@@ -42,13 +42,17 @@ module ImportService
 
     def to_apotheca_metadata
       metadata = @original_metadata.deep_dup
+      metadata = remove_empty_values(metadata)
 
       metadata.delete(:includes)
 
       metadata[:physical_location] = metadata.delete(:call_number)
       metadata[:extent] = metadata.delete(:format)
       metadata[:note] = metadata.delete(:notes)
-      metadata[:physical_format] = metadata.delete(:item_type)
+
+      metadata[:physical_format] = []
+      metadata[:physical_format] += metadata.delete(:item_type) || []
+      metadata[:physical_format] += metadata.delete(:type) || []
 
       metadata[:description] ||= []
       metadata[:description] += metadata.delete(:abstract) || []
@@ -75,6 +79,10 @@ module ImportService
     end
 
     private
+
+    def remove_empty_values(hash)
+      hash.transform_values(&:compact_blank).compact_blank
+    end
 
     # Contributors from the old metadata schema are migrated to names and a contributor role is added.
     def contributors_to_names(contributors)

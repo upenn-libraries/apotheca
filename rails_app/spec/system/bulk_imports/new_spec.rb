@@ -31,4 +31,22 @@ describe 'Bulk Import New Page' do
       expect(page).to have_text 'Problem creating bulk import: CSV has no item data'
     end
   end
+
+  context 'when submitting a csv with duplicated headers' do
+    it 'fails and displays a message with the cause of the failure' do
+      csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_with_duplicated_headers.csv')
+      attach_file('bulk-import-csv', csv_path)
+      click_on 'Create'
+      expect(page).to have_text 'Problem creating bulk import: CSV contains duplicated column names'
+    end
+  end
+
+  context 'when submitting a csv with malformed row data' do
+    it 'fails and displays a message with the cause of the failure' do
+      csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_data_with_malformed_csv.csv')
+      attach_file('bulk-import-csv', csv_path)
+      click_on 'Create'
+      expect(page).to have_text 'Problem creating bulk import: Illegal quoting in line 2'
+    end
+  end
 end
