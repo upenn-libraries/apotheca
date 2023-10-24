@@ -8,7 +8,7 @@ class ItemChangeSet < ChangeSet
   # ChangeSet for Structural Metadata
   class StructuralMetadataChangeSet < ChangeSet
     VIEWING_DIRECTIONS = %w[right-to-left left-to-right top-to-bottom bottom-to-top].freeze
-    VIEWING_HINTS = %w[individual paged].freeze
+    VIEWING_HINTS = %w[individuals paged].freeze
 
     property :viewing_direction, multiple: false, required: false
     property :viewing_hint, multiple: false, required: false

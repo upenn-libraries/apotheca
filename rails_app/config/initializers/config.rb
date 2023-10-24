@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+# Ruby config initializer (https://github.com/rubyconfig/config).
+#
+# Settings object should be populated before any other initializers using Settings is called.
+
+require_relative '../../app/utilities/docker_secrets'
+
 Config.setup do |config|
   # Name of the constant exposing loaded settings
   config.const_name = 'Settings'

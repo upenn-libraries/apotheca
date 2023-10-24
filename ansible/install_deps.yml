@@ -5,16 +5,10 @@
       ansible.builtin.package:
         name:
           - python3-pip
+          - python3-jmespath
         state: present
 
-    - name: "Install deps with python2"
-      ansible.builtin.pip:
-        name:
-          - jmespath
-  vars:
-    ansible_python_interpreter: "/usr/bin/python2"
-
-- name: "Install deps with default python interpreter: python3"
+- name: "Install pip deps"
   ansible.builtin.pip:
     name:
       - jsondiff

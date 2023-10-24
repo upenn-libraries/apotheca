@@ -2,11 +2,20 @@
 apotheca_build_docker_image: false
 apotheca_image_name: "apotheca"
 apotheca_image_registry: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
-apotheca_image_tag: "main-development"
+apotheca_image_tag: "placeholder-tag"
 apotheca_port: 3000
 apotheca_rails_env: "development"
 apotheca_replicas: 1
 apotheca_url: "apotheca-dev.library.upenn.edu"
 apotheca_solr_url: "http://solr-1:8983/solr/apotheca-dev"
 apotheca_solr_test_url: "http://solr-1:8983/solr/apotheca-test"
-
+apotheca_versioned_secrets:
+  rails_master_key:
+    value: "d387ab7464fc5b8bb2e5c0dcd4105355"
+    version: "1"
+  solr_username:
+    value: "{{ solr_custom_env_variables.SOLR_ADMIN_USERNAME }}"
+    version: "1"
+  solr_password:
+    value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
+    version: "1"

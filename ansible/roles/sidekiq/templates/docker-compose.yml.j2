@@ -8,7 +8,6 @@ services:
       placement:
         constraints:
           - "node.labels.sidekiq == true"
-      replicas: {{ item.replicas }}
       update_config:
         order: "start-first"
         parallelism: 1
@@ -47,13 +46,32 @@ services:
       - database
       - redis
       - traefik
-{% if is_development == true %}
-    volumes:
-      - /apotheca/ansible/roles/apotheca/files/src/:/home/app
-{% endif %}
     secrets:
       - database_password
+      - source: rails_master_key
+        target: /home/app/config/credentials/${RAILS_ENV}.key
+        uid: "1000"
+        gid: "1000"
+        mode: 0440
       - redis_sidekiq_password
+      - solr_username
+      - solr_password
+{% if is_development == false %}
+      - honeybadger_api_key
+      - aws_region
+      - aws_access_key_id
+      - aws_secret_access_key
+      - ceph_endpoint
+      - ceph_access_key_id
+      - ceph_secret_access_key
+{% endif %}
+    volumes:
+{% if is_development == true %}
+      - /apotheca/ansible/roles/apotheca/files/src/:/home/app
+{% else %}
+      - app_storage:/home/app/storage
+{% endif %}
+
 networks:
   database:
     external: true
@@ -66,6 +84,43 @@ secrets:
   database_password:
     external: true
     name: ${DATABASE_PASSWORD}
+  rails_master_key:
+    external: true
+    name: ${RAILS_MASTER_KEY}
   redis_sidekiq_password:
     external: true
     name: ${REDIS_SIDEKIQ_PASSWORD}
+  solr_username:
+    external: true
+    name: ${SOLR_USERNAME}
+  solr_password:
+    external: true
+    name: ${SOLR_PASSWORD}
+{% if is_development == false %}
+  honeybadger_api_key:
+    external: true
+    name: ${HONEYBADGER_API_KEY}
+  aws_region:
+    external: true
+    name: ${AWS_REGION}
+  aws_access_key_id:
+    external: true
+    name: ${AWS_ACCESS_KEY_ID}
+  aws_secret_access_key:
+    external: true
+    name: ${AWS_SECRET_ACCESS_KEY}
+  ceph_endpoint:
+    external: true
+    name: ${CEPH_ENDPOINT}
+  ceph_access_key_id:
+    external: true
+    name: ${CEPH_ACCESS_KEY_ID}
+  ceph_secret_access_key:
+    external: true
+    name: ${CEPH_SECRET_ACCESS_KEY}
+
+volumes:
+  app_storage:
+    external: true
+    name: app_storage
+{% endif %}

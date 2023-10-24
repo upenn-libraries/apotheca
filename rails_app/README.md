@@ -11,9 +11,9 @@ The **Rails application** will be available at [https://apotheca-dev.library.upe
 
 The **Sidekiq Web UI** will be available at [http://apotheca-dev.library.upenn.edu/sidekiq](http://apotheca-dev.library.upenn.edu/sidekiq).
 
-The **Minio console** will be available at [http://minio-console-dev.library.upenn.edu](http://minio-console-dev.library.upenn.edu). Log-in with `minioadmin/minioadmin`
+The **Minio console** will be available at [http://minio-console-dev.library.upenn.edu](http://minio-console-dev.library.upenn.edu). Log-in with `minioadmin/minioadmin`.
 
-The **Solr admin console** for the first instance will be available at [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/).
+The **Solr admin console** for the first instance will be available at [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/). Log-in with `admin/test`.
 
 ### Interacting with the Application
 

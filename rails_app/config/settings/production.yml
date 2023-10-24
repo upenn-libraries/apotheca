@@ -1,0 +1,63 @@
+#
+# Settings/Configuration for test environment.
+#
+
+# Internal Services
+solr:
+  user: <%= DockerSecrets.lookup(:solr_username) %>
+  password: <%= DockerSecrets.lookup(:solr_password) %>
+  url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
+fits:
+  url: <%= ENV.fetch('FITS_URL', 'http://fits') %>
+redis:
+  url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
+  username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
+  password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
+
+# External Services
+ezid:
+  default_shoulder: 'ark:/99999/fk4'
+  user: apitest
+  password: apitest
+marmite:
+  url: http://mdproc.library.upenn.edu:9292
+honeybadger:
+  api_key: <%= DockerSecrets.lookup(:honeybadger_api_key) %>
+
+# File Storage
+aws: &aws
+  access_key_id: <%= DockerSecrets.lookup(:aws_access_key_id) %>
+  secret_access_key: <%= DockerSecrets.lookup(:aws_secret_access_key) %>
+  region: <%= DockerSecrets.lookup(:aws_region, 'us-east-1') %>
+wasabi: &wasabi
+  access_key_id: placeholder
+  secret_access_key: placeholder
+  region: us-east-1
+preservation_storage:
+  <<: *aws
+  bucket: preservation-staging
+preservation_copy_storage:
+  <<: *wasabi
+  bucket: preservation-copy-staging
+derivative_storage:
+  <<: *aws
+  bucket: derivatives-staging
+iiif_derivative_storage:
+  <<: *aws
+  bucket: iiif-derivatives-staging
+
+# Bulk Import/Migration
+working_storage:
+  sceti_digitized:
+    <<: *aws
+    bucket: sceti-short-term
+  ceph:
+    access_key_id: <%= DockerSecrets.lookup(:ceph_access_key_id) %>
+    secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
+    endpoint: <%= DockerSecrets.lookup(:ceph_endpoint, 'http://ceph_endpoint_placeholder') %>
+    region: us-east-1
+    force_path_style: true
+migration:
+  storage: ceph
+  colenda_url: https://colenda.library.upenn.edu
+
