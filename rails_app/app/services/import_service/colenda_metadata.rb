@@ -126,12 +126,12 @@ module ImportService
 
       new_fields = {}
 
-      rights_uris = rights.select { |r| r.match(/\Ahttps?:\/\/(rightsstatements|creativecommons)\.org\S+\Z/) }
+      rights_uris = rights.select { |r| r.match(%r{\Ahttps?://(rightsstatements|creativecommons)\.org\S+\Z}) }
 
       new_fields[:rights_note] = rights - rights_uris
       new_fields[:rights] = rights_uris.map do |uri|
         uri = normalize_rights_uri(uri)
-        value = RIGHTS_URI_TO_VALUE.find { |u, _| uri.match?(/https?:\/\/#{u}\/?/) }[1]
+        value = RIGHTS_URI_TO_VALUE.find { |u, _| uri.match?(%r{https?://#{u}/?}) }[1]
         { value: value, uri: uri }
       end
 

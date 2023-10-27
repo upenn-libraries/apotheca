@@ -55,7 +55,8 @@ class ItemIndex
   # @param [ActionController::Parameters] parameters
   # @return [Hash]
   def solr_query(parameters:)
-    Solr::QueryBuilder.new(params: parameters, defaults: { fq: DEFAULT_FQ, sort: DEFAULT_SORT }, mapper: MAPPER).solr_query
+    Solr::QueryBuilder.new(params: parameters, defaults: { fq: DEFAULT_FQ, sort: DEFAULT_SORT }, mapper: MAPPER)
+                      .solr_query
   end
 
   # @param [Array] solr_documents

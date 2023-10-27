@@ -8,8 +8,10 @@ RSpec.describe ItemIndex do
   end
 
   before do
-    persist(:item_resource, descriptive_metadata: { title: [{ value: 'Cheesy Item'}], collection: [{ value: 'Collection B' }] })
-    persist(:item_resource, descriptive_metadata: { title: [{ value: 'Crunchy Item'}], collection: [{ value: 'Collection A' }] })
+    persist(:item_resource,
+            descriptive_metadata: { title: [{ value: 'Cheesy Item' }], collection: [{ value: 'Collection B' }] })
+    persist(:item_resource,
+            descriptive_metadata: { title: [{ value: 'Crunchy Item' }], collection: [{ value: 'Collection A' }] })
   end
 
   describe '#item_index' do

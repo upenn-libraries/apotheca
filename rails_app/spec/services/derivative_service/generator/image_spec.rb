@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 describe DerivativeService::Generator::Image do
-  let(:file) { ActionDispatch::Http::UploadedFile.new(tempfile: File.open(file_fixture('files/trade_card/original/front.tif'))) }
+  let(:file) do
+    ActionDispatch::Http::UploadedFile.new tempfile: file_fixture('files/trade_card/original/front.tif').open
+  end
   let(:generator) { described_class.new(file) }
 
   describe '#thumbnail' do

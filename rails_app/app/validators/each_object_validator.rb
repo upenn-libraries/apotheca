@@ -9,24 +9,29 @@ class EachObjectValidator < ActiveModel::EachValidator
   VALIDATIONS = [REQUIRED, ACCEPTED_VALUES].freeze
 
   def check_validity!
-    options.each do |field, validations|
+    options.each do |_field, validations|
       validations.each do |validation, args|
         raise ArgumentError, "#{validation} validation is not supported" unless VALIDATIONS.include?(validation)
-        raise ArgumentError, "#{ACCEPTED_VALUES} validation must be provided an array" if validation == ACCEPTED_VALUES && !args.is_a?(Array)
+
+        if validation == ACCEPTED_VALUES && !args.is_a?(Array)
+          raise ArgumentError, "#{ACCEPTED_VALUES} validation must be provided an array"
+        end
       end
     end
-
   end
+
   def validate_each(record, attribute, values)
-    Array.wrap(values).each_with_index do |value, i|
+    Array.wrap(values).each do |value|
       options.each do |field, validations|
         validations.each do |validation, args|
           case validation
           when :required
             next if value[field].present?
+
             record.errors.add(attribute, "missing #{field}")
           when :accepted_values
             next if args.include? value[field]
+
             record.errors.add(attribute, "#{field} contains invalid value")
           end
         end

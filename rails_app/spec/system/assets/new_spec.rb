@@ -12,13 +12,13 @@ describe 'Asset New Page' do
   end
 
   it 'requires a preservation file' do
-    click_on 'Save'
+    click_button 'Save'
     expect(page).not_to have_text('Successfully created asset')
   end
 
   it 'can create a new asset' do
     attach_file 'asset-file', Rails.root.join('spec/fixtures/files/trade_card/original/front.tif')
-    click_on 'Save'
+    click_button 'Save'
     expect(page).to have_text('Successfully created asset')
   end
 end

@@ -107,7 +107,9 @@ describe ImportService::Process::Update do
       end
 
       it 'updates expected descriptive metadata' do
-        expect(updated_item.descriptive_metadata.collection.pluck(:value)).to contain_exactly('Very important new collection')
+        expect(
+          updated_item.descriptive_metadata.collection.pluck(:value)
+        ).to contain_exactly('Very important new collection')
         expect(updated_item.descriptive_metadata.physical_format.pluck(:value)).to contain_exactly('New')
       end
 

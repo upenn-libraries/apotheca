@@ -22,7 +22,7 @@ describe ImportService::MigrationAssetSet do
       expect(asset_set.valid?).to be false
       expect(asset_set.errors).to include 'path invalid for front.tif'
     end
-    
+
     it 'requires unarranged asset to have path' do
       asset_set = described_class.new(unarranged: [{ filename: 'front.tif', checksum: '123' }])
       expect(asset_set.valid?).to be false
