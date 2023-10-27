@@ -42,9 +42,12 @@ module AssetInfo
 
     # @return [ActiveSupport::SafeBuffer]
     def access_download_link
+      classes = %w[stretched-link list-group-item list-group-item-action]
+      classes.push('disabled') unless access_copy?
+
       link_to('Download Access Copy',
               file_asset_path(asset, type: :access, disposition: 'attachment'),
-              class: 'stretched-link list-group-item list-group-item-action')
+              class: classes)
     end
 
     def thumbnail_form_classes
@@ -96,5 +99,11 @@ module AssetInfo
     def thumbnail_path
       file_asset_path asset, type: :thumbnail, disposition: :inline
     end
+
+    # @return [Boolean]
+    def access_copy?
+      asset.access.present?
+    end
+
   end
 end
