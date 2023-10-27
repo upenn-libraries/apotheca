@@ -605,7 +605,7 @@ DEPENDENCIES
   sprockets-rails
   stimulus-rails
   tzinfo-data
-  upennlib-rubocop
+  upennlib-rubocop (~> 1.0)
   valkyrie (~> 3.0)
   valkyrie-shrine
   view_component
