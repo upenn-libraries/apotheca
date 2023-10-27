@@ -1,3 +1,4 @@
+# rubocop:disable all
 # frozen_string_literal: true
 
 # Modify index on User email field to be scoped to the provider field
