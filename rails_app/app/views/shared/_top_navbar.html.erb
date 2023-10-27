@@ -46,7 +46,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><%= button_to "Sign Out",
-                                destroy_user_session_path(type: current_user.provider),
+                                sign_out_path(type: current_user.provider),
                                 class: 'dropdown-item' %> </li>
             </ul>
           </li>
