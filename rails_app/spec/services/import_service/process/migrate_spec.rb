@@ -198,9 +198,8 @@ describe ImportService::Process::Migrate do
       it 'return expected failure object' do
         expect(result.failure[:error]).to be :import_failed
         expect(result.failure[:details]).to contain_exactly(
-                                              'Following error(s) raised when generating front.tif:',
-                                              "\tExpected checksum does not match"
-                                            )
+          'Error while creating front.tif: Expected checksum does not match'
+        )
       end
     end
   end
