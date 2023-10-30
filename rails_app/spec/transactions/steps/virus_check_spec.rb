@@ -16,6 +16,9 @@ describe Steps::VirusCheck do
 
       it 'returns success and sets a preservation message' do
         expect(result.success?).to be true
+        expect(result.success[:temporary_events].first[:outcome_detail_note]).to eq(
+          I18n.t('preservation_events.virus_check.unscanned')
+        )
       end
     end
 
@@ -34,6 +37,9 @@ describe Steps::VirusCheck do
 
       it 'returns success and sets a preservation message' do
         expect(result.success?).to be true
+        expect(result.success[:temporary_events].first[:outcome_detail_note]).to eq(
+          I18n.t('preservation_events.virus_check.clean')
+        )
       end
     end
 

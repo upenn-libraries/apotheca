@@ -13,18 +13,18 @@ module Steps
     def call(**attributes)
       file = attributes[:file] || attributes['file']
       if skip_scan?(file)
-        attributes[:temporary_events] = AssetResource::PreservationEvent.virus_check(
+        attributes[:temporary_events] = [AssetResource::PreservationEvent.virus_check(
           outcome: Premis::Outcomes::SUCCESS.uri, note: I18n.t('preservation_events.virus_check.unscanned'),
           implementer: attributes[:updated_by]
-        )
+        )]
         Success(attributes)
       else
         case Clamby.safe?(file.path)
         when TrueClass
-          attributes[:temporary_events] = AssetResource::PreservationEvent.virus_check(
+          attributes[:temporary_events] = [AssetResource::PreservationEvent.virus_check(
             outcome: Premis::Outcomes::SUCCESS.uri, implementer: attributes[:updated_by],
             note: I18n.t('preservation_events.virus_check.clean')
-          )
+          )]
           Success(attributes)
         when FalseClass
           File.delete(file.path)
