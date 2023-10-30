@@ -13,6 +13,11 @@ describe 'Item Show Page' do
     it 'shows human readable name' do
       expect(page).to have_text(item.human_readable_name)
     end
+
+    it 'disables access copy link when access copy is not available' do
+      click_on 'Assets'
+      expect(page).to have_link('Download Access Copy', class: /disabled/)
+    end
   end
 
   shared_examples_for 'any logged in user who can edit an Item' do
