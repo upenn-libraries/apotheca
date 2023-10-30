@@ -28,6 +28,7 @@ describe Steps::VirusCheck do
 
       it 'fails' do
         expect(result.failure?).to be true
+        expect(result.failure[:error]).to eq :virus_detected
       end
     end
 
@@ -49,6 +50,7 @@ describe Steps::VirusCheck do
 
       it 'fails' do
         expect(result.failure?).to be true
+        expect(result.failure[:error]).to eq :clamscan_problem
       end
     end
   end
