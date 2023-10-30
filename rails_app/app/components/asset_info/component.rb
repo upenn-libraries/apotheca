@@ -104,6 +104,5 @@ module AssetInfo
     def access_copy?
       asset.access.present?
     end
-
   end
 end
