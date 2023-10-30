@@ -32,7 +32,7 @@ describe Steps::VirusCheck do
     end
 
     context 'when there is no virus' do
-      let(:skip_scan) { true }
+      let(:skip_scan) { false }
       let(:clamby_outcome) { true }
 
       it 'returns success and sets a preservation message' do
