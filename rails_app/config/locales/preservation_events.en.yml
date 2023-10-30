@@ -12,7 +12,5 @@ en:
     preservation_filename:
       note: "Preservation file changed from %{from} to %{to}"
     virus_check:
-      success:
-        note: "File scanned, virus not found"
-      failure:
-        note: "File scanned, virus detected and file deleted"
+      unscanned: "File is not present or over the size limit and therefore no scan performed"
+      clean: "File scanned, virus not found"
