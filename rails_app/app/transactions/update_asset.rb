@@ -64,17 +64,6 @@ class UpdateAsset
     Success(change_set)
   end
 
-  # def virus_check(**attributes)
-  #   if (attributes[:file] || attributes['file']).present?
-  #     warning = AssetResource::PreservationEvent.virus_check outcome: Premis::Outcomes::WARNING.uri,
-  #                                                            note: I18n.t('preservation_events.virus_check.note'),
-  #                                                            implementer: attributes[:updated_by]
-  #     attributes[:temporary_events] = [warning]
-  #   end
-  #
-  #   Success(attributes)
-  # end
-
   # Stores file in preservation storage and adds in the system generated id to the list of
   # attributes passed on to the next step.
   #
