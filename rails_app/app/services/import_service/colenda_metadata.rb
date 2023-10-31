@@ -30,7 +30,7 @@ module ImportService
     def valid?
       @errors = [] # Clear out previously generated errors.
 
-      @errors << 'invalid metadata fields provided' unless original_metadata.all? { |k,_v| VALID_FIELDS.include?(k) }
+      @errors << 'invalid metadata fields provided' unless original_metadata.all? { |k, _v| VALID_FIELDS.include?(k) }
       @errors << 'title is required if a bibnumber is not provided' if original_metadata[:title].blank? && original_metadata[:bibnumber].blank?
 
       errors.empty?
