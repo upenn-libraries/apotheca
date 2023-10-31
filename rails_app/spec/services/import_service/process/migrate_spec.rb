@@ -95,6 +95,7 @@ describe ImportService::Process::Migrate do
 
     context 'when migrating an item' do
       let(:body) { JSON.parse(File.read(file_fixture('colenda_serialization/example-1.json'))).deep_symbolize_keys }
+      # rubocop:disable Layout/LineLength
       let(:metadata) do
         {
           physical_location: [{ value: 'Arc.MS.2' }],
@@ -128,6 +129,7 @@ describe ImportService::Process::Migrate do
           title: [{ value: 'Letter; Sampson, E.; Leeser, I., Rev.; Belton, TX; 17 February 1866' }]
         }
       end
+      # rubocop:enable Layout/LineLength
 
       before do
         stub_request(

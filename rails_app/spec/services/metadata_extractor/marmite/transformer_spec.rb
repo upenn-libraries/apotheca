@@ -6,6 +6,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
 
   describe '#to_descriptive_metadata' do
     context 'when record is a book' do
+      # rubocop:disable Layout/LineLength
       let(:expected_metadata) do
         {
           coverage: [{ value: 'Early works to 1800' }],
@@ -49,6 +50,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           ]
         }
       end
+      # rubocop:enable Layout/LineLength
       let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
 
       it 'generates_expected_xml' do
@@ -57,6 +59,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
     end
 
     context 'when record is a manuscript' do
+      # rubocop:disable Layout/LineLength
       let(:expected_metadata) do
         {
           date: [{ value: '1475' }],
@@ -100,6 +103,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           title: [{ value: '[Partial copy of Chronicon]' }]
         }
       end
+      # rubocop:enable Layout/LineLength
       let(:xml) { File.read(file_fixture('marmite/marc_xml/manuscript-1.xml')) }
 
       it 'generates expected xml' do
