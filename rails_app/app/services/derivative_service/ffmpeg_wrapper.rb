@@ -19,7 +19,7 @@ module DerivativeService
       '-hide_banner' # hide banner about config/formats from output - remove if debugging
     ].freeze
     THUMBNAIL_IMAGE_OPTIONS = [
-      '-vf "thumbnail"', # use ffmpeg video filter to extract meaninfgul thumbnail
+      '-vf "thumbnail"', # use ffmpeg video filter to extract meaningful thumbnail
       '-vframes 1', # extract a specific number of video frames
       '-q:v 2', # set the quality of the output video frame
       '-f image2', # force output as image
