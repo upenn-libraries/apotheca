@@ -160,10 +160,10 @@ describe ImportService::Process::Create do
       it 'return expected failure object' do
         expect(result.failure[:error]).to be :import_failed
         expect(result.failure[:details]).to contain_exactly(
-          'Following error(s) raised when generating front.tif:',
-          "\tFile characterization failed",
-          "\t\tCould not successfully characterize contents: Unexpected Error"
+          'Error while creating front.tif: File characterization failed',
+          "\tCould not successfully characterize contents: Unexpected Error"
         )
+        expect(result.failure[:exception]).to be_a FileCharacterization::Fits::Error
       end
     end
 
