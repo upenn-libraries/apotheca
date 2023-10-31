@@ -11,5 +11,5 @@ class UpdateItem
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
   # TODO: Perhaps do this before save so we can noop if the metadata didn't change.
-  step :update_ark_metadata, with: 'item_resource.update_ark_metadata'
+  tee :enqueue_ark_metadata_update, with: 'item_resource.enqueue_ark_metadata_update'
 end
