@@ -18,14 +18,14 @@ module DerivativeService
       '-ac 2', # ensure 2-channel (stereo) sound
       '-hide_banner' # hide banner about config/formats from output - remove if debugging
     ].freeze
-    FIRST_FRAME_OPTIONS = [
-      '-ss 00:00:00', # seek to a specific time in the input file
+    THUMBNAIL_IMAGE_OPTIONS = [
+      '-vf "thumbnail"', # use ffmpeg video filter to extract meaninfgul thumbnail
       '-vframes 1', # extract a specific number of video frames
       '-q:v 2', # set the quality of the output video frame
       '-f image2', # force output as image
       'pipe:1', # output data to stdout
       '-loglevel quiet' # used to suppress ffmpeg console output
-    ].freeze
+    ]
 
     # @param [String] input_path
     # @param [Array] options
@@ -51,8 +51,8 @@ module DerivativeService
       true
     end
 
-    def self.first_frame_from_video(input_path:)
-      command(input_path: input_path, options: FIRST_FRAME_OPTIONS)
+    def self.thumbnail_frame_from_video(input_path:)
+      command(input_path: input_path, options: THUMBNAIL_IMAGE_OPTIONS)
     end
   end
 end
