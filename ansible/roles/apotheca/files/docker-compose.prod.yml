@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  apotheca:
+    deploy:
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.apotheca.entrypoints=web"
+        - "traefik.http.routers.apotheca.rule=Host(`${APP_URL}`)"
+        - "traefik.http.routers.apotheca.service=apotheca"
+        - "traefik.http.services.apotheca.loadbalancer.server.port=${APP_PORT}"
+    healthcheck:
+      interval: 10s
+      retries: 6
+      start_period: 60s
+      timeout: 120s
+    secrets:
+      - honeybadger_api_key
+      - aws_region
+      - aws_access_key_id
+      - aws_secret_access_key
+      - ceph_endpoint
+      - ceph_access_key_id
+      - ceph_secret_access_key
+    volumes:
+      - app_storage:/home/app/storage
+
+secrets:
+  honeybadger_api_key:
+    external: true
+    name: ${HONEYBADGER_API_KEY}
+  aws_region:
+    external: true
+    name: ${AWS_REGION}
+  aws_access_key_id:
+    external: true
+    name: ${AWS_ACCESS_KEY_ID}
+  aws_secret_access_key:
+    external: true
+    name: ${AWS_SECRET_ACCESS_KEY}
+  ceph_endpoint:
+    external: true
+    name: ${CEPH_ENDPOINT}
+  ceph_access_key_id:
+    external: true
+    name: ${CEPH_ACCESS_KEY_ID}
+  ceph_secret_access_key:
+    external: true
+    name: ${CEPH_SECRET_ACCESS_KEY}
+
+volumes:
+  app_storage:
+    name: app_storage

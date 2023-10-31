@@ -90,8 +90,6 @@ module ImportService
           end
         end
       rescue StandardError => e
-        # Honeybadger.notify(e) # Sending full error to Honeybadger.
-        Rails.logger.debug e.backtrace.join("\n")
         failure(exception: e)
       end
 

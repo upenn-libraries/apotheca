@@ -1,8 +1,36 @@
+#
+# Settings/Configuration for development environment.
+#
+
+# Internal Services
+solr:
+  user: <%= DockerSecrets.lookup(:solr_username) %>
+  password: <%= DockerSecrets.lookup(:solr_password) %>
+  url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
+fits:
+  url: <%= ENV.fetch('FITS_URL', 'http://fits') %>
+redis:
+  url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
+  username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
+  password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
+chrome:
+  url: <%= ENV.fetch('CHROME_URL', 'http://chrome:3000') %>
+
+# External Services
+ezid:
+  default_shoulder: 'ark:/99999/fk4'
+  user: apitest
+  password: apitest
+marmite:
+  url: http://mdproc.library.upenn.edu:9292
+
+# File Storage
 minio: &minio
   access_key_id: minioadmin
   secret_access_key: minioadmin
-  endpoint: <%= ENV['MINIO_URL'] %>
+  endpoint: <%= ENV.fetch('MINIO_URL', 'http://minio:9000') %>
   region: us-east-1
+  force_path_style: true
 preservation_storage:
   <<: *minio
   bucket: preservation-dev
@@ -15,13 +43,8 @@ derivative_storage:
 iiif_derivative_storage:
   <<: *minio
   bucket: iiif-derivatives-dev
-solr:
-  url: <%= ENV['SOLR_URL'] %>
-fits:
-  url: <%= ENV['FITS_URL'] %>
-marmite:
-  url: http://mdproc.library.upenn.edu:9292
-skip_ezid_metadata_update: true
+
+# Bulk Import/Migration
 working_storage:
   sceti_digitized:
     <<: *minio
@@ -31,14 +54,11 @@ working_storage:
     secret_access_key: fake-key
     endpoint: https://ceph.library.upenn.edu
     region: us-east-1
-supported_file_extensions:
-  - .tif
-  - .tiff
-  - .pdf
-  - .gz
-  - .wav
-  - .mov
+    force_path_style: true
 migration:
   storage: ceph
   colenda_url: https://colenda.library.upenn.edu
+
+# Item/Asset Resource Configuration
+skip_ezid_metadata_update: true
 

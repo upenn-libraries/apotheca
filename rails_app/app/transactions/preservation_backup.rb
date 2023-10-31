@@ -10,6 +10,7 @@ class PreservationBackup
   step :find_asset, with: 'asset_resource.find_resource'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :store_file_in_backup_location
+  around :cleanup, with: 'asset_resource.cleanup'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
 

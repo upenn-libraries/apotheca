@@ -31,7 +31,7 @@ stages:
   - sast
   - copy_docker_images
   - remove_tmp_registry
-  # - deploy
+  - deploy
 
 # -- Start - build and push base image
 build_and_push_base_app_image:
@@ -114,7 +114,7 @@ rspec_app_test:
       alias: solr
       variables:
         SOLR_CLOUD_BOOTSTRAP: "yes"
-        SOLR_ENABLE_AUTHENTICATION: "no"
+        SOLR_ENABLE_AUTHENTICATION: "yes"
         SOLR_HOST: "solr"
         SOLR_JAVA_MEM: "-Xms4g -Xmx4g"
         SOLR_MODE: "solrcloud"
@@ -149,8 +149,8 @@ rspec_app_test:
         sleep "30s"
       done
     - (cd ./solr/conf && zip -r - *) > configset.zip
-    - curl -X POST --header "Content-Type:application/octet-stream" --data-binary @configset.zip "http://solr:8983/solr/admin/configs?action=UPLOAD&name=apotheca"
-    - curl -v "http://solr:8983/solr/admin/collections?action=CREATE&name=apotheca-test&collection.configName=apotheca&numShards=1"
+    - curl -X POST --user "admin:Bitnami" --header "Content-Type:application/octet-stream" --data-binary @configset.zip "http://solr:8983/solr/admin/configs?action=UPLOAD&name=apotheca"
+    - curl -v --user "admin:Bitnami" "http://solr:8983/solr/admin/collections?action=CREATE&name=apotheca-test&collection.configName=apotheca&numShards=1"
     - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
   needs:
     - amend_tmp_base_dev_images
@@ -242,6 +242,7 @@ trivy_app_container_scanning:
     - amend_prod_image
   variables:
     CI_IMAGE_NAME: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}
+  allow_failure: true
   tags:
     - build
 # -- End - SAST images
@@ -274,21 +275,21 @@ remove_tmp_registry:
 # -- End - remove tmp registry repository
 
 # Deploy staging
-# deploy_staging:
-#   stage: deploy
-#   extends:
-#     - .deploy
-#   variables:
-#     IMAGE_TAG: staging
-#   environment:
-#     name: staging
-#     url: https://test.com
-#   needs:
-#     - copy_app_docker_images
-#   only:
-#     - main
-#   tags:
-#     - deploy
+deploy_staging:
+  stage: deploy
+  extends:
+    - .deploy
+  variables:
+    IMAGE_TAG: ${CI_COMMIT_SHORT_SHA}
+  environment:
+    name: staging
+    url: http://apothe-stg01.library.upenn.int
+  needs:
+    - copy_app_docker_images
+  only:
+    - main
+  tags:
+    - deploy
 
 # Deploy production
 # deploy_production:

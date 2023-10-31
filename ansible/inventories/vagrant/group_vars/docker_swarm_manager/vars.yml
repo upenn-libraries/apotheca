@@ -1,4 +1,3 @@
 ---
-config_dir: "/opt/devops"
 is_development: true
 project_root: "/opt/devops"

@@ -11,6 +11,9 @@ export default class extends Controller {
     dragstart(event) {
         event.dataTransfer.setData("application/drag-key", event.target.getAttribute("data-asset-id"))
         event.dataTransfer.effectAllowed = "move"
+        const asset_id = event.dataTransfer.getData("application/drag-key")
+        const draggedAsset = this.element.querySelector(`[data-asset-id='${asset_id}']`)
+        draggedAsset.classList.add('border-primary')
     }
 
     dragover(event) {
@@ -26,6 +29,7 @@ export default class extends Controller {
         const asset_id = event.dataTransfer.getData("application/drag-key")
         const dropTarget = event.target
         const draggedAsset = this.element.querySelector(`[data-asset-id='${asset_id}']`)
+        draggedAsset.classList.remove('border-primary')
         const positionComparison = dropTarget.compareDocumentPosition(draggedAsset)
         if (positionComparison & 4) {
             dropTarget.closest("div.card").insertAdjacentElement('beforebegin', draggedAsset)

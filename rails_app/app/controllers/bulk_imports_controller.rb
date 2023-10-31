@@ -35,7 +35,11 @@ class BulkImportsController < ApplicationController
     @bulk_import.original_filename = uploaded_file.original_filename
 
     csv = uploaded_file.read
-    @bulk_import.csv_rows = StructuredCSV.parse(csv)
+    begin
+      @bulk_import.csv_rows = StructuredCSV.parse(csv)
+    rescue CSV::MalformedCSVError => e
+      return redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{e.message}"
+    end
 
     if @bulk_import.empty_csv?
       return redirect_to bulk_imports_path, alert: 'Problem creating bulk import: CSV has no item data'

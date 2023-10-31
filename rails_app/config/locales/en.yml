@@ -16,6 +16,8 @@ en:
         title: "Arranged"
         message: ""
         placeholder_message: "Drag an Asset here to order it."
+    file:
+        size: "Asset too large to load via user interface. Use Bulk Import to load assets larger than 2 gigabytes."
   confirm_messages:
     item:
       refresh_ILS: "Your current ILS metadata will be updated."

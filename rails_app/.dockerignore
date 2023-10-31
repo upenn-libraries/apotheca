@@ -1,0 +1,2 @@
+# Ignore env credential keys
+config/credentials/*.key
