@@ -11,7 +11,6 @@ describe UpdateArkMetadataJob do
     let(:xml) { File.read(file_fixture('marmite/marc_xml/manuscript-1.xml')) }
   end
 
-
   it_behaves_like 'TransactionJob' do
     let(:args) { [item.id.to_s] }
   end
