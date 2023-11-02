@@ -59,6 +59,14 @@ describe ImportService::S3Storage do
       end
     end
 
+    context 'when path is a subdirectory' do
+      it 'returns all files in subdirectory' do
+        expect(
+          storage.files_at('trade_card/original')
+        ).to contain_exactly('trade_card/original/front.tif', 'trade_card/original/back.tif')
+      end
+    end
+
     context 'when path contains files' do
       it 'returns all files (ignoring nested files)' do
         expect(storage.files_at('')).to contain_exactly('bell.wav', 'video.mov')

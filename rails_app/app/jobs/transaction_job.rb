@@ -5,8 +5,8 @@
 class TransactionJob
   include Sidekiq::Job
 
-  def transaction(*args)
-    raise "#transaction must be implemented when inheriting from TransactionJob"
+  def transaction(*_args)
+    raise '#transaction must be implemented when inheriting from TransactionJob'
   end
 
   def perform(*args)
@@ -16,10 +16,8 @@ class TransactionJob
 
     failure = result.failure
 
-    if (e = failure[:exception])
-      raise e
-    else
-      raise StandardError, failure[:error].to_s.titleize
-    end
+    raise failure[:exception] if failure[:exception]
+
+    raise StandardError, failure[:error].to_s.titleize
   end
 end

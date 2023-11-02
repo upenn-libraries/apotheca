@@ -38,7 +38,7 @@ describe ImportService::ColendaMetadata do
 
     context 'when type and item_type present' do
       let(:original_metadata) do
-        { item_type: ['Photographs', 'Book'], type: ['PhotoBook'] }
+        { item_type: %w[Photographs Book], type: ['PhotoBook'] }
       end
 
       it 'combines values in type and item_type' do
@@ -60,7 +60,7 @@ describe ImportService::ColendaMetadata do
     end
 
     context 'when language present' do
-      let(:original_metadata) { { language: ['English', 'French'] } }
+      let(:original_metadata) { { language: %w[English French] } }
 
       it 'adds language URIs' do
         expect(new_metadata[:language]).to contain_exactly(

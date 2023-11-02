@@ -78,7 +78,7 @@ describe FileCharacterization::Fits do
       end
 
       it 'returns duration' do
-        expect(metadata.duration).to eql 0.17
+        expect(metadata.duration).to be 0.17
       end
 
       it 'returns md5 checksum' do
@@ -114,8 +114,8 @@ describe FileCharacterization::Fits do
       # Skipping this test on ARM architecture because the MediaInfo binary used by FITS does not support
       # Linux-based ARM Architectures. It would be hard to fix this problem now, we should wait until the
       # Ubuntu version of MediaInfo supports ARM.
-      it 'returns duration', skip_on_arm: true do
-        expect(metadata.duration).to eql 1.134
+      it 'returns duration', :skip_on_arm do
+        expect(metadata.duration).to be 1.134
       end
 
       it 'returns md5 checksum' do

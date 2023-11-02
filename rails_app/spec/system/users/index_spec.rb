@@ -40,43 +40,43 @@ describe 'User Index Page' do
 
     it 'searches by first name' do
       fill_in 'Search', with: 'rl'
-      click_on 'Filter'
-      expect(page).to have_selector '.users-list__user', count: 1
+      click_button 'Filter'
+      expect(page).to have_css '.users-list__user', count: 1
       expect(page).to have_text(names[:user1_fname])
     end
 
     it 'searches by last name' do
       fill_in 'Search', with: 'annin'
-      click_on 'Filter'
-      expect(page).to have_selector '.users-list__user', count: 1
+      click_button 'Filter'
+      expect(page).to have_css '.users-list__user', count: 1
       expect(page).to have_text names[:user2_lname]
     end
 
     it 'searches by email' do
       fill_in 'Search', with: '@upenn'
-      click_on 'Filter'
-      expect(page).to have_selector '.users-list__user', count: 4
+      click_button 'Filter'
+      expect(page).to have_css '.users-list__user', count: 4
       expect(page).to have_text names[:user2_lname]
     end
 
     it 'searches by full name' do
       fill_in 'Search', with: 'Bob Smith'
-      click_on 'Filter'
-      expect(page).to have_selector '.users-list__user', count: 1
+      click_button 'Filter'
+      expect(page).to have_css '.users-list__user', count: 1
       expect(page).to have_text([names[:user3_fname], names[:user3_lname]].join(' '))
     end
 
     it 'filters by status' do
       select 'Active', from: 'Status'
-      click_on 'Filter'
-      expect(page).to have_selector '.users-list__user', count: 3
+      click_button 'Filter'
+      expect(page).to have_css '.users-list__user', count: 3
       expect(page).not_to have_text user4_email
     end
 
     it 'filters by role' do
       select 'Viewer', from: 'Role'
-      click_on 'Filter'
-      expect(page).to have_selector '.users-list__user', count: 1
+      click_button 'Filter'
+      expect(page).to have_css '.users-list__user', count: 1
       expect(page).to have_text user4_email
     end
   end

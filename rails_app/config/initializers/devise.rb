@@ -14,7 +14,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'd03070d517e7d220bc9285792dc7f579acdd00a02b9497f940fe96ec6427bbf91d3a40464f7acabbf85e7020950cbeb9595ea875989fc0f1f27f319d8d6ff355'
+  # config.secret_key = 'd03070d517e7d220bc9285792dc7f579acdd00a02b9497f940fe96ec6427bbf91d3a40464f7acabbf85
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -287,7 +287,7 @@ Devise.setup do |config|
     },
     # see: https://github.com/SAML-Toolkits/ruby-saml#clock-drift for why this is needed and for GitLab's discussion
     # see: https://gitlab.com/gitlab-org/gitlab/-/issues/13653#note_491162899
-    allowed_clock_drift: 2.second
+    allowed_clock_drift: 2.seconds
   }
 
   # ==> Warden configuration

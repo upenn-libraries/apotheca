@@ -65,16 +65,18 @@ module Form
 
           def subfields(v)
             @subfields.map do |subfield_name, config|
-              render(DescriptiveMetadata::Component.new(
-                field: "#{@field}[#{subfield_name}][]",
-                value: v[subfield_name] || [],
-                label: subfield_name.to_s.titleize,
-                config: config,
-                label_col: @label_col,
-                input_col: @input_col,
-                size: @size
-              # TODO: missing :id,
-              ))
+              render(
+                DescriptiveMetadata::Component.new(
+                  field: "#{@field}[#{subfield_name}][]",
+                  value: v[subfield_name] || [],
+                  label: subfield_name.to_s.titleize,
+                  config: config,
+                  label_col: @label_col,
+                  input_col: @input_col,
+                  size: @size
+                  # TODO: missing :id,
+                )
+              )
             end
           end
 

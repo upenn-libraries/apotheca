@@ -1,3 +1,4 @@
+# rubocop:disable all
 # frozen_string_literal: true
 # This migration comes from valkyrie_engine (originally 20161007101725)
 class CreateOrmResources < ActiveRecord::Migration[5.0]

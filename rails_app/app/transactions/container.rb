@@ -36,8 +36,8 @@ class Container
       Steps::SetThumbnail.new
     end
 
-    register 'update_ark_metadata' do
-      Steps::UpdateArkMetadata.new
+    register 'enqueue_ark_metadata_update' do
+      Steps::EnqueueArkMetadataUpdate.new
     end
 
     register 'delete_resource' do

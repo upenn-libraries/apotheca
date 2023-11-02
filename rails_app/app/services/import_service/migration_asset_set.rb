@@ -79,7 +79,7 @@ module ImportService
     # @param [Array<Hash>] asset_data
     # @return [TrueClass|FalseClass] whether all asset data hashes include a filename, path and checksum
     def asset_valid?(asset_data)
-      asset_data.all? { |a| a.key?(:filename) && a.key?(:path) && a.key?(:checksum)}
+      asset_data.all? { |a| a.key?(:filename) && a.key?(:path) && a.key?(:checksum) }
     end
 
     # Creating AssetData objects for a given asset type.

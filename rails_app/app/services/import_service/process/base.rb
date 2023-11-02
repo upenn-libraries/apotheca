@@ -76,11 +76,10 @@ module ImportService
           result = asset_data.create_asset(**additional_attrs)
 
           if result.failure?
-            error = failure(**result.failure)
-            # Adding additional error message
             error = failure(
-              error: "Following error(s) raised when generating #{asset_data.filename}:",
-              details: error.failure[:details]
+              error: "Error while creating #{asset_data.filename}: #{result.failure[:error].to_s.humanize}",
+              details: result.failure.fetch(:details, []),
+              exception: result.failure[:exception]
             )
             break
           else
@@ -104,8 +103,9 @@ module ImportService
         assets.each { |a| DeleteAsset.new.call(id: a.id) }
       end
 
-      # Takes different failure params and returns a Failure object with two keys: error, details. The details
-      # array can contain some plain text formatting for display purposes.
+      # Takes different failure params and returns a Failure object with three keys: error, details
+      # and exception. The details array can contain some plain text formatting for display purposes. An
+      # exception may not always be present.
       #
       # @param [String|Symbol] error
       # @param [Array<String>] details
@@ -120,10 +120,10 @@ module ImportService
 
         if error
           # Display the details as nested below the error.
-          details = details.map { |d| "\t" + d }.prepend(error)
+          details = details.map { |d| "\t#{d}" }.prepend(error)
         end
 
-        Failure.new(error: :import_failed, details: details)
+        Failure.new(error: :import_failed, details: details, exception: exception)
       end
 
       # Queries EZID to check if a given ark already exists.

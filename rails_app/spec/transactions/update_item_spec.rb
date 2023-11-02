@@ -37,6 +37,10 @@ describe UpdateItem do
       it 'sets thumbnail asset id' do
         expect(updated_item.thumbnail_asset_id).to eql asset.id
       end
+
+      it 'enqueues job to update Ark metadata' do
+        expect(UpdateArkMetadataJob).to have_enqueued_sidekiq_job.with(updated_item.id.to_s)
+      end
     end
 
     context 'when updated_by is not provided' do

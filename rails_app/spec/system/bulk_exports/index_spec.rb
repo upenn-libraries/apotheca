@@ -23,9 +23,9 @@ describe 'Bulk Export Index Page' do
 
       it 'stores per page value across requests' do
         select '25', from: 'Per Page'
-        click_on 'Filter'
-        click_on 'Items'
-        click_on 'Exports'
+        click_button 'Filter'
+        click_link 'Items'
+        click_link 'Exports'
         expect(page).to have_select('Per Page', selected: '25')
       end
     end
@@ -53,8 +53,8 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be cancelled' do
-          click_on 'Cancel Export'
-          within('div.modal-content') { click_on 'Cancel' }
+          click_button 'Cancel Export'
+          within('div.modal-content') { click_button 'Cancel' }
           expect(page).to have_text('Bulk export cancelled.')
         end
       end
@@ -81,8 +81,8 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          click_on 'Delete Export'
-          within('div.modal-content') { click_on 'Delete' }
+          click_button 'Delete Export'
+          within('div.modal-content') { click_button 'Delete' }
           expect(page).to have_text('Bulk export deleted.')
         end
       end
@@ -123,14 +123,14 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          click_on 'Delete Export'
-          within('div.modal-content') { click_on 'Delete' }
+          click_button 'Delete Export'
+          within('div.modal-content') { click_button 'Delete' }
           expect(page).to have_text('Bulk export deleted.')
         end
 
         it 'can be regenerated' do
-          click_on 'Regenerate Export'
-          within('div.modal-content') { click_on 'Regenerate' }
+          click_button 'Regenerate Export'
+          within('div.modal-content') { click_button 'Regenerate' }
           expect(page).to have_text('Bulk export queued for regeneration')
         end
       end
@@ -168,14 +168,14 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'can be deleted' do
-          click_on 'Delete Export'
-          within('div.modal-content') { click_on 'Delete' }
+          click_button 'Delete Export'
+          within('div.modal-content') { click_button 'Delete' }
           expect(page).to have_text('Bulk export deleted.')
         end
 
         it 'can be regenerated' do
-          click_on 'Regenerate Export'
-          within('div.modal-content') { click_on 'Regenerate' }
+          click_button 'Regenerate Export'
+          within('div.modal-content') { click_button 'Regenerate' }
           expect(page).to have_text('Bulk export queued for regeneration')
         end
       end
@@ -195,7 +195,7 @@ describe 'Bulk Export Index Page' do
 
     it 'filters by associated user email' do
       select user.email, from: 'Created By'
-      click_on 'Filter'
+      click_button 'Filter'
       expect(page).to have_text(user.email, count: 2)
       expect(page).to have_text(other_user.email, count: 1)
     end
@@ -217,28 +217,28 @@ describe 'Bulk Export Index Page' do
     it 'sorts by generated at in ascending order' do
       select 'Generated At', from: 'Sort By'
       select 'Ascending', from: 'Sort Direction'
-      click_on 'Filter'
+      click_button 'Filter'
       expect(first('.card')).to have_text(first_export.title)
     end
 
     it 'sorts by generated at in descending order' do
       select 'Generated At', from: 'Sort By'
       select 'Descending', from: 'Sort Direction'
-      click_on 'Filter'
+      click_button 'Filter'
       expect(first('.card')).to have_text(second_export.title)
     end
 
     it 'sorts by created at in ascending order' do
       select 'Created At', from: 'Sort By'
       select 'Ascending', from: 'Sort Direction'
-      click_on 'Filter'
+      click_button 'Filter'
       expect(first('.card')).to have_text(first_export.title)
     end
 
     it 'sorts by created at in descending order' do
       select 'Created At', from: 'Sort By'
       select 'Descending', from: 'Sort Direction'
-      click_on 'Filter'
+      click_button 'Filter'
       expect(first('.card')).to have_text(second_export.title)
     end
   end

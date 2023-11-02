@@ -89,4 +89,3 @@ module ItemDescriptiveMetadata
     end
   end
 end
-

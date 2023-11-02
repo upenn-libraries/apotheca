@@ -31,6 +31,7 @@ class DockerSecrets
   def self.lookup!(key)
     secret = lookup(key)
     raise InvalidKeyError, "Docker secret not found for #{key}" if secret.blank?
+
     secret
   end
 end

@@ -3,11 +3,11 @@
 describe Steps::AddPreservationEvents do
   describe '#call' do
     let(:asset) { persist(:asset_resource, :with_preservation_file) }
-    let(:change_set) {
+    let(:change_set) do
       change_set = AssetChangeSet.new(asset)
       change_set.validate(update_attributes)
       change_set
-    }
+    end
     let(:preservation_events) do
       result = described_class.new.call(change_set)
       result.value!.preservation_events

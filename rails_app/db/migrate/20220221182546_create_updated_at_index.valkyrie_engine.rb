@@ -1,3 +1,4 @@
+# rubocop:disable all
 # frozen_string_literal: true
 # This migration comes from valkyrie_engine (originally 20180212092225)
 class CreateUpdatedAtIndex < ActiveRecord::Migration[5.1]
