@@ -15,7 +15,17 @@ describe IIIFService::ManifestGenerator do
     context 'when item contains image assets' do
       subject(:json) { JSON.parse(iiif_service.v2_manifest) }
 
-      let(:item) { persist(:item_resource, :with_full_assets_all_arranged) }
+      let(:item) do
+        persist(
+          :item_resource, :with_full_assets_all_arranged,
+          descriptive_metadata: {
+            title: [{ value: 'New Item' }],
+            name: [{ value: 'Random, Person', role: [{ value: 'Illustrator' }, { value: 'Creator' }] }],
+            rights: [{ value: 'In Copyright', uri: 'http://rightsstatements.org/vocab/InC/1.0/' }],
+            rights_note: [{ value: 'Contact copyright owner' }]
+          }
+        )
+      end
       let(:expected_manifest) { JSON.parse(file_fixture('iiif_manifest/base_item.json').read) }
 
       it 'includes top level attributes' do
@@ -25,6 +35,16 @@ describe IIIFService::ManifestGenerator do
           'viewingHint' => 'individuals',
           'viewingDirection' => 'left-to-right',
           'attribution' => 'Provided by the University of Pennsylvania Libraries.'
+        )
+      end
+
+      it 'includes manifest metadata' do
+        expect(json['metadata']).to contain_exactly(
+          { 'label' => 'Available Online', 'value' => [starting_with('https://colenda.library.upenn.edu/catalog/')] },
+          { 'label' => 'Title', 'value' => ['New Item'] },
+          { 'label' => 'Name', 'value' => ['Random, Person (Illustrator, Creator)'] },
+          { 'label' => 'Rights', 'value' => ['http://rightsstatements.org/vocab/InC/1.0/'] },
+          { 'label' => 'Rights Note', 'value' => ['Contact copyright owner'] }
         )
       end
 
@@ -51,24 +71,24 @@ describe IIIFService::ManifestGenerator do
         canvases = json['sequences'][0]['canvases']
         expect(canvases[0]).to include(
           '@id' => 'https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/canvas/p1',
-          "label" => 'Front',
+          'label' => 'Front',
           'height' => 238,
           'width' => 400,
           'images' => contain_exactly(
             a_hash_including(
               'resource' => a_hash_including(
-                "@id" => starting_with('https://serverless_iiif.libary.upenn.edu/'),
+                '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/'),
                 'width' => 400,
                 'height' => 238
               )
             )
           ),
-         'rendering' => containing_exactly(
-           a_hash_including(
-             'label' => 'Original File - 285 KB',
-             'format' => 'image/tiff'
-           )
-         )
+          'rendering' => containing_exactly(
+            a_hash_including(
+              'label' => 'Original File - 291 KB',
+              'format' => 'image/tiff'
+            )
+          )
         )
         expect(canvases[1]).to include(
           'label' => 'p. 2',
@@ -77,7 +97,7 @@ describe IIIFService::ManifestGenerator do
           'images' => contain_exactly(
             a_hash_including(
               'resource' => a_hash_including(
-                "@id" => starting_with('https://serverless_iiif.libary.upenn.edu/'),
+                '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/'),
                 'width' => 400,
                 'height' => 238
               )
@@ -85,7 +105,7 @@ describe IIIFService::ManifestGenerator do
           ),
           'rendering' => containing_exactly(
             a_hash_including(
-              'label' => 'Original File - 285 KB',
+              'label' => 'Original File - 291 KB',
               'format' => 'image/tiff'
             )
           )

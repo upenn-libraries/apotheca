@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module IIIFService
+  # Class to generate a IIIF Manifest for an ItemResource
   class ManifestGenerator
     class MissingDerivative < StandardError; end
 
@@ -8,7 +11,7 @@ module IIIFService
     def initialize(item)
       raise ArgumentError, 'IIIF manifest can only be generated for ItemResource' unless item.is_a?(ItemResource)
 
-      @item = item
+      @item = item.presenter
     end
 
     # Returns a IIIF Preservation v2 Manifest only representing images.
@@ -20,13 +23,16 @@ module IIIFService
     def v2_manifest
       return nil unless arranged_assets.any?(&:image?)
 
-      manifest = IIIF::Presentation::Manifest.new({
-        '@id' => uri(base_uri, 'manifest'),
-        'label' => item.descriptive_metadata.title.map(&:value).join('; '),
-        'attribution' => 'Provided by the University of Pennsylvania Libraries.',
-        'viewing_hint' => item.structural_metadata.viewing_hint || 'individuals',
-        'viewing_direction' => item.structural_metadata.viewing_direction || 'left-to-right'
-      })
+      manifest = IIIF::Presentation::Manifest.new(
+        {
+          '@id' => uri(base_uri, 'manifest'),
+          'label' => item.descriptive_metadata.title.map(&:value).join('; '),
+          'attribution' => 'Provided by the University of Pennsylvania Libraries.',
+          'viewing_hint' => item.structural_metadata.viewing_hint || 'individuals',
+          'viewing_direction' => item.structural_metadata.viewing_direction || 'left-to-right',
+          'metadata' => iiif_metadata
+        }
+      )
 
       sequence = IIIF::Presentation::Sequence.new(
         '@id' => uri(base_uri, 'sequence/normal'),
@@ -54,6 +60,32 @@ module IIIFService
     end
 
     private
+
+    # Metadata to display in image viewer.
+    def iiif_metadata
+      metadata = [{ label: 'Available Online', value: [base_uri] }]
+
+      ItemResource::DescriptiveMetadata::Fields.all.each do |field|
+        values = item.descriptive_metadata.send(field)
+
+        next if values.blank?
+
+        normalized_values = case field
+                            when :rights
+                              values.pluck(:uri).map(&:to_s)
+                            when :name
+                              values.map do |v|
+                                roles = v.role.pluck(:value).join(', ')
+                                roles.present? ? "#{v[:value]} (#{roles})" : v[:value]
+                              end
+                            else
+                              values.pluck(:value)
+                            end
+
+        metadata << { label: field.to_s.titleize, value: normalized_values }
+      end
+      metadata
+    end
 
     def arranged_assets
       @arranged_assets ||= item.arranged_assets
