@@ -106,6 +106,18 @@ class ItemResource < Valkyrie::Resource
     end
   end
 
+  # @return [ItemResourcePresenter]
+  def presenter
+    ils_metadata = bibnumber? ? solr_query_service.custom_queries.ils_metadata_for(id: id.to_s) : nil
+    ItemResourcePresenter.new(object: self, ils_metadata: ils_metadata)
+  end
+
+  private
+
+  def solr_query_service
+    @solr_query_service ||= Valkyrie::MetadataAdapter.find(:index_solr).query_service
+  end
+
   def pg_query_service
     @pg_query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
