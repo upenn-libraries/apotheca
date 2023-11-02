@@ -22,7 +22,7 @@ module DerivativeService
 
       # @return [DerivativeService::Generator::DerivativeFile]
       def thumbnail
-        frame = FfmpegWrapper.thumbnail_frame_from_video(input_path: file.disk_path)
+        frame = FfmpegWrapper.thumbnail(input_path: file.disk_path)
         image = Vips::Image.new_from_buffer(frame, '')
         image = image.autorot.thumbnail_image(200, height: 200)
 
