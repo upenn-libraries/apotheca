@@ -45,6 +45,10 @@ describe CreateItem do
       it 'sets thumbnail asset id' do
         expect(item.thumbnail_asset_id).to eql asset.id
       end
+
+      it 'enqueues job to update Ark metadata' do
+        expect(UpdateArkMetadataJob).to have_enqueued_sidekiq_job.with(item.id.to_s)
+      end
     end
 
     context 'when missing created_by' do
