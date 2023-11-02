@@ -3,6 +3,7 @@
 class ItemResource
   # Descriptive metadata for Item.
   class DescriptiveMetadata < Valkyrie::Resource
+    # Defining descriptive metadata fields for ItemResource.
     module Fields
       TEXT = :text
       TERM = :term

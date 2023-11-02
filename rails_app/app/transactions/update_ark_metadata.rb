@@ -28,7 +28,7 @@ class UpdateArkMetadata
     Failure(error: :failed_to_update_ezid_metadata, exception: e)
   end
 
-    private
+  private
 
   def item_presenter(resource)
     ils_metadata = resource.bibnumber? ? query_service.custom_queries.ils_metadata_for(id: resource.id) : nil

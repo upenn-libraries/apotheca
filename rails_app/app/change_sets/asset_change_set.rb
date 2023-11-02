@@ -40,8 +40,8 @@ class AssetChangeSet < ChangeSet
   # can set events with identical timestamps
   property :temporary_events, multiple: true, virtual: true
 
-  # Virtual property to hold expected_checksum that will be used the validate the checksum after file is ingested. Should
-  # only be provided when ingesting a new file.
+  # Virtual property to hold expected_checksum that will be used the validate the checksum after file is
+  # ingested. Should only be provided when ingesting a new file.
   property :expected_checksum, multiple: false, virtual: true
 
   property :label, multiple: false
@@ -52,10 +52,10 @@ class AssetChangeSet < ChangeSet
   collection :derivatives, multiple: true, form: AssetDerivativeChangeSet, populate_if_empty: DerivativeResource
 
   property :transcriptions, multiple: true, required: false, default: [],
-           type: Valkyrie::Types::Array(AssetResource::Transcription)
+                            type: Valkyrie::Types::Array(AssetResource::Transcription)
 
   property :annotations, multiple: true, required: false, default: [],
-           type: Valkyrie::Types::Array(AssetResource::Annotation)
+                         type: Valkyrie::Types::Array(AssetResource::Annotation)
 
   # Validations
   validates :original_filename, presence: true, if: ->(asset) { asset.preservation_file_id.present? }

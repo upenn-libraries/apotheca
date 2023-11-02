@@ -26,37 +26,37 @@ describe 'Item Show Page' do
     end
 
     it 'shows link to edit item within structural metadata tab' do
-      click_on 'Structural Metadata'
+      click_button 'Structural Metadata'
       expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#structural-metadata")
     end
 
     it 'shows link to edit item within administrative info tab' do
-      click_on 'Administrative Info'
+      click_button 'Administrative Info'
       expect(page).to have_link('Edit', href: "#{edit_item_path(item)}#administrative-info")
     end
 
     it 'disables button to refresh ils metadata when item has no bibnumber' do
-      click_on 'Actions'
+      click_button 'Actions'
       expect(page).to have_button('Refresh ILS Metadata', disabled: true)
     end
 
     it 'shows link to add an asset within assets tab' do
-      click_on 'Assets'
+      click_button 'Assets'
       expect(page).to have_link('Add Asset', href: new_asset_path(item_id: item.id))
     end
 
     it 'shows link to arrange assets within assets tab' do
-      click_on 'Assets'
+      click_button 'Assets'
       expect(page).to have_link('Arrange Assets', href: reorder_assets_item_path(id: item.id))
     end
 
     it 'shows button to edit an asset within assets tab' do
-      click_on 'Assets'
+      click_button 'Assets'
       expect(page).to have_link('Edit Asset', href: edit_asset_path(item.asset_ids.first))
     end
 
     it 'shows button to set item thumbnail' do
-      click_on 'Assets'
+      click_button 'Assets'
       expect(page).to have_button('Set as Item Thumbnail')
     end
   end
@@ -103,14 +103,14 @@ describe 'Item Show Page' do
       let(:user) { create(:user, :editor) }
 
       it 'enables the button to refresh ils metadata' do
-        click_on 'Actions'
+        click_button 'Actions'
         expect(page).to have_button('Refresh ILS Metadata', disabled: false)
       end
 
       it 'enqueues job to refresh ils metadata' do
-        click_on 'Actions'
-        click_on 'Refresh ILS Metadata'
-        within('div.modal-content') { click_on 'Refresh' }
+        click_button 'Actions'
+        click_button 'Refresh ILS Metadata'
+        within('div.modal-content') { click_button 'Refresh' }
         expect(page).to have_text('Job to refresh ILS metadata enqueued')
       end
     end
@@ -149,7 +149,7 @@ describe 'Item Show Page' do
     end
 
     it 'does not show actions tab' do
-      expect(page).not_to have_selector('#actions')
+      expect(page).not_to have_css('#actions')
     end
 
     it 'does not show form input to set item thumbnail' do
@@ -158,7 +158,7 @@ describe 'Item Show Page' do
 
     it 'links title of asset to asset show page' do
       visit item_path(item)
-      click_on 'Assets'
+      click_button 'Assets'
       within "#asset-#{item.asset_ids.first}" do
         expect(page).to have_link('front.tif', href: asset_path(item.asset_ids.first))
       end
@@ -169,7 +169,7 @@ describe 'Item Show Page' do
     end
 
     it 'does not highlight resource values on descriptive metadata tab' do
-      expect(page).not_to have_selector('.resource-value.bg-success')
+      expect(page).not_to have_css('.resource-value.bg-success')
     end
   end
 
@@ -183,7 +183,7 @@ describe 'Item Show Page' do
     it_behaves_like 'any logged in user who can edit an Item'
 
     it 'shows actions tab' do
-      expect(page).to have_selector('#actions-tab')
+      expect(page).to have_css('#actions-tab')
     end
 
     it 'does not show button to delete item' do
@@ -201,11 +201,11 @@ describe 'Item Show Page' do
     it_behaves_like 'any logged in user who can edit an Item'
 
     it 'shows actions tab' do
-      expect(page).to have_selector('#actions-tab')
+      expect(page).to have_css('#actions-tab')
     end
 
     it 'shows button to delete item' do
-      click_on 'Actions'
+      click_button 'Actions'
       expect(page).to have_button('Delete Item')
     end
   end

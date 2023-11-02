@@ -19,8 +19,8 @@ describe 'Bulk Export New Page' do
     context 'when redirected to bulk export new form' do
       before do
         fill_in 'Search', with: 'Green'
-        click_on 'Submit'
-        click_on 'Export as CSV'
+        click_button 'Submit'
+        click_link 'Export as CSV'
       end
 
       it 'redirects to bulk export new form' do
@@ -35,15 +35,15 @@ describe 'Bulk Export New Page' do
 
       it 'creates a bulk export and redirects to bulk export index page' do
         fill_in 'bulk-export-title', with: 'Green'
-        click_on 'Create'
+        click_button 'Create'
         expect(find(class: 'card-title')).to have_text('Green')
       end
     end
 
     context 'when creating a Bulk Export without filtered search parameters' do
       before do
-        click_on 'Export as CSV'
-        click_on 'Create'
+        click_link 'Export as CSV'
+        click_button 'Create'
       end
 
       it 'creates a Bulk Export' do

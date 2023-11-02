@@ -1,3 +1,4 @@
+# rubocop:disable all
 class CreateBulkExports < ActiveRecord::Migration[7.0]
   def change
     create_table :bulk_exports do |t|

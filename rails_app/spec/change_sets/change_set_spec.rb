@@ -11,17 +11,17 @@ describe ChangeSet do
     it 'removes empty values from nested hashes' do
       expect(
         change_set.compact_value({ value: 'Random, Person', uri: '', role: [{ value: '' }] })
-      ).to eql ({ value: 'Random, Person' })
+      ).to eql({ value: 'Random, Person' })
     end
 
     it 'removes empty values from an array with hashes' do
       expect(
         change_set.compact_value([{ value: '' }, { value: 'Cats', uri: '' }])
-      ).to eql ([{ value: 'Cats' }])
+      ).to eql([{ value: 'Cats' }])
     end
 
     it 'converts empty strings to nil' do
-      expect(change_set.compact_value('')).to eql nil
+      expect(change_set.compact_value('')).to be_nil
     end
   end
 end

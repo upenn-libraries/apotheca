@@ -28,5 +28,3 @@ class RefreshIlsMetadata
     Valkyrie::MetadataAdapter.find(:index_solr).persister
   end
 end
-
-

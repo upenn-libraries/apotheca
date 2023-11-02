@@ -5,7 +5,6 @@ module Form
     module DescriptiveMetadata
       # Input for descriptive metadata fields. Supports multivalued fields.
       class Component < ViewComponent::Base
-
         def initialize(config:, **options)
           @config = config
           @options = options
@@ -18,7 +17,9 @@ module Form
           when :text
             @options[:field] << '[value]'
             @options[:value] = @options[:value].map { |v| v.nil? ? nil : v[:value] }
-            render(FormControl::Component.new(type: :text, **@options)) # TODO: if a text field had a subfield a new class would have to be created to support this.
+
+            # TODO: if a text field had a subfield a new class would have to be created to support this.
+            render(FormControl::Component.new(type: :text, **@options))
           when :term
             render(Term::Component.new(**@options))
           end

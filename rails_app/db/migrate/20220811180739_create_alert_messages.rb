@@ -1,3 +1,4 @@
+# rubocop:disable all
 # frozen_string_literal: true
 
 # Provide for storage of transient alert messages in header and homepage locations

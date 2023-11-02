@@ -120,7 +120,7 @@ module ImportService
 
         if error
           # Display the details as nested below the error.
-          details = details.map { |d| "\t" + d }.prepend(error)
+          details = details.map { |d| "\t#{d}" }.prepend(error)
         end
 
         Failure.new(error: :import_failed, details: details, exception: exception)

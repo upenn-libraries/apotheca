@@ -1,3 +1,4 @@
+# rubocop:disable all
 # frozen_string_literal: true
 # This migration comes from valkyrie_engine (originally 20170531004548)
 class ChangeModelTypeToInternalModel < ActiveRecord::Migration[5.1]

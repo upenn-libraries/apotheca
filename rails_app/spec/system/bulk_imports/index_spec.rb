@@ -47,8 +47,8 @@ describe 'Bulk Import Index Page' do
     end
 
     it 'can cancel all queued imports' do
-      click_on 'Cancel'
-      within('div.modal-content') { click_on 'Cancel' }
+      click_button 'Cancel'
+      within('div.modal-content') { click_button 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
       expect(page).not_to have_button('Cancel')
     end
@@ -69,8 +69,8 @@ describe 'Bulk Import Index Page' do
 
     it 'can cancel others\' bulk imports' do
       expect(page).to have_button('Cancel')
-      click_on 'Cancel'
-      within('div.modal-content') { click_on 'Cancel' }
+      click_button 'Cancel'
+      within('div.modal-content') { click_button 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
     end
   end
@@ -87,16 +87,16 @@ describe 'Bulk Import Index Page' do
 
     it 'returns the result with the query in the original_filename' do
       fill_in 'Search', with: 'great'
-      click_on 'Filter'
-      expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
+      click_button 'Filter'
+      expect(page).to have_css '.bulk-imports-list__bulk-import', count: 1
       import = find('.bulk-imports-list__bulk-import')
       expect(import).to have_text 'great_import.csv'
     end
 
     it 'returns the result with the query in the note' do
       fill_in 'Search', with: 'awesome'
-      click_on 'Filter'
-      expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
+      click_button 'Filter'
+      expect(page).to have_css '.bulk-imports-list__bulk-import', count: 1
       import = find('.bulk-imports-list__bulk-import')
       expect(import).to have_text 'lame_import.csv'
     end
@@ -114,7 +114,7 @@ describe 'Bulk Import Index Page' do
     end
 
     it 'returns the result within the specified date rage' do
-      expect(page).to have_selector '.bulk-imports-list__bulk-import', count: 1
+      expect(page).to have_css '.bulk-imports-list__bulk-import', count: 1
       import = find('.bulk-imports-list__bulk-import')
       expect(import).to have_text 'lame_import.csv'
     end
@@ -133,7 +133,7 @@ describe 'Bulk Import Index Page' do
 
     it 'filters by associated user email' do
       select user.email, from: 'Created By'
-      click_on 'Filter'
+      click_button 'Filter'
       expect(page).to have_text(user.email, count: 2)
       expect(page).to have_text(other_user.email, count: 1)
     end

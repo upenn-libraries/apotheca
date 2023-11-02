@@ -27,7 +27,7 @@ FactoryBot.define do
         format_type = ['Book', 'Manuscript', 'Audio Recording', 'Video Recording', 'Ancient Utensil'].sample
         {
           title: [{ value: human_readable_name }],
-          description: Faker::Lorem.paragraphs.map { |p| { value: p }},
+          description: Faker::Lorem.paragraphs.map { |p| { value: p } },
           physical_location: [{ value: Faker::IDNumber.spanish_foreign_citizen_number }],
           collection: [{ value: "#{Faker::GreekPhilosophers.name} collection" }],
           date: [{ value: Faker::Date.backward.to_s }],
@@ -83,7 +83,6 @@ FactoryBot.define do
 
       structural_metadata { { arranged_asset_ids: [asset1.id, asset2.id] } }
     end
-
 
     trait :with_many_assets_most_arranged do
       transient do
