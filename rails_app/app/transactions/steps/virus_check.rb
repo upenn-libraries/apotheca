@@ -5,16 +5,19 @@ module Steps
   class VirusCheck
     include Dry::Monads[:result]
 
-    # Perform a virus scan using Clamby. There are 4 potential outcomes:
+    # Perform a virus scan using Clamby. There are 5 potential outcomes:
     # 1. File is too big and can't be scanned by Clam.
     # 2. File is scanned and no virus found.
     # 3. File is scanned and a virus is found. File is deleted from the local system and failure is returned.
     # 4. Problem using Clamby. Failure is returned and Honeybadger notification is sent.
+    # 5. Check is skipped due to configuration setting
     def call(**attributes)
+      return Success(attributes) unless scan_in_environment?
+
       file = attributes[:file] || attributes['file']
       if skip_scan?(file)
         attributes[:temporary_events] = [AssetResource::PreservationEvent.virus_check(
-          outcome: Premis::Outcomes::SUCCESS.uri, note: I18n.t('preservation_events.virus_check.unscanned'),
+          outcome: Premis::Outcomes::WARNING.uri, note: I18n.t('preservation_events.virus_check.unscanned'),
           implementer: attributes[:updated_by]
         )]
         Success(attributes)
@@ -44,7 +47,12 @@ module Steps
     def skip_scan?(file)
       return true if file.blank?
 
-      file.present? && file.size >= 2.gigabytes
+      file.present? && file.size >= Settings.virus_check.size_threshold
+    end
+
+    # @return [Boolean, nil]
+    def scan_in_environment?
+      Settings.virus_check.skip
     end
 
     # Clamby calls return nil if there is a problem finding the file or using clamscan

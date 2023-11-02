@@ -8,6 +8,8 @@ describe Steps::VirusCheck do
     before do
       allow(Clamby).to receive(:safe?).with(anything).and_return(clamby_outcome)
       allow(step).to receive(:skip_scan?).with(anything).and_return(skip_scan)
+      # ignore environment setting concerning Clamby as this spec stubs Clamby method calls so can always run
+      allow(step).to receive(:scan_in_environment?).and_return(true)
     end
 
     context 'when the file is too large' do
