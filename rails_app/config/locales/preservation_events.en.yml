@@ -12,5 +12,5 @@ en:
     preservation_filename:
       note: "Preservation file changed from %{from} to %{to}"
     virus_check:
-      unscanned: "File is not present or over the size limit and therefore no scan performed"
-      clean: "File scanned, virus not found"
+      unscanned: "File size exceeds 2GB limit for virus scan."
+      clean: "File passed pre-ingest scan for viruses"
