@@ -179,5 +179,20 @@ describe ImportService::Process::Create do
         expect(item.thumbnail_asset_id).to eq item.structural_metadata.arranged_asset_ids.last
       end
     end
+
+    context 'when creating an item with a pre-minted ark' do
+      include_context 'with successful requests to lookup EZID'
+
+      let(:process) { build(:import_process, :create, unique_identifier: 'ark:/99999/test') }
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'preserves the pre-minted ark' do
+        expect(item.unique_identifier).to eq('ark:/99999/test')
+      end
+    end
   end
 end

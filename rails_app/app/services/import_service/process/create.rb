@@ -66,6 +66,7 @@ module ImportService
 
         # Create item and attach the assets
         item_attributes = {
+          unique_identifier: unique_identifier,
           thumbnail_asset_id: all_asset_map[thumbnail]&.id,
           human_readable_name: human_readable_name,
           created_by: created_by || imported_by,
