@@ -12,16 +12,10 @@ module Steps
     # 4. Problem using Clamby. Failure is returned and Honeybadger notification is sent.
     # 5. Check is skipped due to configuration setting
     def call(**attributes)
-      return Success(attributes) unless scan_in_environment?
+      return Success(attributes) if skip_in_environment?
 
       file = attributes[:file] || attributes['file']
-      if skip_scan?(file)
-        attributes[:temporary_events] = [AssetResource::PreservationEvent.virus_check(
-          outcome: Premis::Outcomes::WARNING.uri, note: I18n.t('preservation_events.virus_check.unscanned'),
-          implementer: attributes[:updated_by]
-        )]
-        Success(attributes)
-      else
+      if should_scan_file?(file)
         case Clamby.safe?(file.path)
         when TrueClass
           attributes[:temporary_events] = [AssetResource::PreservationEvent.virus_check(
@@ -36,22 +30,28 @@ module Steps
           report_clamscan_problem(file.path)
           Failure(error: :clamscan_problem)
         end
+      else
+        attributes[:temporary_events] = [AssetResource::PreservationEvent.virus_check(
+          outcome: Premis::Outcomes::WARNING.uri, note: I18n.t('preservation_events.virus_check.unscanned'),
+          implementer: attributes[:updated_by]
+        )]
+        Success(attributes)
       end
     end
 
     private
 
-    # Skip the scan if no file is present or if it is over 2 GB
+    # Returns true if file is present and it is under 2 GB
     # @param [String] file
     # @return [Boolean]
-    def skip_scan?(file)
-      return true if file.blank?
+    def should_scan_file?(file)
+      return false if file.blank?
 
-      file.present? && file.size >= Settings.virus_check.size_threshold
+      file.size <= Settings.virus_check.size_threshold
     end
 
     # @return [Boolean, nil]
-    def scan_in_environment?
+    def skip_in_environment?
       Settings.virus_check.skip
     end
 

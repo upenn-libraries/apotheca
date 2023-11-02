@@ -7,13 +7,13 @@ describe Steps::VirusCheck do
 
     before do
       allow(Clamby).to receive(:safe?).with(anything).and_return(clamby_outcome)
-      allow(step).to receive(:skip_scan?).with(anything).and_return(skip_scan)
+      allow(step).to receive(:should_scan_file?).with(anything).and_return(perform_scan)
       # ignore environment setting concerning Clamby as this spec stubs Clamby method calls so can always run
-      allow(step).to receive(:scan_in_environment?).and_return(true)
+      allow(step).to receive(:skip_in_environment?).and_return(false)
     end
 
     context 'when the file is too large' do
-      let(:skip_scan) { true }
+      let(:perform_scan) { false }
       let(:clamby_outcome) { nil }
 
       it 'returns success and sets a preservation message' do
@@ -25,7 +25,7 @@ describe Steps::VirusCheck do
     end
 
     context 'when there is a virus' do
-      let(:skip_scan) { false }
+      let(:perform_scan) { true }
       let(:clamby_outcome) { false }
 
       it 'fails' do
@@ -35,7 +35,7 @@ describe Steps::VirusCheck do
     end
 
     context 'when there is no virus' do
-      let(:skip_scan) { false }
+      let(:perform_scan) { true }
       let(:clamby_outcome) { true }
 
       it 'returns success and sets a preservation message' do
@@ -47,7 +47,7 @@ describe Steps::VirusCheck do
     end
 
     context 'when there is a clamscan issue' do
-      let(:skip_scan) { false }
+      let(:perform_scan) { true }
       let(:clamby_outcome) { nil }
 
       it 'fails' do
