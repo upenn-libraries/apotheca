@@ -16,12 +16,12 @@ describe 'Item New Page' do
 
   context 'when required fields are blank' do
     it 'requires human readable name' do
-      click_on 'Save'
+      click_button 'Save'
       expect(page).to have_text("Human readable name can't be blank")
     end
 
     it 'requires title' do
-      click_on 'Save'
+      click_button 'Save'
       expect(page).to have_text("Title can't be blank")
     end
   end
@@ -37,7 +37,7 @@ describe 'Item New Page' do
     end
 
     it 'can create a new item' do
-      click_on 'Save'
+      click_button 'Save'
       expect(page).to have_text('Successfully created item')
     end
   end

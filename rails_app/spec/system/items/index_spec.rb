@@ -22,7 +22,7 @@ describe 'Item Index Page' do
     it 'lists all Item title values' do
       titles = item.descriptive_metadata.title.pluck(:value)
       titles.each do |title|
-        expect(page).to have_selector 'tr li', text: title
+        expect(page).to have_css 'tr li', text: title
       end
     end
 
@@ -74,9 +74,9 @@ describe 'Item Index Page' do
 
     it 'stores per page value across requests' do
       select '50', from: 'Rows'
-      click_on 'Submit'
-      click_on 'Exports'
-      click_on 'Items'
+      click_button 'Submit'
+      click_link 'Exports'
+      click_link 'Items'
       expect(page).to have_select('Rows', selected: '50')
     end
   end

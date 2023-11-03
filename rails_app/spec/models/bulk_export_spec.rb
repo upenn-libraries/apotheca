@@ -232,7 +232,7 @@ describe BulkExport do
 
     it 'does not allow more than 10 bulk exports' do
       bulk_export = build(:bulk_export, created_by: user)
-      expect(bulk_export).to be_invalid
+      expect(bulk_export).not_to be_valid
       expect(bulk_export.errors[:created_by]).to include('The number of Bulk Exports for a user cannot exceed 10.')
     end
   end

@@ -1,3 +1,4 @@
+# rubocop:disable all
 class AddColumnToBulkExports < ActiveRecord::Migration[7.0]
   def change
     add_column :bulk_exports, :title, :string

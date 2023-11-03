@@ -114,7 +114,9 @@ module ImportService
       # Creates new assets and sets the `created_assets` instance variable.
       def create_new_assets(filenames)
         # If new assets are loaded require that file location is provided.
-        return failure(details: ['asset storage and path must be provided to create new assets']) unless asset_set&.file_locations?
+        unless asset_set&.file_locations?
+          return failure(details: ['asset storage and path must be provided to create new assets'])
+        end
 
         new_assets_data = filenames.map { |f| asset_set.find { |a| a.filename == f } }
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 Rails.application.config.to_prepare do
   unless Rails.env.test?
     redis_connection = {
@@ -19,4 +20,3 @@ Rails.application.config.to_prepare do
     end
   end
 end
-

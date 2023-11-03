@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-describe Steps::UpdateArkMetadata do
-  let(:update_ark_metadata) { described_class.new }
+describe UpdateArkMetadata do
+  let(:transaction) { described_class.new }
 
   describe '#call' do
     let(:item) { persist(:item_resource) }
-    let(:result) { update_ark_metadata.call(item) }
+    let(:result) { transaction.call(id: item.id) }
 
     context 'when EZID requests valid' do
       include_context 'with successful Marmite request' do

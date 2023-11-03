@@ -98,7 +98,9 @@ describe UpdateAsset do
 
       it 'updates preservation_file_id and stores new file' do
         expect(asset.preservation_file_id).not_to eql updated_asset.preservation_file_id
-        expect(Valkyrie::StorageAdapter.find_by(id: updated_asset.preservation_file_id)).to be_a Valkyrie::StorageAdapter::StreamFile
+        expect(
+          Valkyrie::StorageAdapter.find_by(id: updated_asset.preservation_file_id)
+        ).to be_a Valkyrie::StorageAdapter::StreamFile
       end
 
       it 'updates checksum' do
@@ -164,7 +166,9 @@ describe UpdateAsset do
 
     context 'when preservation file does not have original filename' do
       # File that does not respond to original_filename
-      let(:file1) { ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/trade_card/original/front.tif')) }
+      let(:file1) do
+        ActionDispatch::Http::UploadedFile.new tempfile: file_fixture('files/trade_card/original/front.tif').open
+      end
       let(:asset) { persist(:asset_resource) }
       let(:result) do
         transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
@@ -216,9 +220,11 @@ describe UpdateAsset do
       let(:result) { transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com') }
 
       before do
-        step_double = instance_double('Steps::Validate')
+        step_double = instance_double(Steps::Validate)
         allow(Steps::Validate).to receive(:new).and_return(step_double)
-        allow(step_double).to receive(:call) { |change_set| Dry::Monads::Failure.new(error: :step_failed, change_set: change_set) }
+        allow(step_double).to receive(:call) do |change_set|
+          Dry::Monads::Failure.new(error: :step_failed, change_set: change_set)
+        end
       end
 
       it_behaves_like 'a failed asset update'

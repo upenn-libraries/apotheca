@@ -186,7 +186,6 @@ rubocop_app_test:
         - rails_app/.rubocop.yml
   tags:
     - build
-  allow_failure: true
 # -- End - test dev image
 
 # -- Start - build and push temp prod image

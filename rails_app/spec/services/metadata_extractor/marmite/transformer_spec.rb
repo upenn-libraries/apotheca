@@ -6,6 +6,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
 
   describe '#to_descriptive_metadata' do
     context 'when record is a book' do
+      # rubocop:disable Layout/LineLength
       let(:expected_metadata) do
         {
           coverage: [{ value: 'Early works to 1800' }],
@@ -49,6 +50,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           ]
         }
       end
+      # rubocop:enable Layout/LineLength
       let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
 
       it 'generates_expected_xml' do
@@ -57,6 +59,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
     end
 
     context 'when record is a manuscript' do
+      # rubocop:disable Layout/LineLength
       let(:expected_metadata) do
         {
           date: [{ value: '1475' }],
@@ -66,7 +69,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           extent: [{ value: '10 leaves : paper ; 263 x 190 mm bound to 218 x 155 mm' }],
           name: [
             { value: 'Sigebert, of Gembloux, approximately 1030-1112',
-              uri: 'http://id.loc.gov/authorities/names/n87881954' },
+              uri: 'http://id.loc.gov/authorities/names/n87881954' }
           ],
           note: [
             { value: 'Ms. gathering.' },
@@ -79,14 +82,18 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
             { value: 'Origin:  Probably written in Belgium, possibly in Gembloux (inscription on title page of printed work, Bibliotheca Gemblacensis), in the late 15th century (Zacour-Hirsch).' },
             { value: 'Latin.' }
           ],
-          physical_location: [{ value: 'Kislak Center for Special Collections, Rare Books and Manuscripts, Manuscripts, Folio GrC St812 Ef512g' }],
+          physical_location: [
+            { value: 'Kislak Center for Special Collections, Rare Books and Manuscripts, Manuscripts, Folio GrC St812 Ef512g' }
+          ],
           physical_format: [
             { value: 'Chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
             { value: 'Manuscripts, Latin' },
             { value: 'Manuscripts, Renaissance' }
           ],
           provenance: [{ value: 'Sold by Bernard M. Rosenthal (New York), 1964.' }],
-          relation: [{ value: 'Digital facsimile for browsing (Colenda): https://colenda.library.upenn.edu/catalog/81431-p3833nf29' }],
+          relation: [
+            { value: 'Digital facsimile for browsing (Colenda): https://colenda.library.upenn.edu/catalog/81431-p3833nf29' }
+          ],
           coverage: [{ value: 'Early works to 1800' }],
           subject: [
             { value: 'World history -- Early works to 1800', uri: 'http://id.loc.gov/authorities/subjects/sh85148202' },
@@ -96,6 +103,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           title: [{ value: '[Partial copy of Chronicon]' }]
         }
       end
+      # rubocop:enable Layout/LineLength
       let(:xml) { File.read(file_fixture('marmite/marc_xml/manuscript-1.xml')) }
 
       it 'generates expected xml' do
@@ -205,7 +213,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
 
   describe '#preferred_values' do
     let(:with_loc_uri) { { value: 'World history', uri: 'http://id.loc.gov/authorities/subjects/sh85148201' } }
-    let(:with_fast_uri) { { value: 'World history', uri: 'http://id.worldcat.org/fast/1181345'} }
+    let(:with_fast_uri) { { value: 'World history', uri: 'http://id.worldcat.org/fast/1181345' } }
     let(:with_upenn_uri) { { value: 'World history', uri: 'http://id.library.upenn.edu/world-history' } }
     let(:without_uri) { { value: 'World history' } }
 

@@ -95,6 +95,7 @@ describe ImportService::Process::Migrate do
 
     context 'when migrating an item' do
       let(:body) { JSON.parse(File.read(file_fixture('colenda_serialization/example-1.json'))).deep_symbolize_keys }
+      # rubocop:disable Layout/LineLength
       let(:metadata) do
         {
           physical_location: [{ value: 'Arc.MS.2' }],
@@ -128,10 +129,13 @@ describe ImportService::Process::Migrate do
           title: [{ value: 'Letter; Sampson, E.; Leeser, I., Rev.; Belton, TX; 17 February 1866' }]
         }
       end
+      # rubocop:enable Layout/LineLength
 
       before do
-        stub_request(:get, "#{Settings.migration.colenda_url}/migration/#{CGI.escape(body[:unique_identifier])}/serialized")
-          .to_return(status: 200, body: body.to_json, headers: {})
+        stub_request(
+          :get,
+          "#{Settings.migration.colenda_url}/migration/#{CGI.escape(body[:unique_identifier])}/serialized"
+        ).to_return(status: 200, body: body.to_json, headers: {})
       end
 
       it 'is successful' do
@@ -144,7 +148,9 @@ describe ImportService::Process::Migrate do
       end
 
       it 'migrates human_readable_name' do
-        expect(item.human_readable_name).to eql 'Leeser letter; Sampson, E.; Leeser, I., Rev.; Belton, TX; 17 February 1866'
+        expect(
+          item.human_readable_name
+        ).to eql 'Leeser letter; Sampson, E.; Leeser, I., Rev.; Belton, TX; 17 February 1866'
       end
 
       it 'migrated created_at' do
@@ -180,15 +186,17 @@ describe ImportService::Process::Migrate do
         end
       end
     end
-    
+
     context 'when migrating an item with invalid checksums' do
       let(:body) do
         JSON.parse(File.read(file_fixture('colenda_serialization/invalid-checksum-example.json'))).deep_symbolize_keys
       end
 
       before do
-        stub_request(:get, "#{Settings.migration.colenda_url}/migration/#{CGI.escape(body[:unique_identifier])}/serialized")
-          .to_return(status: 200, body: body.to_json, headers: {})
+        stub_request(
+          :get,
+          "#{Settings.migration.colenda_url}/migration/#{CGI.escape(body[:unique_identifier])}/serialized"
+        ).to_return(status: 200, body: body.to_json, headers: {})
       end
 
       it 'fails' do

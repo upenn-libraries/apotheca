@@ -10,7 +10,7 @@ class ChangeSet < Valkyrie::ChangeSet
     when Hash
       value.transform_values! { |v| compact_value(v) }.compact_blank
     when String
-      value.blank? ? nil : value
+      value.presence
     else
       value
     end

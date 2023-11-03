@@ -31,9 +31,11 @@ describe PreservationBackup do
       let(:asset) { persist(:asset_resource, :with_preservation_file) }
 
       before do
-        step_double = instance_double('Steps::Validate')
+        step_double = instance_double(Steps::Validate)
         allow(Steps::Validate).to receive(:new).and_return(step_double)
-        allow(step_double).to receive(:call) { |change_set| Dry::Monads::Failure.new(error: :step_failed, change_set: change_set) }
+        allow(step_double).to receive(:call) do |change_set|
+          Dry::Monads::Failure.new(error: :step_failed, change_set: change_set)
+        end
       end
 
       it 'cleans up the uploaded file' do

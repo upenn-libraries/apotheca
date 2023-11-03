@@ -17,7 +17,7 @@ describe 'Bulk Import New Page' do
   it 'successfully creates a bulk import' do
     csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_data.csv')
     attach_file('bulk-import-csv', csv_path)
-    click_on 'Create'
+    click_button 'Create'
 
     import = find_by_id('bulk-import-dl')
     expect(import).to have_text 'bulk_import_data.csv'
@@ -27,7 +27,7 @@ describe 'Bulk Import New Page' do
     it 'does not create a bulk import if the csv has no item data' do
       csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_without_item_data.csv')
       attach_file('bulk-import-csv', csv_path)
-      click_on 'Create'
+      click_button 'Create'
       expect(page).to have_text 'Problem creating bulk import: CSV has no item data'
     end
   end
@@ -36,7 +36,7 @@ describe 'Bulk Import New Page' do
     it 'fails and displays a message with the cause of the failure' do
       csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_with_duplicated_headers.csv')
       attach_file('bulk-import-csv', csv_path)
-      click_on 'Create'
+      click_button 'Create'
       expect(page).to have_text 'Problem creating bulk import: CSV contains duplicated column names'
     end
   end
@@ -45,7 +45,7 @@ describe 'Bulk Import New Page' do
     it 'fails and displays a message with the cause of the failure' do
       csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_data_with_malformed_csv.csv')
       attach_file('bulk-import-csv', csv_path)
-      click_on 'Create'
+      click_button 'Create'
       expect(page).to have_text 'Problem creating bulk import: Illegal quoting in line 2'
     end
   end

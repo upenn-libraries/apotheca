@@ -30,7 +30,7 @@ describe Solr::QueryBuilder do
       end
 
       it 'properly joins clauses with AND' do
-        expect(builder.fq.scan(/AND/).count).to eq 2
+        expect(builder.fq.scan('AND').count).to eq 2
       end
 
       it 'properly sets a filter with multiple values' do
