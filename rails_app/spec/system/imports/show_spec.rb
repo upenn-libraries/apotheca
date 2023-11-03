@@ -47,6 +47,17 @@ describe 'Import Show Page' do
       visit bulk_import_import_path(import_with_errors.bulk_import, import_with_errors)
       expect(page).to have_text(import_with_errors.process_errors.join(' '))
     end
+
+    context 'with an update import that is processing' do
+      let(:import) do
+        create(:import, :processing, import_data: { action: 'UPDATE',
+                                                    unique_identifier: item_resource.unique_identifier })
+      end
+
+      it "links an import to it's associated resource using import_data hash" do
+        expect(page).to have_link(import.import_data['unique_identifier'], href: item_path(item_resource), count: 1)
+      end
+    end
   end
 
   shared_examples_for 'any user that can update their own Import' do
