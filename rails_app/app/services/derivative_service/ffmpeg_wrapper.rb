@@ -41,13 +41,13 @@ module DerivativeService
 
     def self.ffmpeg(input_path:, options:, output_path: nil, input_options: [])
       options = input_options + ["-i #{input_path}"] + options
-      options = options + [output_path] if output_path
+      options += [output_path] if output_path
 
       command(excecutable: FFMPEG_EXECUTABLE, arguments: options)
     end
 
     def self.ffprobe(input_path:, options:)
-      options = options + [input_path]
+      options += [input_path]
 
       command(excecutable: FFPROBE_EXCECUTABLE, arguments: options)
     end
