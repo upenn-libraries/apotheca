@@ -11,7 +11,7 @@ Clamby.configure(
     error_file_virus: false,
     fdpass: true,
     stream: true,
-    output_level: 'medium', # one of 'off', 'low', 'medium', 'high'
+    output_level: 'low', # one of 'off', 'low', 'medium', 'high'
     executable_path_clamscan: 'clamscan',
     executable_path_clamdscan: 'clamdscan',
     executable_path_freshclam: 'freshclam'
