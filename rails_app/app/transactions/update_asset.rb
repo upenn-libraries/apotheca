@@ -80,8 +80,14 @@ class UpdateAsset
 
       attributes[:preservation_file_id] = file_resource.id
 
-      # Explicitly set the original filename if file is not being migrated.
-      attributes[:original_filename] = file.original_filename if attributes[:migrated_from].blank?
+      # Explicitly set the original filename if file is not being migrated. If file is being migrated
+      # store file's original filename in `migrated_filename` in order to record it properly in our
+      # preservation events.
+      if attributes[:migrated_from].blank?
+        attributes[:original_filename] = file.original_filename
+      else
+        attributes[:migrated_filename] = file.original_filename
+      end
     end
 
     Success(attributes)

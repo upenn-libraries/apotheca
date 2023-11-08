@@ -125,7 +125,15 @@ module Steps
 
       # get current filename - in ingestion case, we want to get the original filename of the file because we have no
       # identifier from storage yet to use as current filename
-      current_filename = action == :ingestion ? change_set.original_filename : file_name(change_set.resource)
+      current_filename = action == :ingestion ? change_set.original_filename :
+      current_filename = case action
+                         when :ingestion
+                           change_set.original_filename
+                         when :migration
+                           change_set.migrated_filename
+                         else
+                           file_name(change_set.resource)
+                         end
       EVENT.change_filename(
         implementer: change_set.updated_by,
         note: I18n.t('preservation_events.preservation_filename.note',
@@ -141,7 +149,7 @@ module Steps
     def file_name(source)
       return source.original_filename if source.preservation_file_id.blank?
 
-      source.preservation_file_id.id.split('/').last
+      source.preservation_file_id.id.split('://').last
     end
   end
 end
