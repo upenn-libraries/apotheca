@@ -12,7 +12,9 @@ class Import < ApplicationRecord
   def run
     result = nil
     elapsed_time = Benchmark.realtime do
-      result = ImportService::Process.build(imported_by: bulk_import.created_by.email, **import_data).run
+      StackProf.run(mode: :wall, raw: true, out: "tmp/stackprof-import-#{id}.dump") do
+        result = ImportService::Process.build(imported_by: bulk_import.created_by.email, **import_data).run
+      end
     end
 
     self.duration = elapsed_time
