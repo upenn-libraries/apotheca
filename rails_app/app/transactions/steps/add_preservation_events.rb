@@ -123,25 +123,40 @@ module Steps
     def preservation_filename_event(action, change_set, timestamp)
       return if action == :metadata_update
 
-      # get current filename - in ingestion case, we want to get the original filename of the file because we have no
-      # identifier from storage yet to use as current filename
-      current_filename = action == :ingestion ? change_set.original_filename : file_name(change_set.resource)
+      previous_filename = previous_preservation_filename(action, change_set)
+
       EVENT.change_filename(
         implementer: change_set.updated_by,
         note: I18n.t('preservation_events.preservation_filename.note',
-                     from: current_filename, to: file_name(change_set)),
+                     from: previous_filename, to: preservation_filename(change_set)),
         timestamp: timestamp
       )
     end
 
-    # Returns a semi-user friendly "filename" from a change set or a resource. Could be a string filename or a UUID
-    # extracted from a Valkyrie::ID
+    # Return the filename of the "previous" preservation file.
+    #
+    # In the ingestion case, we want to get the original filename of the file because we have no
+    #   identifier from storage yet to use as current filename.
+    # In the migration case, we use the migrated_filename extracted during processing.
+    # In the re-ingestion case, we extract the preservation filename from the unchanged resource.
+    def previous_preservation_filename(action, change_set)
+      case action
+      when :ingestion
+        change_set.original_filename
+      when :migration
+        change_set.migrated_filename
+      when :reingestion
+        preservation_filename(change_set.resource)
+      end
+    end
+
+    # Returns a semi-user friendly "filename" from a change set or a resource. This method strips out the leading
+    # characters stored in a Valkyrie::ID that represent the file store.
+    #
     # @param [AssetResource | AssetChangeSet] source
     # @return [String]
-    def file_name(source)
-      return source.original_filename if source.preservation_file_id.blank?
-
-      source.preservation_file_id.id.split('/').last
+    def preservation_filename(source)
+      source.preservation_file_id.id.split('://').last
     end
   end
 end
