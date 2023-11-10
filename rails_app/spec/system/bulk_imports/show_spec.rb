@@ -82,6 +82,30 @@ describe 'Bulk Import Show Page' do
         end
       end
     end
+
+    context 'when viewing a bulk import that is processing an update action' do
+      let(:item_resource) { persist(:item_resource) }
+      let(:bulk_import) { create(:bulk_import, note: 'Test') }
+      let(:import) do
+        create(:import, :processing, bulk_import: bulk_import, import_data: {
+                 action: 'UPDATE',
+                 unique_identifier: item_resource.unique_identifier
+               })
+      end
+
+      before do
+        import
+        visit bulk_import_path(bulk_import)
+      end
+
+      it 'displays human readable name' do
+        expect(page).to have_text(item_resource.human_readable_name)
+      end
+
+      it "links an import to it's associated resource using import_data hash" do
+        expect(page).to have_link(import.import_data['unique_identifier'], href: item_path(item_resource))
+      end
+    end
   end
 
   shared_examples_for 'a user that cannot update bulk imports belonging to other users' do
