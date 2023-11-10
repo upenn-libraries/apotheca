@@ -82,6 +82,21 @@ RSpec.describe StructuredCSV do
         }.to raise_error CSV::MalformedCSVError, /CSV contains duplicated column names \(unique_identifier\)/
       end
     end
+
+    context 'with CSV data containing blank lines' do
+      let(:csv_string_data) do
+        <<~CSV
+          asset.drive,asset.path,unique_identifier
+          test,path/to/assets_1,ark:/9999/test
+
+          test,path/to/assets_2,ark:/9999/test2
+        CSV
+      end
+
+      it 'skips blank lines' do
+        expect(described_class.parse(csv_string_data).count).to be 2
+      end
+    end
   end
 
   describe '.generate' do

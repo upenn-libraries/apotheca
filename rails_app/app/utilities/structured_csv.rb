@@ -15,7 +15,7 @@ module StructuredCSV
   # @param csv_data [String]
   # @return [Array<Hash>]
   def self.parse(csv_data)
-    rows = CSV.parse(csv_data, headers: true, strip: true)
+    rows = CSV.parse(csv_data, headers: true, strip: true, skip_blanks: true)
     validate_headers!(rows.headers)
     rows.map { |row| parse_row(row) }
   end
