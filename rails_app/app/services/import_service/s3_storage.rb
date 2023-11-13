@@ -4,7 +4,10 @@ module ImportService
   # Wrapper around S3 working storage.
   class S3Storage
     REQUIRED_CONFIG_KEYS = %i[access_key_id secret_access_key region].freeze
+
     attr_reader :name
+
+    delegate :client, to: :shrine
 
     def initialize(storage_name, bucket = nil)
       @name = storage_name
@@ -15,8 +18,10 @@ module ImportService
       @config ||= self.class.all[name].to_h.deep_symbolize_keys
     end
 
-    def client
-      @client ||= Aws::S3::Client.new(**config.except(:bucket))
+    def shrine
+      @shrine ||= Shrine::Storage::S3.new(
+        bucket: bucket, **config.except(:bucket)
+      )
     end
 
     # Bucket name.
@@ -28,31 +33,24 @@ module ImportService
 
     # Returns file at the given location.
     #
+    # Using Shrine's open method is more efficient for downloading a file in AWS.
+    #
     # @return [ImportService::S3Storage::File]
     def file(key)
-      tempfile = Tempfile.new
-      client.get_object(bucket: bucket, key: key, response_target: tempfile.path)
-
-      File.new(tempfile: tempfile, key: key)
+      File.new(io: shrine.open(key), key: key) # TODO: We might want to think about caching this
     end
 
-    # Returns the sha256 checksum for a file at the given location. If s3 client supports calculating sha256 checksum
-    # then we will retrieve it from the client, otherwise we will have to download the file and generate it ourselves.
+    # Returns the sha256 checksum for a file at the given location. AWS S3 does not automatically calculate
+    # checksums, so we will be calculating them manually as needed.
     #
     # @param [String] key
     # @return [String] sha256 checksum
     def checksum_sha256(key)
-      response = client.head_object(bucket: bucket, key: key, checksum_mode: 'ENABLED')
-      checksum = response.checksum_sha256
+      f = file(key)
 
-      # Minio does not support trailing checksums yet, but there is work being done to implement them. For now,
-      # we will manually calculate the sha256 checksum.
-      if checksum.blank?
-        f = file(key)
-        checksum = Digest::SHA256.file(f.path)
-        f.close
-        f.unlink
-      end
+      checksum = Digest::SHA256.new
+      f.each_chunk { |chunk| checksum.update(chunk) }
+      f.close
 
       checksum
     end
@@ -110,16 +108,16 @@ module ImportService
 
     # Represents file retrieved from S3.
     #
-    # Combines together a tempfile and other information about the file retrieved. This class
-    # delegates most of its behavior to the tempfile and adds in some additional methods. Was
+    # Combines together a Down::ChunkedIO object and other information about the file retrieved. This class
+    # delegates most of its behavior to the Down::ChunkedIO object and adds in some additional methods. Was
     # inspired by ActionDispatch::Http::UploadedFile.
     class File
-      attr_reader :tempfile, :key
+      attr_reader :io, :key
 
-      delegate_missing_to :tempfile
+      delegate_missing_to :io
 
-      def initialize(tempfile:, key:)
-        @tempfile = tempfile
+      def initialize(io:, key:)
+        @io = io
         @key = key
       end
 

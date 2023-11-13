@@ -15,7 +15,7 @@ describe ImportService::S3Storage do
 
     context 'when key is invalid' do
       it 'returns an error' do
-        expect { storage.file('invalid') }.to raise_error(Aws::S3::Errors::NoSuchKey)
+        expect { storage.file('invalid') }.to raise_error(Shrine::FileNotFound)
       end
     end
   end
