@@ -4,7 +4,10 @@ module ImportService
   # Wrapper around S3 working storage.
   class S3Storage
     REQUIRED_CONFIG_KEYS = %i[access_key_id secret_access_key region].freeze
+
     attr_reader :name
+
+    delegate :client, to: :shrine
 
     def initialize(storage_name, bucket = nil)
       @name = storage_name
@@ -13,10 +16,6 @@ module ImportService
 
     def config
       @config ||= self.class.all[name].to_h.deep_symbolize_keys
-    end
-
-    def client
-      shrine.client
     end
 
     def shrine
