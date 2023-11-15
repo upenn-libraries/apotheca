@@ -31,6 +31,7 @@ gem 'omniauth-saml', '~> 2.0'
 gem 'pg', '~> 1.1'
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 7.1'
+gem 'rbtrace'
 gem 'rsolr'
 gem 'ruby-vips'
 gem 'sassc-rails' # Use Sass to process CSS
