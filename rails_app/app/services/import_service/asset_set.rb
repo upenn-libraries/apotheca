@@ -82,9 +82,11 @@ module ImportService
     def asset_data_objects_for(type)
       if data.key?(:"#{type}_filenames")
         filenames = data[:"#{type}_filenames"]
-        filenames.blank? ? [] : filenames.split(';').map(&:strip).map { |f| asset_data_object(filename: f) }
+        return [] if filenames.blank?
+
+        filenames.split(';').map(&:strip).map { |f| asset_data_object(**structural_metadata(f), filename: f) }
       elsif data.key?(type.to_sym)
-        data[type.to_sym].map { |a| asset_data_object(**a) }
+        data[type.to_sym].map { |a| asset_data_object(**structural_metadata(a), **a) }
       else
         []
       end
