@@ -53,6 +53,14 @@ class BulkImportsController < ApplicationController
       return redirect_to bulk_imports_path, alert: 'Problem creating bulk import: CSV has no item data'
     end
 
+    if missing_metadata_file?(@bulk_import.csv_rows)
+      return redirect_to bulk_imports_path,
+                         alert: <<~HEREDOC
+                           Problem creating bulk import:
+                           Structural Metadata filenames don't match filenames provided in bulk import CSV"
+                         HEREDOC
+    end
+
     if @bulk_import.save
       @bulk_import.create_imports(safe_queue_name_from(params[:bulk_import][:job_priority].to_s))
       redirect_to bulk_import_path(@bulk_import), notice: 'Bulk import created'
