@@ -98,5 +98,11 @@ module ImportService
         **metadata
       )
     end
+
+    # @param [String] filename
+    # @return [Hash]
+    def structural_metadata(filename)
+      data[:structural].find(-> { {} }) { |structural_metadata| structural_metadata[:filename] == filename.to_s }
+    end
   end
 end
