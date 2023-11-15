@@ -37,7 +37,13 @@ module ImportService
     #
     # @return [ImportService::S3Storage::File]
     def file(key)
-      File.new(io: shrine.open(key), key: key) # TODO: We might want to think about caching this
+      tempfile = Tempfile.new(binmode: true)
+      io = shrine.open(key, rewindable: false)
+      io.each_chunk { |chunk| tempfile.write(chunk) }
+      io.close
+      tempfile.rewind
+
+      File.new(tempfile: tempfile, key: key) # TODO: We might want to think about caching this
     end
 
     # Returns the sha256 checksum for a file at the given location. AWS S3 does not automatically calculate
@@ -46,11 +52,11 @@ module ImportService
     # @param [String] key
     # @return [String] sha256 checksum
     def checksum_sha256(key)
-      f = file(key)
+      io = shrine.open(key, rewindable: false) # Using Shrine's open method to fetch file in chunks.
 
       checksum = Digest::SHA256.new
-      f.each_chunk { |chunk| checksum.update(chunk) }
-      f.close
+      io.each_chunk { |chunk| checksum.update(chunk) }
+      io.close
 
       checksum
     end
@@ -108,16 +114,16 @@ module ImportService
 
     # Represents file retrieved from S3.
     #
-    # Combines together a Down::ChunkedIO object and other information about the file retrieved. This class
-    # delegates most of its behavior to the Down::ChunkedIO object and adds in some additional methods. Was
+    # Combines together a Tempfile object and other information about the file retrieved. This class
+    # delegates most of its behavior to the Tempfile object and adds in some additional methods. Was
     # inspired by ActionDispatch::Http::UploadedFile.
     class File
-      attr_reader :io, :key
+      attr_reader :tempfile, :key
 
-      delegate_missing_to :io
+      delegate_missing_to :tempfile
 
-      def initialize(io:, key:)
-        @io = io
+      def initialize(tempfile:, key:)
+        @tempfile = tempfile
         @key = key
       end
 
