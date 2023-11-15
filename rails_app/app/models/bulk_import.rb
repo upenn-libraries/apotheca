@@ -16,7 +16,7 @@ class BulkImport < ApplicationRecord
 
   validates_associated :created_by, :imports
 
-  attr_accessor :csv_rows
+  attr_accessor :csv_rows, :structural_metadata_hash
 
   validates :original_filename, presence: true
 

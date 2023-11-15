@@ -45,6 +45,7 @@ class BulkImportsController < ApplicationController
     csv = uploaded_file.read
     begin
       @bulk_import.csv_rows = StructuredCSV.parse(csv)
+      @bulk_import.structural_metadata_hash = structural_metadata_hash
     rescue CSV::MalformedCSVError => e
       return redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{e.message}"
     end
