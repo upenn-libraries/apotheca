@@ -117,4 +117,13 @@ class BulkImport < ApplicationRecord
   def cancel_all(current_user)
     imports.queued.each { |import| import.cancel! if import.can_cancel?(current_user) }
   end
+
+  # @return [Array<Hash>]
+  def build_import_data
+    csv_rows.map do |row|
+      filename = row['assets']['spreadsheet_filename']
+      row['assets']['structural'] = structural_metadata_hash[filename]
+      row
+    end
+  end
 end
