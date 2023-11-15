@@ -82,4 +82,36 @@ class BulkImportsController < ApplicationController
       BulkImport::DEFAULT_PRIORITY
     end
   end
+
+  # @return [Array<ActionDispatch::Http::UploadedFile>]
+  def structural_metadata_files
+    params[:structural_metadata] || []
+  end
+
+  # @return [Array<String>]
+  def structural_metadata_filenames
+    @structural_metadata_filenames ||= structural_metadata_files.map(&:original_filename)
+  end
+
+  # @return [Hash]
+  def structural_metadata_hash
+    hash = {}
+
+    return hash if structural_metadata_files.empty?
+
+    structural_metadata_files.each do |file|
+      csv = file.read
+      hash[file.original_filename] = StructuredCSV.parse(csv)
+    end
+    hash
+  end
+
+  # @param [Array<Hash>] rows
+  # @return [Boolean]
+  def missing_metadata_file?(rows)
+    filenames_from_bulk_import_csv = rows.map do |row|
+      row['assets']['spreadsheet_filename']
+    end
+    filenames_from_bulk_import_csv.sort != structural_metadata_filenames.sort
+  end
 end
