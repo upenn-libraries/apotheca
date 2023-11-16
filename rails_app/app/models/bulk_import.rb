@@ -120,6 +120,8 @@ class BulkImport < ApplicationRecord
 
   # @return [Array<Hash>]
   def build_import_data
+    return csv_rows if structural_metadata_hash.empty?
+
     csv_rows.map do |row|
       filename = row['assets']['spreadsheet_filename']
       row['assets']['structural'] = structural_metadata_hash[filename]
