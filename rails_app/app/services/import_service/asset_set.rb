@@ -12,6 +12,7 @@ module ImportService
     #   1. { arranged: [ { filename: 'file1.tif', label: '1' }, { filename: 'file2.tif', label: '2' }],
     #        unarranged: [ { filename: 'reference_shot.tif' }] }
     #   2. { arranged_filenames: 'file1.tif;file2.tif', unarranged_filenames: 'reference_shot.tif' }
+    #   3. { structural: [{ filename: 'file1.tif', label: '1' }, { filename: 'file2.tif', label: '2'}] }
     #
     # File locations can be provided via :storage and :path keys:
     #   { storage: 'sceti-completed-n', path: 'object_3' }
