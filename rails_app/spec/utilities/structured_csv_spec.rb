@@ -97,6 +97,19 @@ RSpec.describe StructuredCSV do
         expect(described_class.parse(csv_string_data).count).to be 2
       end
     end
+
+    context 'with CSV containing leading spaces in headers' do
+      let(:csv_string_data) do
+        <<~CSV
+          asset.drive,asset.path ,unique_identifier
+          test,path/to/assets_1,ark:/9999/test
+        CSV
+      end
+
+      it 'removed trailing whitespace from header' do
+        expect(described_class.parse(csv_string_data)[0]['asset']['path']).not_to be_blank
+      end
+    end
   end
 
   describe '.generate' do
