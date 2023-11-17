@@ -45,7 +45,7 @@ class BulkImportsController < ApplicationController
     csv = uploaded_file.read
     begin
       @bulk_import.csv_rows = StructuredCSV.parse(csv)
-      @bulk_import.asset_spreadsheets_data = asset_spreadsheets_data
+      @bulk_import.asset_spreadsheets_hash = asset_spreadsheets_hash
     rescue CSV::MalformedCSVError => e
       return redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{e.message}"
     end
@@ -58,7 +58,7 @@ class BulkImportsController < ApplicationController
       return redirect_to bulk_imports_path,
                          alert: <<~HEREDOC
                            Problem creating bulk import:
-                           Structural Metadata filenames don't match filenames provided in bulk import CSV"
+                           Asset metadata spreadsheet filenames don't match filenames provided in bulk import CSV"
                          HEREDOC
     end
 
@@ -94,7 +94,7 @@ class BulkImportsController < ApplicationController
 
   # @return [Array<ActionDispatch::Http::UploadedFile>]
   def asset_spreadsheets
-    params[:structural_metadata] || []
+    params[:spreadsheet_metadata] || []
   end
 
   # @return [Array<String>]
@@ -103,7 +103,7 @@ class BulkImportsController < ApplicationController
   end
 
   # @return [Hash]
-  def asset_spreadsheets_data
+  def asset_spreadsheets_hash
     hash = {}
 
     return hash if asset_spreadsheets.empty?
