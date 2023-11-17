@@ -91,20 +91,11 @@ module ImportService
     def asset_data_objects_for(type)
       if data.key?(:"#{type}_filenames")
         filenames = data[:"#{type}_filenames"]
-        return [] if filenames.blank?
-
-        filenames.split(';').map(&:strip).map { |f| asset_data_object(filename: f) }
+        filenames.blank? ? [] : filenames.split(';').map(&:strip).map { |f| asset_data_object(filename: f) }
       elsif data.key?(type.to_sym)
         data[type.to_sym].map { |a| asset_data_object(**a) }
       elsif data.key?(:structural) # maybe call this spreadsheet, or something else
-        if type == :arranged
-          data[:structural].select { |a| a[:sequence].present? }
-                           .sort_by { |a| a[:sequence].to_i }
-                           .map { |a| asset_data_object(**a.except(:sequence)) }
-        else type == :unarranged
-             data[:structural].select { |a| a[:sequence].blank? }
-                              .map { |a| asset_data_object(**a.except(:sequence)) }
-        end
+        asset_data_from_spreadsheet(type)
       else
         []
       end
