@@ -131,6 +131,44 @@ describe ImportService::Process::Update do
       end
     end
 
+    context 'when updating existing assets' do
+      let(:item) do
+        persist(:item_resource, :with_faker_metadata, :with_assets_all_arranged,
+                asset1: persist(:asset_resource, :with_preservation_file, original_filename: 'page1'),
+                asset2: persist(:asset_resource, :with_preservation_file, original_filename: 'page2'))
+      end
+
+      let(:updated_assets) do
+        Valkyrie::MetadataAdapter.find(:postgres).query_service.find_many_by_ids(ids: updated_item.asset_ids)
+      end
+
+      let(:process) do
+        build(
+          :import_process, :update,
+          assets: {
+            arranged: [
+              { filename: 'page1', label: 'recto' },
+              { filename: 'page2', label: 'verso', annotation: ['test'] }
+            ]
+          },
+          unique_identifier: item.unique_identifier
+        )
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(updated_item).to be_a ItemResource
+      end
+
+      it 'updates the metadata for multiple assets' do
+        first_asset = updated_assets.find { |a| a.original_filename == 'page1' }
+        second_asset = updated_assets.find { |a| a.original_filename == 'page2' }
+
+        expect(first_asset.label).to eql 'recto'
+        expect(second_asset.annotations.map(&:text)).to contain_exactly('test')
+      end
+    end
+
     context 'when adding updating existing assets and adding new assets' do
       let(:updated_assets) do
         Valkyrie::MetadataAdapter.find(:postgres).query_service.find_many_by_ids(ids: updated_item.asset_ids)
