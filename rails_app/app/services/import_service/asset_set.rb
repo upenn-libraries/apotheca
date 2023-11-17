@@ -119,10 +119,18 @@ module ImportService
       )
     end
 
-    # @param [String] filename
-    # @return [Hash]
-    def structural_metadata(filename)
-      data[:structural].find(-> { {} }) { |structural_metadata| structural_metadata[:filename] == filename.to_s }
+    # @return [Array<ImportService::AssetData>]
+    def asset_data_from_spreadsheet(type)
+      sequence_criteria = {
+        arranged: ->(a) { a[:sequence].present? },
+        unarranged: ->(a) { a[:sequence].blank? }
+      }
+
+      selected_asset_data = data[:structural].select(&sequence_criteria[type])
+
+      sorted_asset_data = type == :arranged ? res.sort_by { |a| a[:sequence].to_i } : selected_asset_data
+
+      sorted_asset_data.map { |a| asset_data_object(**a.except(:sequence)) }
     end
 
     def asset_data_in_array?
