@@ -119,5 +119,13 @@ module ImportService
     def structural_metadata(filename)
       data[:structural].find(-> { {} }) { |structural_metadata| structural_metadata[:filename] == filename.to_s }
     end
+
+    def asset_data_in_array?
+      data[:arranged] || data[:unarranged]
+    end
+
+    def asset_data_in_string?
+      data[:arranged_filenames] || data[:unarranged_filenames]
+    end
   end
 end
