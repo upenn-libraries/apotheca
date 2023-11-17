@@ -31,7 +31,7 @@ module ImportService
       end
 
       # arranged_filename/unarranged_filename or arranged/unarranged keys can't be present when using asset spreadsheet
-      if data[:spreadsheet] && (asset_data_in_array? || asset_data_in_string?)
+      if data[:spreadsheet] && (asset_fields_with_metadata? || asset_fields_without_metadata?)
         @errors << '(arranged/unarranged)_filename or arranged/unarranged keys used alongside asset spreadsheet'
       end
 
@@ -124,11 +124,13 @@ module ImportService
       sorted_data.map { |a| asset_data_object(**a.except(:sequence)) }
     end
 
-    def asset_data_in_array?
+    # @return [Boolean]
+    def asset_fields_with_metadata?
       data[:arranged] || data[:unarranged]
     end
 
-    def asset_data_in_string?
+    # @return [Boolean]
+    def asset_fields_without_metadata?
       data[:arranged_filenames] || data[:unarranged_filenames]
     end
   end
