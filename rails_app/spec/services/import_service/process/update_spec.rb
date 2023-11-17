@@ -169,7 +169,7 @@ describe ImportService::Process::Update do
       end
     end
 
-    context 'when adding updating existing assets and adding new assets' do
+    context 'when updating existing assets and adding new assets' do
       let(:updated_assets) do
         Valkyrie::MetadataAdapter.find(:postgres).query_service.find_many_by_ids(ids: updated_item.asset_ids)
       end
