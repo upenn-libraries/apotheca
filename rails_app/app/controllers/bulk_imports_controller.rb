@@ -118,8 +118,8 @@ class BulkImportsController < ApplicationController
   # @param [Array<Hash>] rows
   # @return [Boolean]
   def missing_metadata_file?(rows)
-    filenames_from_bulk_import_csv = rows.map do |row|
-      row['assets']['spreadsheet_filename']
+    filenames_from_bulk_import_csv = rows.filter_map do |row|
+      row.dig('assets', 'spreadsheet_filename')
     end
     filenames_from_bulk_import_csv.sort != structural_metadata_filenames.sort
   end
