@@ -94,7 +94,7 @@ module ImportService
         filenames.blank? ? [] : filenames.split(';').map(&:strip).map { |f| asset_data_object(filename: f) }
       elsif data.key?(type.to_sym)
         data[type.to_sym].map { |a| asset_data_object(**a) }
-      elsif data.key?(:spreadsheet) # maybe call this spreadsheet, or something else
+      elsif data.key?(:spreadsheet)
         asset_data_from_spreadsheet(type)
       else
         []
