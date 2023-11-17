@@ -34,6 +34,9 @@ module ImportService
       @errors << 'arranged assets missing filename(s)'   if data[:arranged] && !filenames_present?(data[:arranged])
       @errors << 'unarranged assets missing filename(s)' if data[:unarranged] && !filenames_present?(data[:unarranged])
 
+      # Ensure every row of asset spreadsheet has a filename
+      @errors << 'asset filename(s) missing' if data[:structural] && !filenames_present?(data[:structural])
+
       # Ensure at least one asset is defined
       unless %i[arranged_filenames unarranged_filenames arranged unarragned structural].any? { |k| data.key?(k) }
         @errors << 'no assets defined'
