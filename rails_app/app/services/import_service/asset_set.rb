@@ -117,11 +117,11 @@ module ImportService
         unarranged: ->(a) { a[:sequence].blank? }
       }
 
-      selected_asset_data = data[:spreadsheet].select(&sequence_criteria[type.to_sym])
+      selected_data = data[:spreadsheet].select(&sequence_criteria[type.to_sym])
 
-      sorted_asset_data = type == :arranged ? selected_asset_data.sort_by { |a| a[:sequence].to_i } : selected_asset_data
+      sorted_data = type == :arranged ? selected_data.sort_by { |a| a[:sequence].to_i } : selected_data
 
-      sorted_asset_data.map { |a| asset_data_object(**a.except(:sequence)) }
+      sorted_data.map { |a| asset_data_object(**a.except(:sequence)) }
     end
 
     def asset_data_in_array?
