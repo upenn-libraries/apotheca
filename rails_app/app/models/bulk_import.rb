@@ -16,7 +16,7 @@ class BulkImport < ApplicationRecord
 
   validates_associated :created_by, :imports
 
-  attr_accessor :csv_rows, :structural_metadata_hash
+  attr_accessor :csv_rows, :asset_spreadsheets_data
 
   validates :original_filename, presence: true
 
@@ -120,11 +120,11 @@ class BulkImport < ApplicationRecord
 
   # @return [Array<Hash>]
   def build_import_data
-    return csv_rows if structural_metadata_hash.empty?
+    return csv_rows if asset_spreadsheets_data.empty?
 
     csv_rows.map do |row|
       filename = row['assets']['spreadsheet_filename']
-      row['assets']['structural'] = structural_metadata_hash[filename]
+      row['assets']['spreadsheet'] = asset_spreadsheets_data[filename]
       row
     end
   end

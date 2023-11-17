@@ -45,7 +45,7 @@ class BulkImportsController < ApplicationController
     csv = uploaded_file.read
     begin
       @bulk_import.csv_rows = StructuredCSV.parse(csv)
-      @bulk_import.structural_metadata_hash = structural_metadata_hash
+      @bulk_import.asset_spreadsheets_data = asset_spreadsheets_data
     rescue CSV::MalformedCSVError => e
       return redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{e.message}"
     end
@@ -54,7 +54,7 @@ class BulkImportsController < ApplicationController
       return redirect_to bulk_imports_path, alert: 'Problem creating bulk import: CSV has no item data'
     end
 
-    if missing_metadata_file?(@bulk_import.csv_rows)
+    if missing_asset_metadata_file?(@bulk_import.csv_rows)
       return redirect_to bulk_imports_path,
                          alert: <<~HEREDOC
                            Problem creating bulk import:
@@ -93,22 +93,22 @@ class BulkImportsController < ApplicationController
   end
 
   # @return [Array<ActionDispatch::Http::UploadedFile>]
-  def structural_metadata_files
+  def asset_spreadsheets
     params[:structural_metadata] || []
   end
 
   # @return [Array<String>]
-  def structural_metadata_filenames
-    @structural_metadata_filenames ||= structural_metadata_files.map(&:original_filename)
+  def asset_spreadsheets_filenames
+    @asset_spreadsheets_filenames ||= asset_spreadsheets.map(&:original_filename)
   end
 
   # @return [Hash]
-  def structural_metadata_hash
+  def asset_spreadsheets_data
     hash = {}
 
-    return hash if structural_metadata_files.empty?
+    return hash if asset_spreadsheets.empty?
 
-    structural_metadata_files.each do |file|
+    asset_spreadsheets.each do |file|
       csv = file.read
       hash[file.original_filename] = StructuredCSV.parse(csv)
     end
@@ -117,10 +117,10 @@ class BulkImportsController < ApplicationController
 
   # @param [Array<Hash>] rows
   # @return [Boolean]
-  def missing_metadata_file?(rows)
+  def missing_asset_metadata_file?(rows)
     filenames_from_bulk_import_csv = rows.filter_map do |row|
       row.dig('assets', 'spreadsheet_filename')
     end
-    filenames_from_bulk_import_csv.sort != structural_metadata_filenames.sort
+    filenames_from_bulk_import_csv.sort != asset_spreadsheets_filenames.sort
   end
 end

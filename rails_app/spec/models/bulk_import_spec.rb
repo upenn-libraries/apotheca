@@ -220,7 +220,7 @@ describe BulkImport do
   end
 
   describe '#create_imports' do
-    let(:bulk_import) { create(:bulk_import, csv_rows: csv_rows, structural_metadata_hash: {}) }
+    let(:bulk_import) { create(:bulk_import, csv_rows: csv_rows, asset_spreadsheets_data: {}) }
     let(:csv_data) { Rails.root.join('spec/fixtures/imports/bulk_import_data.csv').read }
     let(:csv_rows) { StructuredCSV.parse(csv_data) }
 

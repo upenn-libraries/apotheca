@@ -31,7 +31,7 @@ module ImportService
       end
 
       # arranged_filename/unarranged_filename or arranged/unarranged keys can't be present when using asset spreadsheet
-      if data[:structural] && (asset_data_in_array? || asset_data_in_string?)
+      if data[:spreadsheet] && (asset_data_in_array? || asset_data_in_string?)
         @errors << '(arranged/unarranged)_filename or arranged/unarranged keys used alongside asset spreadsheet'
       end
 
@@ -40,10 +40,10 @@ module ImportService
       @errors << 'unarranged assets missing filename(s)' if data[:unarranged] && !filenames_present?(data[:unarranged])
 
       # Ensure every row of asset spreadsheet has a filename
-      @errors << 'asset filename(s) missing' if data[:structural] && !filenames_present?(data[:structural])
+      @errors << 'asset filename(s) missing' if data[:spreadsheet] && !filenames_present?(data[:spreadsheet])
 
       # Ensure at least one asset is defined
-      unless %i[arranged_filenames unarranged_filenames arranged unarragned structural].any? { |k| data.key?(k) }
+      unless %i[arranged_filenames unarranged_filenames arranged unarragned spreadsheet].any? { |k| data.key?(k) }
         @errors << 'no assets defined'
       end
 
@@ -94,7 +94,7 @@ module ImportService
         filenames.blank? ? [] : filenames.split(';').map(&:strip).map { |f| asset_data_object(filename: f) }
       elsif data.key?(type.to_sym)
         data[type.to_sym].map { |a| asset_data_object(**a) }
-      elsif data.key?(:structural) # maybe call this spreadsheet, or something else
+      elsif data.key?(:spreadsheet) # maybe call this spreadsheet, or something else
         asset_data_from_spreadsheet(type)
       else
         []
