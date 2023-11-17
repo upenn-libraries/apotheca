@@ -30,6 +30,11 @@ module ImportService
         @errors << 'arranged_filenames/unarranged_filenames cannot be used in conjunction with arranged/unarranged keys'
       end
 
+      # arranged_filename/unarranged_filename or arranged/unarranged keys can't be present when using asset spreadsheet
+      if data[:structural] && (asset_data_in_array? || asset_data_in_string?)
+        @errors << '(arranged/unarranged)_filename or arranged/unarranged keys used alongside asset spreadsheet'
+      end
+
       # Ensure all arranged/unarranged assets have a filename
       @errors << 'arranged assets missing filename(s)'   if data[:arranged] && !filenames_present?(data[:arranged])
       @errors << 'unarranged assets missing filename(s)' if data[:unarranged] && !filenames_present?(data[:unarranged])
