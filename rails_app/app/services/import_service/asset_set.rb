@@ -117,7 +117,7 @@ module ImportService
         unarranged: ->(a) { a[:sequence].blank? }
       }
 
-      selected_asset_data = data[:structural].select(&sequence_criteria[type])
+      selected_asset_data = data[:spreadsheet].select(&sequence_criteria[type.to_sym])
 
       sorted_asset_data = type == :arranged ? res.sort_by { |a| a[:sequence].to_i } : selected_asset_data
 
