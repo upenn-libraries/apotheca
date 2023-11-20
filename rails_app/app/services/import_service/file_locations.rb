@@ -44,6 +44,8 @@ module ImportService
     # @return [FalseClass] if there are no assets paths or if one of them is invalid
     # @return [TrueClass] if there are asset paths present and they are all valid
     def valid_paths?
+      return false unless S3Storage.valid?(storage_name)
+
       !paths.empty? && paths.all? { |p| storage.valid_path?(p) }
     end
 
