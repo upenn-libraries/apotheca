@@ -120,15 +120,4 @@ class BulkImport < ApplicationRecord
   def cancel_all(current_user)
     imports.queued.each { |import| import.cancel! if import.can_cancel?(current_user) }
   end
-
-  # @return [Array<Hash>]
-  def build_import_data
-    return csv_rows if asset_spreadsheets_hash.empty?
-
-    csv_rows.map do |row|
-      filename = row['assets']['spreadsheet_filename']
-      row['assets']['spreadsheet'] = asset_spreadsheets_hash[filename]
-      row
-    end
-  end
 end
