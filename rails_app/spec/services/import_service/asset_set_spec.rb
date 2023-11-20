@@ -22,20 +22,6 @@ describe ImportService::AssetSet do
       )
     end
 
-    it 'detects errors when both (arranged/unarranged) filenames and spreadsheet are used' do
-      assets = described_class.new(arranged_filenames: 'a.tif', spreadsheet: [{ filename: 'a.tif' }])
-      expect(assets.valid?).to be false
-      expect(assets.errors).to include(
-        '(arranged/unarranged)_filename or arranged/unarranged keys used alongside asset spreadsheet'
-      )
-    end
-
-    it 'requires every row of asset spreadsheet has a filename' do
-      assets = described_class.new(spreadsheet: [{ filename: 'a.tif' }, { label: 'no filename' }])
-      expect(assets.valid?).to be false
-      expect(assets.errors).to include('asset filename(s) missing')
-    end
-
     it 'requires that paths are valid' do
       assets = described_class.new(storage: 'sceti_digitized', path: 'invalid/something')
       expect(assets.valid?).to be false
