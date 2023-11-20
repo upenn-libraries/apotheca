@@ -221,34 +221,54 @@ describe BulkImport do
 
   describe '#create_imports' do
     let(:bulk_import) { create(:bulk_import, csv_rows: csv_rows, asset_spreadsheets_hash: asset_spreadsheets_hash) }
-    let(:csv_data) { Rails.root.join('spec/fixtures/imports/bulk_import_expecting_asset_spreadsheets.csv').read }
     let(:csv_rows) { StructuredCSV.parse(csv_data) }
-    let(:asset_spreadsheets_hash) do
-      asset_data = Rails.root.join('spec/fixtures/imports/asset_metadata.csv').read
-      { 'asset_metadata.csv' => StructuredCSV.parse(asset_data) }
-    end
 
     before do
       bulk_import.create_imports
     end
 
-    it 'creates imports' do
-      bulk_import.reload
-      expect(bulk_import.imports.count).to eq(1)
-      expect(bulk_import.imports.first.human_readable_name).to eq('The Mermaids Singing are Beautiful')
+    context 'with asset spreadsheet data' do
+      let(:csv_data) { Rails.root.join('spec/fixtures/imports/bulk_import_expecting_asset_spreadsheets.csv').read }
+      let(:asset_spreadsheets_hash) do
+        asset_data = Rails.root.join('spec/fixtures/imports/asset_metadata.csv').read
+        { 'asset_metadata.csv' => StructuredCSV.parse(asset_data) }
+      end
+
+      it 'creates imports' do
+        bulk_import.reload
+        expect(bulk_import.imports.count).to eq(1)
+        expect(bulk_import.imports.first.human_readable_name).to eq('The Mermaids Singing are Beautiful')
+      end
+
+      it 'creates imports with asset spreadsheet data' do
+        bulk_import.reload
+        spreadsheet_data = bulk_import.imports.first.import_data['assets']['spreadsheet']
+        expect(spreadsheet_data.count).to eq(2)
+        expect(spreadsheet_data.first['filename']).to eq 'front.tif'
+      end
+
+      it 'enqueues the job' do
+        bulk_import.reload
+        expect(ProcessImportJob).to have_enqueued_sidekiq_job.with(bulk_import.imports.first.id)
+                                                             .on("import_#{BulkImport::DEFAULT_PRIORITY}")
+      end
     end
 
-    it 'creates imports with asset spreadsheet data' do
-      bulk_import.reload
-      spreadsheet_data = bulk_import.imports.first.import_data['assets']['spreadsheet']
-      expect(spreadsheet_data.count).to eq(2)
-      expect(spreadsheet_data.first['filename']).to eq 'front.tif'
-    end
+    context 'without asset spreadsheet data' do
+      let(:csv_data) { Rails.root.join('spec/fixtures/imports/bulk_import_data.csv').read }
+      let(:asset_spreadsheets_hash) { {} }
 
-    it 'enqueues the job' do
-      bulk_import.reload
-      expect(ProcessImportJob).to have_enqueued_sidekiq_job.with(bulk_import.imports.first.id)
-                                                           .on("import_#{BulkImport::DEFAULT_PRIORITY}")
+      it 'creates imports' do
+        bulk_import.reload
+        expect(bulk_import.imports.count).to eq(1)
+        expect(bulk_import.imports.first.human_readable_name).to eq('The Mermaids Singing are Beautiful')
+      end
+
+      it 'creates imports without spreadsheet field in import_data' do
+        bulk_import.reload
+        import_data = bulk_import.imports.first.import_data
+        expect(import_data.dig('assets', 'spreadsheet')).to be_nil
+      end
     end
   end
 end
