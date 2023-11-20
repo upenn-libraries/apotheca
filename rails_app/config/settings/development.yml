@@ -16,7 +16,7 @@ redis:
 chrome:
   url: <%= ENV.fetch('CHROME_URL', 'http://chrome:3000') %>
 virus_check:
-  skip: true
+  skip: false
   size_threshold: 2000000000 # 2 GB
 
 # External Services
