@@ -48,7 +48,10 @@ class BulkImport < ApplicationRecord
 
   # @param [String] queue
   def create_imports(queue = BulkImport::DEFAULT_PRIORITY)
-    import_params = build_import_data.map do |row|
+    import_params = csv_rows.map do |row|
+      spreadsheet_filename = row.dig('assets', 'spreadsheet_filename')
+      row['assets']['spreadsheet'] = asset_spreadsheets_hash[spreadsheet_filename] if spreadsheet_filename
+
       import = Import.create!(bulk_import: self, import_data: row)
       Array.wrap(import.id)
     end
