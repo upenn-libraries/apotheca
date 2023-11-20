@@ -5,7 +5,7 @@
 #
 
 # App Version
-app_version: <%= ENV.fetch('APP_VERSION', nil)&.tr('-', '.') %>
+app_version: <%= ENV.fetch('APP_IMAGE_TAG', nil)&.tr('-', '.') %>
 
 # External Services
 honeybadger:
