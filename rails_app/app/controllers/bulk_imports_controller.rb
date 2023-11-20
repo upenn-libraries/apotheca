@@ -94,7 +94,7 @@ class BulkImportsController < ApplicationController
 
   # @return [Array<ActionDispatch::Http::UploadedFile>]
   def asset_spreadsheets
-    params[:bulk_import][:spreadsheet_metadata] || []
+    params[:bulk_import][:asset_metadata] || []
   end
 
   # @return [Array<String>]

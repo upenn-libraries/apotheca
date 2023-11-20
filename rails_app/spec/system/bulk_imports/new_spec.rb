@@ -29,7 +29,7 @@ describe 'Bulk Import New Page' do
     it 'successfully creates a bulk import' do
       bulk_import_csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_expecting_asset_spreadsheets.csv')
       attach_file('bulk-import-csv', bulk_import_csv_path)
-      attach_file('spreadsheet-metadata', asset_csv_path)
+      attach_file('bulk-import-asset-metadata', asset_csv_path)
       click_button 'Create'
       expect(page).to have_text 'Bulk import created'
     end
@@ -37,7 +37,7 @@ describe 'Bulk Import New Page' do
     it 'fails when asset metadata spreadsheet filenames do not match those defined in bulk import csv' do
       bulk_import_csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_data.csv')
       attach_file('bulk-import-csv', bulk_import_csv_path)
-      attach_file('spreadsheet-metadata', asset_csv_path)
+      attach_file('bulk-import-asset-metadata', asset_csv_path)
       click_button 'Create'
       expect(page).to have_text "Asset metadata spreadsheet filenames don't match filenames provided in bulk import CSV"
     end

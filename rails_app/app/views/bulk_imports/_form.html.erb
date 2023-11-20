@@ -1,7 +1,7 @@
 <%= render(Form::Component.new(model: @bulk_import, disable_with: 'Creating New Bulk Import...', multipart: true, size: :sm)) do |form| %>
   <% form.with_field(:created_by, type: :text, value: current_user.email, disabled: true) %>
   <% form.with_field(:csv, type: :file, required: true) %>
-  <% form.with_field(field: 'bulk_import[spreadsheet_metadata][]', type: :file,
+  <% form.with_field(field: 'bulk_import[asset_metadata][]', type: :file,
                      label: 'Asset Metadata CSV(s)',
                      multiple: true,  required: false) %>
   <% form.with_field(:note, type: :textarea) %>
