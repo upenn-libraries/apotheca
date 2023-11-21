@@ -24,22 +24,22 @@ describe 'Bulk Import New Page' do
   end
 
   context 'when creating a bulk import with asset metadata CSVs' do
-    let(:asset_csv_path) { Rails.root.join('spec/fixtures/imports/asset_metadata.csv') }
+    let(:assets_csv_path) { Rails.root.join('spec/fixtures/imports/assets.csv') }
 
     it 'successfully creates a bulk import' do
-      bulk_import_csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_expecting_asset_spreadsheets.csv')
+      bulk_import_csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_expecting_assets_csv.csv')
       attach_file('bulk-import-csv', bulk_import_csv_path)
-      attach_file('bulk-import-asset-metadata', asset_csv_path)
+      attach_file('bulk-import-assets-csv-files', assets_csv_path)
       click_button 'Create'
       expect(page).to have_text 'Bulk import created'
     end
   end
 
   context 'when creating a bulk import with missing asset metadata CSVs' do
-    let(:asset_csv_path) { Rails.root.join('spec/fixtures/imports/asset_metadata.csv') }
+    let(:assets_csv_path) { Rails.root.join('spec/fixtures/imports/assets.csv') }
 
     it 'fails with correct error message' do
-      bulk_import_csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_expecting_asset_spreadsheets.csv')
+      bulk_import_csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_expecting_assets_csv.csv')
       attach_file('bulk-import-csv', bulk_import_csv_path)
       click_button 'Create'
       expect(page).to have_text ' Problem creating bulk import: Missing asset CSV(s): assets.csv'

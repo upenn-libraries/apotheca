@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ImportService
-  # Transforms data from an asset metadata csv into our specified format based on 'sequence' attribute.
+  # Transforms data from an assets csv into our specified format based on 'sequence' attribute.
   class AssetsNormalizer
     class << self
       # @param [Array<Hash>]

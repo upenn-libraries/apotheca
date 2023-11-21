@@ -12,7 +12,7 @@ module ImportService
       @data = StructuredCSV.parse(csv)
     end
 
-    # Add assets from assets csv to the appropriate row. This method removes the `asset.spreadsheet_filename` field
+    # Add data from assets csv to the appropriate row. This method removes the `asset.csv_filename` field
     # as part of its processing.
     # @param [String] filename
     # @param [String] contents

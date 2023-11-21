@@ -4,7 +4,7 @@ describe ImportService::CSV do
   let(:contents) { '' }
   let(:csv) { described_class.new(contents) }
 
-  describe '#add_asset_csv' do
+  describe '#add_assets_csv' do
     context 'with all asset CSVs provided' do
       let(:contents) { Rails.root.join('spec/fixtures/imports/bulk_import_expecting_assets_csv.csv').read }
       let(:asset_csv_contents) { Rails.root.join('spec/fixtures/imports/assets.csv').read }

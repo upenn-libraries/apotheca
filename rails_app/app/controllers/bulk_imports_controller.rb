@@ -44,7 +44,7 @@ class BulkImportsController < ApplicationController
 
     begin
       csv = ImportService::CSV.new(uploaded_file.read)
-      asset_spreadsheets.each do |file|
+      assets_csv_files.each do |file|
         csv.add_assets_csv(file.original_filename, file.read)
       end
       csv.valid!
@@ -84,7 +84,7 @@ class BulkImportsController < ApplicationController
   end
 
   # @return [Array<ActionDispatch::Http::UploadedFile>]
-  def asset_spreadsheets
-    params[:bulk_import][:asset_metadata] || []
+  def assets_csv_files
+    params[:bulk_import][:assets_csv_files] || []
   end
 end
