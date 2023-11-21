@@ -15,8 +15,8 @@ module ImportService
     #
     # File locations can be provided via :storage and :path keys:
     #   { storage: 'sceti-completed-n', path: 'object_3' }
-    def initialize(normalizer: ImportService::AssetSpreadsheetNormalizer, **args)
-      @data = normalizer.process(args.deep_symbolize_keys.compact_blank) # Store raw asset data provided.
+    def initialize(**args)
+      @data = args.deep_symbolize_keys.compact_blank # Store raw asset data provided.
       @file_locations = args.key?(:path) || args.key?(:storage) ? FileLocations.new(**args) : nil
 
       @errors = []

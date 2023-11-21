@@ -42,24 +42,16 @@ class BulkImportsController < ApplicationController
     uploaded_file.tempfile.set_encoding('UTF-8')
     @bulk_import.original_filename = uploaded_file.original_filename
 
-    csv = uploaded_file.read
     begin
-      @bulk_import.csv_rows = StructuredCSV.parse(csv)
-      @bulk_import.asset_spreadsheets_hash = asset_spreadsheets_hash
-    rescue CSV::MalformedCSVError => e
+      csv = ImportService::CSV.new(uploaded_file.read)
+      asset_spreadsheets.each do |file|
+        csv.add_assets_csv(file.original_filename, file.read)
+      end
+      csv.normalize_assets if asset_spreadsheets.present?
+      csv.valid!
+      @bulk_import.csv_rows = csv
+    rescue CSV::MalformedCSVError, ImportService::CSV::Error => e
       return redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{e.message}"
-    end
-
-    if @bulk_import.empty_csv?
-      return redirect_to bulk_imports_path, alert: 'Problem creating bulk import: CSV has no item data'
-    end
-
-    if missing_asset_metadata_file?(@bulk_import.csv_rows)
-      return redirect_to bulk_imports_path,
-                         alert: <<~HEREDOC
-                           Problem creating bulk import:
-                           Asset metadata spreadsheet filenames don't match filenames provided in bulk import CSV"
-                         HEREDOC
     end
 
     if @bulk_import.save
@@ -95,32 +87,5 @@ class BulkImportsController < ApplicationController
   # @return [Array<ActionDispatch::Http::UploadedFile>]
   def asset_spreadsheets
     params[:bulk_import][:asset_metadata] || []
-  end
-
-  # @return [Array<String>]
-  def asset_spreadsheets_filenames
-    @asset_spreadsheets_filenames ||= asset_spreadsheets.map(&:original_filename)
-  end
-
-  # @return [Hash]
-  def asset_spreadsheets_hash
-    hash = {}
-
-    return hash if asset_spreadsheets.empty?
-
-    asset_spreadsheets.each do |file|
-      csv = file.read
-      hash[file.original_filename] = StructuredCSV.parse(csv)
-    end
-    hash
-  end
-
-  # @param [Array<Hash>] rows
-  # @return [Boolean]
-  def missing_asset_metadata_file?(rows)
-    filenames_from_bulk_import_csv = rows.filter_map do |row|
-      row.dig('assets', 'spreadsheet_filename')
-    end
-    filenames_from_bulk_import_csv.sort != asset_spreadsheets_filenames.sort
   end
 end
