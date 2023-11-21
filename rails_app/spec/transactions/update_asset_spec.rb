@@ -55,11 +55,11 @@ describe UpdateAsset do
       end
 
       it 'enqueues job to generate derivatives' do
-        expect(GenerateDerivativesJob).to have_enqueued_sidekiq_job.with(updated_asset.id.to_s)
+        expect(GenerateDerivativesJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s, updated_asset.updated_by)
       end
 
       it 'enqueues job to backup preservation file' do
-        expect(PreservationBackupJob).to have_enqueued_sidekiq_job.with(updated_asset.id.to_s)
+        expect(PreservationBackupJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s)
       end
     end
 
@@ -69,7 +69,7 @@ describe UpdateAsset do
       let(:asset) do
         a = persist(:asset_resource)
         transaction.call(id: a.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
-        GenerateDerivatives.new.call(id: a.id)
+        GenerateDerivatives.new.call(id: a.id, updated_by: a.updated_by)
         PreservationBackup.new.call(id: a.id).value!
       end
       let(:result) do
@@ -123,7 +123,9 @@ describe UpdateAsset do
 
       it 'enqueues job to generate derivatives twice' do
         updated_asset
-        expect(GenerateDerivativesJob.jobs.count { |j| j['args'].eql? [updated_asset.id.to_s] }).to be 2
+        expect(
+          GenerateDerivativesJob.jobs.count { |j| j['args'].eql? [updated_asset.id.to_s, updated_asset.updated_by] }
+        ).to be 2
       end
 
       it 'enqueues job to backup preservation file twice' do
@@ -137,7 +139,7 @@ describe UpdateAsset do
 
       let(:asset) do
         a = persist(:asset_resource, :with_preservation_file, :with_preservation_backup)
-        GenerateDerivatives.new.call(id: a.id).value!
+        GenerateDerivatives.new.call(id: a.id, updated_by: a.updated_by).value!
       end
       let(:result) do
         transaction.call(

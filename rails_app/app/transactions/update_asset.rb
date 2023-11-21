@@ -112,7 +112,7 @@ class UpdateAsset
 
   # Generates derivatives if they are missing or stale.
   #
-  # @param [Valkyrie::Resource] resource
+  # @param [AssetResource] resource
   # @param [Boolean] async runs process asynchronously
   def generate_derivatives(resource, async: true)
     return Success(resource) if resource.preservation_file_id.blank?
@@ -121,10 +121,10 @@ class UpdateAsset
     # Calling transaction directly instead of using `perform_inline` so that we can return the failure/success
     # monad from the transaction.
     if async
-      GenerateDerivativesJob.perform_async(resource.id.to_s)
+      GenerateDerivativesJob.perform_async(resource.id.to_s, resource.updated_by)
       Success(resource)
     else
-      GenerateDerivatives.new.call(id: resource.id.to_s)
+      GenerateDerivatives.new.call(id: resource.id.to_s, updated_by: resource.updated_by)
     end
   end
 

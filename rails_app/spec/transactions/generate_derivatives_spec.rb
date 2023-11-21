@@ -6,7 +6,7 @@ describe GenerateDerivatives do
 
     let(:transaction) { described_class.new }
     let(:asset) { persist(:asset_resource, :with_preservation_file) }
-    let(:result) { transaction.call(id: asset.id) }
+    let(:result) { transaction.call(id: asset.id, updated_by: asset.updated_by) }
 
     context 'when derivatives not present' do
       it 'generates and adds derivatives' do
