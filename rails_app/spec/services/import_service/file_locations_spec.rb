@@ -34,6 +34,14 @@ describe ImportService::FileLocations do
   end
 
   describe '#valid_paths?' do
+    context 'when storage is invalid' do
+      let(:location) { described_class.new(storage: 'wrong_storage', path: 'random_path') }
+
+      it 'returns false' do
+        expect(location.valid_paths?).to be false
+      end
+    end
+
     context 'when one path invalid' do
       let(:location) { described_class.new(storage: 'sceti_digitized', path: %w[trade_card not_valid]) }
 
