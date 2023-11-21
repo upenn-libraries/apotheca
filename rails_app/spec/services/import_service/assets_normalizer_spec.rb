@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-describe ImportService::AssetCSVNormalizer do
+describe ImportService::AssetsNormalizer do
   let(:transformer) { described_class }
   let(:assets_data) do
-    { 'csv' => [{ 'filename' => 'a.tif', 'sequence' => '1', 'annotation' => ['scribble'] },
-                { 'filename' => 'b.tif', 'label' => 'test', 'transcription' => %w[readable text], 'sequence' => nil }] }
+    [{ 'filename' => 'a.tif', 'sequence' => '1', 'annotation' => ['scribble'] },
+     { 'filename' => 'b.tif', 'label' => 'test', 'transcription' => %w[readable text], 'sequence' => nil }]
   end
 
   describe '.process' do

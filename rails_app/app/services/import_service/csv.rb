@@ -7,6 +7,7 @@ module ImportService
 
     class Error < StandardError; end
 
+    # @param [String] csv
     def initialize(csv)
       @data = StructuredCSV.parse(csv)
     end
@@ -14,19 +15,14 @@ module ImportService
     # Add assets from assets csv to the appropriate row. This method removes the `asset.spreadsheet_filename` field
     # as part of its processing.
     def add_assets_csv(filename, contents)
-      row = find { |ele| ele.dig('assets', 'spreadsheet_filename') == filename }
+      row = find { |ele| ele.dig('assets', 'csv_filename') == filename }
 
-      return if row.blank?
+      raise Error, "Missing asset CSV(s): #{filename}" if row.blank?
 
-      row['assets'].delete('spreadsheet_filename')
+      row['assets'].delete('csv_filename')
 
-      row['assets']['csv'] = StructuredCSV.parse(contents)
-    end
-
-    def normalize_assets(normalizer = ImportService::AssetCSVNormalizer)
-      each do |row|
-        row['assets'] = normalizer.process(row['assets']) if row['assets']
-      end
+      asset_data = StructuredCSV.parse(contents)
+      row['assets'].merge!(ImportService::AssetsNormalizer.process(asset_data))
     end
 
     # Iterating through each row in the CSV.

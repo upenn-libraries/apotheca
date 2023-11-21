@@ -2,17 +2,15 @@
 
 module ImportService
   # Transforms data from an asset metadata csv into our specified format based on 'sequence' attribute.
-  class AssetCSVNormalizer
+  class AssetsNormalizer
     class << self
-      # @param [Hash]
+      # @param [Array<Hash>]
       # @return [Hash]
-      def process(data)
-        asset_csv_data = data.delete('csv')
-        return data if asset_csv_data.blank?
-
-        data['arranged'] = arranged_assets(asset_csv_data)
-        data['unarranged'] = unarranged_assets(asset_csv_data)
-        data
+      def process(asset_data)
+        normalized_assets = {}
+        normalized_assets['arranged'] = arranged_assets(asset_data)
+        normalized_assets['unarranged'] = unarranged_assets(asset_data)
+        normalized_assets
       end
 
       private

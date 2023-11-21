@@ -47,7 +47,6 @@ class BulkImportsController < ApplicationController
       asset_spreadsheets.each do |file|
         csv.add_assets_csv(file.original_filename, file.read)
       end
-      csv.normalize_assets if asset_spreadsheets.present?
       csv.valid!
       @bulk_import.csv_rows = csv
     rescue CSV::MalformedCSVError, ImportService::CSV::Error => e
