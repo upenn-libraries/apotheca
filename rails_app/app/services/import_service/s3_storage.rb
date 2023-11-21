@@ -85,10 +85,7 @@ module ImportService
         list = client.list_objects_v2(
           bucket: bucket, prefix: modified_path, continuation_token: continuation_token
         )
-        new_keys = list.contents.map(&:key).delete_if do |k|
-          # Remove top level directory and any subdirectories.
-          (k == modified_path && k.ends_with?('/')) || k.delete_prefix(modified_path).include?('/')
-        end
+        new_keys = keys_for_display(modified_path, list)
         keys.concat(new_keys)
         continuation_token = list.next_continuation_token
         break unless list.is_truncated
@@ -110,6 +107,19 @@ module ImportService
 
       path += '/' if path.present? && !path.end_with?('/')
       path
+    end
+
+    # Remove top level directory, any subdirectories, and dotfiles from the display list.
+    #
+    # @param [String] path
+    # @param [Hash] files
+    # @return [Array]
+    def keys_for_display(path, files)
+      files.contents.map(&:key).delete_if do |k|
+        (k == path && k.ends_with?('/')) ||
+          k.delete_prefix(path).include?('/') ||
+          k.delete_prefix(path).starts_with?('.')
+      end
     end
 
     # Represents file retrieved from S3.
