@@ -14,6 +14,8 @@ module ImportService
 
     # Add assets from assets csv to the appropriate row. This method removes the `asset.spreadsheet_filename` field
     # as part of its processing.
+    # @param [String] filename
+    # @param [String] contents
     def add_assets_csv(filename, contents)
       row = find { |ele| ele.dig('assets', 'csv_filename') == filename }
 
@@ -30,7 +32,7 @@ module ImportService
       @data.each(&)
     end
 
-    # @return [ImportService::CSV::Error] if there is an error in the CSV
+    # raise ImportService::CSV::Error if there is an error in the CSV
     def valid!
       empty_csv!
       missing_assets_csv!
@@ -43,13 +45,13 @@ module ImportService
       raise Error, 'CSV has no data' if @data.blank? || all?(&:blank?)
     end
 
-    # Raising error if `asset.spreadsheet_filename` is present. If the spreadsheet_filename is still
+    # Raising error if `asset.csv_filename` is present. If the csv_filename is still
     # present we didn't get an Asset CSV for the Item.
     #
     # raise ImportService::CSV::Error if any asset CSVs are missing
     def missing_assets_csv!
-      missing_csvs = map { |row| row.dig('assets', 'spreadsheet_filename') }.compact_blank
-      raise Error, "Missing asset metadata CSVs: #{missing_csvs.join(', ')}" if missing_csvs.present?
+      missing_csvs = map { |row| row.dig('assets', 'csv_filename') }.compact_blank
+      raise Error, "Missing asset CSV(s): #{missing_csvs.join(', ')}" if missing_csvs.present?
     end
   end
 end

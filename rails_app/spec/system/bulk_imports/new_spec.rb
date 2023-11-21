@@ -42,7 +42,7 @@ describe 'Bulk Import New Page' do
       bulk_import_csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_expecting_asset_spreadsheets.csv')
       attach_file('bulk-import-csv', bulk_import_csv_path)
       click_button 'Create'
-      expect(page).to have_text ' Problem creating bulk import: Missing asset metadata CSVs: asset_metadata.csv'
+      expect(page).to have_text ' Problem creating bulk import: Missing asset CSV(s): assets.csv'
     end
   end
 

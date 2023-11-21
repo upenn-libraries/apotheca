@@ -42,11 +42,11 @@ describe ImportService::CSV do
     end
 
     context 'with missing asset CSVs' do
-      let(:contents) { Rails.root.join('spec/fixtures/imports/bulk_import_expecting_asset_spreadsheets.csv').read }
+      let(:contents) { Rails.root.join('spec/fixtures/imports/bulk_import_expecting_assets_csv.csv').read }
 
       it 'raises error when any asset CSVs are missing' do
         expect { csv.valid! }.to raise_error(ImportService::CSV::Error,
-                                             'Missing asset metadata CSVs: asset_metadata.csv')
+                                             'Missing asset CSV(s): assets.csv')
       end
     end
   end
