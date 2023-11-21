@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe UpdateAsset do
-  shared_examples_for 'a failed asset update' do
+  shared_examples_for 'does not enqueue jobs' do
     it 'does not enqueue any jobs' do
-      expect(GenerateDerivativesJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
-      expect(PreservationBackupJob).to have_been_enqueued.with(asset.id.to_s).exactly(0)
+      expect(GenerateDerivativesJob).not_to have_enqueued_sidekiq_job(asset.id.to_s, asset.updated_by)
+      expect(PreservationBackupJob).not_to have_enqueued_sidekiq_job(asset.id.to_s, asset.updated_by)
     end
   end
 
@@ -26,12 +26,7 @@ describe UpdateAsset do
 
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(
-          id: asset.id,
-          file: file1,
-          label: 'Front of Card',
-          updated_by: 'test@example.com'
-        )
+        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
       end
 
       it 'is successful' do
@@ -59,7 +54,7 @@ describe UpdateAsset do
       end
 
       it 'enqueues job to backup preservation file' do
-        expect(PreservationBackupJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s)
+        expect(PreservationBackupJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s, updated_asset.updated_by)
       end
     end
 
@@ -70,7 +65,7 @@ describe UpdateAsset do
         a = persist(:asset_resource)
         transaction.call(id: a.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
         GenerateDerivatives.new.call(id: a.id, updated_by: a.updated_by)
-        PreservationBackup.new.call(id: a.id).value!
+        PreservationBackup.new.call(id: a.id, updated_by: a.updated_by).value!
       end
       let(:result) do
         transaction.call(
@@ -130,7 +125,9 @@ describe UpdateAsset do
 
       it 'enqueues job to backup preservation file twice' do
         updated_asset
-        expect(PreservationBackupJob.jobs.count { |j| j['args'].eql? [updated_asset.id.to_s] }).to be 2
+        expect(
+          PreservationBackupJob.jobs.count { |j| j['args'].eql? [updated_asset.id.to_s, updated_asset.updated_by] }
+        ).to be 2
       end
     end
 
@@ -151,6 +148,8 @@ describe UpdateAsset do
         )
       end
 
+      include_examples 'does not enqueue jobs'
+
       it 'is successful' do
         expect(result.success?).to be true
       end
@@ -158,11 +157,6 @@ describe UpdateAsset do
       it 'updates transcriptions' do
         expect(updated_asset.transcriptions.count).to be 1
         expect(updated_asset.transcriptions.first.contents).to eql 'Importers, 32 S. Howard Street, Baltimore, MD.'
-      end
-
-      it 'does not enqueue any jobs' do
-        expect(GenerateDerivativesJob).to have_been_enqueued.with(updated_asset.id.to_s).exactly(0)
-        expect(PreservationBackupJob).to have_been_enqueued.with(updated_asset.id.to_s).exactly(0)
       end
     end
 
@@ -176,7 +170,7 @@ describe UpdateAsset do
         transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
       end
 
-      it_behaves_like 'a failed asset update'
+      include_examples 'does not enqueue jobs'
 
       it 'fails' do
         expect(result.failure?).to be true
@@ -195,7 +189,7 @@ describe UpdateAsset do
         transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com')
       end
 
-      it_behaves_like 'a failed asset update'
+      include_examples 'does not enqueue jobs'
 
       it 'fails' do
         expect(result.failure?).to be true
@@ -209,7 +203,7 @@ describe UpdateAsset do
         transaction.call(id: asset.id, file: file1, expected_checksum: '1234', updated_by: 'test@example.com')
       end
 
-      it_behaves_like 'a failed asset update'
+      include_examples 'does not enqueue jobs'
 
       it 'fails' do
         expect(result.failure?).to be true
@@ -229,7 +223,7 @@ describe UpdateAsset do
         end
       end
 
-      it_behaves_like 'a failed asset update'
+      include_examples 'does not enqueue jobs'
 
       it 'cleans up the uploaded file' do
         expect(result.failure[:change_set].preservation_file_id).not_to be_nil

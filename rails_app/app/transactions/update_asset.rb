@@ -132,7 +132,7 @@ class UpdateAsset
   def preservation_backup(resource)
     return if resource.preservation_file_id.blank? || resource.preservation_copies_ids.present?
 
-    PreservationBackupJob.perform_async(resource.id.to_s)
+    PreservationBackupJob.perform_async(resource.id.to_s, resource.updated_by)
   end
 
   private

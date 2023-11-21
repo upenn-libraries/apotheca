@@ -4,7 +4,7 @@
 class PreservationBackupJob < TransactionJob
   sidekiq_options queue: :low
 
-  def transaction(asset_id)
-    PreservationBackup.new.call(id: asset_id)
+  def transaction(asset_id, updated_by)
+    PreservationBackup.new.call(id: asset_id, updated_by: updated_by)
   end
 end
