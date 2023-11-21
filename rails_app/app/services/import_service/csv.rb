@@ -16,6 +16,8 @@ module ImportService
     def add_assets_csv(filename, contents)
       row = find { |ele| ele.dig('assets', 'spreadsheet_filename') == filename }
 
+      return if row.blank?
+
       row['assets'].delete('spreadsheet_filename')
 
       row['assets']['csv'] = StructuredCSV.parse(contents)
