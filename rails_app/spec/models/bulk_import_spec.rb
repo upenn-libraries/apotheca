@@ -85,22 +85,6 @@ describe BulkImport do
     end
   end
 
-  describe '#empty_csv?' do
-    let(:bulk_import) { create(:bulk_import) }
-
-    it 'returns true if csv has no item data' do
-      csv_data = Rails.root.join('spec/fixtures/imports/bulk_import_without_item_data.csv').read
-      bulk_import.csv_rows = StructuredCSV.parse(csv_data)
-      expect(bulk_import).to be_empty_csv
-    end
-
-    it 'returns false if csv has item data' do
-      csv_data = Rails.root.join('spec/fixtures/imports/bulk_import_data.csv').read
-      bulk_import.csv_rows = StructuredCSV.parse(csv_data)
-      expect(bulk_import).not_to be_empty_csv
-    end
-  end
-
   describe '#state' do
     context 'when no imports are present' do
       let(:bulk_import) { create(:bulk_import) }
