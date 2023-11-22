@@ -26,12 +26,26 @@ describe Steps::AddPreservationEvents do
     end
 
     context 'with migration attribute on the change set' do
-      let(:update_attributes) { { migrated_from: 'Internet Archive' } }
+      let(:update_attributes) do
+        {
+          preservation_file_id: Valkyrie::ID.new('new-bogus-file-id'),
+          migrated_from: 'Internet Archive',
+          migrated_filename: 'filename-in-old-system.tif'
+        }
+      end
 
       it 'sets a ingest event with migration-specific outcome_detail_note' do
         ingest_event = find_event_by_type events: preservation_events, type: Premis::Events::INGEST
         expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.action.migration_note',
                                                               from: update_attributes[:migrated_from])
+      end
+
+      it 'sets the correct messages for the preservation filename change event' do
+        filename_event = find_event_by_type events: preservation_events, type: Premis::Events::FILENAME_CHANGE
+        expect(filename_event.outcome_detail_note).to include(
+          I18n.t('preservation_events.preservation_filename.note', from: update_attributes[:migrated_filename],
+                                                                   to: update_attributes[:preservation_file_id])
+        )
       end
     end
 
@@ -97,7 +111,7 @@ describe Steps::AddPreservationEvents do
       end
 
       it 'sets the correct message for the filename change event' do
-        old_file_id = asset.preservation_file_id.id.split('/').last
+        old_file_id = asset.preservation_file_id.id.split('://').last
         expect(preservation_file_events.first.outcome_detail_note).to eq(
           I18n.t('preservation_events.preservation_filename.note', from: old_file_id,
                                                                    to: update_attributes[:preservation_file_id])

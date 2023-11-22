@@ -4,6 +4,7 @@ module DerivativeService
   # Wrap FFMpeg functionality so it can be used for audio and video generators
   class FfmpegWrapper
     FFMPEG_EXECUTABLE = 'ffmpeg'
+    FFPROBE_EXCECUTABLE = 'ffprobe'
     MOV_OPTIONS = [
       '-y', # automatically overwrite any existing output files
       '-vcodec h264', # video codec h264
@@ -18,41 +19,56 @@ module DerivativeService
       '-ac 2', # ensure 2-channel (stereo) sound
       '-hide_banner' # hide banner about config/formats from output - remove if debugging
     ].freeze
-    FIRST_FRAME_OPTIONS = [
-      '-ss 00:00:00', # seek to a specific time in the input file
-      '-vframes 1', # extract a specific number of video frames
+    VIDEO_LENGTH_OPTIONS = [
+      '-loglevel error', # show only errors
+      '-of csv=p=0', # set output format to comma-separated values
+      '-show_entries format=duration' # show only duration from metadata
+    ].freeze
+    THUMBNAIL_OPTIONS = [
+      '-vframes 1', # extract 1 frame
       '-q:v 2', # set the quality of the output video frame
       '-f image2', # force output as image
       'pipe:1', # output data to stdout
       '-loglevel quiet' # used to suppress ffmpeg console output
     ].freeze
 
-    # @param [String] input_path
-    # @param [Array] options
-    # @param [String] output_path
-    # @return [String] stdout
-    def self.command(input_path:, options:, output_path: nil)
-      command_string = "#{FFMPEG_EXECUTABLE} -i #{input_path} #{options.join(' ')}"
-      command_string += " #{output_path}" if output_path
-
-      stdout, stderr, status = Open3.capture3(command_string)
+    def self.command(excecutable:, arguments:)
+      stdout, stderr, status = Open3.capture3("#{excecutable} #{arguments.join(' ')}")
       raise "FFMpeg Error: #{stderr}" unless status.success?
 
       stdout
     end
 
+    def self.ffmpeg(input_path:, options:, output_path: nil, input_options: [])
+      options = input_options + ["-i #{input_path}"] + options
+      options += [output_path] if output_path
+
+      command(excecutable: FFMPEG_EXECUTABLE, arguments: options)
+    end
+
+    def self.ffprobe(input_path:, options:)
+      options += [input_path]
+
+      command(excecutable: FFPROBE_EXCECUTABLE, arguments: options)
+    end
+
+    def self.video_length(input_path:)
+      ffprobe(input_path: input_path, options: VIDEO_LENGTH_OPTIONS)
+    end
+
+    def self.thumbnail(input_path:)
+      length = video_length(input_path: input_path)
+      ffmpeg(input_path: input_path, options: THUMBNAIL_OPTIONS, input_options: ["-ss #{length.to_f / 4}"])
+    end
+
     def self.wav_to_mp3(input_path:, output_path:)
-      command(input_path: input_path, options: MP3_OPTIONS, output_path: output_path)
+      ffmpeg(input_path: input_path, options: MP3_OPTIONS, output_path: output_path)
       true
     end
 
     def self.mov_to_mp4(input_path:, output_path:)
-      command(input_path: input_path, options: MOV_OPTIONS, output_path: output_path)
+      ffmpeg(input_path: input_path, options: MOV_OPTIONS, output_path: output_path)
       true
-    end
-
-    def self.first_frame_from_video(input_path:)
-      command(input_path: input_path, options: FIRST_FRAME_OPTIONS)
     end
   end
 end

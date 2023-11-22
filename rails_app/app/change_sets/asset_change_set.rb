@@ -33,8 +33,9 @@ class AssetChangeSet < ChangeSet
   property :technical_metadata, multiple: false, form: TechnicalMetadataChangeSet
   property :preservation_events, multiple: true, required: false
 
-  # name of source system for a migration action
-  property :migrated_from, multiple: false, virtual: true
+  # Virtual properties to record migration information
+  property :migrated_from, multiple: false, virtual: true # name of source system for a migration action
+  property :migrated_filename, multiple: false, virtual: true # name of preservation file in source system
 
   # virtual property to aggregate events before batch adding them to the change set. this ensures we
   # can set events with identical timestamps

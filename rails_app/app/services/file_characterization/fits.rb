@@ -19,6 +19,7 @@ module FileCharacterization
       uri = URI.parse("#{url}/examine?includeStandardOutput=false")
 
       http = Net::HTTP.new(uri.host, uri.port)
+      http.read_timeout = 120
 
       request = Net::HTTP::Post.new(uri.request_uri)
       request.set_form([['datafile', contents, { filename: filename }]], 'multipart/form-data')

@@ -44,9 +44,11 @@ class Import < ApplicationRecord
   # Get associated Valkyrie::Resource
   # @return [Valkyrie::Resource, nil]
   def resource
-    return unless resource_identifier
+    identifier = resource_identifier || import_data['unique_identifier']
 
-    @resource ||= query_service.custom_queries.find_by_unique_identifier(unique_identifier: resource_identifier)
+    return unless identifier
+
+    @resource ||= query_service.custom_queries.find_by_unique_identifier(unique_identifier: identifier)
   end
 
   private

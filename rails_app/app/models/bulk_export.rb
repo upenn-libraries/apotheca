@@ -18,7 +18,7 @@ class BulkExport < ApplicationRecord
 
   def run
     csv_file = nil
-    benchmark = Benchmark.measure do
+    elapsed_time = Benchmark.realtime do
       items = solr_items
       raise StandardError, 'No search results returned, cannot generate csv' if items.empty?
 
@@ -26,7 +26,7 @@ class BulkExport < ApplicationRecord
       self.records_count = items.length
     end
     self.generated_at = DateTime.now
-    self.duration = benchmark.total
+    self.duration = elapsed_time
     attach_csv_to_record(csv_file)
     success!
   rescue StandardError => e

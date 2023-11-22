@@ -7,7 +7,7 @@ class UpdateAsset
   step :find_asset, with: 'asset_resource.find_resource'
   step :require_updated_by, with: 'change_set.require_updated_by'
   step :validate_file_extension
-  step :virus_check # TODO: fully implement when virus checking is possible
+  step :virus_check, with: 'asset_resource.virus_check'
   step :store_file_in_preservation_storage
   around :cleanup, with: 'asset_resource.cleanup'
   step :create_change_set, with: 'asset_resource.create_change_set'
@@ -64,17 +64,6 @@ class UpdateAsset
     Success(change_set)
   end
 
-  def virus_check(**attributes)
-    if (attributes[:file] || attributes['file']).present?
-      warning = AssetResource::PreservationEvent.virus_check outcome: Premis::Outcomes::WARNING.uri,
-                                                             note: I18n.t('preservation_events.virus_check.note'),
-                                                             implementer: attributes[:updated_by]
-      attributes[:temporary_events] = [warning]
-    end
-
-    Success(attributes)
-  end
-
   # Stores file in preservation storage and adds in the system generated id to the list of
   # attributes passed on to the next step.
   #
@@ -91,8 +80,14 @@ class UpdateAsset
 
       attributes[:preservation_file_id] = file_resource.id
 
-      # Explicitly set the original filename if file is not being migrated.
-      attributes[:original_filename] = file.original_filename if attributes[:migrated_from].blank?
+      # Explicitly set the original filename if file is not being migrated. If file is being migrated
+      # store file's original filename in `migrated_filename` in order to record it properly in our
+      # preservation events.
+      if attributes[:migrated_from].blank?
+        attributes[:original_filename] = file.original_filename
+      else
+        attributes[:migrated_filename] = file.original_filename
+      end
     end
 
     Success(attributes)

@@ -13,6 +13,9 @@ redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
   password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
+virus_check:
+  skip: false
+  size_threshold: 2000000000 # 2 GB
 
 # External Services
 ezid:

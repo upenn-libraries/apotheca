@@ -15,7 +15,7 @@ describe ImportService::S3Storage do
 
     context 'when key is invalid' do
       it 'returns an error' do
-        expect { storage.file('invalid') }.to raise_error(Aws::S3::Errors::NoSuchKey)
+        expect { storage.file('invalid') }.to raise_error(Shrine::FileNotFound)
       end
     end
   end
@@ -70,6 +70,10 @@ describe ImportService::S3Storage do
     context 'when path contains files' do
       it 'returns all files (ignoring nested files)' do
         expect(storage.files_at('')).to contain_exactly('bell.wav', 'video.mov')
+      end
+
+      it 'ignores any dotfiles' do
+        expect(storage.files_at('')).not_to include('.example-dotfile')
       end
     end
 

@@ -73,5 +73,9 @@ class Container
     register 'add_preservation_events' do
       Steps::AddPreservationEvents.new
     end
+
+    register 'virus_check' do
+      Steps::VirusCheck.new
+    end
   end
 end
