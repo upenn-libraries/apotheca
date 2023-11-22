@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Transaction to add an Asset to an Item. The asset is only added to the asset_id array, it is not ordered.
-class AddAsset
+class AttachAsset
   include Dry::Transaction(container: Container)
 
   step :find_item, with: 'item_resource.find_resource'

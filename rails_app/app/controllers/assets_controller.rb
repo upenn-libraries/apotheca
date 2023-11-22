@@ -121,8 +121,8 @@ class AssetsController < ApplicationController
     end
 
     # Add Asset to Item.
-    add_asset_result = AddAsset.new.call(id: @item.id, asset_id: update_result.value!.id,
-                                         updated_by: current_user.email)
+    add_asset_result = AttachAsset.new.call(id: @item.id, asset_id: update_result.value!.id,
+                                            updated_by: current_user.email)
     if add_asset_result.failure?
       DeleteAsset.new.call(id: result.value!.id)
       return add_asset_result
