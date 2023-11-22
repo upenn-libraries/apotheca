@@ -5,7 +5,7 @@ class TestWorkingStorage
   def self.load_example_files
     base = Rails.root.join('spec/fixtures/files').to_s
 
-    Dir.glob(File.join(base, '**/*')) do |f|
+    Dir.glob(File.join(base, '**/*'), File::FNM_DOTMATCH) do |f|
       next if File.directory?(f)
 
       s3.upload(File.new(f), f.delete_prefix(base))
