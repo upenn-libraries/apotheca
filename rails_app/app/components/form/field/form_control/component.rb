@@ -15,15 +15,17 @@ module Form
           @value     = options.delete(:value)
           @size      = options.delete(:size)
           @label     = options.delete(:label)
+          @description = options.delete(:description)
 
           # Options for input
           @options = options
           @options[:class] = Array.wrap(@options[:class]).append(*input_classes)
+          set_aria_describedby if @description
         end
 
         def call
           render(RowComponent.new(:div, class: 'mb-3')) do
-            safe_join([label, input])
+            safe_join([label, input, description])
           end
         end
 
@@ -31,6 +33,20 @@ module Form
           classes = ['col-form-label']
           classes << "col-form-label-#{@size}" if @size
           render(ColumnComponent.new(:div, col: @label_col, class: classes, for: @options[:id])) { @label }
+        end
+
+        def description
+          return if @description.blank?
+
+          classes = ['text-center text-primary fs-6']
+          render(RowComponent.new(:div, class: 'mb3')) do
+            render(ColumnComponent.new(:div, col: 'col-sm-12', id: @options[:'aria-describedby'],
+                                             class: classes)) { @description }
+          end
+        end
+
+        def set_aria_describedby
+          @options[:'aria-describedby'] = "#{@options[:id]}-description"
         end
 
         def input
