@@ -4,6 +4,9 @@
 # This configuration can be overridden in environment specific files.
 #
 
+# App Version
+app_version: <%= ENV.fetch('APP_IMAGE_TAG', nil)&.tr('-', '.') %>
+
 # External Services
 honeybadger:
   api_key: '12345'
