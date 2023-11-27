@@ -35,7 +35,6 @@ describe DeleteAsset do
 
       it 'detaches asset from parent ItemResource' do
         updated_item = query_service.find_by id: item.id # reload item to get changes in memory
-        # expect(updated_item.asset_ids).not_to include(an_object_having_attributes(id: asset.id.id))
         expect(updated_item.asset_ids).not_to include(asset.id)
       end
 
