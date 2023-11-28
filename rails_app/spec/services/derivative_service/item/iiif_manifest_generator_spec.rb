@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe IIIFService::ManifestGenerator do
+describe DerivativeService::Item::IIIFManifestGenerator do
   describe '.new' do
     context 'when parameters do not include an Item' do
       it 'returns an error' do
@@ -121,7 +121,7 @@ describe IIIFService::ManifestGenerator do
 
       it 'raises an error' do
         expect { iiif_service.v2_manifest }.to raise_error(
-          IIIFService::ManifestGenerator::MissingDerivative
+          DerivativeService::Item::IIIFManifestGenerator::MissingDerivative
         )
       end
     end

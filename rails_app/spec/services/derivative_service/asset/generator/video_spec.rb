@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Generator::Image do
-  let(:file) do
-    ActionDispatch::Http::UploadedFile.new tempfile: file_fixture('files/trade_card/original/front.tif').open
-  end
+describe DerivativeService::Asset::Generator::Video do
+  let(:file) { Valkyrie::StorageAdapter::StreamFile.new id: 1, io: File.open(file_fixture('files/video.mov')) }
   let(:generator) { described_class.new(file) }
 
   describe '#thumbnail' do
@@ -17,8 +15,8 @@ describe DerivativeService::Generator::Image do
       expect(derivative_file.mime_type).to eql 'image/jpeg'
     end
 
-    it 'sets expected iiif value of false' do
-      expect(derivative_file.iiif).to be false
+    it 'sets expected iiif_image value of false' do
+      expect(derivative_file.iiif_image).to be false
     end
 
     it 'adds file' do
@@ -34,11 +32,7 @@ describe DerivativeService::Generator::Image do
     end
 
     it 'sets expected mime_type' do
-      expect(derivative_file.mime_type).to eql 'image/tiff'
-    end
-
-    it 'sets expected iiif value of true' do
-      expect(derivative_file.iiif).to be true
+      expect(derivative_file.mime_type).to eql 'video/mp4'
     end
 
     it 'adds file' do
