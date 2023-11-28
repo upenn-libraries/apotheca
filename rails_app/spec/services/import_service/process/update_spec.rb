@@ -131,7 +131,7 @@ describe ImportService::Process::Update do
       end
     end
 
-    context 'when updating existing assets' do
+    context 'when updating multiple existing assets' do
       let(:item) do
         persist(:item_resource, :with_faker_metadata, :with_assets_all_arranged,
                 asset1: persist(:asset_resource, :with_preservation_file, original_filename: 'page1'),
