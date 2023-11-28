@@ -12,6 +12,7 @@ class GenerateDerivatives
   include Dry::Transaction(container: Container)
 
   step :find_asset, with: 'asset_resource.find_resource'
+  step :require_updated_by, with: 'change_set.require_updated_by'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :generate_derivatives
   step :validate, with: 'change_set.validate'
