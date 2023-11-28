@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe ImportService::CSV do
-  let(:contents) { '' }
   let(:csv) { described_class.new(contents) }
 
   describe '#add_assets_csv' do
@@ -10,6 +9,10 @@ describe ImportService::CSV do
       let(:asset_csv_contents) { Rails.root.join('spec/fixtures/imports/assets.csv').read }
 
       before { csv.add_assets_csv('assets.csv', asset_csv_contents) }
+
+      it 'removes csv_filename column' do
+        expect(csv.first.key?('csv_filename')).to be false
+      end
 
       it 'adds asset using long format specification' do
         expect(csv.first['assets']['arranged'].first).to eq('annotation' => ['first annotation', 'second annotation'],

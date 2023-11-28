@@ -10,10 +10,6 @@ describe ImportService::AssetsNormalizer do
   describe '.process' do
     let(:transformed_data) { transformer.process(assets_data) }
 
-    it 'removes the csv field' do
-      expect(transformed_data.key?('csv')).to be false
-    end
-
     it 'adds assets with sequence to arranged assets array' do
       expect(transformed_data['arranged'].size).to eq(1)
       expect(transformed_data['arranged'].first).to eq('filename' => 'a.tif', 'annotation' => ['scribble'])
