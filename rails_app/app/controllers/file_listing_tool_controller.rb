@@ -8,7 +8,7 @@ class FileListingToolController < ApplicationController
     respond_to do |format|
       if valid_drive? && valid_path?
         if filenames.present?
-          format.csv { send_data csv, type: 'text/csv', filename: 'structural_metadata.csv', disposition: :download }
+          format.csv { send_data csv, type: 'text/csv', filename: 'assets.csv', disposition: :download }
           format.json do
             render json: { filenames: filenames.join('; '), drive: params[:drive], path: params[:path] }, status: :ok
           end
