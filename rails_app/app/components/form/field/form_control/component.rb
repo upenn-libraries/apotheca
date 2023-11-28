@@ -38,11 +38,8 @@ module Form
         def description
           return if @description.blank?
 
-          classes = ['text-center text-primary fs-6']
-          render(RowComponent.new(:div, class: 'mb3')) do
-            render(ColumnComponent.new(:div, col: 'col-sm-12', id: @options[:'aria-describedby'],
-                                             class: classes)) { @description }
-          end
+          render(ColumnComponent.new(:div, col: @input_col, offset: @label_col, id: @options[:'aria-describedby'],
+                                           class: 'form-text')) { @description }
         end
 
         def set_aria_describedby
