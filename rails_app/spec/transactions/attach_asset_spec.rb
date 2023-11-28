@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AddAsset do
+describe AttachAsset do
   describe '#call' do
     subject(:updated_item) { result.value! }
 

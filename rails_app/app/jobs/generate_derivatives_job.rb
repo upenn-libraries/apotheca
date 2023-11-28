@@ -4,7 +4,7 @@
 class GenerateDerivativesJob < TransactionJob
   sidekiq_options queue: :high
 
-  def transaction(asset_id)
-    GenerateDerivatives.new.call(id: asset_id)
+  def transaction(asset_id, updated_by)
+    GenerateDerivatives.new.call(id: asset_id, updated_by: updated_by)
   end
 end

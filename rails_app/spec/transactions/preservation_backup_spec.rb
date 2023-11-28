@@ -5,7 +5,7 @@ describe PreservationBackup do
     subject(:updated_asset) { result.value! }
 
     let(:transaction) { described_class.new }
-    let(:result) { transaction.call(id: asset.id) }
+    let(:result) { transaction.call(id: asset.id, updated_by: asset.updated_by) }
 
     context 'when preservation file already backed up' do
       let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }

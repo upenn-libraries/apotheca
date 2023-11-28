@@ -71,7 +71,9 @@ module TrackedEvents
 
     # @return [String]
     def apotheca
-      Rails.application.class.module_parent_name.to_s
+      version = Settings.app_version
+      Rails.logger.warn 'Settings.app_version is not present' if version.blank?
+      "#{Rails.application.class.module_parent_name} (#{version})"
     end
   end
 end
