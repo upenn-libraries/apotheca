@@ -139,12 +139,14 @@ module ImportService
           asset_data = asset_set.find { |a| a.filename == asset.original_filename }
 
           asset_data.update_asset(asset: asset, imported_by: imported_by).then do |result|
-            return result if result.success?
-
-            e = result.failure
-            error = e.delete(:error)
-            error = error.to_s.humanize if error.is_a? Symbol
-            failure(error: "Error occurred updating #{asset.original_filename}: #{error}", **e)
+            if result.success?
+              result
+            else
+              e = result.failure
+              error = e.delete(:error)
+              error = error.to_s.humanize if error.is_a? Symbol
+              failure(error: "Error occurred updating #{asset.original_filename}: #{error}", **e)
+            end
           end
         end
 

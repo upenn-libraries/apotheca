@@ -42,15 +42,15 @@ class BulkImportsController < ApplicationController
     uploaded_file.tempfile.set_encoding('UTF-8')
     @bulk_import.original_filename = uploaded_file.original_filename
 
-    csv = uploaded_file.read
     begin
-      @bulk_import.csv_rows = StructuredCSV.parse(csv)
-    rescue CSV::MalformedCSVError => e
+      csv = ImportService::CSV.new(uploaded_file.read)
+      assets_csv_files.each do |file|
+        csv.add_assets_csv(file.original_filename, file.read)
+      end
+      csv.valid!
+      @bulk_import.csv_rows = csv
+    rescue CSV::MalformedCSVError, ImportService::CSV::Error => e
       return redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{e.message}"
-    end
-
-    if @bulk_import.empty_csv?
-      return redirect_to bulk_imports_path, alert: 'Problem creating bulk import: CSV has no item data'
     end
 
     if @bulk_import.save
@@ -81,5 +81,10 @@ class BulkImportsController < ApplicationController
     else
       BulkImport::DEFAULT_PRIORITY
     end
+  end
+
+  # @return [Array<ActionDispatch::Http::UploadedFile>]
+  def assets_csv_files
+    params[:bulk_import][:assets_csv_files] || []
   end
 end
