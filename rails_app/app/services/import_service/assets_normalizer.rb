@@ -18,7 +18,7 @@ module ImportService
       # @return [Array<Hash>]
       def arranged_assets(asset_data)
         asset_data.select { |asset| asset['sequence'].present? }
-                  .sort_by { |asset| asset['sequence'] }
+                  .sort_by { |asset| asset['sequence'].to_i }
                   .map { |asset| asset.except('sequence') }
       end
 
