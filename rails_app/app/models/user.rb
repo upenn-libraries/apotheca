@@ -14,6 +14,8 @@ class User < ApplicationRecord
     devise :omniauthable, omniauth_providers: [:saml]
   end
 
+  delegate :can?, :cannot?, to: :ability
+
   has_many :bulk_exports, foreign_key: 'created_by_id', dependent: :destroy, inverse_of: :created_by
   has_many :bulk_imports, foreign_key: 'created_by_id', dependent: :destroy, inverse_of: :created_by
 
@@ -74,6 +76,10 @@ class User < ApplicationRecord
   # @return [TrueClass, FalseClass]
   def viewer?
     roles.include? VIEWER_ROLE
+  end
+
+  def ability
+    @ability ||= Ability.new(self)
   end
 
   private

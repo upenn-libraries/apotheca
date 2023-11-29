@@ -31,7 +31,7 @@
                href="<%= alert_messages_path %>">Alerts</a>
           </li>
         <% end %>
-        <% if can? :manage, :all %>
+        <% if can? :manage, :sidekiq_dashboard %>
           <li class="nav-item">
             <a class="nav-link" href="<%= sidekiq_web_path %>"
                target="_blank">Sidekiq <%= render Icon::Component.new(name: 'box-arrow-up-right') %></a>

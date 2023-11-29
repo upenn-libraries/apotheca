@@ -31,7 +31,7 @@ class Import < ApplicationRecord
 
   # Determine if a user can cancel an import
   def can_cancel?(user)
-    Ability.new(user).can?(:cancel, self) && may_cancel?
+    user.can?(:cancel, self) && may_cancel?
   end
 
   # Return human_readable_name from ItemResource if it's been assigned or from data hash if not

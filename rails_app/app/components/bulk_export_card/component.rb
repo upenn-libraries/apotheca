@@ -3,7 +3,7 @@
 module BulkExportCard
   # ViewComponent
   class Component < ViewComponent::Base
-    attr_reader :bulk_export
+    attr_reader :bulk_export, :user
 
     # @param [BulkExport] bulk_export
     # @param [User] user
@@ -14,23 +14,18 @@ module BulkExportCard
       @options = options
     end
 
-    # @return [Ability]
-    def ability
-      @ability ||= Ability.new(@user)
-    end
-
     # @return [Boolean]
     def can_cancel?
-      ability.can?(:cancel, bulk_export) && bulk_export.may_cancel?
+      user.can?(:cancel, bulk_export) && bulk_export.may_cancel?
     end
 
     # @return [Boolean]
     def can_regenerate?
-      ability.can?(:regenerate, bulk_export) && (bulk_export.failed? || bulk_export.successful?)
+      user.can?(:regenerate, bulk_export) && (bulk_export.failed? || bulk_export.successful?)
     end
 
     def can_delete?
-      ability.can?(:destroy, bulk_export) && (bulk_export.failed? || bulk_export.successful? || bulk_export.cancelled?)
+      user.can?(:destroy, bulk_export) && (bulk_export.failed? || bulk_export.successful? || bulk_export.cancelled?)
     end
 
     # @return [String]
