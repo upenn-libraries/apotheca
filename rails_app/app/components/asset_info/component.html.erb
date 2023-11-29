@@ -40,13 +40,13 @@
   </div>
   <div class="col-auto">
     <div class="list-group">
-      <% if ability.can?(:update, @item) %>
+      <% if user.can?(:update, @item) %>
         <%= set_as_thumbnail %>
       <% end %>
       <%= access_download_link %>
       <%= preservation_download_link %>
       <%= link_to 'More Details', asset_path(asset), class: 'stretched-link list-group-item list-group-item-action' %>
-      <% if ability.can?(:update, @asset) %>
+      <% if user.can?(:update, @asset) %>
         <%= link_to 'Edit Asset', edit_asset_path(asset), class: 'stretched-link list-group-item list-group-item-action' %>
       <% end %>
     </div>

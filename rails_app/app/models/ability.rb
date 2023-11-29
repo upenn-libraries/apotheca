@@ -20,6 +20,7 @@ class Ability
       can %i[read create], BulkImport
       can %i[update cancel], BulkImport, created_by: user
       can %i[update cancel], Import, bulk_import: { created_by: user }
+      can :manage, :sidekiq_dashboard
     elsif user.admin?
       can :manage, :all
     end

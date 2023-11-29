@@ -3,7 +3,7 @@
 module AssetInfo
   # ViewComponent
   class Component < ViewComponent::Base
-    attr_reader :asset, :item, :index
+    attr_reader :asset, :item, :index, :user
 
     # @param [AssetResource] asset
     # @param [ItemResource] item
@@ -14,10 +14,6 @@ module AssetInfo
       @index = index ? index + 1 : nil
       @item = item
       @user = user
-    end
-
-    def ability
-      @ability ||= Ability.new(@user)
     end
 
     # @return [Array<AssetResource::Annotation>]

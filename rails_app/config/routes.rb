@@ -47,7 +47,7 @@ Rails.application.routes.draw do
     end
   end
 
-  authenticate :user, ->(u) { u.admin? } do
+  authenticate :user, ->(u) { u.can? :manage, :sidekiq_dashboard } do
     mount Sidekiq::Web => '/sidekiq'
   end
 
