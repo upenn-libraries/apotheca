@@ -48,7 +48,7 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    DeleteItem.new.call(id: params[:id]) do |result|
+    DeleteItem.new.call(id: params[:id], deleted_by: current_user.email) do |result|
       result.success do
         flash.notice = 'Successfully deleted Item'
         redirect_to items_path
@@ -62,7 +62,7 @@ class ItemsController < ApplicationController
   def reorder_assets; end
 
   def refresh_ils_metadata
-    if RefreshIlsMetadataJob.perform_async(@item.id.to_s)
+    if RefreshIlsMetadataJob.perform_async(@item.id.to_s, current_user.email)
       redirect_to item_path(@item), notice: 'Job to refresh ILS metadata enqueued'
     else
       redirect_to items_path(@item), alert: 'An error occurred while enqueuing job to refresh ILS metadata'

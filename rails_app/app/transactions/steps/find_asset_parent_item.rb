@@ -9,7 +9,7 @@ module Steps
       items = query_service.find_inverse_references_by(resource: resource, property: :asset_ids)
       return Failure(error: :multiple_parent_items_found) if items.count > 1
 
-      Success(asset: resource, item: items.try(:first), **attributes)
+      Success(resource: resource, item: items.try(:first), **attributes)
     end
 
     private

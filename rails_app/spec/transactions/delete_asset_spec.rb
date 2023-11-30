@@ -5,7 +5,7 @@ describe DeleteAsset do
   let(:query_service) { Valkyrie::MetadataAdapter.find(:postgres_solr_persister).query_service }
 
   describe '#call' do
-    let(:result) { transaction.call(id: asset.id, updated_by: asset.updated_by) }
+    let(:result) { transaction.call(id: asset.id, deleted_by: 'initiator@example.com') }
 
     # Ensure we create item and run transaction before running any tests
     before do
@@ -22,6 +22,13 @@ describe DeleteAsset do
 
       it 'deletes asset' do
         expect { query_service.find_by(id: asset.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+      end
+
+      it 'records event' do
+        event = ResourceEvent.where(resource_identifier: asset.id.to_s, event_type: :delete_asset).first
+        expect(event).to be_present
+        expect(event).to have_attributes(resource_json: nil, initiated_by: 'initiator@example.com',
+                                         completed_at: be_a(Time))
       end
     end
 
@@ -40,6 +47,13 @@ describe DeleteAsset do
 
       it 'deletes asset' do
         expect { query_service.find_by(id: asset.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+      end
+
+      it 'records event' do
+        event = ResourceEvent.where(resource_identifier: asset.id.to_s, event_type: :delete_asset).first
+        expect(event).to be_present
+        expect(event).to have_attributes(resource_json: nil, initiated_by: 'initiator@example.com',
+                                         completed_at: be_a(Time))
       end
     end
 

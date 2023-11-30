@@ -7,7 +7,7 @@ describe CreateAsset do
 
     context 'when all required attributes present' do
       let(:result) do
-        transaction.call(label: 'Front', created_by: 'admin@example.com')
+        transaction.call(label: 'Front', created_by: 'initiator@example.com')
       end
 
       it 'is successful' do
@@ -23,11 +23,18 @@ describe CreateAsset do
       end
 
       it 'sets updated_by' do
-        expect(asset.updated_by).to eql 'admin@example.com'
+        expect(asset.updated_by).to eql 'initiator@example.com'
       end
 
       it 'does not add preservation event' do
         expect(asset.preservation_events.count).to be 0
+      end
+
+      it 'records event' do
+        event = ResourceEvent.where(resource_identifier: asset.id.to_s, event_type: :create_asset).first
+        expect(event).to be_present
+        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
+                                         completed_at: be_a(Time))
       end
     end
 

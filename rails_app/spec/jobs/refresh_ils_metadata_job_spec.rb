@@ -6,6 +6,6 @@ describe RefreshIlsMetadataJob do
   let(:item) { persist(:item_resource) }
 
   it_behaves_like 'TransactionJob' do
-    let(:args) { [item.id.to_s] }
+    let(:args) { [item.id.to_s, item.updated_by] }
   end
 end

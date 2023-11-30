@@ -9,4 +9,9 @@ class CreateAsset
   step :add_preservation_events, with: 'asset_resource.add_preservation_events'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
+  tee :record_event
+
+  def record_event(resource)
+    ResourceEvent.record_event_for(resource: resource, event_type: :create_asset)
+  end
 end

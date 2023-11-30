@@ -14,7 +14,7 @@ describe CreateItem do
         transaction.call(
           human_readable_name: 'New Item',
           descriptive_metadata: { title: [{ value: 'A New Item' }] },
-          created_by: 'admin@example.com',
+          created_by: 'initiator@example.com',
           asset_ids: [asset.id]
         )
       end
@@ -39,7 +39,7 @@ describe CreateItem do
       end
 
       it 'sets updated_by' do
-        expect(item.updated_by).to eql 'admin@example.com'
+        expect(item.updated_by).to eql 'initiator@example.com'
       end
 
       it 'sets thumbnail asset id' do
@@ -48,6 +48,13 @@ describe CreateItem do
 
       it 'enqueues job to update Ark metadata' do
         expect(UpdateArkMetadataJob).to have_enqueued_sidekiq_job.with(item.id.to_s)
+      end
+
+      it 'records event' do
+        event = ResourceEvent.where(resource_identifier: item.id.to_s, event_type: :create_item).first
+        expect(event).to be_present
+        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
+                                         completed_at: be_a(Time))
       end
     end
 

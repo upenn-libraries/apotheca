@@ -6,11 +6,16 @@ class DetachAsset
   include Dry::Transaction(container: Container)
 
   step :find_item, with: 'item_resource.find_resource'
-  step :require_updated_by, with: 'change_set.require_updated_by'
+  step :require_updated_by, with: 'attributes.require_updated_by'
   step :check_thumbnail_id
   step :create_change_set, with: 'item_resource.create_change_set'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
+  tee :record_event
+
+  def record_event(resource)
+    ResourceEvent.record_event_for(resource: resource, event_type: :detach_asset)
+  end
 
   # Prevent the detachment of Asset currently designated as a thumbnail with message.
   def check_thumbnail_id(resource:, asset_id:, **attributes)

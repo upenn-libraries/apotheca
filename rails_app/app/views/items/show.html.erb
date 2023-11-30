@@ -21,6 +21,10 @@
     <%= render partial: 'administrative_info' %>
   <% end %>
 
+  <% component.with_tab(title: 'Events') do %>
+    <%= render partial: 'shared/events_listing', locals: { resource: @item } %>
+  <% end %>
+
   <% if can? :update, @item  %>
     <% component.with_tab(title: 'Actions') do %>
       <%= render partial: 'actions' %>

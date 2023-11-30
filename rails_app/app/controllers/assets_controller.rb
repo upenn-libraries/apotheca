@@ -71,7 +71,7 @@ class AssetsController < ApplicationController
   def destroy
     authorize! :delete, @asset
 
-    DeleteAsset.new.call(id: @asset.id, updated_by: current_user.email) do |result|
+    DeleteAsset.new.call(id: @asset.id, deleted_by: current_user.email) do |result|
       result.success do
         flash.notice = 'Successfully deleted Asset'
         redirect_to item_path @item, anchor: 'assets'
@@ -116,7 +116,7 @@ class AssetsController < ApplicationController
     # Add file to asset.
     update_result = UpdateAsset.new.call(id: result.value!.id, updated_by: current_user.email, **file_params)
     if update_result.failure?
-      DeleteAsset.new.call(id: result.value!.id)
+      DeleteAsset.new.call(id: result.value!.id, deleted_by: current_user.email)
       return update_result
     end
 
@@ -124,7 +124,7 @@ class AssetsController < ApplicationController
     add_asset_result = AttachAsset.new.call(id: @item.id, asset_id: update_result.value!.id,
                                             updated_by: current_user.email)
     if add_asset_result.failure?
-      DeleteAsset.new.call(id: result.value!.id)
+      DeleteAsset.new.call(id: result.value!.id, deleted_by: current_user.email)
       return add_asset_result
     end
 

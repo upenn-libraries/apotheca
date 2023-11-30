@@ -8,12 +8,17 @@ class PreservationBackup
   include Dry::Transaction(container: Container)
 
   step :find_asset, with: 'asset_resource.find_resource'
-  step :require_updated_by, with: 'change_set.require_updated_by'
+  step :require_updated_by, with: 'attributes.require_updated_by'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :store_file_in_backup_location
   around :cleanup, with: 'asset_resource.cleanup'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
+  tee :record_event
+
+  def record_event(resource)
+    ResourceEvent.record_event_for(resource: resource, event_type: :preservation_backup)
+  end
 
   def store_file_in_backup_location(change_set)
     return Failure(error: :file_backup_already_present) if change_set.preservation_copies_ids.present?

@@ -6,7 +6,7 @@ describe AttachAsset do
 
     let(:transaction) { described_class.new }
     let(:asset) { persist(:asset_resource) }
-    let(:result) { transaction.call(id: item.id, asset_id: asset.id, updated_by: 'admin@example.com') }
+    let(:result) { transaction.call(id: item.id, asset_id: asset.id, updated_by: 'initiator@example.com') }
 
     context 'when item has no current assets' do
       let(:item) { persist(:item_resource) }
@@ -25,6 +25,13 @@ describe AttachAsset do
 
       it 'sets thumbnail' do
         expect(updated_item.thumbnail_asset_id).to eql asset.id
+      end
+
+      it 'records event' do
+        event = ResourceEvent.where(resource_identifier: updated_item.id.to_s, event_type: :attach_asset).first
+        expect(event).to be_present
+        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
+                                         completed_at: be_a(Time))
       end
     end
 

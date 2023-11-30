@@ -35,7 +35,7 @@ module ImportService
             migrated_from: migrated_from, updated_by: imported_by
           ).tap do |update_result|
             # Delete asset if update failed, then return update_result value
-            DeleteAsset.new.call(id: a.id) if update_result.failure?
+            DeleteAsset.new.call(id: a.id, deleted_by: imported_by) if update_result.failure?
           end
         end
 

@@ -7,7 +7,7 @@ describe Steps::FindAssetParentItem do
   describe '#call' do
     context 'when asset has no item' do
       it 'returns the asset and nil' do
-        expect(result.value![:asset]).to eq asset
+        expect(result.value![:resource]).to eq asset
         expect(result.value![:item]).to be_nil
       end
     end
@@ -17,7 +17,7 @@ describe Steps::FindAssetParentItem do
 
       it 'returns the asset and the item' do
         item_id = item.id # ensure item is instantiated prior to determining result
-        expect(result.value![:asset]).to eq asset
+        expect(result.value![:resource]).to eq asset
         expect(result.value![:item].id).to eq item_id
       end
     end

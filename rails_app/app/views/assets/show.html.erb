@@ -52,6 +52,10 @@
     <%= render partial: 'transcriptions' %>
   <% end  %>
 
+  <% component.with_tab(title: 'Events') do %>
+    <%= render partial: 'shared/events_listing', locals: { resource: @asset } %>
+  <% end %>
+
   <% if can? :update, AssetResource %>
     <% component.with_tab(title: 'Actions') do %>
       <%= render partial: 'actions' %>

@@ -10,9 +10,14 @@ class CreateItem
   step :set_updated_by, with: 'change_set.set_updated_by'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
+  tee :record_event
   tee :enqueue_ark_metadata_update, with: 'item_resource.enqueue_ark_metadata_update'
 
   private
+
+  def record_event(resource)
+    ResourceEvent.record_event_for(resource: resource, event_type: :create_item)
+  end
 
   def set_ark(change_set)
     if change_set.unique_identifier.blank?

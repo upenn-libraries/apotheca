@@ -5,7 +5,7 @@ describe PreservationBackup do
     subject(:updated_asset) { result.value! }
 
     let(:transaction) { described_class.new }
-    let(:result) { transaction.call(id: asset.id, updated_by: asset.updated_by) }
+    let(:result) { transaction.call(id: asset.id, updated_by: 'initiator@example.com') }
 
     context 'when preservation file already backed up' do
       let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }
@@ -24,6 +24,13 @@ describe PreservationBackup do
         expect(
           Valkyrie::StorageAdapter.find_by(id: updated_asset.preservation_copies_ids.first)
         ).to be_a Valkyrie::StorageAdapter::File
+      end
+
+      it 'records event' do
+        event = ResourceEvent.where(resource_identifier: updated_asset.id.to_s, event_type: :preservation_backup).first
+        expect(event).to be_present
+        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
+                                         completed_at: be_a(Time))
       end
     end
 

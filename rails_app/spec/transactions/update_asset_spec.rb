@@ -8,6 +8,15 @@ describe UpdateAsset do
     end
   end
 
+  shared_examples_for 'records event' do
+    it 'records event' do
+      event = ResourceEvent.where(resource_identifier: updated_asset.id.to_s, event_type: :update_asset).first
+      expect(event).to be_present
+      expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
+                                       completed_at: be_a(Time))
+    end
+  end
+
   describe '#call' do
     let(:transaction) { described_class.new }
 
@@ -26,8 +35,10 @@ describe UpdateAsset do
 
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
+        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
       end
+
+      include_examples 'records event'
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -63,9 +74,10 @@ describe UpdateAsset do
 
       let(:asset) do
         a = persist(:asset_resource)
-        transaction.call(id: a.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
-        GenerateDerivatives.new.call(id: a.id, updated_by: a.updated_by)
-        PreservationBackup.new.call(id: a.id, updated_by: a.updated_by).value!
+        transaction.call(id: a.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
+        # TODO: instead of depending on these jobs, I think we can use the asset factory now.
+        GenerateDerivatives.new.call(id: a.id, updated_by: 'initiator@example.com')
+        PreservationBackup.new.call(id: a.id, updated_by: 'initiator@example.com').value!
       end
       let(:result) do
         transaction.call(
@@ -73,9 +85,11 @@ describe UpdateAsset do
           file: file2,
           original_filename: 'bell.wav',
           label: 'First',
-          updated_by: 'test@example.com'
+          updated_by: 'initiator@example.com'
         )
       end
+
+      include_examples 'records event'
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -136,7 +150,8 @@ describe UpdateAsset do
 
       let(:asset) do
         a = persist(:asset_resource, :with_preservation_file, :with_preservation_backup)
-        GenerateDerivatives.new.call(id: a.id, updated_by: a.updated_by).value!
+        # TODO: instead of depending on these jobs, I think we can use the asset factory now.
+        GenerateDerivatives.new.call(id: a.id, updated_by: 'initiator@example.com').value!
       end
       let(:result) do
         transaction.call(
@@ -144,11 +159,12 @@ describe UpdateAsset do
           transcriptions: [
             { mime_type: 'text/plain', contents: 'Importers, 32 S. Howard Street, Baltimore, MD.' }
           ],
-          updated_by: 'test@example.com'
+          updated_by: 'initiator@example.com'
         )
       end
 
       include_examples 'does not enqueue jobs'
+      include_examples 'records event'
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -167,7 +183,7 @@ describe UpdateAsset do
       end
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'test@example.com')
+        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
       end
 
       include_examples 'does not enqueue jobs'
@@ -186,7 +202,7 @@ describe UpdateAsset do
       end
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com')
+        transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com')
       end
 
       include_examples 'does not enqueue jobs'
@@ -200,7 +216,7 @@ describe UpdateAsset do
     context 'when expected_checksum does not match ingested file' do
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, expected_checksum: '1234', updated_by: 'test@example.com')
+        transaction.call(id: asset.id, file: file1, expected_checksum: '1234', updated_by: 'initiator@example.com')
       end
 
       include_examples 'does not enqueue jobs'
@@ -213,7 +229,7 @@ describe UpdateAsset do
 
     context 'when asset update fails' do
       let(:asset) { persist(:asset_resource) }
-      let(:result) { transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com') }
+      let(:result) { transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com') }
 
       before do
         step_double = instance_double(Steps::Validate)

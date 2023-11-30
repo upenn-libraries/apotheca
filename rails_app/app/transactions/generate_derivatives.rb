@@ -12,11 +12,16 @@ class GenerateDerivatives
   include Dry::Transaction(container: Container)
 
   step :find_asset, with: 'asset_resource.find_resource'
-  step :require_updated_by, with: 'change_set.require_updated_by'
+  step :require_updated_by, with: 'attributes.require_updated_by'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :generate_derivatives
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
+  tee :record_event
+
+  def record_event(resource)
+    ResourceEvent.record_event_for(resource: resource, event_type: :generate_derivatives)
+  end
 
   # @param [AssetChangeSet] change_set
   def generate_derivatives(change_set)

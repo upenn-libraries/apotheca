@@ -4,7 +4,7 @@
 class RefreshIlsMetadataJob < TransactionJob
   sidekiq_options queue: :high
 
-  def transaction(item_id)
-    RefreshIlsMetadata.new.call(id: item_id)
+  def transaction(item_id, updated_by)
+    RefreshIlsMetadata.new.call(id: item_id, updated_by: updated_by)
   end
 end

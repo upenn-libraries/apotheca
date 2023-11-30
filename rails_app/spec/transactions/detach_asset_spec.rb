@@ -5,7 +5,7 @@ describe DetachAsset do
   let(:query_service) { Valkyrie::MetadataAdapter.find(:postgres_solr_persister).query_service }
 
   describe '#call' do
-    let(:result) { transaction.call(id: item.id, asset_id: asset.id, updated_by: asset.updated_by) }
+    let(:result) { transaction.call(id: item.id, asset_id: asset.id, updated_by: 'initiator@example.com') }
 
     context 'when updated_by is missing' do
       let(:result) { transaction.call(id: item.id, asset_id: asset.id) }
@@ -29,6 +29,14 @@ describe DetachAsset do
         updated_item = result.value!
         expect(updated_item.structural_metadata.arranged_asset_ids).not_to include(asset.id)
         expect(updated_item.asset_ids).not_to include(asset.id)
+      end
+
+      it 'records event' do
+        updated_item = result.value!
+        event = ResourceEvent.where(resource_identifier: updated_item.id.to_s, event_type: :detach_asset).first
+        expect(event).to be_present
+        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
+                                         completed_at: be_a(Time))
       end
     end
 
