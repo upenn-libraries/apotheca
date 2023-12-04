@@ -48,6 +48,9 @@ derivative_storage:
 iiif_derivative_storage:
   <<: *aws
   bucket: upennlib-apotheca-iiif-derivatives-staging
+iiif_manifest_storage:
+  <<: *aws
+  bucket: upennlib-apotheca-iiif-manifests-staging
 
 # Bulk Import/Migration
 working_storage:
@@ -66,4 +69,9 @@ migration:
 
 # Item/Asset Resource Configuration
 skip_ezid_metadata_update: true
-
+iiif:
+  image_server:
+    url: 'https://placeholder_serverless_iiif.libary.upenn.edu'
+    profile: 'http://iiif.io/api/image/2/level2.json'
+  manifest:
+    base_url: 'https://colenda.library.upenn.edu/catalog/'

@@ -46,6 +46,9 @@ derivative_storage:
 iiif_derivative_storage:
   <<: *minio
   bucket: iiif-derivatives-test
+iiif_manifest_storage:
+  <<: *minio
+  bucket: iiif-manifest-test
 
 # Bulk Import/Migration
 working_storage:
@@ -57,3 +60,9 @@ working_storage:
 migration:
   storage: ceph_test
   colenda_url: https://colenda-dev.library.upenn.edu
+iiif:
+  image_server:
+    url: 'https://serverless_iiif.libary.upenn.edu'
+    profile: 'http://iiif.io/api/image/2/level2.json'
+  manifest:
+    base_url: 'https://colenda.library.upenn.edu/catalog/'
