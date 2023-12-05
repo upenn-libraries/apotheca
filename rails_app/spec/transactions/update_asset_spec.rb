@@ -3,8 +3,15 @@
 describe UpdateAsset do
   shared_examples_for 'does not enqueue jobs' do
     it 'does not enqueue any jobs' do
-      expect(GenerateDerivativesJob).not_to have_enqueued_sidekiq_job(asset.id.to_s, asset.updated_by)
-      expect(PreservationBackupJob).not_to have_enqueued_sidekiq_job(asset.id.to_s, asset.updated_by)
+      expect(GenerateDerivativesJob).not_to have_enqueued_sidekiq_job(any_args)
+      expect(PreservationBackupJob).not_to have_enqueued_sidekiq_job(any_args)
+    end
+  end
+
+  shared_examples_for 'enqueues jobs' do
+    it 'enqueues job to generate derivatives and preservation backup' do
+      expect(GenerateDerivativesJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s, updated_asset.updated_by)
+      expect(PreservationBackupJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s, updated_asset.updated_by)
     end
   end
 
@@ -39,6 +46,7 @@ describe UpdateAsset do
       end
 
       include_examples 'records event'
+      include_examples 'enqueues jobs'
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -59,37 +67,20 @@ describe UpdateAsset do
           updated_asset.technical_metadata.sha256
         ).to eql '0929169032ec29557bf85b05b82923fdb75694393e34f652b8955912376e1e0b'
       end
-
-      it 'enqueues job to generate derivatives' do
-        expect(GenerateDerivativesJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s, updated_asset.updated_by)
-      end
-
-      it 'enqueues job to backup preservation file' do
-        expect(PreservationBackupJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s, updated_asset.updated_by)
-      end
     end
 
     context 'when updating file' do
       subject(:updated_asset) { result.value! }
 
-      let(:asset) do
-        a = persist(:asset_resource)
-        transaction.call(id: a.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
-        # TODO: instead of depending on these jobs, I think we can use the asset factory now.
-        GenerateDerivatives.new.call(id: a.id, updated_by: 'initiator@example.com')
-        PreservationBackup.new.call(id: a.id, updated_by: 'initiator@example.com').value!
-      end
+      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives) }
       let(:result) do
         transaction.call(
-          id: asset.id,
-          file: file2,
-          original_filename: 'bell.wav',
-          label: 'First',
-          updated_by: 'initiator@example.com'
+          id: asset.id, file: file2, original_filename: 'bell.wav', label: 'First', updated_by: 'initiator@example.com'
         )
       end
 
       include_examples 'records event'
+      include_examples 'enqueues jobs'
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -129,29 +120,13 @@ describe UpdateAsset do
           Valkyrie::StorageAdapter.find_by(id: asset.preservation_copies_ids.first)
         }.to raise_error Valkyrie::StorageAdapter::FileNotFound
       end
-
-      it 'enqueues job to generate derivatives twice' do
-        updated_asset
-        expect(
-          GenerateDerivativesJob.jobs.count { |j| j['args'].eql? [updated_asset.id.to_s, updated_asset.updated_by] }
-        ).to be 2
-      end
-
-      it 'enqueues job to backup preservation file twice' do
-        updated_asset
-        expect(
-          PreservationBackupJob.jobs.count { |j| j['args'].eql? [updated_asset.id.to_s, updated_asset.updated_by] }
-        ).to be 2
-      end
     end
 
     context 'when adding transcriptions' do
       subject(:updated_asset) { result.value! }
 
       let(:asset) do
-        a = persist(:asset_resource, :with_preservation_file, :with_preservation_backup)
-        # TODO: instead of depending on these jobs, I think we can use the asset factory now.
-        GenerateDerivatives.new.call(id: a.id, updated_by: 'initiator@example.com').value!
+        persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives)
       end
       let(:result) do
         transaction.call(
