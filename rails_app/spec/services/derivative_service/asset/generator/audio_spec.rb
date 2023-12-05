@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Generator::Audio do
+describe DerivativeService::Asset::Generator::Audio do
   let(:file) { Valkyrie::StorageAdapter::StreamFile.new id: 1, io: File.open(file_fixture('files/bell.wav')) }
   let(:generator) { described_class.new(file) }
 

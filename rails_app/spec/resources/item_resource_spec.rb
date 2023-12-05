@@ -29,8 +29,8 @@ describe ItemResource do
   end
 
   describe '#arranged_assets' do
-    let(:resource) { persist(:item_resource, :with_many_assets_most_arranged) }
-    let(:expected_arrangement) { %w[page1 page2 page3] }
+    let(:resource) { persist(:item_resource, :with_assets_some_arranged) }
+    let(:expected_arrangement) { %w[page1] }
 
     it 'returns AssetResource instances in proper order' do
       expect(resource.arranged_assets.collect(&:original_filename)).to eq expected_arrangement

@@ -242,4 +242,67 @@ describe ItemChangeSet do
       expect(change_set.errors[:thumbnail_asset_id]).to include 'is not included in asset_ids'
     end
   end
+
+  # NOTE: Resource must already be created in order to add files.
+  context 'when adding a derivative' do
+    let(:resource) { persist(:item_resource, :with_asset) }
+    let(:derivative_storage) { Valkyrie::StorageAdapter.find(:iiif_manifests) }
+    let(:derivative) do
+      derivative_storage.upload(
+        file: ActionDispatch::Http::UploadedFile.new(tempfile: file_fixture('iiif_manifest/base_item.json').open),
+        resource: resource,
+        original_filename: 'iiif_manifest'
+      )
+    end
+
+    before { freeze_time }
+
+    after  { unfreeze_time }
+
+    context 'with valid information' do
+      before do
+        change_set.validate(
+          derivatives: [
+            { file_id: derivative.id, mime_type: 'application/json',
+              generated_at: DateTime.current, type: 'iiif_manifest' }
+          ]
+        )
+      end
+
+      it 'is valid' do
+        expect(change_set.valid?).to be true
+      end
+
+      it 'sets file_id' do
+        expect(change_set.derivatives[0].file_id).to eql derivative.id
+      end
+
+      it 'sets mime_type' do
+        expect(change_set.derivatives[0].mime_type).to eql 'application/json'
+      end
+
+      it 'sets generated_at' do
+        expect(change_set.derivatives[0].generated_at).to eql DateTime.current
+      end
+
+      it 'sets type' do
+        expect(change_set.derivatives[0].type).to eql 'iiif_manifest'
+      end
+    end
+
+    context 'with invalid derivative type' do
+      before do
+        change_set.validate(
+          derivatives: [
+            { file_id: derivative.id, mime_type: 'application/json', generated_at: DateTime.current, type: 'access' }
+          ]
+        )
+      end
+
+      it 'is not valid' do
+        expect(change_set.valid?).to be false
+        expect(change_set.errors[:'derivatives.type']).to include 'is not included in the list'
+      end
+    end
+  end
 end

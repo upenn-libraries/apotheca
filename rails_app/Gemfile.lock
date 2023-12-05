@@ -248,6 +248,10 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
+    iiif-presentation (1.1.0)
+      activesupport (>= 3.2.18)
+      faraday (>= 0.9)
+      json
     importmap-rails (1.2.1)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
@@ -258,10 +262,10 @@ GEM
     iso-639 (0.3.6)
     jmespath (1.6.2)
     json (2.6.3)
-    json-canonicalization (0.3.2)
-    json-ld (3.3.0)
+    json-canonicalization (1.0.0)
+    json-ld (3.3.1)
       htmlentities (~> 4.3)
-      json-canonicalization (~> 0.3, >= 0.3.2)
+      json-canonicalization (~> 1.0)
       link_header (~> 0.0, >= 0.0.8)
       multi_json (~> 1.15)
       rack (>= 2.2, < 4)
@@ -590,6 +594,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   honeybadger
+  iiif-presentation
   importmap-rails
   iso-639
   kaminari

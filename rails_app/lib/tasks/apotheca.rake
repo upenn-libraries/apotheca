@@ -73,9 +73,10 @@ namespace :apotheca do
 
   desc 'Create preservation, derivative and working storage buckets for development and test environments'
   task create_buckets: :environment do
-    configs = [Settings.derivative_storage, Settings.iiif_derivative_storage,
-               Settings.preservation_storage, Settings.preservation_copy_storage,
-               Settings.working_storage.sceti_digitized]
+    configs = [
+      Settings.derivative_storage, Settings.iiif_derivative_storage, Settings.preservation_storage,
+      Settings.preservation_copy_storage, Settings.iiif_manifest_storage, Settings.working_storage.sceti_digitized
+    ]
 
     configs.each do |config|
       client = Aws::S3::Client.new(**config.to_h.except(:bucket))

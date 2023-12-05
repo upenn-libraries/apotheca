@@ -61,6 +61,11 @@ class AssetResource < Valkyrie::Resource
     end
   end
 
+  # Return true if asset is an image
+  def image?
+    technical_metadata.mime_type.start_with?('image')
+  end
+
   # Best title to use when trying to represent asset. In most cases Assets should
   # have a name. If they don't we display the id.
   #

@@ -48,6 +48,7 @@ FactoryBot.define do
       updated_by { users.sample }
     end
 
+    # Item with one Asset containing only the required attributes.
     trait :with_asset do
       transient do
         asset { persist(:asset_resource) }
@@ -57,7 +58,7 @@ FactoryBot.define do
       thumbnail_asset_id { asset.id }
     end
 
-    # Asset with preservation file
+    # Item with one Asset containing metadata and a preservation file.
     trait :with_full_asset do
       with_asset
 
@@ -66,6 +67,7 @@ FactoryBot.define do
       end
     end
 
+    # Item with two Assets, one arranged, one not arranged.
     trait :with_assets_some_arranged do
       transient do
         asset1 { persist(:asset_resource, original_filename: 'page1') }
@@ -78,24 +80,27 @@ FactoryBot.define do
       structural_metadata { { arranged_asset_ids: [asset1.id] } }
     end
 
+    # Item with two Assets, all arranged.
     trait :with_assets_all_arranged do
       with_assets_some_arranged
 
       structural_metadata { { arranged_asset_ids: [asset1.id, asset2.id] } }
     end
 
-    trait :with_many_assets_most_arranged do
+    # Item with two arranged Asset containing metadata and a preservation file.
+    trait :with_full_assets_all_arranged do
       transient do
-        asset0 { persist(:asset_resource, original_filename: 'page0') }
-        asset1 { persist(:asset_resource, original_filename: 'page1') }
-        asset2 { persist(:asset_resource, original_filename: 'page2') }
-        asset3 { persist(:asset_resource, original_filename: 'page3') }
+        asset1 { persist(:asset_resource, :with_preservation_file, :with_access_copy, :with_metadata) }
+        asset2 do
+          persist(:asset_resource, :with_preservation_file, :with_access_copy,
+                  original_filename: 'back.tif', preservation_file: 'back.tif')
+        end
       end
 
-      asset_ids { [asset0.id, asset1.id, asset2.id, asset3.id] }
+      asset_ids { [asset1.id, asset2.id] }
       thumbnail_asset_id { asset1.id }
 
-      structural_metadata { { arranged_asset_ids: [asset1.id, asset2.id, asset3.id] } }
+      structural_metadata { { arranged_asset_ids: [asset1.id, asset2.id] } }
     end
 
     trait :with_bibnumber do

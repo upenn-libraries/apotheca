@@ -49,6 +49,10 @@ class Container
     register 'delete_resource' do
       Steps::DeleteResource.new
     end
+
+    register 'generate_derivatives' do
+      Steps::GenerateDerivatives.new(DerivativeService::Item::Derivatives, :iiif_manifest)
+    end
   end
 
   namespace 'asset_resource' do
@@ -82,6 +86,10 @@ class Container
 
     register 'virus_check' do
       Steps::VirusCheck.new
+    end
+
+    register 'generate_derivatives' do
+      Steps::GenerateDerivatives.new(DerivativeService::Asset::Derivatives, :thumbnail, :access)
     end
   end
 end

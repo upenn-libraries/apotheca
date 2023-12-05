@@ -46,6 +46,9 @@ derivative_storage:
 iiif_derivative_storage:
   <<: *minio
   bucket: iiif-derivatives-dev
+iiif_manifest_storage:
+  <<: *minio
+  bucket: iiif-manifests-dev
 
 # Bulk Import/Migration
 working_storage:
@@ -61,6 +64,13 @@ working_storage:
 migration:
   storage: ceph
   colenda_url: https://colenda.library.upenn.edu
+iiif:
+  image_server:
+    url: 'https://serverless_iiif.libary.upenn.edu'
+    profile: 'http://iiif.io/api/image/2/level2.json'
+  manifest:
+    base_url: 'https://colenda.library.upenn.edu/catalog/'
+
 
 # Item/Asset Resource Configuration
 skip_ezid_metadata_update: true

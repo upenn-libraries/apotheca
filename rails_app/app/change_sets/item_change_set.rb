@@ -31,6 +31,13 @@ class ItemChangeSet < ChangeSet
     end
   end
 
+  # ChangeSet for Item Derivatives
+  class ItemDerivativeChangeSet < DerivativeChangeSet
+    TYPES = %w[iiif_manifest].freeze
+
+    validates :type, inclusion: TYPES
+  end
+
   # Defining Fields
   property :unique_identifier, multiple: false, required: false
   property :human_readable_name, multiple: false, required: true
@@ -38,6 +45,11 @@ class ItemChangeSet < ChangeSet
   property :internal_notes, multiple: true, required: false
   property :descriptive_metadata, multiple: false, required: true, form: DescriptiveMetadataChangeSet
   property :structural_metadata, multiple: false, required: true, form: StructuralMetadataChangeSet
+
+  # Letting derivatives be defined as a `collection` because derivatives are always set via the setter and not the
+  # `validate` method therefore we don't run into problems when deleting derivatives. More information about this
+  # can be found here: https://gitlab.library.upenn.edu/dld/digital-repository/apotheca/-/issues/202
+  collection :derivatives, multiple: true, form: ItemDerivativeChangeSet, populate_if_empty: DerivativeResource
 
   property :published, multiple: false, required: false, default: false
   property :first_published_at, multiple: false, required: false

@@ -26,7 +26,10 @@ class ItemResource < Valkyrie::Resource
   attribute :last_published_at, Valkyrie::Types::Strict::DateTime.optional
 
   # Asset IDs
-  attribute :asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).optional
+  attribute :asset_ids, Valkyrie::Types::Array.of(Valkyrie::Types::Params::ID).optional
+
+  # Item-level derivatives, like IIIF Manifest.
+  attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
   # @return [Integer]
   def asset_count
@@ -56,6 +59,11 @@ class ItemResource < Valkyrie::Resource
   # @return [TrueClass, FalseClass]
   def bibnumber?
     descriptive_metadata&.bibnumber.try(:any?)
+  end
+
+  # @return [DerivativeResource]
+  def iiif_manifest
+    derivatives.find(&:iiif_manifest?)
   end
 
   # @param [Boolean] include_assets
@@ -96,6 +104,18 @@ class ItemResource < Valkyrie::Resource
       asset = asset_resources.find { |r| r.id == asset_id }
       { filename: asset.original_filename, label: asset.label, annotations: asset.annotations.map(&:text) }
     end
+  end
+
+  # @return [ItemResourcePresenter]
+  def presenter
+    ils_metadata = bibnumber? ? solr_query_service.custom_queries.ils_metadata_for(id: id.to_s) : nil
+    ItemResourcePresenter.new(object: self, ils_metadata: ils_metadata)
+  end
+
+  private
+
+  def solr_query_service
+    @solr_query_service ||= Valkyrie::MetadataAdapter.find(:index_solr).query_service
   end
 
   def pg_query_service

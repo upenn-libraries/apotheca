@@ -109,8 +109,7 @@ class ItemsController < ApplicationController
                else
                  ItemResource.new
                end
-    ils_metadata = resource.bibnumber? ? solr_query_service.custom_queries.ils_metadata_for(id: resource.id) : nil
-    @item = ItemResourcePresenter.new object: resource, ils_metadata: ils_metadata
+    @item = resource.presenter
     @change_set = change_set || ItemChangeSet.new(resource)
   end
 
