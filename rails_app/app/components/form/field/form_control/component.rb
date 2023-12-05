@@ -71,16 +71,15 @@ module Form
           when :file
             file_field_tag @field, **@options
           when :readonly
-            tag.input(type: :text, value: val, **@options)
+            tag.input(type: :text, value: val, readonly: true, **@options)
           when :email
             email_field_tag @field, val, **@options
           end
         end
 
         def input_classes
-          classes = ['form-control']
-          classes << "form-control-#{@size}"  if @size
-          classes << 'form-control-plaintext' if @type == :readonly
+          classes = @type == :readonly ? ['form-control-plaintext'] : ['form-control']
+          classes << "form-control-#{@size}" if @size
           classes
         end
       end
