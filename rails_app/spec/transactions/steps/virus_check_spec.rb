@@ -12,6 +12,17 @@ describe Steps::VirusCheck do
       allow(step).to receive(:skip_in_environment?).and_return(false)
     end
 
+    context 'when file is not present' do
+      let(:result) { step.call(updated_by: 'test@test.edu') }
+      let(:perform_scan) { false }
+      let(:clamby_outcome) { nil }
+
+      it 'returns success and does not set a preservation message' do
+        expect(result.success?).to be true
+        expect(result.success[:temporary_events]).to be_blank
+      end
+    end
+
     context 'when the file is too large' do
       let(:perform_scan) { false }
       let(:clamby_outcome) { nil }
