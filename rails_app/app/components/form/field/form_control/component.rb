@@ -79,7 +79,7 @@ module Form
 
         def input_classes
           classes = @type == :readonly ? ['form-control-plaintext'] : ['form-control']
-          classes << "form-control-#{@size}"  if @size
+          classes << "form-control-#{@size}" if @size
           classes
         end
       end
