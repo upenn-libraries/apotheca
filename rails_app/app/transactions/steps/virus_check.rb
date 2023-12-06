@@ -12,9 +12,10 @@ module Steps
     # 4. Problem using Clamby. Failure is returned and Honeybadger notification is sent.
     # 5. Check is skipped due to configuration setting
     def call(**attributes)
-      return Success(attributes) if skip_in_environment?
-
       file = attributes[:file] || attributes['file']
+
+      return Success(attributes) if skip_in_environment? || file.blank?
+
       if should_scan_file?(file)
         case Clamby.safe?(file.path)
         when TrueClass
@@ -45,8 +46,6 @@ module Steps
     # @param [String] file
     # @return [Boolean]
     def should_scan_file?(file)
-      return false if file.blank?
-
       file.size <= Settings.virus_check.size_threshold
     end
 
