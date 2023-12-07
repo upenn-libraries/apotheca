@@ -37,7 +37,7 @@ describe DeleteItem do
       end
 
       it 'enqueues job to delete Assets' do
-        expect(RemoveAssetJob).to have_enqueued_sidekiq_job.with(
+        expect(DeleteAssetJob).to have_enqueued_sidekiq_job.with(
           result.value![:resource].asset_ids.first, 'initiator@example.com'
         )
       end

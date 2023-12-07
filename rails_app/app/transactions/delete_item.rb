@@ -21,6 +21,6 @@ class DeleteItem
     asset_params = resource.asset_ids&.map { |id| [id.to_s, deleted_by] }
     return if asset_params.blank?
 
-    RemoveAssetJob.perform_bulk(asset_params)
+    DeleteAssetJob.perform_bulk(asset_params)
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Job to remove an asset. Used when deleting an Item.
-class RemoveAssetJob < TransactionJob
+class DeleteAssetJob < TransactionJob
   sidekiq_options queue: :low
 
   # Convert Asset ID to a Valkyrie::ID object and then use that ID to delete the asset
