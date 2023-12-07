@@ -4,6 +4,8 @@
 class ResourceEvent < ApplicationRecord
   validates :event_type, :completed_at, :resource_identifier, presence: true
 
+  scope :resource_identifier, ->(resource_id) { where(resource_identifier: resource_id.to_s) }
+
   def self.record_event_for(event_type:, resource:, initiated_by: nil, json: true)
     attrs = {
       initiated_by: initiated_by || resource.updated_by,

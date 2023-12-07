@@ -80,6 +80,14 @@ class Container
       Steps::DeleteResource.new
     end
 
+    register 'delete_files' do
+      Steps::DeleteFiles.new
+    end
+
+    register 'detach_from_item' do
+      Steps::DetachFromItem.new
+    end
+
     register 'add_preservation_events' do
       Steps::AddPreservationEvents.new
     end

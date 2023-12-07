@@ -116,7 +116,7 @@ class AssetsController < ApplicationController
     # Add file to asset.
     update_result = UpdateAsset.new.call(id: result.value!.id, updated_by: current_user.email, **file_params)
     if update_result.failure?
-      DeleteAsset.new.call(id: result.value!.id, deleted_by: current_user.email)
+      PurgeAsset.new.call(id: result.value!.id)
       return update_result
     end
 
@@ -124,7 +124,7 @@ class AssetsController < ApplicationController
     add_asset_result = AttachAsset.new.call(id: @item.id, asset_id: update_result.value!.id,
                                             updated_by: current_user.email)
     if add_asset_result.failure?
-      DeleteAsset.new.call(id: result.value!.id, deleted_by: current_user.email)
+      PurgeAsset.new.call(id: result.value!.id)
       return add_asset_result
     end
 

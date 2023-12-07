@@ -100,7 +100,7 @@ module ImportService
       #
       # @param [<Array<AssetResource>]
       def delete_assets(assets)
-        assets.each { |a| DeleteAsset.new.call(id: a.id, deleted_by: imported_by) }
+        assets.each { |a| PurgeAsset.new.call(id: a.id) }
       end
 
       # Takes different failure params and returns a Failure object with three keys: error, details
