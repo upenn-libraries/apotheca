@@ -6,6 +6,8 @@ class ResourceEvent < ApplicationRecord
 
   scope :resource_identifier, ->(resource_id) { where(resource_identifier: resource_id.to_s) }
 
+  paginates_per 10
+
   def self.record_event_for(event_type:, resource:, initiated_by: nil, json: true)
     attrs = {
       initiated_by: initiated_by || resource.updated_by,
@@ -14,7 +16,7 @@ class ResourceEvent < ApplicationRecord
       completed_at: DateTime.current
     }
 
-    attrs[:resource_json] = resource.to_json if json
+    attrs[:resource_json] = resource.to_h if json
 
     ResourceEvent.create!(**attrs)
   end

@@ -112,6 +112,13 @@ class ItemResource < Valkyrie::Resource
     ItemResourcePresenter.new(object: self, ils_metadata: ils_metadata)
   end
 
+  # Best title to use when trying to represent an item.
+  #
+  # @return [String]
+  def display_title
+    human_readable_name
+  end
+
   private
 
   def solr_query_service

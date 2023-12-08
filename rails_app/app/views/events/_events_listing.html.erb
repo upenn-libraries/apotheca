@@ -1,12 +1,13 @@
-<% @events = ResourceEvent.where(resource_identifier: resource.id.to_s).order(:completed_at) %>
 
-<h3 id="events" class="mb-3">Events</h3>
+<div class="mb-3">
+  <%= page_entries_info @events, entry_name: 'events' %>
+</div>
 
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Event</th>
+        <th scope="col">Type</th>
         <th scope="col">Initiated By</th>
         <th scope="col">Completed At</th>
         <th scope="col"></th>
@@ -18,7 +19,7 @@
           <td><%= event.event_type.titleize %></td>
           <td><%= event.initiated_by %></td>
           <td><%= event.completed_at.to_fs(:display) %></td>
-          <td><%= link_to 'Details', "/events/#{event.id}", class: 'btn btn-sm btn-primary' %></td>
+          <td><%= link_to 'Details', event_path(event.id), class: 'btn btn-sm btn-primary' %></td>
         </tr>
       <% end %>
     </tbody>

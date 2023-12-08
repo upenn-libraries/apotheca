@@ -47,6 +47,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :events, only: [:index, :show]
+
   authenticate :user, ->(u) { u.can? :manage, :sidekiq_dashboard } do
     mount Sidekiq::Web => '/sidekiq'
   end

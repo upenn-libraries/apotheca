@@ -1,0 +1,8 @@
+<% @events = ResourceEvent.where(resource_identifier: resource.id.to_s).order(completed_at: :desc).page(1) %>
+
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title(tag: :h3) { 'Last 10 Events' } %>
+  <%= header.with_link(href: events_path(resource_id: resource.id.to_s), target: '_blank') { 'View All Events' } %>
+<% end %>
+
+<%= render partial: 'events/events_listing' %>
