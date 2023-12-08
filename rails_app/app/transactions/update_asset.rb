@@ -39,7 +39,6 @@ class UpdateAsset
   end
 
   def record_event(resource)
-    # TODO: class.name.underscore
     ResourceEvent.record_event_for(resource: resource, event_type: :update_asset)
   end
 
