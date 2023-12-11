@@ -20,3 +20,14 @@ supported_file_extensions:
   - .gz
   - .wav
   - .mov
+supported_mime_types:
+  - application/pdf
+  - application/gzip
+  - audio/wav
+  - audio/wave
+  - audio/x-wav
+  - audio/x-wave
+  - audio/x-pn-wav
+  - audio/vnd.wave
+  - image/tiff
+  - video/quicktime
