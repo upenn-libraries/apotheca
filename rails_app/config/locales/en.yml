@@ -18,19 +18,34 @@ en:
         placeholder_message: "Drag an Asset here to order it."
     file:
         size: "Asset too large to load via user interface. Use Bulk Import to load assets larger than 2 gigabytes."
-  confirm_messages:
+  actions:
     item:
-      refresh_ILS: "Your current ILS metadata will be updated."
-      delete: "You will permanently delete this item."
+      refresh_ILS:
+        description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata."
+        confirm_message: "Your current ILS metadata will be updated."
+      delete:
+        description: "Deleting this item completely removes the record from our system. This cannot be undone."
+        confirm_message: "You will permanently delete this item."
     bulk_import:
-      cancel_all: "You will permanently cancel all queued imports."
+      cancel_all:
+        confirm_message: "You will permanently cancel all queued imports."
     import:
-      cancel: "You will permanently cancel this import."
+      cancel:
+        confirm_message: "You will permanently cancel this import."
     bulk_export:
-      regenerate: "Your current bulk export will be regenerated."
-      cancel: "You will permanently cancel this bulk export."
-      delete: "You will permanently delete this bulk export."
+      regenerate:
+        confirm_message: "Your current bulk export will be regenerated."
+      cancel:
+        confirm_message: "You will permanently cancel this bulk export."
+      delete:
+        confirm_message: "You will permanently delete this bulk export."
     asset:
-      regenerate_derivatives: "Your current derivatives for this asset will be regenerated."
-      delete: "You will permanently delete this asset."
-      change_thumbnail: "Your current thumbnail will be replaced."
+      regenerate_derivatives:
+        description: "Regenerates access copy and thumbnail for asset. The item must be published again to present the 
+        new derivatives in the public interface."
+        confirm_message: "Your current derivatives for this asset will be regenerated."
+      delete:
+        description: "Deleting this item completely removes the record from our system. This cannot be undone."
+        confirm_message: "You will permanently delete this asset."
+      change_thumbnail:
+        confirm_message: "Your current thumbnail will be replaced."
