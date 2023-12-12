@@ -1,17 +1,25 @@
-<h3 id="actions" class="mb-3">Actions</h3>
+<%= render(ActionsTable::Component.new(user: current_user, resource: @asset)) do |component| %>
 
-<div class="d-flex justify-content-around my-3">
-  <% if can? :update, @asset  %>
-    <%= render Form::Component.new(name: 'regenerate_derivatives', url: regenerate_derivatives_asset_path(@asset), method: :post) do |component| %>
-      <% component.with_error(@error) %>
-      <% component.with_submit('Regenerate Derivatives', confirm: I18n.t('confirm_messages.asset.regenerate_derivatives'), class: %w[btn btn-primary]) %>
+  <% if can?(:update, @asset) %>
+    <%= component.with_action(description: I18n.t('actions.asset.regenerate_derivatives.description')) do |action| %>
+      <% action.with_form_component(name: 'regenerate_derivatives',
+                                    url: regenerate_derivatives_asset_path(@asset), method: :post) do |form_component|%>
+        <% form_component.with_error(@error) %>
+        <% form_component.with_submit('Regenerate Derivatives',
+                                      confirm: I18n.t('actions.asset.regenerate_derivatives.confirm_message'),
+                                      class: %w[btn btn-primary]) %>
+      <% end %>
     <% end %>
   <% end %>
 
-  <% if can? :delete, @asset  %>
-    <%= render Form::Component.new(name: 'delete_asset', url: asset_path(@asset), method: :delete) do |component| %>
-      <% component.with_error(@error) %>
-      <% component.with_submit('Delete Asset', confirm: I18n.t('confirm_messages.asset.delete'), class: %w[btn btn-danger]) %>
+  <% if  can?(:delete, @asset) %>
+    <%= component.with_action(description: I18n.t('actions.asset.delete.description')) do |action| %>
+      <%= action.with_form_component(name: 'delete_asset', url: asset_path(@asset),
+                                     method: :delete)do |form_component|%>
+        <% form_component.with_error(@error) %>
+        <% form_component.with_submit('Delete Asset', confirm: I18n.t('actions.asset.delete.confirm_message'),
+                                      class: %w[btn btn-danger]) %>
+      <% end %>
     <% end %>
   <% end %>
-</div>
+<% end %>
