@@ -106,8 +106,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_30_194721) do
     t.datetime "completed_at", null: false
     t.string "resource_identifier", null: false
     t.jsonb "resource_json"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["resource_identifier"], name: "index_resource_events_on_resource_identifier"
   end
 

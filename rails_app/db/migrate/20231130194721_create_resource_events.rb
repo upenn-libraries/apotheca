@@ -8,8 +8,6 @@ class CreateResourceEvents < ActiveRecord::Migration[7.1]
       t.datetime :completed_at, null: false
       t.string :resource_identifier, null: false, index: true
       t.jsonb :resource_json
-
-      t.timestamps
     end
   end
 end
