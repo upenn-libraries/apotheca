@@ -791,12 +791,6 @@
       <str name="facet.field">created_by_ssi</str>
       <str name="facet.field">updated_by_ssi</str>
       <str name="facet.field">collection_ssim</str>
-      <str name="facet.field">physical_format_ssim</str>
-      <str name="facet.field">geographic_subject_ssim</str>
-      <str name="facet.field">item_type_ssim</str>
-      <str name="facet.field">language_ssim</str>
-      <str name="facet.field">name_ssim</str>
-      <str name="facet.field">subject_ssim</str>
       <str name="facet.field">internal_resource_ssim</str>
     </lst>
   </requestHandler>
