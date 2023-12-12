@@ -11,6 +11,10 @@ describe AttachAsset do
     context 'when item has no current assets' do
       let(:item) { persist(:item_resource) }
 
+      include_examples 'creates a resource event', :attach_asset, 'initiator@example.com', true do
+        let(:resource) { updated_item }
+      end
+
       it 'is successful' do
         expect(result.success?).to be true
       end
@@ -25,13 +29,6 @@ describe AttachAsset do
 
       it 'sets thumbnail' do
         expect(updated_item.thumbnail_asset_id).to eql asset.id
-      end
-
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: updated_item.id.to_s, event_type: :attach_asset).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
       end
     end
 

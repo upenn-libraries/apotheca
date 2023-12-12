@@ -9,16 +9,13 @@ describe GenerateDerivatives do
     let(:result) { transaction.call(id: asset.id, updated_by: 'initiator@example.com') }
 
     context 'when derivatives not present' do
+      include_examples 'creates a resource event', :generate_derivatives, 'initiator@example.com', true do
+        let(:resource) { updated_asset }
+      end
+
       it 'generates and adds derivatives' do
         expect(updated_asset.derivatives.length).to be 2
         expect(updated_asset.derivatives.map(&:type)).to contain_exactly 'thumbnail', 'access'
-      end
-
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: updated_asset.id.to_s, event_type: :generate_derivatives).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
       end
     end
 
@@ -29,16 +26,13 @@ describe GenerateDerivatives do
         end
       end
 
+      include_examples 'creates a resource event', :generate_derivatives, 'initiator@example.com', true do
+        let(:resource) { updated_asset }
+      end
+
       it 'regenerates derivatives' do
         expect(updated_asset.derivatives.count).to be 2
         expect(updated_asset.derivatives.map(&:generated_at)).to all(be_within(1.second).of(DateTime.current))
-      end
-
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: updated_asset.id.to_s, event_type: :generate_derivatives).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
       end
     end
   end

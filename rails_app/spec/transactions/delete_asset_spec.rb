@@ -16,6 +16,10 @@ describe DeleteAsset do
     context 'when the asset is not attached to any item' do
       let(:asset) { persist(:asset_resource) }
 
+      include_examples 'creates a resource event', :delete_asset, 'initiator@example.com', false do
+        let(:resource) { asset }
+      end
+
       it 'is successful' do
         expect(result.success?).to be true
       end
@@ -23,18 +27,15 @@ describe DeleteAsset do
       it 'deletes asset' do
         expect { query_service.find_by(id: asset.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
       end
-
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: asset.id.to_s, event_type: :delete_asset).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: nil, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
-      end
     end
 
     context 'when asset is attached' do
       let(:asset) { persist(:asset_resource) }
       let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
+
+      include_examples 'creates a resource event', :delete_asset, 'initiator@example.com', false do
+        let(:resource) { asset }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -47,13 +48,6 @@ describe DeleteAsset do
 
       it 'deletes asset' do
         expect { query_service.find_by(id: asset.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
-      end
-
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: asset.id.to_s, event_type: :delete_asset).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: nil, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
       end
     end
 

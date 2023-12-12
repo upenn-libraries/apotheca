@@ -21,6 +21,10 @@ describe UpdateItem do
       end
       let(:asset) { persist(:asset_resource) }
 
+      include_examples 'creates a resource event', :update_item, 'initiator@example.com', true do
+        let(:resource) { updated_item }
+      end
+
       it 'is successful' do
         expect(result.success?).to be true
       end
@@ -40,13 +44,6 @@ describe UpdateItem do
 
       it 'enqueues job to update Ark metadata' do
         expect(UpdateArkMetadataJob).to have_enqueued_sidekiq_job.with(updated_item.id.to_s)
-      end
-
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: updated_item.id.to_s, event_type: :update_item).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
       end
     end
 

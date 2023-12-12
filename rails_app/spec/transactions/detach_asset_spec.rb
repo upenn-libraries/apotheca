@@ -21,6 +21,10 @@ describe DetachAsset do
       let(:item) { persist(:item_resource, :with_assets_all_arranged) }
       let(:asset) { query_service.find_by id: item.asset_ids.second }
 
+      include_examples 'creates a resource event', :detach_asset, 'initiator@example.com', true do
+        let(:resource) { result.value! }
+      end
+
       it 'is successful' do
         expect(result.success?).to be true
       end
@@ -29,14 +33,6 @@ describe DetachAsset do
         updated_item = result.value!
         expect(updated_item.structural_metadata.arranged_asset_ids).not_to include(asset.id)
         expect(updated_item.asset_ids).not_to include(asset.id)
-      end
-
-      it 'records event' do
-        updated_item = result.value!
-        event = ResourceEvent.where(resource_identifier: updated_item.id.to_s, event_type: :detach_asset).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
       end
     end
 

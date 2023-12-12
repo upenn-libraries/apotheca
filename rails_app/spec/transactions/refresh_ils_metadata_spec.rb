@@ -13,15 +13,12 @@ describe RefreshIlsMetadata do
     context 'when bibnumber present' do
       let(:item) { persist(:item_resource, :with_bibnumber) }
 
-      it 'succeeds' do
-        expect(result.success?).to be true
+      include_examples 'creates a resource event', :refresh_ils_metadata, 'initiator@example.com', false do
+        let(:resource) { updated_item }
       end
 
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: updated_item.id.to_s, event_type: :refresh_ils_metadata).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: nil, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
+      it 'succeeds' do
+        expect(result.success?).to be true
       end
     end
 

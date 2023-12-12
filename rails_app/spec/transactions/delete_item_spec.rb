@@ -10,6 +10,10 @@ describe DeleteItem do
     context 'when the Item has no assets' do
       let(:item) { persist(:item_resource) }
 
+      include_examples 'creates a resource event', :delete_item, 'initiator@example.com', false do
+        let(:resource) { deleted_item }
+      end
+
       it 'is successful' do
         expect(result.success?).to be true
       end
@@ -18,13 +22,6 @@ describe DeleteItem do
         expect {
           query_service.find_by(id: deleted_item.id)
         }.to raise_error Valkyrie::Persistence::ObjectNotFoundError
-      end
-
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: deleted_item.id.to_s, event_type: :delete_item).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: nil, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
       end
     end
 

@@ -15,15 +15,6 @@ describe UpdateAsset do
     end
   end
 
-  shared_examples_for 'records event' do
-    it 'records event' do
-      event = ResourceEvent.where(resource_identifier: updated_asset.id.to_s, event_type: :update_asset).first
-      expect(event).to be_present
-      expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
-                                       completed_at: be_a(Time))
-    end
-  end
-
   describe '#call' do
     let(:transaction) { described_class.new }
 
@@ -45,8 +36,10 @@ describe UpdateAsset do
         transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
       end
 
-      include_examples 'records event'
       include_examples 'enqueues jobs'
+      include_examples 'creates a resource event', :update_asset, 'initiator@example.com', true do
+        let(:resource) { updated_asset }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -79,8 +72,10 @@ describe UpdateAsset do
         )
       end
 
-      include_examples 'records event'
       include_examples 'enqueues jobs'
+      include_examples 'creates a resource event', :update_asset, 'initiator@example.com', true do
+        let(:resource) { updated_asset }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -139,7 +134,9 @@ describe UpdateAsset do
       end
 
       include_examples 'does not enqueue jobs'
-      include_examples 'records event'
+      include_examples 'creates a resource event', :update_asset, 'initiator@example.com', true do
+        let(:resource) { updated_asset }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true

@@ -10,6 +10,10 @@ describe CreateAsset do
         transaction.call(label: 'Front', created_by: 'initiator@example.com')
       end
 
+      include_examples 'creates a resource event', :create_asset, 'initiator@example.com', true do
+        let(:resource) { asset }
+      end
+
       it 'is successful' do
         expect(result.success?).to be true
       end
@@ -28,13 +32,6 @@ describe CreateAsset do
 
       it 'does not add preservation event' do
         expect(asset.preservation_events.count).to be 0
-      end
-
-      it 'records event' do
-        event = ResourceEvent.where(resource_identifier: asset.id.to_s, event_type: :create_asset).first
-        expect(event).to be_present
-        expect(event).to have_attributes(resource_json: a_value, initiated_by: 'initiator@example.com',
-                                         completed_at: be_a(Time))
       end
     end
 
