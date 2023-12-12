@@ -12,6 +12,8 @@ module Steps
 
       tech_metadata = fits.examine(contents: file.read, filename: change_set.original_filename)
 
+      return Failure(error: :invalid_mime_type) unless Settings.supported_mime_types.include?(tech_metadata.mime_type)
+
       change_set.technical_metadata.raw       = tech_metadata.raw
       change_set.technical_metadata.mime_type = tech_metadata.mime_type
       change_set.technical_metadata.size      = tech_metadata.size

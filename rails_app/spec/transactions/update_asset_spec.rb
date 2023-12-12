@@ -232,5 +232,25 @@ describe UpdateAsset do
         }.to raise_error Valkyrie::StorageAdapter::FileNotFound
       end
     end
+
+    context 'when preservation file has an invalid mime_type' do
+      let(:asset) { persist(:asset_resource) }
+      let(:result) do
+        transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com')
+      end
+
+      before do
+        metadata = instance_double(FileCharacterization::Fits::Metadata)
+        allow(FileCharacterization::Fits::Metadata).to receive(:new).and_return(metadata)
+        allow(metadata).to receive(:mime_type).and_return('text/plain')
+      end
+
+      include_examples 'does not enqueue jobs'
+
+      it 'fails' do
+        expect(result.failure?).to be true
+        expect(result.failure[:error]).to be :invalid_mime_type
+      end
+    end
   end
 end
