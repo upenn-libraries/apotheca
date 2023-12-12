@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Steps
-  # Deletes preservation, preservation backup and derivative files
+  # Removes linkage of given Asset resource from parent Item
   class DetachFromItem
     include Dry::Monads[:result]
 
