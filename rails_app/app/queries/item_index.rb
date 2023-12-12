@@ -4,6 +4,7 @@
 class ItemIndex
   DEFAULT_FQ = { internal_resource: ['ItemResource'] }.freeze # ensure we are returning only ItemResources
   DEFAULT_SORT = { field: 'created_at', direction: 'desc' }.freeze
+  DEFAULT_FACET_LIMIT = 20
   MAPPER = Solr::QueryMaps::Item
 
   attr_reader :query_service
@@ -55,8 +56,9 @@ class ItemIndex
   # @param [ActionController::Parameters] parameters
   # @return [Hash]
   def solr_query(parameters:)
-    Solr::QueryBuilder.new(params: parameters, defaults: { fq: DEFAULT_FQ, sort: DEFAULT_SORT }, mapper: MAPPER)
-                      .solr_query
+    Solr::QueryBuilder.new(params: parameters,
+                           defaults: { fq: DEFAULT_FQ, sort: DEFAULT_SORT, facet_limit: DEFAULT_FACET_LIMIT },
+                           mapper: MAPPER).solr_query
   end
 
   # @param [Array] solr_documents
