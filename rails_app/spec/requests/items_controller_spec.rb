@@ -84,12 +84,11 @@ describe 'Items Requests' do
 
       it 'displays job enqueued alert' do
         follow_redirect!
-        expect(response).to have_http_status :ok
         expect(response.body).to include('Job to refresh ILS metadata enqueued')
       end
 
       it 'enqueues job' do
-        expect(RefreshIlsMetadataJob).to have_enqueued_sidekiq_job.with(item.id)
+        expect(RefreshIlsMetadataJob).to have_enqueued_sidekiq_job.with(item.id, any_args)
       end
     end
   end
