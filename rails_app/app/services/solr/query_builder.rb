@@ -23,7 +23,6 @@ module Solr
         rows: rows,
         sort: sort,
         start: start,
-        'facet.limit': defaults[:facet_limit],
         fq: fq }
     end
 

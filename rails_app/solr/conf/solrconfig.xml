@@ -789,9 +789,11 @@
       <str name="facet.mincount">1</str>
       <str name="facet.limit">10</str>
       <str name="facet.field">created_by_ssi</str>
+      <str name="f.created_by_ssi.facet.limit">-1</str>
       <str name="facet.field">updated_by_ssi</str>
+      <str name="f.updated_by_ssi.facet.limit">-1</str>
       <str name="facet.field">collection_ssim</str>
-      <str name="facet.field">internal_resource_ssim</str>
+      <str name="f.collection_ssim.facet.limit">20</str>
     </lst>
   </requestHandler>
 
