@@ -1,20 +1,25 @@
-<h3 id="actions" class="mb-3">Actions</h3>
+<%= render(ActionsTable::Component.new) do |component| %>
+  <% if can?(:refresh_ils_metadata, @item) %>
+    <%= component.with_action(description: I18n.t('actions.item.refresh_ILS.description')) do |action| %>
+      <% action.with_form_component(name: 'refresh_ILS_metadata', url: refresh_ils_metadata_item_path(@item),
+                                    method: :post) do |form_component| %>
+        <% form_component.with_error(@error) %>
+        <% form_component.with_submit('Refresh ILS Metadata',
+                                      confirm: I18n.t('actions.item.refresh_ILS.confirm_message'),
+                                      disabled: @item.descriptive_metadata.bibnumber.blank?,
+                                      class: %w[btn btn-primary]) %>
+      <% end %>
+    <% end %>
+  <% end %>
 
-<div class="d-flex justify-content-around my-3">
-<% if can? :refresh_ils_metadata, @item  %>
-  <%= render Form::Component.new(name: 'refresh_ILS_metadata', url: refresh_ils_metadata_item_path(@item), method: :post) do |component| %>
-    <% component.with_error(@error) %>
-    <% component.with_submit('Refresh ILS Metadata',
-                             confirm: I18n.t('confirm_messages.item.refresh_ILS'),
-                             disabled: @item.descriptive_metadata.bibnumber.blank?,
-                             class: %w[btn btn-primary]) %>
+  <% if can?(:delete, @item) %>
+    <%= component.with_action(description: I18n.t('actions.item.delete.description')) do |action| %>
+      <% action.with_form_component(name: 'delete_item', url: item_path(@item), method: :delete) do |form_component| %>
+        <% form_component.with_error(@error) %>
+        <% form_component.with_submit('Delete Item',
+                                      confirm: I18n.t('actions.item.delete.confirm_message'),
+                                      variant: :danger) %>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
-
-<% if can? :delete, @item  %>
-  <%= render Form::Component.new(name: 'delete_item', url: item_path(@item), method: :delete) do |component| %>
-    <% component.with_error(@error) %>
-    <% component.with_submit('Delete Item', confirm: I18n.t('confirm_messages.item.delete'), variant: :danger) %>
-  <% end %>
-<% end %>
-</div>

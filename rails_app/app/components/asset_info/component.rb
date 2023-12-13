@@ -67,7 +67,7 @@ module AssetInfo
         form.with_field(:thumbnail_asset_id, value: asset.id, type: :hidden)
         form.with_submit('Set as Item Thumbnail',
                          variant: :link,
-                         confirm: I18n.t('confirm_messages.asset.change_thumbnail'),
+                         confirm: I18n.t('actions.asset.change_thumbnail.confirm_message'),
                          class: thumbnail_submit_classes,
                          id: 'set-as-item-thumbnail')
       end

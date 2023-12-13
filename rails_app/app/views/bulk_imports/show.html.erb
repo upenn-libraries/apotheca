@@ -55,7 +55,7 @@
   <% if @bulk_import.any_imports_queued? &&  can?(:cancel, @bulk_import)  %>
     <%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(@bulk_import), method: :patch) do |component| %>
       <% component.with_submit('Cancel All Queued Imports',
-                               confirm: I18n.t('confirm_messages.bulk_import.cancel_all'),
+                               confirm: I18n.t('actions.bulk_import.cancel_all.confirm_message'),
                                variant: :secondary,
                                class: 'btn-sm')
       %>
@@ -114,7 +114,7 @@
         <td>
           <% if import.can_cancel?(current_user)  %>
             <%= render Form::Component.new(name: 'cancel_import', url: cancel_bulk_import_import_path(import.bulk_import, import), method: :patch) do |component| %>
-              <% component.with_submit('Cancel', confirm: I18n.t('confirm_messages.import.cancel'),
+              <% component.with_submit('Cancel', confirm: I18n.t('actions.import.cancel.confirm_message'),
                                        variant: :secondary, class: 'btn-sm')
               %>
             <% end %>

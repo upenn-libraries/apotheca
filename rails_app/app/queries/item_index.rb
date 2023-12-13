@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Query class for searching, filtering and sorting over ItemResources via Solr
+# Also note that search and facet field configuration also resides in the solrconfig.xml file
 class ItemIndex
   DEFAULT_FQ = { internal_resource: ['ItemResource'] }.freeze # ensure we are returning only ItemResources
   DEFAULT_SORT = { field: 'created_at', direction: 'desc' }.freeze
@@ -55,8 +56,9 @@ class ItemIndex
   # @param [ActionController::Parameters] parameters
   # @return [Hash]
   def solr_query(parameters:)
-    Solr::QueryBuilder.new(params: parameters, defaults: { fq: DEFAULT_FQ, sort: DEFAULT_SORT }, mapper: MAPPER)
-                      .solr_query
+    Solr::QueryBuilder.new(params: parameters,
+                           defaults: { fq: DEFAULT_FQ, sort: DEFAULT_SORT },
+                           mapper: MAPPER).solr_query
   end
 
   # @param [Array] solr_documents
