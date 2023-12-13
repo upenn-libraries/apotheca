@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-describe 'Asset requests' do
+describe 'Asset Requests' do
+  before { sign_in create(:user, user_role) }
+
+  # GET /resources/assets/:id/file/:type
   context 'when downloading files' do
-    before { sign_in create(:user, :admin) }
+    let(:user_role) { :viewer }
 
     context 'with errors' do
       let(:asset) { persist :asset_resource }
@@ -21,10 +24,7 @@ describe 'Asset requests' do
     context 'when the file exists' do
       let(:asset) { persist :asset_resource, :with_preservation_file }
 
-      before do
-        sign_in create(:user, :viewer)
-        get file_asset_path(asset, type: :preservation)
-      end
+      before { get file_asset_path(asset, type: :preservation) }
 
       it 'returns a successful response' do
         expect(response).to have_http_status :ok
@@ -44,25 +44,72 @@ describe 'Asset requests' do
     end
   end
 
-  context 'when uploading files' do
+  # POST /resources/assets
+  context 'when creating asset' do
+    let(:user_role) { :editor }
+    let(:item) { persist :item_resource }
+    let(:file) { fixture_file_upload('files/trade_card/original/front.tif') }
+
+    context 'when an error is raised in UpdateAsset transaction' do
+      before do
+        # Returning a virus check failure when creating the asset.
+        transaction_double = instance_double(UpdateAsset)
+        allow(UpdateAsset).to receive(:new).and_return(transaction_double)
+        allow(transaction_double).to receive(:call).with(any_args) do
+          Dry::Monads::Failure.new(error: :virus_detected)
+        end
+
+        # Request
+        post assets_path, params: { item_id: item.id, asset: { file: file } }
+      end
+
+      it 'displays error' do
+        expect(response.body).to include 'Virus Detected'
+      end
+
+      it 'does not create an asset' do
+        expect(
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_all_of_model(model: AssetResource).count
+        ).to be 0
+      end
+
+      it 'does not record any events' do
+        expect(ResourceEvent.all.count).to be 0
+      end
+    end
+
+    context 'when uploading a file over 2GBs' do
+      before do
+        allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
+        allow(file).to receive(:size).and_return(AssetsController::FILE_SIZE_LIMIT)
+
+        post assets_path, params: { item_id: item.id, asset: { file: file } }
+      end
+
+      it 'displays a flash alert' do
+        expect(flash[:alert]).to include(I18n.t('assets.file.size'))
+      end
+    end
+  end
+
+  # PATCH /resource/assets
+  context 'when updating asset' do
+    let(:user_role) { :editor }
     let(:asset) { persist :asset_resource }
     let(:item) { persist :item_resource }
-    let(:file) { fixture_file_upload(Rails.root.join('spec/fixtures/files/trade_card/original/front.tif')) }
+    let(:file) { fixture_file_upload('files/trade_card/original/front.tif') }
 
-    before do
-      sign_in create(:user, :admin)
-      allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
-      allow(file).to receive(:size).and_return(AssetsController::FILE_SIZE_LIMIT)
-    end
+    context 'when uploading a file over 2GBs' do
+      before do
+        allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
+        allow(file).to receive(:size).and_return(AssetsController::FILE_SIZE_LIMIT)
 
-    it 'does not load files 2 gb or larger when creating an asset' do
-      post assets_path, params: { item_id: item.id, id: asset.id, asset: { file: file } }
-      expect(flash[:alert]).to include(I18n.t('assets.file.size'))
-    end
+        patch asset_path(asset), params: { item_id: item.id, asset: { file: file } }
+      end
 
-    it 'does not load files 2 gb or larger when updating an asset' do
-      patch asset_path(asset), params: { item_id: item.id, id: asset.id, asset: { file: file } }
-      expect(flash[:alert]).to include(I18n.t('assets.file.size'))
+      it 'displays a flash alert' do
+        expect(flash[:alert]).to include(I18n.t('assets.file.size'))
+      end
     end
   end
 end

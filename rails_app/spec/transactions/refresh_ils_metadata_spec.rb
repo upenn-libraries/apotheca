@@ -7,23 +7,23 @@ describe RefreshIlsMetadata do
     end
 
     let(:transaction) { described_class.new }
+    let(:result) { transaction.call(id: item.id.to_s, updated_by: 'initiator@example.com') }
+    let(:updated_item) { result.value![:resource] }
 
     context 'when bibnumber present' do
       let(:item) { persist(:item_resource, :with_bibnumber) }
-      let(:result) { transaction.call(id: item.id.to_s) }
+
+      include_examples 'creates a resource event', :refresh_ils_metadata, 'initiator@example.com', false do
+        let(:resource) { updated_item }
+      end
 
       it 'succeeds' do
         expect(result.success?).to be true
-      end
-
-      it 're-persists item to solr index' do
-        expect(result.value!).to be true
       end
     end
 
     context 'when persisting a resource raises an error' do
       let(:item) { persist(:item_resource, :with_bibnumber) }
-      let(:result) { transaction.call(id: item.id.to_s) }
 
       before do
         allow(transaction).to receive(:persister).and_raise(StandardError)
@@ -41,7 +41,6 @@ describe RefreshIlsMetadata do
 
     context 'when the item does not have bibnumber' do
       let(:item) { persist(:item_resource) }
-      let(:result) { transaction.call(id: item.id.to_s) }
 
       it 'fails' do
         expect(result.failure?).to be true

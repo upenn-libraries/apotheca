@@ -136,11 +136,17 @@ describe ImportService::Process::Create do
       end
 
       it 'does not leave orphaned assets or items' do
+        result
         expect(query_service.find_all.count).to be 0
+      end
+
+      it 'removes all ResourceEvents' do
+        result
+        expect(ResourceEvent.all.count).to be 0
       end
     end
 
-    context 'when creating and item with an asset error' do
+    context 'when creating an item with an asset error' do
       # Mock a miscellaneous error arising from file characterization.
       before do
         fits = instance_double(FileCharacterization::Fits)
@@ -164,6 +170,16 @@ describe ImportService::Process::Create do
           "\tCould not successfully characterize contents: Unexpected Error"
         )
         expect(result.failure[:exception]).to be_a FileCharacterization::Fits::Error
+      end
+
+      it 'does not leave orphaned assets or items' do
+        result
+        expect(query_service.find_all.count).to be 0
+      end
+
+      it 'removes all ResourceEvents' do
+        result
+        expect(ResourceEvent.all.count).to be 0
       end
     end
 

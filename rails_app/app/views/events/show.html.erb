@@ -1,0 +1,22 @@
+<%= render(Breadcrumbs::Component.new) do |component| %>
+  <% component.with_breadcrumb(href: '/') { 'Home' } %>
+  <% component.with_breadcrumb { 'Events' } %>
+  <% component.with_breadcrumb(active: true) { @event.id.to_s } %>
+<% end %>
+
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title { 'Event' } %>
+<% end %>
+
+<%= render(StaticFields::Component.new) do |component| %>
+  <% component.with_field(label: 'Event Type', values: @event.event_type.titleize) %>
+  <% component.with_field(label: 'Resource Identifier', values: @event.resource_identifier) %>
+  <% component.with_field(label: 'Completed At', values: @event.completed_at) %>
+  <% component.with_field(label: 'Initiated By', values: @event.initiated_by) %>
+<% end %>
+
+
+<% if @event.resource_json %>
+  <h4>Resource JSON</h4>
+  <pre class="bg-light"><%= JSON.pretty_generate(@event.resource_json) %></pre>
+<% end %>

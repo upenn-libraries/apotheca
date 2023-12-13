@@ -6,10 +6,14 @@ describe AttachAsset do
 
     let(:transaction) { described_class.new }
     let(:asset) { persist(:asset_resource) }
-    let(:result) { transaction.call(id: item.id, asset_id: asset.id, updated_by: 'admin@example.com') }
+    let(:result) { transaction.call(id: item.id, asset_id: asset.id, updated_by: 'initiator@example.com') }
 
     context 'when item has no current assets' do
       let(:item) { persist(:item_resource) }
+
+      include_examples 'creates a resource event', :attach_asset, 'initiator@example.com', true do
+        let(:resource) { updated_item }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true

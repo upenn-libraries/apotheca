@@ -5,7 +5,7 @@ describe PreservationBackup do
     subject(:updated_asset) { result.value! }
 
     let(:transaction) { described_class.new }
-    let(:result) { transaction.call(id: asset.id, updated_by: asset.updated_by) }
+    let(:result) { transaction.call(id: asset.id, updated_by: 'initiator@example.com') }
 
     context 'when preservation file already backed up' do
       let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }
@@ -18,6 +18,10 @@ describe PreservationBackup do
 
     context 'when preservation file is not backed up' do
       let(:asset) { persist(:asset_resource, :with_preservation_file) }
+
+      include_examples 'creates a resource event', :preservation_backup, 'initiator@example.com', true do
+        let(:resource) { updated_asset }
+      end
 
       it 'generates and adds preservation backup' do
         expect(updated_asset.preservation_copies_ids.length).to be 1

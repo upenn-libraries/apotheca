@@ -5,6 +5,16 @@
 class Container
   extend Dry::Core::Container::Mixin
 
+  namespace 'attributes' do
+    register 'require_updated_by' do
+      Steps::RequireAttribute.new(:updated_by)
+    end
+
+    register 'require_deleted_by' do
+      Steps::RequireAttribute.new(:deleted_by)
+    end
+  end
+
   namespace 'change_set' do
     register 'validate' do
       Steps::Validate.new
@@ -16,10 +26,6 @@ class Container
 
     register 'set_updated_by' do
       Steps::SetUpdatedBy.new
-    end
-
-    register 'require_updated_by' do
-      Steps::RequireUpdatedBy.new
     end
   end
 
@@ -72,6 +78,14 @@ class Container
 
     register 'delete_resource' do
       Steps::DeleteResource.new
+    end
+
+    register 'delete_files' do
+      Steps::DeleteFiles.new
+    end
+
+    register 'detach_from_item' do
+      Steps::DetachFromItem.new
     end
 
     register 'add_preservation_events' do

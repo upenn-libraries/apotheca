@@ -5,7 +5,7 @@ describe DeleteAsset do
   let(:query_service) { Valkyrie::MetadataAdapter.find(:postgres_solr_persister).query_service }
 
   describe '#call' do
-    let(:result) { transaction.call(id: asset.id, updated_by: asset.updated_by) }
+    let(:result) { transaction.call(id: asset.id, deleted_by: 'initiator@example.com') }
 
     # Ensure we create item and run transaction before running any tests
     before do
@@ -15,6 +15,10 @@ describe DeleteAsset do
 
     context 'when the asset is not attached to any item' do
       let(:asset) { persist(:asset_resource) }
+
+      include_examples 'creates a resource event', :delete_asset, 'initiator@example.com', false do
+        let(:resource) { asset }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -28,6 +32,10 @@ describe DeleteAsset do
     context 'when asset is attached' do
       let(:asset) { persist(:asset_resource) }
       let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
+
+      include_examples 'creates a resource event', :delete_asset, 'initiator@example.com', false do
+        let(:resource) { asset }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true

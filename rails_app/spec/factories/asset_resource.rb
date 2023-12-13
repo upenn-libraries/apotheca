@@ -29,6 +29,7 @@ FactoryBot.define do
     transient do
       preservation_backup { false }
       access_copy { false }
+      thumbnail { false }
       preservation_file { 'front.tif' }
     end
 
@@ -62,10 +63,20 @@ FactoryBot.define do
           file: uploaded_file, resource: asset, original_filename: 'access'
         )
 
-        asset.derivatives = [
-          DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                 type: 'access', generated_at: DateTime.current)
-        ]
+        asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
+                                                    type: 'access', generated_at: DateTime.current)
+      end
+
+      if evaluator.thumbnail
+        uploaded_file.rewind
+
+        derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
+        file = derivative_storage.upload(
+          file: uploaded_file, resource: asset, original_filename: 'thumbnail'
+        )
+
+        asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
+                                                    type: 'thumbnail', generated_at: DateTime.current)
       end
     end
   end
@@ -76,9 +87,10 @@ FactoryBot.define do
     end
   end
 
-  trait :with_access_copy do
+  trait :with_derivatives do
     transient do
       access_copy { true }
+      thumbnail { true }
     end
   end
 end

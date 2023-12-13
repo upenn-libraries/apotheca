@@ -16,10 +16,14 @@ describe UpdateItem do
           human_readable_name: 'Updated Item',
           descriptive_metadata: { subject: [{ value: 'Cataloging' }, { value: 'Animals' }] },
           asset_ids: [asset.id],
-          updated_by: 'admin@example.com'
+          updated_by: 'initiator@example.com'
         )
       end
       let(:asset) { persist(:asset_resource) }
+
+      include_examples 'creates a resource event', :update_item, 'initiator@example.com', true do
+        let(:resource) { updated_item }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true

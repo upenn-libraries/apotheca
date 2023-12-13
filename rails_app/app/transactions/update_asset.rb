@@ -5,7 +5,7 @@ class UpdateAsset
   include Dry::Transaction(container: Container)
 
   step :find_asset, with: 'asset_resource.find_resource'
-  step :require_updated_by, with: 'change_set.require_updated_by'
+  step :require_updated_by, with: 'attributes.require_updated_by'
   step :validate_file_extension
   step :virus_check, with: 'asset_resource.virus_check'
   step :store_file_in_preservation_storage
@@ -18,6 +18,7 @@ class UpdateAsset
   step :add_preservation_events, with: 'asset_resource.add_preservation_events'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
+  tee :record_event
   step :generate_derivatives
   tee :preservation_backup
 
@@ -35,6 +36,10 @@ class UpdateAsset
     end
 
     result
+  end
+
+  def record_event(resource)
+    ResourceEvent.record_event_for(resource: resource, event_type: :update_asset)
   end
 
   # Verify that file has original_filename that ends with a valid extension

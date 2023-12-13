@@ -289,5 +289,47 @@ describe ImportService::Process::Update do
         expect(updated_item.thumbnail_asset_id).to eq item.structural_metadata.arranged_asset_ids.last
       end
     end
+
+    context 'when updating an item with additional asset and there\'s an error' do
+      # Returning a virus check failure when updating the newly created asset.
+      before do
+        step_double = instance_double(Steps::VirusCheck)
+        allow(Steps::VirusCheck).to receive(:new).and_return(step_double)
+        allow(step_double).to receive(:call).with(hash_including(file: a_value)) do
+          Dry::Monads::Failure.new(error: :virus_detected)
+        end
+      end
+
+      let(:process) do
+        build(
+          :import_process, :update,
+          assets: {
+            arranged: [
+              { filename: 'front.tif' },
+              { filename: 'back.tif', label: 'Back', annotation: ['mostly blank'] }
+            ],
+            storage: 'sceti_digitized',
+            path: 'trade_card/original/back.tif'
+          },
+          unique_identifier: item.unique_identifier
+        )
+      end
+
+      it 'fails' do
+        expect(result).to be_a Dry::Monads::Failure
+      end
+
+      it 'removes newly created asset' do
+        result
+        expect(
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_all_of_model(model: AssetResource).count
+        ).to be 1
+      end
+
+      it 'does not record any events' do
+        result
+        expect(ResourceEvent.count).to be 0
+      end
+    end
   end
 end

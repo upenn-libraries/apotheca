@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_08_23_152909) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_30_194721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -98,6 +98,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_08_23_152909) do
     t.index ["metadata"], name: "index_orm_resources_on_metadata", using: :gin
     t.index ["metadata"], name: "index_orm_resources_on_metadata_jsonb_path_ops", opclass: :jsonb_path_ops, using: :gin
     t.index ["updated_at"], name: "index_orm_resources_on_updated_at"
+  end
+
+  create_table "resource_events", force: :cascade do |t|
+    t.string "event_type", null: false
+    t.string "initiated_by"
+    t.datetime "completed_at", null: false
+    t.string "resource_identifier", null: false
+    t.jsonb "resource_json"
+    t.index ["resource_identifier"], name: "index_resource_events_on_resource_identifier"
   end
 
   create_table "users", force: :cascade do |t|

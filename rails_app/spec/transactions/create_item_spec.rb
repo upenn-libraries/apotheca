@@ -14,11 +14,15 @@ describe CreateItem do
         transaction.call(
           human_readable_name: 'New Item',
           descriptive_metadata: { title: [{ value: 'A New Item' }] },
-          created_by: 'admin@example.com',
+          created_by: 'initiator@example.com',
           asset_ids: [asset.id]
         )
       end
       let(:asset) { persist(:asset_resource) }
+
+      include_examples 'creates a resource event', :create_item, 'initiator@example.com', true do
+        let(:resource) { item }
+      end
 
       it 'is successful' do
         expect(result.success?).to be true
@@ -39,7 +43,7 @@ describe CreateItem do
       end
 
       it 'sets updated_by' do
-        expect(item.updated_by).to eql 'admin@example.com'
+        expect(item.updated_by).to eql 'initiator@example.com'
       end
 
       it 'sets thumbnail asset id' do
