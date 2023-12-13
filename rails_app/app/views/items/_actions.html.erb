@@ -1,4 +1,4 @@
-<%= render(ActionsTable::Component.new(user: current_user, resource: @item)) do |component| %>
+<%= render(ActionsTable::Component.new) do |component| %>
   <% if can?(:refresh_ils_metadata, @item) %>
     <%= component.with_action(description: I18n.t('actions.item.refresh_ILS.description')) do |action| %>
       <% action.with_form_component(name: 'refresh_ILS_metadata', url: refresh_ils_metadata_item_path(@item),

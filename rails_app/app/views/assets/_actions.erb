@@ -1,4 +1,4 @@
-<%= render(ActionsTable::Component.new(user: current_user, resource: @asset)) do |component| %>
+<%= render(ActionsTable::Component.new) do |component| %>
 
   <% if can?(:update, @asset) %>
     <%= component.with_action(description: I18n.t('actions.asset.regenerate_derivatives.description')) do |action| %>
