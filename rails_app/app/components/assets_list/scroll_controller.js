@@ -22,6 +22,15 @@ export default class extends Controller {
         this.tabHeader = document.querySelector('#assets.tab-pane .header-row');
         this.tabHeader.classList.add('sticky-top', 'bg-white');
 
+        // Site wide sticky header alert
+        this.headerAlert =  document.querySelector('.header-alert')
+
+        // Prevent sticky tabHeader from overlapping with sticky headerAlert
+        // Adjust the top offset of tabHeader if headerAlert exists
+        if (this.headerAlert) {
+            this.tabHeader.style.top= this.headerAlert.offsetHeight + 'px'
+        }
+
         // Tab container for the assets tab of the Item show page
         // (not including the tabs themselves)
         this.tabContainer = document.querySelector('#assets.tab-pane');
