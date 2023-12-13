@@ -18,7 +18,7 @@
                                      method: :delete)do |form_component|%>
         <% form_component.with_error(@error) %>
         <% form_component.with_submit('Delete Asset', confirm: I18n.t('actions.asset.delete.confirm_message'),
-                                      class: %w[btn btn-danger]) %>
+                                     variant: :danger) %>
       <% end %>
     <% end %>
   <% end %>
