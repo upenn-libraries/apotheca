@@ -54,7 +54,7 @@ module Solr
         GEOGRAPHIC_SUBJECT = :geographic_subject_ssim
         ITEM_TYPE = :item_type_ssim
         LANGUAGE = :language_ssim
-        NAME = :name_ssim
+        NAMES = :name_ssim
         SUBJECT = :subject_ssim
       end
 
@@ -71,7 +71,7 @@ module Solr
         ITEM_TYPE = :item_type_ssim
         LANGUAGE = :language_ssim
         LOCATION = :location_tsim
-        NAME = :name_tsim
+        NAMES = :name_tsim
         NOTE = :note_tsim
         PHYSICAL_FORMAT = :physical_format_ssim
         PHYSICAL_LOCATION = :physical_format_tsim

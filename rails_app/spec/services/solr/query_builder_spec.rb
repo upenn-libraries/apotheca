@@ -68,15 +68,15 @@ describe Solr::QueryBuilder do
           'all' => 'blah',
           'fielded' => [
             { field: 'date', term: '1999', opr: '' },
-            { field: 'subject', term: 'Ruby', opr: 'required' },
-            { field: 'name', term: '', opr: 'excluded' }
+            { field: 'names', term: 'Ruby', opr: 'required' },
+            { field: 'subject', term: '', opr: 'excluded' }
           ]
         } }
       ).permit!
     end
 
     it 'properly composes a q param' do
-      expect(builder.search).to eq '+(blah) date_tsim:"1999" +subject_tsim:"Ruby"'
+      expect(builder.search).to eq '+(blah) date_tsim:"1999" +name_tsim:"Ruby"'
     end
   end
 
