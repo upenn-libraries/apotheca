@@ -3,7 +3,6 @@
 module Solr
   module QueryMaps
     module Item
-      DEFAULT_FACET_LIMIT = 20
       ROWS_OPTIONS = [20, 50, 100, 250].freeze
       MAX_BULK_EXPORT_ROWS = 100_000
 
