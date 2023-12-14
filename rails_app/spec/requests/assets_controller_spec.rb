@@ -126,7 +126,7 @@ describe 'Asset Requests' do
     end
   end
 
-
+  # DELETE /resources/assets/:id
   context 'when deleting an asset' do
     let(:user_role) { :admin }
     let(:item) { persist :item_resource, :with_full_assets_all_arranged }
@@ -137,6 +137,26 @@ describe 'Asset Requests' do
       it 'displays successful alert' do
         follow_redirect!
         expect(response.body).to include('Successfully deleted Asset')
+      end
+    end
+  end
+
+  # POST /resources/assets/:id/regenerate_derivatives
+  context 'when regenerating derivatives' do
+    let(:user_role) { :admin }
+    let(:item) { persist :item_resource, :with_full_assets_all_arranged }
+    # let(:asset) { persist :asset_resource, :with_derivatives }
+
+    context 'with a successful request' do
+      before { post regenerate_derivatives_asset_path(item.asset_ids.first) }
+
+      it 'displays successful alert' do
+        follow_redirect!
+        expect(response.body).to include('Successfully enqueued job to regenerate derivatives')
+      end
+
+      it 'enqueues job' do
+        expect(GenerateDerivativesJob).to have_enqueued_sidekiq_job.with(item.asset_ids.first, any_args)
       end
     end
   end
