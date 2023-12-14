@@ -9,6 +9,16 @@ module Solr
       # Methods for grabbing all mappable values
       class Type
         class << self
+          def method_missing(name)
+            raise NoMethodError unless respond_to_missing? name
+
+            const_get name.upcase.to_sym
+          end
+
+          def respond_to_missing?(name)
+            name.to_sym.in? fields
+          end
+
           # @return [Array]
           def fields
             self::MAP.keys
@@ -53,7 +63,7 @@ module Solr
       class Search < Type
         MAP = {
           alt_title: :alt_title_tsim,
-          bibnumber: :bibnumber_ss,
+          bibnumber: :bibnumber_ssi,
           collection: :collection_tsim,
           coverage: :coverage_tsim,
           date: :date_tsim,
