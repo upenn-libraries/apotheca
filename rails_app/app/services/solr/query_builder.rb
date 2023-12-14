@@ -93,7 +93,7 @@ module Solr
       mapper_type = mapper.const_get(type.to_s.titleize)
       return nil unless mapper_type
 
-      mapper_type.public_send field
+      mapper_type::MAP.fetch field.to_sym
     end
 
     # @param [String] field
@@ -114,7 +114,7 @@ module Solr
     # @return [TrueClass, FalseClass]
     def reject_filter(field, values)
       empty_values = values.is_a?(Array) ? values.compact_blank.empty? : values.blank?
-      empty_values || !field.to_sym.in?(mapper::Filter.fields)
+      empty_values || !field.to_sym.in?(mapper::Filter::MAP.keys)
     end
   end
 end

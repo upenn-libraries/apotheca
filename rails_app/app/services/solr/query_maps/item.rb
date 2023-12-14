@@ -6,24 +6,12 @@ module Solr
       ROWS_OPTIONS = [20, 50, 100, 250].freeze
       MAX_BULK_EXPORT_ROWS = 100_000
 
-      # accessor for constant values
+      # Methods for grabbing all mappable values
       class Type
         class << self
-          def method_missing(name)
-            raise NoMethodError unless respond_to_missing? name
-
-            const_get name.upcase.to_sym
-          end
-
-          def respond_to_missing?(name)
-            name.to_sym.in? fields
-          end
-
           # @return [Array]
           def fields
-            constants.map do |c|
-              c.downcase.to_sym
-            end
+            self::MAP.keys
           end
 
           def field_map
@@ -35,53 +23,59 @@ module Solr
       end
 
       class Sort < Type
-        SCORE = :score
-        TITLE = :title_ssi
-        CREATED_AT = :created_at_dtsi
-        UPDATED_AT = :updated_at_dtsi
-        FIRST_PUBLISHED_AT = :first_published_at_dtsi
-        LAST_PUBLISHED_AT = :last_published_at_dtsi
+        MAP = {
+          score: :score,
+          title: :title_ssi,
+          created_at: :created_at_dtsi,
+          updated_at: :updated_at_dtsi,
+          first_published_at: :first_published_at_dtsi,
+          last_published_at: :last_published_at_dtsi
+        }.freeze
       end
 
       class Filter < Type
-        INTERNAL_RESOURCE = :internal_resource_ssim
-        PUBLISHED = :published_bsi
-        CREATED_BY = :created_by_ssi
-        UPDATED_BY = :updated_by_ssi
-        COLLECTION = :collection_ssim
-        CORPORATE_NAME = :corporate_name_ssim
-        PHYSICAL_FORMAT = :physical_format_ssim
-        GEOGRAPHIC_SUBJECT = :geographic_subject_ssim
-        ITEM_TYPE = :item_type_ssim
-        LANGUAGE = :language_ssim
-        NAMES = :name_ssim
-        SUBJECT = :subject_ssim
+        MAP = {
+          internal_resource: :internal_resource_ssim,
+          published: :published_bsi,
+          created_by: :created_by_ssi,
+          updated_by: :updated_by_ssi,
+          collection: :collection_ssim,
+          corporate_name: :corporate_name_ssim,
+          physical_format: :physical_format_ssim,
+          geographic_subject: :geographic_subject_ssim,
+          item_type: :item_type_ssim,
+          language: :language_ssim,
+          names: :name_ssim,
+          subject: :subject_ssim
+        }.freeze
       end
 
       class Search < Type
-        ALT_TITLE = :alt_title_tsim
-        BIBNUMBER = :bibnumber_ss
-        COLLECTION = :collection_tsim
-        COVERAGE = :coverage_tsim
-        DATE = :date_tsim
-        DESCRIPTION = :description_tsim
-        EXTENT = :extent_tsim
-        GEOGRAPHIC_SUBJECT = :geographic_subject_tsim
-        IDENTIFIER = :identifier_ssim
-        ITEM_TYPE = :item_type_ssim
-        LANGUAGE = :language_ssim
-        LOCATION = :location_tsim
-        NAMES = :name_tsim
-        NOTE = :note_tsim
-        PHYSICAL_FORMAT = :physical_format_ssim
-        PHYSICAL_LOCATION = :physical_format_tsim
-        PROVENANCE = :provenance_tsim
-        PUBLISHER = :publisher_tsim
-        RELATION = :relation_tsim
-        RIGHTS = :rights_tsim
-        RIGHTS_NOTE = :rights_tsim
-        SUBJECT = :subject_tsim
-        TITLE = :title_tsim
+        MAP = {
+          alt_title: :alt_title_tsim,
+          bibnumber: :bibnumber_ss,
+          collection: :collection_tsim,
+          coverage: :coverage_tsim,
+          date: :date_tsim,
+          description: :description_tsim,
+          extent: :extent_tsim,
+          geographic_subject: :geographic_subject_tsim,
+          identifier: :identifier_ssim,
+          item_type: :item_type_ssim,
+          language: :language_ssim,
+          location: :location_tsim,
+          name: :name_tsim,
+          note: :note_tsim,
+          physical_format: :physical_format_ssim,
+          physical_location: :physical_format_tsim,
+          provenance: :provenance_tsim,
+          publisher: :publisher_tsim,
+          relation: :relation_tsim,
+          rights: :rights_tsim,
+          rights_note: :rights_tsim,
+          subject: :subject_tsim,
+          title: :title_tsim
+        }.freeze
       end
     end
   end
