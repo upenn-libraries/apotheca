@@ -4,7 +4,7 @@ describe 'Items Requests' do
   before { sign_in create(:user, user_role) }
 
   # POST /resources/items
-  context 'when creating an Item' do
+  context 'when creating an item' do
     include_context 'with successful requests to mint EZID'
 
     let(:user_role) { :editor }
@@ -33,7 +33,7 @@ describe 'Items Requests' do
   end
 
   # PATCH /resources/items/:id
-  context 'when editing an Item' do
+  context 'when updating an item' do
     let(:user_role) { :editor }
     let(:item) { persist(:item_resource) }
 
@@ -54,7 +54,7 @@ describe 'Items Requests' do
   end
 
   # DELETE /resources/items/:id
-  context 'when deleting an Item' do
+  context 'when deleting an item' do
     let(:user_role) { :admin }
     let(:item) { persist(:item_resource) }
 
@@ -66,7 +66,7 @@ describe 'Items Requests' do
         expect(response.body).to include('Successfully deleted Item')
       end
 
-      it 'deletes the Item' do
+      it 'deletes the item' do
         expect(
           Valkyrie::MetadataAdapter.find(:postgres).query_service.find_all_of_model(model: ItemResource).count
         ).to be 0

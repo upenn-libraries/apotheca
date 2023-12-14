@@ -50,6 +50,25 @@ describe 'Asset Requests' do
     let(:item) { persist :item_resource }
     let(:file) { fixture_file_upload('files/trade_card/original/front.tif') }
 
+    context 'with a successful request' do
+      before { post assets_path, params: { item_id: item.id, asset: { file: file } } }
+
+      it 'displays successful alert' do
+        follow_redirect!
+        expect(response.body).to include('Successfully created asset.')
+      end
+
+      it 'creates the asset' do
+        expect(
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_all_of_model(model: AssetResource).count
+        ).to be 1
+      end
+
+      it 'records events' do
+        expect(ResourceEvent.all.count).to be 3
+      end
+    end
+
     context 'when an error is raised in UpdateAsset transaction' do
       before do
         # Returning a virus check failure when creating the asset.
@@ -92,23 +111,32 @@ describe 'Asset Requests' do
     end
   end
 
-  # PATCH /resource/assets
+  # PATCH /resources/assets/:id
   context 'when updating asset' do
     let(:user_role) { :editor }
-    let(:asset) { persist :asset_resource }
-    let(:item) { persist :item_resource }
-    let(:file) { fixture_file_upload('files/trade_card/original/front.tif') }
+    let(:item) { persist :item_resource, :with_full_assets_all_arranged }
 
-    context 'when uploading a file over 2GBs' do
-      before do
-        allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
-        allow(file).to receive(:size).and_return(AssetsController::FILE_SIZE_LIMIT)
+    context 'with a successful request' do
+      before { patch asset_path(item.asset_ids.first), params: { asset: { label: 'a new label' } } }
 
-        patch asset_path(asset), params: { item_id: item.id, asset: { file: file } }
+      it 'displays successful alert' do
+        follow_redirect!
+        expect(response.body).to include('Successfully updated asset.')
       end
+    end
+  end
 
-      it 'displays a flash alert' do
-        expect(flash[:alert]).to include(I18n.t('assets.file.size'))
+
+  context 'when deleting an asset' do
+    let(:user_role) { :admin }
+    let(:item) { persist :item_resource, :with_full_assets_all_arranged }
+
+    context 'with a successful request' do
+      before { delete asset_path(item.asset_ids.last) }
+
+      it 'displays successful alert' do
+        follow_redirect!
+        expect(response.body).to include('Successfully deleted Asset')
       end
     end
   end
