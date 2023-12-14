@@ -247,8 +247,8 @@
     <copyField source="sourceFieldName" dest="destinationFieldName"/>
     -->
     <!-- to support admin general keyword searching, define fields to copy into
-           bucket field. we don't want to add all *_tmiv fields because Valkyrie
-           adds some _tmiv fields that would gunk up our bucket field, such as
+           bucket field. we don't want to add all *_tsim fields because Valkyrie
+           adds some _tsim fields that would gunk up our bucket field, such as
            asset_ids_tsim, descriptive_metadata_tsim, etc. -->
     <!-- TODO: ue a maxChars value? -->
     <!-- from ItemResource -->
@@ -257,7 +257,7 @@
     <copyField source="unique_identifier_tsim" dest="admin_search_tmiv"/>
     <!-- from DescriptiveMetadata -->
     <copyField source="alt_title_tsim" dest="admin_search_tmiv"/>
-    <copyField source="bibnumber_ss" dest="admin_search_tmiv"/>
+    <copyField source="bibnumber_ssi" dest="admin_search_tmiv"/>
     <copyField source="collection_tsim" dest="admin_search_tmiv"/>
     <copyField source="coverage_tsim" dest="admin_search_tmiv"/>
     <copyField source="date_tsim" dest="admin_search_tmiv"/>

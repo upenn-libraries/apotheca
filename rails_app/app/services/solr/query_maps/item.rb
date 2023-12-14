@@ -60,7 +60,7 @@ module Solr
 
       class Search < Type
         ALT_TITLE = :alt_title_tsim
-        BIBNUMBER = :bibnumber_ss
+        BIBNUMBER = :bibnumber_ssi
         COLLECTION = :collection_tsim
         COVERAGE = :coverage_tsim
         DATE = :date_tsim
