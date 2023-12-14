@@ -114,7 +114,7 @@ module Solr
     # @return [TrueClass, FalseClass]
     def reject_filter(field, values)
       empty_values = values.is_a?(Array) ? values.compact_blank.empty? : values.blank?
-      empty_values || !field.to_sym.in?(mapper::Filter::MAP.keys)
+      empty_values || !field.to_sym.in?(mapper::Filter.fields)
     end
   end
 end
