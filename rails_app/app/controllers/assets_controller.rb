@@ -2,9 +2,6 @@
 
 # actions for Assets
 class AssetsController < ApplicationController
-  # Files uploaded through web ui cannot exceed 2 gigabytes measured in base 10. We declare this constant because the
-  # numeric helpers Rails uses to measure file size return results in binary.
-  FILE_SIZE_LIMIT = Settings.virus_check.size_threshold
   class FileNotFound < StandardError; end
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
@@ -214,7 +211,7 @@ class AssetsController < ApplicationController
   def validate_file_size
     return if file_params.blank?
 
-    raise UnsupportedFileSize if file_params[:file].size >= FILE_SIZE_LIMIT
+    raise UnsupportedFileSize if file_params[:file].size >= Settings.virus_check.size_threshold
   end
 
   # @return [Valkyrie::MetadataAdapter]
