@@ -21,7 +21,7 @@ describe 'Items Requests' do
 
       it 'displays successful alert' do
         follow_redirect!
-        expect(response.body).to include('Successfully created item.')
+        expect(response.body).to include I18n.t('actions.item.create.success')
       end
 
       it 'creates the item' do
@@ -60,7 +60,7 @@ describe 'Items Requests' do
 
       it 'displays successful alert' do
         follow_redirect!
-        expect(response.body).to include('Successfully updated item.')
+        expect(response.body).to include I18n.t('actions.item.update.success')
       end
 
       it 'updates the Item' do
@@ -102,7 +102,7 @@ describe 'Items Requests' do
 
       it 'displays successful alert' do
         follow_redirect!
-        expect(response.body).to include('Successfully deleted Item')
+        expect(response.body).to include I18n.t('actions.item.delete.success')
       end
 
       it 'deletes the item' do
@@ -143,7 +143,7 @@ describe 'Items Requests' do
 
       it 'displays job enqueued alert' do
         follow_redirect!
-        expect(response.body).to include('Job to refresh ILS metadata enqueued')
+        expect(response.body).to include I18n.t('actions.item.refresh_ILS.success')
       end
 
       it 'enqueues job' do
@@ -160,7 +160,7 @@ describe 'Items Requests' do
 
       it 'displays failure alert' do
         follow_redirect!
-        expect(response.body).to include('An error occurred while enqueuing job to refresh ILS metadata')
+        expect(response.body).to include I18n.t('actions.item.refresh_ILS.failure')
       end
     end
   end

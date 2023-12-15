@@ -55,7 +55,7 @@ describe 'Asset Requests' do
 
       it 'displays successful alert' do
         follow_redirect!
-        expect(response.body).to include('Successfully created asset.')
+        expect(response.body).to include I18n.t('actions.asset.create.success')
       end
 
       it 'creates the asset' do
@@ -122,7 +122,7 @@ describe 'Asset Requests' do
 
       it 'displays successful alert' do
         follow_redirect!
-        expect(response.body).to include('Successfully updated asset.')
+        expect(response.body).to include I18n.t('actions.asset.update.success')
       end
     end
 
@@ -166,7 +166,7 @@ describe 'Asset Requests' do
 
       it 'displays successful alert' do
         follow_redirect!
-        expect(response.body).to include('Successfully deleted Asset')
+        expect(response.body).to include I18n.t('actions.asset.delete.success')
       end
     end
 
@@ -201,14 +201,13 @@ describe 'Asset Requests' do
   context 'when regenerating derivatives' do
     let(:user_role) { :admin }
     let(:item) { persist :item_resource, :with_full_assets_all_arranged }
-    # let(:asset) { persist :asset_resource, :with_derivatives }
 
     context 'with a successful request' do
       before { post regenerate_derivatives_asset_path(item.asset_ids.first) }
 
       it 'displays successful alert' do
         follow_redirect!
-        expect(response.body).to include('Successfully enqueued job to regenerate derivatives')
+        expect(response.body).to include I18n.t('actions.asset.regenerate_derivatives.success')
       end
 
       it 'enqueues job' do
@@ -224,7 +223,7 @@ describe 'Asset Requests' do
 
       it 'displays failure alert' do
         follow_redirect!
-        expect(response.body).to include('An error occurred while enqueueing job to regenerate derivatives')
+        expect(response.body).to include I18n.t('actions.asset.regenerate_derivatives.failure')
       end
     end
   end
