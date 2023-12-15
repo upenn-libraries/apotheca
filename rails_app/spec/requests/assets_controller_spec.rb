@@ -69,26 +69,26 @@ describe 'Asset Requests' do
       end
     end
 
-    context 'when an error is raised in UpdateAsset transaction' do
+    context 'when an error is raised in CreateAsset transaction' do
       before do
         # Returning a virus check failure when creating the asset.
-        transaction_double = instance_double(UpdateAsset)
-        allow(UpdateAsset).to receive(:new).and_return(transaction_double)
+        transaction_double = instance_double(CreateAsset)
+        allow(CreateAsset).to receive(:new).and_return(transaction_double)
         allow(transaction_double).to receive(:call).with(any_args) do
-          Dry::Monads::Failure.new(error: :virus_detected)
+          Dry::Monads::Failure.new(error: :create_failed)
         end
 
-        # Request
         post assets_path, params: { item_id: item.id, asset: { file: file } }
       end
 
       it 'displays error' do
-        expect(response.body).to include 'Virus Detected'
+        expect(response.body).to include('Create Failed')
       end
 
       it 'does not create an asset' do
         expect(
-          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_all_of_model(model: AssetResource).count
+          Valkyrie::MetadataAdapter.find(:postgres).query_service
+                                   .find_all_of_model(model: AssetResource).count
         ).to be 0
       end
 
@@ -115,6 +115,7 @@ describe 'Asset Requests' do
   context 'when updating asset' do
     let(:user_role) { :editor }
     let(:item) { persist :item_resource, :with_full_assets_all_arranged }
+    let(:file) { fixture_file_upload('files/trade_card/original/front.tif') }
 
     context 'with a successful request' do
       before { patch asset_path(item.asset_ids.first), params: { asset: { label: 'a new label' } } }
@@ -122,6 +123,35 @@ describe 'Asset Requests' do
       it 'displays successful alert' do
         follow_redirect!
         expect(response.body).to include('Successfully updated asset.')
+      end
+    end
+
+    context 'when an error is raised in UpdateAsset transaction' do
+      before do
+        # Returning a virus check failure when creating the asset.
+        transaction_double = instance_double(UpdateAsset)
+        allow(UpdateAsset).to receive(:new).and_return(transaction_double)
+        allow(transaction_double).to receive(:call).with(any_args) do
+          Dry::Monads::Failure.new(error: :virus_detected)
+        end
+
+        # Request
+        post assets_path, params: { item_id: item.id, asset: { file: file } }
+      end
+
+      it 'displays error' do
+        expect(response.body).to include 'Virus Detected'
+      end
+
+      it 'does not create an asset' do
+        expect(
+          Valkyrie::MetadataAdapter.find(:postgres).query_service
+                                   .find_all_of_model(model: AssetResource).count
+        ).to be 2
+      end
+
+      it 'does not record any events' do
+        expect(ResourceEvent.all.count).to be 0
       end
     end
   end
@@ -137,6 +167,32 @@ describe 'Asset Requests' do
       it 'displays successful alert' do
         follow_redirect!
         expect(response.body).to include('Successfully deleted Asset')
+      end
+    end
+
+    context 'when an error is raised in the DeleteAsset transaction' do
+      before do
+        step_double = instance_double(Steps::DeleteResource)
+        allow(Steps::DeleteResource).to receive(:new).and_return(step_double)
+        allow(step_double).to receive(:call) { Dry::Monads::Failure.new(error: :delete_failed) }
+
+        delete asset_path(item.asset_ids.last)
+      end
+
+      it 'displays error' do
+        expect(response.body).to include('Delete Failed')
+      end
+
+      it 'does not delete asset' do
+        expect(item.asset_ids.count).to be 2
+      end
+    end
+
+    context 'when the requested asset is the thumbnail' do
+      before { delete asset_path(item.asset_ids.first) }
+
+      it 'displays error' do
+        expect(response.body).to include('This Asset Is Currently Designated As The Item Thumbnail.')
       end
     end
   end
@@ -157,6 +213,18 @@ describe 'Asset Requests' do
 
       it 'enqueues job' do
         expect(GenerateDerivativesJob).to have_enqueued_sidekiq_job.with(item.asset_ids.first, any_args)
+      end
+    end
+
+    context 'when an error occurs while enqueueing the job' do
+      before do
+        allow(GenerateDerivativesJob).to receive(:perform_async).and_return(nil)
+        post regenerate_derivatives_asset_path(item.asset_ids.first), params: { form: 'regenerate_derivatives' }
+      end
+
+      it 'displays failure alert' do
+        follow_redirect!
+        expect(response.body).to include('An error occurred while enqueueing job to regenerate derivatives')
       end
     end
   end
