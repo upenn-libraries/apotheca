@@ -62,6 +62,9 @@ export default class extends Controller {
      * @param element
      */
     getOuterHeight(element) {
+        // return 0 if element is falsy
+        if (!element) { return 0 }
+
         // Get the css styles that have been applied to the element
         const computedStyles = window.getComputedStyle(element);
 
@@ -121,11 +124,11 @@ export default class extends Controller {
                 });
             } else {
                 // If not, the sticky tab header is active, so take the tab
-                // header's height into account in determining the top of
+                // header's height and headerAlert's height into account in determining the top of
                 // the container
                 this.mainContent?.scrollTo({
                     behavior: 'smooth',
-                    top: targetTitle.offsetTop - this.getOuterHeight(this.tabHeader)
+                    top: targetTitle.offsetTop - this.getOuterHeight(this.headerAlert) - this.getOuterHeight(this.tabHeader)
                 });
             }
         }
