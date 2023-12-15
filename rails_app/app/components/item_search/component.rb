@@ -41,21 +41,21 @@ module ItemSearch
 
     def created_by_options
       options_for_select(
-        container.facets.fetch(mapper::Filter.created_by.to_s, []),
+        container.facets.fetch(mapper::Filter::MAP[:created_by].to_s, []),
         search_params.dig(:filter, :created_by)
       )
     end
 
     def updated_by_options
       options_for_select(
-        container.facets.fetch(mapper::Filter.updated_by.to_s, []),
+        container.facets.fetch(mapper::Filter::MAP[:updated_by].to_s, []),
         search_params.dig(:filter, :updated_by)
       )
     end
 
     def collections_options
       options_for_select(
-        container.facets.fetch(mapper::Filter.collection.to_s, []),
+        container.facets.fetch(mapper::Filter::MAP[:collection].to_s, []),
         search_params.dig(:filter, :collection)
       )
     end

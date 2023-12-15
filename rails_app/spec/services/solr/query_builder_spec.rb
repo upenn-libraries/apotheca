@@ -55,7 +55,7 @@ describe Solr::QueryBuilder do
       let(:defaults) { { sort: { field: 'created_at', direction: 'desc' } } }
 
       it 'sets default sort value' do
-        field = mapper::Sort.public_send(defaults.dig(:sort, :field))
+        field = mapper::Sort::MAP.fetch(defaults.dig(:sort, :field).to_sym)
         expect(builder.sort).to eq("#{field} #{defaults.dig(:sort, :direction)}")
       end
     end
@@ -68,15 +68,15 @@ describe Solr::QueryBuilder do
           'all' => 'blah',
           'fielded' => [
             { field: 'date', term: '1999', opr: '' },
-            { field: 'subject', term: 'Ruby', opr: 'required' },
-            { field: 'name', term: '', opr: 'excluded' }
+            { field: 'name', term: 'Ruby', opr: 'required' },
+            { field: 'subject', term: '', opr: 'excluded' }
           ]
         } }
       ).permit!
     end
 
     it 'properly composes a q param' do
-      expect(builder.search).to eq '+(blah) date_tsim:"1999" +subject_tsim:"Ruby"'
+      expect(builder.search).to eq '+(blah) date_tsim:"1999" +name_tsim:"Ruby"'
     end
   end
 
