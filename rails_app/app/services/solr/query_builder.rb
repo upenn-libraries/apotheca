@@ -93,7 +93,7 @@ module Solr
       mapper_type = mapper.const_get(type.to_s.titleize)
       return nil unless mapper_type
 
-      mapper_type.public_send field
+      mapper_type::MAP.fetch field.to_sym
     end
 
     # @param [String] field

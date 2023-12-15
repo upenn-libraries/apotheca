@@ -97,10 +97,10 @@ describe 'Asset Requests' do
       end
     end
 
-    context 'when uploading a file over 2GBs' do
+    context 'when uploading a file at least 2GB in size' do
       before do
         allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(file)
-        allow(file).to receive(:size).and_return(AssetsController::FILE_SIZE_LIMIT)
+        allow(file).to receive(:size).and_return(Settings.virus_check.size_threshold)
 
         post assets_path, params: { item_id: item.id, asset: { file: file } }
       end

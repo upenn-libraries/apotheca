@@ -22,7 +22,7 @@ module IndexingMappers
 
     # @return [Hash{Symbol->Unknown}]
     def bibnumber
-      { bibnumber_ss: data.dig(:bibnumber, 0, :value) }
+      { bibnumber_ssi: data.dig(:bibnumber, 0, :value) }
     end
 
     # @return [Hash{Symbol->Unknown}]
