@@ -28,27 +28,45 @@ describe MetadataExtractor::Marmite::Client do
     end
 
     context 'when request is unsuccessful' do
-      let(:marmite_error) { ["Record #{bibnumber} in marc21 format not found"] }
+      let(:marmite_error) { 'Request failed: Alma API error' }
 
       before do
         stub_request(:get, "#{url}/api/v2/records/#{bibnumber}/marc21?update=always")
-          .to_return(status: 404, body: JSON.generate(errors: marmite_error), headers: {})
+          .to_return(status: 500, body: { errors: [marmite_error] }.to_json,
+                     headers: { 'Content-Type' => 'application/json' })
       end
 
       it 'raises exception' do
         expect {
           marmite.marc21(bibnumber)
         }.to raise_error(MetadataExtractor::Marmite::Client::Error,
-                         "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error.join(' ')}")
+                         "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error}")
       end
     end
 
-    context 'when saving record with invalid bib number' do
-      let(:marmite_error) { 'Internal Server Error' }
+    context 'when request is unsuccessful with non-JSON response body' do
+      let(:raw_marmite_error) { 'Internal Server Error' }
 
       before do
         stub_request(:get, "#{url}/api/v2/records/#{bibnumber}/marc21?update=always")
-          .to_return(status: 500, body: marmite_error, headers: {})
+          .to_return(status: 500, body: raw_marmite_error)
+      end
+
+      it 'raises exception with raw response included in the message' do
+        expect {
+          marmite.marc21(bibnumber)
+        }.to raise_error(MetadataExtractor::Marmite::Client::Error,
+                         "Could not retrieve MARC for #{bibnumber}. Error: #{raw_marmite_error}")
+      end
+    end
+
+    context 'when request is unsuccessful due to an invalid bib number' do
+      let(:marmite_error) { "Bib not found in Alma for #{bibnumber}" }
+
+      before do
+        stub_request(:get, "#{url}/api/v2/records/#{bibnumber}/marc21?update=always")
+          .to_return(status: 404, body: { errors: [marmite_error] }.to_json,
+                     headers: { 'Content-Type' => 'application/json' })
       end
 
       it 'raises exception' do

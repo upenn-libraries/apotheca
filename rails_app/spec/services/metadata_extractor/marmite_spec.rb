@@ -29,21 +29,5 @@ describe MetadataExtractor::Marmite do
         expect(metadata[:item_type].pluck(:value)).to eql ['Text']
       end
     end
-
-    context 'when record is not found' do
-      let(:errors) { ["Bib not found in Alma for #{bibnumber}"] }
-
-      before do
-        stub_request(:get, "#{Settings.marmite.url}/api/v2/records/#{bibnumber}/marc21?update=always")
-          .to_return(status: 404, body: JSON.generate({ errors: errors }),
-                     headers: { 'Content-Type' => 'application/json' })
-      end
-
-      it 'raises an error with the correct message' do
-        expect { metadata }.to raise_error(MetadataExtractor::Marmite::Client::Error) do |error|
-          expect(error.message).to include(errors.join(' '))
-        end
-      end
-    end
   end
 end
