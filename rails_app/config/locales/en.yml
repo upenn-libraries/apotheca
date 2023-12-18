@@ -30,7 +30,7 @@ en:
         description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata."
         confirm_message: "Your current ILS metadata will be updated."
       delete:
-        successs: 'Successfully deleted item.'
+        success: 'Successfully deleted item.'
         description: "Deleting this item completely removes the record from our system. This cannot be undone."
         confirm_message: "You will permanently delete this item."
     bulk_import:

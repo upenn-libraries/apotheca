@@ -65,6 +65,7 @@ describe 'Asset Requests' do
       end
 
       it 'records events' do
+        # create, update, attach
         expect(ResourceEvent.all.count).to be 3
       end
     end
@@ -105,7 +106,7 @@ describe 'Asset Requests' do
         post assets_path, params: { item_id: item.id, asset: { file: file } }
       end
 
-      it 'displays a flash alert' do
+      it 'displays error' do
         expect(flash[:alert]).to include(I18n.t('assets.file.size'))
       end
     end
@@ -123,6 +124,16 @@ describe 'Asset Requests' do
       it 'displays successful alert' do
         follow_redirect!
         expect(response.body).to include I18n.t('actions.asset.update.success')
+      end
+
+      it 'updates the asset' do
+        expect(
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: item.asset_ids.first).label
+        ).to eq('a new label')
+      end
+
+      it 'records an event' do
+        expect(ResourceEvent.all.count).to be 1
       end
     end
 
@@ -167,6 +178,18 @@ describe 'Asset Requests' do
       it 'displays successful alert' do
         follow_redirect!
         expect(response.body).to include I18n.t('actions.asset.delete.success')
+      end
+
+      it 'deletes the asset' do
+        expect(
+          Valkyrie::MetadataAdapter.find(:postgres).query_service
+                                   .find_all_of_model(model: AssetResource).count
+        ).to be 1
+      end
+
+      it 'records an event' do
+        # detach, delete
+        expect(ResourceEvent.all.count).to be 2
       end
     end
 
