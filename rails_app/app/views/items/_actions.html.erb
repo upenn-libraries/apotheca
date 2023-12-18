@@ -1,9 +1,10 @@
 <%= render(ActionsTable::Component.new) do |component| %>
   <% if can?(:refresh_ils_metadata, @item) %>
     <%= component.with_action(description: I18n.t('actions.item.refresh_ILS.description')) do |action| %>
-      <% action.with_form_component(name: 'refresh_ILS_metadata', url: refresh_ils_metadata_item_path(@item),
+      <% action.with_form_component(name: 'refresh_ILS_metadata',
+                                    url: refresh_ils_metadata_item_path(@item, anchor: 'actions'),
                                     method: :post) do |form_component| %>
-        <% form_component.with_error(@error) %>
+        <% form_component.with_error(@error) if @errors_for == 'refresh_ILS_metadata' %>
         <% form_component.with_submit('Refresh ILS Metadata',
                                       confirm: I18n.t('actions.item.refresh_ILS.confirm_message'),
                                       disabled: @item.descriptive_metadata.bibnumber.blank?,
@@ -14,8 +15,9 @@
 
   <% if can?(:delete, @item) %>
     <%= component.with_action(description: I18n.t('actions.item.delete.description')) do |action| %>
-      <% action.with_form_component(name: 'delete_item', url: item_path(@item), method: :delete) do |form_component| %>
-        <% form_component.with_error(@error) %>
+      <% action.with_form_component(name: 'delete_item', url: item_path(@item, anchor: 'actions'),
+                                    method: :delete) do |form_component| %>
+        <% form_component.with_error(@error) if @errors_for == 'delete_item'  %>
         <% form_component.with_submit('Delete Item',
                                       confirm: I18n.t('actions.item.delete.confirm_message'),
                                       variant: :danger) %>

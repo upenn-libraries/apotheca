@@ -1,6 +1,7 @@
 <h3>Descriptive Metadata</h3>
 
-<%= render(Form::Component.new(url: item_path(@item), model: @change_set, name: 'descriptive-metadata', size: :sm)) do |form| %>
+<%= render(Form::Component.new(url: item_path(@item, anchor: 'descriptive-metadata'), model: @change_set,
+                               name: 'descriptive-metadata', size: :sm)) do |form| %>
   <% form.with_error(@error) if @errors_for == 'descriptive-metadata' %>
 
   <% ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field, type| %>

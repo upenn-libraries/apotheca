@@ -135,6 +135,7 @@ class AssetsController < ApplicationController
     end
 
     @error = failure
+    @errors_for = params[:form]
 
     load_resources
 
