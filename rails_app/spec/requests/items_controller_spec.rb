@@ -3,6 +3,30 @@
 describe 'Items Requests' do
   before { sign_in create(:user, user_role) }
 
+  # Authentication check
+  context 'when editing' do
+    let(:item) { persist(:item_resource) }
+
+    context 'without edit role' do
+      let(:user_role) { :viewer }
+
+      it 'redirects viewer users to authenticated root path with authorization message' do
+        get edit_item_path(item)
+        expect(response).to redirect_to(authenticated_root_path)
+        expect(flash['alert']).to include 'not authorized'
+      end
+    end
+
+    context 'with proper role' do
+      let(:user_role) { :editor }
+
+      it 'shows item edit form' do
+        get edit_item_path(item)
+        expect(response).to have_http_status :ok
+      end
+    end
+  end
+
   # POST /resources/items
   context 'when creating an item' do
     include_context 'with successful requests to mint EZID'

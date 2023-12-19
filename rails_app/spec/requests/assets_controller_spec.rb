@@ -3,6 +3,30 @@
 describe 'Asset Requests' do
   before { sign_in create(:user, user_role) }
 
+  # Authentication check
+  context 'when editing' do
+    let(:item) { persist(:item_resource, :with_full_asset) }
+
+    context 'without edit role' do
+      let(:user_role) { :viewer }
+
+      it 'redirects viewer users to authenticated root path with authorization message' do
+        get edit_asset_path(item.asset_ids.first)
+        expect(response).to redirect_to(authenticated_root_path)
+        expect(flash['alert']).to include 'not authorized'
+      end
+    end
+
+    context 'with proper role' do
+      let(:user_role) { :editor }
+
+      it 'shows item edit form' do
+        get edit_item_path(item)
+        expect(response).to have_http_status :ok
+      end
+    end
+  end
+
   # GET /resources/assets/:id/file/:type
   context 'when downloading files' do
     let(:user_role) { :viewer }
@@ -215,7 +239,7 @@ describe 'Asset Requests' do
       before { delete asset_path(item.asset_ids.first) }
 
       it 'displays error' do
-        expect(response.body).to include('This Asset Is Currently Designated As The Item Thumbnail.')
+        expect(response.body).to include('Cannot Delete Thumbnail')
       end
     end
   end
