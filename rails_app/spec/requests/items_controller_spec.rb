@@ -32,14 +32,13 @@ describe 'Items Requests' do
     include_context 'with successful requests to mint EZID'
 
     let(:user_role) { :editor }
-    let(:item) { build(:item_resource) }
 
     context 'with a successful request' do
       before do
-        post items_path, params: { item: { human_readable_name: item.human_readable_name,
-                                           created_by: item.created_by,
+        post items_path, params: { item: { human_readable_name: 'Book Name',
+                                           created_by: 'test@test.com',
                                            descriptive_metadata: {
-                                             title: [{ value: item.descriptive_metadata.title.first.value }]
+                                             title: [{ value: 'Book Title' }]
                                            } } }
       end
 
