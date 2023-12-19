@@ -57,8 +57,8 @@ describe 'Items Requests' do
     context 'when an error is raised in CreateAsset transaction' do
       before do
         # Don't include Title in request, validation will fail
-        post items_path, params: { item: { human_readable_name: item.human_readable_name,
-                                           created_by: item.created_by } }
+        post items_path, params: { item: { human_readable_name: 'The Readable Name',
+                                           created_by: 'test@test.com' } }
       end
 
       it 'displays failure alert' do
