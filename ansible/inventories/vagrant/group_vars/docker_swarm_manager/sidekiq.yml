@@ -9,5 +9,5 @@ sidekiq:
         - import_medium
         - import_low
         - low
-      concurrency: 5
+      concurrency: 10
       replicas: 1
