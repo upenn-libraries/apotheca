@@ -1,6 +1,6 @@
 <h3>Administrative Information</h3>
 
-<%= render(Form::Component.new(uri: item_path(@item, anchor: 'administrative-info'),
+<%= render(Form::Component.new(url: item_path(@item, anchor: 'administrative-info'),
                                name: 'administrative-info',
                                model: @change_set,
                                size: :sm)) do |form| %>

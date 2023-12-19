@@ -3,8 +3,9 @@
   <% if can?(:update, @asset) %>
     <%= component.with_action(description: I18n.t('actions.asset.regenerate_derivatives.description')) do |action| %>
       <% action.with_form_component(name: 'regenerate_derivatives',
-                                    url: regenerate_derivatives_asset_path(@asset), method: :post) do |form_component|%>
-        <% form_component.with_error(@error) %>
+                                    url: regenerate_derivatives_asset_path(@asset, anchor: 'actions'),
+                                    method: :post) do |form_component|%>
+        <% form_component.with_error(@error) if @errors_for == 'regenerate_derivatives'  %>
         <% form_component.with_submit('Regenerate Derivatives',
                                       confirm: I18n.t('actions.asset.regenerate_derivatives.confirm_message'),
                                       class: %w[btn btn-primary]) %>
@@ -14,9 +15,9 @@
 
   <% if  can?(:delete, @asset) %>
     <%= component.with_action(description: I18n.t('actions.asset.delete.description')) do |action| %>
-      <%= action.with_form_component(name: 'delete_asset', url: asset_path(@asset),
+      <%= action.with_form_component(name: 'delete_asset', url: asset_path(@asset, anchor: 'actions'),
                                      method: :delete)do |form_component|%>
-        <% form_component.with_error(@error) %>
+        <% form_component.with_error(@error) if @errors_for == 'delete_asset' %>
         <% form_component.with_submit('Delete Asset', confirm: I18n.t('actions.asset.delete.confirm_message'),
                                      variant: :danger) %>
       <% end %>
