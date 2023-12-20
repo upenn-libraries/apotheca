@@ -22,13 +22,13 @@ export default class extends Controller {
         this.tabHeader = document.querySelector('#assets.tab-pane .header-row');
         this.tabHeader.classList.add('sticky-top', 'bg-white');
 
-        // Site wide sticky header alert
-        this.headerAlert =  document.querySelector('.header-alert')
+        // Site wide sticky alert header
+        this.alertHeader =  document.querySelector('.header-alert')
 
-        // Prevent sticky tabHeader from overlapping with sticky headerAlert
-        // Adjust the top offset of tabHeader if headerAlert exists
-        if (this.headerAlert) {
-            this.tabHeader.style.top= this.headerAlert.offsetHeight + 'px'
+        // Prevent sticky tabHeader from overlapping with sticky alertHeader
+        // Adjust the top offset of tabHeader if alertHeader exists
+        if (this.alertHeader) {
+            this.tabHeader.style.top= this.alertHeader.offsetHeight + 'px'
         }
 
         // Tab container for the assets tab of the Item show page
@@ -124,11 +124,14 @@ export default class extends Controller {
                 });
             } else {
                 // If not, the sticky tab header is active, so take the tab
-                // header's height and headerAlert's height into account in determining the top of
+                // header's height and alertHeader's height into account in determining the top of
                 // the container
                 this.mainContent?.scrollTo({
                     behavior: 'smooth',
-                    top: targetTitle.offsetTop - this.getOuterHeight(this.headerAlert) - this.getOuterHeight(this.tabHeader)
+                    top:
+                        targetTitle.offsetTop -
+                        this.getOuterHeight(this.alertHeader) -
+                        this.getOuterHeight(this.tabHeader)
                 });
             }
         }
