@@ -109,8 +109,12 @@ export default class extends Controller {
             // If on a smaller screen (nav is in offcanvas), take into account
             // the height of the sticky tab header that appears
             window.scrollTo({
-                behavior: 'smooth',
-                top: targetTitle.getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.getOuterHeight(this.tabHeader),
+                behavior: "smooth",
+                top:
+                    targetTitle.getBoundingClientRect().top -
+                    document.body.getBoundingClientRect().top -
+                    this.getOuterHeight(this.alertHeader) -
+                    this.getOuterHeight(this.tabHeader),
             });
         } else {
             // If on a larger screen, check if the page header is still visible
