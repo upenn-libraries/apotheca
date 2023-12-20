@@ -1,0 +1,15 @@
+<div class="modal" id="raw-xml-modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Raw XML</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <pre><%= @asset.technical_metadata.raw %></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#raw-xml-modal">Raw XML</button>
