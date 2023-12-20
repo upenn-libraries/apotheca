@@ -44,7 +44,7 @@
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <%= current_user_presenter.full_name %>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
+            <ul class="dropdown-menu dropdown-menu-end <%= 'fixed-top' if @header_alert&.active? %>">
               <li><%= button_to "Sign Out",
                                 sign_out_path(type: current_user.provider),
                                 class: 'dropdown-item' %> </li>

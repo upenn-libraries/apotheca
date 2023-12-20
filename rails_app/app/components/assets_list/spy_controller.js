@@ -61,6 +61,9 @@ export default class extends Controller {
         this.tabHeader = document.querySelector('#assets.tab-pane .header-row');
         this.tabHeader.classList.add('sticky-top', 'bg-white');
 
+        // Site wide sticky alert header - not always present on the page
+        this.alertHeader = document.querySelector('.header-alert')
+
         // Initialize scrollspy once the spy controller is loaded
         Promise.resolve().then(() => {
             this.initScrollSpy();
@@ -124,12 +127,18 @@ export default class extends Controller {
         this.refreshScrollSpy();
     };
 
-    // Tab header is sticky-top when scrolled past the page header
+    // retrieve offsetHeight value of potential alertHeader, returning 0 if it is not present on page
+    alertHeaderOffsetHeight() {
+        return this.alertHeader?.offsetHeight || 0
+    }
+
+    // Tab header is sticky-top when scrolled past the page header, taking the height of the sticky alertHeader
+    // into account
     isStickyHeader() {
         if (!this.tabHeader) {
             return false;
         }
-        return window.scrollY > this.tabHeader.offsetTop - 1;
+        return window.scrollY > this.tabHeader.offsetTop - this.alertHeaderOffsetHeight() - 1;
     }
 
     // Monitor active scrollspy items in the sidebar nav
@@ -266,11 +275,11 @@ export default class extends Controller {
         // container
         //
         // But if the sticky header has taken over, we need to
-        // take the height of it into account
+        // take the height of it and the alertHeader into account
         const isAboveSidebar = this.offcanvasShown
             ? itemRect.top < this.offcanvasHeaderTarget.offsetHeight + 16
             : this.isStickyHeader()
-                ? itemRect.top < (containerTop + this.tabHeader.offsetHeight)
+                ? itemRect.top < (containerTop + this.tabHeader.offsetHeight + this.alertHeaderOffsetHeight())
                 : itemRect.top < containerTop;
 
         // Determine when the active item has gone out the bottom of its
@@ -281,10 +290,10 @@ export default class extends Controller {
         // container, scrolling it down from the top
         if (isAboveSidebar) {
             // The tab header is sticky once a user scrolls past the main page
-            // header, so account for the tab header's height in calculating
+            // header, so account for the tab header's and alertHeader's height in calculating
             // where the top is
             container.scrollTop = this.isStickyHeader()
-                ? item.offsetTop - this.tabHeader.offsetHeight
+                ? item.offsetTop - (this.tabHeader.offsetHeight + this.alertHeaderOffsetHeight())
                 : item.offsetTop;
 
             // If the main scroller is scrolled all the way to its top,
