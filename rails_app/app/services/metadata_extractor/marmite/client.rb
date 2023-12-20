@@ -24,7 +24,7 @@ module MetadataExtractor
 
         return response.body if response.success?
 
-        error = response.status == 500 ? response.body : JSON.parse(response.body)['errors'].join(' ')
+        error = parse_marmite_error_message(response)
         raise Error, "Could not retrieve MARC for #{bibnumber}. Error: #{error}"
       end
 
@@ -37,6 +37,21 @@ module MetadataExtractor
         uri.to_s
       rescue URI::Error => e
         raise Error, "Error generating valid Marmite url: #{e.message}"
+      end
+
+      # For handled errors, Marmite returns a 404 or 500 status code and a JSON response. Unexpected errors may
+      # return identical status codes but non-JSON content. This method parses the JSON response if present, otherwise
+      # returns the raw response body. Any non-success? response will be processed here.
+      # @param [Faraday::Response] response
+      # @return [String] error message
+      def parse_marmite_error_message(response)
+        return 'Marmite returned a blank response' if response.body.blank?
+
+        if response.headers['Content-Type'] == 'application/json'
+          JSON.parse(response.body)['errors'].join(' ')
+        else
+          response.body
+        end
       end
     end
   end
