@@ -1,4 +1,4 @@
-<div class="modal" id="raw-xml-modal" tabindex="-1">
+<div class="modal fade" id="raw-xml-modal" tabindex="-1">
   <div class="modal-dialog modal-dialog-scrollable modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -12,4 +12,4 @@
   </div>
 </div>
 
-<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#raw-xml-modal">Raw XML</button>
+<%= button_tag 'Raw XML', type: 'button', data: { 'bs-toggle': 'modal', 'bs-target': '#raw-xml-modal' } %>

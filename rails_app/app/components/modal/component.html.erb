@@ -1,0 +1,24 @@
+<div class="modal fade" id="<%= @id %>" tabindex="-1" data-controller="modal--modal">
+  <div class="modal-dialog <%= @modal_class %>">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title me-2"><%= @value %></h5>
+        <% if @preview %>
+          <button type="button" class="btn btn-primary btn-sm mr-3" id="copy-button" data-action="click->modal--modal#copy">Copy</button>
+        <% end  %>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" data-modal--modal-target="body">
+        <% if @preview %>
+          <pre class="bg-light p-2"><%= @body %></pre>
+        <% else %>
+          <%= @body %>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<%= button_tag @value, type: 'button', class: @button_class,
+               data: { 'bs-toggle': 'modal', 'bs-target': "##{@id}" } %>

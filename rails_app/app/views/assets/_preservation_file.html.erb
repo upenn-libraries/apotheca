@@ -14,7 +14,8 @@
 
 <div class="d-flex justify-content-between">
   <h3 id="technical-metadata" class="mb-3">Technical Metadata</h3>
-  <%= render 'raw_data_modal' %>
+  <%= render(Modal::Component.new(value: 'Raw XML', body: @asset.technical_metadata.raw,
+                                  button_variant: :secondary, modal_size: 'xl', scrollable: true, preview: true)) %>
 </div>
 
 <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
