@@ -11,6 +11,12 @@ module Modal
       @preview = options[:preview]
     end
 
+    def highlight(text, language)
+      formatter = Rouge::Formatters::HTML.new
+      lexer = Rouge::Lexer.find(language)
+      formatter.format(lexer.lex(text))
+    end
+
     private
 
     def configure_modal(attributes)
