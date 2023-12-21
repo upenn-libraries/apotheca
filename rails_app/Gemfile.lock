@@ -415,6 +415,7 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.2.6)
+    rouge (4.2.0)
     rsolr (2.5.0)
       builder (>= 2.1.2)
       faraday (>= 0.9, < 3, != 2.0.0)
@@ -605,6 +606,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 7.1)
   rbtrace
+  rouge (~> 4.2)
   rsolr
   rspec-rails (~> 6.0)
   rspec-sidekiq

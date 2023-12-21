@@ -62,3 +62,5 @@ group :test do
   gem 'simplecov', require: false
   gem 'webmock'
 end
+
+gem "rouge", "~> 4.2"
