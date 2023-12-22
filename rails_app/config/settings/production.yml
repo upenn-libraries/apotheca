@@ -67,3 +67,7 @@ migration:
   storage: ceph
   colenda_url: https://colenda.library.upenn.edu
 
+# Item/Asset Resource Configuration
+publish:
+  url: http://colenda.library.upenn.edu:3000/items
+  token: sample_token
