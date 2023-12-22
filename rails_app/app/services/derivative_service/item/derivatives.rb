@@ -23,6 +23,7 @@ module DerivativeService
 
         file = DerivativeFile.new(mime_type: 'application/json', iiif_manifest: true)
         file.write(manifest)
+        file.rewind
         file
       end
     end
