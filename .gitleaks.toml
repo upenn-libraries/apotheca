@@ -228,5 +228,6 @@ title = "gitlab gitleaks config"
         '''config/initializers/(ezid|devise|sidekiq|valkyrie).rb''',
         '''spec/indexers/descriptive_metadata_spec.rb''',
         '''app/services/import_service/s3_storage.rb''',
-        '''config/initializers/monkey_patches.rb'''
+        '''config/initializers/monkey_patches.rb''',
+        '''app/transactions/publish_item.rb'''
     ]
