@@ -41,5 +41,9 @@ class ItemResourcePresenter < BasePresenter
       @ils_metadata = ils_metadata&.with_indifferent_access
       @resource_metadata = object.to_json_export.with_indifferent_access
     end
+
+    def to_h
+      ItemResource::DescriptiveMetadata::Fields.all.map { |f| [f, send(f)] }.to_h
+    end
   end
 end

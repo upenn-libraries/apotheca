@@ -69,6 +69,14 @@ class ItemsController < ApplicationController
     end
   end
 
+  def publish
+    if PublishItemJob.perform_async(@item.id.to_s, current_user.email)
+      redirect_to item_path(@item), notice: 'Job to publish item enqueued'
+    else
+      redirect_to items_path(@item), alert: 'An error occurred while enqueuing job to publish item'
+    end
+  end
+
   private
 
   # Explicitly set the default per page for initial page load (when there are no params) only for the ItemResource

@@ -43,6 +43,9 @@ en:
         success: "Successfully created item."
       update:
         success: "Successfully updated item."
+      publish:
+        description: "Publishes this item to Colenda. If this item is already published to Colenda it will update the data that is present there."
+        confirm_message: "You will publish this item to Colenda"
       refresh_ILS:
         success: 'Job to refresh ILS metadata enqueued.'
         failure: 'An error occurred while enqueuing job to refresh ILS metadata.'
