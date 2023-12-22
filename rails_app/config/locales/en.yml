@@ -20,6 +20,9 @@ en:
         size: "Asset too large to load via user interface. Use Bulk Import to load assets larger than 2 gigabytes."
   actions:
     item:
+      publish:
+        description: "Publishes this item to Colenda. If this item is already published to Colenda it will update the data that is present there."
+        confirm_message: "You will publish this item to Colenda"
       refresh_ILS:
         description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata."
         confirm_message: "Your current ILS metadata will be updated."
