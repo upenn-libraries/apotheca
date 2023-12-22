@@ -31,7 +31,7 @@ module Form
           def label
             classes = ['col-form-label']
             classes << "col-form-label-#{@size}" if @size
-            render(ColumnComponent.new(:div, col: @label_col, class: classes, for: @options[:id])) { @label }
+            render(ColumnComponent.new(:label, col: @label_col, class: classes, for: @options[:id])) { @label }
           end
 
           def input
