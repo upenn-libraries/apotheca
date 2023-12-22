@@ -593,6 +593,7 @@ DEPENDENCIES
   ezid-client
   factory_bot_rails
   faker
+  faraday
   honeybadger
   iiif-presentation
   importmap-rails
