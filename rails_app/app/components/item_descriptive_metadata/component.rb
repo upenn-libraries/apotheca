@@ -36,7 +36,7 @@ module ItemDescriptiveMetadata
       end
     end
 
-    # Display field values with secondary URI formatting. Recursively display subfield values.
+    # Display field values. Recursively display subfield values.
     # For example, this is what the value hash looks like:
     #   {value: 'John Smith', uri: 'john.com', role:[{value: 'Author', uri: 'john.com/author'}]}
     #
@@ -44,7 +44,7 @@ module ItemDescriptiveMetadata
     # @return [Array] value string and URI html
     def field_display(value)
       subfields = [value[:value]]
-      subfields << tag.div(value[:uri], class: 'small text-secondary') if value[:uri]
+      subfields << format_uri(value[:uri]) if value[:uri]
 
       value.except(:value, :uri).each do |k, v|
         subfields << tag.table(class: %w[table table-borderless mb-0]) do
@@ -59,6 +59,16 @@ module ItemDescriptiveMetadata
       end
 
       safe_join(subfields)
+    end
+
+    # Format secondary URI's for display
+    # @param [String] uri
+    # @return [ActiveSupport::SafeBuffer]
+    def format_uri(uri)
+      tag.div(
+        tag.a(uri, href: uri, class: 'link-secondary link-opacity-75 link-opacity-100-hover small', target: '_blank',
+                   rel: 'noopener')
+      )
     end
 
     # Add bootstrap classes to identify whether field's ILS value will be used or overridden by resource value
