@@ -1,34 +1,36 @@
 <%= bootstrap_form_tag(url: url, method: :get, id: 'item-search-form') do |form| %>
   <div class="row g-2">
     <div class="col-md-6">
-      <%= form.text_field 'search[all]', value: params.dig(:search, :all), label: 'Search' %>
+      <%= form.text_field 'search[all]',
+                          value: params.dig(:search, :all), label: t('items.search.options.keyword') %>
     </div>
     <div class="col-md-1">
-      <%= form.select :rows, rows_options, label: 'Rows' %>
+      <%= form.select :rows, rows_options,
+                      label: t('items.search.options.rows') %>
     </div>
     <div class="col-md-2">
-      <%= form.select 'sort[field]', sort_fields_options, label: 'Sort By' %>
+      <%= form.select 'sort[field]', sort_fields_options,
+                      label: t('items.search.options.sort.field') %>
     </div>
     <div class="col-md-2">
-      <%= form.select 'sort[direction]', sort_directions_options, label: 'Direction' %>
+      <%= form.select 'sort[direction]', sort_directions_options,
+                      label: t('items.search.options.sort.direction') %>
     </div>
     <div class="col-md-1">
-      <%= form.select 'filter[published]', published_options, include_blank: true, label: 'Published?' %>
+      <%= form.select 'filter[published]', published_options,
+                      include_blank: true, label: t('items.search.options.published') %>
     </div>
-    <div class="col-md-6">
-      <div class="row">
-        <div class="col-md-12">
-          <%= form.select 'filter[created_by]', created_by_options, include_blank: true, label: 'Created By' %>
-        </div>
-        <div class="col-md-12">
-          <%= form.select 'filter[updated_by]', updated_by_options, include_blank: true, label: 'Updated By' %>
-        </div>
-      </div>
+    <div class="col-md-4">
+      <%= form.select 'filter[collection]', collections_options,
+                      { label: t('items.search.options.collection') }, { include_blank: true } %>
     </div>
-    <div class="col-md-6">
-      <div class="col-md-12">
-        <%= form.select 'filter[collection]', collections_options, { label: 'Collection' }, { multiple: true, include_blank: true, size: 6 } %>
-      </div>
+    <div class="col-md-4">
+        <%= form.select 'filter[created_by]', created_by_options,
+                        include_blank: true, label: t('items.search.options.created_by') %>
+    </div>
+    <div class="col-md-4">
+      <%= form.select 'filter[updated_by]', updated_by_options,
+                      include_blank: true, label: t('items.search.options.updated_by') %>
     </div>
   </div>
   <div class="row">
@@ -38,13 +40,16 @@
           <% fielded_search_params.each do |field|  %>
             <div class="row g-1 mt-2 field-search-set" data-item-search--field-search-target="row">
               <div class="col-md-2">
-                <%= form.select 'search[fielded][][field]', search_fields_options(selected: field[:field]), label: 'Field' %>
+                <%= form.select 'search[fielded][][field]', search_fields_options(selected: field[:field]),
+                                label: t('items.search.options.field') %>
               </div>
               <div class="col-md-7">
-                <%= form.text_field 'search[fielded][][term]', value: field[:term], label: 'Term' %>
+                <%= form.text_field 'search[fielded][][term]',
+                                    value: field[:term], label: t('items.search.options.term') %>
               </div>
               <div class="col-md-2">
-                <%= form.select 'search[fielded][][opr]', operator_options(selected: field[:opr]), label: 'Operator' %>
+                <%= form.select 'search[fielded][][opr]', operator_options(selected: field[:opr]),
+                                label: t('items.search.options.operator') %>
               </div>
               <div class="col-md-1">
                 <br class="mb-2">
@@ -58,15 +63,11 @@
     </div>
     <div class="col-md-2">
       <div class="btn-group-vertical d-block mt-2">
-        <%= form.submit 'Submit', class: 'btn btn-primary' %>
-        <%= link_to 'Start Over', items_path, class: 'btn btn-secondary' %>
-        <%= link_to 'Export as CSV', new_bulk_export_path(search_params: search_params.except('rows')), class: 'btn btn-secondary' %>
+        <%= form.submit t('items.search.actions.submit'), class: 'btn btn-primary' %>
+        <%= link_to t('items.search.actions.reset'), items_path, class: 'btn btn-secondary' %>
+        <%= link_to t('items.search.actions.export'), new_bulk_export_path(search_params: search_params.except('rows')),
+                    class: 'btn btn-secondary' %>
       </div>
     </div>
   </div>
-<% end %>
-
-<%# TODO: remove eventually...but I think this is worth keeping while we are still in development %>
-<% if query.present? %>
-  <div class="card mt-2 font-monospace bg-info bg-opacity-25 p-2"><%= query %></div>
 <% end %>
