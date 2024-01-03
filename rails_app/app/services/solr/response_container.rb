@@ -35,7 +35,7 @@ module Solr
     def facets_to_hash(facet_data:)
       facet_data.transform_values do |v|
         v.each_slice(2).map do |a, b|
-          ["(#{b}) #{a}", a]
+          ["#{a} (#{b})", a]
         end
       end
     end
