@@ -18,6 +18,25 @@ en:
         placeholder_message: "Drag an Asset here to order it."
     file:
         size: "Asset too large to load via user interface. Use Bulk Import to load assets larger than 2 gigabytes."
+  items:
+    search:
+      options:
+        keyword: "Search"
+        rows: "Rows"
+        sort:
+          field: "Sort By"
+          direction: "Direction"
+        published: "Published?"
+        created_by: "Created By"
+        updated_by: "Updated By"
+        collection: "Collection"
+        field: "Field"
+        term: "Term"
+        operator: "Operator"
+      actions:
+        submit: "Submit"
+        reset: "Start Over"
+        export: "Export as CSV"
   actions:
     item:
       refresh_ILS:
