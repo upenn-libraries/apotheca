@@ -18,19 +18,19 @@
     </div>
     <div class="col-md-1">
       <%= form.select 'filter[published]', published_options,
-                      include_blank: true, label: t('items.search.options.published') %>
+                      label: t('items.search.options.published'), include_blank: true %>
     </div>
     <div class="col-md-4">
       <%= form.select 'filter[collection]', collections_options,
-                      { label: t('items.search.options.collection') }, { include_blank: true } %>
+                      label: t('items.search.options.collection'), include_blank: true %>
     </div>
     <div class="col-md-4">
         <%= form.select 'filter[created_by]', created_by_options,
-                        include_blank: true, label: t('items.search.options.created_by') %>
+                        label: t('items.search.options.created_by'), include_blank: true %>
     </div>
     <div class="col-md-4">
       <%= form.select 'filter[updated_by]', updated_by_options,
-                      include_blank: true, label: t('items.search.options.updated_by') %>
+                      label: t('items.search.options.updated_by'), include_blank: true %>
     </div>
   </div>
   <div class="row">
