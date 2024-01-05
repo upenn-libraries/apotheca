@@ -50,7 +50,7 @@ module ItemDescriptiveMetadata
         subfields << tag.table(class: %w[table table-borderless mb-0]) do
           tag.tbody do
             tag.tr do
-              tag.th(k.to_s.titleize, scope: :row) + tag.td do
+              tag.th(k.to_s.titleize, scope: :row, class: 'bg-transparent') + tag.td(class: 'bg-transparent') do
                 list_of_values(v)
               end
             end
@@ -71,22 +71,21 @@ module ItemDescriptiveMetadata
       )
     end
 
-    # Add bootstrap classes to identify whether field's ILS value will be used or overridden by resource value
-    # (ILS value only used if field has no resource value)
+    # Add bootstrap classes to distinguish between ILS and resource metadata, and identify whether field's ILS value
+    # will be used or overridden by resource value (ILS value only used if field has no resource value)
     #
     # @param [String] source
     # @param [String] field
     # @return [String] class for field
-    # @return [nil] if field does not have an ILS value (no highlight necessary)
     def field_class(source, field)
-      return unless @descriptive_metadata.ils_metadata
-
       values = @descriptive_metadata.send("#{source}_metadata")[field]
 
       if source == ILS && @descriptive_metadata.object[field].present?
         'opacity-75 text-decoration-line-through'
-      elsif values.present?
+      elsif source == ILS && values.present?
         'bg-success bg-opacity-10'
+      elsif values.present?
+        'bg-warning bg-opacity-10'
       end
     end
 
