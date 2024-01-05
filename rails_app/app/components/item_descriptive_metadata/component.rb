@@ -50,7 +50,7 @@ module ItemDescriptiveMetadata
         subfields << tag.table(class: %w[table table-borderless mb-0]) do
           tag.tbody do
             tag.tr do
-              tag.th(k.to_s.titleize, scope: :row) + tag.td do
+              tag.th(k.to_s.titleize, scope: :row, class: 'bg-transparent') + tag.td(class: 'bg-transparent') do
                 list_of_values(v)
               end
             end
