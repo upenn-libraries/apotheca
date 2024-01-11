@@ -11,7 +11,7 @@ module Steps
     # 3. File is scanned and a virus is found. File is deleted from the local system and failure is returned.
     # 4. Problem using Clamby. Failure is returned and Honeybadger notification is sent.
     # 5. Check is skipped due to configuration setting
-    def call(**attributes)
+    def call(attributes)
       file = attributes[:file] || attributes['file']
 
       return Success(attributes) if skip_in_environment? || file.blank?

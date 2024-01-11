@@ -164,14 +164,11 @@ describe 'Asset Requests' do
     context 'when an error is raised in UpdateAsset transaction' do
       before do
         # Returning a virus check failure when creating the asset.
-        transaction_double = instance_double(UpdateAsset)
-        allow(UpdateAsset).to receive(:new).and_return(transaction_double)
-        allow(transaction_double).to receive(:call).with(any_args) do
-          Dry::Monads::Failure.new(error: :virus_detected)
-        end
+        step_double = instance_double(Steps::VirusCheck)
+        allow(Steps::VirusCheck).to receive(:new).and_return(step_double)
+        allow(step_double).to receive(:call).with(anything) { Dry::Monads::Failure.new(error: :virus_detected) }
 
-        # Request
-        post assets_path, params: { item_id: item.id, asset: { file: file } }
+        patch asset_path(item.asset_ids.first), params: { asset: { file: file } }
       end
 
       it 'displays error' do
