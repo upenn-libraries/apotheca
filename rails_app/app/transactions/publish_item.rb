@@ -23,14 +23,16 @@ class PublishItem
       item: {
         id: resource.unique_identifier.to_s,
         uuid: resource.id,
-        created_at: change_set.first_published_at.utc.iso8601,
-        updated_at: change_set.last_published_at.utc.iso8601,
+        first_published_at: change_set.first_published_at.utc.iso8601,
+        last_published_at: change_set.last_published_at.utc.iso8601,
         descriptive_metadata: resource.presenter.descriptive_metadata.to_h,
         thumbnail_asset_id: resource.thumbnail_asset_id.to_s,
         iiif_manifest_path: change_set.derivatives.find(&:iiif_manifest?)&.file_id.split('://').last,
         assets: assets(resource)
       }
     }
+
+    # TODO: only send thumbnail_asset_id if a thumbnail file is actually present.
 
     publish_request(payload)
 
@@ -60,7 +62,9 @@ class PublishItem
   def assets(resource)
     resource.arranged_assets.map do |asset|
       hash = {
+        id: asset.id.to_s,
         filename: asset.original_filename,
+        iiif: asset.image?,
         original_file: {
           path: asset.preservation_file_id.split('://').last,
           size: asset.technical_metadata.size,
@@ -75,7 +79,8 @@ class PublishItem
         }
       end
 
-      if asset.access
+      # Only provide asset if its not a iiif-compatible file
+      if asset.access && !asset.image?
         hash[:access_file] = {
           path: asset.access.file_id.split('://').last,
           mime_type: asset.access.mime_type
