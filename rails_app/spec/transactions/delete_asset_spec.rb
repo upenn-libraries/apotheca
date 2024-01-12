@@ -57,7 +57,7 @@ describe DeleteAsset do
 
       it 'does not delete the asset and returns a descriptive error message' do
         expect(result.success?).to be false
-        expect(result.failure[:error]).to include 'thumbnail'
+        expect(result.failure[:error]).to eq :cannot_delete_thumbnail
       end
     end
 

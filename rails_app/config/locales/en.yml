@@ -39,10 +39,17 @@ en:
         export: "Export as CSV"
   actions:
     item:
+      create:
+        success: "Successfully created item."
+      update:
+        success: "Successfully updated item."
       refresh_ILS:
+        success: 'Job to refresh ILS metadata enqueued.'
+        failure: 'An error occurred while enqueuing job to refresh ILS metadata.'
         description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata."
         confirm_message: "Your current ILS metadata will be updated."
       delete:
+        success: 'Successfully deleted item.'
         description: "Deleting this item completely removes the record from our system. This cannot be undone."
         confirm_message: "You will permanently delete this item."
     bulk_import:
@@ -59,11 +66,18 @@ en:
       delete:
         confirm_message: "You will permanently delete this bulk export."
     asset:
+      create:
+        success: "Successfully created asset."
+      update:
+        success: "Successfully updated asset."
       regenerate_derivatives:
+        success: "Successfully enqueued job to regenerate derivatives."
+        failure: "An error occurred while enqueueing job to regenerate derivatives."
         description: "Regenerates access copy and thumbnail for asset. The item must be published again to present the 
         new derivatives in the public interface."
         confirm_message: "Your current derivatives for this asset will be regenerated."
       delete:
+        success: "Successfully deleted asset."
         description: "Deleting this item completely removes the record from our system. This cannot be undone."
         confirm_message: "You will permanently delete this asset."
       change_thumbnail:
