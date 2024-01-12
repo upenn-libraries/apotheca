@@ -139,6 +139,7 @@ describe 'Asset Requests' do
   # PATCH /resources/assets/:id
   context 'when updating asset' do
     let(:user_role) { :editor }
+    # This item has to banged to prevent the stub on 193 from preventing its creation
     let!(:item) { persist :item_resource, :with_full_assets_all_arranged }
     let(:file) { fixture_file_upload('files/trade_card/original/front.tif') }
 
