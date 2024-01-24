@@ -234,7 +234,7 @@ describe 'Asset Requests' do
         allow(Steps::DeleteResource).to receive(:new).and_return(step_double)
         allow(step_double).to receive(:call) { Dry::Monads::Failure.new(error: :delete_failed) }
 
-        delete asset_path(item.asset_ids.last)
+        delete asset_path(item.asset_ids.last), params: { form: 'delete_asset' }
       end
 
       it 'displays error' do
@@ -247,7 +247,7 @@ describe 'Asset Requests' do
     end
 
     context 'when the requested asset is the thumbnail' do
-      before { delete asset_path(item.asset_ids.first) }
+      before { delete asset_path(item.asset_ids.first), params: { form: 'delete_asset' } }
 
       it 'displays error' do
         expect(response.body).to include('Cannot Delete Thumbnail')
