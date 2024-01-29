@@ -75,6 +75,6 @@ iiif:
   manifest:
     base_url: 'https://colenda.library.upenn.edu/catalog/'
 publish:
-  url: http://colenda-test.library.upenn.edu:3000/items
+  url: http://10.252.0.2:3000/items
   token: sample_token
 

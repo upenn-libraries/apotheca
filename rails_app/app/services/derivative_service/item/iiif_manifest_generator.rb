@@ -27,7 +27,7 @@ module DerivativeService
         manifest = IIIF::Presentation::Manifest.new(
           {
             '@id' => uri(base_uri, 'manifest'),
-            'label' => item.descriptive_metadata.title.pluck(&:value).join('; '),
+            'label' => item.descriptive_metadata.title.pluck(:value).join('; '),
             'attribution' => 'Provided by the University of Pennsylvania Libraries.',
             'viewing_hint' => item.structural_metadata.viewing_hint || 'individuals',
             'viewing_direction' => item.structural_metadata.viewing_direction || 'left-to-right',

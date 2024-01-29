@@ -69,5 +69,5 @@ migration:
 
 # Item/Asset Resource Configuration
 publish:
-  url: http://colenda.library.upenn.edu:3000/items
-  token: sample_token
+  url: http://colenda.library.upenn.edu/items
+  token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>

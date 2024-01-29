@@ -13,26 +13,9 @@ class PublishItem
   tee :record_event
 
   def publish(change_set)
-    resource = change_set.resource
+    add_published_values(change_set)
 
-    set_published_values(change_set)
-
-    # Create payload to send to Colenda
-    # TODO: This payload still need to be adjusted
-    payload = {
-      item: {
-        id: resource.unique_identifier.to_s,
-        uuid: resource.id,
-        first_published_at: change_set.first_published_at.utc.iso8601,
-        last_published_at: change_set.last_published_at.utc.iso8601,
-        descriptive_metadata: resource.presenter.descriptive_metadata.to_h,
-        thumbnail_asset_id: resource.thumbnail_asset_id.to_s,
-        iiif_manifest_path: change_set.derivatives.find(&:iiif_manifest?)&.file_id.split('://').last,
-        assets: assets(resource)
-      }
-    }
-
-    # TODO: only send thumbnail_asset_id if a thumbnail file is actually present.
+    payload = create_payload(change_set)
 
     publish_request(payload)
 
@@ -56,7 +39,31 @@ class PublishItem
     end
 
     # Raise error if publishing request is not successful
-    raise "Request to publishing endpoint failed: #{response.body.error}" unless response.success? # TODO: might have to convert json to hash
+    raise "Request to publishing endpoint failed: #{response.body.error}" unless response.success?
+  end
+
+  # Creates payload to send to publishing endpoint
+  #
+  # @return [Hash]
+  def create_payload(change_set)
+    resource = change_set.resource
+
+    # Create payload to send to Colenda
+    payload = {
+      item: {
+        id: resource.unique_identifier.to_s,
+        uuid: resource.id,
+        first_published_at: change_set.first_published_at.utc.iso8601,
+        last_published_at: change_set.last_published_at.utc.iso8601,
+        descriptive_metadata: resource.presenter.descriptive_metadata.to_h,
+        iiif_manifest_path: change_set.derivatives.find { |d| d.type == 'iiif_manifest' }&.file_id.to_s.split('://').last,
+        assets: assets(resource)
+      }
+    }
+
+    # Only send thumbnail_asset_id if a thumbnail image is present.
+    payload[:item][:thumbnail_asset_id] = resource.thumbnail_asset_id.to_s if resource.thumbnail_image?
+    payload
   end
 
   def assets(resource)
@@ -66,15 +73,15 @@ class PublishItem
         filename: asset.original_filename,
         iiif: asset.image?,
         original_file: {
-          path: asset.preservation_file_id.split('://').last,
+          path: asset.preservation_file_id.to_s.split('://').last,
           size: asset.technical_metadata.size,
           mime_type: asset.technical_metadata.mime_type
-        },
+        }
       }
 
       if asset.thumbnail
         hash[:thumbnail_file] = {
-          path: asset.thumbnail.file_id.split('://').last,
+          path: asset.thumbnail.file_id.to_s.split('://').last,
           mime_type: asset.thumbnail.mime_type
         }
       end
@@ -82,7 +89,7 @@ class PublishItem
       # Only provide asset if its not a iiif-compatible file
       if asset.access && !asset.image?
         hash[:access_file] = {
-          path: asset.access.file_id.split('://').last,
+          path: asset.access.file_id.to_s.split('://').last,
           mime_type: asset.access.mime_type
         }
       end
@@ -91,7 +98,7 @@ class PublishItem
     end
   end
 
-  def set_published_values(change_set)
+  def add_published_values(change_set)
     publishing_at = DateTime.current
 
     change_set.first_published_at = publishing_at if change_set.first_published_at.blank?

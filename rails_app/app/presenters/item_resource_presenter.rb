@@ -43,7 +43,7 @@ class ItemResourcePresenter < BasePresenter
     end
 
     def to_h
-      ItemResource::DescriptiveMetadata::Fields.all.map { |f| [f, send(f)] }.to_h
+      ItemResource::DescriptiveMetadata::Fields.all.index_with { |f| send(f) }
     end
   end
 end

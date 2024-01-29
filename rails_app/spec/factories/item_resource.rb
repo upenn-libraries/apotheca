@@ -93,7 +93,7 @@ FactoryBot.define do
         asset1 { persist(:asset_resource, :with_preservation_file, :with_derivatives, :with_metadata) }
         asset2 do
           persist(:asset_resource, :with_preservation_file, :with_derivatives,
-                  original_filename: 'back.tif', preservation_file: 'back.tif')
+                  original_filename: 'back.tif', preservation_file: 'trade_card/original/back.tif')
         end
       end
 

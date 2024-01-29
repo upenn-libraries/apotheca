@@ -4,7 +4,9 @@
     <%= @item.unique_identifier %>
   <% end %>
 
-  <% component.with_field(spacer: true) %>
+  <% component.with_field('Published') do %>
+    <%= @item.published ? 'Yes' : 'No' %>
+  <% end %>
 
   <% component.with_field('Created By') do %>
     <%= @item.created_by %>
@@ -21,5 +23,4 @@
   <% component.with_field('Updated At') do %>
     <%= @item.date_updated&.to_fs(:display) %>
   <% end %>
-
 <% end %>

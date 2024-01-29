@@ -7,7 +7,7 @@ describe PublishItem do
         stub_request(:post, Settings.publish.url)
           .with(
             body: be_a(String),
-            headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer #{Settings.publish.token}" }
+            headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.token}" }
           )
           .to_return(status: 200, headers: { 'Content-Type': 'application/json' })
       end
@@ -37,10 +37,10 @@ describe PublishItem do
         )
       end
 
-      # it 'publishes item' do
-      #   result
-      #   expect(a_request(:post, Settings.publish.url)).to have_been_made
-      # end
+      it 'publishes item' do
+        result
+        expect(a_request(:post, Settings.publish.url)).to have_been_made
+      end
 
       it 'adds expected publishing attributes' do
         expect(updated_item).to have_attributes(
@@ -52,7 +52,10 @@ describe PublishItem do
     context 'when no iiif-compatible assets are present' do
       include_context 'with successful publish request'
 
-      # TODO: need to create an item with a non-image file
+      let(:item) do
+        asset = persist(:asset_resource, :with_preservation_file, :with_pdf_file)
+        persist(:item_resource, asset_ids: [asset.id], structural_metadata: { arranged_asset_ids: [asset.id] })
+      end
 
       include_examples 'creates a resource event', :publish_item, 'initiator@example.com', true do
         let(:resource) { updated_item }
@@ -66,12 +69,15 @@ describe PublishItem do
         expect(updated_item.derivatives.find(&:iiif_manifest)).to be_nil
       end
 
-      it 'publishes item'
+      it 'publishes item' do
+        result
+        expect(a_request(:post, Settings.publish.url)).to have_been_made
+      end
 
       it 'adds expected publishing attributes' do
         expect(updated_item).to have_attributes(
-                                  published: true, first_published_at: be_a(DateTime), last_published_at: be_a(DateTime)
-                                )
+          published: true, first_published_at: be_a(DateTime), last_published_at: be_a(DateTime)
+        )
       end
     end
 
@@ -80,7 +86,7 @@ describe PublishItem do
         stub_request(:post, Settings.publish.url)
           .with(
             body: be_a(String),
-            headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer #{Settings.publish.token}" }
+            headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.token}" }
           )
           .to_return(
             status: 500,
@@ -93,7 +99,7 @@ describe PublishItem do
 
       it 'fails' do
         expect(result.failure?).to be true
-        expect(result.failure[:error_publishing_item]).to be :error_publishing_item
+        expect(result.failure[:error]).to be :error_publishing_item
       end
     end
   end
