@@ -31,15 +31,17 @@ class PublishItem
   private
 
   def publish_request(payload)
-    # TODO: if request errors our try again at least two additional times?
-    response = Faraday.post(Settings.publish.url) do |req|
-      req.headers['Content-Type'] = 'application/json'
-      req.headers['Authorization'] = "Token token=#{Settings.publish.token}"
-      req.body = payload.to_json
+    connection = Faraday.new(Settings.publish.url) do |conn|
+      conn.request :authorization, 'Token', "token=#{Settings.publish.token}"
+      conn.request :json
+      conn.request :retry, methods: [:post]
+      conn.response :json
     end
 
+    response = connection.post('items', payload)
+
     # Raise error if publishing request is not successful
-    raise "Request to publishing endpoint failed: #{response.body.error}" unless response.success?
+    raise "Request to publishing endpoint failed: #{response.body['error']}" unless response.success?
   end
 
   # Creates payload to send to publishing endpoint

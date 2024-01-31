@@ -4,9 +4,9 @@ describe PublishItem do
   describe '#call' do
     shared_context 'with successful publish request' do
       before do
-        stub_request(:post, Settings.publish.url)
+        stub_request(:post, "#{Settings.publish.url}/items")
           .with(
-            body: be_a(String),
+            body: { 'item' => a_hash_including('descriptive_metadata' => a_hash_including('title' => [{ 'value' => 'New Item'}])) },
             headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.token}" }
           )
           .to_return(status: 200, headers: { 'Content-Type': 'application/json' })
@@ -39,7 +39,7 @@ describe PublishItem do
 
       it 'publishes item' do
         result
-        expect(a_request(:post, Settings.publish.url)).to have_been_made
+        expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
       end
 
       it 'adds expected publishing attributes' do
@@ -71,7 +71,7 @@ describe PublishItem do
 
       it 'publishes item' do
         result
-        expect(a_request(:post, Settings.publish.url)).to have_been_made
+        expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
       end
 
       it 'adds expected publishing attributes' do
@@ -83,7 +83,7 @@ describe PublishItem do
 
     context 'when publishing endpoint responds with error' do
       before do
-        stub_request(:post, Settings.publish.url)
+        stub_request(:post, "#{Settings.publish.url}/items")
           .with(
             body: be_a(String),
             headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.token}" }
@@ -100,6 +100,10 @@ describe PublishItem do
       it 'fails' do
         expect(result.failure?).to be true
         expect(result.failure[:error]).to be :error_publishing_item
+      end
+
+      it 'includes error message in json response' do
+        expect(result.failure[:exception].message).to include 'Crazy Solr error'
       end
     end
   end

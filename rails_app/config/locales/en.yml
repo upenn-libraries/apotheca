@@ -44,8 +44,14 @@ en:
       update:
         success: "Successfully updated item."
       publish:
+        success: 'Job to publish item enqueued.'
+        failure: 'An error occurred while enqueuing job to publish item.'
         description: "Publishes this item to Colenda. If this item is already published to Colenda it will update the data that is present there."
         confirm_message: "You will publish this item to Colenda"
+      unpublish:
+        success: 'Successfully unpublished item.'
+        description: 'Unpublishes (removes) item from Colenda.'
+        confirm_message: "You will unpublish this item from Colenda."
       refresh_ILS:
         success: 'Job to refresh ILS metadata enqueued.'
         failure: 'An error occurred while enqueuing job to refresh ILS metadata.'

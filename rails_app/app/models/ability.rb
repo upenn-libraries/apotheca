@@ -16,7 +16,7 @@ class Ability
       can :read, [ItemResource, AssetResource]
     elsif user.editor?
       can %i[read create update], AssetResource
-      can %i[read create update publish reorder_assets refresh_ils_metadata], ItemResource
+      can %i[read create update publish unpublish reorder_assets refresh_ils_metadata], ItemResource
       can %i[read create], BulkImport
       can %i[update cancel], BulkImport, created_by: user
       can %i[update cancel], Import, bulk_import: { created_by: user }

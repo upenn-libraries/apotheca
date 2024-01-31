@@ -187,4 +187,83 @@ describe 'Items Requests' do
       end
     end
   end
+
+  # POST /resources/items/:id/publish
+  context 'when publishing an item' do
+    let(:user_role) { :editor }
+    let(:item) { persist(:item_resource, :with_full_assets_all_arranged) }
+
+    context 'with a successful request' do
+      before { post publish_item_path(item) }
+
+      it 'displays job enqueued alert' do
+        follow_redirect!
+        expect(response.body).to include I18n.t('actions.item.publish.success')
+      end
+
+      it 'enqueues job' do
+        expect(PublishItemJob).to have_enqueued_sidekiq_job.with(item.id, any_args)
+      end
+    end
+
+    context 'when an error occurs while enqueueing the job' do
+      before do
+        allow(PublishItemJob).to receive(:perform_async).and_return(nil)
+
+        post publish_item_path(item), params: { form: 'publish_item' }
+      end
+
+      it 'displays failure alert' do
+        follow_redirect!
+        expect(response.body).to include I18n.t('actions.item.publish.failure')
+      end
+    end
+  end
+
+  # POST /resources/items/:id/unpublish
+  context 'when unpublishing an item' do
+    let(:user_role) { :editor }
+    let(:item) { persist(:item_resource, :published) }
+
+    context 'with a successful request' do
+      before do
+        stub_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")
+          .with(headers: { 'Authorization': "Token token=#{Settings.publish.token}" })
+          .to_return(status: 200, headers: { 'Content-Type': 'application/json' })
+
+        post unpublish_item_path(item)
+      end
+
+      it 'displays successful alert' do
+        follow_redirect!
+        expect(response.body).to include I18n.t('actions.item.unpublish.success')
+      end
+
+      it 'unpublishes item' do
+        updated_item = Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: item.id)
+        expect(updated_item.published).to be false
+      end
+    end
+
+    context 'when an error is raised in the UnpublishItem transaction' do
+      before do
+        stub_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")
+          .with(headers: { 'Authorization': "Token token=#{Settings.publish.token}" })
+          .to_return(
+            status: 500, body: { error: 'Crazy Solr error' }.to_json, headers: { 'Content-Type': 'application/json' }
+          )
+
+        post unpublish_item_path(item), params: { form: 'unpublish_item' }
+      end
+
+      it 'displays failure alert' do
+        expect(response.body).to include('Crazy Solr error')
+      end
+
+      it 'does not unpublish item' do
+        updated_item = Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: item.id)
+        expect(updated_item.published).to be true
+      end
+    end
+  end
 end

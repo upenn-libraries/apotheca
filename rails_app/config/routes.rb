@@ -38,6 +38,7 @@ Rails.application.routes.draw do
         get :reorder_assets, to: 'items#reorder_assets'
         post :refresh_ils_metadata, to: 'items#refresh_ils_metadata'
         post :publish, to: 'items#publish'
+        post :unpublish, to: 'items#unpublish'
       end
     end
     resources :assets, except: :index do

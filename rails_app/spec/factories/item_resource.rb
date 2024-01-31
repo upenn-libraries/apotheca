@@ -48,6 +48,12 @@ FactoryBot.define do
       updated_by { users.sample }
     end
 
+    trait :published do
+      published { true }
+      first_published_at { DateTime.current }
+      last_published_at { DateTime.current }
+    end
+
     # Item with one Asset containing only the required attributes.
     trait :with_asset do
       transient do

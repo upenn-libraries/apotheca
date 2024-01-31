@@ -43,7 +43,9 @@ class ItemResourcePresenter < BasePresenter
     end
 
     def to_h
-      ItemResource::DescriptiveMetadata::Fields.all.index_with { |f| send(f) }
+      ItemResource::DescriptiveMetadata::Fields.all.index_with do |f|
+        send(f).map { |h| h.to_h.deep_symbolize_keys.slice(:value, :uri) }
+      end
     end
   end
 end
