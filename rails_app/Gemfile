@@ -33,6 +33,7 @@ gem 'pg', '~> 1.1'
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 7.1'
 gem 'rbtrace'
+gem 'rouge', '~> 4.2'
 gem 'rsolr'
 gem 'ruby-vips'
 gem 'sassc-rails' # Use Sass to process CSS
@@ -62,5 +63,3 @@ group :test do
   gem 'simplecov', require: false
   gem 'webmock'
 end
-
-gem "rouge", "~> 4.2"

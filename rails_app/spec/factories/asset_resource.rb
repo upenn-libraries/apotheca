@@ -22,7 +22,8 @@ FactoryBot.define do
         mime_type: 'image/tiff',
         sha256: ['sha256checksum'],
         height: 238,
-        width: 400
+        width: 400,
+        raw: '<?xml version="1.0" encoding="UTF-8"?>'
       }
     end
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Modal
+  # Modal and button component
   class Component < ViewComponent::Base
     def initialize(value:, body:, button_variant: :primary, **options)
       @id = "modal_component_#{object_id}"
