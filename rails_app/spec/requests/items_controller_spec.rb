@@ -226,13 +226,9 @@ describe 'Items Requests' do
     let(:item) { persist(:item_resource, :published) }
 
     context 'with a successful request' do
-      before do
-        stub_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")
-          .with(headers: { 'Authorization': "Token token=#{Settings.publish.token}" })
-          .to_return(status: 200, headers: { 'Content-Type': 'application/json' })
+      include_context 'with successful unpublish request'
 
-        post unpublish_item_path(item)
-      end
+      before { post unpublish_item_path(item) }
 
       it 'displays successful alert' do
         follow_redirect!
@@ -246,15 +242,9 @@ describe 'Items Requests' do
     end
 
     context 'when an error is raised in the UnpublishItem transaction' do
-      before do
-        stub_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")
-          .with(headers: { 'Authorization': "Token token=#{Settings.publish.token}" })
-          .to_return(
-            status: 500, body: { error: 'Crazy Solr error' }.to_json, headers: { 'Content-Type': 'application/json' }
-          )
+      include_context 'with unsuccessful unpublish request'
 
-        post unpublish_item_path(item), params: { form: 'unpublish_item' }
-      end
+      before { post unpublish_item_path(item), params: { form: 'unpublish_item' } }
 
       it 'displays failure alert' do
         expect(response.body).to include('Crazy Solr error')

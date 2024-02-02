@@ -2,16 +2,7 @@
 
 describe PublishItem do
   describe '#call' do
-    shared_context 'with successful publish request' do
-      before do
-        stub_request(:post, "#{Settings.publish.url}/items")
-          .with(
-            body: { 'item' => a_hash_including('descriptive_metadata' => a_hash_including('title' => [{ 'value' => 'New Item'}])) },
-            headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.token}" }
-          )
-          .to_return(status: 200, headers: { 'Content-Type': 'application/json' })
-      end
-    end
+    include_context 'with successful publish request'
 
     let(:transaction) { described_class.new }
     let(:result) { transaction.call(id: item.id.to_s, updated_by: 'initiator@example.com') }
@@ -82,18 +73,7 @@ describe PublishItem do
     end
 
     context 'when publishing endpoint responds with error' do
-      before do
-        stub_request(:post, "#{Settings.publish.url}/items")
-          .with(
-            body: be_a(String),
-            headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.token}" }
-          )
-          .to_return(
-            status: 500,
-            body: { error: 'Crazy Solr error' }.to_json,
-            headers: { 'Content-Type': 'application/json' }
-          )
-      end
+      include_context 'with unsuccessful publish request'
 
       let(:item) { persist(:item_resource, :with_full_assets_all_arranged) }
 

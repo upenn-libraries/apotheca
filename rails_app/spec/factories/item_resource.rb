@@ -54,6 +54,19 @@ FactoryBot.define do
       last_published_at { DateTime.current }
     end
 
+    trait :with_iiif_manifest do
+      derivatives do
+        [
+          {
+            file_id: 'iiif_manifests-shrine://0000-abcdefg-123456/iiif_manifest',
+            mime_type: 'application/json',
+            type: 'iiif_manifest',
+            generated_at: DateTime.current
+          }
+        ]
+      end
+    end
+
     # Item with one Asset containing only the required attributes.
     trait :with_asset do
       transient do

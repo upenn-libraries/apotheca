@@ -8,12 +8,12 @@ module ImportService
 
       # Initializes object to conduct migration.
       #
-      # @param (see Base#initialize)
       # @param [String] :imported_by
       # @param [String] :unique_identifier
       def initialize(**args)
         @imported_by       = args[:imported_by]
         @unique_identifier = args[:unique_identifier]
+        @publish           = args.fetch(:publish, 'false').casecmp('true').zero? # Not allowing for unpublishing
         @errors            = []
       end
 
@@ -83,7 +83,10 @@ module ImportService
         }
 
         CreateItem.new.call(item_attributes) do |result|
-          result.success { |i| Success(i) }
+          result.success do |i|
+            publish ? publish_item(i) : Success(i)
+          end
+
           result.failure do |failure_hash|
             delete_assets(all_assets)
             failure(**failure_hash)

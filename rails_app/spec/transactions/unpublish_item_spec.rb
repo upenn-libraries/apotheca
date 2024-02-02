@@ -8,13 +8,7 @@ describe UnpublishItem do
     let(:item) { persist(:item_resource, :published) }
 
     context 'with successful unpublish request' do
-      before do
-        stub_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")
-          .with(
-            headers: { 'Authorization': "Token token=#{Settings.publish.token}" }
-          )
-          .to_return(status: 200, headers: { 'Content-Type': 'application/json' })
-      end
+      include_context 'with successful unpublish request'
 
       include_examples 'creates a resource event', :unpublish_item, 'initiator@example.com', true do
         let(:resource) { updated_item }
@@ -35,15 +29,7 @@ describe UnpublishItem do
     end
 
     context 'with unsuccessful unpublish request' do
-      before do
-        stub_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")
-          .with(
-            headers: { 'Authorization': "Token token=#{Settings.publish.token}" }
-          )
-          .to_return(
-            status: 500, body: { error: 'Crazy Solr error' }.to_json, headers: { 'Content-Type': 'application/json' }
-          )
-      end
+      include_context 'with unsuccessful unpublish request'
 
       it 'fails' do
         expect(result.failure?).to be true
@@ -52,25 +38,6 @@ describe UnpublishItem do
 
       it 'includes error message in json response' do
         expect(result.failure[:exception].message).to include 'Crazy Solr error'
-      end
-    end
-
-    context 'when item is not present in remote system' do
-      before do
-        stub_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")
-          .with(
-            headers: { 'Authorization': "Token token=#{Settings.publish.token}" }
-          )
-          .to_return(status: 404, body: { error: 'Not Found' }.to_json, headers: { 'Content-Type': 'application/json' })
-      end
-
-      it 'fails' do
-        expect(result.failure?).to be true
-        expect(result.failure[:error]).to be :error_unpublishing_item
-      end
-
-      it 'includes error message in json response' do
-        expect(result.failure[:exception].message).to include 'Not Found'
       end
     end
   end

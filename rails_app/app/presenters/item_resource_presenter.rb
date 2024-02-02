@@ -42,9 +42,12 @@ class ItemResourcePresenter < BasePresenter
       @resource_metadata = object.to_json_export.with_indifferent_access
     end
 
+    # Return a hash representation of the descriptive metadata. Converts any resource objects to hashes.
     def to_h
       ItemResource::DescriptiveMetadata::Fields.all.index_with do |f|
-        send(f).map { |h| h.to_h.deep_symbolize_keys.slice(:value, :uri) }
+        send(f).map do |value|
+          value.is_a?(Valkyrie::Resource) ? value.to_json_export : value
+        end
       end
     end
   end
