@@ -39,5 +39,16 @@ describe DeleteItem do
         )
       end
     end
+
+    context 'when the Item is published' do
+      include_context 'with successful unpublish request'
+
+      let(:item) { persist(:item_resource, :published) }
+
+      it 'makes unpublish request' do
+        result
+        expect(a_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")).to have_been_made
+      end
+    end
   end
 end

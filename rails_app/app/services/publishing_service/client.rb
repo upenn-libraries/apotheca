@@ -28,7 +28,7 @@ module PublishingService
 
     # Unpublish record. Send request to external application to remove record (item).
     #
-    # @param [ItemChangeSet] change_set
+    # @param [ItemChangeSet|ItemResource] change_set
     def unpublish(change_set)
       connection.delete("items/#{change_set.unique_identifier}")
     rescue Faraday::ResourceNotFound
