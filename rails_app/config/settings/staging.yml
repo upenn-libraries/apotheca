@@ -76,5 +76,5 @@ iiif:
   manifest:
     base_url: 'https://colenda-dev.library.upenn.edu/catalog/'
 publish:
-  url: http://colenda-dev.library.upenn.edu
+  url: https://colenda-dev.library.upenn.edu
   token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>
