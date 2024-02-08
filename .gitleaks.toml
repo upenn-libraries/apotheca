@@ -233,6 +233,6 @@ title = "gitlab gitleaks config"
         '''config/initializers/monkey_patches.rb''',
         '''app/transactions/publish_item.rb''',
         '''rails_app/spec/transactions/publish_item_spec.rb''',
-        '''rails_app/spec/services/publishing_service/client_spec.rb''',
+        '''rails_app/*/services/publishing_service/client_spec.rb''',
         '''rails_app/spec/shared_examples/publishing.rb'''
     ]
