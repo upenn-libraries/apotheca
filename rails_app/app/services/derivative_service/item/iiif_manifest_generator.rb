@@ -27,7 +27,7 @@ module DerivativeService
         manifest = IIIF::Presentation::Manifest.new(
           {
             '@id' => uri(base_uri, 'manifest'),
-            'label' => item.descriptive_metadata.title.map(&:value).join('; '),
+            'label' => item.descriptive_metadata.title.pluck(:value).join('; '),
             'attribution' => 'Provided by the University of Pennsylvania Libraries.',
             'viewing_hint' => item.structural_metadata.viewing_hint || 'individuals',
             'viewing_direction' => item.structural_metadata.viewing_direction || 'left-to-right',
@@ -76,7 +76,7 @@ module DerivativeService
                                 values.pluck(:uri).map(&:to_s)
                               when :name
                                 values.map do |v|
-                                  roles = v.role.pluck(:value).join(', ')
+                                  roles = v[:role]&.pluck(:value)&.join(', ')
                                   roles.present? ? "#{v[:value]} (#{roles})" : v[:value]
                                 end
                               else

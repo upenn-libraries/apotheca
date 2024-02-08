@@ -49,16 +49,12 @@ class AssetResource < Valkyrie::Resource
 
   # @return [DerivativeResource]
   def thumbnail
-    derivatives.find do |d|
-      return d if d.thumbnail?
-    end
+    derivatives.find(&:thumbnail?)
   end
 
   # @return [DerivativeResource]
   def access
-    derivatives.find do |d|
-      return d if d.access?
-    end
+    derivatives.find(&:access?)
   end
 
   # Return true if asset is an image

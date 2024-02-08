@@ -87,11 +87,14 @@ module ImportService
 
         UpdateItem.new.call(item_attributes) do |result|
           result.success do |i|
-            return Success(i) if asset_set.blank?
+            if asset_set.present?
+              update_result = update_existing_assets
+              return update_result unless update_result.success?
+            end
 
-            update_result = update_existing_assets
-            update_result.success? ? Success(i) : update_result
+            publish ? publish_item(i) : Success(i)
           end
+
           result.failure do |failure_hash|
             delete_assets(created_assets)
             failure(**failure_hash)

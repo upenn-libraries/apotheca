@@ -71,7 +71,10 @@ migration:
 skip_ezid_metadata_update: true
 iiif:
   image_server:
-    url: 'https://placeholder_serverless_iiif.libary.upenn.edu'
+    url: 'https://iiif-images-staging.libary.upenn.edu/iiif/2'
     profile: 'http://iiif.io/api/image/2/level2.json'
   manifest:
-    base_url: 'https://colenda.library.upenn.edu/catalog/'
+    base_url: 'https://colenda-dev.library.upenn.edu/catalog/'
+publish:
+  url: http://colenda-dev.library.upenn.edu
+  token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>

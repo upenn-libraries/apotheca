@@ -69,6 +69,26 @@ class ItemsController < ApplicationController
     end
   end
 
+  def publish
+    if PublishItemJob.perform_async(@item.id.to_s, current_user.email)
+      redirect_to item_path(@item), notice: I18n.t('actions.item.publish.success')
+    else
+      redirect_to items_path(@item), alert: I18n.t('actions.item.publish.failure')
+    end
+  end
+
+  def unpublish
+    UnpublishItem.new.call(id: params[:id], updated_by: current_user.email) do |result|
+      result.success do
+        flash.notice = I18n.t('actions.item.unpublish.success')
+        redirect_to items_path
+      end
+      result.failure do |failure|
+        render_failure(failure, :show)
+      end
+    end
+  end
+
   private
 
   # Explicitly set the default per page for initial page load (when there are no params) only for the ItemResource

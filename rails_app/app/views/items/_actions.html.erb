@@ -1,4 +1,25 @@
 <%= render(ActionsTable::Component.new) do |component| %>
+  <% if can? :publish, @item  %>
+    <%= component.with_action(description: I18n.t('actions.item.publish.description')) do |action| %>
+      <% action.with_form_component(name: 'publish_item', url: publish_item_path(@item, anchor: 'actions'), method: :post) do |form_component| %>
+        <% form_component.with_error(@error) if @errors_for == 'publish_item' %>
+        <% form_component.with_submit('Publish Item', confirm: I18n.t('actions.item.publish.confirm_message'), variant: :primary) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if can? :unpublish, @item  %>
+    <%= component.with_action(description: I18n.t('actions.item.unpublish.description')) do |action| %>
+      <% action.with_form_component(name: 'unpublish_item', url: unpublish_item_path(@item, anchor: 'actions'), method: :post) do |form_component| %>
+        <% form_component.with_error(@error) if @errors_for == 'unpublish_item' %>
+        <% form_component.with_submit('Unpublish Item',
+                                      confirm: I18n.t('actions.item.unpublish.confirm_message'),
+                                      disabled: !@item.published,
+                                      variant: :primary) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <% if can?(:refresh_ils_metadata, @item) %>
     <%= component.with_action(description: I18n.t('actions.item.refresh_ILS.description')) do |action| %>
       <% action.with_form_component(name: 'refresh_ILS_metadata',
@@ -8,7 +29,7 @@
         <% form_component.with_submit('Refresh ILS Metadata',
                                       confirm: I18n.t('actions.item.refresh_ILS.confirm_message'),
                                       disabled: @item.descriptive_metadata.bibnumber.blank?,
-                                      class: %w[btn btn-primary]) %>
+                                      variant: :primary) %>
       <% end %>
     <% end %>
   <% end %>
