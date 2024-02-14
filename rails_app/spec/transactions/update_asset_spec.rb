@@ -242,10 +242,10 @@ describe UpdateAsset do
     end
 
     context 'when skipping preservation backup' do
+      subject(:updated_asset) { result.value! }
+
       before { Settings.skip_preservation_backup = true }
       after { Settings.skip_preservation_backup = false }
-
-      subject(:updated_asset) { result.value! }
 
       let(:asset) { persist(:asset_resource) }
       let(:result) do
