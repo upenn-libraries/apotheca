@@ -135,6 +135,7 @@ class UpdateAsset
 
   # Enqueue job to backup to S3 if backup is not present.
   def preservation_backup(resource)
+    return if Settings.skip_preservation_backup
     return if resource.preservation_file_id.blank? || resource.preservation_copies_ids.present?
 
     PreservationBackupJob.perform_async(resource.id.to_s, resource.updated_by)

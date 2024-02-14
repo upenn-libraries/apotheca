@@ -68,6 +68,7 @@ migration:
   colenda_url: https://colenda.library.upenn.edu
 
 # Item/Asset Resource Configuration
+skip_preservation_backup: true
 publish:
   url: https://colenda.library.upenn.edu
   token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>

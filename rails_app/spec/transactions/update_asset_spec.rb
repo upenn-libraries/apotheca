@@ -240,5 +240,37 @@ describe UpdateAsset do
         expect(result.failure[:error]).to be :invalid_mime_type
       end
     end
+
+    context 'when skipping preservation backup' do
+      before { Settings.skip_preservation_backup = true }
+      after { Settings.skip_preservation_backup = false }
+
+      subject(:updated_asset) { result.value! }
+
+      let(:asset) { persist(:asset_resource) }
+      let(:result) do
+        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
+      end
+
+      include_examples 'creates a resource event', :update_asset, 'initiator@example.com', true do
+        let(:resource) { updated_asset }
+      end
+
+      it 'is successful' do
+        expect(result.success?).to be true
+      end
+
+      it 'adds file' do
+        expect(updated_asset.preservation_file_id).not_to be_blank
+      end
+
+      it 'enqueues derivative job' do
+        expect(GenerateDerivativesJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s, updated_asset.updated_by)
+      end
+
+      it 'does not enqueue preservation backup' do
+        expect(PreservationBackupJob).not_to have_enqueued_sidekiq_job(any_args)
+      end
+    end
   end
 end
