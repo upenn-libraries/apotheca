@@ -73,7 +73,7 @@ module MetadataExtractor
         map_datafield '260', to: :publisher, value: { subfields: 'b' }
         map_datafield '264', to: :publisher, value: { subfields: 'b' },
                              if: ->(datafield) { datafield.indicator2 == '1' }
-        map_datafield '300', to: :extent, value: { subfields: %w[a b c e g], join: SPACE }
+        map_datafield '300', to: :extent, value: { subfields: %w[a b c e f g], join: SPACE }
         map_datafield '336', to: :item_type, value: { subfields: 'a' },
                              if: ->(datafield) { datafield.subfield_at('2') == 'rdacontent' },
                              custom: ->(_, values) { RDAContentTypeToDCMIType::MAP.fetch(values[:value], {}) }
