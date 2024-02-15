@@ -79,9 +79,9 @@ class ItemsController < ApplicationController
 
   def unpublish
     UnpublishItem.new.call(id: params[:id], updated_by: current_user.email) do |result|
-      result.success do
+      result.success do |resource|
         flash.notice = I18n.t('actions.item.unpublish.success')
-        redirect_to items_path
+        redirect_to item_path(resource)
       end
       result.failure do |failure|
         render_failure(failure, :show)
