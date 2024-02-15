@@ -64,7 +64,12 @@ module DerivativeService
 
       # Metadata to display in image viewer.
       def iiif_metadata
-        metadata = [{ label: 'Available Online', value: [base_uri] }]
+        metadata = [
+          {
+            label: 'Available Online',
+            value: [uri(Settings.iiif.manifest.base_url, item.unique_identifier.gsub('ark:/', '').tr('/', '-'))]
+          }
+        ]
 
         ItemResource::DescriptiveMetadata::Fields.all.each do |field|
           values = item.descriptive_metadata.send(field)
