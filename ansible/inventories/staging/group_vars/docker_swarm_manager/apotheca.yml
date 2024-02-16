@@ -41,3 +41,9 @@ apotheca_versioned_secrets:
   colenda_publish_token:
     value: "{{ apotheca_vault_values.secret.colenda_publish_token }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
+  ezid_user:
+    value: "{{ apotheca_vault_values.secret.ezid_user }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ezid_password:
+    value: "{{ apotheca_vault_values.secret.ezid_password }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
