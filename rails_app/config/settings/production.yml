@@ -38,25 +38,25 @@ wasabi: &wasabi
   region: us-east-1
 preservation_storage:
   <<: *aws
-  bucket: preservation-staging
+  bucket: upennlib-apotheca-preservation-prod
 preservation_copy_storage:
   <<: *wasabi
-  bucket: preservation-copy-staging
+  bucket: preservation-copy-prod
 derivative_storage:
   <<: *aws
-  bucket: derivatives-staging
+  bucket: upennlib-apotheca-derivatives-prod
 iiif_derivative_storage:
   <<: *aws
-  bucket: iiif-derivatives-staging
+  bucket: upennlib-apotheca-iiif-derivatives-prod
 iiif_manifest_storage:
   <<: *aws
-  bucket: iiif-manifest-staging
+  bucket: upennlib-apotheca-iiif-manifest-prod
 
 # Bulk Import/Migration
 working_storage:
   sceti_digitized:
     <<: *aws
-    bucket: sceti-short-term
+    bucket: upennlib-sceti-short-term
   ceph:
     access_key_id: <%= DockerSecrets.lookup(:ceph_access_key_id) %>
     secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
@@ -69,6 +69,12 @@ migration:
 
 # Item/Asset Resource Configuration
 skip_preservation_backup: true
+iiif:
+  image_server:
+    url: 'https://iiif-images.library.upenn.edu/iiif/2'
+    profile: 'http://iiif.io/api/image/2/level2.json'
+  manifest:
+    base_url: 'https://colenda.library.upenn.edu/catalog/'
 publish:
   url: https://colenda.library.upenn.edu
   token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>
