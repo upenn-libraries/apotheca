@@ -1,0 +1,43 @@
+---
+apotheca_build_docker_image: false
+apotheca_image_name: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
+apotheca_image_tag: "{{ image_tag }}"
+apotheca_port: 3000
+apotheca_rails_env: "production"
+apotheca_replicas: 1
+apotheca_url: "apotheca.library.upenn.edu"
+apotheca_solr_url: "http://solr-1:8983/solr/apotheca"
+apotheca_versioned_secrets:
+  rails_master_key:
+    value: "{{ apotheca_vault_values.secret.rails_master_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  solr_username:
+    value: "{{ apotheca_vault_values.secret.solr_username }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  solr_password:
+    value: "{{ apotheca_vault_values.secret.solr_password }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  honeybadger_api_key:
+    value: "{{ apotheca_vault_values.secret.honeybadger_api_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  aws_region:
+    value: "{{ apotheca_vault_values.secret.aws_region }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  aws_access_key_id:
+    value: "{{ apotheca_vault_values.secret.aws_access_key_id }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  aws_secret_access_key:
+    value: "{{ apotheca_vault_values.secret.aws_secret_access_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ceph_endpoint:
+    value: "{{ apotheca_vault_values.secret.ceph_endpoint }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ceph_access_key_id:
+    value: "{{ apotheca_vault_values.secret.ceph_access_key_id }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ceph_secret_access_key:
+    value: "{{ apotheca_vault_values.secret.ceph_secret_access_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  colenda_publish_token:
+    value: "{{ apotheca_vault_values.secret.colenda_publish_token }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
