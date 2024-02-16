@@ -83,15 +83,15 @@ To access the Solr Admin UI, navigate to [http://apotheca-dev.library.upenn.int/
 #### Chrome
 To access browserless Chrome, go to: [http://apotheca-dev.library.upenn.int:3333/](http://apotheca-dev.library.upenn.int:3333/)
 
-## Deployment (WIP)
+## Deployment
 Gitlab automatically deploys to both our staging and production environment under certain conditions.
 
-### Staging (WIP)
+### Staging
 Gitlab deploys to our staging server every time new code gets merged into `main`. The staging site is available at [https://apotheca-staging.library.upenn.edu/](https://apotheca-staging.library.upenn.edu/).
 
 Code cannot be pushed directly onto `main`, new code must be merged via a merge request.
 
-### Production (WIP)
+### Production
 Deployments are triggered when a new git tag is created that matches [semantic versioning](https://semver.org/), (e.g., v1.0.0). Git tags should be created via the creation of a new Release in Gitlab.
 
 In order to deploy to production:
