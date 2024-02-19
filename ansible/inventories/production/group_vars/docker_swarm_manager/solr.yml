@@ -1,6 +1,6 @@
 ---
 solr_collections:
-  - name: apotheca
+  - name: apotheca-prod
     configset: apotheca
     replicas: 3
     shards: 1
