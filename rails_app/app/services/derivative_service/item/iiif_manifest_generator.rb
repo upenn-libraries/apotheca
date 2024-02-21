@@ -67,7 +67,9 @@ module DerivativeService
         metadata = [
           {
             label: 'Available Online',
-            value: [uri(Settings.iiif.manifest.item_link_base_url, item.unique_identifier.gsub('ark:/', '').tr('/', '-'))]
+            value: [
+              uri(Settings.iiif.manifest.item_link_base_url, item.unique_identifier.gsub('ark:/', '').tr('/', '-'))
+            ]
           }
         ]
 
