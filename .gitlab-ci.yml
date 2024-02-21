@@ -23,8 +23,6 @@ stages:
   - build_and_push:tmp_base_image
   - build_and_push:tmp_dev_image
   - amend_tmp_base_dev_images
-  - build_and_push:tmp_solr_image
-  - amend_tmp_solr_image
   - test
   - build_and_push:tmp_prod_image
   - amend_prod_image
