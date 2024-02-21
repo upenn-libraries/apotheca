@@ -15,8 +15,12 @@
 <div class="d-flex justify-content-between">
   <h3 id="technical-metadata" class="mb-3">Technical Metadata</h3>
   <% if @asset.technical_metadata.raw %>
-    <%= render(Modal::Component.new(value: 'Raw XML', body: @asset.technical_metadata.raw,
-                                    button_variant: :secondary, modal_size: 'xl', scrollable: true, preview: true)) %>
+    <%= render(Modal::Component.new(title: 'Raw XML', id: 'raw_technical_metadata',
+                                    button_variant: :secondary, modal_size: :xl, scrollable: true)) do %>
+      <div class="bg-light p-3 rounded">
+        <%= render(SyntaxHighlighter::Component.new(text: @asset.technical_metadata.raw, language: :xml)) %>
+      </div>
+    <% end %>
   <% end %>
 </div>
 
