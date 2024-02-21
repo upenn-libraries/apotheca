@@ -6,7 +6,7 @@ apotheca_port: 3000
 apotheca_rails_env: "staging"
 apotheca_replicas: 1
 apotheca_url: "apotheca-staging.library.upenn.edu"
-apotheca_solr_url: "http://solr-1:8983/solr/apotheca-staging"
+apotheca_solr_url: "http://apothe-stg01.library.upenn.int/solr/apotheca-staging"
 apotheca_versioned_secrets:
   rails_master_key:
     value: "{{ apotheca_vault_values.secret.rails_master_key }}"
