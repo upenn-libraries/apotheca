@@ -25,6 +25,7 @@ class User < ApplicationRecord
   validates :roles, inclusion: ROLES
   validates :email, uniqueness: { scope: :provider }, presence: true
   validates :uid, uniqueness: { scope: :provider }, presence: true
+  validates :provider, presence: true
 
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
