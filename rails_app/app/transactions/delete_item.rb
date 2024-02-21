@@ -6,9 +6,24 @@ class DeleteItem
 
   step :find_item, with: 'item_resource.find_resource'
   step :require_deleted_by, with: 'attributes.require_deleted_by'
+  step :unpublish_item
   step :delete_item, with: 'item_resource.delete_resource'
   tee :record_event
   tee :delete_assets
+
+  # Unpublishing record if its been published to an outside application
+  def unpublish_item(attributes)
+    resource = attributes[:resource]
+
+    if resource.published
+      client = PublishingService::Client.new(**Settings.publish)
+      client.unpublish(resource)
+    end
+
+    Success(attributes)
+  rescue StandardError => e
+    Failure(error: :error_unpublishing_item, exception: e)
+  end
 
   def record_event(resource:, deleted_by:)
     ResourceEvent.record_event_for(resource: resource, event_type: :delete_item, json: false, initiated_by: deleted_by)

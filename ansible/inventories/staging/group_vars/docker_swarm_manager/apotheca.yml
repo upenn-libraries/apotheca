@@ -38,3 +38,6 @@ apotheca_versioned_secrets:
   ceph_secret_access_key:
     value: "{{ apotheca_vault_values.secret.ceph_secret_access_key }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
+  colenda_publish_token:
+    value: "{{ apotheca_vault_values.secret.colenda_publish_token }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"

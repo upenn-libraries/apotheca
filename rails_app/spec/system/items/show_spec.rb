@@ -86,7 +86,7 @@ describe 'Item Show Page' do
     it 'shows that resource value has priority over ILS on descriptive metadata tab' do
       expect(page).to have_css('.text-decoration-line-through li',
                                text: 'Edgar Fahs Smith Memorial Collection')
-      expect(page).to have_css('.bg-success li',
+      expect(page).to have_css('.bg-warning li',
                                text: 'Fake Collection')
     end
 

@@ -70,6 +70,7 @@
     CEPH_ENDPOINT: "{{ 'apotheca_ceph_endpoint_v' ~ apotheca_versioned_secrets.ceph_endpoint.version }}"
     CEPH_ACCESS_KEY_ID: "{{ 'apotheca_ceph_access_key_id_v' ~ apotheca_versioned_secrets.ceph_access_key_id.version }}"
     CEPH_SECRET_ACCESS_KEY: "{{ 'apotheca_ceph_secret_access_key_v' ~ apotheca_versioned_secrets.ceph_secret_access_key.version }}"
+    COLENDA_PUBLISH_TOKEN: "{{ 'apotheca_colenda_publish_token_v' ~ apotheca_versioned_secrets.colenda_publish_token.version }}"
     FITS_PORT: "{{ fits.port }}"
   no_log: true
   when: not is_development | default (false) == true

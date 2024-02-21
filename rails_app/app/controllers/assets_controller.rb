@@ -43,7 +43,7 @@ class AssetsController < ApplicationController
     authorize! :create, AssetResource
     result = build_and_attach_asset
     if result.success?
-      flash.notice = 'Successfully created asset.'
+      flash.notice = I18n.t('actions.asset.create.success')
       redirect_to asset_path(result.value!.id)
     else
       render_failure(result.failure, :new)
@@ -55,7 +55,7 @@ class AssetsController < ApplicationController
 
     UpdateAsset.new.call(id: @asset.id, updated_by: current_user.email, **asset_params, **file_params) do |result|
       result.success do |resource|
-        flash.notice = 'Successfully updated asset.'
+        flash.notice = I18n.t('actions.asset.update.success')
         redirect_to asset_path(resource)
       end
 
@@ -70,7 +70,7 @@ class AssetsController < ApplicationController
 
     DeleteAsset.new.call(id: @asset.id, deleted_by: current_user.email) do |result|
       result.success do
-        flash.notice = 'Successfully deleted Asset'
+        flash.notice = I18n.t('actions.asset.delete.success')
         redirect_to item_path @item, anchor: 'assets'
       end
       result.failure do |failure|
@@ -94,9 +94,9 @@ class AssetsController < ApplicationController
     authorize! :update, @asset
 
     if GenerateDerivativesJob.perform_async(@asset.id.to_s, current_user.email)
-      redirect_to asset_path(@asset), notice: 'Successfully enqueued job to regenerate derivatives'
+      redirect_to asset_path(@asset), notice: I18n.t('actions.asset.regenerate_derivatives.success')
     else
-      redirect_to asset_path(@asset), alert: 'An error occurred while enqueueing job to regenerate derivatives'
+      redirect_to asset_path(@asset), alert: I18n.t('actions.asset.regenerate_derivatives.failure')
     end
   end
 

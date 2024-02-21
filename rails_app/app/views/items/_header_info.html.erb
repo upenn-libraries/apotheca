@@ -4,7 +4,18 @@
     <%= @item.unique_identifier %>
   <% end %>
 
-  <% component.with_field(spacer: true) %>
+  <% component.with_field('Published') do %>
+    <% if @item.published %>
+      <span>Yes</span>
+      <a href="<%= URI.join(Settings.publish.url, "catalog/#{@item.unique_identifier.gsub('ark:/', '').tr('/', '-')}").to_s %>"
+         target="_blank"
+         class="link-underline link-underline-opacity-0">
+        (View in Colenda)
+      </a>
+    <% else %>
+      No
+    <% end %>
+  <% end %>
 
   <% component.with_field('Created By') do %>
     <%= @item.created_by %>
@@ -21,5 +32,4 @@
   <% component.with_field('Updated At') do %>
     <%= @item.date_updated&.to_fs(:display) %>
   <% end %>
-
 <% end %>

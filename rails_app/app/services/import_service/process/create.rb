@@ -14,10 +14,8 @@ module ImportService
       def initialize(**args)
         super
 
-        # TODO: thumbnail
         @created_by = args[:created_by]
         @asset_set  = args[:assets].blank? ? nil : AssetSet.new(**args[:assets])
-        # @publish    = args.fetch(:publish, 'false').casecmp('true').zero?
       end
 
       # Validates that Item can be created with the arguments given.
@@ -78,7 +76,10 @@ module ImportService
         }
 
         CreateItem.new.call(item_attributes) do |result|
-          result.success { |i| Success(i) }
+          result.success do |i|
+            publish ? publish_item(i) : Success(i)
+          end
+
           result.failure do |failure_hash|
             delete_assets(all_assets)
             failure(**failure_hash)

@@ -24,7 +24,7 @@ class ItemsController < ApplicationController
   def create
     CreateItem.new.call(created_by: current_user.email, **item_params) do |result|
       result.success do |resource|
-        flash.notice = 'Successfully created item.'
+        flash.notice = I18n.t('actions.item.create.success')
         redirect_to item_path(resource)
       end
 
@@ -37,7 +37,7 @@ class ItemsController < ApplicationController
   def update
     UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **item_params) do |result|
       result.success do |resource|
-        flash.notice = 'Successfully updated item.'
+        flash.notice = I18n.t('actions.item.update.success')
         redirect_to item_path(resource, anchor: params[:form])
       end
 
@@ -50,7 +50,7 @@ class ItemsController < ApplicationController
   def destroy
     DeleteItem.new.call(id: params[:id], deleted_by: current_user.email) do |result|
       result.success do
-        flash.notice = 'Successfully deleted Item'
+        flash.notice = I18n.t('actions.item.delete.success')
         redirect_to items_path
       end
       result.failure do |failure|
@@ -63,9 +63,29 @@ class ItemsController < ApplicationController
 
   def refresh_ils_metadata
     if RefreshIlsMetadataJob.perform_async(@item.id.to_s, current_user.email)
-      redirect_to item_path(@item), notice: 'Job to refresh ILS metadata enqueued'
+      redirect_to item_path(@item), notice: I18n.t('actions.item.refresh_ILS.success')
     else
-      redirect_to items_path(@item), alert: 'An error occurred while enqueuing job to refresh ILS metadata'
+      redirect_to items_path(@item), alert: I18n.t('actions.item.refresh_ILS.failure')
+    end
+  end
+
+  def publish
+    if PublishItemJob.perform_async(@item.id.to_s, current_user.email)
+      redirect_to item_path(@item), notice: I18n.t('actions.item.publish.success')
+    else
+      redirect_to items_path(@item), alert: I18n.t('actions.item.publish.failure')
+    end
+  end
+
+  def unpublish
+    UnpublishItem.new.call(id: params[:id], updated_by: current_user.email) do |result|
+      result.success do |resource|
+        flash.notice = I18n.t('actions.item.unpublish.success')
+        redirect_to item_path(resource)
+      end
+      result.failure do |failure|
+        render_failure(failure, :show)
+      end
     end
   end
 
@@ -91,7 +111,7 @@ class ItemsController < ApplicationController
   # Handle Failure response from transaction. Set appropriate ivars based on Failure contents and template to render.
   def render_failure(failure, template)
     load_item_and_change_set failure[:change_set]
-    load_assets if template == :edit
+    load_assets if [:edit, :show].include?(template)
 
     @error = failure
     @errors_for = params[:form]

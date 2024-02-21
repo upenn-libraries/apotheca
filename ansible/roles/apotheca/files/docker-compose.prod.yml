@@ -23,6 +23,7 @@ services:
       - ceph_endpoint
       - ceph_access_key_id
       - ceph_secret_access_key
+      - colenda_publish_token
     volumes:
       - app_storage:/home/app/storage
 
@@ -48,6 +49,9 @@ secrets:
   ceph_secret_access_key:
     external: true
     name: ${CEPH_SECRET_ACCESS_KEY}
+  colenda_publish_token:
+    external: true
+    name: ${COLENDA_PUBLISH_TOKEN}
 
 volumes:
   app_storage:

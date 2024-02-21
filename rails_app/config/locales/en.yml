@@ -18,13 +18,48 @@ en:
         placeholder_message: "Drag an Asset here to order it."
     file:
         size: "Asset too large to load via user interface. Use Bulk Import to load assets larger than 2 gigabytes."
+  items:
+    search:
+      options:
+        keyword: "Search"
+        rows: "Rows"
+        sort:
+          field: "Sort By"
+          direction: "Direction"
+        published: "Published?"
+        created_by: "Created By"
+        updated_by: "Updated By"
+        collection: "Collection"
+        field: "Field"
+        term: "Term"
+        operator: "Operator"
+      actions:
+        submit: "Submit"
+        reset: "Start Over"
+        export: "Export as CSV"
   actions:
     item:
+      create:
+        success: "Successfully created item."
+      update:
+        success: "Successfully updated item."
+      publish:
+        success: 'Job to publish item enqueued.'
+        failure: 'An error occurred while enqueuing job to publish item.'
+        description: "Publishes this item to Colenda. If this item is already published to Colenda it will update the data that is present there."
+        confirm_message: "You will publish this item to Colenda"
+      unpublish:
+        success: 'Successfully unpublished item.'
+        description: 'Unpublishes (removes) item from Colenda.'
+        confirm_message: "You will unpublish this item from Colenda."
       refresh_ILS:
+        success: 'Job to refresh ILS metadata enqueued.'
+        failure: 'An error occurred while enqueuing job to refresh ILS metadata.'
         description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata."
         confirm_message: "Your current ILS metadata will be updated."
       delete:
-        description: "Deleting this item completely removes the record from our system. This cannot be undone."
+        success: 'Successfully deleted item.'
+        description: "Deleting this item completely removes the record from our system and unpublishes the item. This cannot be undone."
         confirm_message: "You will permanently delete this item."
     bulk_import:
       cancel_all:
@@ -40,11 +75,18 @@ en:
       delete:
         confirm_message: "You will permanently delete this bulk export."
     asset:
+      create:
+        success: "Successfully created asset."
+      update:
+        success: "Successfully updated asset."
       regenerate_derivatives:
+        success: "Successfully enqueued job to regenerate derivatives."
+        failure: "An error occurred while enqueueing job to regenerate derivatives."
         description: "Regenerates access copy and thumbnail for asset. The item must be published again to present the 
         new derivatives in the public interface."
         confirm_message: "Your current derivatives for this asset will be regenerated."
       delete:
+        success: "Successfully deleted asset."
         description: "Deleting this item completely removes the record from our system. This cannot be undone."
         confirm_message: "You will permanently delete this asset."
       change_thumbnail:

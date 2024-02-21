@@ -60,9 +60,14 @@ working_storage:
 migration:
   storage: ceph_test
   colenda_url: https://colenda-dev.library.upenn.edu
+
+# Item/Asset Resource Configuration
 iiif:
   image_server:
     url: 'https://serverless_iiif.libary.upenn.edu'
     profile: 'http://iiif.io/api/image/2/level2.json'
   manifest:
     base_url: 'https://colenda.library.upenn.edu/catalog/'
+publish:
+  url: http://colenda.library.upenn.edu
+  token: sample_token

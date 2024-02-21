@@ -30,7 +30,7 @@ module Form
         end
 
         def label
-          render(ColumnComponent.new(:div, col: @label_col, class: 'form-check-label', for: @options[:id])) { @label }
+          render(ColumnComponent.new(:label, col: @label_col, class: 'form-check-label', for: @options[:id])) { @label }
         end
 
         def input

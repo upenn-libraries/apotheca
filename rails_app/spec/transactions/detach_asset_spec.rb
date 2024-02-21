@@ -42,7 +42,7 @@ describe DetachAsset do
 
       it 'fails and returns descriptive error' do
         expect(result.failure?).to be true
-        expect(result.failure[:error]).to include 'thumbnail'
+        expect(result.failure[:error]).to eq :cannot_delete_thumbnail
       end
     end
 

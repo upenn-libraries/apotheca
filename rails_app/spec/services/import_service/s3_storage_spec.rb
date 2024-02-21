@@ -69,7 +69,7 @@ describe ImportService::S3Storage do
 
     context 'when path contains files' do
       it 'returns all files (ignoring nested files)' do
-        expect(storage.files_at('')).to contain_exactly('bell.wav', 'video.mov')
+        expect(storage.files_at('')).to contain_exactly('bell.wav', 'dummy.pdf', 'video.mov')
       end
 
       it 'ignores any dotfiles' do
