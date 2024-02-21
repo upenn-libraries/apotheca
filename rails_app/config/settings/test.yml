@@ -67,7 +67,8 @@ iiif:
     url: 'https://serverless_iiif.libary.upenn.edu'
     profile: 'http://iiif.io/api/image/2/level2.json'
   manifest:
-    base_url: 'https://colenda.library.upenn.edu/catalog/'
+    base_url: 'https://colenda.library.upenn.edu/items/'
+    item_link_base_url: 'https://colenda.library.upenn.edu/catalog/'
 publish:
   url: http://colenda.library.upenn.edu
   token: sample_token
