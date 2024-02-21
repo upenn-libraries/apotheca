@@ -67,7 +67,7 @@ module DerivativeService
         metadata = [
           {
             label: 'Available Online',
-            value: [uri(Settings.iiif.manifest.base_url, item.unique_identifier.gsub('ark:/', '').tr('/', '-'))]
+            value: [uri(Settings.iiif.manifest.item_link_base_url, item.unique_identifier.gsub('ark:/', '').tr('/', '-'))]
           }
         ]
 
@@ -159,7 +159,7 @@ module DerivativeService
       # TODO: We could make the asset download path configurable in the future.
       def download_original_file(asset)
         {
-          '@id' => uri(base_uri, "assets/#{asset.id}/preservation-file"), # TODO: Add controller in Bulwark/Colenda
+          '@id' => uri(base_uri, "assets/#{asset.id}/original"),
           'label' => "Original File - #{asset.technical_metadata.size.to_fs(:human_size)}",
           'format' => asset.technical_metadata.mime_type
         }

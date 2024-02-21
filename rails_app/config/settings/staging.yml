@@ -75,7 +75,8 @@ iiif:
     url: 'https://iiif-images-staging.library.upenn.edu/iiif/2'
     profile: 'http://iiif.io/api/image/2/level2.json'
   manifest:
-    base_url: 'https://colenda-dev.library.upenn.edu/catalog/'
+    base_url: 'https://colenda-dev.library.upenn.edu/items/'
+    item_link_base_url: 'https://colenda-dev.library.upenn.edu/catalog/'
 publish:
   url: https://colenda-dev.library.upenn.edu
   token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>

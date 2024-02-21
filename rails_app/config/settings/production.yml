@@ -69,6 +69,13 @@ migration:
 
 # Item/Asset Resource Configuration
 skip_preservation_backup: true
+iiif:
+  image_server:
+    url: 'https://iiif-images.library.upenn.edu/iiif/2'
+    profile: 'http://iiif.io/api/image/2/level2.json'
+  manifest:
+    base_url: 'https://colenda.library.upenn.edu/items/'
+    item_link_base_url: 'https://colenda.library.upenn.edu/catalog/'
 publish:
   url: https://colenda.library.upenn.edu
   token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>
