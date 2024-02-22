@@ -3,7 +3,7 @@ solr_collections:
   - name: apotheca-prod
     configset: apotheca
     replicas: 3
-    shards: 1
+    shards: 3
 
 solr_configsets:
   - name: "apotheca"
