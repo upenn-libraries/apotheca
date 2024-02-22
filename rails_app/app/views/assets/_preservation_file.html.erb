@@ -12,7 +12,17 @@
   <% component.with_field(label: 'File', values: @asset.preservation_file_id)  %>
 <% end %>
 
-<h3 id="technical-metadata" class="mb-3">Technical Metadata</h3>
+<div class="d-flex justify-content-between">
+  <h3 id="technical-metadata" class="mb-3">Technical Metadata</h3>
+  <% if @asset.technical_metadata.raw %>
+    <%= render(Modal::Component.new(title: 'Raw XML', id: 'raw_technical_metadata',
+                                    button_variant: :secondary, modal_size: :xl, scrollable: true)) do %>
+      <div class="bg-light p-3 rounded">
+        <%= render(SyntaxHighlighter::Component.new(text: @asset.technical_metadata.raw, language: :xml)) %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
 
 <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
   <% component.with_field(label: 'MIME Type', values: @asset.technical_metadata.mime_type, classes: ['user-select-all']) %>
