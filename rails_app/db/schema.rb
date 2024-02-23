@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_30_194721) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_21_182823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -117,8 +117,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_30_194721) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "remember_created_at"
-    t.string "provider"
-    t.string "uid"
+    t.string "provider", null: false
+    t.string "uid", null: false
     t.string "roles", default: [], array: true
     t.index ["provider", "email"], name: "index_users_on_provider_and_email", unique: true
     t.index ["roles"], name: "index_users_on_roles"

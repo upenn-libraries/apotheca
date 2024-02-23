@@ -21,9 +21,7 @@ class UsersController < ApplicationController
   def new; end
 
   def create
-    @user.update(user_params)
-    @user.email = "#{user_params[:uid]}@upenn.edu"
-    @user.provider = 'saml'
+    @user.update(**user_params, provider: 'saml')
     if @user.save
       flash.notice = "User access granted for #{@user.uid}"
       redirect_to user_path(@user)
@@ -49,8 +47,9 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    safe_params = params.require(:user).permit(:first_name, :last_name, :uid, :email, :active, :roles)
-    safe_params[:roles] = Array.wrap(safe_params[:roles]) # roles is expected to be multivalued
-    safe_params
+    params.require(:user).permit(:first_name, :last_name, :uid, :email, :active, :roles).tap do |p|
+      p[:roles] = Array.wrap(p[:roles]) # roles is expected to be multivalued
+      p[:email] = "#{p[:uid]}@upenn.edu" if p[:email].blank?
+    end
   end
 end
