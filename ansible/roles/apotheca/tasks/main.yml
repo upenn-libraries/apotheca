@@ -128,6 +128,8 @@
     CEPH_ACCESS_KEY_ID: "{{ 'apotheca_ceph_access_key_id_v' ~ apotheca_versioned_secrets.ceph_access_key_id.version }}"
     CEPH_SECRET_ACCESS_KEY: "{{ 'apotheca_ceph_secret_access_key_v' ~ apotheca_versioned_secrets.ceph_secret_access_key.version }}"
     COLENDA_PUBLISH_TOKEN: "{{ 'apotheca_colenda_publish_token_v' ~ apotheca_versioned_secrets.colenda_publish_token.version }}"
+    EZID_USER: "{{ 'apotheca_ezid_user_v' ~ apotheca_versioned_secrets.ezid_user.version }}"
+    EZID_PASSWORD: "{{ 'apotheca_ezid_password_v' ~ apotheca_versioned_secrets.ezid_password.version }}"
     FITS_PORT: "{{ fits.port }}"
   changed_when: false
   no_log: true

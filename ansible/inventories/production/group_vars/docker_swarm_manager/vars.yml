@@ -1,0 +1,5 @@
+---
+is_development: false
+project_root: "/opt/devops"
+
+apotheca_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'apotheca/production', engine_mount_point='kv-applications') }}"
