@@ -57,6 +57,9 @@ working_storage:
   sceti-short-term:
     <<: *aws
     bucket: upennlib-sceti-short-term
+  sceti-patron-requests:
+    <<: *aws
+    bucket: upennlib-sceti-patron-requests
   ceph:
     access_key_id: <%= DockerSecrets.lookup(:ceph_access_key_id) %>
     secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
