@@ -78,7 +78,7 @@ To access the Minio UI, navigate to [http://minio-console-dev.library.upenn.edu/
 #### Solr
 Solr is running in [CloudMode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode) which uses Apache Zookeeper to provide centralized cluster management. Additionally, [ZooNavigator](https://github.com/elkozmon/zoonavigator) is used to manage the Zookeeper cluster in deployed environments.
 
-To access the Solr Admin UI, navigate to [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/) and log-in as the `admin` user with the password `test`.
+To access the Solr Admin UI, navigate to [http://apotheca-dev.library.upenn.int/solr/#/](http://apotheca-dev.library.upenn.int/solr/#/) and log-in as the `admin` user with the password `test`.
 
 #### Chrome
 To access browserless Chrome, go to: [http://apotheca-dev.library.upenn.int:3333/](http://apotheca-dev.library.upenn.int:3333/)

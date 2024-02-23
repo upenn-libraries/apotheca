@@ -13,7 +13,7 @@ The **Sidekiq Web UI** will be available at [http://apotheca-dev.library.upenn.e
 
 The **Minio console** will be available at [http://minio-console-dev.library.upenn.edu](http://minio-console-dev.library.upenn.edu). Log-in with `minioadmin/minioadmin`.
 
-The **Solr admin console** for the first instance will be available at [http://apotheca-dev.library.upenn.int/solr1/#/](http://apotheca-dev.library.upenn.int/solr1/#/). Log-in with `admin/test`.
+The **Solr admin console** for the first instance will be available at [http://apotheca-dev.library.upenn.int/solr/#/](http://apotheca-dev.library.upenn.int/solr/#/). Log-in with `admin/test`.
 
 ### Interacting with the Application
 
