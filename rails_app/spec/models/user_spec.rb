@@ -7,6 +7,18 @@ describe User do
     expect(user.errors['email']).to include "can't be blank"
   end
 
+  it 'requires a uid' do
+    user = described_class.new uid: nil
+    expect(user.valid?).to be false
+    expect(user.errors['uid']).to include "can't be blank"
+  end
+
+  it 'requires a provider' do
+    user = described_class.new provider: nil
+    expect(user.valid?).to be false
+    expect(user.errors['provider']).to include "can't be blank"
+  end
+
   it 'requires a unique email per provider' do
     create(:user, :viewer, email: 'test@upenn.edu')
     user = build(:user, :viewer, email: 'test@upenn.edu')
