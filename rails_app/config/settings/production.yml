@@ -19,7 +19,7 @@ virus_check:
 
 # External Services
 ezid:
-  default_shoulder: 'ark:/99999/fk4'
+  default_shoulder: 'ark:/81431/p3'
   user: <%= DockerSecrets.lookup(:ezid_user, 'apitest') %>
   password: <%= DockerSecrets.lookup(:ezid_password, 'apitest') %>
 marmite:
