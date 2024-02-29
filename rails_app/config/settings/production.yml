@@ -50,7 +50,7 @@ iiif_derivative_storage:
   bucket: upennlib-apotheca-iiif-derivatives-prod
 iiif_manifest_storage:
   <<: *aws
-  bucket: upennlib-apotheca-iiif-manifest-prod
+  bucket: upennlib-apotheca-iiif-manifests-prod
 
 # Bulk Import/Migration
 working_storage:
