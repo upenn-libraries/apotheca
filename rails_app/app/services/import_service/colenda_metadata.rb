@@ -6,7 +6,7 @@ module ImportService
     VALID_FIELDS = %i[
       item_type abstract call_number collection contributor corporate_name coverage creator date description format
       geographic_subject identifier includes language notes personal_name provenance publisher relation rights source
-      subject title bibnumber type
+      subject title bibnumber type call_no
     ].freeze
 
     RIGHTS_URI_TO_VALUE = {
@@ -46,6 +46,7 @@ module ImportService
       metadata = remove_empty_values(metadata)
 
       metadata.delete(:includes)
+      metadata.delete(:call_no) # duplicate field in some records, should be ignored.
 
       metadata[:physical_location] = metadata.delete(:call_number)
       metadata[:extent] = metadata.delete(:format)
