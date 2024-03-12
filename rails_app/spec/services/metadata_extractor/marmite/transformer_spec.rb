@@ -185,6 +185,24 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
     end
   end
 
+  context 'when MARC XML contains blank value' do
+    let(:xml) do
+      <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:controlfield tag="001">9958487343503681</marc:controlfield>
+              <marc:controlfield tag="008">121105b        pau           000 0 akk d</marc:controlfield>
+            </marc:record>
+          </marc:records>
+        XML
+    end
+
+    it 'sets blank date' do
+      expect(transformer.to_descriptive_metadata[:date]).to be_nil
+    end
+  end
+
   describe '#remove_duplicates!' do
     let(:creator) { { value: 'Random, Person', role: [{ value: 'creator' }] } }
     let(:creator_with_uri) { { value: 'Random, Person', uri: 'https://example.com/random-person', role: [{ value: 'creator' }] } }

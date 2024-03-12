@@ -49,7 +49,7 @@ module MetadataExtractor
 
         # Applying some minor transformation to ensure the date value follows the EDTF spec.
         def self.convert_to_edtf(_, extracted_values)
-          return {} if extracted_values[:value].match?(/\Auuuu\Z/)
+          return {} if extracted_values[:value].blank? || extracted_values[:value].match?(/\Auuuu\Z/)
 
           extracted_values[:value] = extracted_values[:value].tr('u', 'X')
           extracted_values
