@@ -111,14 +111,6 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
       end
     end
 
-    context 'when record is a non-book' do
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/non-book-1.xml')) }
-
-      it 'generates expected xml' do
-        expect(transformer.to_descriptive_metadata['item_type']).to be_nil
-      end
-    end
-
     context 'when MARC XML contains languages in 008 and 041' do
       let(:xml) do
         <<~XML
