@@ -100,10 +100,12 @@ module ImportService
 
       # Pull information from Colenda
       def extract_data_from_colenda
-        uri = URI.parse(Settings.migration.colenda_url)
-                 .merge("migration/#{CGI.escape(unique_identifier)}/serialized")
+        connection = Faraday.new(Settings.migration.colenda_url) do |conn|
+          conn.request :retry, exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed],
+                               interval: 1, max: 3
+        end
 
-        response = Faraday.get(uri.to_s)
+        response = connection.get("migration/#{CGI.escape(unique_identifier)}/serialized")
 
         return failure(error: 'Error extracting data from Colenda:', details: [response.body]) unless response.success?
 
