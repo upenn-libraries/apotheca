@@ -147,9 +147,15 @@ module ImportService
       # @return true if ark exists
       # @return false if ark does not exist
       def ark_exists?(ark)
+        retries ||= 0
         Ezid::Identifier.find(ark)
         true
       rescue StandardError # EZID gem raises unexpected errors when ark isn't found.
+        if (retries += 1) < 3 # Retrying request because EZID request fails even though ARK is present.
+          sleep 1
+          retry
+        end
+
         false
       end
     end
