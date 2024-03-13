@@ -8,10 +8,10 @@ module MetadataExtractor
     class Client
       class Error < StandardError; end
 
-      attr_reader :url
+      attr_reader :connection
 
       def initialize(url:)
-        @url = url
+        @connection = create_connection(url)
       end
 
       # Fetches MARC XML from Marmite. Raises error if cannot retrieve MARC XML.
@@ -20,7 +20,7 @@ module MetadataExtractor
       # @return [String] contain MARC XML for the given bibnumber
       def marc21(bibnumber)
         # Get updated MARC record
-        response = Faraday.get(url_for("/api/v2/records/#{bibnumber}/marc21?update=always"))
+        response = connection.get("/api/v2/records/#{bibnumber}/marc21?update=always")
 
         return response.body if response.success?
 
@@ -30,13 +30,11 @@ module MetadataExtractor
 
       private
 
-      # Combines host and path to create a a full URL.
-      def url_for(path)
-        uri = URI.parse(url)
-        uri = uri.merge(path)
-        uri.to_s
-      rescue URI::Error => e
-        raise Error, "Error generating valid Marmite url: #{e.message}"
+      def create_connection(url)
+        Faraday.new(url) do |conn|
+          conn.request :retry, exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed],
+                               interval: 1, max: 3
+        end
       end
 
       # For handled errors, Marmite returns a 404 or 500 status code and a JSON response. Unexpected errors may
