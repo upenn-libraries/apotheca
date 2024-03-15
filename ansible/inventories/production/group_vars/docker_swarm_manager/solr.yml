@@ -17,4 +17,4 @@ solr_custom_env_variables:
   SOLR_ENABLE_AUTHENTICATION: "yes"
   SOLR_ADMIN_USERNAME: "{{ apotheca_vault_values.secret.solr_username }}"
   SOLR_ADMIN_PASSWORD: "{{ apotheca_vault_values.secret.solr_password }}"
-  # SOLR_JAVA_MEM: "-Xms4g -Xmx4g"
+  SOLR_JAVA_MEM: "-Xms4g -Xmx4g"
