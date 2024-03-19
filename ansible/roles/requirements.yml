@@ -6,6 +6,11 @@ roles:
     scm: git
     version: master
 
+  - name: hostsfile
+    src: https://gitlab.library.upenn.edu/devops/ansible/roles/hostsfile.git
+    scm: git
+    version: 1.0.0
+
   - name: solr
     src: https://gitlab.library.upenn.edu/devops/ansible/roles/solr.git
     scm: git
