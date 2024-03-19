@@ -1,4 +1,14 @@
 ---
+hostsfile_entries:
+  - ip: "{{ apotheca_vault_values.secret.ip_address }}"
+    hostname: "apothe-prod01.library.upenn.int"
+    aliases:
+      - "apothe-prod01"
+
+hostsfile_to_remove:
+  - ip: "{{ apotheca_vault_values.secret.ip_address }}"
+    hostname: "apothe-prod01.library.upenn.int"
+
 solr_collections:
   - name: apotheca-prod
     configset: apotheca
@@ -11,10 +21,14 @@ solr_configsets:
 
 solr_docker_image_tag: 9.3.0
 
+solr_limits_cpu: "4"
+solr_limits_mem: "12G"
+
 solr_proxy_host: "apothe-prod01.library.upenn.int"
 
 solr_custom_env_variables:
-  SOLR_ENABLE_AUTHENTICATION: "yes"
-  SOLR_ADMIN_USERNAME: "{{ apotheca_vault_values.secret.solr_username }}"
   SOLR_ADMIN_PASSWORD: "{{ apotheca_vault_values.secret.solr_password }}"
-  SOLR_JAVA_MEM: "-Xms4g -Xmx4g"
+  SOLR_ADMIN_USERNAME: "{{ apotheca_vault_values.secret.solr_username }}"
+  SOLR_ENABLE_AUTHENTICATION: "yes"
+  SOLR_HEAP: "8G"
+  SOLR_JAVA_MEM: "-Xms10G -Xmx10G"
