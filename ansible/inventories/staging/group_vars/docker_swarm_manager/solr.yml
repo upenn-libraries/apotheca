@@ -1,10 +1,4 @@
 ---
-hostsfile_entries:
-  - ip: "{{ apotheca_vault_values.secret.ip_address }}"
-    hostname: "apothe-stg01.library.upenn.int"
-    aliases:
-      - "apothe-stg01"
-
 solr_collections:
   - name: apotheca-staging
     configset: apotheca

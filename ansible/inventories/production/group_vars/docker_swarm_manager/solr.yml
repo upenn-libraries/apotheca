@@ -1,14 +1,4 @@
 ---
-hostsfile_entries:
-  - ip: "{{ apotheca_vault_values.secret.ip_address }}"
-    hostname: "apothe-prod01.library.upenn.int"
-    aliases:
-      - "apothe-prod01"
-
-hostsfile_to_remove:
-  - ip: "{{ apotheca_vault_values.secret.ip_address }}"
-    hostname: "apothe-prod01.library.upenn.int"
-
 solr_collections:
   - name: apotheca-prod
     configset: apotheca
