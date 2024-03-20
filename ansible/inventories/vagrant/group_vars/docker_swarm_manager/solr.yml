@@ -1,14 +1,4 @@
 ---
-hostsfile_entries:
-  - ip: "127.0.2.1"
-    hostname: "apotheca-dev.library.upenn.int"
-    aliases:
-      - "apotheca-manager"
-
-hostsfile_to_remove:
-  - ip: "127.0.2.1"
-    hostname: "apotheca-manager"
-
 solr_collections:
   - name: apotheca-dev
     configset: apotheca
