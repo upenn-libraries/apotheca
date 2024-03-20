@@ -48,6 +48,18 @@ describe DerivativeService::Item::IIIFManifestGenerator do
         )
       end
 
+      it 'includes thumbnail' do
+        expect(json['thumbnail']).to a_hash_including(
+          '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/')
+                     .and(ending_with('/full/!200,200/0/default.jpg')),
+          'service' => {
+            '@context' => 'http://iiif.io/api/image/2/context.json',
+            '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/'),
+            'profile' => 'http://iiif.io/api/image/2/level2.json'
+          }
+        )
+      end
+
       it 'includes ranges' do
         expect(json['structures'][0]).to include(
           'label' => 'Front',

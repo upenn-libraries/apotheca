@@ -31,7 +31,8 @@ module DerivativeService
             'attribution' => 'Provided by the University of Pennsylvania Libraries.',
             'viewing_hint' => item.structural_metadata.viewing_hint || 'individuals',
             'viewing_direction' => item.structural_metadata.viewing_direction || 'left-to-right',
-            'metadata' => iiif_metadata
+            'metadata' => iiif_metadata,
+            'thumbnail' => thumbnail
           }
         )
 
@@ -61,6 +62,23 @@ module DerivativeService
       end
 
       private
+
+      # Manifest-level thumbnail.
+      def thumbnail
+        return {} unless item.thumbnail&.access
+
+        filepath = item.thumbnail.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
+        thumbnail_url = uri(image_server_url, CGI.escape(filepath))
+
+        {
+          "@id": "#{thumbnail_url}/full/!200,200/0/default.jpg",
+          "service": {
+            "@context": 'http://iiif.io/api/image/2/context.json',
+            "@id": thumbnail_url,
+            "profile": image_server_profile
+          }
+        }
+      end
 
       # Metadata to display in image viewer.
       def iiif_metadata
