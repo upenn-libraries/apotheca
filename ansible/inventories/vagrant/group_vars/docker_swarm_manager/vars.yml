@@ -1,13 +1,4 @@
 ---
+ingress_ip: "10.10.2.137"
 is_development: true
 project_root: "/opt/devops"
-
-hostsfile_entries:
-  - ip: "127.0.2.1"
-    hostname: "apotheca-dev.library.upenn.int"
-    aliases:
-      - "apotheca-manager"
-
-hostsfile_to_remove:
-  - ip: "127.0.2.1"
-    hostname: "apotheca-manager"
