@@ -118,11 +118,20 @@ class ItemResource < Valkyrie::Resource
     human_readable_name
   end
 
+  # Returns thumbnail asset.
+  #
+  # @return [AssetResource]
+  def thumbnail
+    return unless thumbnail_asset_id
+
+    @thumbnail ||= pg_query_service.find_by(id: thumbnail_asset_id)
+  end
+
   # Returns true if thumbnail asset has a thumbnail image.
   def thumbnail_image?
     return false unless thumbnail_asset_id
 
-    pg_query_service.find_by(id: thumbnail_asset_id)&.thumbnail.present?
+    thumbnail&.thumbnail.present?
   end
 
   private
