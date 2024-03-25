@@ -1,79 +1,11 @@
 ---
-- name: Create sidekiq dir
-  file:
-    path: "{{ project_root ~ '/sidekiq' }}"
-    state: directory
-
-- name: Copy base docker-compose files
-  copy:
-    content: "{{ lookup('template', 'docker-compose.yml.j2', template_vars={'item': item} ) | from_yaml }}"
-    dest: "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
-  loop: "{{ sidekiq.instances }}"
-
-- name: Deploy Sidekiq development environment
-  docker_stack:
-    name: "apotheca"
-    compose:
-      - "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
-    state: present
-  changed_when: false
-  environment:
-    APP_IMAGE_NAME: "{{ apotheca_image_name }}"
-    APP_IMAGE_TAG: "{{ apotheca_image_tag }}"
-    APP_PORT: "{{ apotheca_port }}"
-    APP_URL: "{{ apotheca_url }}"
-    DATABASE_NAME: "{{ postgres.database }}"
-    DATABASE_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
-    DATABASE_USER: "{{ postgres.user }}"
-    RAILS_ENV: "{{ apotheca_rails_env }}"
-    RAILS_MASTER_KEY: "{{ 'apotheca_rails_master_key_v' ~ apotheca_versioned_secrets.rails_master_key.version }}"
-    REDIS_SIDEKIQ_USER: "sidekiq"
-    REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
-    REDIS_PORT: "{{ redis.port }}"
-    SOLR_URL: "{{ apotheca_solr_url }}"
-    SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
-    SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
-    FITS_PORT: "{{ fits.port }}"
-    MINIO_PORT: "{{ minio.port }}"
-  no_log: true
-  when: is_development | default (false) == true
-  loop: "{{ sidekiq.instances }}"
-  tags: dev_environment
 
 - name: Deploy Sidekiq
   docker_stack:
     name: "apotheca"
     compose:
-      - "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
+      - "{{ lookup('template', 'docker-compose.yml.j2', item=item ) | from_yaml }}"
     state: present
   changed_when: false
-  environment:
-    APP_IMAGE_NAME: "{{ apotheca_image_name }}"
-    APP_IMAGE_TAG: "{{ apotheca_image_tag }}"
-    APP_PORT: "{{ apotheca_port }}"
-    APP_URL: "{{ apotheca_url }}"
-    DATABASE_NAME: "{{ postgres.database }}"
-    DATABASE_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
-    DATABASE_USER: "{{ postgres.user }}"
-    RAILS_ENV: "{{ apotheca_rails_env }}"
-    RAILS_MASTER_KEY: "{{ 'apotheca_rails_master_key_v' ~ apotheca_versioned_secrets.rails_master_key.version }}"
-    REDIS_SIDEKIQ_USER: "sidekiq"
-    REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
-    REDIS_PORT: "{{ redis.port }}"
-    SOLR_URL: "{{ apotheca_solr_url }}"
-    SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
-    SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
-    HONEYBADGER_API_KEY: "{{ 'apotheca_honeybadger_api_key_v' ~ apotheca_versioned_secrets.honeybadger_api_key.version }}"
-    AWS_REGION: "{{ 'apotheca_aws_region_v' ~ apotheca_versioned_secrets.aws_region.version }}"
-    AWS_ACCESS_KEY_ID: "{{ 'apotheca_aws_access_key_id_v' ~ apotheca_versioned_secrets.aws_access_key_id.version }}"
-    AWS_SECRET_ACCESS_KEY: "{{ 'apotheca_aws_secret_access_key_v' ~ apotheca_versioned_secrets.aws_secret_access_key.version }}"
-    CEPH_ENDPOINT: "{{ 'apotheca_ceph_endpoint_v' ~ apotheca_versioned_secrets.ceph_endpoint.version }}"
-    CEPH_ACCESS_KEY_ID: "{{ 'apotheca_ceph_access_key_id_v' ~ apotheca_versioned_secrets.ceph_access_key_id.version }}"
-    CEPH_SECRET_ACCESS_KEY: "{{ 'apotheca_ceph_secret_access_key_v' ~ apotheca_versioned_secrets.ceph_secret_access_key.version }}"
-    COLENDA_PUBLISH_TOKEN: "{{ 'apotheca_colenda_publish_token_v' ~ apotheca_versioned_secrets.colenda_publish_token.version }}"
-    EZID_USER: "{{ 'apotheca_ezid_user_v' ~ apotheca_versioned_secrets.ezid_user.version }}"
-    EZID_PASSWORD: "{{ 'apotheca_ezid_password_v' ~ apotheca_versioned_secrets.ezid_password.version }}"
-    FITS_PORT: "{{ fits.port }}"
   no_log: true
-  when: not is_development | default (false) == true
   loop: "{{ sidekiq.instances }}"
