@@ -11,8 +11,6 @@
   gather_facts: true
   tasks:
     - ansible.builtin.import_role:
-        name: hostsfile
-    - ansible.builtin.import_role:
         name: traefik
       tags: traefik
     - ansible.builtin.import_role:

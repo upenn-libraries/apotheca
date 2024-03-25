@@ -1,15 +1,5 @@
 ---
+apotheca_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'apotheca/production', engine_mount_point='kv-applications') }}"
+ingress_ip: "{{ apotheca_vault_values.secret.ingress_ip }}"
 is_development: false
 project_root: "/opt/devops"
-
-apotheca_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'apotheca/production', engine_mount_point='kv-applications') }}"
-
-hostsfile_entries:
-  - ip: "127.0.0.1"
-    hostname: "apothe-prod01.library.upenn.int"
-    aliases:
-      - "apothe-prod01"
-
-hostsfile_to_remove:
-  - ip: "{{ apotheca_vault_values.secret.ip_address }}"
-    hostname: "apothe-prod01.library.upenn.int"
