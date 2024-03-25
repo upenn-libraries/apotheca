@@ -29,6 +29,8 @@ services:
       SOLR_BACKUP_LOCATION: "solr/backups"
       SOLR_URL: "${SOLR_URL}"
       FITS_URL: "http://fits:${FITS_PORT}/fits"
+    extra_hosts:
+      - "${SOLR_PROXY_HOST}:${INGRESS_IP}"
     healthcheck:
       test:
         [
