@@ -6,11 +6,13 @@ module DerivativeService
     class Derivatives
       attr_reader :item
 
-      # @param item [ItemResource]
+      # @param item [ItemChangeSet]
       def initialize(item)
-        raise ArgumentError, 'Item provided must be a ItemResource' unless item.is_a?(ItemResource)
+        raise ArgumentError, 'Item provided must be a ItemChangeSet' unless item.is_a?(ItemChangeSet)
 
-        @item = item
+        # Derivatives created from items have to be generated from the resource and not the change set because
+        # we fetch additional metadata from Solr instance.
+        @item = item.resource
       end
 
       # Generates V2 IIIF manifest

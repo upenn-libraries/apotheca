@@ -83,7 +83,7 @@ module ImportService
     end
 
     def update_transaction
-      UpdateAsset.new.with_step_args(generate_derivatives: [async: false])
+      UpdateAsset.new.with_step_args(generate_derivatives: [skip: false])
     end
 
     # Make hash representation to send to the resource transactions.
