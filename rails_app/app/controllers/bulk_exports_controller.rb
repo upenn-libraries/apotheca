@@ -52,7 +52,7 @@ class BulkExportsController < ApplicationController
       redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
     else
       redirect_to bulk_export_path,
-                  alert: "An error occurred while cancelling the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+                  alert: "An error occurred while cancelling the bulk export: #{@bulk_export.errors.full_messages.join(', ')}"
     end
   end
 
