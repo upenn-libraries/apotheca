@@ -15,11 +15,12 @@ class UpdateAsset
   step :validate_expected_checksum
   step :mark_stale_derivatives
   step :unlink_stale_preservation_backup
+  step :generate_derivatives, with: 'asset_resource.generate_derivatives'
   step :add_preservation_events, with: 'asset_resource.add_preservation_events'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
   tee :record_event
-  step :generate_derivatives
+  tee :async_derivative_generation
   tee :preservation_backup
 
   # Wrapping save method in order to delete the old preservation file if a file update is successful.
@@ -115,22 +116,27 @@ class UpdateAsset
     Success(change_set)
   end
 
-  # Generates derivatives if they are missing or stale.
+  # Generate derivatives as part of the update task to prevent retrieving the preservation file multiple times. By
+  # default this step is skipped and the derivative files are generated asynchronously.
+  #
+  # Note: This method is a wrapper around the generate_derivative step defined in the container.
+  def generate_derivatives(change_set, skip: true)
+    return Success(change_set) if skip || change_set.preservation_file_id.blank?
+    return Success(change_set) if change_set.derivatives.present? && change_set.derivatives.none?(&:stale)
+
+    super(change_set)
+  end
+
+  # Enqueue a job to generates derivatives if they are missing or stale. Does not attempt to generate derivatives
+  # for mime types where derivatives cannot be generated.
   #
   # @param [AssetResource] resource
-  # @param [Boolean] async runs process asynchronously
-  def generate_derivatives(resource, async: true)
-    return Success(resource) if resource.preservation_file_id.blank?
-    return Success(resource) if resource.derivatives.present? && resource.derivatives.none?(&:stale)
+  def async_derivative_generation(resource)
+    return if resource.preservation_file_id.blank?
+    return if resource.derivatives.present? && resource.derivatives.none?(&:stale)
+    return unless DerivativeService::Asset::Derivatives.generate_for?(resource.technical_metadata.mime_type)
 
-    # Calling transaction directly instead of using `perform_inline` so that we can return the failure/success
-    # monad from the transaction.
-    if async
-      GenerateDerivativesJob.perform_async(resource.id.to_s, resource.updated_by)
-      Success(resource)
-    else
-      GenerateDerivatives.new.call(id: resource.id.to_s, updated_by: resource.updated_by)
-    end
+    GenerateDerivativesJob.perform_async(resource.id.to_s, resource.updated_by)
   end
 
   # Enqueue job to backup to S3 if backup is not present.

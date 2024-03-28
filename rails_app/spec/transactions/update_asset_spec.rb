@@ -200,7 +200,7 @@ describe UpdateAsset do
     end
 
     context 'when asset update fails' do
-      let(:asset) { persist(:asset_resource) }
+      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives) }
       let(:result) { transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com') }
 
       before do
@@ -218,6 +218,12 @@ describe UpdateAsset do
         expect {
           Valkyrie::StorageAdapter.find_by(id: result.failure[:change_set].preservation_file_id)
         }.to raise_error Valkyrie::StorageAdapter::FileNotFound
+      end
+
+      it 'does not delete derivatives' do
+        result.failure[:change_set].derivatives.each do |d|
+          expect(Valkyrie::StorageAdapter.find_by(id: d.file_id)).to be_a Valkyrie::StorageAdapter::StreamFile
+        end
       end
     end
 
@@ -270,6 +276,56 @@ describe UpdateAsset do
 
       it 'does not enqueue preservation backup' do
         expect(PreservationBackupJob).not_to have_enqueued_sidekiq_job(any_args)
+      end
+    end
+
+    context 'when generating derivatives synchronously' do
+      subject(:updated_asset) { result.value! }
+
+      let(:transaction) { described_class.new.with_step_args(generate_derivatives: [skip: false]) }
+      let(:asset) { persist(:asset_resource) }
+      let(:result) do
+        transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com')
+      end
+
+      context 'when transaction successful' do
+        include_examples 'creates a resource event', :update_asset, 'initiator@example.com', true do
+          let(:resource) { updated_asset }
+        end
+
+        it 'generates derivatives' do
+          expect(updated_asset.derivatives.count).to be 2
+        end
+
+        it 'does not enqueue job generate derivatives' do
+          expect(GenerateDerivativesJob).not_to have_enqueued_sidekiq_job(any_args)
+        end
+
+        it 'enqueues job to run preservation backup' do
+          expect(PreservationBackupJob).to have_enqueued_sidekiq_job(updated_asset.id.to_s, updated_asset.updated_by)
+        end
+      end
+
+      context 'when transaction returns a failure' do
+        before do
+          step_double = instance_double(Steps::Validate)
+          allow(Steps::Validate).to receive(:new).and_return(step_double)
+          allow(step_double).to receive(:call) do |change_set|
+            Dry::Monads::Failure.new(error: :step_failed, change_set: change_set)
+          end
+        end
+
+        it 'created derivatives' do
+          expect(result.failure[:change_set].derivatives.count).to be 2
+        end
+
+        it 'cleans up the derivative files' do
+          result.failure[:change_set].derivatives.each do |d|
+            expect {
+              Valkyrie::StorageAdapter.find_by(id: d.file_id)
+            }.to raise_error Valkyrie::StorageAdapter::FileNotFound
+          end
+        end
       end
     end
   end
