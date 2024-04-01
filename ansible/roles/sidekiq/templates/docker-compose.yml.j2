@@ -23,7 +23,7 @@ services:
       DATABASE_USER: "{{ postgres.user }}"
       DB_POOL: {{ item.concurrency }}
       APP_URL: "{{ apotheca_url }}"
-      APP_IMAGE_TAG: ${APP_IMAGE_TAG}
+      APP_IMAGE_TAG:  "{{ apotheca_image_tag }}"
       RAILS_ENV: "{{ apotheca_rails_env }}"
       REDIS_SIDEKIQ_USER: "sidekiq"
       REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
