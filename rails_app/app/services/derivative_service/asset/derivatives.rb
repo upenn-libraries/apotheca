@@ -34,7 +34,8 @@ module DerivativeService
 
       # Creates the correct generator for a file and mime type.
       def create_generator
-        derivative_generator.new(asset.preservation_file)
+        file = SourceFile.new(asset.preservation_file)
+        derivative_generator.new(file)
       end
 
       def derivative_generator

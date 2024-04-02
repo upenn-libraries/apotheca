@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 describe DerivativeService::Asset::Generator::Video do
-  let(:file) { Valkyrie::StorageAdapter::StreamFile.new id: 1, io: File.open(file_fixture('files/video.mov')) }
+  let(:file) do
+    DerivativeService::Asset::SourceFile.new(
+      Valkyrie::StorageAdapter::StreamFile.new(id: 1, io: File.open(file_fixture('files/video.mov')))
+    )
+  end
   let(:generator) { described_class.new(file) }
 
   describe '#thumbnail' do
