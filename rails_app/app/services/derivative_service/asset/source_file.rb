@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DerivativeService
   module Asset
     # Wrapper around Valkyrie::StorageAdapter::StreamFile that creates a Tempfile if access to a file on
