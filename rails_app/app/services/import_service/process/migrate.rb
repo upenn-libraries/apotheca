@@ -4,7 +4,7 @@ module ImportService
   class Process
     # Import class to migrate an Item from Bulwark (Colenda) to Apotheca.
     class Migrate < Base
-      attr_reader :created_by, :created_at, :first_published_at, :last_published_at
+      attr_reader :created_by, :created_at, :first_published_at, :last_published_at, :skip_assets
 
       # Initializes object to conduct migration.
       #
@@ -14,6 +14,7 @@ module ImportService
         @imported_by       = args[:imported_by]
         @unique_identifier = args[:unique_identifier]
         @publish           = args.fetch(:publish, 'false').casecmp('true').zero? # Not allowing for unpublishing
+        @skip_assets       = args.fetch(:skip_assets, [])
         @errors            = []
       end
 
@@ -118,7 +119,7 @@ module ImportService
         @created_at = DateTime.parse(data[:created_at]) if data[:created_at]
         @first_published_at = DateTime.parse(data[:first_published_at]) if data[:first_published_at]
         @last_published_at = DateTime.parse(data[:last_published_at]) if data[:last_published_at]
-        @asset_set = MigrationAssetSet.new(storage: Settings.migration.storage, **data[:assets]) if data[:assets].present?
+        @asset_set = MigrationAssetSet.new(skip_assets: skip_assets, storage: Settings.migration.storage, **data[:assets]) if data[:assets].present?
       end
     end
   end

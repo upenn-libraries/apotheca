@@ -6,7 +6,7 @@ module ImportService
   class MigrationAssetSet
     include Enumerable
 
-    attr_reader :errors, :data
+    attr_reader :errors, :data, :skip_assets
 
     # Asset information when migrating assets should be provided in the following format:
     #   {
@@ -16,12 +16,17 @@ module ImportService
     #        { filename: 'file1.tif', label: '1', path: 'file1.tif' },
     #        { filename: 'file2.tif', label: '2', path: 'file2.tif' }
     #      ],
-    #      unarranged: [{ filename: 'reference_shot.tif', path: 'reference_shot.tif' }]
+    #      unarranged: [
+    #        { filename: 'reference_shot.tif', path: 'reference_shot.tif' },
+    #        { filename: 'reference_shot.jpg', path: 'reference_shot.jpg' }
+    #      ],
+    #      skip_assets: ['reference_shot.jpg']
     #   }
     #
     #   Bucket and storage keys should be provided as a top level key. Each file should contain the path of the file
     #   within the bucket.
-    def initialize(**args)
+    def initialize(skip_assets: [], **args)
+      @skip_assets = skip_assets
       @data = args.deep_symbolize_keys.compact_blank # Store raw asset data provided.
       @errors = []
     end
@@ -39,6 +44,11 @@ module ImportService
 
       @errors << 'asset storage name is blank' if data[:storage].blank?
       @errors << "assets storage invalid: '#{data[:storage]}'" if data[:storage].present? && !S3Storage.valid?(data[:storage])
+
+      # Check that skipped assets are listed.
+      all_filenames = data.fetch(:arranged, []).pluck(:filename) + data.fetch(:unarranged, []).pluck(:filename)
+      missing = skip_assets - all_filenames
+      @errors << "cannot skip assets that are not present: #{missing.join(', ')}" if missing.present?
 
       return false if errors.present?
 
@@ -87,7 +97,8 @@ module ImportService
     # @param [Symbol] type of asset
     def asset_data_objects_for(type)
       if data.key?(type.to_sym)
-        data[type.to_sym].map { |a| asset_data_object(**a) }
+        data[type.to_sym].reject { |a| skip_assets.include?(a[:filename]) }
+                         .map { |a| asset_data_object(**a) }
       else
         []
       end
