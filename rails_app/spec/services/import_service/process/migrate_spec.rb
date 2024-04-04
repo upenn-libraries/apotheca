@@ -228,7 +228,7 @@ describe ImportService::Process::Migrate do
 
     context 'when migrating an item and skipping assets' do
       let(:process) do
-        build(:import_process, :migrate, skip_assets: ['ilcajs_b3f1_0014_1r.tif'],
+        build(:import_process, :migrate, ignored_assets: ['ilcajs_b3f1_0014_1r.tif'],
                                          unique_identifier: body[:unique_identifier])
       end
 

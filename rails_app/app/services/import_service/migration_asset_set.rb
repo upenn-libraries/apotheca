@@ -6,7 +6,7 @@ module ImportService
   class MigrationAssetSet
     include Enumerable
 
-    attr_reader :errors, :data, :skip_assets
+    attr_reader :errors, :data, :ignored_assets
 
     # Asset information when migrating assets should be provided in the following format:
     #   {
@@ -20,13 +20,13 @@ module ImportService
     #        { filename: 'reference_shot.tif', path: 'reference_shot.tif' },
     #        { filename: 'reference_shot.jpg', path: 'reference_shot.jpg' }
     #      ],
-    #      skip_assets: ['reference_shot.jpg']
+    #      ignored_assets: ['reference_shot.jpg']
     #   }
     #
     #   Bucket and storage keys should be provided as a top level key. Each file should contain the path of the file
     #   within the bucket.
-    def initialize(skip_assets: [], **args)
-      @skip_assets = skip_assets
+    def initialize(ignored_assets: [], **args)
+      @ignored_assets = ignored_assets
       @data = args.deep_symbolize_keys.compact_blank # Store raw asset data provided.
       @errors = []
     end
@@ -47,7 +47,7 @@ module ImportService
 
       # Check that skipped assets are listed.
       all_filenames = data.fetch(:arranged, []).pluck(:filename) + data.fetch(:unarranged, []).pluck(:filename)
-      missing = skip_assets - all_filenames
+      missing = ignored_assets - all_filenames
       @errors << "cannot skip assets that are not present: #{missing.join(', ')}" if missing.present?
 
       return false if errors.present?
@@ -97,7 +97,7 @@ module ImportService
     # @param [Symbol] type of asset
     def asset_data_objects_for(type)
       if data.key?(type.to_sym)
-        data[type.to_sym].reject { |a| skip_assets.include?(a[:filename]) }
+        data[type.to_sym].reject { |a| ignored_assets.include?(a[:filename]) }
                          .map { |a| asset_data_object(**a) }
       else
         []

@@ -36,7 +36,7 @@ describe ImportService::MigrationAssetSet do
     end
 
     it 'requires that skipped assets are present' do
-      asset_set = described_class.new(skip_assets: ['back.tif'], arranged: [{ filename: 'front.tif', checksum: '123' }])
+      asset_set = described_class.new(ignored_assets: ['back.tif'], arranged: [{ filename: 'front.tif', checksum: '123' }])
       expect(asset_set.valid?).to be false
       expect(asset_set.errors).to include 'cannot skip assets that are not present: back.tif'
     end
