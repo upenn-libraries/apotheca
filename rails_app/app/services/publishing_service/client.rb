@@ -45,7 +45,7 @@ module PublishingService
         conn.request :authorization, 'Token', "token=#{token}"
         conn.request :json
         conn.request :retry, exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed],
-                             methods: %i[get post patch delete], interval: 1, max: 3
+                             methods: %i[get post patch delete], interval: 10, max: 5
         conn.response :raise_error, include_request: true
         conn.response :json
       end
