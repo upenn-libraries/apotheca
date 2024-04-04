@@ -88,7 +88,8 @@ module PublishingService
         if asset.thumbnail
           hash[:thumbnail_file] = {
             path: asset.thumbnail.file_id.to_s.split('://').last,
-            mime_type: asset.thumbnail.mime_type
+            mime_type: asset.thumbnail.mime_type,
+            size: asset.thumbnail.size
           }
         end
 
@@ -96,7 +97,8 @@ module PublishingService
         if asset.access && !asset.image?
           hash[:access_file] = {
             path: asset.access.file_id.to_s.split('://').last,
-            mime_type: asset.access.mime_type
+            mime_type: asset.access.mime_type,
+            size: asset.access.size
           }
         end
 

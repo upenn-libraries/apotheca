@@ -89,7 +89,8 @@ FactoryBot.define do
         )
 
         asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                                    type: 'access', generated_at: DateTime.current)
+                                                    size: asset.technical_metadata.size, type: 'access',
+                                                    generated_at: DateTime.current)
       end
 
       if evaluator.thumbnail
@@ -101,7 +102,8 @@ FactoryBot.define do
         )
 
         asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                                    type: 'thumbnail', generated_at: DateTime.current)
+                                                    size: asset.technical_metadata.size, type: 'thumbnail',
+                                                    generated_at: DateTime.current)
       end
     end
   end
