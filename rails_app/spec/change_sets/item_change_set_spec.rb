@@ -282,7 +282,7 @@ describe ItemChangeSet do
       end
 
       it 'sets size' do
-        expect(change_set.derivatives[0].size).to eql 400
+        expect(change_set.derivatives[0].size).to be 400
       end
 
       it 'sets generated_at' do
