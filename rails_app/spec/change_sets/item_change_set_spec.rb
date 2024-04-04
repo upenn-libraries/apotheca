@@ -263,7 +263,7 @@ describe ItemChangeSet do
       before do
         change_set.validate(
           derivatives: [
-            { file_id: derivative.id, mime_type: 'application/json',
+            { file_id: derivative.id, mime_type: 'application/json', size: 400,
               generated_at: DateTime.current, type: 'iiif_manifest' }
           ]
         )
@@ -279,6 +279,10 @@ describe ItemChangeSet do
 
       it 'sets mime_type' do
         expect(change_set.derivatives[0].mime_type).to eql 'application/json'
+      end
+
+      it 'sets size' do
+        expect(change_set.derivatives[0].size).to be 400
       end
 
       it 'sets generated_at' do

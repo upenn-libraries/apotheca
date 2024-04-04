@@ -4,6 +4,7 @@
 class DerivativeChangeSet < ChangeSet
   property :file_id, multiple: false
   property :mime_type, multiple: false
+  property :size, multiple: false
   property :type, multiple: false
   property :generated_at, multiple: false
   property :stale, multiple: false, required: false, default: false

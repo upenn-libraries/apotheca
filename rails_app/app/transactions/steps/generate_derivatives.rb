@@ -43,9 +43,10 @@ module Steps
         storage = find_storage(derivative_file)
         file = storage.upload(file: derivative_file, resource: change_set.resource,
                               original_filename: type.to_s, content_type: derivative_file.mime_type)
+        size = derivative_file.size
         derivative_file.cleanup!
 
-        DerivativeResource.new(file_id: file.id, mime_type: derivative_file.mime_type,
+        DerivativeResource.new(file_id: file.id, mime_type: derivative_file.mime_type, size: size,
                                type: type.to_s, generated_at: DateTime.current)
       end
     end

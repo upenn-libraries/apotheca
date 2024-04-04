@@ -33,6 +33,7 @@ describe Steps::GenerateDerivatives do
           file_id: an_instance_of(Valkyrie::ID),
           type: derivative_type.to_s,
           mime_type: 'application/json',
+          size: 0,
           generated_at: DateTime.current
         )
       end

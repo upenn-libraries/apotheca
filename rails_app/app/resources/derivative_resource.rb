@@ -6,6 +6,7 @@ class DerivativeResource < Valkyrie::Resource
   # Not using a strict type b/c nested dates aren't correctly parsed in the Valkyrie Solr Adapter.
   attribute :generated_at, Valkyrie::Types::DateTime
   attribute :mime_type, Valkyrie::Types::Strict::String
+  attribute :size, Valkyrie::Types::Strict::Integer.optional # Size in Bytes
   attribute :file_id, Valkyrie::Types::ID
   attribute :stale, Valkyrie::Types::Strict::Bool
 
