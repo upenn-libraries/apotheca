@@ -14,7 +14,7 @@ module ImportService
         @imported_by       = args[:imported_by]
         @unique_identifier = args[:unique_identifier]
         @publish           = args.fetch(:publish, 'false').casecmp('true').zero? # Not allowing for unpublishing
-        @ignored_assets       = args.fetch(:ignored_assets, [])
+        @ignored_assets    = args.fetch(:ignored_assets, [])
         @errors            = []
       end
 
