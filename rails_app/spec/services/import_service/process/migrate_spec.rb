@@ -225,5 +225,27 @@ describe ImportService::Process::Migrate do
         )
       end
     end
+
+    context 'when migrating an item and skipping assets' do
+      let(:process) do
+        build(:import_process, :migrate, ignored_assets: ['ilcajs_b3f1_0014_1r.tif'],
+                                         unique_identifier: body[:unique_identifier])
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'migrates one asset' do
+        expect(item.asset_ids.count).to be 1
+        expect(item.structural_metadata.arranged_asset_ids.count).to be 1
+      end
+
+      it 'migrates the expected asset' do
+        assets = Valkyrie::MetadataAdapter.find(:postgres).query_service.find_many_by_ids(ids: item.asset_ids)
+        expect(assets.first.original_filename).to eql 'ilcajs_b3f1_0014_1v.tif'
+      end
+    end
   end
 end
