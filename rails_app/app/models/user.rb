@@ -6,6 +6,7 @@ class User < ApplicationRecord
   EDITOR_ROLE = 'editor'
   VIEWER_ROLE = 'viewer'
   ROLES = [ADMIN_ROLE, EDITOR_ROLE, VIEWER_ROLE].freeze
+  MAX_BULK_EXPORTS = 10
 
   devise :rememberable, :timeoutable
   if Rails.env.development?
