@@ -9,6 +9,7 @@ module MetadataExtractor
         SPACE = ' '
         ALL = '*'
         A_TO_Z = ('a'..'z').to_a
+        PROVENANCE_NAME_VALUES = %w[donor owner]
 
         # Mapping language to standardized ISO639 english name and URI.
         def self.language_transformation(_, extracted_values)
@@ -22,6 +23,8 @@ module MetadataExtractor
 
         # Adding role value to name.
         def self.add_role_to_name(datafield, extracted_values)
+          return if datafield.tag == '700' && role_is_provenance?(datafield.subfield_at('e'))
+
           role_subfield = datafield.tag == '111' || datafield.tag == '711' ? 'j' : 'e'
 
           extracted_values.tap do |values|
@@ -29,6 +32,22 @@ module MetadataExtractor
               values[:role] = [{ value: role }]
             end
           end
+        end
+
+        # If a 700 field contains a subfield 'e' with the value 'owner', append the role to the provenance value.
+        def self.add_owner_to_provenance(datafield, extracted_values)
+          role = datafield.subfield_at('e')
+          return unless role_is_provenance?(role)
+
+          extracted_values.tap do |values|
+            values[:value] = "#{values[:value]} (#{role})"
+          end
+        end
+
+        # Check if the role is a provenance role.
+        def self.role_is_provenance?(role)
+          return false unless role
+          return PROVENANCE_NAME_VALUES.any? { |value| role.downcase.include?(value) }
         end
 
         # Adding location to the beginning of the value manually because currently the order of the fields is preserved.
@@ -98,6 +117,8 @@ module MetadataExtractor
         map_datafield '655', to: :physical_format, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
         map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
+        map_datafield '700', to: :provenance, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
+                      custom: method(:add_owner_to_provenance)
         map_datafield '710', to: :name, value: { subfields: %w[a b d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '711', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },

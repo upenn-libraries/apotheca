@@ -131,6 +131,11 @@
       <marc:subfield code="e">printer.</marc:subfield>
       <marc:subfield code="0">http://id.loc.gov/authorities/names/nr95034041</marc:subfield>
     </marc:datafield>
+    <marc:datafield ind1="1" ind2=" " tag="700">
+      <subfield code="a">Beck, Helmut,</subfield>
+      <subfield code="d">1919-2001,</subfield>
+      <subfield code="e">former owner.</subfield>
+    </marc:datafield>
     <marc:datafield ind1=" " ind2=" " tag="752">
       <marc:subfield code="a">Germany</marc:subfield>
       <marc:subfield code="d">Frankfurt am Main.</marc:subfield>
