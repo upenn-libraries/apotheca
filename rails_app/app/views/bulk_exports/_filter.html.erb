@@ -10,7 +10,7 @@
     </div>
     <div class="col-md-auto">
       <%= form.select 'sort[field]',
-                      options_for_select([["Created At", "created_at"], ["Generated At", "generated_at"]],
+                      options_for_select([["Generated At", "generated_at"], ["Created At", "created_at"]],
                                          params.dig('sort', 'field')),
                       label: 'Sort By'
       %>

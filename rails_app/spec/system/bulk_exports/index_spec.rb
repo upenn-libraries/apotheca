@@ -214,6 +214,16 @@ describe 'Bulk Export Index Page' do
       visit bulk_exports_path
     end
 
+    it 'sorts by generated_at in descending order by default' do
+      expect(first('.card')).to have_text(second_export.title)
+    end
+
+    it 'sorts missing generated_at values first' do
+      unprocessed_export = create(:bulk_export, :queued, title: 'unprocessed')
+      visit bulk_exports_path
+      expect(first('.card')).to have_text(unprocessed_export.title)
+    end
+
     it 'sorts by generated at in ascending order' do
       select 'Generated At', from: 'Sort By'
       select 'Ascending', from: 'Sort Direction'

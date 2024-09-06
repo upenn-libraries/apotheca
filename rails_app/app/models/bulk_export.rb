@@ -13,7 +13,7 @@ class BulkExport < ApplicationRecord
   validate :restrict_search_params_to_hash
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
-  scope :sort_by_field, ->(field, direction) { order("#{field}": direction.to_s) }
+  scope :sort_by_field, ->(field: 'generated_at', direction: 'desc') { order("#{field}": direction.to_s) }
   scope :with_created_by, -> { includes(:created_by) }
 
   def run

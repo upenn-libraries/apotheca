@@ -12,9 +12,7 @@ class BulkExportsController < ApplicationController
     if params.dig('filter', 'created_by').present?
       @bulk_exports = @bulk_exports.filter_created_by(params[:filter][:created_by])
     end
-    return if params[:sort].blank?
-
-    @bulk_exports = @bulk_exports.sort_by_field(params[:sort][:field], params[:sort][:direction])
+    @bulk_exports = @bulk_exports.sort_by_field(**sort_params.to_h.symbolize_keys)
   end
 
   def new
@@ -81,5 +79,9 @@ class BulkExportsController < ApplicationController
       search_params['search']['fielded'] = search_params['search']['fielded'].reject { |v| v['term'].blank? }
     end
     search_params
+  end
+
+  def sort_params
+    params.fetch(:sort, {}).permit(:field, :direction).compact_blank!
   end
 end
