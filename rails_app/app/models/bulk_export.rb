@@ -60,8 +60,8 @@ class BulkExport < ApplicationRecord
     container = Valkyrie::MetadataAdapter.find(:index_solr)
                                          .query_service
                                          .custom_queries
-                                         .item_index parameters: search_params.update(rows: max_rows_to_export)
-                                                                              .with_indifferent_access
+                                         .item_index_all parameters: search_params.update(rows: max_rows_to_export)
+                                                                                  .with_indifferent_access
     container.documents
   end
 

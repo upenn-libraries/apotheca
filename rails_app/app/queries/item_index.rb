@@ -13,7 +13,7 @@ class ItemIndex
   delegate :resource_factory, to: :query_service
 
   def self.queries
-    [:item_index]
+    %i[item_index item_index_all]
   end
 
   # @param [Object] query_service
@@ -28,6 +28,24 @@ class ItemIndex
     query = solr_query(parameters: parameters)
     response = response(solr_query: query)
     build_response_container response: response, search_params: parameters, query: query
+  end
+
+  # recursively retrieve all resources based on parameters
+  # @param [ActionController::Parameters] parameters
+  # @return [Solr::ResponseContainer]
+  def item_index_all(parameters:, documents: [], cursor_mark: '*')
+    query = solr_query(parameters: parameters)
+    response = response(solr_query: query.merge(start: 0, cursorMark: cursor_mark, sort: "#{query[:sort]}, id asc"))
+
+    documents += response.dig('response', 'docs')
+    if cursor_mark == response['nextCursorMark']
+      return Solr::ResponseContainer.new(documents: build_item_presenters(solr_documents: documents),
+                                         facet_data: response.dig('facet_counts', 'facet_fields'),
+                                         search_params: parameters, query: query,
+                                         total_count: response.dig('response', 'numFound'))
+    end
+
+    item_index_all(parameters: parameters, documents: documents, cursor_mark: response['nextCursorMark'])
   end
 
   # @param [RSolr::HashWithResponse] response
