@@ -9,7 +9,7 @@ module MetadataExtractor
         SPACE = ' '
         ALL = '*'
         A_TO_Z = ('a'..'z').to_a
-        PROVENANCE_NAME_VALUES = %w[donor owner]
+        PROVENANCE_NAME_VALUES = %w[donor owner].freeze
 
         # Mapping language to standardized ISO639 english name and URI.
         def self.language_transformation(_, extracted_values)
@@ -47,7 +47,8 @@ module MetadataExtractor
         # Check if the role is a provenance role.
         def self.role_is_provenance?(role)
           return false unless role
-          return PROVENANCE_NAME_VALUES.any? { |value| role.downcase.include?(value) }
+
+          PROVENANCE_NAME_VALUES.any? { |value| role.downcase.include?(value) }
         end
 
         # Adding location to the beginning of the value manually because currently the order of the fields is preserved.
@@ -118,7 +119,7 @@ module MetadataExtractor
         map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '700', to: :provenance, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
-                      custom: method(:add_owner_to_provenance)
+                             custom: method(:add_owner_to_provenance)
         map_datafield '710', to: :name, value: { subfields: %w[a b d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '711', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },

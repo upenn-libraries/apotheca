@@ -28,7 +28,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           publisher: [{ value: 'Durch Johan Feyerabendt' }],
           relation: [{ value: 'Facsimile: https://colenda.library.upenn.edu/catalog/81431-p3df6k90j' }],
           provenance: [
-            { value: 'Beck, Helmut, 1919-2001, (former owner.)'},
+            { value: 'Beck, Helmut, 1919-2001, (former owner.)' },
             { value: 'Smith, Edgar Fahs, 1854-1928 (autograph, 1917)' },
             { value: 'Wright, H. (autograph, 1870)' }
           ],
