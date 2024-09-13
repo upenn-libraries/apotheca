@@ -26,7 +26,8 @@ module MetadataExtractor
             next if config[:if] && !config[:if].call(marc_field)
 
             values = config.slice(:value, :uri).transform_values { |c|
-              c.fetch(:prefix, '') + marc_field.values_at(**c.except(*mappings::VALUE_OPTIONS)).join(c[:join])
+          .join(c[:join])
+          .prepend(c.fetch(:prefix, ''))
             }.compact_blank
 
             values = config[:custom].call(marc_field, values) if config[:custom]
