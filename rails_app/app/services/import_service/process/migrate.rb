@@ -4,16 +4,17 @@ module ImportService
   class Process
     # Import class to migrate an Item from Bulwark (Colenda) to Apotheca.
     class Migrate < Base
-      attr_reader :created_by, :created_at, :first_published_at, :last_published_at
+      attr_reader :created_by, :created_at, :first_published_at, :last_published_at, :ignored_assets
 
       # Initializes object to conduct migration.
       #
-      # @param (see Base#initialize)
       # @param [String] :imported_by
       # @param [String] :unique_identifier
       def initialize(**args)
         @imported_by       = args[:imported_by]
         @unique_identifier = args[:unique_identifier]
+        @publish           = args.fetch(:publish, 'false').casecmp('true').zero? # Not allowing for unpublishing
+        @ignored_assets    = args.fetch(:ignored_assets, [])
         @errors            = []
       end
 
@@ -83,7 +84,10 @@ module ImportService
         }
 
         CreateItem.new.call(item_attributes) do |result|
-          result.success { |i| Success(i) }
+          result.success do |i|
+            publish ? publish_item(i) : Success(i)
+          end
+
           result.failure do |failure_hash|
             delete_assets(all_assets)
             failure(**failure_hash)
@@ -97,10 +101,12 @@ module ImportService
 
       # Pull information from Colenda
       def extract_data_from_colenda
-        uri = URI.parse(Settings.migration.colenda_url)
-                 .merge("migration/#{CGI.escape(unique_identifier)}/serialized")
+        connection = Faraday.new(Settings.migration.colenda_url) do |conn|
+          conn.request :retry, exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed],
+                               interval: 1, max: 3
+        end
 
-        response = Faraday.get(uri.to_s)
+        response = connection.get("migration/#{CGI.escape(unique_identifier)}/serialized")
 
         return failure(error: 'Error extracting data from Colenda:', details: [response.body]) unless response.success?
 
@@ -113,7 +119,7 @@ module ImportService
         @created_at = DateTime.parse(data[:created_at]) if data[:created_at]
         @first_published_at = DateTime.parse(data[:first_published_at]) if data[:first_published_at]
         @last_published_at = DateTime.parse(data[:last_published_at]) if data[:last_published_at]
-        @asset_set = MigrationAssetSet.new(storage: Settings.migration.storage, **data[:assets]) if data[:assets].present?
+        @asset_set = MigrationAssetSet.new(ignored_assets: ignored_assets, storage: Settings.migration.storage, **data[:assets]) if data[:assets].present?
       end
     end
   end

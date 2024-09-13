@@ -11,6 +11,7 @@
     <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
       <% component.with_field(label: 'File', values: derivative.file_id) %>
       <% component.with_field(label: 'MIME Type', values: derivative.mime_type, classes: ['user-select-all']) %>
+      <% component.with_field(label: 'Size', values: number_to_human_size(derivative.size, classes: ['user-select-all'])) %>
       <% component.with_field(label: 'Generated At', values: derivative.generated_at&.to_fs(:display)) %>
     <% end %>
   <% end %>

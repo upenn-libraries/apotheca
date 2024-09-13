@@ -19,9 +19,9 @@ virus_check:
 
 # External Services
 ezid:
-  default_shoulder: 'ark:/99999/fk4'
-  user: apitest
-  password: apitest
+  default_shoulder: 'ark:/81431/p3'
+  user: <%= DockerSecrets.lookup(:ezid_user, 'apitest') %>
+  password: <%= DockerSecrets.lookup(:ezid_password, 'apitest') %>
 marmite:
   url: http://mdproc.library.upenn.edu:9292
 honeybadger:
@@ -38,25 +38,28 @@ wasabi: &wasabi
   region: us-east-1
 preservation_storage:
   <<: *aws
-  bucket: preservation-staging
+  bucket: upennlib-apotheca-preservation-prod
 preservation_copy_storage:
   <<: *wasabi
-  bucket: preservation-copy-staging
+  bucket: preservation-copy-prod
 derivative_storage:
   <<: *aws
-  bucket: derivatives-staging
+  bucket: upennlib-apotheca-derivatives-prod
 iiif_derivative_storage:
   <<: *aws
-  bucket: iiif-derivatives-staging
+  bucket: upennlib-apotheca-iiif-derivatives-prod
 iiif_manifest_storage:
   <<: *aws
-  bucket: iiif-manifest-staging
+  bucket: upennlib-apotheca-iiif-manifests-prod
 
 # Bulk Import/Migration
 working_storage:
-  sceti_digitized:
+  sceti-short-term:
     <<: *aws
-    bucket: sceti-short-term
+    bucket: upennlib-sceti-short-term
+  sceti-patron-requests:
+    <<: *aws
+    bucket: upennlib-sceti-patron-request
   ceph:
     access_key_id: <%= DockerSecrets.lookup(:ceph_access_key_id) %>
     secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
@@ -67,3 +70,15 @@ migration:
   storage: ceph
   colenda_url: https://colenda.library.upenn.edu
 
+# Item/Asset Resource Configuration
+skip_preservation_backup: true
+iiif:
+  image_server:
+    url: 'https://iiif-images.library.upenn.edu/iiif/2'
+    profile: 'http://iiif.io/api/image/2/level2.json'
+  manifest:
+    base_url: 'https://colenda.library.upenn.edu/items/'
+    item_link_base_url: 'https://colenda.library.upenn.edu/catalog/'
+publish:
+  url: https://colenda.library.upenn.edu
+  token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>

@@ -11,10 +11,14 @@ solr_configsets:
 
 solr_docker_image_tag: 9.3.0
 
+solr_limits_cpu: "2"
+solr_limits_mem: "6G"
+
 solr_proxy_host: "apothe-stg01.library.upenn.int"
 
 solr_custom_env_variables:
-  SOLR_ENABLE_AUTHENTICATION: "yes"
-  SOLR_ADMIN_USERNAME: "{{ apotheca_vault_values.secret.solr_username }}"
   SOLR_ADMIN_PASSWORD: "{{ apotheca_vault_values.secret.solr_password }}"
-  # SOLR_JAVA_MEM: "-Xms4g -Xmx4g"
+  SOLR_ADMIN_USERNAME: "{{ apotheca_vault_values.secret.solr_username }}"
+  SOLR_ENABLE_AUTHENTICATION: "yes"
+  SOLR_HEAP: "4G"
+  SOLR_JAVA_MEM: "-Xms5G -Xmx5G"

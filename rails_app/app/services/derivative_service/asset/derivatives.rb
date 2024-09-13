@@ -8,9 +8,9 @@ module DerivativeService
 
       delegate :thumbnail, :access, to: :generator
 
-      # @param asset [AssetResource]
+      # @param asset [AssetChangeSet]
       def initialize(asset)
-        raise ArgumentError, 'Asset provided must be an AssetResource' unless asset.is_a?(AssetResource)
+        raise ArgumentError, 'Asset provided must be an AssetChangeSet' unless asset.is_a?(AssetChangeSet)
         raise 'Missing mime type' unless asset.technical_metadata.mime_type
 
         @asset = asset
@@ -20,12 +20,22 @@ module DerivativeService
         @generator ||= create_generator
       end
 
+      # Returns true if derivatives will be generated for the mime_type given.
+      def self.generate_for?(mime_type)
+        supported_mime_types.include?(mime_type)
+      end
+
+      # All the mime types we can generate derivatives for.
+      def self.supported_mime_types
+        Generator::Image::VALID_MIME_TYPES + Generator::Audio::VALID_MIME_TYPES + Generator::Video::VALID_MIME_TYPES
+      end
+
       private
 
       # Creates the correct generator for a file and mime type.
       def create_generator
-        file = Valkyrie::StorageAdapter.find_by id: asset.preservation_file_id
-        derivative_generator.new file
+        file = SourceFile.new(asset.preservation_file)
+        derivative_generator.new(file)
       end
 
       def derivative_generator

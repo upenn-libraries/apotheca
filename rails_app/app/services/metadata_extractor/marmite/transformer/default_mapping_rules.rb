@@ -49,7 +49,7 @@ module MetadataExtractor
 
         # Applying some minor transformation to ensure the date value follows the EDTF spec.
         def self.convert_to_edtf(_, extracted_values)
-          return {} if extracted_values[:value].match?(/\Auuuu\Z/)
+          return {} if extracted_values[:value].blank? || extracted_values[:value].match?(/\Auuuu\Z/)
 
           extracted_values[:value] = extracted_values[:value].tr('u', 'X')
           extracted_values
@@ -73,7 +73,7 @@ module MetadataExtractor
         map_datafield '260', to: :publisher, value: { subfields: 'b' }
         map_datafield '264', to: :publisher, value: { subfields: 'b' },
                              if: ->(datafield) { datafield.indicator2 == '1' }
-        map_datafield '300', to: :extent, value: { subfields: %w[a b c e g], join: SPACE }
+        map_datafield '300', to: :extent, value: { subfields: %w[a b c e f g], join: SPACE }
         map_datafield '336', to: :item_type, value: { subfields: 'a' },
                              if: ->(datafield) { datafield.subfield_at('2') == 'rdacontent' },
                              custom: ->(_, values) { RDAContentTypeToDCMIType::MAP.fetch(values[:value], {}) }
@@ -95,7 +95,7 @@ module MetadataExtractor
         map_datafield '651', to: :geographic_subject, value: { subfields: A_TO_Z, join: ' -- ' },
                              uri: { subfields: '0' }
         map_datafield '651', to: :coverage, value: { subfields: 'y' }
-        map_datafield '655', to: :physical_format, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
+        map_datafield '655', to: :physical_format, value: { subfields: 'a' }, uri: { subfields: '0' }
         map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '710', to: :name, value: { subfields: %w[a b d], join: SPACE }, uri: { subfields: '0' },

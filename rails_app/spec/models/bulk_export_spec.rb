@@ -29,6 +29,26 @@ describe BulkExport do
     expect(bulk_export.errors['generated_at']).to include "can't be blank"
   end
 
+  context 'when a user has the maximum number of bulk exports' do
+    let(:user) { create(:user, :admin) }
+
+    before { create_list(:bulk_export, User::MAX_BULK_EXPORTS, :queued, created_by: user) }
+
+    it 'prevents creating a new bulk export for the user' do
+      bulk_export = build(:bulk_export, created_by: user)
+      expect(bulk_export).not_to be_valid
+      expect(bulk_export.errors['created_by']).to include(
+        "The number of Bulk Exports for a user cannot exceed #{User::MAX_BULK_EXPORTS}."
+      )
+    end
+
+    it 'allows updating an existing bulk export' do
+      bulk_export = user.bulk_exports.last
+      bulk_export.cancel!
+      expect(bulk_export).to be_valid
+    end
+  end
+
   describe '#csv' do
     let(:bulk_export) { create(:bulk_export, generated_at: DateTime.current) }
 

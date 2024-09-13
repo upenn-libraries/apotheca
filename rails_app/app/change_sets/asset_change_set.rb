@@ -75,4 +75,14 @@ class AssetChangeSet < ChangeSet
   def transcriptions=(values)
     super(compact_value(values))
   end
+
+  # Returns preservation file. Caches response.
+  #
+  # @return [Valkyrie::Storage::Shrine::DelayedDownload]
+  def preservation_file
+    return unless preservation_file_id
+
+    @preservation_file ||= Valkyrie::StorageAdapter.find(:preservation)
+                                                   .find_by(id: preservation_file_id)
+  end
 end

@@ -30,7 +30,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
 
       it 'includes top level attributes' do
         expect(json).to include(
-          '@id' => 'https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/manifest',
+          '@id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/manifest',
           'label' => 'New Item',
           'viewingHint' => 'individuals',
           'viewingDirection' => 'left-to-right',
@@ -48,14 +48,26 @@ describe DerivativeService::Item::IIIFManifestGenerator do
         )
       end
 
+      it 'includes thumbnail' do
+        expect(json['thumbnail']).to a_hash_including(
+          '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/')
+                     .and(ending_with('/full/!200,200/0/default.jpg')),
+          'service' => {
+            '@context' => 'http://iiif.io/api/image/2/context.json',
+            '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/'),
+            'profile' => 'http://iiif.io/api/image/2/level2.json'
+          }
+        )
+      end
+
       it 'includes ranges' do
         expect(json['structures'][0]).to include(
           'label' => 'Front',
           'ranges' => containing_exactly(
             a_hash_including(
-              '@id' => 'https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/range/r1-1',
+              '@id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/range/r1-1',
               'label' => 'Front of Card',
-              'canvases' => containing_exactly('https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/canvas/p1')
+              'canvases' => containing_exactly('https://colenda.library.upenn.edu/items/ark:/99999/fk4random/canvas/p1')
             )
           )
         )
@@ -70,7 +82,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
       it 'includes canvases in sequence' do
         canvases = json['sequences'][0]['canvases']
         expect(canvases[0]).to include(
-          '@id' => 'https://colenda.library.upenn.edu/catalog/ark:/99999/fk4random/canvas/p1',
+          '@id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/canvas/p1',
           'label' => 'Front',
           'height' => 238,
           'width' => 400,

@@ -8,7 +8,7 @@ module Steps
     def call(change_set)
       return Success(change_set) unless change_set.changed?(:preservation_file_id)
 
-      file = preservation_storage.find_by(id: change_set.preservation_file_id)
+      file = change_set.preservation_file
 
       tech_metadata = fits.examine(contents: file.read, filename: change_set.original_filename)
 

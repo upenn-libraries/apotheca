@@ -99,6 +99,47 @@ describe ImportService::Process::Create do
       end
     end
 
+    context 'when creating a new item and publishing' do
+      include_context 'with successful publish request'
+
+      let(:process) { build(:import_process, :create, :publish) }
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'makes publishing request' do
+        result
+        expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
+      end
+
+      it 'sets publishing values' do
+        expect(item).to have_attributes(
+          published: true, first_published_at: be_a(DateTime), last_published_at: be_a(DateTime)
+        )
+      end
+    end
+
+    context 'when creating a new item and publishing fails' do
+      include_context 'with unsuccessful publish request'
+
+      let(:process) { build(:import_process, :create, :publish) }
+
+      it 'fails' do
+        expect(result).to be_a Dry::Monads::Failure
+      end
+
+      it 'return expected failure object' do
+        expect(result.failure[:error]).to be :import_failed
+        expect(result.failure[:details]).to contain_exactly(
+          'Item was successfully created/updated. Please retry publishing. Publishing failed with the following error: Error publishing item',
+          "\tRequest to publishing endpoint failed: Crazy Solr error"
+        )
+        expect(result.failure[:exception]).to be_a PublishingService::Client::Error
+      end
+    end
+
     context 'when creating a new item with asset metadata' do
       let(:process) { build(:import_process, :create, :with_asset_metadata) }
 

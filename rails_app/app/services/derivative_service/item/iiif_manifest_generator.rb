@@ -27,11 +27,12 @@ module DerivativeService
         manifest = IIIF::Presentation::Manifest.new(
           {
             '@id' => uri(base_uri, 'manifest'),
-            'label' => item.descriptive_metadata.title.map(&:value).join('; '),
+            'label' => item.descriptive_metadata.title.pluck(:value).join('; '),
             'attribution' => 'Provided by the University of Pennsylvania Libraries.',
             'viewing_hint' => item.structural_metadata.viewing_hint || 'individuals',
             'viewing_direction' => item.structural_metadata.viewing_direction || 'left-to-right',
-            'metadata' => iiif_metadata
+            'metadata' => iiif_metadata,
+            'thumbnail' => thumbnail
           }
         )
 
@@ -62,9 +63,33 @@ module DerivativeService
 
       private
 
+      # Manifest-level thumbnail.
+      def thumbnail
+        return {} unless item.thumbnail&.access
+
+        filepath = item.thumbnail.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
+        thumbnail_url = uri(image_server_url, CGI.escape(filepath))
+
+        {
+          "@id": "#{thumbnail_url}/full/!200,200/0/default.jpg",
+          "service": {
+            "@context": 'http://iiif.io/api/image/2/context.json',
+            "@id": thumbnail_url,
+            "profile": image_server_profile
+          }
+        }
+      end
+
       # Metadata to display in image viewer.
       def iiif_metadata
-        metadata = [{ label: 'Available Online', value: [base_uri] }]
+        metadata = [
+          {
+            label: 'Available Online',
+            value: [
+              uri(Settings.iiif.manifest.item_link_base_url, item.unique_identifier.gsub('ark:/', '').tr('/', '-'))
+            ]
+          }
+        ]
 
         ItemResource::DescriptiveMetadata::Fields.all.each do |field|
           values = item.descriptive_metadata.send(field)
@@ -76,7 +101,7 @@ module DerivativeService
                                 values.pluck(:uri).map(&:to_s)
                               when :name
                                 values.map do |v|
-                                  roles = v.role.pluck(:value).join(', ')
+                                  roles = v[:role]&.pluck(:value)&.join(', ')
                                   roles.present? ? "#{v[:value]} (#{roles})" : v[:value]
                                 end
                               else
@@ -154,7 +179,7 @@ module DerivativeService
       # TODO: We could make the asset download path configurable in the future.
       def download_original_file(asset)
         {
-          '@id' => uri(base_uri, "assets/#{asset.id}/preservation-file"), # TODO: Add controller in Bulwark/Colenda
+          '@id' => uri(base_uri, "assets/#{asset.id}/original"),
           'label' => "Original File - #{asset.technical_metadata.size.to_fs(:human_size)}",
           'format' => asset.technical_metadata.mime_type
         }

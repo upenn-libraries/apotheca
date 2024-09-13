@@ -6,7 +6,7 @@ module ImportService
     VALID_FIELDS = %i[
       item_type abstract call_number collection contributor corporate_name coverage creator date description format
       geographic_subject identifier includes language notes personal_name provenance publisher relation rights source
-      subject title bibnumber type
+      subject title bibnumber type call_no
     ].freeze
 
     RIGHTS_URI_TO_VALUE = {
@@ -32,6 +32,7 @@ module ImportService
 
       @errors << 'invalid metadata fields provided' unless original_metadata.all? { |k, _v| VALID_FIELDS.include?(k) }
       @errors << 'title is required if a bibnumber is not provided' if original_metadata[:title].blank? && original_metadata[:bibnumber].blank?
+      @errors << 'date cannot include time' if original_metadata.fetch(:date, []).any? { |d| d.include?('T') }
 
       errors.empty?
     end
@@ -45,6 +46,7 @@ module ImportService
       metadata = remove_empty_values(metadata)
 
       metadata.delete(:includes)
+      metadata.delete(:call_no) # duplicate field in some records, should be ignored.
 
       metadata[:physical_location] = metadata.delete(:call_number)
       metadata[:extent] = metadata.delete(:format)

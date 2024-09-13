@@ -13,7 +13,7 @@ module DerivativeService
     # @param [TrueClass, FalseClass] iiif_manifest
     def initialize(mime_type:, extension: nil, iiif_image: false, iiif_manifest: false)
       @mime_type = mime_type
-      @file = Tempfile.new(['', extension])
+      @file = Tempfile.new(['derivative-file-', extension])
       @iiif_image = iiif_image
       @iiif_manifest = iiif_manifest
     end

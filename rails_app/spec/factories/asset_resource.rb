@@ -15,29 +15,54 @@ FactoryBot.define do
     annotations { [{ text: 'Front of Card' }] }
   end
 
-  trait :with_preservation_file do
+  trait :with_image_file do
     technical_metadata do
       {
         size: 291_455,
         mime_type: 'image/tiff',
         sha256: ['sha256checksum'],
         height: 238,
-        width: 400
+        width: 400,
+        raw: '<?xml version="1.0" encoding="UTF-8"?>'
       }
     end
+
+    transient do
+      preservation_file { 'trade_card/original/front.tif' }
+    end
+  end
+
+  trait :with_pdf_file do
+    original_filename { 'dummy.pdf' }
+
+    technical_metadata do
+      {
+        size: 13_264,
+        mime_type: 'application/pdf',
+        sha256: ['sha256checksum']
+      }
+    end
+
+    transient do
+      preservation_file { 'dummy.pdf' }
+    end
+  end
+
+  # Defaults to using image file.
+  trait :with_preservation_file do
+    with_image_file
 
     transient do
       preservation_backup { false }
       access_copy { false }
       thumbnail { false }
-      preservation_file { 'front.tif' }
     end
 
     # Attach file as preservation file. If `preservation_backup` flag is set to true also
     # backs up preservation file. If `access_copy` is set to true generates access copy derivative.
     after(:create) do |asset, evaluator|
       uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: File.new(Rails.root.join("spec/fixtures/files/trade_card/original/#{evaluator.preservation_file}")),
+        tempfile: File.new(Rails.root.join("spec/fixtures/files/#{evaluator.preservation_file}")),
         filename: asset.original_filename, type: asset.technical_metadata.mime_type
       )
       preservation_storage = Valkyrie::StorageAdapter.find(:preservation)
@@ -64,7 +89,8 @@ FactoryBot.define do
         )
 
         asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                                    type: 'access', generated_at: DateTime.current)
+                                                    size: asset.technical_metadata.size, type: 'access',
+                                                    generated_at: DateTime.current)
       end
 
       if evaluator.thumbnail
@@ -76,7 +102,8 @@ FactoryBot.define do
         )
 
         asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                                    type: 'thumbnail', generated_at: DateTime.current)
+                                                    size: asset.technical_metadata.size, type: 'thumbnail',
+                                                    generated_at: DateTime.current)
       end
     end
   end

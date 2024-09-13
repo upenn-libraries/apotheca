@@ -3,20 +3,17 @@
 # This is a derivative of an original image
 class DerivativeResource < Valkyrie::Resource
   attribute :type, Valkyrie::Types::Strict::String
-  attribute :generated_at, Valkyrie::Types::Strict::DateTime
+  # Not using a strict type b/c nested dates aren't correctly parsed in the Valkyrie Solr Adapter.
+  attribute :generated_at, Valkyrie::Types::DateTime
   attribute :mime_type, Valkyrie::Types::Strict::String
+  attribute :size, Valkyrie::Types::Strict::Integer.optional # Size in Bytes
   attribute :file_id, Valkyrie::Types::ID
   attribute :stale, Valkyrie::Types::Strict::Bool
 
-  def method_missing(symbol, *_args)
-    raise NoMethodError unless respond_to_missing? symbol
-
-    type == symbol.to_s[...-1]
-  end
-
-  def respond_to_missing?(symbol, _include_private = false)
-    return false unless symbol.to_s[...-1].in? AssetChangeSet::AssetDerivativeChangeSet::TYPES
-
-    symbol.to_s.end_with? '?'
+  # Methods to check what type of derivative this is.
+  (AssetChangeSet::AssetDerivativeChangeSet::TYPES + ItemChangeSet::ItemDerivativeChangeSet::TYPES).each do |symbol|
+    define_method "#{symbol}?" do
+      symbol == type
+    end
   end
 end

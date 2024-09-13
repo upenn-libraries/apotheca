@@ -36,7 +36,7 @@ module ItemDescriptiveMetadata
       end
     end
 
-    # Display field values with secondary URI formatting. Recursively display subfield values.
+    # Display field values. Recursively display subfield values.
     # For example, this is what the value hash looks like:
     #   {value: 'John Smith', uri: 'john.com', role:[{value: 'Author', uri: 'john.com/author'}]}
     #
@@ -44,13 +44,13 @@ module ItemDescriptiveMetadata
     # @return [Array] value string and URI html
     def field_display(value)
       subfields = [value[:value]]
-      subfields << tag.div(value[:uri], class: 'small text-secondary') if value[:uri]
+      subfields << format_uri(value[:uri]) if value[:uri]
 
       value.except(:value, :uri).each do |k, v|
         subfields << tag.table(class: %w[table table-borderless mb-0]) do
           tag.tbody do
             tag.tr do
-              tag.th(k.to_s.titleize, scope: :row) + tag.td do
+              tag.th(k.to_s.titleize, scope: :row, class: 'bg-transparent') + tag.td(class: 'bg-transparent') do
                 list_of_values(v)
               end
             end
@@ -61,22 +61,31 @@ module ItemDescriptiveMetadata
       safe_join(subfields)
     end
 
-    # Add bootstrap classes to identify whether field's ILS value will be used or overridden by resource value
-    # (ILS value only used if field has no resource value)
+    # Format secondary URI's for display
+    # @param [String] uri
+    # @return [ActiveSupport::SafeBuffer]
+    def format_uri(uri)
+      tag.div(
+        tag.a(uri, href: uri, class: 'link-secondary link-opacity-75 link-opacity-100-hover small', target: '_blank',
+                   rel: 'noopener')
+      )
+    end
+
+    # Add bootstrap classes to distinguish between ILS and resource metadata, and identify whether field's ILS value
+    # will be used or overridden by resource value (ILS value only used if field has no resource value)
     #
     # @param [String] source
     # @param [String] field
     # @return [String] class for field
-    # @return [nil] if field does not have an ILS value (no highlight necessary)
     def field_class(source, field)
-      return unless @descriptive_metadata.ils_metadata
-
       values = @descriptive_metadata.send("#{source}_metadata")[field]
 
       if source == ILS && @descriptive_metadata.object[field].present?
         'opacity-75 text-decoration-line-through'
-      elsif values.present?
+      elsif source == ILS && values.present?
         'bg-success bg-opacity-10'
+      elsif values.present?
+        'bg-warning bg-opacity-10'
       end
     end
 

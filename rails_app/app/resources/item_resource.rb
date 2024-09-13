@@ -108,8 +108,7 @@ class ItemResource < Valkyrie::Resource
 
   # @return [ItemResourcePresenter]
   def presenter
-    ils_metadata = bibnumber? ? solr_query_service.custom_queries.ils_metadata_for(id: id.to_s) : nil
-    ItemResourcePresenter.new(object: self, ils_metadata: ils_metadata)
+    @presenter ||= create_presenter
   end
 
   # Best title to use when trying to represent an item.
@@ -119,7 +118,28 @@ class ItemResource < Valkyrie::Resource
     human_readable_name
   end
 
+  # Returns thumbnail asset.
+  #
+  # @return [AssetResource]
+  def thumbnail
+    return unless thumbnail_asset_id
+
+    @thumbnail ||= pg_query_service.find_by(id: thumbnail_asset_id)
+  end
+
+  # Returns true if thumbnail asset has a thumbnail image.
+  def thumbnail_image?
+    return false unless thumbnail_asset_id
+
+    thumbnail&.thumbnail.present?
+  end
+
   private
+
+  def create_presenter
+    ils_metadata = bibnumber? ? solr_query_service.custom_queries.ils_metadata_for(id: id.to_s) : nil
+    ItemResourcePresenter.new(object: self, ils_metadata: ils_metadata)
+  end
 
   def solr_query_service
     @solr_query_service ||= Valkyrie::MetadataAdapter.find(:index_solr).query_service

@@ -41,7 +41,7 @@ class BulkExportsController < ApplicationController
       redirect_to bulk_exports_path, notice: 'Bulk export deleted.'
     else
       redirect_to bulk_exports_path,
-                  alert: "An error occurred while deleting the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+                  alert: "An error occurred while deleting the bulk export: #{@bulk_export.errors.full_messages.join(', ')}"
     end
   end
 
@@ -52,19 +52,19 @@ class BulkExportsController < ApplicationController
       redirect_to bulk_exports_path, notice: 'Bulk export cancelled.'
     else
       redirect_to bulk_export_path,
-                  alert: "An error occurred while cancelling the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+                  alert: "An error occurred while cancelling the bulk export: #{@bulk_export.errors.full_messages.join(', ')}"
     end
   end
 
   def regenerate
     if !@bulk_export.may_reprocess?
-      redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{bulk_export.state}"
+      redirect_to bulk_exports_path, notice: "Can't regenerate bulk export that is #{@bulk_export.state}"
     elsif @bulk_export.reprocess!
       ProcessBulkExportJob.perform_async(@bulk_export.id)
       redirect_to bulk_exports_path, notice: 'Bulk export queued for regeneration.'
     else
       redirect_to bulk_export_path,
-                  alert: "An error occurred while regenerating the bulk export: #{bulk_export.errors.full_messages.join(', ')}"
+                  alert: "An error occurred while regenerating the bulk export: #{@bulk_export.errors.full_messages.join(', ')}"
     end
   end
 
@@ -77,9 +77,6 @@ class BulkExportsController < ApplicationController
   def clean_search_params(search_params)
     return {} if search_params.blank?
 
-    if search_params.dig('filter', 'collection')
-      search_params['filter']['collection'] = search_params['filter']['collection'].reject(&:empty?)
-    end
     if search_params.dig('search', 'fielded')
       search_params['search']['fielded'] = search_params['search']['fielded'].reject { |v| v['term'].blank? }
     end

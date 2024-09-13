@@ -20,7 +20,7 @@ class DetachAsset
   # Prevent the detachment of Asset currently designated as a thumbnail with message.
   def check_thumbnail_id(resource:, asset_id:, **attributes)
     if resource.thumbnail?(asset_id) && resource.asset_ids.count > 1
-      Failure(error: 'This asset is currently designated as the item thumbnail. Please select a new asset to serve as the thumbnail before deleting this asset.')
+      Failure(error: :cannot_delete_thumbnail)
     else
       Success(resource: resource, asset_id: asset_id, **attributes)
     end

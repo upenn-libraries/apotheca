@@ -92,9 +92,16 @@ describe ImportService::Process::Migrate do
     let(:process) { build(:import_process, :migrate, unique_identifier: body[:unique_identifier]) }
     let(:result) { process.run }
     let(:item) { result.value! }
+    let(:body) { JSON.parse(File.read(file_fixture('colenda_serialization/example-1.json'))).deep_symbolize_keys }
+
+    before do
+      stub_request(
+        :get,
+        "#{Settings.migration.colenda_url}/migration/#{CGI.escape(body[:unique_identifier])}/serialized"
+      ).to_return(status: 200, body: body.to_json, headers: {})
+    end
 
     context 'when migrating an item' do
-      let(:body) { JSON.parse(File.read(file_fixture('colenda_serialization/example-1.json'))).deep_symbolize_keys }
       # rubocop:disable Layout/LineLength
       let(:metadata) do
         {
@@ -130,13 +137,6 @@ describe ImportService::Process::Migrate do
         }
       end
       # rubocop:enable Layout/LineLength
-
-      before do
-        stub_request(
-          :get,
-          "#{Settings.migration.colenda_url}/migration/#{CGI.escape(body[:unique_identifier])}/serialized"
-        ).to_return(status: 200, body: body.to_json, headers: {})
-      end
 
       it 'is successful' do
         expect(result).to be_a Dry::Monads::Success
@@ -187,16 +187,31 @@ describe ImportService::Process::Migrate do
       end
     end
 
+    context 'when migrating an item and publishing' do
+      include_context 'with successful publish request'
+
+      let(:process) { build(:import_process, :migrate, :publish, unique_identifier: body[:unique_identifier]) }
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'makes publishing request' do
+        result
+        expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
+      end
+
+      it 'sets publishing values' do
+        expect(item).to have_attributes(
+          published: true, first_published_at: be_a(DateTime), last_published_at: be_a(DateTime)
+        )
+      end
+    end
+
     context 'when migrating an item with invalid checksums' do
       let(:body) do
         JSON.parse(File.read(file_fixture('colenda_serialization/invalid-checksum-example.json'))).deep_symbolize_keys
-      end
-
-      before do
-        stub_request(
-          :get,
-          "#{Settings.migration.colenda_url}/migration/#{CGI.escape(body[:unique_identifier])}/serialized"
-        ).to_return(status: 200, body: body.to_json, headers: {})
       end
 
       it 'fails' do
@@ -208,6 +223,28 @@ describe ImportService::Process::Migrate do
         expect(result.failure[:details]).to contain_exactly(
           'Error while creating front.tif: Expected checksum does not match'
         )
+      end
+    end
+
+    context 'when migrating an item and skipping assets' do
+      let(:process) do
+        build(:import_process, :migrate, ignored_assets: ['ilcajs_b3f1_0014_1r.tif'],
+                                         unique_identifier: body[:unique_identifier])
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'migrates one asset' do
+        expect(item.asset_ids.count).to be 1
+        expect(item.structural_metadata.arranged_asset_ids.count).to be 1
+      end
+
+      it 'migrates the expected asset' do
+        assets = Valkyrie::MetadataAdapter.find(:postgres).query_service.find_many_by_ids(ids: item.asset_ids)
+        expect(assets.first.original_filename).to eql 'ilcajs_b3f1_0014_1v.tif'
       end
     end
   end

@@ -4,7 +4,7 @@ require 'system_helper'
 
 describe 'Asset Show Page' do
   let(:user) { create(:user, role) }
-  let(:asset) { persist(:asset_resource) }
+  let(:asset) { persist(:asset_resource, :with_preservation_file) }
   let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
 
   before do
@@ -32,6 +32,14 @@ describe 'Asset Show Page' do
     it 'shows download button for preservation file' do
       click_button 'Preservation File'
       expect(page).to have_link('Download Preservation File')
+    end
+
+    it 'displays raw technical metadata' do
+      click_button 'Preservation File'
+      click_button 'Raw XML'
+      within('div.modal-content') do
+        expect(page).to have_text('<?xml version="1.0" encoding="UTF-8"?>')
+      end
     end
   end
 

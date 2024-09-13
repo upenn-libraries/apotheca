@@ -8,8 +8,9 @@ describe MetadataExtractor::Marmite::Client do
 
     it { is_expected.to be_a described_class }
 
-    it 'sets url' do
-      expect(marmite.url).to eql url
+    it 'creates connection' do
+      expect(marmite.connection).to be_a Faraday::Connection
+      expect(marmite.connection.url_prefix.to_s).to match %r{#{url}/?}
     end
   end
 
@@ -74,26 +75,6 @@ describe MetadataExtractor::Marmite::Client do
           marmite.marc21(bibnumber)
         }.to raise_error(MetadataExtractor::Marmite::Client::Error,
                          "Could not retrieve MARC for #{bibnumber}. Error: #{marmite_error}")
-      end
-    end
-  end
-
-  describe '#url_for' do
-    let(:marmite) { described_class.new(url: url) }
-
-    it 'correctly creates url' do
-      expect(
-        marmite.send(:url_for, 'cool/new/path?query=keyword')
-      ).to eql "#{url}/cool/new/path?query=keyword"
-    end
-
-    context 'when error parsing url' do
-      let(:marmite) { described_class.new(url: 'something/not/right') }
-
-      it 'raises exception' do
-        expect {
-          marmite.send(:url_for, 'api/v2/records/sample?bib/marc21')
-        }.to raise_error(MetadataExtractor::Marmite::Client::Error, /Error generating valid Marmite url/)
       end
     end
   end

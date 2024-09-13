@@ -45,6 +45,11 @@ FactoryBot.define do
 
     trait :migrate do
       action { ImportService::Process::MIGRATE }
+      ignored_assets { [] }
+    end
+
+    trait :publish do
+      publish { 'true' }
     end
 
     trait :with_asset_metadata do

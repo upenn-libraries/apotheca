@@ -10,7 +10,7 @@ describe 'file listing tool requests' do
     let(:params) { { drive: 'sceti_digitized', path: '/' } }
 
     it 'returns file list' do
-      expect(response.parsed_body['filenames']).to eq('bell.wav; video.mov')
+      expect(response.parsed_body['filenames']).to eq('bell.wav; dummy.pdf; video.mov')
     end
   end
 

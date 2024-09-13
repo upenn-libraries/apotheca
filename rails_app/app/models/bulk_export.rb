@@ -9,7 +9,7 @@ class BulkExport < ApplicationRecord
   has_one_attached :csv
   validates :state, presence: true
   validates :generated_at, presence: true, if: -> { csv.attached? }
-  validate :restrict_number_of_bulk_exports
+  validate :restrict_number_of_bulk_exports, on: :create
   validate :restrict_search_params_to_hash
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
@@ -45,9 +45,9 @@ class BulkExport < ApplicationRecord
   private
 
   def restrict_number_of_bulk_exports
-    return unless created_by.present? && (created_by.bulk_exports.count >= 10)
+    return unless created_by.present? && (created_by.bulk_exports.count >= User::MAX_BULK_EXPORTS)
 
-    errors.add(:created_by, 'The number of Bulk Exports for a user cannot exceed 10.')
+    errors.add(:created_by, "The number of Bulk Exports for a user cannot exceed #{User::MAX_BULK_EXPORTS}.")
   end
 
   def restrict_search_params_to_hash

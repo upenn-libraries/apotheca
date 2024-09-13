@@ -12,10 +12,10 @@ module DerivativeService
         # @return [DerivativeService::Generator::DerivativeFile]
         def access
           derivative_file = DerivativeFile.new mime_type: 'audio/mpeg', extension: '.mp3'
-          FfmpegWrapper.wav_to_mp3(
-            input_path: file.disk_path,
-            output_path: derivative_file.path
-          )
+          file.tmp_file do |path|
+            FfmpegWrapper.wav_to_mp3(input_path: path, output_path: derivative_file.path)
+          end
+
           derivative_file
         rescue StandardError => e
           raise Generator::Error, "Error generating MP3: #{e.class} #{e.message}", e.backtrace

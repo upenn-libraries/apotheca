@@ -8,8 +8,8 @@ describe MetadataExtractor::Marmite do
 
     it { is_expected.to be_a described_class }
 
-    it 'sets url' do
-      expect(marmite.client.url).to eql url
+    it 'creates client' do
+      expect(marmite.client).to be_a MetadataExtractor::Marmite::Client
     end
   end
 

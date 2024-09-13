@@ -5,16 +5,11 @@ module DerivativeService
     module Generator
       # Super class from which all Generator classes should inherit from.
       class Base
-        # NOTE: Could also accept a file-like object that responds to #read, #rewind and #disk_path
-        #
-        # @param file [Valkyrie::StorageAdapter::StreamFile]
+        attr_reader :file
+
+        # @param file [DerivativeService::Asset::SourceFile]
         def initialize(file)
           @file = file
-        end
-
-        def file
-          @file.rewind # Ensure file is rewinded before reading
-          @file
         end
 
         def thumbnail

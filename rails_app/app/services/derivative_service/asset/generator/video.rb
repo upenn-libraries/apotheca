@@ -12,10 +12,10 @@ module DerivativeService
         # @return [DerivativeService::Generator::DerivativeFile]
         def access
           derivative_file = DerivativeFile.new mime_type: 'video/mp4', extension: '.mp4'
-          FfmpegWrapper.mov_to_mp4(
-            input_path: file.disk_path,
-            output_path: derivative_file.path
-          )
+          file.tmp_file do |path|
+            FfmpegWrapper.mov_to_mp4(input_path: path, output_path: derivative_file.path)
+          end
+
           derivative_file
         rescue StandardError => e
           raise Generator::Error, "Error generating MP4: #{e.class} #{e.message}", e.backtrace
@@ -23,7 +23,10 @@ module DerivativeService
 
         # @return [DerivativeService::Generator::DerivativeFile]
         def thumbnail
-          frame = FfmpegWrapper.thumbnail(input_path: file.disk_path)
+          frame = file.tmp_file do |path|
+            FfmpegWrapper.thumbnail(input_path: path)
+          end
+
           image = Vips::Image.new_from_buffer(frame, '')
           image = image.autorot.thumbnail_image(200, height: 200)
 

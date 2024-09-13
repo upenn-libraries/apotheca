@@ -6,7 +6,7 @@ apotheca_port: 3000
 apotheca_rails_env: "staging"
 apotheca_replicas: 1
 apotheca_url: "apotheca-staging.library.upenn.edu"
-apotheca_solr_url: "http://solr-1:8983/solr/apotheca-staging"
+apotheca_solr_url: "http://apothe-stg01.library.upenn.int/solr/apotheca-staging"
 apotheca_versioned_secrets:
   rails_master_key:
     value: "{{ apotheca_vault_values.secret.rails_master_key }}"
@@ -37,4 +37,13 @@ apotheca_versioned_secrets:
     version: "{{ apotheca_vault_values.metadata.version }}"
   ceph_secret_access_key:
     value: "{{ apotheca_vault_values.secret.ceph_secret_access_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  colenda_publish_token:
+    value: "{{ apotheca_vault_values.secret.colenda_publish_token }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ezid_user:
+    value: "{{ apotheca_vault_values.secret.ezid_user }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  ezid_password:
+    value: "{{ apotheca_vault_values.secret.ezid_password }}"
     version: "{{ apotheca_vault_values.metadata.version }}"

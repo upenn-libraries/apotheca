@@ -7,7 +7,7 @@ module ImportService
     class Base
       include Dry::Monads[:result]
 
-      attr_reader :errors, :imported_by, :descriptive_metadata, :structural_metadata,
+      attr_reader :errors, :imported_by, :descriptive_metadata, :structural_metadata, :publish,
                   :asset_set, :unique_identifier, :human_readable_name, :internal_notes, :thumbnail
 
       # Initializes object to conduct import. For the time being this class will only import Items.
@@ -26,6 +26,7 @@ module ImportService
         @internal_notes       = args[:internal_notes]
         @descriptive_metadata = args.fetch(:metadata, {})
         @structural_metadata  = args.fetch(:structural, {})
+        @publish              = args.fetch(:publish, 'false').casecmp('true').zero? # Not allowing for unpublishing
         @errors               = []
       end
 
@@ -96,6 +97,19 @@ module ImportService
         end
       end
 
+      # Publishing an item.
+      def publish_item(resource)
+        PublishItem.new.call(id: resource.id, updated_by: imported_by) do |publish_result|
+          publish_result.success { |published_item| Success(published_item) }
+          publish_result.failure do |failure_hash|
+            failure(
+              prepend: 'Item was successfully created/updated. Please retry publishing. Publishing failed with the following error',
+              **failure_hash
+            )
+          end
+        end
+      end
+
       # Deletes all the assets given.
       #
       # @param [<Array<AssetResource>]
@@ -105,14 +119,16 @@ module ImportService
 
       # Takes different failure params and returns a Failure object with three keys: error, details
       # and exception. The details array can contain some plain text formatting for display purposes. An
-      # exception may not always be present.
+      # exception or change_set may not always be present.
       #
-      # @param [String|Symbol] error
-      # @param [Array<String>] details
-      # @param [Valkyrie::ChangeSet] change_set
+      # @param [String|Symbol] error main error message
+      # @param [Array<String>] details list of more detailed error messages
+      # @param [Valkyrie::ChangeSet] change_set containing validation errors
       # @param [Exception] exception
-      def failure(error: nil, details: [], change_set: nil, exception: nil)
+      # @param [String] prepend message to prefix main error message
+      def failure(error: nil, details: [], change_set: nil, exception: nil, prepend: nil)
         error = error.to_s.humanize if error.is_a? Symbol
+        error = "#{prepend}: #{error}" if prepend
         validation_errors = change_set.try(:errors).try(:full_messages)
 
         details.push(exception&.message) if exception
@@ -131,9 +147,15 @@ module ImportService
       # @return true if ark exists
       # @return false if ark does not exist
       def ark_exists?(ark)
+        retries ||= 0
         Ezid::Identifier.find(ark)
         true
       rescue StandardError # EZID gem raises unexpected errors when ark isn't found.
+        if (retries += 1) < 3 # Retrying request because EZID request fails even though ARK is present.
+          sleep 1
+          retry
+        end
+
         false
       end
     end

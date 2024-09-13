@@ -129,6 +129,10 @@ describe ImportService::Process::Update do
       it 'removes language' do
         expect(updated_item.descriptive_metadata.language).to be_blank
       end
+
+      it 'does not publish item' do
+        expect(updated_item).to have_attributes(published: false, last_published_at: nil, first_published_at: nil)
+      end
     end
 
     context 'when updating multiple existing assets' do
@@ -329,6 +333,35 @@ describe ImportService::Process::Update do
       it 'does not record any events' do
         result
         expect(ResourceEvent.count).to be 0
+      end
+    end
+
+    context 'when updating and publishing an item' do
+      include_context 'with successful publish request'
+
+      let(:process) do
+        build(
+          :import_process, :update, :publish,
+          unique_identifier: item.unique_identifier,
+          metadata: { collection: [{ value: 'Very important new collection' }] }
+        )
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(updated_item).to be_a ItemResource
+      end
+
+      it 'updates metadata' do
+        expect(
+          updated_item.descriptive_metadata.collection.pluck(:value)
+        ).to contain_exactly('Very important new collection')
+      end
+
+      it 'publishes item' do
+        expect(updated_item).to have_attributes(
+          published: true, first_published_at: be_a(DateTime), last_published_at: be_a(DateTime)
+        )
       end
     end
   end

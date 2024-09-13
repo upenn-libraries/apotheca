@@ -1,0 +1,11 @@
+[production]
+swarm-01
+
+[docker_engine:children]
+production
+
+[docker_engine:vars]
+ansible_python_interpreter="/usr/bin/python3"
+
+[docker_swarm_manager]
+swarm-01 swarm_labels='["apotheca", "clamav", "fits", "postgres", "redis", "sidekiq", "solr-1", "solr-2", "solr-3", "traefik" ,"zookeeper-1", "zookeeper-2", "zookeeper-3", "zoonavigator"]'

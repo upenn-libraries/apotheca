@@ -48,6 +48,25 @@ FactoryBot.define do
       updated_by { users.sample }
     end
 
+    trait :published do
+      published { true }
+      first_published_at { DateTime.current }
+      last_published_at { DateTime.current }
+    end
+
+    trait :with_iiif_manifest do
+      derivatives do
+        [
+          {
+            file_id: 'iiif_manifests-shrine://0000-abcdefg-123456/iiif_manifest',
+            mime_type: 'application/json',
+            type: 'iiif_manifest',
+            generated_at: DateTime.current
+          }
+        ]
+      end
+    end
+
     # Item with one Asset containing only the required attributes.
     trait :with_asset do
       transient do
@@ -93,7 +112,7 @@ FactoryBot.define do
         asset1 { persist(:asset_resource, :with_preservation_file, :with_derivatives, :with_metadata) }
         asset2 do
           persist(:asset_resource, :with_preservation_file, :with_derivatives,
-                  original_filename: 'back.tif', preservation_file: 'back.tif')
+                  original_filename: 'back.tif', preservation_file: 'trade_card/original/back.tif')
         end
       end
 
