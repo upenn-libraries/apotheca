@@ -60,8 +60,7 @@ class BulkExport < ApplicationRecord
     container = Valkyrie::MetadataAdapter.find(:index_solr)
                                          .query_service
                                          .custom_queries
-                                         .item_index_all parameters: search_params.update(rows: max_rows_to_export)
-                                                                                  .with_indifferent_access
+                                         .item_index_all parameters: search_params.with_indifferent_access
     container.documents
   end
 
@@ -86,10 +85,5 @@ class BulkExport < ApplicationRecord
   # @param [StringIO] csv_file
   def attach_csv_to_record(csv_file)
     csv.attach(io: csv_file, filename: sanitized_filename, content_type: 'text/csv')
-  end
-
-  # @return [Integer]
-  def max_rows_to_export
-    Solr::QueryMaps::Item::MAX_BULK_EXPORT_ROWS
   end
 end

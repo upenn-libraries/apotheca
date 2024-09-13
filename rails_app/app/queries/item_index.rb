@@ -30,12 +30,14 @@ class ItemIndex
     build_response_container response: response, search_params: parameters, query: query
   end
 
-  # recursively retrieve all resources based on parameters
+  # recursively retrieve all resources based on parameters and solr cursor mark
   # @param [ActionController::Parameters] parameters
+  # @param [Array<Hash>] documents
+  # @param [String] cursor_mark
   # @return [Solr::ResponseContainer]
   def item_index_all(parameters:, documents: [], cursor_mark: '*')
-    query = solr_query(parameters: parameters)
-    response = response(solr_query: query.merge(start: 0, cursorMark: cursor_mark, sort: "#{query[:sort]}, id asc"))
+    query = solr_query(parameters: parameters.merge(rows: MAPPER::MAX_BULK_EXPORT_ROWS), cursor_mark: cursor_mark)
+    response = response(solr_query: query)
 
     documents += response.dig('response', 'docs')
     if cursor_mark == response['nextCursorMark']
@@ -72,11 +74,13 @@ class ItemIndex
 
   # Use Solr::QueryBuilder to compose Solr query from params
   # @param [ActionController::Parameters] parameters
+  # @param [String, nil] cursor_mark
   # @return [Hash]
-  def solr_query(parameters:)
+  def solr_query(parameters:, cursor_mark: nil)
     Solr::QueryBuilder.new(params: parameters,
                            defaults: { fq: DEFAULT_FQ, sort: DEFAULT_SORT },
-                           mapper: MAPPER).solr_query
+                           mapper: MAPPER,
+                           cursor_mark: cursor_mark).solr_query
   end
 
   # @param [Array] solr_documents

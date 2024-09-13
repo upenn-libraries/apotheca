@@ -4,17 +4,19 @@ module Solr
   # build a solr query hash from expected parameters
   # solr docs: https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#standard-query-parser-parameters
   class QueryBuilder
-    attr_accessor :params, :mapper, :defaults, :rows, :page
+    attr_accessor :params, :mapper, :defaults, :rows, :page, :cursor_mark
 
     # @param [ActionController::Parameters] params
     # @param [Hash] defaults
     # @param [Module<Solr::QueryMaps::Item>] mapper
-    def initialize(params:, defaults:, mapper:)
+    # @param [String, nil] cursor_mark solr parameter used when retrieving all items from a query
+    def initialize(params:, defaults:, mapper:, cursor_mark: nil)
       @params = params
       @defaults = defaults
       @mapper = mapper
       @rows = params[:rows] || mapper::ROWS_OPTIONS.min
       @page = params[:page] || 1
+      @cursor_mark = cursor_mark
     end
 
     # @return [Hash]
@@ -23,7 +25,8 @@ module Solr
         rows: rows,
         sort: sort,
         start: start,
-        fq: fq }
+        fq: fq,
+        cursorMark: cursor_mark }.compact
     end
 
     # return q param for solr query
@@ -46,6 +49,8 @@ module Solr
     end
 
     def start
+      return 0 if cursor_mark
+
       (page.to_i - 1) * rows.to_i
     end
 
@@ -68,7 +73,8 @@ module Solr
       sort_field = 'score' if sort_field.blank?
       sort_field = map type: :sort, field: sort_field
       sort_direction = 'asc' if sort_direction.blank?
-      "#{sort_field} #{sort_direction}"
+      sort_for_cursor = 'id asc' if cursor_mark
+      ["#{sort_field} #{sort_direction}", sort_for_cursor].compact.join(', ')
     end
 
     private
