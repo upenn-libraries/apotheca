@@ -9,7 +9,6 @@ module MetadataExtractor
         SPACE = ' '
         ALL = '*'
         A_TO_Z = ('a'..'z').to_a
-        VALUE_OPTIONS = %i[join prefix].freeze
 
         # Mapping language to standardized ISO639 english name and URI.
         def self.language_transformation(_, extracted_values)
