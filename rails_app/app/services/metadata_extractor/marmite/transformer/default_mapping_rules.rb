@@ -113,13 +113,13 @@ module MetadataExtractor
         map_datafield '651', to: :geographic_subject, value: { subfields: A_TO_Z, join: ' -- ' },
                              uri: { subfields: '0' }
         map_datafield '651', to: :coverage, value: { subfields: 'y' }
-        map_datafield '655', to: :physical_format, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
+        map_datafield '655', to: :physical_format, value: { subfields: 'a' }, uri: { subfields: '0' }
         map_datafield '700', to: :provenance, value: { subfields: %w[a b c d], join: SPACE },
-                             uri: { subfields: '0' },
-                             custom: method(:add_owner_to_provenance), if: method(:role_is_provenance?)
+                      uri: { subfields: '0' },
+                      custom: method(:add_owner_to_provenance), if: method(:role_is_provenance?)
         map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE },
-                             uri: { subfields: '0' },
-                             custom: method(:add_role_to_name), unless: method(:role_is_provenance?)
+                      uri: { subfields: '0' },
+                      custom: method(:add_role_to_name), unless: method(:role_is_provenance?)
         map_datafield '710', to: :name, value: { subfields: %w[a b d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '711', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
