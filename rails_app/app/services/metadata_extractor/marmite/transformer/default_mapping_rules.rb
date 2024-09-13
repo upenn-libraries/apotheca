@@ -23,8 +23,6 @@ module MetadataExtractor
 
         # Adding role value to name.
         def self.add_role_to_name(datafield, extracted_values)
-          return if datafield.tag == '700' && role_is_provenance?(datafield.subfield_at('e'))
-
           role_subfield = datafield.tag == '111' || datafield.tag == '711' ? 'j' : 'e'
 
           extracted_values.tap do |values|
@@ -37,7 +35,6 @@ module MetadataExtractor
         # If a 700 field contains a subfield 'e' with the value 'owner', append the role to the provenance value.
         def self.add_owner_to_provenance(datafield, extracted_values)
           role = datafield.subfield_at('e')
-          return unless role_is_provenance?(role)
 
           extracted_values.tap do |values|
             values[:value] = "#{values[:value]} (#{role})"
@@ -45,7 +42,8 @@ module MetadataExtractor
         end
 
         # Check if the role is a provenance role.
-        def self.role_is_provenance?(role)
+        def self.role_is_provenance?(datafield)
+          role = datafield.subfield_at('e')
           return false unless role
 
           PROVENANCE_NAME_VALUES.any? { |value| role.downcase.include?(value) }
@@ -116,10 +114,12 @@ module MetadataExtractor
                              uri: { subfields: '0' }
         map_datafield '651', to: :coverage, value: { subfields: 'y' }
         map_datafield '655', to: :physical_format, value: { subfields: A_TO_Z, join: ' -- ' }, uri: { subfields: '0' }
-        map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
-                             custom: method(:add_role_to_name)
-        map_datafield '700', to: :provenance, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
-                             custom: method(:add_owner_to_provenance)
+        map_datafield '700', to: :provenance, value: { subfields: %w[a b c d], join: SPACE },
+                             uri: { subfields: '0' },
+                             custom: method(:add_owner_to_provenance), if: method(:role_is_provenance?)
+        map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE },
+                             uri: { subfields: '0' },
+                             custom: method(:add_role_to_name), unless: method(:role_is_provenance?)
         map_datafield '710', to: :name, value: { subfields: %w[a b d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '711', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
