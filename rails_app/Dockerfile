@@ -3,7 +3,7 @@
 ARG BUNDLE_HOME=vendor/bundle
 
 # Image tag
-ARG IMAGE_TAG=3.2.0-slim-bullseye
+ARG IMAGE_TAG=3.2.5-slim-bookworm
 
 # The root of our app
 ARG PROJECT_ROOT=/home/app
@@ -14,6 +14,9 @@ ARG RAILS_ENV=development
 
 # Build Stage ----------------------------------------
 FROM ruby:${IMAGE_TAG} AS base
+
+ARG RUBY_MAJOR
+ENV RUBY_MAJOR=3.2.0
 
 ARG BUNDLE_HOME
 ENV BUNDLE_HOME=${BUNDLE_HOME}
@@ -52,14 +55,17 @@ RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     bundle config set without "development:test:assets"; \
     fi && \
     MAKE="make -j $(nproc)" bundle install && \
-    rm -rf ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/cache/*.gem && \
-    find ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/gems/ \( -name "*.c" -o -name "*.o" \) -delete
+    rm -rf ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/cache/*.gem && \
+    find ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/gems/ \( -name "*.c" -o -name "*.o" \) -delete
 
 COPY . .
 
 
 # Development Stage ----------------------------------
-FROM ruby:${IMAGE_TAG} as development
+FROM ruby:${IMAGE_TAG} AS development
+
+ARG RUBY_MAJOR
+ENV RUBY_MAJOR=3.2.0
 
 ARG BUNDLE_HOME
 ENV BUNDLE_HOME=${BUNDLE_HOME}
@@ -72,10 +78,10 @@ ENV RAILS_ENV=${RAILS_ENV}
 
 # Set Rails env
 ENV BUNDLE_APP_CONFIG="${PROJECT_ROOT}/.bundle"
-ENV GEM_HOME="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/"
-ENV GEM_PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/"
+ENV GEM_HOME="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/"
+ENV GEM_PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/"
 ENV NLS_LANG=$LANG
-ENV PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin:${PATH}"
+ENV PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/bin:${PATH}"
 
 WORKDIR ${PROJECT_ROOT}
 
@@ -97,19 +103,15 @@ RUN apt-get update && apt-get install -y \
     mkdir -p ${PROJECT_ROOT}/tmp/pids && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
+COPY --chown=app:app --chmod=755 --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
 
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
+COPY --chown=app:app --chmod=644 --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
 RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
-    SECRET_KEY_BASE=x bundle exec rake assets:precompile && \
-    find . -type d -exec chmod 755 {} + && \
-    find . -type f -exec chmod 644 {} + && \
-    find bin -type f -exec chmod 744 {} + && \
-    chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
-    chown -R app:app .
+  SECRET_KEY_BASE=x bundle exec rake assets:precompile && \
+  find . -type d -exec chmod 755 {} + && \
+  chmod 744 -R ./bin && \
+  chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/bin/
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
@@ -120,7 +122,10 @@ CMD ["bundle", "exec", "puma", "-b", "tcp://0.0.0.0:3000"]
 
 
 # Production Stage -----------------------------------
-FROM ruby:${IMAGE_TAG} as production
+FROM ruby:${IMAGE_TAG} AS production
+
+ARG RUBY_MAJOR
+ENV RUBY_MAJOR=3.2.0
 
 ARG BUNDLE_HOME
 ENV BUNDLE_HOME=${BUNDLE_HOME}
@@ -133,10 +138,10 @@ ENV RAILS_ENV=${RAILS_ENV}
 
 # Set Rails env
 ENV BUNDLE_APP_CONFIG="${PROJECT_ROOT}/.bundle"
-ENV GEM_HOME="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/"
-ENV GEM_PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/"
+ENV GEM_HOME="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/"
+ENV GEM_PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/"
 ENV NLS_LANG=$LANG
-ENV PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin:${PATH}"
+ENV PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/bin:${PATH}"
 ENV RAILS_LOG_TO_STDOUT=true
 ENV RAILS_SERVE_STATIC_FILES=true
 
@@ -160,19 +165,15 @@ RUN apt-get update && apt-get install -y \
     mkdir -p ${PROJECT_ROOT}/tmp/pids && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
+COPY --chown=app:app --chmod=755 --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
 
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-COPY --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
+COPY --chown=app:app --chmod=644 --from=base ${PROJECT_ROOT} ${PROJECT_ROOT}
 
 RUN mkdir -p ${PROJECT_ROOT}/app/assets/builds/ && \
     SECRET_KEY_BASE=x bundle exec rake assets:precompile && \
     find . -type d -exec chmod 755 {} + && \
-    find . -type f -exec chmod 644 {} + && \
-    find bin -type f -exec chmod 744 {} + && \
-    chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/bin/ && \
-    chown -R app:app .
+    chmod 744 -R ./bin && \
+    chmod +x -R ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/bin/
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
