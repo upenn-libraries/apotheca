@@ -14,10 +14,7 @@ RSpec.describe ItemIndex do
             descriptive_metadata: { title: [{ value: 'Crunchy Item' }], collection: [{ value: 'Collection A' }] })
   end
 
-  describe '#item_index' do
-    let(:parameters) { ActionController::Parameters.new(params_hash).permit! }
-    let(:items) { query_service.custom_queries.item_index(parameters: parameters).documents }
-
+  shared_examples_for 'a solr query' do
     context 'with a keyword search' do
       let(:params_hash) { { search: { all: 'Crunchy' } } }
 
@@ -62,6 +59,28 @@ RSpec.describe ItemIndex do
         expect(items.count).to eq 2
         returned_collections = items.collect { |i| i.descriptive_metadata.collection.pluck(:value) }.flatten
         expect(returned_collections).to match_array collections
+      end
+    end
+  end
+
+  describe '#item_index' do
+    let(:parameters) { ActionController::Parameters.new(params_hash).permit! }
+    let(:items) { query_service.custom_queries.item_index(parameters: parameters).documents }
+
+    it_behaves_like 'a solr query'
+  end
+
+  describe '#item_index_all' do
+    let(:parameters) { ActionController::Parameters.new(params_hash).permit! }
+    let(:items) { query_service.custom_queries.item_index_all(parameters: parameters).documents }
+
+    it_behaves_like 'a solr query'
+
+    context 'with page and row parameters' do
+      let(:params_hash) { { page: 1, rows: 1 } }
+
+      it 'returns all results' do
+        expect(items.count).to eq 2
       end
     end
   end
