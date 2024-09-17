@@ -59,6 +59,17 @@ describe Solr::QueryBuilder do
         expect(builder.sort).to eq("#{field} #{defaults.dig(:sort, :direction)}")
       end
     end
+
+    context 'with cursor mark param' do
+      let(:params) do
+        ActionController::Parameters.new({ 'sort' => { 'field' => 'title', 'direction' => 'asc' },
+                                           'cursorMark' => '*' }).permit!
+      end
+
+      it 'appends an additional sort ordering' do
+        expect(builder.sort).to eq 'title_ssi asc, id asc'
+      end
+    end
   end
 
   describe '#search' do
@@ -103,6 +114,14 @@ describe Solr::QueryBuilder do
 
       it 'sets the proper start value' do
         expect(builder.start).to eq default_rows
+      end
+    end
+
+    context 'with cursor mark param' do
+      let(:params) { ActionController::Parameters.new({ 'rows' => '20', 'cursorMark' => '*' }).permit! }
+
+      it 'sets the proper start value' do
+        expect(builder.start).to eq 0
       end
     end
   end
