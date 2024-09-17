@@ -9,14 +9,13 @@ module Solr
     # @param [ActionController::Parameters] params
     # @param [Hash] defaults
     # @param [Module<Solr::QueryMaps::Item>] mapper
-    # @param [String, nil] cursor_mark solr parameter used when retrieving all items from a query
-    def initialize(params:, defaults:, mapper:, cursor_mark: nil)
+    def initialize(params:, defaults:, mapper:)
       @params = params
       @defaults = defaults
       @mapper = mapper
       @rows = params[:rows] || mapper::ROWS_OPTIONS.min
       @page = params[:page] || 1
-      @cursor_mark = cursor_mark
+      @cursor_mark = params[:cursorMark]
     end
 
     # @return [Hash]

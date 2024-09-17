@@ -36,7 +36,7 @@ class ItemIndex
   # @param [String] cursor_mark
   # @return [Solr::ResponseContainer]
   def item_index_all(parameters:, documents: [], cursor_mark: '*')
-    query = solr_query(parameters: parameters.merge(rows: MAPPER::MAX_BULK_EXPORT_ROWS), cursor_mark: cursor_mark)
+    query = solr_query(parameters: parameters.merge(rows: MAPPER::MAX_BULK_EXPORT_ROWS, cursorMark: cursor_mark))
     response = response(solr_query: query)
 
     documents += response.dig('response', 'docs')
@@ -74,13 +74,11 @@ class ItemIndex
 
   # Use Solr::QueryBuilder to compose Solr query from params
   # @param [ActionController::Parameters] parameters
-  # @param [String, nil] cursor_mark
   # @return [Hash]
-  def solr_query(parameters:, cursor_mark: nil)
+  def solr_query(parameters:)
     Solr::QueryBuilder.new(params: parameters,
                            defaults: { fq: DEFAULT_FQ, sort: DEFAULT_SORT },
-                           mapper: MAPPER,
-                           cursor_mark: cursor_mark).solr_query
+                           mapper: MAPPER).solr_query
   end
 
   # @param [Array] solr_documents
