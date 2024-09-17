@@ -35,17 +35,19 @@ module Steps
       derivative_generator = derivative_class.new(change_set)
 
       types.filter_map do |type|
-        derivative_file = derivative_generator.send(type)
+        begin
+          derivative_file = derivative_generator.send(type)
 
-        next if derivative_file.nil? # Skip if no derivative was created
+          next if derivative_file.nil? # Skip if no derivative was created
 
-        # Save file to storage, create derivative resource and clean up derivative file.
-        storage = find_storage(derivative_file)
-        file = storage.upload(file: derivative_file, resource: change_set.resource,
-                              original_filename: type.to_s, content_type: derivative_file.mime_type)
-        size = derivative_file.size
-        derivative_file.cleanup!
-
+          # Save file to storage, create derivative resource and clean up derivative file.
+          storage = find_storage(derivative_file)
+          file = storage.upload(file: derivative_file, resource: change_set.resource,
+                                original_filename: type.to_s, content_type: derivative_file.mime_type)
+          size = derivative_file.size
+        ensure
+          derivative_file&.cleanup!
+        end
         DerivativeResource.new(file_id: file.id, mime_type: derivative_file.mime_type, size: size,
                                type: type.to_s, generated_at: DateTime.current)
       end
