@@ -24,6 +24,7 @@ module MetadataExtractor
             field = config[:to] # descriptive metadata field name
 
             next if config[:if] && !config[:if].call(marc_field)
+            next if config[:unless] && config[:unless].call(marc_field)
 
             values = config.slice(:value, :uri).transform_values { |c|
               marc_field.values_at(**c.slice(*MARCDocument::VALUES_PARAMS)).join(c[:join]).prepend(c.fetch(:prefix, ''))

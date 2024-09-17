@@ -12,8 +12,8 @@ module MetadataExtractor
       #   - must contain a `:to` key, describing what top-level key the value should be mapped to
       #   - must contain a `:value` or `:uri` key, containing configuration describing how to pull the
       #       value for the value and uri fields respectively
-      #   - can contain a `:if` key, containing a lambda that returns a truthy or falsey value, the lambda is passed
-      #       the datafield or controlfield extracted from the xml document
+      #   - can contain a `:if` or `:unless` key, containing a lambda that returns a truthy or falsey value, the lambda
+      #       is passed the datafield or controlfield extracted from the xml document
       #   - can contain a `:custom` key, containing a lambda that applies additional transformations to the extracted
       #       values. The lambda is passed the datafield/controlfield and the extracted_values. It must return the
       #       extracted values with any transformations applied.
