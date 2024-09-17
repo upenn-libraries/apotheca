@@ -42,6 +42,10 @@ class BulkExport < ApplicationRecord
     csv.purge
   end
 
+  def clear_process_errors
+    process_errors&.clear
+  end
+
   private
 
   def restrict_number_of_bulk_exports
