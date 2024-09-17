@@ -57,6 +57,24 @@ describe Steps::GenerateDerivatives do
         expect(result.value!.derivatives.count).to be 0
       end
     end
+
+    context 'when an error is raised while generating derivatives' do
+      let(:derivative_file) { DerivativeService::DerivativeFile.new(mime_type: 'application/json') }
+
+      before do
+        allow(derivative_file).to receive(:cleanup!)
+        allow(Valkyrie::StorageAdapter).to receive(:find).and_raise(StandardError)
+      end
+
+      it 'cleans up the temporary derivative file' do
+        result
+        expect(derivative_file).to have_received(:cleanup!)
+      end
+
+      it 'returns a failure' do
+        expect(result.failure?).to be true
+      end
+    end
   end
 
   describe '#find_storage' do
