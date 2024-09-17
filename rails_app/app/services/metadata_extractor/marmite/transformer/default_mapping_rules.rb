@@ -98,7 +98,7 @@ module MetadataExtractor
         map_datafield '500', to: :note,      value: { subfields: 'a' }
         map_datafield '501', to: :note,      value: { subfields: 'a' }
         map_datafield '502', to: :note,      value: { subfields: ('a'..'o').to_a, join: SPACE }
-        map_datafield '505', to: :description, value: { subfields: ALL, join: SPACE }
+        map_datafield '505', to: :note, value: { subfields: ALL, join: SPACE, prefix: 'Table of contents: ' }
         map_datafield '520', to: :description, value: { subfields: %w[a b], join: SPACE }
         map_datafield '542', to: :note, value: { subfields: ('a'..'s').to_a, join: SPACE }
         map_datafield '545', to: :note, value: { subfields: %w[a b u], join: SPACE }

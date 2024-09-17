@@ -184,23 +184,50 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
         ).to contain_exactly('10XX')
       end
     end
-  end
 
-  context 'when MARC XML contains blank value' do
-    let(:xml) do
-      <<~XML
-        <?xml version="1.0"?>
-        <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
-          <marc:record>
-            <marc:controlfield tag="001">9958487343503681</marc:controlfield>
-            <marc:controlfield tag="008">121105b        pau           000 0 akk d</marc:controlfield>
-          </marc:record>
-        </marc:records>
-      XML
+    context 'when MARC XML contains blank value' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:controlfield tag="001">9958487343503681</marc:controlfield>
+              <marc:controlfield tag="008">121105b        pau           000 0 akk d</marc:controlfield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'sets blank date' do
+        expect(transformer.to_descriptive_metadata[:date]).to be_nil
+      end
     end
 
-    it 'sets blank date' do
-      expect(transformer.to_descriptive_metadata[:date]).to be_nil
+    context 'when MARC XML contains a field with a mapped prefix option' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:datafield ind1="0" ind2="0" tag="505">
+                <marc:subfield code="a">formatted contents note</marc:subfield>
+                <marc:subfield code="r">statement of responsibility</marc:subfield>
+                <marc:subfield code="t">title</marc:subfield>
+              </marc:datafield>
+              <marc:datafield ind1="0" ind2="0" tag="505">
+                <marc:subfield code="a">more contents</marc:subfield>
+              </marc:datafield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'prepends the prefix to the expected values' do
+        expect(transformer.to_descriptive_metadata).to eq(
+          { note: [{ value: 'Table of contents: formatted contents note statement of responsibility title' },
+                   { value: 'Table of contents: more contents' }] }
+        )
+      end
     end
   end
 

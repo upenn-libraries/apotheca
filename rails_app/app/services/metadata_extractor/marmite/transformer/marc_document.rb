@@ -5,6 +5,8 @@ module MetadataExtractor
     class Transformer
       # Wrapper around MARC XML document to help parse out the different fields.
       class MARCDocument
+        VALUES_PARAMS = %i[subfields chars].freeze
+
         attr_reader :xml
 
         delegate_missing_to :xml

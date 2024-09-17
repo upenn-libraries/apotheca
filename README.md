@@ -19,7 +19,7 @@ You may need to update the VirtualBox configuration for the creation of a host-o
 * 10.0.0.0/8
 ```
 
-#### Starting
+### Starting
 
 From the [vagrant](vagrant) directory run:
 
@@ -36,7 +36,7 @@ vagrant up --provider=parallels --provision
 
 This will run the [vagrant/Vagrantfile](vagrant/Vagrantfile) which will bring up an Ubuntu VM and run the Ansible script which will provision a single node Docker Swarm behind nginx with a self-signed certificate to mimic a load balancer. Your hosts file will be modified; the domain `apotheca-dev.library.upenn.edu` will be added and mapped to the Ubuntu VM. Once the Ansible script has completed and the Docker Swarm is deployed you can access the application by navigating to [https://apotheca-dev.library.upenn.edu](https://apotheca-dev.library.upenn.edu).
 
-#### Stopping
+### Stopping
 
 To stop the development environment, from the `vagrant` directory run:
 
@@ -44,7 +44,7 @@ To stop the development environment, from the `vagrant` directory run:
 vagrant halt
 ```
 
-#### Destroying
+### Destroying
 
 To destroy the development environment, from the `vagrant` directory run:
 
@@ -52,7 +52,7 @@ To destroy the development environment, from the `vagrant` directory run:
 vagrant destroy -f
 ```
 
-#### SSH
+### SSH
 
 You may ssh into the Vagrant VM by running:
 
@@ -60,27 +60,30 @@ You may ssh into the Vagrant VM by running:
 vagrant ssh
 ```
 
-#### Traefik
+### Traefik
 
 When running the development environment you can access the traefik web ui by navigating to: [https://traefik-dev.library.upenn.edu:8080/#](https://traefik-dev.library.upenn.edu:8080/#).
 
 
-#### Rails Application
+### Rails Application
 For information about the Rails application, see the [README](/rails_app/README.md) in the Rails application root. This includes information about running the test suite, performing harvesting, development styleguide and general application information.
 
-#### Minio
+#### Locally build image
+Usually the image for the Rails application is pulled from our gitlab registry. In some instances you may want to force the image to be build locally. In order to do that the `apotheca_build_docker_image` variable in [/ansible/inventories/vagrant/group_vars/docker_swarm_manager/apotheca.yml](ansible/inventories/vagrant/group_vars/docker_swarm_manager/apotheca.yml) must be set to `true`.
+
+### Minio
 In development, Minio is used to mimic S3-compatible object storage. In staging/production, the application will use an external services like AWS S3 and Wasabi.
 
 The Minio API is available at [http://minio-dev.library.upenn.edu](http://minio-dev.library.upenn.edu).
 
 To access the Minio UI, navigate to [http://minio-console-dev.library.upenn.edu/](http://minio-console-dev.library.upenn.edu/) and log-in as the `minioadmin` user with the password `minioadmin`.
 
-#### Solr
+### Solr
 Solr is running in [CloudMode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode) which uses Apache Zookeeper to provide centralized cluster management. Additionally, [ZooNavigator](https://github.com/elkozmon/zoonavigator) is used to manage the Zookeeper cluster in deployed environments.
 
 To access the Solr Admin UI, navigate to [http://apotheca-dev.library.upenn.int/solr/#/](http://apotheca-dev.library.upenn.int/solr/#/) and log-in as the `admin` user with the password `test`.
 
-#### Chrome
+### Chrome
 To access browserless Chrome, go to: [http://apotheca-dev.library.upenn.int:3333/](http://apotheca-dev.library.upenn.int:3333/)
 
 ## Deployment

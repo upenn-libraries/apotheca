@@ -1,15 +1,9 @@
 ---
-- name: Create custom docker image
-  community.docker.docker_image:
-    build:
-      args:
-        RAILS_ENV: "{{ apotheca_rails_env }}"
-      dockerfile: "Dockerfile"
-      path: "/apotheca/ansible/roles/apotheca/files/src/"
-      target: "development"
-      pull: true
-    force_tag: true
-    force_source: true
-    name: "{{ apotheca_image_name ~ ':' ~ apotheca_image_tag }}"
-    source: build
-    state: present
+- name: Create custom docker image using buildkit
+  ansible.builtin.shell:
+    cmd: |-
+      docker build --build-arg RAILS_ENV="{{ apotheca_rails_env }}" --target=development -t {{ apotheca_image_name }}:{{ apotheca_image_tag }} .
+    chdir: "/apotheca/ansible/roles/apotheca/files/src/"
+  environment:
+    DOCKER_BUILDKIT: "true"
+

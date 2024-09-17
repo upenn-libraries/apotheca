@@ -214,32 +214,14 @@ describe 'Bulk Export Index Page' do
       visit bulk_exports_path
     end
 
-    it 'sorts by generated at in ascending order' do
-      select 'Generated At', from: 'Sort By'
-      select 'Ascending', from: 'Sort Direction'
-      click_button 'Filter'
-      expect(first('.card')).to have_text(first_export.title)
-    end
-
-    it 'sorts by generated at in descending order' do
-      select 'Generated At', from: 'Sort By'
-      select 'Descending', from: 'Sort Direction'
-      click_button 'Filter'
+    it 'sorts by updated_at in descending order by default' do
       expect(first('.card')).to have_text(second_export.title)
     end
 
-    it 'sorts by created at in ascending order' do
-      select 'Created At', from: 'Sort By'
+    it 'sorts by updated_at in ascending order' do
       select 'Ascending', from: 'Sort Direction'
       click_button 'Filter'
       expect(first('.card')).to have_text(first_export.title)
-    end
-
-    it 'sorts by created at in descending order' do
-      select 'Created At', from: 'Sort By'
-      select 'Descending', from: 'Sort Direction'
-      click_button 'Filter'
-      expect(first('.card')).to have_text(second_export.title)
     end
   end
 
