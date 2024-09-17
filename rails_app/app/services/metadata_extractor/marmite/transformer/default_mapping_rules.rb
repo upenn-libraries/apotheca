@@ -32,15 +32,6 @@ module MetadataExtractor
           end
         end
 
-        # If a 700 field contains a subfield 'e' with the value 'owner', append the role to the provenance value.
-        def self.add_owner_to_provenance(datafield, extracted_values)
-          role = datafield.subfield_at('e')
-
-          extracted_values.tap do |values|
-            values[:value] = "#{values[:value]} (#{role})"
-          end
-        end
-
         # Check if the role is a provenance role.
         def self.role_is_provenance?(datafield)
           role = datafield.subfield_at('e')
@@ -115,8 +106,7 @@ module MetadataExtractor
         map_datafield '651', to: :coverage, value: { subfields: 'y' }
         map_datafield '655', to: :physical_format, value: { subfields: 'a' }, uri: { subfields: '0' }
         map_datafield '700', to: :provenance, value: { subfields: %w[a b c d], join: SPACE },
-                             uri: { subfields: '0' },
-                             custom: method(:add_owner_to_provenance), if: method(:role_is_provenance?)
+                             if: method(:role_is_provenance?)
         map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE },
                              uri: { subfields: '0' },
                              custom: method(:add_role_to_name), unless: method(:role_is_provenance?)
