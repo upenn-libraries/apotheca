@@ -4,7 +4,7 @@ module Solr
   module QueryMaps
     module Item
       ROWS_OPTIONS = [20, 50, 100, 250].freeze
-      MAX_BULK_EXPORT_ROWS = 100_000
+      MAX_BULK_EXPORT_ROWS = 10_000
 
       # Methods for grabbing all mappable values
       class Type
