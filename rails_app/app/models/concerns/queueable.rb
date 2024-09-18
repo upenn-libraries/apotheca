@@ -31,7 +31,7 @@ module Queueable
         transitions from: :processing, to: :failed
       end
 
-      event :reprocess, before: :clear_process_errors, after_commit: :remove_values_for_display do
+      event :reprocess, before: :remove_values_for_display do
         transitions from: %i[successful failed], to: :queued
       end
     end
