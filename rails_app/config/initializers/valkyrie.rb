@@ -96,5 +96,7 @@ Rails.application.config.to_prepare do
 
   # Requiring full iso8601 timestamp with offset in order to deserialize a string to a DateTime object.
   require 'valkyrie_extensions/date_time_json_value'
-  Valkyrie::Persistence::Shared::JSONValueMapper::DateValue.singleton_class.send(:prepend, ValkyrieExtensions::DateTimeJSONValue)
+  Valkyrie::Persistence::Shared::JSONValueMapper::DateValue.singleton_class.send(
+    :prepend, ValkyrieExtensions::DateTimeJSONValue
+  )
 end
