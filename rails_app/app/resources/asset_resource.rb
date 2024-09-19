@@ -69,4 +69,16 @@ class AssetResource < Valkyrie::Resource
   def display_title
     original_filename || id.to_s
   end
+
+  # @return [TrueClass, FalseClass]
+  def preservation_backup_needed?
+    item = query_service.find_inverse_references_by(resource: self, property: :asset_ids).first
+    item.present? && preservation_file_id.present? && preservation_copies_ids.blank?
+  end
+
+  private
+
+  def query_service
+    @query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
+  end
 end
