@@ -20,6 +20,7 @@ FactoryBot.define do
 
     trait :failed do
       state { BulkExport::STATE_FAILED }
+      process_errors { ['This is an error message!'] }
     end
 
     trait :successful do

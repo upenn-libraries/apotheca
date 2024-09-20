@@ -38,7 +38,10 @@ class BulkExport < ApplicationRecord
   end
 
   def remove_values_for_display
-    update(generated_at: nil, duration: nil, records_count: nil)
+    self.generated_at = nil
+    self.duration = nil
+    self.records_count = nil
+    self.process_errors = []
     csv.purge
   end
 
