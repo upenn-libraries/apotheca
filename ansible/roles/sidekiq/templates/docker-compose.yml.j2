@@ -72,6 +72,8 @@ services:
       - colenda_publish_token
       - ezid_user
       - ezid_password
+      - wasabi_access_key_id
+      - wasabi_secret_access_key
 {% endif %}
     volumes:
 {% if is_development == true %}
@@ -135,7 +137,12 @@ secrets:
   ezid_password:
     external: true
     name: "{{ 'apotheca_ezid_password_v' ~ apotheca_versioned_secrets.ezid_password.version }}"
-
+  wasabi_access_key_id:
+    external: true
+    name: "{{ 'apotheca_wasabi_access_key_id_v' ~ apotheca_versioned_secrets.wasabi_access_key_id.version }}"
+  wasabi_secret_access_key:
+    external: true
+    name: "{{ 'apotheca_wasabi_secret_access_key_v' ~ apotheca_versioned_secrets.wasabi_secret_access_key.version }}"
 volumes:
   app_storage:
     external: true

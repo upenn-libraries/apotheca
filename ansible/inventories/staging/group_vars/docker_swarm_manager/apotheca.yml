@@ -47,3 +47,9 @@ apotheca_versioned_secrets:
   ezid_password:
     value: "{{ apotheca_vault_values.secret.ezid_password }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
+  wasabi_access_key_id:
+    value: "{{ apotheca_vault_values.secret.wasabi_access_key_id }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  wasabi_secret_access_key:
+    value: "{{ apotheca_vault_values.secret.wasabi_secret_access_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"

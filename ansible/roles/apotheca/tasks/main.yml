@@ -136,6 +136,8 @@
     SOLR_URL: "{{ apotheca_solr_url }}"
     SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
     SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
+    WASABI_ACCESS_KEY_ID: "{{ 'apotheca_wasabi_access_key_id_v' ~ apotheca_versioned_secrets.wasabi_access_key_id.version }}"
+    WASABI_SECRET_ACCESS_KEY: "{{ 'apotheca_wasabi_secret_access_key_v' ~ apotheca_versioned_secrets.wasabi_secret_access_key.version }}"
   changed_when: false
   no_log: true
   when: not is_development | default (false, true)
