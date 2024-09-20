@@ -32,7 +32,6 @@ module ImportService
 
       @errors << 'invalid metadata fields provided' unless original_metadata.all? { |k, _v| VALID_FIELDS.include?(k) }
       @errors << 'title is required if a bibnumber is not provided' if original_metadata[:title].blank? && original_metadata[:bibnumber].blank?
-      @errors << 'date cannot include time' if original_metadata.fetch(:date, []).any? { |d| d.include?('T') }
 
       errors.empty?
     end
