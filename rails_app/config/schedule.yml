@@ -1,2 +1,0 @@
-# Sidekiq-cron will automatically load jobs specified in this file.
-# More details here: https://github.com/sidekiq-cron/sidekiq-cron?tab=readme-ov-file#loading-jobs-from-schedule-file
