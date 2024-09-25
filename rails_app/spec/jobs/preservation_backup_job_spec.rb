@@ -9,7 +9,7 @@ describe PreservationBackupJob do
     let(:args) { [asset.id.to_s, asset.updated_by] }
   end
 
-  context '#transaction' do
+  describe '#transaction' do
     context 'with an invalid asset' do
       let(:result) { described_class.new.transaction('non_id', 'test@test.com') }
 
