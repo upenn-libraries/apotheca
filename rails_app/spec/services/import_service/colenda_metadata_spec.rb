@@ -18,14 +18,6 @@ describe ImportService::ColendaMetadata do
       metadata = described_class.new({ bibnumber: ['12345'] })
       expect(metadata.valid?).to be true
     end
-
-    # Currently, migrating dates that are in the following format, 1944-06-24T14:00:00,
-    # throw an error when trying to deserialize.
-    it 'requires that dates do not include time' do
-      metadata = described_class.new({ date: ['1944-06-24T14:00:00', '1944'] })
-      expect(metadata.valid?).to be false
-      expect(metadata.errors).to include 'date cannot include time'
-    end
   end
 
   describe '#to_apotheca_metadata' do

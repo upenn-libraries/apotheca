@@ -91,4 +91,12 @@ Rails.application.config.to_prepare do
                              .query_service.custom_queries
                              .register_query_handler(postgres_query_handler)
   end
+
+  ### VALKYRIE OVERRIDES ###
+
+  # Requiring full iso8601 timestamp with offset in order to deserialize a string to a DateTime object.
+  require 'valkyrie_extensions/date_time_json_value'
+  Valkyrie::Persistence::Shared::JSONValueMapper::DateValue.singleton_class.send(
+    :prepend, ValkyrieExtensions::DateTimeJSONValue
+  )
 end

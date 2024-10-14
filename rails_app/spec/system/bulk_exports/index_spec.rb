@@ -133,6 +133,18 @@ describe 'Bulk Export Index Page' do
           within('div.modal-content') { click_button 'Regenerate' }
           expect(page).to have_text('Bulk export queued for regeneration')
         end
+
+        it 'displays the error message' do
+          within('div.card-footer') do
+            expect(page).to have_text(user_export.process_errors.first)
+          end
+        end
+
+        it 'clears the error message when regenerating' do
+          within('div.card-body') { click_button 'Regenerate Export' }
+          within('div.modal-content') { click_button 'Regenerate' }
+          expect(page).not_to have_text(user_export.process_errors.first)
+        end
       end
 
       context 'when it is successful' do

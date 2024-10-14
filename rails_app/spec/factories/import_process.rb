@@ -20,7 +20,7 @@ FactoryBot.define do
           'physical_location' => [{ value: 'Arc.MS.56' }],
           'item_type' => [{ value: 'Trade cards' }],
           'language' => [{ value: 'English' }],
-          'date' => [{ value: 'undated' }],
+          'date' => [{ value: '1900-01-01T12:00:00' }],
           'name' => [{ value: 'J. Rosenblatt & Co.' }],
           'geographic_subject' => [
             { value: 'Baltimore, Maryland, United States' },
