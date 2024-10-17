@@ -2,6 +2,6 @@
 fits:
   image:
     name: "gitlab.library.upenn.edu/dld/digital-repository/fits-servlet"
-    tag: "6d13f419"
+    tag: "main"
   port: 8080
   replicas: 1
