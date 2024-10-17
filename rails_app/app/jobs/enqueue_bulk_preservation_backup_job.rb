@@ -3,10 +3,14 @@
 # Job to backup assets to preservation storage in bulk
 class EnqueueBulkPreservationBackupJob
   include Sidekiq::Job
+
+  sidekiq_options queue: :medium
+
   DEFAULT_BATCH_SIZE = 1_000
+
   def perform(batch_size = DEFAULT_BATCH_SIZE)
     args = bulk_args.compact_blank.take(batch_size).to_a
-    PreservationBackupJob.perform_bulk(args, batch_size: batch_size)
+    PreservationBackupJob.perform_bulk(args)
   end
 
   private
