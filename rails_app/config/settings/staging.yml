@@ -35,8 +35,8 @@ aws: &aws
 wasabi: &wasabi
   access_key_id: <%= DockerSecrets.lookup(:wasabi_access_key_id) %>
   secret_access_key: <%= DockerSecrets.lookup(:wasabi_secret_access_key) %>
-  region: us-east-1
-  endpoint: https://s3.wasabisys.com
+  endpoint: https://s3.us-west-1.wasabisys.com
+  region: us-west-1
   force_path_style: true
 preservation_storage:
   <<: *aws
