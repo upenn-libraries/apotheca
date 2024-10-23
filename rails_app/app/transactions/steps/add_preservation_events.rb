@@ -13,15 +13,13 @@ module Steps
     # TODO: rescue exceptions?
     # @param [Valkyrie::ChangeSet] change_set
     def call(change_set)
-      action = action_event_type(change_set)
       timestamp = DateTime.current
       events = []
 
       events += preceding_events(change_set, timestamp)
-      events << action_event(action, change_set, timestamp)
-      events << checksum_event(action, change_set, timestamp)
-      events << preservation_filename_event(action, change_set, timestamp)
+      events += preservation_file_events(change_set, timestamp)
       events << original_filename_event(change_set, timestamp)
+      events << replication_event(change_set, timestamp)
 
       change_set.preservation_events += events.compact
 
@@ -30,12 +28,28 @@ module Steps
 
     private
 
-    # Determine event type based on the change being made to the associated preservation file, which occurs prior
-    # in the transaction (see add_preservation_file method in UpdateAsset transaction). If no file change is detected,
-    # consider the action a metadata update and do not log any ingestion or related events.
-    # @return [Symbol]
+    # Log changes to the preservation file. Determine ingestion event type and then log ingestion and related events.
     # @param [Valkyrie::ChangeSet] change_set
-    def action_event_type(change_set)
+    # @param [DateTime] timestamp
+    # @return [Array<AssetResource::PreservationEvent>]
+    def preservation_file_events(change_set, timestamp)
+      ingestion_type = ingestion_event_type(change_set)
+
+      return [] unless ingestion_type
+
+      [
+        ingestion_event(ingestion_type, change_set, timestamp),
+        checksum_event(change_set, timestamp),
+        preservation_filename_event(ingestion_type, change_set, timestamp)
+      ]
+    end
+
+    # Determine ingestion event type based on the change being made to the associated preservation file, which occurs
+    # prior in the transaction (see add_preservation_file method in UpdateAsset transaction). If no file change is
+    # detected, return nil.
+    # @param [Valkyrie::ChangeSet] change_set
+    # @return [Symbol|nil]
+    def ingestion_event_type(change_set)
       if change_set.migrated_from.present?
         :migration
       elsif change_set.resource.preservation_file_id.blank? && change_set.preservation_file_id.present?
@@ -45,17 +59,15 @@ module Steps
             (change_set.changed? :preservation_file_id)
         # resource ID is set and a new ID is incoming in the ChangeSet, and they aren't the same
         :reingestion
-      else
-        :metadata_update
       end
     end
 
     # Events may be built earlier in the transaction and stored on the temporary events virtual attribute.
     # Set the timestamp on any of these temporary events so that they are consistent with other events in
     # the transaction
-    # @return [Array<AssetResource::PreservationEvent>]
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
+    # @return [Array<AssetResource::PreservationEvent>]
     def preceding_events(change_set, timestamp)
       Array.wrap(change_set.temporary_events).map do |event|
         event.timestamp = timestamp
@@ -68,7 +80,7 @@ module Steps
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent | NilClass]
-    def action_event(action, change_set, timestamp)
+    def ingestion_event(action, change_set, timestamp)
       note = case action
              when :migration
                I18n.t('preservation_events.action.migration_note', from: change_set.migrated_from)
@@ -77,18 +89,16 @@ module Steps
              when :reingestion
                I18n.t('preservation_events.action.reingestion_note', filename: change_set.original_filename)
              else return; end
+
       EVENT.ingestion implementer: change_set.updated_by, timestamp: timestamp, note: note
     end
 
     # Return a checksum event. This requires that technical metadata be set in a prior transaction step.
     # See AddTechnicalMetadata step.
-    # @param [Symbol] action
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def checksum_event(action, change_set, timestamp)
-      return if action == :metadata_update
-
+    def checksum_event(change_set, timestamp)
       # TODO: throws exception if no tech md set, but at this point in the transaction, tech md should always be set
       checksum = change_set.technical_metadata.sha256
       EVENT.checksum(
@@ -121,14 +131,28 @@ module Steps
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
     def preservation_filename_event(action, change_set, timestamp)
-      return if action == :metadata_update
-
       previous_filename = previous_preservation_filename(action, change_set)
 
       EVENT.change_filename(
         implementer: change_set.updated_by,
         note: I18n.t('preservation_events.preservation_filename.note',
-                     from: previous_filename, to: preservation_filename(change_set)),
+                     from: previous_filename, to: normalized_filename(change_set.preservation_file_id)),
+        timestamp: timestamp
+      )
+    end
+
+    # Return an event when a preservation file has been backed up (replicated).
+    # @param [Valkyrie::ChangeSet] change_set
+    # @param [DateTime] timestamp
+    # @return [AssetResource::PreservationEvent]
+    def replication_event(change_set, timestamp)
+      return unless change_set.preservation_copies_ids.present? && change_set.changed?(:preservation_copies_ids)
+
+      filename = normalized_filename(change_set.preservation_copies_ids.first)
+
+      EVENT.replication(
+        implementer: change_set.updated_by,
+        note: I18n.t('preservation_events.replication.note', filename: filename),
         timestamp: timestamp
       )
     end
@@ -146,17 +170,17 @@ module Steps
       when :migration
         change_set.migrated_filename
       when :reingestion
-        preservation_filename(change_set.resource)
+        normalized_filename(change_set.resource.preservation_file_id)
       end
     end
 
     # Returns a semi-user friendly "filename" from a change set or a resource. This method strips out the leading
     # characters stored in a Valkyrie::ID that represent the file store.
     #
-    # @param [AssetResource | AssetChangeSet] source
+    # @param [Valkyrie::ID] source
     # @return [String]
-    def preservation_filename(source)
-      source.preservation_file_id.id.split('://').last
+    def normalized_filename(source)
+      source.id.split('://').last
     end
   end
 end

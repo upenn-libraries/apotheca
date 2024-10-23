@@ -140,6 +140,22 @@ describe Steps::AddPreservationEvents do
       end
     end
 
+    context 'when an Asset replicating the preservation file' do
+      let(:update_attributes) do
+        { preservation_copies_ids: [Valkyrie::ID.new('new-bogus-replicated-file-id')] }
+      end
+
+      it 'sets one preservation event' do
+        expect(preservation_events.length).to eq 1
+      end
+
+      it 'sets a replication event  outcome_detail_note' do
+        event = find_event_by_type events: preservation_events, type: Premis::Events::REPLICATION
+        expect(event.outcome_detail_note).to eq I18n.t('preservation_events.replication.note',
+                                                       filename: update_attributes[:preservation_copies_ids].first)
+      end
+    end
+
     context 'with an Asset receiving only updated metadata' do
       let(:update_attributes) { { label: 'Updated Label' } }
 
