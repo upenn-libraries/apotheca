@@ -50,5 +50,17 @@ describe DeleteItem do
         expect(a_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")).to have_been_made
       end
     end
+
+    context 'when item has iiif manifest' do
+      let!(:item) { persist(:item_resource, :with_iiif_manifest) }
+
+      it 'deletes derivatives' do
+        expect(Valkyrie::StorageAdapter.find_by(id: item.derivatives.first.file_id)).to be_present
+        result
+        expect {
+          Valkyrie::StorageAdapter.find_by(id: item.derivatives.first.file_id)
+        }.to raise_error(Valkyrie::StorageAdapter::FileNotFound)
+      end
+    end
   end
 end
