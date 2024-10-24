@@ -55,15 +55,25 @@ FactoryBot.define do
     end
 
     trait :with_iiif_manifest do
-      derivatives do
-        [
-          {
-            file_id: 'iiif_manifests-shrine://0000-abcdefg-123456/iiif_manifest',
-            mime_type: 'application/json',
-            type: 'iiif_manifest',
-            generated_at: DateTime.current
-          }
-        ]
+      transient do
+        iiif_manifest { true }
+      end
+
+      after(:create) do |item, evaluator|
+        if evaluator.iiif_manifest
+
+          uploaded_file = ActionDispatch::Http::UploadedFile.new(
+            tempfile: File.new(Rails.root.join('spec/fixtures/iiif_manifest/base_item.json')),
+            filename: 'iiif_manifest', type: 'iiif_manifest'
+          )
+          derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
+
+          file = derivative_storage.upload(file: uploaded_file, resource: item, original_filename: 'iiif_manifest')
+
+          item.derivatives << DerivativeResource.new(file_id: file.id, mime_type: 'application/json',
+                                                     type: 'iiif_manifest',
+                                                     generated_at: DateTime.current)
+        end
       end
     end
 
