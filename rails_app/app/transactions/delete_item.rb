@@ -7,6 +7,7 @@ class DeleteItem
   step :find_item, with: 'item_resource.find_resource'
   step :require_deleted_by, with: 'attributes.require_deleted_by'
   step :unpublish_item
+  step :delete_derivatives, with: 'item_resource.delete_derivatives'
   step :delete_item, with: 'item_resource.delete_resource'
   tee :record_event
   tee :delete_assets

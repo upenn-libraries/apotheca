@@ -10,7 +10,8 @@ class PurgeAsset
   step :find_asset, with: 'asset_resource.find_resource'
   step :find_parent_item, with: 'asset_resource.find_asset_parent_item'
   step :require_asset_not_attached
-  step :delete_files, with: 'asset_resource.delete_files'
+  step :delete_derivatives, with: 'asset_resource.delete_derivatives'
+  step :delete_preservation_files, with: 'asset_resource.delete_preservation_files'
   step :delete_asset, with: 'asset_resource.delete_resource'
   tee :delete_events
 

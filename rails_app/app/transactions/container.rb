@@ -50,6 +50,10 @@ class Container
       Steps::DeleteResource.new
     end
 
+    register 'delete_derivatives' do
+      Steps::DeleteDerivatives.new
+    end
+
     register 'generate_derivatives' do
       Steps::GenerateDerivatives.new(DerivativeService::Item::Derivatives, :iiif_manifest)
     end
@@ -80,8 +84,12 @@ class Container
       Steps::DeleteResource.new
     end
 
-    register 'delete_files' do
-      Steps::DeleteFiles.new
+    register 'delete_derivatives' do
+      Steps::DeleteDerivatives.new
+    end
+
+    register 'delete_preservation_files' do
+      Steps::DeletePreservationFiles.new
     end
 
     register 'detach_from_item' do

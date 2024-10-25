@@ -8,7 +8,8 @@ class DeleteAsset
   step :require_deleted_by, with: 'attributes.require_deleted_by'
   step :find_parent_item, with: 'asset_resource.find_asset_parent_item'
   step :detach_from_item, with: 'asset_resource.detach_from_item'
-  step :delete_files, with: 'asset_resource.delete_files'
+  step :delete_derivatives, with: 'asset_resource.delete_derivatives'
+  step :delete_preservation_files, with: 'asset_resource.delete_preservation_files'
   step :delete_asset, with: 'asset_resource.delete_resource'
   tee :record_event
 

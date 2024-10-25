@@ -62,7 +62,7 @@ describe DeleteAsset do
     end
 
     context 'when not set as thumbnail' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }
+      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives) }
       let(:item) do
         persist(:item_resource, asset_ids: [asset.id], structural_metadata: { arranged_asset_ids: [asset.id] })
       end
@@ -73,6 +73,12 @@ describe DeleteAsset do
 
       it 'deletes asset' do
         expect { query_service.find_by(id: asset.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+      end
+
+      it 'deletes derivatives' do
+        error =  Valkyrie::StorageAdapter::FileNotFound
+        expect { Valkyrie::StorageAdapter.find_by(id: asset.derivatives.first.file_id) }.to raise_error(error)
+        expect { Valkyrie::StorageAdapter.find_by(id: asset.derivatives.second.file_id) }.to raise_error(error)
       end
 
       it 'deletes preservation file' do
