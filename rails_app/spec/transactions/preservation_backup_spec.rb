@@ -29,6 +29,12 @@ describe PreservationBackup do
           Valkyrie::StorageAdapter.find_by(id: updated_asset.preservation_copies_ids.first)
         ).to be_a Valkyrie::StorageAdapter::File
       end
+
+      it 'mirrors preservation filename' do
+        preservation_filename = updated_asset.preservation_file_id.id.split('://').last
+        preservation_copy_filename = updated_asset.preservation_copies_ids.first.id.split('://').last
+        expect(preservation_copy_filename).to eql preservation_filename
+      end
     end
 
     context 'when preservation backup fails' do

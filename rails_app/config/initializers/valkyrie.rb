@@ -56,8 +56,9 @@ Rails.application.config.to_prepare do
   )
 
   Valkyrie::StorageAdapter.register(
-    Valkyrie::Storage::Shrine.new(Shrine.storages[:preservation_copy], identifier_prefix: 'preservation_copy'),
-    :preservation_copy
+    Valkyrie::Storage::Shrine.new(
+      Shrine.storages[:preservation_copy], nil, PreservationCopyPathGenerator, identifier_prefix: 'preservation_copy'
+    ), :preservation_copy
   )
 
   Valkyrie::StorageAdapter.register(

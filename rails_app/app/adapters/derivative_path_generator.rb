@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Generates paths for use with Valkyrie adapters.
+# Generates derivative paths. For use with Valkyrie adapters.
 #
 # Replaces default Valkyrie::Storage::Shrine::IDPathGenerator, uses original_filename instead
 # of random UUID for derivatives.
