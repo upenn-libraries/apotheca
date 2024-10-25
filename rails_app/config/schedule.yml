@@ -1,0 +1,9 @@
+# Sidekiq-cron will automatically load jobs specified in this file.
+# More details here: https://github.com/sidekiq-cron/sidekiq-cron?tab=readme-ov-file#loading-jobs-from-schedule-file
+
+preservation_backup:
+  cron: "0 0 * * *" # Every day at midnight
+  class: "EnqueueBulkPreservationBackupJob"
+  describe: "Enqueues preservation backup jobs for assets that have not been backed up"
+  queue: medium
+
