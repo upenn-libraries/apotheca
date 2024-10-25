@@ -11,6 +11,7 @@ class PreservationBackup
   step :require_updated_by, with: 'attributes.require_updated_by'
   step :create_change_set, with: 'asset_resource.create_change_set'
   step :store_file_in_backup_location
+  step :add_preservation_events, with: 'asset_resource.add_preservation_events'
   around :cleanup, with: 'asset_resource.cleanup'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'

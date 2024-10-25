@@ -16,5 +16,7 @@ module Premis
                                   'http://id.loc.gov/vocabulary/preservation/eventType/fix']
     TOMBSTONE =       Types::Term['deletion',
                                   'http://id.loc.gov/vocabulary/preservation/eventType/del']
+    REPLICATION =     Types::Term['replication',
+                                  'http://id.loc.gov/vocabulary/preservation/eventType/rep']
   end
 end

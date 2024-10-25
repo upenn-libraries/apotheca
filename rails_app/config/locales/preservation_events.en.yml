@@ -1,9 +1,11 @@
 en:
   preservation_events:
-    action:
-      migration_note: "Object migrated from %{from}"
-      ingestion_note: "Ingested as %{filename}"
-      reingestion_note: "New file ingested as %{filename}"
+    migration:
+      note: "Object migrated from %{from}"
+    ingestion:
+      note: "Ingested as %{filename}"
+    reingestion:
+      note: "New file ingested as %{filename}"
     checksum:
       note: "Checksum for file is %{checksum}"
     original_filename:
@@ -14,3 +16,5 @@ en:
     virus_check:
       unscanned: "File size exceeds 2GB limit for virus scan."
       clean: "File passed pre-ingest scan for viruses"
+    replication:
+      note: "%{filename} has been ingested into preservation backup"

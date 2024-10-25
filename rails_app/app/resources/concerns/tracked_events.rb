@@ -65,6 +65,18 @@ module TrackedEvents
             outcome: outcome, note: note, implementer: implementer, timestamp: timestamp
     end
 
+    # Used for preservation backup (replication of preservation file).
+    #
+    # @param [String] note
+    # @param [String] implementer
+    # @param [DateTime] timestamp
+    # @return [AssetResource::PreservationEvent]
+    def replication(note:, implementer:, timestamp:)
+      event type: Premis::Events::REPLICATION.uri,
+            outcome: Premis::Outcomes::SUCCESS.uri,
+            note: note, implementer: implementer, timestamp: timestamp
+    end
+
     # TODO: these actions remain to be integrated
     def fixity; end
     def tombstone; end
