@@ -1,9 +1,11 @@
 en:
   preservation_events:
-    action:
-      migration_note: "Object migrated from %{from}"
-      ingestion_note: "Ingested as %{filename}"
-      reingestion_note: "New file ingested as %{filename}"
+    migration:
+      note: "Object migrated from %{from}"
+    ingestion:
+      note: "Ingested as %{filename}"
+    reingestion:
+      note: "New file ingested as %{filename}"
     checksum:
       note: "Checksum for file is %{checksum}"
     original_filename:

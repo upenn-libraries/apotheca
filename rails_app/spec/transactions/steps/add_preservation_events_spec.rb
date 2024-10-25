@@ -36,7 +36,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets a ingest event with migration-specific outcome_detail_note' do
         ingest_event = find_event_by_type events: preservation_events, type: Premis::Events::INGEST
-        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.action.migration_note',
+        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.migration.note',
                                                               from: update_attributes[:migrated_from])
       end
 
@@ -61,7 +61,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets an ingest event with ingestion-specific outcome_detail_note' do
         ingest_event = find_event_by_type events: preservation_events, type: Premis::Events::INGEST
-        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.action.ingestion_note',
+        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.ingestion.note',
                                                               filename: update_attributes[:original_filename])
       end
 
@@ -102,7 +102,7 @@ describe Steps::AddPreservationEvents do
 
       it 'sets an ingest event with reingestion-specific outcome_detail_note' do
         ingest_event = find_event_by_type events: preservation_events, type: Premis::Events::INGEST
-        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.action.reingestion_note',
+        expect(ingest_event.outcome_detail_note).to eq I18n.t('preservation_events.reingestion.note',
                                                               filename: update_attributes[:original_filename])
       end
 

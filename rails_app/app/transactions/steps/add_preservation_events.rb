@@ -75,7 +75,7 @@ module Steps
       end
     end
 
-    # Returns an Event for the ingestion action type - nil if no action on the file is performed
+    # Returns an Event for the ingestion type - nil if no action on the file is performed
     # @param [Symbol] ingestion_type
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
@@ -83,11 +83,11 @@ module Steps
     def ingestion_event(ingestion_type, change_set, timestamp)
       note = case ingestion_type
              when :migration
-               I18n.t('preservation_events.action.migration_note', from: change_set.migrated_from)
+               I18n.t('preservation_events.migration.note', from: change_set.migrated_from)
              when :ingestion
-               I18n.t('preservation_events.action.ingestion_note', filename: change_set.original_filename)
+               I18n.t('preservation_events.ingestion.note', filename: change_set.original_filename)
              when :reingestion
-               I18n.t('preservation_events.action.reingestion_note', filename: change_set.original_filename)
+               I18n.t('preservation_events.reingestion.note', filename: change_set.original_filename)
              else return; end
 
       EVENT.ingestion implementer: change_set.updated_by, timestamp: timestamp, note: note
@@ -126,12 +126,12 @@ module Steps
 
     # Returns an event for a preservation file change. Base the detail note of the event on the type of change.
     # Include appropriate previous and current filename values.
-    # @param [Symbol] action
+    # @param [Symbol] ingestion_type
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent]
-    def preservation_filename_event(action, change_set, timestamp)
-      previous_filename = previous_preservation_filename(action, change_set)
+    def preservation_filename_event(ingestion_type, change_set, timestamp)
+      previous_filename = previous_preservation_filename(ingestion_type, change_set)
 
       EVENT.change_filename(
         implementer: change_set.updated_by,
@@ -163,8 +163,8 @@ module Steps
     #   identifier from storage yet to use as current filename.
     # In the migration case, we use the migrated_filename extracted during processing.
     # In the re-ingestion case, we extract the preservation filename from the unchanged resource.
-    def previous_preservation_filename(action, change_set)
-      case action
+    def previous_preservation_filename(ingestion_type, change_set)
+      case ingestion_type
       when :ingestion
         change_set.original_filename
       when :migration
