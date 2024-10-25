@@ -76,12 +76,12 @@ module Steps
     end
 
     # Returns an Event for the ingestion action type - nil if no action on the file is performed
-    # @param [Symbol] action
+    # @param [Symbol] ingestion_type
     # @param [Valkyrie::ChangeSet] change_set
     # @param [DateTime] timestamp
     # @return [AssetResource::PreservationEvent | NilClass]
-    def ingestion_event(action, change_set, timestamp)
-      note = case action
+    def ingestion_event(ingestion_type, change_set, timestamp)
+      note = case ingestion_type
              when :migration
                I18n.t('preservation_events.action.migration_note', from: change_set.migrated_from)
              when :ingestion
