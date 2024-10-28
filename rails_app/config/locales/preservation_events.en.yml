@@ -17,4 +17,4 @@ en:
       unscanned: "File size exceeds 2GB limit for virus scan."
       clean: "File passed pre-ingest scan for viruses"
     replication:
-      note: "%{filename} has been ingested into preservation backup"
+      note: "%{filename} has been replicated to preservation backup"
