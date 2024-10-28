@@ -192,10 +192,10 @@ describe AssetChangeSet do
     let(:resource) { persist(:asset_resource, :with_preservation_file) }
     let(:preservation_copy_storage) { Valkyrie::StorageAdapter.find(:preservation_copy) }
     let(:preservation_copy_file) do
+      preservation_file = Valkyrie::StorageAdapter.find_by(id: resource.preservation_file_id)
+
       preservation_copy_storage.upload(
-        file: ActionDispatch::Http::UploadedFile.new(
-          tempfile: file_fixture('files/trade_card/original/front.tif').open
-        ),
+        file: preservation_file,
         resource: resource,
         original_filename: resource.original_filename
       )
