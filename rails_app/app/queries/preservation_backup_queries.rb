@@ -17,6 +17,8 @@ class PreservationBackupQueries
 
   # Return the number of given Assets that have a preservation backup.
   def number_with_preservation_backup(ids)
+    return 0 if ids.blank?
+
     ids.map! do |id|
       id = Valkyrie::ID.new(id.to_s) if id.is_a?(String)
       raise ArgumentError, 'id must be a Valkyrie::ID' unless id.is_a? Valkyrie::ID
