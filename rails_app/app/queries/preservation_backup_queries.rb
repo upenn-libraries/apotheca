@@ -20,6 +20,7 @@ class PreservationBackupQueries
     ids.map! do |id|
       id = Valkyrie::ID.new(id.to_s) if id.is_a?(String)
       raise ArgumentError, 'id must be a Valkyrie::ID' unless id.is_a? Valkyrie::ID
+
       id.to_s
     end
 
