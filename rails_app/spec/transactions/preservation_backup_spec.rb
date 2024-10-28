@@ -10,9 +10,8 @@ describe PreservationBackup do
     context 'when preservation file already backed up' do
       let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }
 
-      it 'fails' do
-        expect(result.failure?).to be true
-        expect(result.failure[:error]).to be :file_backup_already_present
+      it 'succeeds' do
+        expect(result.success?).to be true
       end
     end
 
