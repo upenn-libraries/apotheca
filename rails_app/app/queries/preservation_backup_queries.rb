@@ -41,4 +41,3 @@ class PreservationBackupQueries
     SQL
   end
 end
-
