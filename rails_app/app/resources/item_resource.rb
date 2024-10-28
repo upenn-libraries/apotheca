@@ -134,6 +134,10 @@ class ItemResource < Valkyrie::Resource
     thumbnail&.thumbnail.present?
   end
 
+  def all_assets_backed_up?
+    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_ids.count
+  end
+
   private
 
   def create_presenter
