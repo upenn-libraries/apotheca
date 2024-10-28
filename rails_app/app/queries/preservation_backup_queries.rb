@@ -15,7 +15,7 @@ class PreservationBackupQueries
     @query_service = query_service
   end
 
-  # Return the number of given Assets that are missing a preservation backup.
+  # Return the number of given Assets that have a preservation backup.
   def number_with_preservation_backup(ids)
     ids.map! do |id|
       id = Valkyrie::ID.new(id.to_s) if id.is_a?(String)
@@ -26,6 +26,8 @@ class PreservationBackupQueries
     query = count_with_preservation_backup_query(ids)
     orm_class.count_by_sql(query)
   end
+
+  private
 
   def count_with_preservation_backup_query(ids)
     ids_string = ids.map { |i| "'#{i}'" }.join(',')
