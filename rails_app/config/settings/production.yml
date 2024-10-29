@@ -73,7 +73,6 @@ migration:
   colenda_url: https://colenda.library.upenn.edu
 
 # Item/Asset Resource Configuration
-skip_preservation_backup: true
 iiif:
   image_server:
     url: 'https://iiif-images.library.upenn.edu/iiif/2'
