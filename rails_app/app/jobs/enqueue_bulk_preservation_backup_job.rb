@@ -20,7 +20,9 @@ class EnqueueBulkPreservationBackupJob
   def bulk_args
     query_service.find_all_of_model(model: ItemResource).flat_map do |item|
       query_service.find_many_by_ids(ids: Array.wrap(item.asset_ids)).filter_map do |asset|
-        [asset.id.to_s, asset.created_by] if asset.preservation_file_id.present? && asset.preservation_copies_ids.blank?
+        next unless asset.preservation_file_id.present? && asset.preservation_copies_ids.blank?
+
+        [asset.id.to_s, Settings.system_user]
       end
     end
   end
