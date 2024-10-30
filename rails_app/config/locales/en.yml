@@ -1,4 +1,5 @@
 en:
+  system_email: 'system@apotheca.library.upenn.edu'
   alert_messages:
     update:
       updated: "Alert updated"
