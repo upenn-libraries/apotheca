@@ -16,7 +16,7 @@ RSpec.describe PreservationBackupQueries do
       end
     end
 
-    context 'when none of assets backed up' do
+    context 'when no assets backed up' do
       let(:asset_ids) { [asset_without_pres_backup.id] }
 
       it 'returns 0' do
