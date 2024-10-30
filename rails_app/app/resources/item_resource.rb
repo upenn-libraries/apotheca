@@ -134,6 +134,7 @@ class ItemResource < Valkyrie::Resource
     thumbnail&.thumbnail.present?
   end
 
+  # Returns true if all assets have been backed up to preservation-copy. If no assets are present, returns true.
   def all_assets_backed_up?
     return true if asset_ids.nil?
 

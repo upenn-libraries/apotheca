@@ -7,9 +7,13 @@
 <h2><%= @item.human_readable_name %></h2>
 
 <div class="align-self-center mb-2">
-  <%= render(StatusBadge::Component.new(test: @item.all_assets_backed_up?,
-                                        truthy: 'All Assets Backed up',
-                                        falsey: 'Pending Asset Backups')) %>
+  <% if @item.asset_count.zero? %>
+    <span class="badge bg-warning text-dark">No Assets</span>
+  <% else %>
+    <%= render(StatusBadge::Component.new(test: @item.all_assets_backed_up?,
+                                          truthy: 'All Assets Backed up',
+                                          falsey: 'Pending Asset Backups')) %>
+  <% end %>
 </div>
 
 <%= render partial: 'header_info' %>
