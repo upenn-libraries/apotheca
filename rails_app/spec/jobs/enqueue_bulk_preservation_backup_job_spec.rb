@@ -46,9 +46,9 @@ describe EnqueueBulkPreservationBackupJob do
 
     it 'enqueues the expected jobs with the correct arguments' do
       expect { job.perform_inline }.to enqueue_sidekiq_job(PreservationBackupJob)
-        .with(without_preservation_backup.id.to_s, without_preservation_backup.updated_by)
+        .with(without_preservation_backup.id.to_s, Settings.system_user)
       expect { job.perform_inline }.to enqueue_sidekiq_job(PreservationBackupJob)
-        .with(additional_asset_to_backup.id.to_s, additional_asset_to_backup.updated_by)
+        .with(additional_asset_to_backup.id.to_s, Settings.system_user)
     end
 
     context 'when receiving a batch size parameter' do
