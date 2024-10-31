@@ -41,10 +41,14 @@ describe ItemResource do
     context 'when not including assets' do
       subject(:export) { resource.to_json_export }
 
-      let(:resource) { persist(:item_resource) }
+      let(:resource) { persist(:item_resource, :migrated) }
 
       it 'returns expected data' do
         expect(export[:human_readable_name]).to eql('New Item')
+      end
+
+      it 'returns first_created_at date' do
+        expect(export[:created_at]).to eql resource.first_created_at&.to_fs(:display)
       end
 
       it 'returns expected nested data' do
