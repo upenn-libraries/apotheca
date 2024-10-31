@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Query class that fetches resources by unique_identifier
-class FindByUniqueIdentifier
+class UniqueIdentifierQueries
   def self.queries
     [:find_by_unique_identifier]
   end
