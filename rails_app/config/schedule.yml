@@ -2,7 +2,7 @@
 # More details here: https://github.com/sidekiq-cron/sidekiq-cron?tab=readme-ov-file#loading-jobs-from-schedule-file
 
 preservation_backup:
-  cron: "0 0 * * *" # Every day at midnight
+  cron: "0 */1 * * *" # Every hour
   class: "EnqueueBulkPreservationBackupJob"
   describe: "Enqueues preservation backup jobs for assets that have not been backed up"
   queue: medium
