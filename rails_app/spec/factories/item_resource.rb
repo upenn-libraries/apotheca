@@ -20,6 +20,10 @@ FactoryBot.define do
     created_by { 'admin@library.upenn.edu' }
     updated_by { 'admin@library.upenn.edu' }
 
+    trait :migrated do
+      first_created_at { 2.years.ago }
+    end
+
     trait :with_faker_metadata do
       users = (0..5).map { Faker::Internet.email }
       human_readable_name { Faker::Book.title }
