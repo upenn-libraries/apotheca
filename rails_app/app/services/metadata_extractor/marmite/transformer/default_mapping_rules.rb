@@ -105,7 +105,7 @@ module MetadataExtractor
                              uri: { subfields: '0' }
         map_datafield '651', to: :coverage, value: { subfields: 'y' }
         map_datafield '655', to: :physical_format, value: { subfields: 'a' }, uri: { subfields: '0' }
-        map_datafield '700', to: :provenance, value: { subfields: %w[a b c d e ], join: SPACE },
+        map_datafield '700', to: :provenance, value: { subfields: %w[a b c d e], join: SPACE },
                              if: method(:role_is_provenance?)
         map_datafield '700', to: :name, value: { subfields: %w[a b c d q], join: SPACE },
                              uri: { subfields: '0' },
