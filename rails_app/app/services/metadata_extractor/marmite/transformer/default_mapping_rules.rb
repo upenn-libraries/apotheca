@@ -71,7 +71,7 @@ module MetadataExtractor
         map_datafield '041', to: :language, value: { subfields: 'a' }, custom: method(:language_transformation)
         map_datafield '041', to: :language, value: { subfields: 'b' }, custom: method(:language_transformation)
         map_datafield '041', to: :language, value: { subfields: 'g' }, custom: method(:language_transformation)
-        map_datafield '100', to: :name, value: { subfields: %w[a b c d], join: SPACE }, uri: { subfields: '0' },
+        map_datafield '100', to: :name, value: { subfields: %w[a b c d q], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
         map_datafield '110', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
                              custom: method(:add_role_to_name)
@@ -107,7 +107,7 @@ module MetadataExtractor
         map_datafield '655', to: :physical_format, value: { subfields: 'a' }, uri: { subfields: '0' }
         map_datafield '700', to: :provenance, value: { subfields: %w[a b c d e], join: SPACE },
                              if: method(:role_is_provenance?)
-        map_datafield '700', to: :name, value: { subfields: %w[a b c d], join: SPACE },
+        map_datafield '700', to: :name, value: { subfields: %w[a b c d q], join: SPACE },
                              uri: { subfields: '0' },
                              custom: method(:add_role_to_name), unless: method(:role_is_provenance?)
         map_datafield '710', to: :name, value: { subfields: %w[a b d], join: SPACE }, uri: { subfields: '0' },
