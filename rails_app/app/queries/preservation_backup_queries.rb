@@ -46,8 +46,7 @@ class PreservationBackupQueries
   # Given an Item's id, find any of its related Assets that are missing a preservation backup.
   def assets_without_preservation_backup_query(item_id)
     <<-SQL
-        SELECT DISTINCT member.* FROM orm_resources a,
-        jsonb_array_elements(a.metadata->'asset_ids') AS b(member)
+        SELECT DISTINCT member.* FROM orm_resources a, jsonb_array_elements(a.metadata->'asset_ids') AS b(member)
         JOIN orm_resources member ON (b.member->>'id')::#{orm_class.columns_hash["id"].type} = member.id 
         WHERE a.id = '#{item_id}' 
         AND member.internal_resource = 'AssetResource'
