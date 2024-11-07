@@ -6,14 +6,14 @@ module MetadataExtractor
       class DefaultMappingRules
         # Mapping for RDA content type to DCMI type.
         module RDAContentTypeToDCMIType
-          DATASET         = { value: 'Dataset',        uri: 'http://purl.org/dc/dcmitype/Dataset'        }.freeze
-          IMAGE           = { value: 'Image',          uri: 'http://purl.org/dc/dcmitype/Image'          }.freeze
-          MOVING_IMAGE    = { value: 'MovingImage',    uri: 'http://purl.org/dc/dcmitype/MovingImage'    }.freeze
-          PHYSICAL_OBJECT = { value: 'PhysicalObject', uri: 'http://purl.org/dc/dcmitype/PhysicalObject' }.freeze
-          SOFTWARE        = { value: 'Software',       uri: 'http://purl.org/dc/dcmitype/Software'       }.freeze
-          SOUND           = { value: 'Sound',          uri: 'http://purl.org/dc/dcmitype/Sound'          }.freeze
-          STILL_IMAGE     = { value: 'StillImage',     uri: 'http://purl.org/dc/dcmitype/StillImage'     }.freeze
-          TEXT            = { value: 'Text',           uri: 'http://purl.org/dc/dcmitype/Text'           }.freeze
+          DATASET         = { value: 'Dataset',         uri: 'http://purl.org/dc/dcmitype/Dataset'        }.freeze
+          IMAGE           = { value: 'Image',           uri: 'http://purl.org/dc/dcmitype/Image'          }.freeze
+          MOVING_IMAGE    = { value: 'Moving Image',    uri: 'http://purl.org/dc/dcmitype/MovingImage'    }.freeze
+          PHYSICAL_OBJECT = { value: 'Physical Object', uri: 'http://purl.org/dc/dcmitype/PhysicalObject' }.freeze
+          SOFTWARE        = { value: 'Software',        uri: 'http://purl.org/dc/dcmitype/Software'       }.freeze
+          SOUND           = { value: 'Sound',           uri: 'http://purl.org/dc/dcmitype/Sound'          }.freeze
+          STILL_IMAGE     = { value: 'Still Image',     uri: 'http://purl.org/dc/dcmitype/StillImage'     }.freeze
+          TEXT            = { value: 'Text',            uri: 'http://purl.org/dc/dcmitype/Text'           }.freeze
 
           MAP = {
             'cartographic dataset' => DATASET,
