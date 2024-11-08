@@ -15,7 +15,7 @@ RSpec.describe PreservationBackupQueries do
         persist(:item_resource, asset_ids: [asset_with_pres_backup.id])
       end
 
-      it 'returns 0' do
+      it 'returns 0 AssetResources' do
         expect(query.missing_preservation_backup.count).to be 0
       end
     end
@@ -25,8 +25,9 @@ RSpec.describe PreservationBackupQueries do
         persist(:item_resource, asset_ids: [asset_with_pres_backup.id, asset_without_pres_backup.id])
       end
 
-      it 'returns 1' do
+      it 'returns 1 AssetResource' do
         expect(query.missing_preservation_backup.count).to be 1
+        expect(query.missing_preservation_backup.first).to be_a AssetResource
       end
 
       it 'returns expected assets' do
