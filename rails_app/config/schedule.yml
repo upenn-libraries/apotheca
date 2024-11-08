@@ -6,4 +6,6 @@ preservation_backup:
   class: "EnqueueBulkPreservationBackupJob"
   describe: "Enqueues preservation backup jobs for assets that have not been backed up"
   queue: medium
+  args:
+    - 2000
 
