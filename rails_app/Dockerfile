@@ -31,8 +31,6 @@ ENV BUNDLE_APP_CONFIG="${PROJECT_ROOT}/.bundle"
 
 WORKDIR ${PROJECT_ROOT}
 
-COPY ocr_languages.txt ./
-
 # Install build packages
 RUN apt-get update && apt-get install -y \
       build-essential \
@@ -44,9 +42,7 @@ RUN apt-get update && apt-get install -y \
       clamav-daemon \
       clamdscan \
       postgresql \
-      postgresql-contrib \
-      tesseract-ocr \
-      $(xargs -I {} echo tesseract-ocr-{} < ./ocr_languages.txt) && \
+      postgresql-contrib && \
     rm -rf /var/lib/apt/lists/*
 
 COPY Gemfile* ./
