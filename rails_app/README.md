@@ -42,18 +42,22 @@ In order to run the test suite (currently):
 2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
 
 ## Valkyrie
-Apotheca use [Valkyrie](https://github.com/samvera/valkyrie) to store the metadata and files for each digital object. The metadata is stored in Solr and Postgres. The Solr index is used for searching and Postgres is used as the canonical metadata source. We use the extension valkyrie-shrine to store all of our files to cloud storage. 
+Apotheca uses [Valkyrie](https://github.com/samvera/valkyrie)'s interface to store the metadata and files associated for each digital object. The metadata is stored in Solr and Postgres. The Solr index is used for searching and Postgres is used as the canonical metadata source. We use the extension [valkyrie-shrine](https://github.com/samvera-labs/valkyrie-shrine) to store all of our files to cloud storage. Our Valkyrie resources and change sets are located in [app/resources](app/resources/) and [app/change_sets](app/change_sets/), respectively.
 
-[Dive into Valkyrie](https://github.com/samvera/valkyrie/wiki/Dive-into-Valkyrie) is a good tutorial to run through to get some familiarity with Valkyrie.
+More information about why we choose Valkyrie can be found in the [relevant ADR](docs/architecture_decisions/0002_choose_valkyrie.md).
+
+[Dive into Valkyrie](https://github.com/samvera/valkyrie/wiki/Dive-into-Valkyrie) is a good tutorial to get some familiarity with Valkyrie.
 
 ## dry-transaction
-TODO
+To orchestrate the various actions that need to happen when we create/update/delete Valkyrie resources we use [dry-transaction](https://dry-rb.org/gems/dry-transaction/0.15/). Where possible, we try to extract `steps` that can be shared across transactions. Essentially, any action that involves changing a Resource should go through a transaction. The only place transactions are not used is during testing.
+
+More information about transactions can be found in the [relevant ADR](docs/architecture_decisions/0003_use_transactions.md).
 
 ## ViewComponent
-TODO
+We use the [ViewComponent](https://viewcomponent.org/) library to create shareable/reuseable UI elements. In some cases we use it to make our view templates more manageable. 
 
 ## Sidekiq and ActiveJob
-We use Sidekiq to run all of our jobs in `development`, `staging` and `production`. In `test`, we use test appropriate adapters. All of our custom jobs are written with `Sidekiq::Job` to provide better performance. We don't use `ActiveJob::Base` when writing custom jobs. While we don't directly use `ActiveJob`, it is configured to use Sidekiq in case we decide to use built-in jobs like sending emails.
+We use [Sidekiq](https://github.com/sidekiq/sidekiq) to run all of our jobs in `development`, `staging` and `production`. In `test`, we use test appropriate adapters. All of our custom jobs are written with `Sidekiq::Job` to provide better performance. We don't use `ActiveJob::Base` when writing custom jobs. While we don't directly use `ActiveJob`, it is configured to use Sidekiq in case we decide to use built-in jobs like sending emails.
 
 The Sidekiq Web UI is available at `/sidekiq`.
 
@@ -63,6 +67,8 @@ In development, two authentication providers are available:
 1. Developer Authentication - enter a fake PennKey and you're in. This looks for an existing developer-provider user and logs that user in. Upon creation, these users have the `ADMIN_ROLE`.
 2. PennKey Authentication - selecting this will authenticate via Penn's IdP. Another admin user will have to create a user stub via the UI. In deployed environments, the rake task `apotheca:create_admin_stub UID=your_pennkey` can be used to initialize a stub admin user.
 This makes it possible to use your PennKey in development but also to create additional users to test out authorization functionality.
+
+In staging and production, only PennKey authentication is available.
 
 ## Configuration/Settings
 Application-wide configuration is centralized in `config/settings` and `config/settings.yml`. Access to configuration is provided via the `Settings` object instantiated by the [config](https://github.com/rubyconfig/config) gem. For example, to retrieve the preservation storage configuration run:
