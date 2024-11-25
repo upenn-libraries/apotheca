@@ -2,6 +2,8 @@
 Apotheca is the administrative application that enables the ingestion and management of digital assets. It is a 
 Ruby-on-Rails application that uses [Valkyrie](https://github.com/samvera/valkyrie) to manage the files and metadata associated with each digital object. It provides a web UI and a bulk import process for staff to load content. It stores preservation copies in two cloud storage solutions, extracts technical metadata, creates derivatives and publishes the content out to our discovery interface.
 
+To view end-user documentation, visit our [Confluence documentation](https://upennlibrary.atlassian.net/wiki/spaces/COL/pages/498794612/Apotheca).
+
 ## Local Development Environment
 
 Our local development environment uses vagrant in order to set up a consistent environment with the required services. Please see the [root README for instructions](../README.md#development)  on how to set up this environment.
