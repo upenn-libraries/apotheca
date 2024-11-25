@@ -26,7 +26,7 @@ namespace :apotheca do
 
     sample_records_count = 20
     0.upto(sample_records_count).each do
-      FactoryBot.persist :item_resource, :with_faker_metadata, :with_asset
+      FactoryBot.persist :item_resource, :with_faker_metadata, :with_full_asset
     end
   end
 
