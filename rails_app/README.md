@@ -1,7 +1,6 @@
 # Apotheca
-
-## Overview
-The administrative application that enables the ingestion and management of digital assets. This application provides a web UI and a bulk import process for staff to load content. It stores preservation copies in two cloud storage solutions, extracts technical metadata, creates derivatives and publishes the content out to our discovery interface.
+Apotheca is the administrative application that enables the ingestion and management of digital assets. It is a 
+Ruby-on-Rails application that uses [Valkyrie](https://github.com/samvera/valkyrie) to manage the files and metadata associated with each digital object. It provides a web UI and a bulk import process for staff to load content. It stores preservation copies in two cloud storage solutions, extracts technical metadata, creates derivatives and publishes the content out to our discovery interface.
 
 ## Local Development Environment
 
@@ -42,12 +41,23 @@ In order to run the test suite (currently):
 1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
 2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
 
+## Valkyrie
+Apotheca use [Valkyrie](https://github.com/samvera/valkyrie) to store the metadata and files for each digital object. The metadata is stored in Solr and Postgres. The Solr index is used for searching and Postgres is used as the canonical metadata source. We use the extension valkyrie-shrine to store all of our files to cloud storage. 
+
+[Dive into Valkyrie](https://github.com/samvera/valkyrie/wiki/Dive-into-Valkyrie) is a good tutorial to run through to get some familiarity with Valkyrie.
+
+## dry-transaction
+TODO
+
+## ViewComponent
+TODO
+
 ## Sidekiq and ActiveJob
 We use Sidekiq to run all of our jobs in `development`, `staging` and `production`. In `test`, we use test appropriate adapters. All of our custom jobs are written with `Sidekiq::Job` to provide better performance. We don't use `ActiveJob::Base` when writing custom jobs. While we don't directly use `ActiveJob`, it is configured to use Sidekiq in case we decide to use built-in jobs like sending emails.
 
 The Sidekiq Web UI is available at `/sidekiq`.
 
-### Working with PennKey Auth
+## Authentication
 
 In development, two authentication providers are available:
 1. Developer Authentication - enter a fake PennKey and you're in. This looks for an existing developer-provider user and logs that user in. Upon creation, these users have the `ADMIN_ROLE`.
@@ -72,19 +82,24 @@ For CSS vendored assets, CDN or Gemified versions should be used when available.
 
 Node, NPM nor Yarn are required to develop, run or deploy this application.
 
-## Code Linting and Formatting
-### Rubocop
-Rubocop is used to enforce style and formatting rules in our Ruby code. This application uses a custom set of rules contained within the [upennlib-rubocop](https://gitlab.library.upenn.edu/cgalarza/upennlib-rubocop) gem.
+## Rubocop
+This application uses Rubocop to enforce Ruby and Rails style guidelines. We centralize our UPenn specific configuration in
+[upennlib-rubocop](https://gitlab.library.upenn.edu/dld/upennlib-rubocop).
 
-#### To check style and formatting run:
+
+To check style and formatting run:
 ```ruby
 bundle exec rubocop
 ```
 
-#### To regenerate `.rubocop_todo.yml`:
-```shell
-bundle exec rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
+If there are rubocop offenses that you are not able to fix please do not edit the rubocop configuration instead regenerate the `rubocop_todo.yml` using the following command:
+
+```bash
+rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
 ```
+
+To change our default Rubocop config please open an MR in the `upennlib-rubocop` project.
+
 
 ## Basic Operations
 ### Create an Item and Asset with transactions
@@ -102,3 +117,9 @@ asset = result.value!
 # Attach Asset to Item
 item = CreateItem.new.call(human_readable_name: 'New Item', created_by: 'admin@library.upenn.edu', descriptive_metadata: { title: ['Best Item'] }, structural_metadata: { arranged_asset_ids: [asset.id]}, asset_ids: [asset.id])
 ```
+
+## Contributing
+
+In order to contribute productively while fostering the project values, familiarize yourself with the established
+[Gitlab Collaboration Workflow](https://upennlibrary.atlassian.net/wiki/spaces/DLD/pages/498073672/GitLab+Collaboration+Workflow)
+as well as the [Ruby on Rails Development Guidelines](https://upennlibrary.atlassian.net/wiki/spaces/DLD/pages/495616001/Ruby-on-Rails+Development+Guidelines).
