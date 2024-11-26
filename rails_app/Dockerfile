@@ -85,6 +85,9 @@ ENV PATH="${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/bin:${PATH}"
 
 WORKDIR ${PROJECT_ROOT}
 
+COPY --from=base ${PROJECT_ROOT}/ocr_languages.txt ${PROJECT_ROOT}/ocr_languages.txt
+
+
 RUN apt-get update && apt-get install -y \
       build-essential \
       curl \
@@ -98,7 +101,9 @@ RUN apt-get update && apt-get install -y \
       clamav-daemon \
       clamdscan \
       postgresql \
-      postgresql-contrib && \
+      postgresql-contrib \
+      tesseract-ocr \
+      $(xargs -I {} echo tesseract-ocr-{} < ./ocr_languages.txt) && \
     addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
     mkdir -p ${PROJECT_ROOT}/tmp/pids && \
     rm -rf /var/lib/apt/lists/*
@@ -147,6 +152,8 @@ ENV RAILS_SERVE_STATIC_FILES=true
 
 WORKDIR ${PROJECT_ROOT}
 
+COPY --from=base ${PROJECT_ROOT}/ocr_languages.txt ${PROJECT_ROOT}/ocr_languages.txt
+
 RUN apt-get update && apt-get install -y \
       build-essential \
       curl \
@@ -160,7 +167,9 @@ RUN apt-get update && apt-get install -y \
       clamav-daemon \
       clamdscan \
       postgresql \
-      postgresql-contrib && \
+      postgresql-contrib \
+      tesseract-ocr \
+      $(xargs -I {} echo tesseract-ocr-{} < ./ocr_languages.txt) && \
     addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
     mkdir -p ${PROJECT_ROOT}/tmp/pids && \
     rm -rf /var/lib/apt/lists/*
