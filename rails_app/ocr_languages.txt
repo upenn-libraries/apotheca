@@ -4,6 +4,7 @@ ita
 heb
 fra
 deu
+frk
 jpn
 jpn-vert
 spa
