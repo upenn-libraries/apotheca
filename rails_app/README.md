@@ -26,15 +26,28 @@ Once your local development environment is set up you can ssh into the vagrant b
   docker exec -it apotheca_apotheca.1.{whatever} sh
 ```
 
-### Generate Example Items
+### Generating Example Items
+#### Basic Items via a Rake task
+The following task generates some basic items that all have the same asset. These type of items could be good for various types of testing but if you work requires samples that mimic real items use the [bulk import](#real-items-via-bulkimport) instructions below. 
 
-To generate some example items in a local development environment:
+To generate basic example items in a local development environment:
 
 1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
 2. Run rake tasks:
 ```bash
 bundle exec rake apotheca:generate_samples
 ```
+
+#### "Real" Items via BulkImport
+To load some real sample items the process is more involved. First, download the [sample records from Box](https://upenn.box.com/s/yqzkpydba1f6bab58t8ae0co2zjfl3cj) onto your computer. This set includes a few different types of objects and their matching CSVs are in the "Bulk Import CSVs" folder. In this example, we will load five samples from the Franklin Papers collection:
+
+1. Visit the [Minio Console UI](http://minio-console-dev.library.upenn.edu) and login with the credentials `minioadmin/minioadmin`.
+2. Move the entire `FranklinPapers` directory to the [sceti-digitized bucket](http://minio-console-dev.library.upenn.edu/browser/sceti-digitized).
+3. In Apotheca, navigate to the [BulkImport create page](https://apotheca-dev.library.upenn.edu/bulk_imports/new). 
+4. In the "CSV" field, load the Franklin Papers CSV `Franklin Papers - 5 Sample Items.csv`. 
+5. Hit "Create". This will start up jobs to load the items represented in the Bulk Import CSV.
+
+For more documentation on the ingestion process, please see our [Confluence documentation](https://upennlibrary.atlassian.net/wiki/spaces/COL/pages/498794612/Apotheca).
 
 ### Running Test Suite
 
