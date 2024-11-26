@@ -108,24 +108,6 @@ rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
 
 To change our default Rubocop config please open an MR in the `upennlib-rubocop` project.
 
-
-## Basic Operations
-### Create an Item and Asset with transactions
-
-```ruby
-# Create Asset and attach file
-result = CreateAsset.new.call(original_filename: 'front.tif', created_by: 'admin@library.upenn.edu')
-
-uploaded_file = ActionDispatch::Http::UploadedFile.new tempfile: File.new(Rails.root.join('spec', 'fixtures', 'files', 'trade_card', 'original', 'front.tif')), filename: 'front.tif', type: 'image/tiff'
-
-result = UpdateAsset.new.call(id: result.value!.id, file: uploaded_file, updated_by: 'admin@library.upenn.edu')
-
-asset = result.value!
-
-# Attach Asset to Item
-item = CreateItem.new.call(human_readable_name: 'New Item', created_by: 'admin@library.upenn.edu', descriptive_metadata: { title: ['Best Item'] }, structural_metadata: { arranged_asset_ids: [asset.id]}, asset_ids: [asset.id])
-```
-
 ## Contributing
 
 In order to contribute productively while fostering the project values, familiarize yourself with the established
