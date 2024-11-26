@@ -41,36 +41,6 @@ namespace :apotheca do
     end
   end
 
-  desc 'Start local development & test environments'
-  task start: :environment do
-    # Start services
-    system('docker-compose up -d')
-
-    # Wait until postgres is ready before creating database.
-    until system('docker-compose exec -u postgres postgres pg_isready')
-      # Create databases, if they aren't present.
-      system('rake db:create')
-
-      # Migrate test and development databases
-      system('RAILS_ENV=development rake db:migrate')
-      system('RAILS_ENV=test rake db:migrate')
-    end
-
-    # Create buckets
-    system('RAILS_ENV=development rake apotheca:create_buckets')
-    system('RAILS_ENV=test rake apotheca:create_buckets')
-  end
-
-  desc 'Destroys local development & test environments and any data'
-  task destroy: :environment do
-    system('docker-compose down --volumes') # Removes containers and volumes
-  end
-
-  desc 'Stop local development & test environments'
-  task stop: :environment do
-    system('docker-compose stop')
-  end
-
   desc 'Create preservation, derivative and working storage buckets for development and test environments'
   task create_buckets: :environment do
     configs = [
