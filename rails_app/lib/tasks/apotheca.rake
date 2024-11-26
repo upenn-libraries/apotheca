@@ -29,12 +29,13 @@ namespace :apotheca do
 
       # Load file
       uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: File.new(Rails.root.join("spec/fixtures/files/trade_card/original/front.tif")),
+        tempfile: File.new(Rails.root.join('spec/fixtures/files/trade_card/original/front.tif')),
         filename: 'front.tif'
       )
 
       # Create Asset
-      result = CreateAsset.new.call(created_by: fake_item.created_by, label: 'Front', annotation: [{ text: 'Front of Card' }])
+      result = CreateAsset.new.call(created_by: fake_item.created_by, label: 'Front',
+                                    annotation: [{ text: 'Front of Card' }])
       asset_id = result.value!.id
 
       # Update Asset with preservation file
