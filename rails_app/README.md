@@ -56,6 +56,9 @@ In order to run the test suite (currently):
 1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
 2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
 
+### Debugging
+We have yet to figure out a way to hook the RubyMine debugger into our Vagrant environment, therefore debugging can be limited. In the meanwhile, we debug while running the test suite by using [byebug](https://github.com/deivid-rodriguez/byebug), [debug](https://github.com/ruby/debug) or similar tools.  
+
 ## Valkyrie
 Apotheca uses [Valkyrie](https://github.com/samvera/valkyrie)'s interface to store the metadata and files associated for each digital object. The metadata is stored in Solr and Postgres. The Solr index is used for searching and Postgres is used as the canonical metadata source. We use the extension [valkyrie-shrine](https://github.com/samvera-labs/valkyrie-shrine) to store all of our files to cloud storage. Our Valkyrie resources and change sets are located in [app/resources](app/resources/) and [app/change_sets](app/change_sets/), respectively.
 
@@ -70,6 +73,18 @@ More information about transactions can be found in the [relevant ADR](docs/arch
 
 ## ViewComponent
 We use the [ViewComponent](https://viewcomponent.org/) library to create shareable/reuseable UI elements. In some cases we use it to make our view templates more manageable. 
+
+One important thing to note is that we use the [subdirectory](https://viewcomponent.org/guide/templates.html#subdirectory) strategy to organize our ViewComponent files. In other projects, we have move away from this strategy and eventually we might in this project as well.
+
+## Javascript and CSS Asset management
+We will be following Rails 7 convention and using `importmap-rails` to manage and load javascript assets. We can make use of JS NPM packages by following [these instructions](https://github.com/rails/importmap-rails#using-npm-packages-via-javascript-cdns) from the `importmap-rails` docs.
+
+For CSS vendored assets, CDN or Gemified versions should be used when available. Otherwise, CSS can be copied into `app/assets/stylesheets` and imported in `application.scss`.
+
+Node, NPM nor Yarn are required to develop, run or deploy this application.
+
+## Stimulus
+To add javascript to our application, we use [Stimulus](https://stimulus.hotwired.dev/). All javascript additions get wrapped in a Stimulus controller that usually lives along side its relevant ViewComponent ([example](https://gitlab.library.upenn.edu/dld/digital-repository/apotheca/-/blob/main/rails_app/app/components/asset_arrange/arrangement_controller.js)). Stimulus controllers in the [app/components](app/components/) directory get pulled in by importmaps. 
 
 ## Sidekiq and ActiveJob
 We use [Sidekiq](https://github.com/sidekiq/sidekiq) to run all of our jobs in `development`, `staging` and `production`. In `test`, we use test appropriate adapters. All of our custom jobs are written with `Sidekiq::Job` to provide better performance. We don't use `ActiveJob::Base` when writing custom jobs. While we don't directly use `ActiveJob`, it is configured to use Sidekiq in case we decide to use built-in jobs like sending emails.
@@ -96,12 +111,7 @@ Environment specific configuration values should be placed in the appropriate fi
 
 In production, configuration values that are secret should be set using docker secrets and the application should read them in from the filesystem.
 
-## Javascript and CSS Asset management
-We will be following Rails 7 convention and using `importmap-rails` to manage and load javascript assets. We can make use of JS NPM packages by following [these instructions](https://github.com/rails/importmap-rails#using-npm-packages-via-javascript-cdns) from the `importmap-rails` docs.
 
-For CSS vendored assets, CDN or Gemified versions should be used when available. Otherwise, CSS can be copied into `app/assets/stylesheets` and imported in `application.scss`.
-
-Node, NPM nor Yarn are required to develop, run or deploy this application.
 
 ## Rubocop
 This application uses Rubocop to enforce Ruby and Rails style guidelines. We centralize our UPenn specific configuration in
