@@ -28,12 +28,12 @@ Once your local development environment is set up you can ssh into the vagrant b
 
 ### Generating Example Items
 #### Basic Items via a Rake task
-The following task generates some basic items that all have the same asset. These type of items could be good for various types of testing but if you work requires samples that mimic real items use the [bulk import](#real-items-via-bulkimport) instructions below. 
+The following task generates some basic items that all have the same asset. These type of items could be good for various types of testing but if your work requires samples that mimic real items use the [bulk import](#real-items-via-bulkimport) instructions below. 
 
 To generate basic example items in a local development environment:
 
 1. Start a shell in the apotheca app, see [interacting-with-the-application](#interacting-with-the-application)
-2. Run rake tasks:
+2. Run rake task:
 ```bash
 bundle exec rake apotheca:generate_samples
 ```
