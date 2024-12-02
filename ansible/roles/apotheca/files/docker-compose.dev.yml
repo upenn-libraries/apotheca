@@ -31,5 +31,12 @@ services:
     healthcheck:
       retries: 20
       start_period: 5m
+    secrets:
+      - sidekiq_pro_credentials
     volumes:
       - /apotheca/ansible/roles/apotheca/files/src/:/home/app
+
+secrets:
+  sidekiq_pro_credentials:
+    external: true
+    name: ${SIDEKIQ_PRO_CREDENTIALS}

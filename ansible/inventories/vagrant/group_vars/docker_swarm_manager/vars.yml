@@ -1,4 +1,5 @@
 ---
+dld_sidekiq_pro_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'sidekiq_pro', engine_mount_point='dld') }}"
 ingress_ip: "10.10.2.137"
 is_development: true
 project_root: "/opt/devops"

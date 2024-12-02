@@ -77,6 +77,7 @@
     REDIS_SIDEKIQ_USER: "sidekiq"
     REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
     REDIS_PORT: "{{ redis.port }}"
+    SIDEKIQ_PRO_CREDENTIALS: "{{ 'apotheca_sidekiq_pro_credentials_v' ~ apotheca_versioned_secrets.sidekiq_pro_credentials.version }}"
     SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
     SOLR_PROXY_HOST: "{{ solr_proxy_host }}"
     SOLR_URL: "{{ apotheca_solr_url }}"

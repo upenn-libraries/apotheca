@@ -61,7 +61,9 @@ services:
       - redis_sidekiq_password
       - solr_username
       - solr_password
-{% if is_development == false %}
+{% if is_development == true %}
+      - sidekiq_pro_credentials
+{% else %}
       - honeybadger_api_key
       - aws_region
       - aws_access_key_id
@@ -106,7 +108,11 @@ secrets:
   solr_password:
     external: true
     name: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
-{% if is_development == false %}
+{% if is_development == true %}
+  sidekiq_pro_credentials:
+    external: true
+    name: "{{ 'apotheca_sidekiq_pro_credentials_v' ~ apotheca_versioned_secrets.sidekiq_pro_credentials.version }}"
+{% else %}
   honeybadger_api_key:
     external: true
     name: "{{ 'apotheca_honeybadger_api_key_v' ~ apotheca_versioned_secrets.honeybadger_api_key.version }}"
