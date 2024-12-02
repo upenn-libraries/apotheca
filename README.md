@@ -1,6 +1,5 @@
 # Apotheca
 
-## Overview
 Apotheca is the administrative application that enables the ingestion and management of digital assets. This repository includes the infrastructure and application code that supports Apotheca.
 
 Development occurs within a robust vagrant environment. Setup and initialization of this environment, as well as information about the deployed staging and production environments, is contained here.
@@ -64,7 +63,6 @@ vagrant ssh
 
 When running the development environment you can access the traefik web ui by navigating to: [https://traefik-dev.library.upenn.edu:8080/#](https://traefik-dev.library.upenn.edu:8080/#).
 
-
 ### Rails Application
 For information about the Rails application, see the [README](/rails_app/README.md) in the Rails application root. This includes information about running the test suite, performing harvesting, development styleguide and general application information.
 
@@ -98,7 +96,7 @@ Code cannot be pushed directly onto `main`, new code must be merged via a merge 
 Deployments are triggered when a new git tag is created that matches [semantic versioning](https://semver.org/), (e.g., v1.0.0). Git tags should be created via the creation of a new Release in Gitlab.
 
 In order to deploy to production:
-1. Go to [https://gitlab.library.upenn.edu/dld/apotheca/-/releases/new](https://gitlab.library.upenn.edu/dld/apotheca/-/releases/new)
+1. Go to [https://gitlab.library.upenn.edu/dld/digital-repository/apotheca/-/releases/new](https://gitlab.library.upenn.edu/dld/digital-repository/apotheca/-/releases/new)
 2. Create a new tag that follows semantic versioning. Please use the next tag in the sequence.
 3. Relate a milestone to the release if there is one.
 4. Add a release title that is the same as the tag name.
