@@ -38,7 +38,6 @@ describe ItemResource do
   end
 
   describe '#to_json_export' do
-
     context 'with any resource' do
       subject(:export) { resource.to_json_export }
 
