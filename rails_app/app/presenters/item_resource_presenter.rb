@@ -2,11 +2,18 @@
 
 # Presentation logic for an ItemResource
 class ItemResourcePresenter < BasePresenter
+  include Rails.application.routes.url_helpers
+
   # @param [Hash|nil] ils_metadata
   # @param [ItemResource] object
   def initialize(object:, ils_metadata: nil)
     super object: object
     @ils_metadata = ils_metadata
+  end
+
+  # @return [String] The URL for this ItemResource on the Apotheca site.
+  def apotheca_url
+    url_for(controller: 'items', action: 'show', id: object.id, host: Settings.app_url)
   end
 
   # @return [ItemResourcePresenter::DescriptiveMetadataPresenter]
