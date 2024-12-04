@@ -136,16 +136,11 @@ class ItemResource < Valkyrie::Resource
     thumbnail&.thumbnail.present?
   end
 
-  # Returns true if all assets have been backed up to preservation-copy.
+  # Returns true if all assets have been backed up to preservation-copy. If no assets are present, returns true.
   def all_assets_backed_up?
-    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
-  end
+    return true if asset_ids.nil?
 
-  # @return [Integer] the number of assets associated with this item
-  def asset_count
-    return 0 if asset_ids.blank?
-
-    asset_ids.count
+    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_ids.count
   end
 
   private
