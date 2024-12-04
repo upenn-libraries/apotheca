@@ -71,6 +71,7 @@ class ItemResource < Valkyrie::Resource
     bulk_export_hash = {
       unique_identifier: unique_identifier,
       human_readable_name: human_readable_name,
+      apotheca_url: presenter.apotheca_url,
       metadata: descriptive_metadata.to_json_export,
       created_at: date_created&.to_fs(:display),
       created_by: created_by,

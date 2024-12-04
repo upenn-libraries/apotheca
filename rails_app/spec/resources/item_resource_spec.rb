@@ -38,6 +38,17 @@ describe ItemResource do
   end
 
   describe '#to_json_export' do
+
+    context 'with any resource' do
+      subject(:export) { resource.to_json_export }
+
+      let(:resource) { persist(:item_resource) }
+
+      it 'returns the Apotheca URL' do
+        expect(export).to include(:apotheca_url)
+      end
+    end
+
     context 'when there are assets' do
       subject(:export) { resource.to_json_export }
 
