@@ -24,6 +24,7 @@ module DerivativeService
         def access
           image = Vips::Image.new_from_buffer(file.read, '')
           image = image.autorot
+          image = image.icc_transform('srgb') # Setting srgb as profile, so colors of derivative match the original.
 
           derivative_file = DerivativeFile.new mime_type: 'image/tiff', iiif_image: true
 
