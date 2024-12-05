@@ -140,7 +140,7 @@ class ItemResource < Valkyrie::Resource
   def all_assets_backed_up?
     return true if asset_ids.nil?
 
-    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_ids.count
+    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
   end
 
   private
