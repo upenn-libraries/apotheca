@@ -8,7 +8,7 @@
 app_version: <%= ENV.fetch('APP_IMAGE_TAG', nil) %>
 
 # App URL
-app_url: <%= ENV.fetch('APP_URL', 'http://localhost:3000') %>
+app_url: <%= ENV.fetch('APP_URL', 'localhost:3000') %>
 
 # Email for "System User"
 system_user: 'system@apotheca.library.upenn.edu'
