@@ -79,9 +79,10 @@ module DerivativeService
 
           # @return [DerivativeService::Asset::Generator::Image::OCR]
           def generate
-            @dir = Dir.mktmpdir
-            run_tesseract(output_path: "#{@dir}/")
-            @derivatives_map = build_derivative_files(dir: @dir)
+            @derivatives_map = Dir.mktmpdir do |dir|
+              run_tesseract(output_path: "#{dir}/")
+              build_derivative_files(dir: dir)
+            end
             self
           rescue StandardError => e
             raise Generator::Error, "Error generating ocr derivatives: #{e.class} #{e.message}", e.backtrace
