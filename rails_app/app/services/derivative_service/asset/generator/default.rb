@@ -12,6 +12,18 @@ module DerivativeService
         def access
           nil
         end
+
+        def textonlypdf
+          nil
+        end
+
+        def text
+          nil
+        end
+
+        def hocr
+          nil
+        end
       end
     end
   end

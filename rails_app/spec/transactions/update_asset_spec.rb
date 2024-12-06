@@ -294,7 +294,7 @@ describe UpdateAsset do
         end
 
         it 'generates derivatives' do
-          expect(updated_asset.derivatives.count).to be 2
+          expect(updated_asset.derivatives.count).to be 5
         end
 
         it 'does not enqueue job generate derivatives' do
@@ -316,7 +316,7 @@ describe UpdateAsset do
         end
 
         it 'created derivatives' do
-          expect(result.failure[:change_set].derivatives.count).to be 2
+          expect(result.failure[:change_set].derivatives.count).to be 5
         end
 
         it 'cleans up the derivative files' do

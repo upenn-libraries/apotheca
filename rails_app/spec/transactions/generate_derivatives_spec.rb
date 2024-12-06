@@ -14,8 +14,9 @@ describe GenerateDerivatives do
       end
 
       it 'generates and adds derivatives' do
-        expect(updated_asset.derivatives.length).to be 2
-        expect(updated_asset.derivatives.map(&:type)).to contain_exactly 'thumbnail', 'access'
+        expect(updated_asset.derivatives.length).to be 5
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access', 'textonly_pdf',
+                                                                         'text', 'hocr')
       end
     end
 
@@ -31,7 +32,7 @@ describe GenerateDerivatives do
       end
 
       it 'regenerates derivatives' do
-        expect(updated_asset.derivatives.count).to be 2
+        expect(updated_asset.derivatives.count).to be 5
         expect(updated_asset.derivatives.map(&:generated_at)).to all(be_within(1.second).of(DateTime.current))
       end
     end

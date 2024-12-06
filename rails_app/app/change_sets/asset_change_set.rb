@@ -21,7 +21,7 @@ class AssetChangeSet < ChangeSet
 
   # ChangeSet for Asset Derivatives
   class AssetDerivativeChangeSet < DerivativeChangeSet
-    TYPES = %w[thumbnail access].freeze
+    TYPES = %w[thumbnail access textonly_pdf text hocr].freeze
 
     validates :type, inclusion: TYPES
   end

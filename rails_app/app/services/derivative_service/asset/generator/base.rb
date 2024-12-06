@@ -19,6 +19,18 @@ module DerivativeService
         def access
           raise NotImplementedError
         end
+
+        def textonly_pdf
+          raise NotImplementedError
+        end
+
+        def text
+          raise NotImplementedError
+        end
+
+        def hocr
+          raise NotImplementedError
+        end
       end
     end
   end
