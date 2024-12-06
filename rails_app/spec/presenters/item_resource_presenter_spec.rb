@@ -7,6 +7,14 @@ RSpec.describe ItemResourcePresenter do
 
   let(:item_resource) { persist(:item_resource) }
 
+  context 'with any ItemResource' do
+    let(:ils_metadata) { nil }
+
+    it 'returns the Apotheca URL for the ItemResource' do
+      expect(presenter.apotheca_url).to eq "http://#{ENV['APP_URL']}/resources/items/#{item_resource.id}"
+    end
+  end
+
   context 'without ILS metadata' do
     let(:ils_metadata) { nil }
 

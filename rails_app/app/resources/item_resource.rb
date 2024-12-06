@@ -71,6 +71,7 @@ class ItemResource < Valkyrie::Resource
     bulk_export_hash = {
       unique_identifier: unique_identifier,
       human_readable_name: human_readable_name,
+      apotheca_url: presenter.apotheca_url,
       metadata: descriptive_metadata.to_json_export,
       created_at: date_created&.to_fs(:display),
       created_by: created_by,
@@ -78,6 +79,7 @@ class ItemResource < Valkyrie::Resource
       updated_by: updated_by,
       internal_notes: internal_notes,
       published: published,
+      asset_count: asset_count,
       first_published_at: first_published_at&.to_fs(:display),
       last_published_at: last_published_at&.to_fs(:display),
       structural: {
@@ -138,7 +140,7 @@ class ItemResource < Valkyrie::Resource
   def all_assets_backed_up?
     return true if asset_ids.nil?
 
-    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_ids.count
+    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
   end
 
   private
