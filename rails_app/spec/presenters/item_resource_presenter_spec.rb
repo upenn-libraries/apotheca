@@ -11,7 +11,7 @@ RSpec.describe ItemResourcePresenter do
     let(:ils_metadata) { nil }
 
     it 'returns the Apotheca URL for the ItemResource' do
-      expect(presenter.apotheca_url).to eq "http://apotheca-dev.library.upenn.edu/resources/items/#{item_resource.id}"
+      expect(presenter.apotheca_url).to eq "http://#{ENV['APP_URL']}/resources/items/#{item_resource.id}"
     end
   end
 
