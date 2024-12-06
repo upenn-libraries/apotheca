@@ -34,4 +34,28 @@ describe 'Item Edit Page' do
     first(:button, 'Save').click
     expect(page).to have_text('Successfully updated item')
   end
+
+  it 'shows descriptive metadata tab' do
+    expect(page).to have_css('#descriptive-metadata-tab')
+  end
+
+  it 'shows structural metadata tab' do
+    expect(page).to have_css('#structural-metadata-tab')
+  end
+
+  it 'shows administrative info tab' do
+    expect(page).to have_css('#administrative-info-tab')
+  end
+
+  it 'shows events tab' do
+    expect(page).to have_css('#events-tab')
+  end
+
+  it 'shows actions tab' do
+    expect(page).to have_css('#actions-tab')
+  end
+
+  it 'shows assets tab' do
+    expect(page).to have_css('#assets-tab')
+  end
 end
