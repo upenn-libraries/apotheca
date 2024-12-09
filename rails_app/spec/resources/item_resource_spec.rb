@@ -38,6 +38,38 @@ describe ItemResource do
   end
 
   describe '#to_json_export' do
+    context 'with any resource' do
+      subject(:export) { resource.to_json_export }
+
+      let(:resource) { persist(:item_resource) }
+
+      it 'returns the Apotheca URL for the ItemResource' do
+        expect(export).to include(:apotheca_url)
+      end
+    end
+
+    context 'when there are assets' do
+      subject(:export) { resource.to_json_export }
+
+      let(:resource) { persist(:item_resource, :with_assets_some_arranged) }
+
+      it 'returns correct asset_count' do
+        expect(export).to include(:asset_count)
+        expect(export[:asset_count]).to eq 2
+      end
+    end
+
+    context 'when there are no assets' do
+      subject(:export) { resource.to_json_export }
+
+      let(:resource) { persist(:item_resource) }
+
+      it 'returns correct asset_count' do
+        expect(export).to include(:asset_count)
+        expect(export[:asset_count]).to eq 0
+      end
+    end
+
     context 'when not including assets' do
       subject(:export) { resource.to_json_export }
 
