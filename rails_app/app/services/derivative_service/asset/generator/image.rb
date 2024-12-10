@@ -68,30 +68,24 @@ module DerivativeService
 
         # Generates OCR derivatives
         class OCR
-          EXTENSION_MAP = { '.pdf': { mime_type: 'application/pdf', derivative_type: :textonly_pdf },
-                            '.txt': { mime_type: 'text/plain', derivative_type: :text },
-                            '.hocr': { mime_type: 'text/html', derivative_type: :hocr } }.freeze
+          TYPE_MAP = { textonly_pdf: { mime_type: 'application/pdf', extension: 'pdf' },
+                       text: { mime_type: 'text/plain', extension: 'txt' },
+                       hocr: { mime_type: 'text/html', extension: 'hocr' } }.freeze
 
           def initialize(file)
             @file = file
-            @derivatives_map = {}
           end
 
-          # @return [DerivativeService::Asset::Generator::Image::OCR]
+          # @return [Hash]
           def generate
-            @derivatives_map = Dir.mktmpdir do |dir|
-              run_tesseract(output_path: "#{dir}/")
-              build_derivative_files(dir: dir)
-            end
-            self
+            path = Pathname.new("#{Dir.tmpdir}/ocr-derivative-file-#{SecureRandom.uuid}")
+            run_tesseract(output_path: path)
+
+            return process_empty_ocr(path: path) if no_text_extracted?(path: path)
+
+            build_derivative_files(path: path)
           rescue StandardError => e
             raise Generator::Error, "Error generating ocr derivatives: #{e.class} #{e.message}", e.backtrace
-          end
-
-          # @param type [Symbol]
-          # @return [DerivativeService::DerivativeFile, nil]
-          def fetch(type)
-            @derivatives_map[type]
           end
 
           private
@@ -103,19 +97,33 @@ module DerivativeService
             end
           end
 
-          # @param dir [String] directory path where derivatives are located
+          # @param path [Pathname] directory path where derivatives are located
           # @return [Hash] mapping extension to AssetDerivatives::DerivativeFile
-          def build_derivative_files(dir:)
-            derivative_files = {}
-            Dir.each_child(dir) do |entry_name|
-              mime_type = EXTENSION_MAP[entry_name.to_sym][:mime_type]
-              derivative_type = EXTENSION_MAP[entry_name.to_sym][:derivative_type]
-              derivative_file = DerivativeFile.new(mime_type: mime_type, extension: entry_name)
-              IO.copy_stream("#{dir}/#{entry_name}", derivative_file.path)
-              derivative_file.rewind
-              derivative_files[derivative_type] = derivative_file
+          def build_derivative_files(path:)
+            TYPE_MAP.transform_values do |details|
+              file = File.new(path.sub_ext(".#{details[:extension]}"))
+              DerivativeFile.new(file: file, **details)
             end
-            derivative_files
+          end
+
+          # @param path [Pathname]
+          # @return [Hash]
+          def process_empty_ocr(path:)
+            cleanup_files(path: path)
+            TYPE_MAP.transform_values { nil }
+          end
+
+          # @param path [Pathname]
+          # @return [Hash]
+          def cleanup_files(path:)
+            TYPE_MAP.each { |_k, v| path.sub_ext(".#{v[:extension]}").unlink }
+          end
+
+          # OCR text has not been extracted if tesseract outputs an empty text file
+          # @param path [Pathname]
+          # @return [TrueClass, FalseClass]
+          def no_text_extracted?(path:)
+            path.sub_ext(".#{TYPE_MAP[:text][:extension]}").zero?
           end
         end
       end
