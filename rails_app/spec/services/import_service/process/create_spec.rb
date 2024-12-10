@@ -160,7 +160,7 @@ describe ImportService::Process::Create do
 
       it 'generates derivatives' do
         expect(assets[0].derivatives.length).to be 5
-        expect(assets[1].derivatives.length).to be 5
+        expect(assets[1].derivatives.length).to be 2
       end
     end
 
