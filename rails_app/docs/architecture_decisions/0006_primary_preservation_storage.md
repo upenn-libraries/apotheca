@@ -11,6 +11,7 @@ Our previous implementation used a locally hosted Ceph storage cluster. It creat
 
 ## Decision
 1. Use AWS S3 as our primary preservation storage.
+2. Use an AWS region in the eastern United States. 
 
 ## Consequences
 1. Reduced maintenance of a locally-hosted storage cluster.
