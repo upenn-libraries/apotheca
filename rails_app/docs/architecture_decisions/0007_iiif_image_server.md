@@ -17,5 +17,3 @@ In order for images to load quickly and efficiently, we need to provide a IIIF I
 1. By using `serverless-iiif`, we will no longer have the overheard of maintaining a locally hosted IIIF image server.
 2. `serverless-iiif` is an AWS Lambda, in order to run this service we will have to have more local expertise of AWS. We are already moving in this direction since we are using AWS S3 as are primary storage layer. 
 3. We'll have to pay-per-request. Peer institutions (that have more content than we currently do) have shared that the costs are minimal. Since we are already storing our derivatives in AWS S3 with any solution we used we were going to pay for egress. 
-
-

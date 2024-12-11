@@ -17,7 +17,7 @@ Apotheca and Colenda are two separate applications and we need some way for Apot
 ## Consequences
 1. Potentially allow us to "publish" to other interfaces.
 2. JSON payload can be fairly large depending on how many Assets an Item has.
-3. IIIIF manifest generation required information about Colenda.
+3. IIIF manifest generation requires information about the public Colenda site URL.
    - Ideally Apotheca will not know anything about the interface it is publishing to, but because we wanted to include links to Colenda in the IIIF manifest, we had to configure details about the endpoint.
    - In the future, we can do more to move the inline values to be configurable.
 

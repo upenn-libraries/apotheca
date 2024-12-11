@@ -16,4 +16,4 @@ Our previous implementation used a locally hosted Ceph storage cluster. It creat
 1. Reduced maintenance of a locally-hosted storage cluster.
 2. $$$$$
    - AWS S3 storage costs can fluctuate and be hard to estimate, but we think the trade-off of reduced maintenance is worth it. Internally, AWS S3 is replacing a lot of previously locally-hosted storage solutions.
-3. Better availability.
+3. AWS S3 should provide better uptime and availability, while reducing the need for staff expertise with high-availability local storage.
