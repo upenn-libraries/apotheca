@@ -59,6 +59,11 @@ describe 'Item Show Page' do
       click_button 'Assets'
       expect(page).to have_button('Set as Item Thumbnail')
     end
+
+    it 'shows link to view all events within events tab' do
+      click_button 'Events'
+      expect(page).to have_link('View All Events', href: events_path(resource_id: item.id.to_s))
+    end
   end
 
   context 'with incorporated ILS metadata' do
