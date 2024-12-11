@@ -7,12 +7,12 @@
 `Accepted`
 
 ## Context
-As part of our work to implement Valkyrie in Apotheca, we need to choose what metadata storage solutions to use.
+As part of our work to implement Valkyrie in Apotheca, we need to choose what metadata storage solutions to use. We must also consider where and how to store additional bibliographic metadata from the ILS for inclusion in the Apotheca record.
 
 ## Decision
 1. Use Postgres as primary metadata store.
 2. Use Solr as an additional metadata store that is used primarily for searching.
-3. Only Solr will merge in the additional metadata from Alma. Postgres will only store original metadata created for Apotheca.
+3. Postgres will store only original metadata created for Apotheca. The Solr record will merge in the additional metadata from Alma. 
 
 ## Consequences
 1. We will not be able to retrieve Alma metadata from Postgres. We will only be able to access it by querying Solr. 

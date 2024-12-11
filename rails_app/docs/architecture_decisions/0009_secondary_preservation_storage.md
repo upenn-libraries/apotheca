@@ -12,7 +12,7 @@ It has always been a goal of our repository infrastructure to store a secondary 
 ## Decision
 1. Using [Wasabi](https://wasabi.com/) to store a secondary copy of all of our preservation files. 
 2. Add preservation events when data replicated in Wasabi.
-3. Ensure files stored in Wasabi are in a different region than were our primary preservation copies are stored. We'll use the `us-west-1` region for Wasabi.
+3. Ensure the files stored in Wasabi are in a different geographic region than our primary preservation copies. We'll use the `us-west-1` region for Wasabi.
 4. Our primary preservation file and replicated preservation file will have the same filename.
 
 ## Consequences
