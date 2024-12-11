@@ -8,6 +8,8 @@
 
   <% form.with_field(:human_readable_name, type: :text) %>
   <% form.with_field(:internal_notes, type: :text) %>
+  <% form.with_field(:first_published_at, value: @item.first_published_at&.to_fs(:display), type: :readonly) %>
+  <% form.with_field(:last_published_at, value: @item.last_published_at&.to_fs(:display), type: :readonly) %>
 
   <% form.with_submit('Save') %>
 <% end %>
