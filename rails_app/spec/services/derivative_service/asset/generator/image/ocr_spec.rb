@@ -7,7 +7,8 @@ describe DerivativeService::Asset::Generator::Image::OCR do
                                                io: File.open(file_fixture('files/trade_card/original/front.tif')))
     )
   end
-  let(:ocr) { described_class.new(file) }
+  let(:asset) { AssetChangeSet.new(AssetResource.new, ocr_language: ['eng']) }
+  let(:ocr) { described_class.new(file: file, asset: asset) }
 
   describe '#generate' do
     let(:derivative_files) { ocr.generate }
