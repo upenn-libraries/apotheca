@@ -128,7 +128,9 @@ module ImportService
         return failure(details: ["Files in storage missing for: #{missing.join(', ')}"]) if missing.present?
 
         # Creating new assets
-        result = batch_create_assets(new_assets_data, { imported_by: imported_by })
+        result = batch_create_assets(new_assets_data, { imported_by: imported_by,
+                                                        ocr_language: ocr_language,
+                                                        viewing_direction: structural_metadata[:viewing_direction] })
         @created_assets = result.value! if result.success?
         result
       end

@@ -53,7 +53,10 @@ module ImportService
 
         # Create all the assets
         assets_result = batch_create_assets(
-          asset_set.all, { created_by: created_by, imported_by: imported_by }
+          asset_set.all, { created_by: created_by,
+                           imported_by: imported_by,
+                           ocr_language: ocr_language,
+                           viewing_direction: structural_metadata[:viewing_direction] }
         )
 
         return assets_result if assets_result.failure?

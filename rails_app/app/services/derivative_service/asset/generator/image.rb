@@ -63,7 +63,7 @@ module DerivativeService
         private
 
         def ocr
-          @ocr ||= OCR.new(file).generate
+          @ocr ||= OCR.new(file: file, asset: @asset).generate
         end
 
         # Generates OCR derivatives
@@ -72,14 +72,24 @@ module DerivativeService
                        text: { mime_type: 'text/plain', extension: 'txt' },
                        hocr: { mime_type: 'text/html', extension: 'hocr' } }.freeze
 
-          def initialize(file)
+          def initialize(file:, asset:, engine: nil)
             @file = file
+            @asset = asset
+            @engine = engine
+          end
+
+          def engine
+            @engine ||= TesseractWrapper.new(
+              language_preparer: TesseractWrapper::LanguagePreparer.new(languages: @asset.ocr_language,
+                                                                        viewing_direction: @asset.viewing_direction)
+            )
           end
 
           # @return [Hash]
           def generate
             path = Pathname.new("#{Dir.tmpdir}/ocr-derivative-file-#{SecureRandom.uuid}")
-            run_tesseract(output_path: path)
+
+            run_ocr(output_path: path)
 
             return process_empty_ocr(path: path) if no_text_extracted?(path: path)
 
@@ -90,10 +100,12 @@ module DerivativeService
 
           private
 
-          # @param output_path [String] path where tesseract will generate ocr files
-          def run_tesseract(output_path:)
+          # @param output_path [String] path where ocr engine will generate ocr files
+          def run_ocr(output_path:)
+            return if @asset.ocr_language.blank?
+
             @file.tmp_file(extension: '.tif') do |path|
-              TesseractWrapper.ocr(input_path: path, output_path: output_path)
+              engine.ocr(input_path: path, output_path: output_path)
             end
           end
 
@@ -116,14 +128,17 @@ module DerivativeService
           # @param path [Pathname]
           # @return [Hash]
           def cleanup_files(path:)
-            TYPE_MAP.each { |_k, v| path.sub_ext(".#{v[:extension]}").unlink }
+            TYPE_MAP.each do |_k, v|
+              file_path = path.sub_ext(".#{v[:extension]}")
+              file_path.unlink if file_path.exist?
+            end
           end
 
-          # OCR text has not been extracted if tesseract outputs an empty text file
+          # OCR text has not been extracted if text output file does not exist or has zero size
           # @param path [Pathname]
           # @return [TrueClass, FalseClass]
           def no_text_extracted?(path:)
-            path.sub_ext(".#{TYPE_MAP[:text][:extension]}").zero?
+            path.sub_ext(".#{TYPE_MAP[:text][:extension]}").size?.nil?
           end
         end
       end

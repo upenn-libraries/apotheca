@@ -8,8 +8,10 @@ module DerivativeService
         attr_reader :file
 
         # @param file [DerivativeService::Asset::SourceFile]
-        def initialize(file)
+        # @param asset [AssetChangeSet]
+        def initialize(file, asset = nil)
           @file = file
+          @asset = asset
         end
 
         def thumbnail
