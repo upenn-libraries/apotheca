@@ -15,9 +15,6 @@ redis:
   password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
 chrome:
   url: <%= ENV.fetch('CHROME_URL', 'http://chrome:3000') %>
-virus_check:
-  skip: false
-  size_threshold: 2000000000 # 2 GB
 
 # External Services
 ezid:
@@ -77,4 +74,8 @@ iiif:
 publish:
   url: http://10.252.0.2:3000
   token: sample_token
+virus_check:
+  skip: false
+  size_threshold: 2000000000 # 2 GB
+
 

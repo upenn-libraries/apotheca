@@ -8,7 +8,7 @@ class UpdateArkMetadata
   step :update_ark_metadata
 
   def update_ark_metadata(resource:)
-    return Success(resource) if Settings.skip_ezid_metadata_update
+    return Success(resource) if Settings.ezid_metadata_update.skip
 
     presenter = resource.presenter # Using presenter that contains ILS metadata and resource metadata.
 

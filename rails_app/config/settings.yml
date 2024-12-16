@@ -18,8 +18,10 @@ honeybadger:
   api_key: '12345'
 
 # Item/Asset Resource Configuration
-skip_ezid_metadata_update: false
-skip_preservation_backup: false
+ezid_metadata_update:
+  skip: false
+preservation_backup:
+  skip: false
 supported_file_extensions:
   - .tif
   - .tiff
