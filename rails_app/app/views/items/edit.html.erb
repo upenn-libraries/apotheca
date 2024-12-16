@@ -22,7 +22,7 @@
   <% end %>
 
   <% component.with_tab(title: 'Events') do %>
-    <%= render partial: 'events/last_10_events', locals: { resource: @item } %>
+    <%= render partial: 'resources/last_10_events', locals: { resource: @item } %>
   <% end %>
 
   <% if can? :update, @item  %>
