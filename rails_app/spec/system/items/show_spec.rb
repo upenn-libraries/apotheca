@@ -64,6 +64,10 @@ describe 'Item Show Page' do
       click_button 'Events'
       expect(page).to have_link('View All Events', href: events_path(resource_id: item.id.to_s))
     end
+
+    it 'shows button for derivatives tab' do
+      expect(page).to have_button('Derivatives')
+    end
   end
 
   context 'with incorporated ILS metadata' do

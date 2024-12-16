@@ -1,0 +1,18 @@
+<div class="m-3">
+  <% resource.derivatives.each do |derivative| %>
+    <div class="d-flex justify-content-between">
+      <h4><%= derivative.type.titlecase %></h4>
+      <% download_path = url_for(only_path: true, action: :file, type: derivative.type, disposition: :attachment) %>
+      <%= link_to(download_path, title: "Download #{derivative.type} derivative") do %>
+        <%= render Icon::Component.new(name: 'download', size: '22px') %>
+      <% end %>
+
+    </div>
+    <%= render(StaticFields::Component.new(class: ['mx-2'])) do |component| %>
+      <% component.with_field(label: 'File', values: derivative.file_id) %>
+      <% component.with_field(label: 'MIME Type', values: derivative.mime_type, classes: ['user-select-all']) %>
+      <% component.with_field(label: 'Size', values: number_to_human_size(derivative.size, classes: ['user-select-all'])) %>
+      <% component.with_field(label: 'Generated At', values: derivative.generated_at&.to_fs(:display)) %>
+    <% end %>
+  <% end %>
+</div>

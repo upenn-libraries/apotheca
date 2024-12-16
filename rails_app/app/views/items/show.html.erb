@@ -31,6 +31,10 @@
     <%= render partial: 'administrative_info' %>
   <% end %>
 
+  <% component.with_tab(title: 'Derivatives', count: @item.derivatives.count, disabled: @item.derivatives.empty?) do %>
+    <%= render partial: 'resources/derivatives', locals: { resource: @item } %>
+  <% end %>
+
   <% component.with_tab(title: 'Events') do %>
     <%= render partial: 'resources/last_10_events', locals: { resource: @item } %>
   <% end %>
