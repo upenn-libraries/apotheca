@@ -25,7 +25,7 @@ module AssetInfo
       if asset.thumbnail
         tag.img src: thumbnail_path, alt: 'Thumbnail for Asset', class: 'img-thumbnail', loading: 'lazy'
       else
-        render(partial: 'shared/no_thumbnail')
+        render(partial: 'resources/no_thumbnail')
       end
     end
 
