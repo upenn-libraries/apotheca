@@ -22,6 +22,8 @@ ezid_metadata_update:
   skip: false
 preservation_backup:
   skip: false
+publish:
+  skip: false
 supported_file_extensions:
   - .tif
   - .tiff

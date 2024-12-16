@@ -72,8 +72,7 @@ iiif:
     base_url: 'https://colenda.library.upenn.edu/items/'
     item_link_base_url: 'https://colenda.library.upenn.edu/catalog/'
 publish:
-  url: http://10.252.0.2:3000
-  token: sample_token
+  skip: true
 virus_check:
   skip: false
   size_threshold: 2000000000 # 2 GB
