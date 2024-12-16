@@ -47,6 +47,10 @@ describe 'Item Edit Page' do
     expect(page).to have_css('#administrative-info-tab')
   end
 
+  it 'shows derivatives tab' do
+    expect(page).to have_css('#derivatives-tab')
+  end
+
   it 'shows events tab' do
     expect(page).to have_css('#events-tab')
   end
