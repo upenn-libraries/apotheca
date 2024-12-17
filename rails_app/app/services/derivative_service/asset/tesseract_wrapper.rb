@@ -13,20 +13,36 @@ module DerivativeService
         '-c tessedit_page_number=0' # only extract from first page if tiff has second page thumbnail
       ].freeze
 
-      DEFAULT_FORMATS = %w[txt pdf hocr].freeze
+      TEXT_FORMAT = 'txt'
+      PDF_FORMAT = 'pdf'
+      HOCR_FORMAT = 'hocr'
+      DEFAULT_FORMATS = [TEXT_FORMAT, PDF_FORMAT, HOCR_FORMAT].freeze
 
-      def initialize(language_preparer:)
-        @language_preparer = language_preparer
+      attr_reader :input_path, :output_path, :language_preparer
+
+      def initialize(input_path:, output_path:, language:, viewing_direction: nil)
+        @input_path = input_path
+        @output_path = output_path
+        @language = language
+        @language_preparer = LanguagePreparer.new(languages: @language, viewing_direction: viewing_direction)
       end
 
-      def ocr(input_path:, output_path:, format: DEFAULT_FORMATS)
+      def ocr
+        return if @language.blank?
+
         language_argument = @language_preparer.argument
 
         return if language_argument.blank?
 
-        options = [*DEFAULT_CONFIG, language_argument, *format]
+        options = [*DEFAULT_CONFIG, language_argument, *DEFAULT_FORMATS]
 
         execute_tesseract(input_path: input_path, output_path: output_path, options: options)
+      end
+
+      # OCR text has been extracted if text output file exists and has positive size
+      # @return [TrueClass, FalseClass]
+      def text_extracted?
+        @output_path.sub_ext(".#{TEXT_FORMAT}").size?.present?
       end
 
       private

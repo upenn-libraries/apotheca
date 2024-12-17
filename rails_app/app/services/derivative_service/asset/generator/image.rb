@@ -63,50 +63,45 @@ module DerivativeService
         private
 
         def ocr
-          @ocr ||= OCR.new(file: file, asset: @asset).generate
+          @ocr ||= OCR.new(file: file, language: @asset.ocr_language,
+                           engine_options: { viewing_direction: @asset.viewing_direction }).generate
         end
 
-        # Generates OCR derivatives
+        # Generates OCR derivatives using a given ocr engine
         class OCR
           TYPE_MAP = { textonly_pdf: { mime_type: 'application/pdf', extension: 'pdf' },
                        text: { mime_type: 'text/plain', extension: 'txt' },
                        hocr: { mime_type: 'text/html', extension: 'hocr' } }.freeze
 
-          def initialize(file:, asset:, engine: nil)
+          def initialize(file:, language:, engine_class: TesseractWrapper, engine_options: {})
             @file = file
-            @asset = asset
-            @engine = engine
-          end
-
-          def engine
-            @engine ||= TesseractWrapper.new(
-              language_preparer: TesseractWrapper::LanguagePreparer.new(languages: @asset.ocr_language,
-                                                                        viewing_direction: @asset.viewing_direction)
-            )
+            @language = language
+            @engine_class = engine_class
+            @engine_options = engine_options
           end
 
           # @return [Hash]
           def generate
-            path = Pathname.new("#{Dir.tmpdir}/ocr-derivative-file-#{SecureRandom.uuid}")
+            return empty_derivatives_hash if @language.blank?
 
-            run_ocr(output_path: path)
+            output_path = Pathname.new("#{Dir.tmpdir}/ocr-derivative-file-#{SecureRandom.uuid}")
 
-            return process_empty_ocr(path: path) if no_text_extracted?(path: path)
+            @file.tmp_file(extension: '.tif') do |input_path|
+              @engine = initialize_engine(input_path: input_path, output_path: output_path)
+              @engine.ocr
+            end
 
-            build_derivative_files(path: path)
+            return process_empty_ocr(path: output_path) unless @engine.text_extracted?
+
+            build_derivative_files(path: output_path)
           rescue StandardError => e
             raise Generator::Error, "Error generating ocr derivatives: #{e.class} #{e.message}", e.backtrace
           end
 
           private
 
-          # @param output_path [String] path where ocr engine will generate ocr files
-          def run_ocr(output_path:)
-            return if @asset.ocr_language.blank?
-
-            @file.tmp_file(extension: '.tif') do |path|
-              engine.ocr(input_path: path, output_path: output_path)
-            end
+          def initialize_engine(input_path:, output_path:)
+            @engine_class.new(input_path: input_path, output_path: output_path, language: @language, **@engine_options)
           end
 
           # @param path [Pathname] directory path where derivatives are located
@@ -122,6 +117,10 @@ module DerivativeService
           # @return [Hash]
           def process_empty_ocr(path:)
             cleanup_files(path: path)
+            empty_derivatives_hash
+          end
+
+          def empty_derivatives_hash
             TYPE_MAP.transform_values { nil }
           end
 
@@ -132,13 +131,6 @@ module DerivativeService
               file_path = path.sub_ext(".#{v[:extension]}")
               file_path.unlink if file_path.exist?
             end
-          end
-
-          # OCR text has not been extracted if text output file does not exist or has zero size
-          # @param path [Pathname]
-          # @return [TrueClass, FalseClass]
-          def no_text_extracted?(path:)
-            path.sub_ext(".#{TYPE_MAP[:text][:extension]}").size?.nil?
           end
         end
       end
