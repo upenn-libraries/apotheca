@@ -27,7 +27,7 @@ class ResourcesController < ApplicationController
 
   # Default logic for derivative. Each controller can override this method to implement customized logic.
   def derivative_filename(resource:, derivative:)
-    "#{resource.id.to_s}-#{derivative.type}.#{derivative.extension}" #parameterize
+    "#{resource.id}-#{derivative.type}.#{derivative.extension}"
   end
 
   # Postgres query service.
