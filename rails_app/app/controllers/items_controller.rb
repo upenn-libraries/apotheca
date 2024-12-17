@@ -179,6 +179,11 @@ class ItemsController < ResourcesController
     params.permit(:keyword, :rows, :page, filter: {}, sort: {}, search: {})
   end
 
+  # Custom derivative filename.
+  def derivative_filename(resource:, derivative:)
+    "#{resource.human_readable_name.parameterize}.#{derivative.extension}"
+  end
+
   # @return [Valkyrie::MetadataAdapter]
   def solr_query_service
     @solr_query_service ||= Valkyrie::MetadataAdapter.find(:index_solr).query_service

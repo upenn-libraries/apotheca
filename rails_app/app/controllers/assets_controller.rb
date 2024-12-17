@@ -195,4 +195,9 @@ class AssetsController < ResourcesController
 
     raise UnsupportedFileSize if file_params[:file].size >= Settings.virus_check.size_threshold
   end
+
+  # Custom derivative filename.
+  def derivative_filename(resource:, derivative:)
+    "#{File.basename(resource.original_filename, '.*')}-#{derivative.type}.#{derivative.extension}"
+  end
 end
