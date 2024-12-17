@@ -62,8 +62,8 @@ class ItemsController < ResourcesController
   def reorder_assets; end
 
   def file
-    case params[:type].to_sym
-    when :iiif_manifest
+    case params[:type]
+    when *ItemChangeSet::DERIVATIVE_TYPES
       serve_derivative_file resource: @item, type: params[:type].to_sym
     else
       raise UnsupportedFileType, 'Type is not supported'

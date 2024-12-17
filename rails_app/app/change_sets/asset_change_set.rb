@@ -6,6 +6,7 @@ class AssetChangeSet < ChangeSet
   include LockableChangeSet
 
   TRANSCRIPTION_MIME_TYPES = ['text/plain'].freeze
+  DERIVATIVE_TYPES = %w[thumbnail access].freeze
 
   # ChangeSet for Technical Metadata
   class TechnicalMetadataChangeSet < ChangeSet
@@ -21,9 +22,7 @@ class AssetChangeSet < ChangeSet
 
   # ChangeSet for Asset Derivatives
   class AssetDerivativeChangeSet < DerivativeChangeSet
-    TYPES = %w[thumbnail access].freeze
-
-    validates :type, inclusion: TYPES
+    validates :type, inclusion: DERIVATIVE_TYPES
   end
 
   # Defining Fields

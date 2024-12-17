@@ -80,10 +80,10 @@ class AssetsController < ResourcesController
   end
 
   def file
-    case params[:type].to_sym
-    when :thumbnail, :access
+    case params[:type]
+    when *AssetChangeSet::DERIVATIVE_TYPES
       serve_derivative_file resource: @asset, type: params[:type].to_sym
-    when :preservation
+    when 'preservation'
       serve_preservation_file
     else
       raise UnsupportedFileType, 'Type is not supported'
