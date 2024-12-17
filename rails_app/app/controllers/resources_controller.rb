@@ -15,7 +15,7 @@ class ResourcesController < ApplicationController
     send_data file.read,
               type: derivative.mime_type,
               disposition: file_disposition,
-              filename: type.to_s
+              filename: derivative_filename(resource: resource, derivative: derivative)
   end
 
   # @return [Symbol]
@@ -23,6 +23,11 @@ class ResourcesController < ApplicationController
     return :inline if params[:disposition] == 'inline'
 
     :attachment
+  end
+
+  # Default logic for derivative. Each controller can override this method to implement customized logic.
+  def derivative_filename(resource:, derivative:)
+    "#{resource.id.to_s}-#{derivative.type}.#{derivative.extension}" #parameterize
   end
 
   # Postgres query service.

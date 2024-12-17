@@ -16,4 +16,8 @@ class DerivativeResource < Valkyrie::Resource
       symbol == type
     end
   end
+
+  def extension
+    MIME::Types[mime_type].first&.preferred_extension
+  end
 end
