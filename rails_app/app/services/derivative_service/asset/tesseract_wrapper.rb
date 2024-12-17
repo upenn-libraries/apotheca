@@ -56,7 +56,8 @@ module DerivativeService
       # Ensure language data is fit for a tesseract command
       class LanguagePreparer
         SUPPORTED_LANGUAGES_FILE = 'ocr_languages.txt'
-        VERTICAL_LANGUAGES = %w[jpn kor chi-tra chi-sim].freeze
+        LANGUAGE_EXPANSIONS = { 'deu' => %w[deu frk], 'chi' => %w[chi-tra chi-sim] }.freeze
+        CJK_LANGUAGES = %w[jpn kor chi-tra chi-sim].freeze
         def initialize(languages: [], viewing_direction: nil)
           @languages = languages
           @viewing_direction = viewing_direction
@@ -73,9 +74,12 @@ module DerivativeService
 
         # @return [Array<String>]
         def prepared_languages
-          @prepared_languages ||= @languages.select { |lang| supported_languages.include?(lang) }
-                                            .flat_map { |lang| transform_languages(lang) }
-                                            .map { |lang| handle_vertical_languages(lang) }
+          @prepared_languages ||= @languages.flat_map { |code| LANGUAGE_EXPANSIONS.fetch(code, [code]) }
+                                            .filter_map do |code|
+                                              next unless supported_language?(code)
+
+                                              add_vertical_suffix_if_needed(code)
+                                            end
         end
 
         # @return [String, nil]
@@ -87,26 +91,22 @@ module DerivativeService
 
         private
 
-        # @param lang_code [String]
-        # @return [Array<string>]
-        def transform_languages(lang_code)
-          case lang_code
-          when 'deu' then %w[deu frk]
-          when 'chi' then %w[chi_tra chi_sim]
-          else [lang_code]
-          end
-        end
-
-        # @param lang_code [String]
+        # @param code [String]
         # @return [String]
-        def handle_vertical_languages(lang_code)
-          vertical_language?(lang_code) ? "#{lang_code}-vert" : lang_code
+        def add_vertical_suffix_if_needed(code)
+          vertical_cjk_language?(code) ? "#{code}-vert" : code
         end
 
-        # @param lang_code [String]
+        # @param code [String]
         # @return [TrueClass, FalseClass]
-        def vertical_language?(lang_code)
-          VERTICAL_LANGUAGES.include?(lang_code) && @viewing_direction == 'left-to-right'
+        def supported_language?(code)
+          supported_languages.include?(code)
+        end
+
+        # @param code [String]
+        # @return [TrueClass, FalseClass]
+        def vertical_cjk_language?(code)
+          CJK_LANGUAGES.include?(code) && @viewing_direction != 'left-to-right'
         end
       end
     end
