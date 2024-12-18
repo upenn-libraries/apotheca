@@ -55,7 +55,7 @@ class GenerateDerivatives
   # @param data [Array]
   # @return [Array<String>]
   def extract_language_codes(data)
-    Array.wrap(data).pluck(:value).flat_map { |lang| ISO_639.find_by_english_name(lang)&.first(2) }.compact_blank
+    Array.wrap(data).pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l.capitalize)&.first(2) }.compact_blank
   end
 
   # @param bibnumber [String]
