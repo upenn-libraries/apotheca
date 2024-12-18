@@ -252,6 +252,22 @@ describe ImportService::Process::Create do
       end
     end
 
+    context 'when creating an item with multiple languages' do
+      let(:process) do
+        build(:import_process, :create, :with_asset_metadata,
+              metadata: { 'title' => [{ value: 'Trade card' }], 'language' => [{ value: 'English' }, { value: 'German' }] })
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'generates OCR derivatives' do
+        expect(assets[0].derivatives.map(&:type)).to include('text', 'textonly_pdf', 'hocr')
+      end
+    end
+
     context 'when creating an item without language metadata or bibnumber' do
       let(:process) do
         build(:import_process, :create, :with_asset_metadata, metadata: { 'title' => [{ value: 'Trade card' }] })

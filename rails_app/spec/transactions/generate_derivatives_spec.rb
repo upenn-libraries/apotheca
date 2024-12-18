@@ -43,7 +43,8 @@ describe GenerateDerivatives do
 
     context 'when item descriptive metadata has a valid language' do
       let(:item) do
-        persist(:item_resource, descriptive_metadata: { language: [{ value: 'English' }] }, asset_ids: [asset.id])
+        persist(:item_resource, descriptive_metadata: { language: [{ value: 'English' }, { value: 'German' }] },
+                                asset_ids: [asset.id])
       end
 
       it 'generates OCR derivatives' do
