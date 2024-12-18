@@ -31,6 +31,8 @@ class GenerateDerivatives
     change_set.ocr_language = ocr_language(item)
 
     Success(change_set)
+  rescue StandardError => e
+    Failure(error: :error_generating_derivatives, exception: e)
   end
 
   def record_event(resource)
@@ -42,27 +44,23 @@ class GenerateDerivatives
   # @param item [ItemResource]
   # @return [Array<String>]
   def ocr_language(item)
-    language = item.descriptive_metadata.language.flat_map { |lang| ISO_639.find_by_english_name(lang.value).first(2) }
-    bibnumber = item.descriptive_metadata.bibnumber
+    ocr_language = extract_language_codes(item.descriptive_metadata.language)
+    bibnumber = Array.wrap(item.descriptive_metadata.bibnumber).pick(:value)
 
-    if request_language_from_ils?(language, bibnumber)
-      # get language from ils
-      language = language_metadata(bibnumber).flat_map { |lang| ISO_639.find_by_english_name(lang[:value]).first(2) }
-    end
+    return ocr_language if ocr_language.present? || bibnumber.blank?
 
-    language.compact_blank
+    extract_language_codes(ils_language_metadata(bibnumber))
   end
 
-  # @param language [Array]
-  # @param bibnumber [String]
-  # @return [TrueClass, FalseClass]
-  def request_language_from_ils?(language, bibnumber)
-    language.empty? && bibnumber.present?
+  # @param data [Array]
+  # @return [Array<String>]
+  def extract_language_codes(data)
+    Array.wrap(data).pluck(:value).flat_map { |lang| ISO_639.find_by_english_name(lang)&.first(2) }.compact_blank
   end
 
   # @param bibnumber [String]
   # @return [Array]
-  def language_metadata(bibnumber)
+  def ils_language_metadata(bibnumber)
     MetadataExtractor::Marmite.new(url: Settings.marmite.url).descriptive_metadata(bibnumber)[:language] || []
   end
 

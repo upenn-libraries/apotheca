@@ -161,19 +161,24 @@ module ImportService
 
       # @return [Array<String>]
       def ocr_language
-        metadata_language = Array.wrap(descriptive_metadata[:language])
-        bibnumber = structural_metadata[:bibnumber]
+        ocr_language = extract_language_codes(descriptive_metadata[:language])
+        bibnumber = Array.wrap(descriptive_metadata[:bibnumber]).pick(:value)
 
-        ocr_language = metadata_language.flat_map { |lang| ISO_639.find_by_english_name(lang[:value]).first(2) }
+        return ocr_language if ocr_language.present? || bibnumber.blank?
 
-        if ocr_language.empty? && bibnumber.present?
-          ils_language = MetadataExtractor::Marmite.new(url: Settings.marmite.url)
-                                                   .descriptive_metadata(bibnumber)[:language] || []
+        extract_language_codes(ils_language_metadata(bibnumber))
+      end
 
-          ocr_language = ils_language.flat_map { |lang| ISO_639.find_by_english_name(lang[:value]).first(2) }
-        end
+      # @param data [Array]
+      # @return [Array<String>]
+      def extract_language_codes(data)
+        Array.wrap(data).pluck(:value).flat_map { |lang| ISO_639.find_by_english_name(lang)&.first(2) }.compact_blank
+      end
 
-        ocr_language.compact_blank
+      # @param bibnumber [String]
+      # @return [Array]
+      def ils_language_metadata(bibnumber)
+        MetadataExtractor::Marmite.new(url: Settings.marmite.url).descriptive_metadata(bibnumber)[:language] || []
       end
     end
   end
