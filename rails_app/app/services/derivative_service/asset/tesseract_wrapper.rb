@@ -55,9 +55,12 @@ module DerivativeService
 
       # Ensure language data is fit for a tesseract command
       class LanguagePreparer
-        SUPPORTED_LANGUAGES_FILE = 'ocr_languages.txt'
+        OCR_LANGUAGES_FILE = 'ocr_languages.txt'
+        # Include fraktur when language is German, Include both Chinese traditional and Chinese Simplified when language
+        # is Chinese
         LANGUAGE_EXPANSIONS = { deu: %w[deu frk], chi: %w[chi-tra chi-sim] }.freeze
         CJK_LANGUAGE_CODES = %w[jpn kor chi-tra chi-sim].freeze
+        # Viewing direction to signal CJK languages are not meant to be read in vertical columns from right-to-left
         LEFT_TO_RIGHT = 'left-to-right'
         VERTICAL_LANGUAGE_SUFFIX = '_vert'
         def initialize(languages: [], viewing_direction: nil)
@@ -67,7 +70,7 @@ module DerivativeService
 
         # @return [Array<String>]
         def self.supported_languages
-          @supported_languages ||= File.readlines(Rails.root.join(SUPPORTED_LANGUAGES_FILE), chomp: true)
+          @supported_languages ||= File.readlines(Rails.root.join(OCR_LANGUAGES_FILE), chomp: true)
         end
 
         def supported_languages
@@ -102,13 +105,17 @@ module DerivativeService
           normalize_tessdata_code(prepared)
         end
 
-        # tessdata training files use "_" separators instead of "-"
+        # while the tesseract language packages use hyphen separators, the tessdata files and tesseract command line
+        # language arguments use underscore separators. E.g. 'jpn-vert' is the package name, but tesseract responds to
+        # 'jpn_vert'
         # @param code [String]
         # @return [String]
         def normalize_tessdata_code(code)
           code.split('-').join('_')
         end
 
+        # Assume cjk material is written top-to-bottom, right-to-left.
+        # Add vertical suffix unless viewing direction is 'left-to-right'
         # @param code [String]
         # @return [String]
         def handle_cjk_language(code)
