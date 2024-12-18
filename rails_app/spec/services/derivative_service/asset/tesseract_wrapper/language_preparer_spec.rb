@@ -34,31 +34,25 @@ describe DerivativeService::Asset::TesseractWrapper::LanguagePreparer do
       let(:languages) { ['chi'] }
 
       it 'includes traditional and simplified codes' do
-        expect(language_preparer.prepared_languages).to contain_exactly('chi-tra-vert', 'chi-sim-vert')
-      end
-    end
-
-    context 'with left-to-right viewing direction' do
-      it 'does not return any vertical(*-vert) language codes' do
-        expect(language_preparer.prepared_languages).to contain_exactly(*languages)
+        expect(language_preparer.prepared_languages).to contain_exactly('chi_tra_vert', 'chi_sim_vert')
       end
     end
 
     context 'with chinese, korean, japanese' do
-      let(:languages) { described_class::CJK_LANGUAGES }
+      let(:languages) { described_class::CJK_LANGUAGE_CODES }
 
       it 'returns vertical language code by default' do
-        vert_languages = languages.map { |lang| "#{lang}-vert" }
-        expect(language_preparer.prepared_languages).to contain_exactly(*vert_languages)
+        expect(language_preparer.prepared_languages).to contain_exactly('chi_sim_vert', 'chi_tra_vert',
+                                                                        'jpn_vert', 'kor_vert')
       end
     end
 
     context 'with chinese, korean, japanese and left-to-right viewing direction' do
-      let(:languages) { described_class::CJK_LANGUAGES }
+      let(:languages) { described_class::CJK_LANGUAGE_CODES }
       let(:viewing_direction) { 'left-to-right' }
 
       it 'does not return vertical language code with left-to-right viewing direction' do
-        expect(language_preparer.prepared_languages).to contain_exactly(*languages)
+        expect(language_preparer.prepared_languages).to contain_exactly('chi_sim', 'chi_tra', 'jpn', 'kor')
       end
     end
   end

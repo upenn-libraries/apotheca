@@ -56,8 +56,10 @@ module DerivativeService
       # Ensure language data is fit for a tesseract command
       class LanguagePreparer
         SUPPORTED_LANGUAGES_FILE = 'ocr_languages.txt'
-        LANGUAGE_EXPANSIONS = { 'deu' => %w[deu frk], 'chi' => %w[chi-tra chi-sim] }.freeze
-        CJK_LANGUAGES = %w[jpn kor chi-tra chi-sim].freeze
+        LANGUAGE_EXPANSIONS = { deu: %w[deu frk], chi: %w[chi-tra chi-sim] }.freeze
+        CJK_LANGUAGE_CODES = %w[jpn kor chi-tra chi-sim].freeze
+        LEFT_TO_RIGHT = 'left-to-right'
+        VERTICAL_LANGUAGE_SUFFIX = '_vert'
         def initialize(languages: [], viewing_direction: nil)
           @languages = languages
           @viewing_direction = viewing_direction
@@ -74,11 +76,13 @@ module DerivativeService
 
         # @return [Array<String>]
         def prepared_languages
-          @prepared_languages ||= @languages.flat_map { |code| LANGUAGE_EXPANSIONS.fetch(code, [code]) }
+          return [] if @languages.blank?
+
+          @prepared_languages ||= @languages.flat_map { |code| LANGUAGE_EXPANSIONS.fetch(code&.to_sym, [code]) }
                                             .filter_map do |code|
                                               next unless supported_language?(code)
 
-                                              add_vertical_suffix_if_needed(code)
+                                              prepare_code(code)
                                             end
         end
 
@@ -93,8 +97,24 @@ module DerivativeService
 
         # @param code [String]
         # @return [String]
-        def add_vertical_suffix_if_needed(code)
-          vertical_cjk_language?(code) ? "#{code}-vert" : code
+        def prepare_code(code)
+          prepared = cjk_language?(code) ? handle_cjk_language(code) : code
+          normalize_tessdata_code(prepared)
+        end
+
+        # tessdata training files use "_" separators instead of "-"
+        # @param code [String]
+        # @return [String]
+        def normalize_tessdata_code(code)
+          code.split('-').join('_')
+        end
+
+        # @param code [String]
+        # @return [String]
+        def handle_cjk_language(code)
+          vertical_suffix = @viewing_direction != LEFT_TO_RIGHT ? VERTICAL_LANGUAGE_SUFFIX : ''
+
+          "#{code}#{vertical_suffix}"
         end
 
         # @param code [String]
@@ -105,8 +125,8 @@ module DerivativeService
 
         # @param code [String]
         # @return [TrueClass, FalseClass]
-        def vertical_cjk_language?(code)
-          CJK_LANGUAGES.include?(code) && @viewing_direction != 'left-to-right'
+        def cjk_language?(code)
+          CJK_LANGUAGE_CODES.any? { |c| code.starts_with? c }
         end
       end
     end
