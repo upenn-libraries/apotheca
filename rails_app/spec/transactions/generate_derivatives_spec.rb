@@ -5,7 +5,8 @@ describe GenerateDerivatives do
     subject(:updated_asset) { result.value! }
 
     let(:transaction) { described_class.new }
-    let(:item) { persist(:item_resource, :with_full_asset, :with_bibnumber) }
+    let(:asset) { persist(:asset_resource, :with_preservation_file, :with_metadata) }
+    let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
     let(:result) { transaction.call(id: item.asset_ids.first, updated_by: 'initiator@example.com') }
 
     include_context 'with successful Marmite request' do
@@ -18,9 +19,8 @@ describe GenerateDerivatives do
       end
 
       it 'generates and adds derivatives' do
-        expect(updated_asset.derivatives.length).to be 5
-        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access', 'textonly_pdf',
-                                                                         'text', 'hocr')
+        expect(updated_asset.derivatives.length).to be 2
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access')
       end
     end
 
@@ -36,8 +36,41 @@ describe GenerateDerivatives do
       end
 
       it 'regenerates derivatives' do
-        expect(updated_asset.derivatives.count).to be 5
+        expect(updated_asset.derivatives.count).to be 2
         expect(updated_asset.derivatives.map(&:generated_at)).to all(be_within(1.second).of(DateTime.current))
+      end
+    end
+
+    context 'when item descriptive metadata has a valid language' do
+      let(:item) do
+        persist(:item_resource, descriptive_metadata: { language: [{ value: 'English' }] }, asset_ids: [asset.id])
+      end
+
+      it 'generates OCR derivatives' do
+        expect(updated_asset.derivatives.length).to be 5
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access', 'textonly_pdf',
+                                                                         'text', 'hocr')
+      end
+    end
+
+    context 'when language metadata is only found in ils' do
+      let(:item) do
+        persist(:item_resource, descriptive_metadata: { bibnumber: [{ value: 'sample-bib' }] }, asset_ids: [asset.id])
+      end
+
+      it 'generates OCR derivatives' do
+        expect(updated_asset.derivatives.length).to be 5
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access', 'textonly_pdf',
+                                                                         'text', 'hocr')
+      end
+    end
+
+    context 'when there is no language metadata or bibnumber' do
+      let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
+
+      it 'does not generate OCR derivatives' do
+        expect(updated_asset.derivatives.length).to be 2
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
       end
     end
   end

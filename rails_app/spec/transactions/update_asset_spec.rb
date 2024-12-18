@@ -327,6 +327,22 @@ describe UpdateAsset do
           end
         end
       end
+
+      context 'with ocr_language' do
+        subject(:updated_asset) { result.value! }
+
+        let(:transaction) { described_class.new.with_step_args(generate_derivatives: [skip: false]) }
+        let(:asset) { persist(:asset_resource) }
+        let(:result) do
+          transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com', ocr_language: ['eng'])
+        end
+
+        it 'generates ocr derivatives' do
+          expect(updated_asset.derivatives.count).to be 5
+          expect(updated_asset.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail', 'text',
+                                                                           'textonly_pdf', 'hocr')
+        end
+      end
     end
   end
 end
