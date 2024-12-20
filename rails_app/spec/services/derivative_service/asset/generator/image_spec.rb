@@ -68,7 +68,7 @@ describe DerivativeService::Asset::Generator::Image do
         expect(derivative_file.mime_type).to eql 'application/pdf'
       end
 
-      it 'sets expected iiif_image value of true' do
+      it 'sets expected iiif_image value' do
         expect(derivative_file.iiif_image).to be false
       end
 
@@ -103,7 +103,7 @@ describe DerivativeService::Asset::Generator::Image do
         expect(derivative_file.mime_type).to eql 'text/plain'
       end
 
-      it 'sets expected iiif_image value of true' do
+      it 'sets expected iiif_image value' do
         expect(derivative_file.iiif_image).to be false
       end
 
@@ -138,7 +138,7 @@ describe DerivativeService::Asset::Generator::Image do
         expect(derivative_file.mime_type).to eql 'text/html'
       end
 
-      it 'sets expected iiif_image value of true' do
+      it 'sets expected iiif_image value' do
         expect(derivative_file.iiif_image).to be false
       end
 
