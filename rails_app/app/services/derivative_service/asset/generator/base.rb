@@ -9,8 +9,8 @@ module DerivativeService
 
         # @param file [DerivativeService::Asset::SourceFile]
         # @param asset [AssetChangeSet]
-        def initialize(file, asset = nil)
-          @file = file
+        def initialize(asset)
+          @file = SourceFile.new(asset.preservation_file)
           @asset = asset
         end
 
