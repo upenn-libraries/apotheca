@@ -26,6 +26,10 @@ class ResourcesController < ApplicationController
   end
 
   # Default logic for derivative. Each controller can override this method to implement customized logic.
+  #
+  # @param [ItemResource] resource
+  # @param [DerivativeResource] derivative
+  # @return [String]
   def derivative_filename(resource:, derivative:)
     "#{resource.id}-#{derivative.type}.#{derivative.extension}"
   end

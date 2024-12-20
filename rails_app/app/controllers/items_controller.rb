@@ -180,6 +180,10 @@ class ItemsController < ResourcesController
   end
 
   # Custom derivative filename.
+  #
+  # @param [ItemResource] resource
+  # @param [DerivativeResource] derivative
+  # @return [String]
   def derivative_filename(resource:, derivative:)
     "#{resource.human_readable_name.parameterize}.#{derivative.extension}"
   end
