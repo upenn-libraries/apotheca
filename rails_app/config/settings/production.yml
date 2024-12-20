@@ -80,6 +80,3 @@ iiif:
 publish:
   url: https://colenda.library.upenn.edu
   token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>
-virus_check:
-  skip: false
-  size_threshold: 2000000000 # 2 GB

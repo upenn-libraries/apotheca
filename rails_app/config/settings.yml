@@ -42,3 +42,6 @@ supported_mime_types:
   - audio/vnd.wave
   - image/tiff
   - video/quicktime
+virus_check:
+  skip: false
+  size_threshold: 2000000000 # 2 GB

@@ -71,4 +71,3 @@ publish:
   token: sample_token
 virus_check:
   skip: true
-  size_threshold: 2000000000 # 2 GB
