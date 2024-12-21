@@ -55,7 +55,7 @@ en:
       refresh_ILS:
         success: 'Job to refresh ILS metadata enqueued.'
         failure: 'An error occurred while enqueuing job to refresh ILS metadata.'
-        description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata."
+        description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata. If this item is already published to Colenda, this action will republish it to Colenda."
         confirm_message: "Your current ILS metadata will be updated."
       delete:
         success: 'Successfully deleted item.'
