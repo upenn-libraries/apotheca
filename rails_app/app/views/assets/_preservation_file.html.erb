@@ -28,6 +28,7 @@
   <% component.with_field(label: 'MIME Type', values: @asset.technical_metadata.mime_type, classes: ['user-select-all']) %>
   <% component.with_field(label: 'Size', values: number_to_human_size(@asset.technical_metadata.size, classes: ['user-select-all'])) %>
   <% component.with_field(label: 'Duration', values: @asset.technical_metadata.duration ? distance_of_time(@asset.technical_metadata.duration) : nil) %>
+  <% component.with_field(label: 'DPI', values: @asset.technical_metadata.dpi) %>
   <% component.with_field(label: 'Width', values: @asset.technical_metadata.width ? "#{@asset.technical_metadata.width} px" : nil) %>
   <% component.with_field(label: 'Height', values: @asset.technical_metadata.height ? "#{@asset.technical_metadata.height} px" : nil) %>
   <% component.with_field(label: 'MD5 Checksum', values: @asset.technical_metadata.md5, classes: %w[user-select-all font-monospace]) %>

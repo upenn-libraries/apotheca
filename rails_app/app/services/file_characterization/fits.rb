@@ -98,6 +98,17 @@ module FileCharacterization
         convert_duration(text)
       end
 
+      def dpi
+        unit = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:samplingFrequencyUnit')&.text
+
+        return unless unit&.starts_with?('in')
+
+        x_sampling_frequency = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:xSamplingFrequency')&.text
+        y_sampling_frequency = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:ySamplingFrequency')&.text
+
+        x_sampling_frequency == y_sampling_frequency ? x_sampling_frequency.to_i : nil
+      end
+
       private
 
       %i[image audio video].each do |type|

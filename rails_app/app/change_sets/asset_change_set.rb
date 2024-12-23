@@ -14,6 +14,7 @@ class AssetChangeSet < ChangeSet
     property :size, multiple: false
     property :width, multiple: false
     property :height, multiple: false
+    property :dpi, multiple: false
     property :duration, multiple: false
     property :md5, multiple: false
     property :sha256, multiple: false
