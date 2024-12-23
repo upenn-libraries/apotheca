@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Asset::TesseractWrapper::LanguagePreparer do
+require 'open3'
+
+describe DerivativeService::Asset::OCR::TesseractEngine::LanguagePreparer do
   let(:languages) { [] }
   let(:viewing_direction) { nil }
   let(:language_preparer) { described_class.new(languages: languages, viewing_direction: viewing_direction) }
+
+  describe '.supported_languages' do
+    it 'returns expected number of language codes' do
+      expect(described_class.supported_languages.size).to eq 32
+    end
+  end
 
   describe '#prepared_languages' do
     context 'with only invalid or blank languages' do
