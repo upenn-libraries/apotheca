@@ -45,23 +45,16 @@ class GenerateDerivatives
   # @return [Array<String>]
   def ocr_language(item)
     ocr_language = extract_language_codes(item.descriptive_metadata.language)
-    bibnumber = Array.wrap(item.descriptive_metadata.bibnumber).pick(:value)
 
-    return ocr_language if ocr_language.present? || bibnumber.blank?
+    return ocr_language if ocr_language.present?
 
-    extract_language_codes(ils_language_metadata(bibnumber))
+    extract_language_codes(item.presenter.descriptive_metadata.language)
   end
 
   # @param data [Array]
   # @return [Array<String>]
   def extract_language_codes(data)
     Array.wrap(data).pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l.capitalize)&.first(2) }.compact_blank
-  end
-
-  # @param bibnumber [String]
-  # @return [Array]
-  def ils_language_metadata(bibnumber)
-    MetadataExtractor::Marmite.new(url: Settings.marmite.url).descriptive_metadata(bibnumber)[:language] || []
   end
 
   # @param resource [AssetResource]

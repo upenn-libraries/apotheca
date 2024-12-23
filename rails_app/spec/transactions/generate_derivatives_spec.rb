@@ -9,10 +9,6 @@ describe GenerateDerivatives do
     let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
     let(:result) { transaction.call(id: item.asset_ids.first, updated_by: 'initiator@example.com') }
 
-    include_context 'with successful Marmite request' do
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
-    end
-
     context 'when derivatives not present' do
       include_examples 'creates a resource event', :generate_derivatives, 'initiator@example.com', true do
         let(:resource) { updated_asset }
@@ -54,7 +50,11 @@ describe GenerateDerivatives do
       end
     end
 
-    context 'when language metadata is only found in ils' do
+    context 'when language metadata is only found in ils metadata' do
+      include_context 'with successful Marmite request' do
+        let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+      end
+
       let(:item) do
         persist(:item_resource, descriptive_metadata: { bibnumber: [{ value: 'sample-bib' }] }, asset_ids: [asset.id])
       end
@@ -66,7 +66,7 @@ describe GenerateDerivatives do
       end
     end
 
-    context 'when there is no language metadata or bibnumber' do
+    context 'when there is no language metadata' do
       let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
 
       it 'does not generate OCR derivatives' do
