@@ -1,17 +1,8 @@
 # frozen_string_literal: true
 
 describe DerivativeService::Asset::Generator::Image do
-  let(:file) do
-    DerivativeService::Asset::SourceFile.new(
-      Valkyrie::StorageAdapter::StreamFile.new(id: 1,
-                                               io: File.open(file_fixture('files/trade_card/original/front.tif')))
-    )
-  end
-
-  let(:asset) { AssetChangeSet.new(AssetResource.new, ocr_language: ['eng']) }
-
-  let(:generator) { described_class.new(file, asset) }
-
+  let(:resource) { persist(:asset_resource, :with_preservation_file) }
+  let(:generator) { described_class.new(AssetChangeSet.new(resource, ocr_language: ['eng'])) }
   let(:ocr_types) { described_class::OCR::TYPE_MAP.keys }
 
   describe '#thumbnail' do
@@ -78,11 +69,8 @@ describe DerivativeService::Asset::Generator::Image do
     end
 
     context 'when OCR text has not been extracted from the asset' do
-      let(:file) do
-        DerivativeService::Asset::SourceFile.new(
-          Valkyrie::StorageAdapter::StreamFile.new(id: 1,
-                                                   io: File.open(file_fixture('files/trade_card/original/back.tif')))
-        )
+      let(:resource) do
+        persist(:asset_resource, :with_preservation_file, preservation_file: 'trade_card/original/back.tif')
       end
 
       it { is_expected.to be_nil }
@@ -113,11 +101,8 @@ describe DerivativeService::Asset::Generator::Image do
     end
 
     context 'when OCR text has not been extracted from the asset' do
-      let(:file) do
-        DerivativeService::Asset::SourceFile.new(
-          Valkyrie::StorageAdapter::StreamFile.new(id: 1,
-                                                   io: File.open(file_fixture('files/trade_card/original/back.tif')))
-        )
+      let(:resource) do
+        persist(:asset_resource, :with_preservation_file, preservation_file: 'trade_card/original/back.tif')
       end
 
       it { is_expected.to be_nil }
@@ -127,7 +112,7 @@ describe DerivativeService::Asset::Generator::Image do
   describe '#hocr' do
     subject(:derivative_file) { generator.hocr }
 
-    context 'when ocr has been extracted from the imaged' do
+    context 'when ocr has been extracted from the image' do
       after { ocr_types.each { |type| generator.send(type).cleanup! } }
 
       it 'returns DerivativeFile' do
@@ -148,11 +133,8 @@ describe DerivativeService::Asset::Generator::Image do
     end
 
     context 'when OCR text has not been extracted from the asset' do
-      let(:file) do
-        DerivativeService::Asset::SourceFile.new(
-          Valkyrie::StorageAdapter::StreamFile.new(id: 1,
-                                                   io: File.open(file_fixture('files/trade_card/original/back.tif')))
-        )
+      let(:resource) do
+        persist(:asset_resource, :with_preservation_file, preservation_file: 'trade_card/original/back.tif')
       end
 
       it { is_expected.to be_nil }

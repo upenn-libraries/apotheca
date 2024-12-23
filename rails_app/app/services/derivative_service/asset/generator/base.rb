@@ -7,8 +7,7 @@ module DerivativeService
       class Base
         attr_reader :file
 
-        # @param file [DerivativeService::Asset::SourceFile]
-        # @param asset [AssetChangeSet]
+        # @param asset [Valkyrie::ChangeSet]
         def initialize(asset)
           @file = SourceFile.new(asset.preservation_file)
           @asset = asset
