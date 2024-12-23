@@ -19,4 +19,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'RDA'
   inflect.acronym 'DCMI'
   inflect.acronym 'IIIF'
+  inflect.acronym 'OCR'
 end
