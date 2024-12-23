@@ -14,6 +14,7 @@ class GenerateDerivatives
   step :find_asset, with: 'asset_resource.find_resource'
   step :require_updated_by, with: 'attributes.require_updated_by'
   step :create_change_set, with: 'asset_resource.create_change_set'
+  step :add_dpi # temporary step
   step :generate_derivatives, with: 'asset_resource.generate_derivatives'
   step :validate, with: 'change_set.validate'
   step :save, with: 'change_set.save'
@@ -21,5 +22,17 @@ class GenerateDerivatives
 
   def record_event(resource)
     ResourceEvent.record_event_for(resource: resource, event_type: :generate_derivatives)
+  end
+
+  # Temporary step so we can set the dpi if it's not already set.
+  #
+  # Note: This can be removed once we regenerate all the derivatives.
+  def add_dpi(change_set)
+    return Success(change_set) if change_set.technical_metadata.dpi.present?
+
+    technical_metadata = FileCharacterization::Fits::Metadata.new(change_set.technical_metadata.raw)
+    change_set.technical_metadata.dpi = technical_metadata.dpi
+
+    Success(change_set)
   end
 end
