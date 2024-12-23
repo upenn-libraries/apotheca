@@ -15,7 +15,7 @@ class ResourcesController < ApplicationController
     send_data file.read,
               type: derivative.mime_type,
               disposition: file_disposition,
-              filename: derivative_filename(resource: resource, derivative: derivative)
+              filename: derivative_filename(derivative)
   end
 
   # @return [Symbol]
@@ -25,13 +25,12 @@ class ResourcesController < ApplicationController
     :attachment
   end
 
-  # Default logic for derivative. Each controller can override this method to implement customized logic.
+  # Return derivative filename. Each sub-controller must implement this method.
   #
-  # @param [ItemResource] resource
   # @param [DerivativeResource] derivative
   # @return [String]
-  def derivative_filename(resource:, derivative:)
-    "#{resource.id}-#{derivative.type}.#{derivative.extension}"
+  def derivative_filename(derivative)
+    raise NotImplementedError
   end
 
   # Postgres query service.

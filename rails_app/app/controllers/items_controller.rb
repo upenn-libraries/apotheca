@@ -181,11 +181,10 @@ class ItemsController < ResourcesController
 
   # Custom derivative filename.
   #
-  # @param [ItemResource] resource
   # @param [DerivativeResource] derivative
   # @return [String]
-  def derivative_filename(resource:, derivative:)
-    "#{resource.human_readable_name.parameterize}.#{derivative.extension}"
+  def derivative_filename(derivative)
+    "#{@item.human_readable_name.parameterize}.#{derivative.extension}"
   end
 
   # @return [Valkyrie::MetadataAdapter]

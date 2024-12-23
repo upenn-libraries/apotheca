@@ -198,10 +198,9 @@ class AssetsController < ResourcesController
 
   # Custom derivative filename.
   #
-  # @param [AssetResource] resource
   # @param [DerivativeResource] derivative
   # @return [String]
-  def derivative_filename(resource:, derivative:)
-    "#{File.basename(resource.original_filename, '.*')}-#{derivative.type}.#{derivative.extension}"
+  def derivative_filename(derivative)
+    "#{File.basename(@asset.original_filename, '.*')}-#{derivative.type}.#{derivative.extension}"
   end
 end
