@@ -13,7 +13,7 @@ module PublishingService
 
     # @param [String] url
     # @param [String] token
-    def initialize(url:, token:)
+    def initialize(url:, token:, **)
       @connection = create_connection(url, token)
     end
 
