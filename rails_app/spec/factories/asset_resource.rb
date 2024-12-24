@@ -23,6 +23,7 @@ FactoryBot.define do
         sha256: ['sha256checksum'],
         height: 238,
         width: 400,
+        dpi: 600,
         raw: '<?xml version="1.0" encoding="UTF-8"?>'
       }
     end
