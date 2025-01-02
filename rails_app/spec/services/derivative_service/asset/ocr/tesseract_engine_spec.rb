@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'open3'
-
 describe DerivativeService::Asset::OCR::TesseractEngine do
   let(:input_path) { Rails.root.join('spec/fixtures/files/trade_card/original/front.tif') }
   let(:output_path) { Pathname.new("#{Dir.tmpdir}/tesseract-test") }

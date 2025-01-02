@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'open3'
-
 describe DerivativeService::Asset::OCR::TesseractEngine::LanguagePreparer do
   let(:languages) { [] }
   let(:viewing_direction) { nil }

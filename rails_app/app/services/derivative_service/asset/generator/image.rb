@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'open3'
-
 module DerivativeService
   module Asset
     module Generator
