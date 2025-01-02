@@ -105,7 +105,7 @@ module DerivativeService
           # @param code [String]
           # @return [String]
           def prepare_code(code)
-            cjk_language?(code) ? handle_vertical_suffix(code) : code
+            cjk_language?(code) ? vertical_suffix(code) : code
           end
 
           # @param code [String]
@@ -118,7 +118,7 @@ module DerivativeService
           # Add vertical suffix unless viewing direction is 'left-to-right'
           # @param code [String]
           # @return [String]
-          def handle_vertical_suffix(code)
+          def vertical_suffix(code)
             vertical_suffix = @viewing_direction != LEFT_TO_RIGHT ? VERTICAL_LANGUAGE_SUFFIX : ''
 
             "#{code}#{vertical_suffix}"
