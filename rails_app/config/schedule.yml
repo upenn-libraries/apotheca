@@ -13,3 +13,5 @@ ils_metadata:
   class: "EnqueueBulkRefreshIlsMetadataJob"
   describe: "Enqueues ILS metadata refresh jobs for all items with a bibnumber"
   queue: low
+  args:
+    - 1000

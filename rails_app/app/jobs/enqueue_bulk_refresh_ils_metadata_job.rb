@@ -6,9 +6,11 @@ class EnqueueBulkRefreshIlsMetadataJob
 
   sidekiq_options queue: :low
 
-  def perform
+  DEFAULT_BATCH_SIZE = 1_000 # The sidekiq perform_bulk default
+
+  def perform(batch_size = DEFAULT_BATCH_SIZE)
     args = bulk_args.compact_blank.to_a
-    RefreshIlsMetadataJob.perform_bulk(args)
+    RefreshIlsMetadataJob.perform_bulk(args, batch_size: batch_size)
   end
 
   private
