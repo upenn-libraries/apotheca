@@ -44,10 +44,6 @@ class GenerateDerivatives
   # @param item [ItemResource]
   # @return [Array<String>]
   def ocr_language(item)
-    ocr_language = extract_language_codes(item.descriptive_metadata.language)
-
-    return ocr_language if ocr_language.present?
-
     extract_language_codes(item.presenter.descriptive_metadata.language)
   end
 
