@@ -48,10 +48,6 @@ describe DerivativeService::Asset::Generator::Image::OCR do
       it 'returns a hash containing nil values' do
         expect(derivative_files).to eq({ textonly_pdf: nil, text: nil, hocr: nil })
       end
-      #
-      # it 'cleans up the generated files' do
-      #   expect(Dir.new(Dir.tmpdir).entries.none? { |entry| entry.start_with?('ocr-derivative-file-') }).to be true
-      # end
     end
   end
 end
