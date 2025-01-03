@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Custom query to return all ItemResources with a bibnumber.
-class RefreshIlsMetadataQueries
+class DescriptiveMetadataQueries
   def self.queries
     %i[items_with_bibnumber]
   end
