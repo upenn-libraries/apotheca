@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 describe EnqueueBulkRefreshIlsMetadataJob do
-  let(:job) { described_class }
+  let(:job) { described_class.new }
 
   before { 2.times { persist(:item_resource) } }
 
   context 'when there are no items with bibnumbers' do
     it 'does not enqueue an ILS refresh job' do
-      expect { job.perform_inline }.not_to enqueue_sidekiq_job(RefreshIlsMetadataJob)
+      expect { job.perform }.not_to enqueue_sidekiq_job(RefreshIlsMetadataJob)
     end
   end
 
@@ -20,14 +20,14 @@ describe EnqueueBulkRefreshIlsMetadataJob do
     let!(:second_item_with_bib) { persist(:item_resource, :with_bibnumber) }
 
     it 'enqueues an ILS refresh job' do
-      expect { job.perform_inline }.to enqueue_sidekiq_job(RefreshIlsMetadataJob)
+      expect { job.perform }.to enqueue_sidekiq_job(RefreshIlsMetadataJob)
       expect(RefreshIlsMetadataJob.jobs.size).to eq 2
     end
 
     it 'enqueues an ILS refresh job with the correct arguments' do
-      expect { job.perform_inline }.to enqueue_sidekiq_job(RefreshIlsMetadataJob)
+      expect { job.perform }.to enqueue_sidekiq_job(RefreshIlsMetadataJob)
         .with(first_item_with_bib.id.to_s, Settings.system_user)
-      expect { job.perform_inline }.to enqueue_sidekiq_job(RefreshIlsMetadataJob)
+      expect { job.perform }.to enqueue_sidekiq_job(RefreshIlsMetadataJob)
         .with(second_item_with_bib.id.to_s, Settings.system_user)
     end
   end
