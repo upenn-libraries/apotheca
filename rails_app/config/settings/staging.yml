@@ -13,9 +13,6 @@ redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
   password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
-virus_check:
-  skip: false
-  size_threshold: 2000000000 # 2 GB
 
 # External Services
 ezid:
@@ -73,7 +70,8 @@ migration:
   colenda_url: https://colenda.library.upenn.edu
 
 # Item/Asset Resource Configuration
-skip_ezid_metadata_update: true
+ezid_metadata_update:
+  skip: true
 iiif:
   image_server:
     url: 'https://iiif-images-staging.library.upenn.edu/iiif/2'

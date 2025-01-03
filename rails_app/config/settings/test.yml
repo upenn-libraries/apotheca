@@ -15,9 +15,6 @@ redis:
   password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
 chrome:
   url: <%= ENV.fetch('CHROME_URL', 'http://chrome:3000') %>
-virus_check:
-  skip: true
-  size_threshold: 2000000000 # 2 GB
 
 # External Services
 ezid:
@@ -72,3 +69,5 @@ iiif:
 publish:
   url: http://colenda.library.upenn.edu
   token: sample_token
+virus_check:
+  skip: true

@@ -250,8 +250,8 @@ describe UpdateAsset do
     context 'when skipping preservation backup' do
       subject(:updated_asset) { result.value! }
 
-      before { Settings.skip_preservation_backup = true }
-      after { Settings.skip_preservation_backup = false }
+      before { Settings.preservation_backup.skip = true }
+      after { Settings.preservation_backup.skip = false }
 
       let(:asset) { persist(:asset_resource) }
       let(:result) do
