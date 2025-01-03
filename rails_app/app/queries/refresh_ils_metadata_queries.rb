@@ -31,7 +31,8 @@ class RefreshIlsMetadataQueries
     <<-SQL
       SELECT *
       FROM orm_resources
-      WHERE jsonb_array_length(metadata->'descriptive_metadata'->0->'bibnumber') > 0
+      WHERE internal_resource = 'ItemResource' AND
+            jsonb_array_length(metadata->'descriptive_metadata'->0->'bibnumber') > 0
     SQL
   end
 end
