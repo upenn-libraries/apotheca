@@ -56,7 +56,7 @@ module ImportService
           asset_set.all, { created_by: created_by,
                            imported_by: imported_by,
                            ocr_language: ocr_language,
-                           viewing_direction: structural_metadata[:viewing_direction] }
+                           viewing_direction: viewing_direction }
         )
 
         return assets_result if assets_result.failure?

@@ -164,14 +164,24 @@ module ImportService
         false
       end
 
+      # @return [String, nil]
+      def viewing_direction
+        structural_metadata[:viewing_direction] || item&.structural_metadata&.viewing_direction
+      end
+
       # @return [Array<String>]
       def ocr_language
-        ocr_language = extract_language_codes(descriptive_metadata[:language])
+        language_codes = extract_language_codes(descriptive_metadata[:language])
+
+        return language_codes if language_codes.present?
+
         bibnumber = Array.wrap(descriptive_metadata[:bibnumber]).pick(:value)
 
-        return ocr_language if ocr_language.present? || bibnumber.blank?
+        language_codes = extract_language_codes(ils_language_metadata(bibnumber)) if bibnumber.present?
 
-        extract_language_codes(ils_language_metadata(bibnumber))
+        return language_codes if language_codes.present? || item.blank?
+
+        extract_language_codes(item.descriptive_metadata.language)
       end
 
       # @param data [Array]

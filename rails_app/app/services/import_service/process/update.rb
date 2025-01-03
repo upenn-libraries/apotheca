@@ -125,7 +125,7 @@ module ImportService
 
         # Creating new assets
         result = batch_create_assets(new_assets_data, { imported_by: imported_by, ocr_language: ocr_language,
-                                                        viewing_direction: structural_metadata[:viewing_direction] })
+                                                        viewing_direction: viewing_direction })
         @created_assets = result.value! if result.success?
         result
       end
