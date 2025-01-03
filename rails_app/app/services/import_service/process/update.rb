@@ -106,10 +106,6 @@ module ImportService
 
       private
 
-      def item
-        @item ||= find_item(unique_identifier)
-      end
-
       def existing_assets
         @existing_assets ||= query_service.find_many_by_ids(ids: item.asset_ids || [])
       end

@@ -27,7 +27,7 @@ module ImportService
         @errors << 'metadata must be provided to create an object' if descriptive_metadata.blank?
 
         if unique_identifier
-          @errors << "\"#{unique_identifier}\" already assigned to an item" if find_item(unique_identifier)
+          @errors << "\"#{unique_identifier}\" already assigned to an item" if item
           @errors << "\"#{unique_identifier}\" is not minted" unless ark_exists?(unique_identifier)
         end
 

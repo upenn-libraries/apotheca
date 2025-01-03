@@ -54,6 +54,11 @@ module ImportService
 
       private
 
+      # @return [ItemResource]
+      def item
+        @item ||= find_item(unique_identifier)
+      end
+
       def query_service
         Valkyrie::MetadataAdapter.find(:postgres).query_service
       end
