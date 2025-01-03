@@ -364,5 +364,26 @@ describe ImportService::Process::Update do
         )
       end
     end
+
+    context 'when adding new assets without providing language metadata' do
+      let(:item) { persist(:item_resource, :with_faker_metadata) }
+      let(:updated_assets) do
+        updated_item.asset_ids.map do |id|
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: id)
+        end
+      end
+
+      let(:process) do
+        build(
+          :import_process, :update,
+          assets: { arranged_filenames: 'front.tif', storage: 'sceti_digitized', path: 'trade_card/original' },
+          unique_identifier: item.unique_identifier
+        )
+      end
+
+      it 'generates ocr derivatives using existing item metadata' do
+        expect(updated_assets.first.derivatives.map(&:type)).to include('textonly_pdf', 'hocr', 'text')
+      end
+    end
   end
 end

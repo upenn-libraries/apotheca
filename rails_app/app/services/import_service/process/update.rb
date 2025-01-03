@@ -82,7 +82,7 @@ module ImportService
         if asset_set
           item_attributes[:structural_metadata] = item_attributes.fetch(:structural_metadata, {})
                                                                  .merge(arranged_asset_ids: arranged_asset_ids)
-          item_attributes[:asset_ids] = item.asset_ids + created_assets.map(&:id)
+          item_attributes[:asset_ids] = Array.wrap(item.asset_ids) + created_assets.map(&:id)
         end
 
         UpdateItem.new.call(item_attributes) do |result|
