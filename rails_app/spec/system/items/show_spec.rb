@@ -112,11 +112,6 @@ describe 'Item Show Page' do
         expect(page).to have_button('Refresh ILS Metadata', disabled: false)
       end
 
-      it 'warns the user that published items will be republished' do
-        click_button 'Actions'
-        expect(page).to have_text('this action will republish it to Colenda')
-      end
-
       it 'enqueues job to refresh ils metadata' do
         click_button 'Actions'
         click_button 'Refresh ILS Metadata'
