@@ -99,9 +99,12 @@ module FileCharacterization
       end
 
       def dpi
+        return unless image?
+
         unit = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:samplingFrequencyUnit')&.text
 
-        return unless unit&.starts_with?('in')
+        # Return if unit is provided and it's not inches. Unit can sometimes be missing from technical metadata.
+        return unless unit.nil? || unit.starts_with?('in')
 
         x_sampling_frequency = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:xSamplingFrequency')&.text
         y_sampling_frequency = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:ySamplingFrequency')&.text
