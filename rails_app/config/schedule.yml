@@ -12,6 +12,4 @@ ils_metadata:
   cron: "0 6 31 1,7 *" # 6am Jan and July 31
   class: "EnqueueBulkRefreshIlsMetadataJob"
   describe: "Enqueues ILS metadata refresh jobs for all items with a bibnumber"
-  queue: low
-  args:
-    - 1000
+  queue: high
