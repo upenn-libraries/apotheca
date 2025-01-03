@@ -30,7 +30,7 @@ module DerivativeService
           # transformation.
           begin
             image = image.icc_transform('srgb')
-          rescue => e
+          rescue StandardError => e
             Honeybadger.notify(e)
           end
 
