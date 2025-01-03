@@ -3,20 +3,8 @@
 RSpec.describe RefreshIlsMetadataQueries do
   subject(:query) { described_class.new query_service: query_service }
 
-  # create two items without bibnumbers
-  before do
-    2.times { persist(:item_resource) }
-  end
-
   let(:query_service) do
     Valkyrie::MetadataAdapter.find(:postgres).query_service
-  end
-
-  let(:items_with_bib) do
-    # get the items by querying each object, not using the SQL query
-    query_service.find_all_of_model(model: ItemResource).select do |item|
-      item.descriptive_metadata.bibnumber.present?
-    end
   end
 
   describe '#items_with_bibnumber' do
@@ -25,18 +13,22 @@ RSpec.describe RefreshIlsMetadataQueries do
     end
 
     context 'when there are items with bibnumbers' do
-      # create two items with bibnumbers
-      before do
-        2.times { persist(:item_resource, :with_bibnumber) }
+      let!(:item_ids) do
+        [
+          persist(:item_resource, :with_bibnumber),
+          persist(:item_resource, :with_bibnumber)
+        ].map(&:id)
       end
 
-      it 'returns the expected IDs' do
-        expect(query.items_with_bibnumber).to match_array items_with_bib
+      it 'returns the expected items' do
+        expect(query.items_with_bibnumber.map(&:id)).to match_array item_ids
       end
     end
 
     context 'when there are no items with bibnumbers' do
-      it 'returns the expected IDs' do
+      before { 2.times { persist(:item_resource) } }
+
+      it 'returns no items' do
         expect(query.items_with_bibnumber.size).to eq 0
       end
     end
