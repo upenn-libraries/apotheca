@@ -24,7 +24,15 @@ module DerivativeService
         def access
           image = Vips::Image.new_from_buffer(file.read, '')
           image = image.autorot
-          image = image.icc_transform('srgb') # Setting srgb as profile, so colors of derivative match the original.
+
+          # Setting srgb as profile, so colors of derivative match the original. In some cases, the
+          # icc profile is not set on the image, if that's the case we cannot perform an icc profile
+          # transformation.
+          begin
+            image = image.icc_transform('srgb')
+          rescue StandardError => e
+            Honeybadger.notify(e)
+          end
 
           derivative_file = DerivativeFile.new mime_type: 'image/tiff', iiif_image: true
 
