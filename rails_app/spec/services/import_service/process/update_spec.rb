@@ -385,5 +385,28 @@ describe ImportService::Process::Update do
         expect(updated_assets.first.derivatives.map(&:type)).to include('textonly_pdf', 'hocr', 'text')
       end
     end
+
+    context 'when updating language property and existing preservation file' do
+      let(:item) { persist(:item_resource, :with_full_asset) }
+
+      let(:updated_assets) do
+        updated_item.asset_ids.map do |id|
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: id)
+        end
+      end
+
+      let(:process) do
+        build(
+          :import_process, :update,
+          metadata: { language: [{ value: 'English' }] },
+          assets: { arranged_filenames: 'front.tif', storage: 'sceti_digitized', path: 'trade_card/updated' },
+          unique_identifier: item.unique_identifier
+        )
+      end
+
+      it 'generates ocr derivatives' do
+        expect(updated_assets.first.derivatives.map(&:type)).to include('textonly_pdf', 'hocr', 'text')
+      end
+    end
   end
 end

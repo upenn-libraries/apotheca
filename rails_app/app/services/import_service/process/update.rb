@@ -138,7 +138,8 @@ module ImportService
         results = existing_assets.map do |asset|
           asset_data = asset_set.find { |a| a.filename == asset.original_filename }
 
-          asset_data.update_asset(asset: asset, imported_by: imported_by).then do |result|
+          asset_data.update_asset(asset: asset, imported_by: imported_by, ocr_language: ocr_language,
+                                  viewing_direction: viewing_direction).then do |result|
             if result.success?
               result
             else
