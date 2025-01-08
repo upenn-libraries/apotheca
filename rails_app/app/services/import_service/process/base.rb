@@ -54,6 +54,13 @@ module ImportService
 
       private
 
+      # @return [ItemResource]
+      def item
+        return nil unless unique_identifier
+
+        @item ||= find_item(unique_identifier)
+      end
+
       def query_service
         Valkyrie::MetadataAdapter.find(:postgres).query_service
       end
@@ -157,6 +164,38 @@ module ImportService
         end
 
         false
+      end
+
+      # @return [String, nil]
+      def viewing_direction
+        structural_metadata[:viewing_direction] || item&.structural_metadata&.viewing_direction
+      end
+
+      # @return [Array<String>]
+      def ocr_language
+        language_codes = extract_language_codes(descriptive_metadata[:language])
+
+        return language_codes if language_codes.present?
+
+        bibnumber = Array.wrap(descriptive_metadata[:bibnumber]).pick(:value)
+
+        language_codes = extract_language_codes(ils_language_metadata(bibnumber)) if bibnumber.present?
+
+        return language_codes if language_codes.present? || item.blank?
+
+        extract_language_codes(item.descriptive_metadata.language)
+      end
+
+      # @param data [Array]
+      # @return [Array<String>]
+      def extract_language_codes(data)
+        Array.wrap(data).pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l.capitalize)&.first(2) }.compact_blank
+      end
+
+      # @param bibnumber [String]
+      # @return [Array]
+      def ils_language_metadata(bibnumber)
+        MetadataExtractor::Marmite.new(url: Settings.marmite.url).descriptive_metadata(bibnumber)[:language] || []
       end
     end
   end

@@ -250,8 +250,8 @@ describe UpdateAsset do
     context 'when skipping preservation backup' do
       subject(:updated_asset) { result.value! }
 
-      before { Settings.skip_preservation_backup = true }
-      after { Settings.skip_preservation_backup = false }
+      before { Settings.preservation_backup.skip = true }
+      after { Settings.preservation_backup.skip = false }
 
       let(:asset) { persist(:asset_resource) }
       let(:result) do
@@ -325,6 +325,22 @@ describe UpdateAsset do
               Valkyrie::StorageAdapter.find_by(id: d.file_id)
             }.to raise_error Valkyrie::StorageAdapter::FileNotFound
           end
+        end
+      end
+
+      context 'with ocr_language' do
+        subject(:updated_asset) { result.value! }
+
+        let(:transaction) { described_class.new.with_step_args(generate_derivatives: [skip: false]) }
+        let(:asset) { persist(:asset_resource) }
+        let(:result) do
+          transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com', ocr_language: %w[eng fra])
+        end
+
+        it 'generates ocr derivatives' do
+          expect(updated_asset.derivatives.count).to be 5
+          expect(updated_asset.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail', 'text',
+                                                                           'textonly_pdf', 'hocr')
         end
       end
     end

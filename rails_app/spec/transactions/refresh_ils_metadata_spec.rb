@@ -50,5 +50,25 @@ describe RefreshIlsMetadata do
         expect(result.failure[:error]).to be :no_bib_number
       end
     end
+
+    context 'when the item has already been published' do
+      let(:item) { persist(:item_resource, :with_bibnumber, :published) }
+
+      it 'enqueues a PublishItemJob' do
+        allow(PublishItemJob).to receive(:perform_async)
+        result
+        expect(PublishItemJob).to have_received :perform_async
+      end
+    end
+
+    context 'when the item has not been published' do
+      let(:item) { persist(:item_resource, :with_bibnumber) }
+
+      it 'does enqueue a PublishItemJob' do
+        allow(PublishItemJob).to receive(:perform_async)
+        result
+        expect(PublishItemJob).not_to have_received :perform_async
+      end
+    end
   end
 end

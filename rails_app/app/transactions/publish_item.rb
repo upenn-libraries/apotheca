@@ -13,6 +13,8 @@ class PublishItem
   tee :record_event
 
   def publish(change_set)
+    return Success(change_set) if Settings.publish.skip
+
     add_published_values(change_set)
 
     client = PublishingService::Client.new(**Settings.publish)

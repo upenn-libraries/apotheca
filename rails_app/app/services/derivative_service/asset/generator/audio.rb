@@ -25,6 +25,18 @@ module DerivativeService
         def thumbnail
           nil
         end
+
+        def textonly_pdf
+          nil
+        end
+
+        def text
+          nil
+        end
+
+        def hocr
+          nil
+        end
       end
     end
   end

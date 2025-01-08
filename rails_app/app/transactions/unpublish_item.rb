@@ -12,6 +12,8 @@ class UnpublishItem
   tee :record_event
 
   def unpublish(change_set)
+    return Success(change_set) if Settings.publish.skip
+
     change_set.published = false
 
     client = PublishingService::Client.new(**Settings.publish)

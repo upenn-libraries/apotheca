@@ -159,7 +159,7 @@ describe ImportService::Process::Create do
       end
 
       it 'generates derivatives' do
-        expect(assets[0].derivatives.length).to be 2
+        expect(assets[0].derivatives.length).to be 5
         expect(assets[1].derivatives.length).to be 2
       end
     end
@@ -249,6 +249,57 @@ describe ImportService::Process::Create do
 
       it 'preserves the pre-minted ark' do
         expect(item.unique_identifier).to eq('ark:/99999/test')
+      end
+    end
+
+    context 'when creating an item with multiple languages' do
+      let(:process) do
+        build(:import_process, :create, :with_asset_metadata,
+              metadata: { 'title' => [{ value: 'Trade card' }], 'language' => [{ value: 'English' }, { value: 'German' }] })
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'generates OCR derivatives' do
+        expect(assets[0].derivatives.map(&:type)).to include('text', 'textonly_pdf', 'hocr')
+      end
+    end
+
+    context 'when creating an item without language metadata or bibnumber' do
+      let(:process) do
+        build(:import_process, :create, :with_asset_metadata, metadata: { 'title' => [{ value: 'Trade card' }] })
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'does not generate OCR derivatives' do
+        expect(assets[0].derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+      end
+    end
+
+    context 'when language metadata is only found in ils' do
+      include_context 'with successful Marmite request' do
+        let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+      end
+
+      let(:process) do
+        build(:import_process, :create, :with_asset_metadata, metadata: { 'title' => [{ value: 'Trade card' }],
+                                                                          'bibnumber' => [{ value: 'sample-bib' }] })
+      end
+
+      it 'is successful' do
+        expect(result).to be_a Dry::Monads::Success
+        expect(item).to be_a ItemResource
+      end
+
+      it 'generates OCR derivatives' do
+        expect(assets[0].derivatives.map(&:type)).to include('text', 'textonly_pdf', 'hocr')
       end
     end
   end
