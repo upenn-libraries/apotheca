@@ -42,7 +42,7 @@ class GenerateDerivatives
 
   # Temporary step so we can set the dpi if it's not already set.
   #
-  # Note: This can be removed once we regenerate all the derivatives.
+  # @todo This can be removed once we regenerate all the derivatives.
   def add_dpi(change_set)
     return Success(change_set) if change_set.technical_metadata.dpi.present?
 

@@ -98,6 +98,12 @@ module FileCharacterization
         convert_duration(text)
       end
 
+      # Dots per inch (in pixels) used when photographing the object.
+      #
+      # This value can be used to accurately create a print representation of the object
+      # that matches the original size of the object.
+      #
+      # @return [Integer] dpi
       def dpi
         return unless image?
 
