@@ -51,6 +51,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :system_actions, only: [:index]
+
   resources :events, only: [:index, :show]
 
   authenticate :user, ->(u) { u.can? :manage, :sidekiq_dashboard } do
