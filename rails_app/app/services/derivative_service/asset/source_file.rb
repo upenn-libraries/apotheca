@@ -28,11 +28,13 @@ module DerivativeService
       #   f.tmp_file do |path|
       #     # processing of tempfile at path
       #   end
-      def tmp_file
+      # @param extension [String]
+      def tmp_file(extension: nil)
         @file.rewind
 
-        Tempfile.create('derivative-source-file-') do |t|
+        Tempfile.create(['derivative-source-file-', extension]) do |t|
           IO.copy_stream(@file.io, t)
+          t.rewind
           yield(t.path)
         end
       end

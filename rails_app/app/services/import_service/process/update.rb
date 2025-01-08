@@ -82,7 +82,7 @@ module ImportService
         if asset_set
           item_attributes[:structural_metadata] = item_attributes.fetch(:structural_metadata, {})
                                                                  .merge(arranged_asset_ids: arranged_asset_ids)
-          item_attributes[:asset_ids] = item.asset_ids + created_assets.map(&:id)
+          item_attributes[:asset_ids] = Array.wrap(item.asset_ids) + created_assets.map(&:id)
         end
 
         UpdateItem.new.call(item_attributes) do |result|
@@ -106,10 +106,6 @@ module ImportService
 
       private
 
-      def item
-        @item ||= find_item(unique_identifier)
-      end
-
       def existing_assets
         @existing_assets ||= query_service.find_many_by_ids(ids: item.asset_ids || [])
       end
@@ -128,7 +124,8 @@ module ImportService
         return failure(details: ["Files in storage missing for: #{missing.join(', ')}"]) if missing.present?
 
         # Creating new assets
-        result = batch_create_assets(new_assets_data, { imported_by: imported_by })
+        result = batch_create_assets(new_assets_data, { imported_by: imported_by, ocr_language: ocr_language,
+                                                        viewing_direction: viewing_direction })
         @created_assets = result.value! if result.success?
         result
       end
@@ -141,7 +138,8 @@ module ImportService
         results = existing_assets.map do |asset|
           asset_data = asset_set.find { |a| a.filename == asset.original_filename }
 
-          asset_data.update_asset(asset: asset, imported_by: imported_by).then do |result|
+          asset_data.update_asset(asset: asset, imported_by: imported_by, ocr_language: ocr_language,
+                                  viewing_direction: viewing_direction).then do |result|
             if result.success?
               result
             else

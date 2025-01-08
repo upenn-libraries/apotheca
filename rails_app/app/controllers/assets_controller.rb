@@ -81,7 +81,7 @@ class AssetsController < ApplicationController
 
   def file
     case params[:type].to_sym
-    when :thumbnail, :access
+    when :thumbnail, :access, :textonly_pdf, :text, :hocr
       serve_derivative_file type: params[:type].to_sym
     when :preservation
       serve_preservation_file

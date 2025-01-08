@@ -50,6 +50,67 @@ module DerivativeService
         rescue StandardError => e
           raise Generator::Error, "Error generating image access copy: #{e.class} #{e.message}", e.backtrace
         end
+
+        # @return [DerivativeService::DerivativeFile, nil]
+        def textonly_pdf
+          ocr.fetch(:textonly_pdf)
+        end
+
+        # @return [DerivativeService::DerivativeFile, nil]
+        def text
+          ocr.fetch(:text)
+        end
+
+        # @return [DerivativeService::DerivativeFile, nil]
+        def hocr
+          ocr.fetch(:hocr)
+        end
+
+        private
+
+        def ocr
+          @ocr ||= OCR.new(file: file, engine_options: { language: @asset.ocr_language,
+                                                         viewing_direction: @asset.viewing_direction }).generate
+        end
+
+        # Generates OCR derivatives using a given ocr engine
+        class OCR
+          TYPE_MAP = { textonly_pdf: { mime_type: 'application/pdf', extension: 'pdf' },
+                       text: { mime_type: 'text/plain', extension: 'txt' },
+                       hocr: { mime_type: 'text/html', extension: 'hocr' } }.freeze
+
+          def initialize(file:, engine_class: DerivativeService::Asset::OCR::TesseractEngine, engine_options: {})
+            @file = file
+            @engine = engine_class.new(**engine_options)
+          end
+
+          # @return [Hash]
+          def generate
+            return TYPE_MAP.transform_values { nil } unless @engine.ocrable?
+
+            output_path = Pathname.new("#{Dir.tmpdir}/ocr-derivative-file-#{SecureRandom.uuid}")
+
+            ocr_files = @file.tmp_file(extension: '.tif') do |input_path|
+              @engine.ocr(input_path: input_path, output_path: output_path)
+            end
+
+            build_derivative_files(ocr_files: ocr_files)
+          rescue StandardError => e
+            raise Generator::Error, "Error generating ocr derivatives: #{e.class} #{e.message}", e.backtrace
+          end
+
+          private
+
+          # @param ocr_files [Array]
+          # @return [Hash] mapping extension to AssetDerivatives::DerivativeFile
+          def build_derivative_files(ocr_files:)
+            TYPE_MAP.transform_values do |details|
+              file = ocr_files.find { |f| f.path.ends_with?(".#{details[:extension]}") }
+
+              file ? DerivativeFile.new(file: file, **details) : nil
+            end
+          end
+        end
       end
     end
   end

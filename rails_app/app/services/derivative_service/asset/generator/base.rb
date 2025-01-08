@@ -7,9 +7,10 @@ module DerivativeService
       class Base
         attr_reader :file
 
-        # @param file [DerivativeService::Asset::SourceFile]
-        def initialize(file)
-          @file = file
+        # @param asset [Valkyrie::ChangeSet]
+        def initialize(asset)
+          @file = SourceFile.new(asset.preservation_file)
+          @asset = asset
         end
 
         def thumbnail
@@ -17,6 +18,18 @@ module DerivativeService
         end
 
         def access
+          raise NotImplementedError
+        end
+
+        def textonly_pdf
+          raise NotImplementedError
+        end
+
+        def text
+          raise NotImplementedError
+        end
+
+        def hocr
           raise NotImplementedError
         end
       end

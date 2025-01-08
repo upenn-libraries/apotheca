@@ -6,7 +6,7 @@ module DerivativeService
     class Derivatives
       attr_reader :asset
 
-      delegate :thumbnail, :access, to: :generator
+      delegate :thumbnail, :access, :textonly_pdf, :text, :hocr, to: :generator
 
       # @param asset [AssetChangeSet]
       def initialize(asset)
@@ -34,8 +34,7 @@ module DerivativeService
 
       # Creates the correct generator for a file and mime type.
       def create_generator
-        file = SourceFile.new(asset.preservation_file)
-        derivative_generator.new(file)
+        derivative_generator.new(@asset)
       end
 
       def derivative_generator

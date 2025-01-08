@@ -32,7 +32,8 @@ module ImportService
         result.success do |a|
           update_transaction.call(
             id: a.id, file: file, expected_checksum: @expected_checksum,
-            migrated_from: migrated_from, updated_by: imported_by
+            migrated_from: migrated_from, updated_by: imported_by, ocr_language: additional_attrs[:ocr_language],
+            viewing_direction: additional_attrs[:viewing_direction]
           ).tap do |update_result|
             # Delete asset if update failed, then return update_result value
             PurgeAsset.new.call(id: a.id) if update_result.failure?
@@ -50,7 +51,7 @@ module ImportService
     # than the metadata already assigned.
     #
     # @param [AssetResource] asset to be updated
-    def update_asset(asset:, imported_by:)
+    def update_asset(asset:, imported_by:, **ocr_attributes)
       attributes = update_attrs(asset)
 
       return Success(asset) if attributes.empty? # Don't process an update if not necessary.
@@ -59,7 +60,8 @@ module ImportService
         id: asset.id,
         updated_by: imported_by,
         optimistic_lock_token: asset.optimistic_lock_token,
-        **attributes
+        **attributes,
+        **ocr_attributes
       )
     end
 
