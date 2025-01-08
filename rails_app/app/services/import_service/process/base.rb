@@ -56,6 +56,8 @@ module ImportService
 
       # @return [ItemResource]
       def item
+        return nil unless unique_identifier
+
         @item ||= find_item(unique_identifier)
       end
 
