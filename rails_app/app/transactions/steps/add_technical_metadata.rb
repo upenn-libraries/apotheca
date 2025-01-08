@@ -21,6 +21,7 @@ module Steps
       change_set.technical_metadata.height    = tech_metadata.height
       change_set.technical_metadata.md5       = tech_metadata.md5
       change_set.technical_metadata.duration  = tech_metadata.duration
+      change_set.technical_metadata.dpi       = tech_metadata.dpi
       change_set.technical_metadata.sha256    = file.checksum(digests: [Digest::SHA256.new]).first
 
       Success(change_set)

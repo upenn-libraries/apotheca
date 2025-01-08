@@ -43,6 +43,10 @@ describe FileCharacterization::Fits do
         expect(metadata.height).to be 238
       end
 
+      it 'returns dpi' do
+        expect(metadata.dpi).to be 600
+      end
+
       it 'returns duration' do
         expect(metadata.duration).to be_nil
       end
@@ -77,6 +81,10 @@ describe FileCharacterization::Fits do
         expect(metadata.height).to be_nil
       end
 
+      it 'returns dpi' do
+        expect(metadata.dpi).to be_nil
+      end
+
       it 'returns duration' do
         expect(metadata.duration).to be 0.17
       end
@@ -109,6 +117,10 @@ describe FileCharacterization::Fits do
 
       it 'returns height' do
         expect(metadata.height).to be 480
+      end
+
+      it 'returns dpi' do
+        expect(metadata.dpi).to be_nil
       end
 
       # Skipping this test on ARM architecture because the MediaInfo binary used by FITS does not support

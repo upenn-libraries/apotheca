@@ -20,6 +20,7 @@ class AssetResource < Valkyrie::Resource
     attribute :size, Valkyrie::Types::Strict::Integer.optional # Size in Bytes
     attribute :width, Valkyrie::Types::Strict::Integer.optional # in pixels
     attribute :height, Valkyrie::Types::Strict::Integer.optional # in pixels
+    attribute :dpi, Valkyrie::Types::Strict::Integer.optional # dots/pixels per inch
     attribute :duration, Valkyrie::Types::Strict::Float.optional # in seconds
     attribute :md5, Valkyrie::Types::Strict::String.optional
     attribute :sha256, Valkyrie::Types::String.optional
