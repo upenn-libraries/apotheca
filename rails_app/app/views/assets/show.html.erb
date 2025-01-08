@@ -22,7 +22,7 @@
     <% if @asset.thumbnail %>
       <%= image_tag file_asset_path(@asset, type: :thumbnail), class: 'img-thumbnail' %>
     <% else %>
-      <%= render partial: 'shared/no_thumbnail' %>
+      <%= render partial: 'resources/no_thumbnail' %>
     <% end %>
   </div>
   <div class="flex-grow-1 ms-3 mt-3">
@@ -45,7 +45,7 @@
   <% end %>
 
   <% component.with_tab(title: 'Derivatives', count: @asset.derivatives.count, disabled: @asset.derivatives.empty?) do %>
-    <%= render partial: 'derivatives' %>
+    <%= render partial: 'resources/derivatives', locals: { resource: @asset } %>
   <% end %>
 
   <% component.with_tab(title: 'Transcriptions', count: @asset.transcriptions.count, disabled: @asset.transcriptions.empty?) do %>
@@ -53,7 +53,7 @@
   <% end  %>
 
   <% component.with_tab(title: 'Events') do %>
-    <%= render partial: 'events/last_10_events', locals: { resource: @asset } %>
+    <%= render partial: 'resources/last_10_events', locals: { resource: @asset } %>
   <% end %>
 
   <% if can? :update, AssetResource %>

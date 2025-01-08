@@ -11,9 +11,13 @@ class DerivativeResource < Valkyrie::Resource
   attribute :stale, Valkyrie::Types::Strict::Bool
 
   # Methods to check what type of derivative this is.
-  (AssetChangeSet::AssetDerivativeChangeSet::TYPES + ItemChangeSet::ItemDerivativeChangeSet::TYPES).each do |symbol|
+  (AssetChangeSet::DERIVATIVE_TYPES + ItemChangeSet::DERIVATIVE_TYPES).each do |symbol|
     define_method "#{symbol}?" do
       symbol == type
     end
+  end
+
+  def extension
+    MIME::Types[mime_type].first&.preferred_extension
   end
 end
