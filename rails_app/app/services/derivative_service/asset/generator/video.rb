@@ -36,6 +36,18 @@ module DerivativeService
         rescue StandardError => e
           raise Generator::Error, "Error generating video thumbnail: #{e.class} #{e.message}", e.backtrace
         end
+
+        def textonly_pdf
+          nil
+        end
+
+        def text
+          nil
+        end
+
+        def hocr
+          nil
+        end
       end
     end
   end

@@ -58,6 +58,21 @@ class AssetResource < Valkyrie::Resource
     derivatives.find(&:access?)
   end
 
+  # @return [DerivativeResource]
+  def textonly_pdf
+    derivatives.find(&:textonly_pdf?)
+  end
+
+  # @return [DerivativeResource]
+  def text
+    derivatives.find(&:text?)
+  end
+
+  # @return [DerivativeResource]
+  def hocr
+    derivatives.find(&:hocr?)
+  end
+
   # Return true if asset is an image
   def image?
     technical_metadata.mime_type.start_with?('image')

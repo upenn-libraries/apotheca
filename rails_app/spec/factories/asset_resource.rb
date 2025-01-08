@@ -49,6 +49,38 @@ FactoryBot.define do
     end
   end
 
+  trait :with_audio_file do
+    technical_metadata do
+      {
+        mime_type: 'audio/x-wave',
+        size: 30_804,
+        duration: 0.17,
+        sha256: ['sha256checksum']
+      }
+    end
+
+    transient do
+      preservation_file { 'bell.wav' }
+    end
+  end
+
+  trait :with_video_file do
+    technical_metadata do
+      {
+        mime_type: 'video/quicktime',
+        size: 480_754,
+        duration: 1.134,
+        height: 480,
+        width: 640,
+        sha256: ['sha256checksum']
+      }
+    end
+
+    transient do
+      preservation_file { 'video.mov' }
+    end
+  end
+
   # Defaults to using image file.
   trait :with_preservation_file do
     with_image_file

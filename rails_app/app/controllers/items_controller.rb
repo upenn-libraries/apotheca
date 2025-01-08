@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # controller actions for Item stuff
-class ItemsController < ApplicationController
+class ItemsController < ResourcesController
   before_action :load_item_and_change_set, except: :index
   before_action :load_assets, only: %i[show edit reorder_assets]
   before_action :configure_pagination, only: :index
@@ -60,6 +60,15 @@ class ItemsController < ApplicationController
   end
 
   def reorder_assets; end
+
+  def file
+    case params[:type]
+    when *ItemChangeSet::DERIVATIVE_TYPES
+      serve_derivative_file resource: @item, type: params[:type].to_sym
+    else
+      raise UnsupportedFileType, 'Type is not supported'
+    end
+  end
 
   def refresh_ils_metadata
     if RefreshIlsMetadataJob.perform_async(@item.id.to_s, current_user.email)
@@ -170,10 +179,12 @@ class ItemsController < ApplicationController
     params.permit(:keyword, :rows, :page, filter: {}, sort: {}, search: {})
   end
 
-  # TODO: this is shared with AssetsController - create a parent controller class or concern?
-  # @return [Valkyrie::MetadataAdapter]
-  def pg_query_service
-    @pg_query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
+  # Custom derivative filename.
+  #
+  # @param [DerivativeResource] derivative
+  # @return [String]
+  def derivative_filename(derivative)
+    "#{@item.human_readable_name.parameterize}.#{derivative.extension}"
   end
 
   # @return [Valkyrie::MetadataAdapter]

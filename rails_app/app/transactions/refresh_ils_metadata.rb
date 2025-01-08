@@ -8,6 +8,7 @@ class RefreshIlsMetadata
   step :require_updated_by, with: 'attributes.require_updated_by'
   step :validate_bibnumber
   step :save
+  tee :republish
   tee :record_event
 
   def validate_bibnumber(resource:, **attributes)
@@ -23,6 +24,15 @@ class RefreshIlsMetadata
     Success(resource: resource, **attributes)
   rescue StandardError => e
     Failure(error: :error_persisting_to_solr_index, exception: e)
+  end
+
+  # Republish item if it has already been published; otherwise, do
+  # nothing. Method does not return a Monad; intended to be called
+  # using `tee`.
+  def republish(resource:, updated_by:)
+    return unless resource.published
+
+    PublishItemJob.perform_async(resource.id.to_s, updated_by)
   end
 
   def record_event(resource:, updated_by:)

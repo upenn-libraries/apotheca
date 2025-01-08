@@ -5,6 +5,8 @@ class ItemChangeSet < ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet
 
+  DERIVATIVE_TYPES = %w[iiif_manifest].freeze
+
   # ChangeSet for Structural Metadata
   class StructuralMetadataChangeSet < ChangeSet
     VIEWING_DIRECTIONS = %w[right-to-left left-to-right top-to-bottom bottom-to-top].freeze
@@ -33,9 +35,7 @@ class ItemChangeSet < ChangeSet
 
   # ChangeSet for Item Derivatives
   class ItemDerivativeChangeSet < DerivativeChangeSet
-    TYPES = %w[iiif_manifest].freeze
-
-    validates :type, inclusion: TYPES
+    validates :type, inclusion: DERIVATIVE_TYPES
   end
 
   # Defining Fields

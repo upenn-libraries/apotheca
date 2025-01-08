@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # actions for Assets
-class AssetsController < ApplicationController
+class AssetsController < ResourcesController
   class FileNotFound < StandardError; end
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
@@ -80,10 +80,10 @@ class AssetsController < ApplicationController
   end
 
   def file
-    case params[:type].to_sym
-    when :thumbnail, :access
-      serve_derivative_file type: params[:type].to_sym
-    when :preservation
+    case params[:type]
+    when *AssetChangeSet::DERIVATIVE_TYPES
+      serve_derivative_file resource: @asset, type: params[:type].to_sym
+    when 'preservation'
       serve_preservation_file
     else
       raise UnsupportedFileType, 'Type is not supported'
@@ -163,18 +163,6 @@ class AssetsController < ApplicationController
     end
   end
 
-  # @param [Symbol] type
-  def serve_derivative_file(type:)
-    resource = @asset.send(type)
-    raise FileNotFound, "No #{type} derivative exists for asset #{@asset.id}" unless resource
-
-    file = Valkyrie::StorageAdapter.find_by id: resource.file_id
-    send_data file.read,
-              type: resource.mime_type,
-              disposition: file_disposition,
-              filename: type.to_s
-  end
-
   def serve_preservation_file
     raise FileNotFound, "No preservation file exists for asset #{@asset.id}" unless @asset.preservation_file_id
 
@@ -185,24 +173,17 @@ class AssetsController < ApplicationController
               filename: @asset.original_filename
   end
 
-  # @return [Symbol]
-  def file_disposition
-    return :inline if params[:disposition] == 'inline'
-
-    :attachment
-  end
-
   def set_asset
-    @asset = metadata_adapter.query_service.find_by id: params[:id]
+    @asset = pg_query_service.find_by id: params[:id]
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
     raise FileNotFound, e
   end
 
   def set_item
     @item = if params[:item_id]
-              metadata_adapter.query_service.find_by(id: params[:item_id])
+              pg_query_service.find_by(id: params[:item_id])
             else
-              metadata_adapter.query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
+              pg_query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
             end
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
     raise ItemNotFound, e
@@ -215,8 +196,11 @@ class AssetsController < ApplicationController
     raise UnsupportedFileSize if file_params[:file].size >= Settings.virus_check.size_threshold
   end
 
-  # @return [Valkyrie::MetadataAdapter]
-  def metadata_adapter
-    @metadata_adapter ||= Valkyrie::MetadataAdapter.find(:postgres)
+  # Custom derivative filename.
+  #
+  # @param [DerivativeResource] derivative
+  # @return [String]
+  def derivative_filename(derivative)
+    "#{File.basename(@asset.original_filename, '.*')}-#{derivative.type}.#{derivative.extension}"
   end
 end

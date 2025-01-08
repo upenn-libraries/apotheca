@@ -6,6 +6,7 @@ class AssetChangeSet < ChangeSet
   include LockableChangeSet
 
   TRANSCRIPTION_MIME_TYPES = ['text/plain'].freeze
+  DERIVATIVE_TYPES = %w[thumbnail access textonly_pdf text hocr].freeze
 
   # ChangeSet for Technical Metadata
   class TechnicalMetadataChangeSet < ChangeSet
@@ -22,9 +23,7 @@ class AssetChangeSet < ChangeSet
 
   # ChangeSet for Asset Derivatives
   class AssetDerivativeChangeSet < DerivativeChangeSet
-    TYPES = %w[thumbnail access].freeze
-
-    validates :type, inclusion: TYPES
+    validates :type, inclusion: DERIVATIVE_TYPES
   end
 
   # Defining Fields
@@ -45,6 +44,10 @@ class AssetChangeSet < ChangeSet
   # Virtual property to hold expected_checksum that will be used the validate the checksum after file is
   # ingested. Should only be provided when ingesting a new file.
   property :expected_checksum, multiple: false, virtual: true
+
+  # Virtual property to hold parameters to generate OCR derivatives
+  property :ocr_language, multiple: true, virtual: true
+  property :viewing_direction, multiple: false, virtual: true
 
   property :label, multiple: false
 
