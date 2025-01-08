@@ -43,7 +43,7 @@ describe FileCharacterization::Fits do
         expect(metadata.height).to be 238
       end
 
-      it 'return dpi' do
+      it 'returns dpi' do
         expect(metadata.dpi).to be 600
       end
 
@@ -81,7 +81,7 @@ describe FileCharacterization::Fits do
         expect(metadata.height).to be_nil
       end
 
-      it 'return dpi' do
+      it 'returns dpi' do
         expect(metadata.dpi).to be_nil
       end
 
@@ -119,7 +119,7 @@ describe FileCharacterization::Fits do
         expect(metadata.height).to be 480
       end
 
-      it 'return dpi' do
+      it 'returns dpi' do
         expect(metadata.dpi).to be_nil
       end
 
