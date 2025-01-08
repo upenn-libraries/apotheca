@@ -87,7 +87,7 @@ Rails.application.config.to_prepare do
   end
 
   # Register custom queries for Postgres adapter
-  [UniqueIdentifierQueries, PreservationBackupQueries].each do |postgres_query_handler|
+  [UniqueIdentifierQueries, PreservationBackupQueries, DescriptiveMetadataQueries].each do |postgres_query_handler|
     Valkyrie::MetadataAdapter.find(:postgres)
                              .query_service.custom_queries
                              .register_query_handler(postgres_query_handler)

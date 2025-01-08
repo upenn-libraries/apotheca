@@ -50,6 +50,7 @@ namespace :apotheca do
           viewing_hint: fake_item.structural_metadata.viewing_hint,
           arranged_asset_ids: [asset_id]
         },
+        published: fake_item.published,
         asset_ids: [asset_id]
       }
 

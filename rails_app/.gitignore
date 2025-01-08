@@ -38,3 +38,6 @@ vendor/bundle
 
 # Ignore env credential keys
 config/credentials/*.key
+
+# Ignore yard server files
+/.yardoc
