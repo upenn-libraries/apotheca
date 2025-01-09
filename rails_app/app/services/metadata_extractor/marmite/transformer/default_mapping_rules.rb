@@ -10,6 +10,7 @@ module MetadataExtractor
         ALL = '*'
         A_TO_Z = ('a'..'z').to_a
         PROVENANCE_NAME_VALUES = %w[donor owner].freeze
+        UNKNOWN_DATE = 'uuuu'
 
         # Mapping language to standardized ISO639 english name and URI.
         def self.language_transformation(_, extracted_values)
@@ -58,13 +59,37 @@ module MetadataExtractor
 
         # Applying some minor transformation to ensure the date value follows the EDTF spec.
         def self.convert_to_edtf(_, extracted_values)
-          return {} if extracted_values[:value].blank? || extracted_values[:value].match?(/\Auuuu\Z/)
+          dates = extracted_values[:value][1..]
 
-          extracted_values[:value] = extracted_values[:value].tr('u', 'X')
+          return {} if dates.blank?
+
+          date_type = extracted_values[:value][0]
+          date1 = dates[0, 4]
+          date2 = dates[4, 4]
+          range = date_type.in? %w[i k m]
+
+          return {} if unknown_date?(date1, date2, range)
+
+          extracted_values[:value] = format_edtf_value(date1, date2, range)
+
           extracted_values
         end
 
-        map_controlfield '008', to: :date, value: { chars: (7..10).to_a }, custom: method(:convert_to_edtf)
+        # @param date1 [String]
+        # @param date2 [String]
+        # @param range [Boolean]
+        def self.unknown_date?(date1, date2, range)
+          (!range && date1 == UNKNOWN_DATE) || (range && date1 == UNKNOWN_DATE && date2 == UNKNOWN_DATE)
+        end
+
+        # @param date1 [String]
+        # @param date2 [String]
+        # @param range [Boolean]
+        def self.format_edtf_value(date1, date2, range)
+          range ? "#{date1}/#{date2}".gsub(/#{UNKNOWN_DATE}/, '').tr('u', 'X') : date1.tr('u', 'X')
+        end
+
+        map_controlfield '008', to: :date, value: { chars: (6..14).to_a }, custom: method(:convert_to_edtf)
         map_controlfield '008', to: :language, value: { chars: (35..37).to_a }, custom: method(:language_transformation)
 
         # Separate mappings for language ensure the language codes aren't appended together

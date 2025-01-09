@@ -185,6 +185,60 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
       end
     end
 
+    context 'when MARC XML contains a date range with both dates' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:controlfield tag="001">9940417313503681</marc:controlfield>
+              <marc:controlfield tag="008">030101i10uu11uuxx 000 0 heb d</marc:controlfield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'converts date to EDFT' do
+        expect(transformer.to_descriptive_metadata[:date].pluck(:value)).to contain_exactly('10XX/11XX')
+      end
+    end
+
+    context 'when MARC XML contains a date range with only end date' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:controlfield tag="001">9940417313503681</marc:controlfield>
+              <marc:controlfield tag="008">030101iuuuu11uuxx 000 0 heb d</marc:controlfield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'converts date to EDFT' do
+        expect(transformer.to_descriptive_metadata[:date].pluck(:value)).to contain_exactly('/11XX')
+      end
+    end
+
+    context 'when MARC XML contains a date range with only start date' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:controlfield tag="001">9940417313503681</marc:controlfield>
+              <marc:controlfield tag="008">030101i10uuuuuuxx 000 0 heb d</marc:controlfield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'converts date to EDFT' do
+        expect(transformer.to_descriptive_metadata[:date].pluck(:value)).to contain_exactly('10XX/')
+      end
+    end
+
     context 'when MARC XML contains blank value' do
       let(:xml) do
         <<~XML
