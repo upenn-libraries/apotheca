@@ -74,5 +74,36 @@ describe GenerateDerivatives do
         expect(updated_asset.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
       end
     end
+
+    context 'when dpi is not present' do
+      let(:fits_xml) do
+        <<-XML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="1.6.0" timestamp="1/7/25, 6:09 PM">
+          <identification>
+            <identity format="TIFF EXIF" mimetype="image/tiff" toolname="FITS" toolversion="1.6.0">
+              <tool toolname="Jhove" toolversion="1.26.1"/>
+            </identity>
+          </identification>
+          <metadata>
+            <image>
+              <samplingFrequencyUnit toolname="Jhove" toolversion="1.26.1">in.</samplingFrequencyUnit>
+              <xSamplingFrequency toolname="Exiftool" toolversion="12.50">400</xSamplingFrequency>
+              <ySamplingFrequency toolname="Exiftool" toolversion="12.50">400</ySamplingFrequency>
+            </image>
+          </metadata>
+         </fits>
+        XML
+      end
+      let(:asset) do
+        persist(:asset_resource, :with_preservation_file, :with_metadata,
+                technical_metadata: { size: 291_455, mime_type: 'image/tiff', sha256: ['sha256checksum'],
+                                      height: 238, width: 400, dpi: nil, raw: fits_xml })
+      end
+
+      it 'adds dpi' do
+        expect(updated_asset.technical_metadata.dpi).to be 400
+      end
+    end
   end
 end

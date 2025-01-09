@@ -98,6 +98,26 @@ module FileCharacterization
         convert_duration(text)
       end
 
+      # Dots per inch (in pixels) used when photographing the object.
+      #
+      # This value can be used to accurately create a print representation of the object
+      # that matches the original size of the object.
+      #
+      # @return [Integer] dpi
+      def dpi
+        return unless image?
+
+        unit = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:samplingFrequencyUnit')&.text
+
+        # Return if unit is provided and it's not inches. Unit can sometimes be missing from technical metadata.
+        return unless unit.nil? || unit.starts_with?('in')
+
+        x_sampling_frequency = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:xSamplingFrequency')&.text
+        y_sampling_frequency = @xml.at_xpath('/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:ySamplingFrequency')&.text
+
+        x_sampling_frequency == y_sampling_frequency ? x_sampling_frequency.to_i : nil
+      end
+
       private
 
       %i[image audio video].each do |type|

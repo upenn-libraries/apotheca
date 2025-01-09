@@ -69,12 +69,13 @@ Metrics/ClassLength:
     - 'app/services/import_service/process/update.rb'
     - 'app/services/metadata_extractor/marmite/transformer/default_mapping_rules.rb'
 
-# Offense count: 20
+# Offense count: 21
 # Configuration parameters: AllowedMethods, AllowedPatterns, Max.
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'app/indexers/indexing_mappers/descriptive_metadata.rb'
     - 'app/services/derivative_service/item/iiif_manifest_generator.rb'
+    - 'app/services/file_characterization/fits.rb'
     - 'app/services/import_service/asset_data.rb'
     - 'app/services/import_service/asset_set.rb'
     - 'app/services/import_service/colenda_metadata.rb'
