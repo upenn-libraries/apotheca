@@ -61,6 +61,9 @@ en:
         success: 'Successfully deleted item.'
         description: "Deleting this item completely removes the record from our system and unpublishes the item. This cannot be undone."
         confirm_message: "You will permanently delete this item."
+      refresh_all_ILS:
+        success: "Job to refresh all ILS metadata enqueued."
+        failure: "An error occurred while enqueuing job to refresh all ILS metadata."
     bulk_import:
       cancel_all:
         confirm_message: "You will permanently cancel all queued imports."
