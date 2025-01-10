@@ -6,7 +6,7 @@ class EnqueueBulkRefreshIlsMetadataJob
 
   sidekiq_options queue: :high
 
-  def perform(email = Settings.system_user)
+  def perform(email)
     args = bulk_args(email).compact_blank.to_a
     RefreshIlsMetadataJob.set(queue: :low).perform_bulk(args)
   end
