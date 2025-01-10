@@ -23,6 +23,7 @@ gem 'factory_bot_rails'
 gem 'faker'
 gem 'faraday'
 gem 'faraday-retry'
+gem 'hexapdf'
 gem 'honeybadger'
 gem 'iiif-presentation'
 gem 'importmap-rails'
@@ -46,7 +47,7 @@ gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'upennlib-rubocop', '~> 1.0', require: false
-gem 'valkyrie', '~> 3.0'
+gem 'valkyrie', '~> 3.2.0'
 gem 'valkyrie-shrine'
 gem 'view_component'
 
