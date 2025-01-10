@@ -19,6 +19,12 @@
           <a class="nav-link <%= 'active' if request.path.starts_with?(bulk_exports_path) %>"
              href="<%= bulk_exports_path %>">Exports</a>
         </li>
+        <% if can? :manage, :system_actions %>
+          <li class="nav-item">
+            <a class="nav-link <%= 'active' if request.path.starts_with?(system_actions_path) %>"
+               href="<%= system_actions_path %>">System Actions</a>
+          </li>
+        <% end %>
         <% if can? :manage, User %>
           <li class="nav-item">
             <a class="nav-link <%= 'active' if request.path.starts_with?(users_path) %>"
