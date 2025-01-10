@@ -20,4 +20,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'DCMI'
   inflect.acronym 'IIIF'
   inflect.acronym 'OCR'
+  inflect.acronym 'PDF'
 end
