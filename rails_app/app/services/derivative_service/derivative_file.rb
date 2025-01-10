@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DerivativeService
-  # Wrapper class around TempFile with additional derivative-specific variables and helper methods.
+  # Wrapper class around TempFile/File with additional derivative-specific variables and helper methods.
   class DerivativeFile
     attr_reader :mime_type, :file, :iiif_image, :iiif_manifest
 
