@@ -42,7 +42,6 @@ Rails.application.routes.draw do
         post :publish, to: 'items#publish'
         post :unpublish, to: 'items#unpublish'
       end
-
       collection do
         post 'refresh_all_ils_metadata', to: 'items#refresh_all_ils_metadata'
       end
