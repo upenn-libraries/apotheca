@@ -1,12 +1,6 @@
-<%= render(ActionsTable::Component.new) do |component| %>
-  <%= component.with_action(description: I18n.t('actions.item.refresh_all_ILS.description')) do |action| %>
-    <% action.with_form_component(name:   'refresh_all_ILS_metadata',
-                                  url:    refresh_all_ils_metadata_items_path,
-                                  method: :post) do |form_component| %>
-      <%# form_component.with_error(@error) if @errors_for == 'refresh_all_ILS_metadata' %>
-      <% form_component.with_submit('Refresh All ILS Metadata',
-                                    confirm:  I18n.t('actions.item.refresh_all_ILS.confirm_message'),
-                                    variant:  :primary) %>
-    <% end %>
-  <% end %>
+<%= render(Breadcrumbs::Component.new) do |component| %>
+  <% component.with_breadcrumb(href: "/")      { 'Home' } %>
+  <% component.with_breadcrumb(active: true)   { 'System Actions' } %>
 <% end %>
+
+<%= render partial: 'actions' %>
