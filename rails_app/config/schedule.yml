@@ -14,4 +14,4 @@ ils_metadata:
   describe: "Enqueues ILS metadata refresh jobs for all items with a bibnumber"
   queue: high
   args:
-    - 'system@apotheca.library.upenn.edu'
+    - "<%= Settings.system_user %>"
