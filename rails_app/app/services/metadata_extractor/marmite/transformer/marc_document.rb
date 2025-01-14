@@ -85,7 +85,7 @@ module MetadataExtractor
           # Return an array of the values at the given locations.
           #
           # @param chars [Array|String]
-          # @return [String]
+          # @return [Array<String>]
           def values_at(chars:)
             chars = Array.wrap(chars)
             text = node.text
