@@ -3,8 +3,7 @@
     <% action.with_form_component(name:   'refresh_all_ILS_metadata',
                                   url:    refresh_all_ils_metadata_items_path,
                                   method: :post) do |form_component| %>
-      <%# QUESTION: Is this needed? There is no @errors_for %>
-      <%# form_component.with_error(@error) if @errors_for == 'refresh_all_ILS_metadata' %>
+      <% form_component.with_error(@error) if @errors_for == 'refresh_all_ILS_metadata' %>
       <% form_component.with_submit('Refresh All ILS Metadata',
                                     confirm:  I18n.t('actions.item.refresh_all_ILS.confirm_message'),
                                     variant:  :primary) %>
