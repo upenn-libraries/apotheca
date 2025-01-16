@@ -5,6 +5,7 @@ module ActionsTable
   class Component < ViewComponent::Base
     renders_many :actions, Action::Component
 
+    # @param header [TrueClass | FalseClass]
     def initialize(header: true)
       @header = header
     end
