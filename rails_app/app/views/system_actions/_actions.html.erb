@@ -1,4 +1,4 @@
-<%= render(ActionsTable::Component.new) do |component| %>
+<%= render(ActionsTable::Component.new(header: false)) do |component| %>
   <%= component.with_action(description: I18n.t('actions.item.refresh_all_ILS.description')) do |action| %>
     <% action.with_form_component(name:   'refresh_all_ILS_metadata',
                                   url:    refresh_all_ils_metadata_items_path,
