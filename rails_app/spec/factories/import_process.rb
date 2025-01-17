@@ -69,6 +69,10 @@ FactoryBot.define do
       action { 'invalid' }
     end
 
+    trait :printed do
+      ocr_type { 'printed' }
+    end
+
     skip_create
     initialize_with { ImportService::Process.build(**attributes) }
   end
