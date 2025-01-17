@@ -7,6 +7,7 @@
 
 <%= render(StaticFields::Component.new) do |component| %>
   <% component.with_field(label: 'Human Readable Name', values: @item.human_readable_name) %>
+  <% component.with_field(label: 'OCR Type', values: @item.ocr_type) %>
   <% component.with_field(label: 'Internal Notes', values: @item.internal_notes) %>
   <% component.with_field(label: 'First Published At', values: @item.first_published_at&.to_fs(:display)) %>
   <% component.with_field(label: 'Last Published At', values: @item.last_published_at&.to_fs(:display)) %>
