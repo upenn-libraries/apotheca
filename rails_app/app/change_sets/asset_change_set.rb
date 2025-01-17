@@ -46,6 +46,7 @@ class AssetChangeSet < ChangeSet
   property :expected_checksum, multiple: false, virtual: true
 
   # Virtual property to hold parameters to generate OCR derivatives
+  property :ocr_type, multiple: false, virtual: true
   property :ocr_language, multiple: true, virtual: true
   property :viewing_direction, multiple: false, virtual: true
 
