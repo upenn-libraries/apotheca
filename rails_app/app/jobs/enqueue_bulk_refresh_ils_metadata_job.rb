@@ -6,8 +6,8 @@ class EnqueueBulkRefreshIlsMetadataJob
 
   sidekiq_options queue: :high
 
-  def perform
-    args = bulk_args.compact_blank.to_a
+  def perform(email)
+    args = bulk_args(email).compact_blank.to_a
     RefreshIlsMetadataJob.set(queue: :low).perform_bulk(args)
   end
 
@@ -17,10 +17,10 @@ class EnqueueBulkRefreshIlsMetadataJob
   # with a bibnumber
   #
   # @return [Enumerator::Lazy]
-  def bulk_args
+  def bulk_args(email)
     query_service.custom_queries
                  .items_with_bibnumber
-                 .map { |item| [item.id.to_s, Settings.system_user] }
+                 .map { |item| [item.id.to_s, email] }
   end
 
   def query_service

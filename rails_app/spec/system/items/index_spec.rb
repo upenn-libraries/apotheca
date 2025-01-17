@@ -79,6 +79,10 @@ describe 'Item Index Page' do
       click_link 'Items'
       expect(page).to have_select('Rows', selected: '50')
     end
+
+    it 'does not show the link to the system actions page' do
+      expect(page).not_to have_link('System Actions', href: system_actions_path)
+    end
   end
 
   context 'with a viewer' do
@@ -91,6 +95,25 @@ describe 'Item Index Page' do
     it 'does not show link to create an item' do
       visit items_path
       expect(page).not_to have_link('Create Item', href: new_item_path)
+    end
+
+    it 'does not show the link to the system actions page' do
+      expect(page).not_to have_link('System Actions', href: system_actions_path)
+    end
+  end
+
+  context 'with an admin' do
+    let(:role) { :admin }
+
+    before { visit items_path }
+
+    it 'shows the link to the system actions page' do
+      expect(page).to have_link('System Actions', href: system_actions_path)
+    end
+
+    it 'takes the user to the system actions page' do
+      click_link 'System Actions'
+      expect(page).to have_current_path(system_actions_path)
     end
   end
 end
