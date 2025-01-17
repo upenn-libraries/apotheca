@@ -8,7 +8,7 @@ module ImportService
       include Dry::Monads[:result]
 
       attr_reader :errors, :imported_by, :descriptive_metadata, :structural_metadata, :publish,
-                  :asset_set, :unique_identifier, :human_readable_name, :internal_notes, :thumbnail
+                  :asset_set, :unique_identifier, :human_readable_name, :internal_notes, :thumbnail, :ocr_type
 
       # Initializes object to conduct import. For the time being this class will only import Items.
       #
@@ -27,6 +27,7 @@ module ImportService
         @descriptive_metadata = args.fetch(:metadata, {})
         @structural_metadata  = args.fetch(:structural, {})
         @publish              = args.fetch(:publish, 'false').casecmp('true').zero? # Not allowing for unpublishing
+        @ocr_type             = args[:ocr_type]
         @errors               = []
       end
 
@@ -164,6 +165,11 @@ module ImportService
         end
 
         false
+      end
+
+      # @return [Hash{Symbol->Array<String> | String}]
+      def ocr_options
+        { ocr_type: ocr_type, ocr_language: ocr_language, viewing_direction: viewing_direction }
       end
 
       # @return [String, nil]
