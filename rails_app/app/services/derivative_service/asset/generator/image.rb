@@ -69,7 +69,7 @@ module DerivativeService
         private
 
         def ocr
-          @ocr ||= OCR.new(file: file, engine_options: { language: @asset.ocr_language,
+          @ocr ||= OCR.new(file: file, engine_options: { type: @asset.ocr_type, language: @asset.ocr_language,
                                                          viewing_direction: @asset.viewing_direction }).generate
         end
 
@@ -79,14 +79,17 @@ module DerivativeService
                        text: { mime_type: 'text/plain', extension: 'txt' },
                        hocr: { mime_type: 'text/html', extension: 'hocr' } }.freeze
 
-          def initialize(file:, engine_class: DerivativeService::Asset::OCR::TesseractEngine, engine_options: {})
+          PRINT_MATERIAL = 'printed'
+
+          def initialize(file:, engine_options: {})
             @file = file
-            @engine = engine_class.new(**engine_options)
+            @engine_options = engine_options
+            @engine = create_ocr_engine
           end
 
           # @return [Hash]
           def generate
-            return TYPE_MAP.transform_values { nil } unless @engine.ocrable?
+            return TYPE_MAP.transform_values { nil } unless @engine.present? && @engine.ocrable?
 
             output_path = Pathname.new("#{Dir.tmpdir}/ocr-derivative-file-#{SecureRandom.uuid}")
 
@@ -100,6 +103,15 @@ module DerivativeService
           end
 
           private
+
+          # @return [DerivativeService::Asset::OCR::Engine::Base, nil]
+          def create_ocr_engine
+            args = @engine_options.except(:type)
+            case @engine_options[:type]
+            when PRINT_MATERIAL
+              DerivativeService::Asset::OCR::Engine::Tesseract.new(**args)
+            end
+          end
 
           # @param ocr_files [Array]
           # @return [Hash] mapping extension to AssetDerivatives::DerivativeFile
