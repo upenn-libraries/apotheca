@@ -24,10 +24,11 @@ class GenerateDerivatives
   # @param change_set [AssetChangeSet]
   # @return [Dry::Monads::Result]
   def fetch_ocr_properties(change_set)
-    mime_type = change_set.resource.technical_metadata.mime_type
-    return Success(change_set) unless mime_type.in?(DerivativeService::Asset::Generator::Image::VALID_MIME_TYPES)
+    return Success(change_set) unless image_mime_type?(change_set)
 
     item = find_parent_item(change_set.resource)
+
+    change_set.ocr_type = item.ocr_type
     change_set.viewing_direction = item.structural_metadata.viewing_direction
     change_set.ocr_language = ocr_language(item)
 
@@ -71,5 +72,11 @@ class GenerateDerivatives
   def find_parent_item(resource)
     Valkyrie::MetadataAdapter.find(:postgres).query_service
                              .find_inverse_references_by(resource: resource, property: :asset_ids).first
+  end
+
+  # @param change_set [AssetChangeSet]
+  # @return [TrueClass, FalseClass]
+  def image_mime_type?(change_set)
+    change_set.resource.technical_metadata.mime_type.in?(DerivativeService::Asset::Generator::Image::VALID_MIME_TYPES)
   end
 end
