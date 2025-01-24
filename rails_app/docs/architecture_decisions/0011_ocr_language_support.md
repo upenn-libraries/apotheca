@@ -12,8 +12,7 @@ OCR Language Support
 
 ## Context
 
-1. Tesseract requires a language argument, comprised of one or more ISO 639 language codes, to perform OCR and is
-   specifically optimized for printed materials.
+1. Tesseract requires a language argument, comprised of one or more ISO 639 language codes, to perform OCR and is specifically optimized for printed materials.
 2. Two approaches are available to select an appropriate language:
     - Using existing metadata from our items to specify the language
     - Using Tesseract's built-in script detection capability (provides a confidence value for detected scripts)
@@ -28,8 +27,7 @@ OCR Language Support
 2. Support OCR only for languages that meet the following criteria:
     - Official Tesseract language support exists
     - Language appears in our printed material
-3. Select vertical language packs for Chinese, Japanese, and Korean language material unless the `viewing_direction`
-   property from item's structural metadata suggests the text is meant to be read horizontally from left-to-right.
+3. Select vertical language packs for Chinese, Japanese, and Korean language material unless the `viewing_direction` property from item's structural metadata suggests the text is meant to be read horizontally from left-to-right.
 4. Use the order provided in the language metadata when performing OCR on an item with multiple languages.
 
 ## Consequences
