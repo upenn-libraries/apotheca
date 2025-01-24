@@ -230,8 +230,8 @@ GEM
       i18n (>= 1.8.11, < 2)
     faraday (2.9.0)
       faraday-net_http (>= 2.0, < 3.2)
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
+    faraday-multipart (1.1.0)
+      multipart-post (~> 2.0)
     faraday-net_http (3.1.0)
       net-http
     faraday-retry (2.2.0)
@@ -272,13 +272,14 @@ GEM
     jmespath (1.6.2)
     json (2.6.3)
     json-canonicalization (1.0.0)
-    json-ld (3.3.1)
+    json-ld (3.3.2)
       htmlentities (~> 4.3)
       json-canonicalization (~> 1.0)
       link_header (~> 0.0, >= 0.0.8)
       multi_json (~> 1.15)
       rack (>= 2.2, < 4)
       rdf (~> 3.3)
+      rexml (~> 3.2)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -313,7 +314,7 @@ GEM
     minitest (5.20.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
-    multipart-post (2.3.0)
+    multipart-post (2.4.1)
     mutex_m (0.1.2)
     net-http (0.4.1)
       uri
@@ -409,7 +410,7 @@ GEM
     rdf (3.3.1)
       bcp47_spec (~> 0.2)
       link_header (~> 0.0, >= 0.0.8)
-    rdf-vocab (3.3.0)
+    rdf-vocab (3.3.2)
       rdf (~> 3.3)
     rdoc (6.5.0)
       psych (>= 4.0.0)
@@ -548,7 +549,7 @@ GEM
       rubocop-rake
       rubocop-rspec
     uri (0.13.0)
-    valkyrie (3.1.1)
+    valkyrie (3.2.0)
       activemodel
       activesupport
       dry-struct
@@ -645,7 +646,7 @@ DEPENDENCIES
   stimulus-rails
   tzinfo-data
   upennlib-rubocop (~> 1.0)
-  valkyrie (~> 3.0)
+  valkyrie (~> 3.2.0)
   valkyrie-shrine
   view_component
   web-console
