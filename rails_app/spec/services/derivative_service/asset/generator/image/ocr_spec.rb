@@ -2,10 +2,8 @@
 
 describe DerivativeService::Asset::Generator::Image::OCR do
   let(:file) do
-    DerivativeService::Asset::SourceFile.new(
-      Valkyrie::StorageAdapter::StreamFile.new(id: 1,
-                                               io: File.open(file_fixture('files/trade_card/original/front.tif')))
-    )
+    Valkyrie::StorageAdapter::StreamFile.new(id: 1,
+                                             io: File.open(file_fixture('files/trade_card/original/front.tif')))
   end
   let(:asset) { AssetChangeSet.new(AssetResource.new, ocr_language: ['eng']) }
   let(:ocr) do
@@ -39,10 +37,8 @@ describe DerivativeService::Asset::Generator::Image::OCR do
 
     context 'when no ocr text is extracted from the asset' do
       let(:file) do
-        DerivativeService::Asset::SourceFile.new(
-          Valkyrie::StorageAdapter::StreamFile.new(id: 1,
-                                                   io: File.open(file_fixture('files/trade_card/original/back.tif')))
-        )
+        Valkyrie::StorageAdapter::StreamFile.new(id: 1,
+                                                 io: File.open(file_fixture('files/trade_card/original/back.tif')))
       end
 
       it 'returns a hash containing nil values' do
