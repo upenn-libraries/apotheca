@@ -8,6 +8,7 @@ preservation_backup:
   queue: medium
   args:
     - 2000
+  status: "disabled"
 ils_metadata:
   cron: "0 6 31 1,7 *" # 6am Jan and July 31
   class: "EnqueueBulkRefreshIlsMetadataJob"
