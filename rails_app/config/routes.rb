@@ -42,6 +42,9 @@ Rails.application.routes.draw do
         post :publish, to: 'items#publish'
         post :unpublish, to: 'items#unpublish'
       end
+      collection do
+        post 'refresh_all_ils_metadata', to: 'items#refresh_all_ils_metadata'
+      end
     end
     resources :assets, except: :index do
       member do
@@ -50,6 +53,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :system_actions, only: [:index]
 
   resources :events, only: [:index, :show]
 

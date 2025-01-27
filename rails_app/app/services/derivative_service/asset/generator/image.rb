@@ -11,6 +11,7 @@ module DerivativeService
         def thumbnail
           # TODO: We might need to apply `page: 0` if the image file is a tiff. Vips says it defaults to 0 though
           #   but before we have had to specify the page/layer for some tiffs.
+          file.rewind
           image = Vips::Image.new_from_buffer(file.read, '')
           image = image.autorot.thumbnail_image(200, height: 200)
 
@@ -22,6 +23,7 @@ module DerivativeService
         end
 
         def access
+          file.rewind
           image = Vips::Image.new_from_buffer(file.read, '')
           image = image.autorot
 
@@ -90,8 +92,10 @@ module DerivativeService
 
             output_path = Pathname.new("#{Dir.tmpdir}/ocr-derivative-file-#{SecureRandom.uuid}")
 
-            ocr_files = @file.tmp_file(extension: '.tif') do |input_path|
-              @engine.ocr(input_path: input_path, output_path: output_path)
+            ocr_files = nil
+            @file.rewind
+            @file.disk_path do |input_path|
+              ocr_files = @engine.ocr(input_path: input_path, output_path: output_path)
             end
 
             build_derivative_files(ocr_files: ocr_files)
