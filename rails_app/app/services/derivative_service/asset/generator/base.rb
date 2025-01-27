@@ -9,7 +9,7 @@ module DerivativeService
 
         # @param asset [Valkyrie::ChangeSet]
         def initialize(asset)
-          @file = SourceFile.new(asset.preservation_file)
+          @file = asset.preservation_file
           @asset = asset
         end
 
