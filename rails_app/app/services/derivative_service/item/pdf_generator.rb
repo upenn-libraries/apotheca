@@ -4,6 +4,9 @@ module DerivativeService
   module Item
     # Class to generate a PDF for an ItemResource
     class PDFGenerator
+      POINTS_PER_INCH = 72.0 # PDF points per inch
+      START_COORDINATES = [0, 0].freeze # PDF start coordinates
+
       attr_reader :item
 
       # @param [ItemResource]
@@ -63,18 +66,22 @@ module DerivativeService
         assets.each do |asset|
           image = doc.images.add(asset.image.path)
 
-          iw = image.width.to_f * (72.0 / asset.image_dpi)
-          ih = image.height.to_f * (72.0 / asset.image_dpi)
+          # In order for the PDF to be sized correctly, the width and height of the page must be calculated
+          # in PDF points. Because 72 PDF points equal one inch, we can use the image's DPI (dots per inch)
+          # and convert the image width and height to PDF points. Essentially, we need to use the DPI to
+          # convert the width and height from pixels to inches and then convert the inches to PDF pixels.
+          iw = image.width.to_f * (POINTS_PER_INCH / asset.image_dpi)
+          ih = image.height.to_f * (POINTS_PER_INCH / asset.image_dpi)
 
-          page = doc.pages.add([0, 0, iw, ih])
+          page = doc.pages.add(START_COORDINATES + [iw, ih])
 
-          page.canvas.image(image, at: [0, 0], width: iw, height: ih)
+          page.canvas.image(image, at: START_COORDINATES, width: iw, height: ih)
 
           # Overlay OCR text layer, if present
           if (textonly_pdf = asset.textonly_pdf)
             ocr_text = HexaPDF::Document.open(textonly_pdf.disk_path)
             ocr_overlay = doc.import(ocr_text.pages.first.to_form_xobject)
-            page.canvas(type: :overlay).xobject(ocr_overlay, at: [0, 0], width: iw, height: ih)
+            page.canvas(type: :overlay).xobject(ocr_overlay, at: START_COORDINATES, width: iw, height: ih)
           end
 
           # Add bookmarks
