@@ -129,9 +129,10 @@ FactoryBot.define do
       if evaluator.thumbnail
         uploaded_file.rewind
 
+        thumbnail_file = DerivativeService::Asset::Generator::Image.new(AssetChangeSet.new(asset)).thumbnail
         derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
         file = derivative_storage.upload(
-          file: uploaded_file, resource: asset, original_filename: 'thumbnail'
+          file: thumbnail_file, resource: asset, original_filename: 'thumbnail'
         )
 
         asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
