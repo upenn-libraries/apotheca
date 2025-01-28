@@ -31,12 +31,8 @@ module DerivativeService
 
         # @return [HexaPDF::Type::Page]
         def generate
-          begin
-            draw_title
-            draw_metadata
-          ensure
-            cleanup!
-          end
+          draw_title
+          draw_metadata
           composer.page
         end
 
@@ -107,13 +103,6 @@ module DerivativeService
             canvas.line_width(1).stroke_color(*LOGO_COLOR).line(START_X_COORD, box.height + y_offset, box.width,
                                                                 box.height + y_offset).stroke
           end
-        end
-
-        def cleanup!
-          return unless thumbnail_file
-
-          File.delete(thumbnail_file.path)
-          @thumbnail_file = nil
         end
 
         def thumbnail_file
