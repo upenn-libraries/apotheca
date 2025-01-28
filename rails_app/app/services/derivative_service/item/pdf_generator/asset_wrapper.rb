@@ -41,6 +41,14 @@ module DerivativeService
           @textonly_pdf = nil
         end
 
+        def label
+          @label ||= asset.label
+        end
+
+        def annotations
+          @annotations ||= asset.annotations.map(&:text)
+        end
+
         private
 
         # Create asset JPEG derivative.
