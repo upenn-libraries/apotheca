@@ -17,7 +17,7 @@ module DerivativeService
         LOGO_GAP = 5
         LOGO_COLOR = [1, 31, 91].freeze
 
-        METADATA_FIELDS = %i[date description collection rights physical_location].freeze
+        class Error < StandardError; end
 
         attr_reader :item, :composer, :page_width, :page_height
 
@@ -29,11 +29,18 @@ module DerivativeService
           set_page_layout
         end
 
+        # generates HexaPDF::Type::Page object that can be added to a HexaPDF::Document.
+        # @example
+        #   document = HexaPDF::Document.new
+        #   cover_page = CoverPage.new(item: item)
+        #   document.pages.add(document.import(cover_page))
         # @return [HexaPDF::Type::Page]
         def generate
           draw_title
           draw_metadata
           composer.page
+        rescue StandardError => e
+          raise Error "Failed to generate pdf cover page: #{e.message}"
         end
 
         def write(path:)
