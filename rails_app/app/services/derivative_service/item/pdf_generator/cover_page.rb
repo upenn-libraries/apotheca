@@ -9,8 +9,7 @@ module DerivativeService
         START_Y_COORD = 0
         PAGE_SIZE = :A4
         MARGIN = 36
-        THUMBNAIL_WIDTH = 50
-        THUMBNAIL_HEIGHT = 80
+        THUMBNAIL_WIDTH = 100
         LOGO_WIDTH = 20
         LOGO_HEIGHT = 23.333
         LOGO_X_COORD = 400
@@ -54,8 +53,9 @@ module DerivativeService
         def set_page_layout
           composer.styles(**styles)
           draw_thumbnail
-          composer.frame.remove_area(Geom2D::Rectangle(0, 0, THUMBNAIL_WIDTH + MARGIN,
-                                                       page_height - THUMBNAIL_HEIGHT - MARGIN))
+          # ensure text is not placed in the space under the thumbnail by removing the rectangle from the frame
+          composer.frame.remove_area(Geom2D::Rectangle(START_X_COORD, START_Y_COORD, THUMBNAIL_WIDTH + MARGIN,
+                                                       composer.frame.available_height))
           draw_attribution
         end
 
