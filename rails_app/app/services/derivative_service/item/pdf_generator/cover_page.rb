@@ -77,19 +77,33 @@ module DerivativeService
         end
 
         def draw_metadata
-          item_metadata.each do |field, value|
+          pdf_metadata.each do |field, value|
             next if value.blank?
 
             composer.text(field.to_s.titleize, style: :field)
-            composer.text(value, style: :metadata_value)
+            composer.text(value, style: value.starts_with?('http') ? :metadata_uri : :metadata_value)
           end
         end
 
-        def item_metadata
-          METADATA_FIELDS.index_with { |field|
-            item.descriptive_metadata.send(field).first&.value ||
-              item.descriptive_metadata.send(field).first&.try(:uri)&.value
-          }.merge({ available_online: colenda_url, date_generated: DateTime.now.to_fs(:display) })
+        # @return [Hash{Symbol->String (frozen)}]
+        def pdf_metadata
+          {
+            date: descriptive_metadata_text(:date), available_online: colenda_url,
+            physical_location: descriptive_metadata_text(:physical_location),
+            description: descriptive_metadata_text(:description),
+            collection: descriptive_metadata_text(:collection), rights: descriptive_metadata_uri(:rights),
+            date_generated: DateTime.now.to_fs(:display)
+          }
+        end
+
+        # @return [String, nil]
+        def descriptive_metadata_text(field)
+          item.descriptive_metadata.send(field).pluck(:value).join('; ')
+        end
+
+        # @return [String, nil]
+        def descriptive_metadata_uri(field)
+          item.descriptive_metadata.send(field).first&.uri&.value
         end
 
         def colenda_url
