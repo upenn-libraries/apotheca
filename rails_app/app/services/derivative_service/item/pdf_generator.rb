@@ -28,22 +28,24 @@ module DerivativeService
       def pdf
         return unless pdfable?
 
-        # Wrap all assets with AssetWrapper class.
-        assets = item.arranged_assets.map { |a| AssetWrapper.new(a) }
+        begin
+          # Wrap all assets with AssetWrapper class.
+          assets = item.arranged_assets.map { |a| AssetWrapper.new(a) }
 
-        # Create PDF.
-        pdf = create_pdf(assets)
+          # Create PDF.
+          pdf = create_pdf(assets)
 
-        # Create PDF derivative file.
-        pdf_derivative = DerivativeFile.new mime_type: 'application/pdf', extension: '.pdf'
-        pdf.write(pdf_derivative.path, optimize: true)
+          # Create PDF derivative file.
+          pdf_derivative = DerivativeFile.new mime_type: 'application/pdf', extension: '.pdf'
+          pdf.write(pdf_derivative.path, optimize: true)
 
-        # Cleanup temporary derivative files.
-        # These need to be deleted after the PDF file is written because otherwise they are still being referenced.
-        assets.each(&:cleanup!)
-
-        # Return PDF derivative file.
-        pdf_derivative
+          # Return PDF derivative file.
+          pdf_derivative
+        ensure
+          # Cleanup temporary derivative files.
+          # These need to be deleted after the PDF file is written because otherwise they are still being referenced.
+          assets.each(&:cleanup!)
+        end
       end
 
       # Returns true if item meets requirements for generating a PDF.
