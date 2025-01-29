@@ -37,6 +37,7 @@ module DerivativeService
         #   document.pages.add(document.import(cover_page))
         # @return [HexaPDF::Type::Page]
         def generate
+          set_page_layout
           draw_title
           draw_metadata
           composer.page
