@@ -25,9 +25,6 @@ module DerivativeService
         def initialize(item:)
           @item = item
           @composer = HexaPDF::Composer.new(page_size: PAGE_SIZE, margin: MARGIN)
-          @page_width = @composer.page.box.width
-          @page_height = @composer.page.box.height
-          set_page_layout
         end
 
         # generates HexaPDF::Type::Page object that can be added to a HexaPDF::Document.
@@ -45,6 +42,10 @@ module DerivativeService
           raise Error "Failed to generate pdf cover page: #{e.message}"
         end
 
+        # Write cover PDF file at the given path
+        # @param path [String]
+        # @see HexaPDF::Writer#write
+        # @return [Array<Integer, HexaPDF::XRefSection]
         def write(path:)
           generate
           composer.document.write(path)
@@ -52,6 +53,8 @@ module DerivativeService
 
         private
 
+        # lays out foundational elements of the page (thumbnail, attribution, and frame) and also provides styles to
+        # the composer
         def set_page_layout
           composer.styles(**styles)
           draw_thumbnail
@@ -106,10 +109,13 @@ module DerivativeService
           item.descriptive_metadata.send(field).first&.uri&.value
         end
 
+        # @return [String (frozen)]
         def colenda_url
           "#{Settings.iiif.manifest.item_link_base_url}#{item.unique_identifier.gsub('ark:/', '').tr('/', '-')}"
         end
 
+        # Styles provided to the composer in #set_page_layout
+        # @return [Hash]
         def styles
           {
             base: { font_size: 16, font: 'Helvetica', fill_color: 'black' },
@@ -122,6 +128,7 @@ module DerivativeService
           }
         end
 
+        # @return [Proc]
         def logo_overlay
           lambda do |canvas, box|
             y_offset = 2
@@ -130,10 +137,12 @@ module DerivativeService
           end
         end
 
+        # @return [File]
         def thumbnail_file
           @thumbnail_file ||= File.new(Valkyrie::StorageAdapter.find_by(id: item.thumbnail.thumbnail.file_id).disk_path)
         end
 
+        # @return [File]
         def logo_file
           @logo_file ||= File.new(Rails.root.join('app/assets/images/penn-shield.png'))
         end
