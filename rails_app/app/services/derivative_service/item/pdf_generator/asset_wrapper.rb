@@ -14,8 +14,10 @@ module DerivativeService
         end
 
         # Calculates the DPI of the scaled derivative image.
+        #
+        # @return [Integer]
         def image_dpi
-          asset.technical_metadata.dpi * DEFAULT_SCALE
+          (asset.technical_metadata.dpi * DEFAULT_SCALE).to_i
         end
 
         # Return scaled asset JPEG derivative.
@@ -41,10 +43,12 @@ module DerivativeService
           @textonly_pdf = nil
         end
 
+        # @return [String]
         def label
           @label ||= asset.label
         end
 
+        # @return [Array<String>]
         def annotations
           @annotations ||= asset.annotations.map(&:text)
         end
