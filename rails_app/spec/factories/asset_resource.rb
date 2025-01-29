@@ -142,7 +142,7 @@ FactoryBot.define do
         # Using canned pdf file for now
         if evaluator.textonly_pdf
           textonly_pdf = ActionDispatch::Http::UploadedFile.new(
-            tempfile: File.new(Rails.root.join("spec/fixtures/files/trade_card/derivatives/front-textonly_pdf.pdf")),
+            tempfile: File.new(Rails.root.join('spec/fixtures/files/trade_card/derivatives/front-textonly_pdf.pdf')),
             filename: 'textonly_pdf', type: 'application/pdf'
           )
 
