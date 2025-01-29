@@ -19,8 +19,9 @@ module DerivativeService
 
         class Error < StandardError; end
 
-        attr_reader :item, :composer, :page_width, :page_height
+        attr_reader :item, :composer
 
+        # @param item [ItemResource, ItemResourcePresenter]
         def initialize(item:)
           @item = item
           @composer = HexaPDF::Composer.new(page_size: PAGE_SIZE, margin: MARGIN)
