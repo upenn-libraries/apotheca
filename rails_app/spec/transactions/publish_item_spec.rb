@@ -28,6 +28,13 @@ describe PublishItem do
         )
       end
 
+      it 'generated pdf' do
+        expect(updated_item.pdf).to have_attributes(
+                                      type: 'pdf', generated_at: be_a(DateTime), mime_type: 'application/pdf',
+                                      file_id: be_a(Valkyrie::ID)
+                                    )
+      end
+
       it 'publishes item' do
         result
         expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
@@ -58,6 +65,10 @@ describe PublishItem do
 
       it 'does not generate an IIIF manifest' do
         expect(updated_item.derivatives.find(&:iiif_manifest)).to be_nil
+      end
+
+      it 'does not generate a pdf' do
+        expect(updated_item.derivatives.find(&:pdf)).to be_nil
       end
 
       it 'publishes item' do

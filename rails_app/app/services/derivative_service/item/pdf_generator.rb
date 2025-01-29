@@ -49,6 +49,9 @@ module DerivativeService
       # Returns true if item meets requirements for generating a PDF.
       # @todo Need to flesh out the requirements for a PDF to be generated.
       def pdfable?
+        return false unless item.arranged_assets.present?
+        return false unless item.arranged_assets.all?(&:image?)
+
         true
       end
 
