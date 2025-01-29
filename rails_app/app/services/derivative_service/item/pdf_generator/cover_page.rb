@@ -15,6 +15,7 @@ module DerivativeService
         LOGO_X_COORD = 400
         LOGO_GAP = 5
         LOGO_COLOR = [1, 31, 91].freeze
+        LINK_COLOR = [14, 86, 150].freeze
 
         class Error < StandardError; end
 
@@ -98,8 +99,9 @@ module DerivativeService
           {
             base: { font_size: 16, font: 'Helvetica', fill_color: 'black' },
             field: { font: 'Helvetica bold', margin: [0, 0, 5, 15], padding: [0, 0, 0, 5] },
-            metadata_value: { base: :base, margin: [0, 0, 10, 15], padding: [0, 0, 0, 10] },
-            title: { base: :base, font: 'Helvetica bold', font_size: 22, margin: [0, 0, 15, 15] },
+            metadata_value: { base: :base, margin: [0, 0, 15, 15], padding: [0, 0, 0, 10] },
+            metadata_uri: { base: :metadata_value, fill_color: LINK_COLOR, font_size: 14 },
+            title: { base: :base, font: 'Helvetica bold', font_size: 22, margin: [0, 0, 20, 15] },
             logo_main_text: { base: :base, font_size: 12, fill_color: LOGO_COLOR, padding: [0, 0, 0, 8] },
             logo_sub_text: { base: :logo, overlays: [logo_overlay], font_size: 8, padding: [0, 0, 2, 0] }
           }
