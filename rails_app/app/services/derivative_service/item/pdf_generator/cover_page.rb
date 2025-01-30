@@ -10,12 +10,9 @@ module DerivativeService
         PAGE_SIZE = :A4
         MARGIN = 36
         THUMBNAIL_WIDTH = 100
-        LOGO_WIDTH = 20
-        LOGO_HEIGHT = 23.333
+        LOGO_WIDTH = 100
         LOGO_X_COORD = 400
-        LOGO_GAP = 5
-        LOGO_COLOR = [1, 31, 91].freeze
-        LINK_COLOR = [14, 86, 150].freeze
+        LOGO_FILE_PATH = 'app/assets/images/Penn Libraries Logo 2020_RGB.png'
 
         class Error < StandardError; end
 
@@ -25,21 +22,25 @@ module DerivativeService
         def initialize(item:)
           @item = item
           @composer = HexaPDF::Composer.new(page_size: PAGE_SIZE, margin: MARGIN)
+          composer.styles(**Styles::MAPPING)
+          composer.document.config['font.map'] = Styles::FONTS
+          composer.document.config['font.fallback'] = Styles::FONTS.keys
         end
 
         # generates HexaPDF::Type::Page object that can be added to a HexaPDF::Document.
         # @example
         #   document = HexaPDF::Document.new
         #   cover_page = CoverPage.new(item: item)
-        #   document.pages.add(document.import(cover_page))
+        #   document.pages.add(document.import(cover_page.page))
         # @return [HexaPDF::Type::Page]
-        def generate
-          set_page_layout
-          draw_title
-          draw_metadata
-          composer.page
-        rescue StandardError => e
-          raise Error "Failed to generate pdf cover page: #{e.message}"
+        def page
+          @page ||= begin
+            set_page_layout
+            draw_main_content
+            composer.page
+          rescue StandardError => e
+            raise Error, "Failed to generate pdf cover page for item #{item.id}: #{e.message}"
+          end
         end
 
         # Write cover PDF file at the given path
@@ -47,50 +48,47 @@ module DerivativeService
         # @see HexaPDF::Writer#write
         # @return [Array<Integer, HexaPDF::XRefSection]
         def write(path:)
-          generate
+          page
           composer.document.write(path)
         end
 
         private
 
-        # lays out foundational elements of the page (thumbnail, attribution, and frame) and also provides styles to
-        # the composer
+        # lays out foundational elements of the page (thumbnail, logo, and frame)
         def set_page_layout
-          composer.styles(**styles)
           draw_thumbnail
           # ensure text is not placed in the space under the thumbnail by removing the rectangle from the frame
           composer.frame.remove_area(Geom2D::Rectangle(START_X_COORD, START_Y_COORD, THUMBNAIL_WIDTH + MARGIN,
                                                        composer.frame.available_height))
-          draw_attribution
+          draw_logo
+        end
+
+        def draw_main_content
+          composer.text(descriptive_metadata_text(:title), style: :title)
+
+          pdf_metadata.each do |field, value|
+            next if value.blank?
+
+            composer.text(field.to_s.titleize, style: :field)
+            if value.starts_with?('http')
+              composer.text(value, style: :metadata_uri, overlays: [[:link, { uri: value }]])
+            else
+              composer.text(value, style: :metadata_value)
+            end
+          end
         end
 
         def draw_thumbnail
           composer.image(thumbnail_file, width: THUMBNAIL_WIDTH, position: :float)
         end
 
-        def draw_attribution
+        def draw_logo
           composer.image(logo_file, width: LOGO_WIDTH, position: [LOGO_X_COORD, START_Y_COORD])
-          text_start = LOGO_X_COORD + LOGO_WIDTH + LOGO_GAP
-          composer.text('Penn Libraries', position: [text_start, (LOGO_HEIGHT / 2)], style: :logo_main_text)
-          composer.text('University of Pennsylvania', position: [text_start, START_Y_COORD], style: :logo_sub_text)
-        end
-
-        def draw_title
-          composer.text(item.descriptive_metadata.title.first.value, style: :title)
-        end
-
-        def draw_metadata
-          pdf_metadata.each do |field, value|
-            next if value.blank?
-
-            composer.text(field.to_s.titleize, style: :field)
-            composer.text(value, style: value.starts_with?('http') ? :metadata_uri : :metadata_value)
-          end
         end
 
         # @return [Hash{Symbol->String (frozen)}]
         def pdf_metadata
-          {
+          @pdf_metadata ||= {
             date: descriptive_metadata_text(:date), available_online: colenda_url,
             physical_location: descriptive_metadata_text(:physical_location),
             description: descriptive_metadata_text(:description),
@@ -114,37 +112,53 @@ module DerivativeService
           "#{Settings.iiif.manifest.item_link_base_url}#{item.unique_identifier.gsub('ark:/', '').tr('/', '-')}"
         end
 
-        # Styles provided to the composer in #set_page_layout
-        # @return [Hash]
-        def styles
-          {
-            base: { font_size: 16, font: 'Helvetica', fill_color: 'black' },
-            field: { font: 'Helvetica bold', margin: [0, 0, 5, 15], padding: [0, 0, 0, 5] },
-            metadata_value: { base: :base, margin: [0, 0, 15, 15], padding: [0, 0, 0, 10] },
-            metadata_uri: { base: :metadata_value, fill_color: LINK_COLOR, font_size: 14 },
-            title: { base: :base, font: 'Helvetica bold', font_size: 22, margin: [0, 0, 20, 15] },
-            logo_main_text: { base: :base, font_size: 12, fill_color: LOGO_COLOR, padding: [0, 0, 0, 8] },
-            logo_sub_text: { base: :logo, overlays: [logo_overlay], font_size: 8, padding: [0, 0, 2, 0] }
-          }
-        end
-
-        # @return [Proc]
-        def logo_overlay
-          lambda do |canvas, box|
-            y_offset = 2
-            canvas.line_width(1).stroke_color(*LOGO_COLOR).line(START_X_COORD, box.height + y_offset, box.width,
-                                                                box.height + y_offset).stroke
-          end
-        end
-
         # @return [File]
         def thumbnail_file
-          @thumbnail_file ||= File.new(Valkyrie::StorageAdapter.find_by(id: item.thumbnail.thumbnail.file_id).disk_path)
+          file_id = item.thumbnail&.thumbnail&.file_id
+          raise Error, "Thumbnail file is missing for item #{item.id}" unless file_id
+
+          @thumbnail_file ||= File.new(Valkyrie::StorageAdapter.find_by(id: file_id).disk_path)
         end
 
         # @return [File]
         def logo_file
-          @logo_file ||= File.new(Rails.root.join('app/assets/images/penn-shield.png'))
+          @logo_file ||= File.new(Rails.root.join(LOGO_FILE_PATH))
+        end
+
+        class Styles
+          LINK_COLOR = [14, 86, 150].freeze
+
+          MAPPING = {
+            base: { font_size: 16, font: 'Helvetica', fill_color: 'black' },
+            field: { font: 'Helvetica bold', margin: [0, 0, 5, 15], padding: [0, 0, 0, 5] },
+            metadata_value: { base: :base, margin: [0, 0, 15, 15], padding: [0, 0, 0, 10] },
+            metadata_uri: { base: :metadata_value, fill_color: LINK_COLOR, font_size: 14, underline: true },
+            title: { base: :base, font: 'Helvetica bold', font_size: 22, margin: [0, 0, 20, 15] }
+          }.freeze
+
+          FALLBACK_FONTS_PATH = 'app/assets/fonts/noto_sans/'
+
+          FONTS = {
+            'Noto-Sans' => {
+              none: Rails.root.join("#{FALLBACK_FONTS_PATH}NotoSans-Regular.ttf"),
+              bold: Rails.root.join("#{FALLBACK_FONTS_PATH}NotoSans-Bold.ttf")
+            },
+
+            'Noto-Sans-CJK' => {
+              none: Rails.root.join("#{FALLBACK_FONTS_PATH}cjk/NotoSansCJKtc-Regular.ttf"),
+              bold: Rails.root.join("#{FALLBACK_FONTS_PATH}cjk/NotoSansCJKtc-Bold.ttf")
+            },
+
+            'Noto-Sans-Hebrew' => {
+              none: Rails.root.join("#{FALLBACK_FONTS_PATH}hebrew/NotoSansHebrew-Regular.ttf"),
+              bold: Rails.root.join("#{FALLBACK_FONTS_PATH}hebrew/NotoSansHebrew-Bold.ttf")
+            },
+
+            'Noto-Sans-Arabic' => {
+              none: Rails.root.join("#{FALLBACK_FONTS_PATH}arabic/NotoSansArabic-Regular.ttf"),
+              bold: Rails.root.join("#{FALLBACK_FONTS_PATH}arabic/NotoSansArabic-Bold.ttf")
+            }
+          }.freeze
         end
       end
     end

@@ -7,19 +7,19 @@ describe DerivativeService::Item::PDFGenerator::CoverPage do
   let(:item) { persist(:item_resource, :with_faker_metadata, asset_ids: [asset.id], thumbnail_asset_id: asset.id) }
   let(:cover_page) { described_class.new(item: item) }
 
-  describe '#generate' do
+  describe '#page' do
     it 'returns a page' do
-      expect(cover_page.generate).to be_a HexaPDF::Type::Page
+      expect(cover_page.page).to be_a HexaPDF::Type::Page
     end
 
     it 'contains the expected contents' do
-      expect(cover_page.generate.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
-      expect(cover_page.generate.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
+      expect(cover_page.page.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
+      expect(cover_page.page.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
     end
 
     it 'contains a link to the item on colenda' do
       url = "#{Settings.iiif.manifest.item_link_base_url}#{item.unique_identifier.gsub('ark:/', '').tr('/', '-')}"
-      expect(cover_page.generate.contents).to match(/#{url}/)
+      expect(cover_page.page.contents).to match(/#{url}/)
     end
   end
 
