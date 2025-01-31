@@ -80,11 +80,11 @@ module DerivativeService
                        hocr: { mime_type: 'text/html', extension: 'hocr' } }.freeze
 
           PRINT_MATERIAL = 'printed'
+          ALL_ENGINES = [PRINT_MATERIAL].freeze
 
           def initialize(file:, engine_options: {})
             @file = file
-            @engine_options = engine_options
-            @engine = create_ocr_engine
+            @engine = create_ocr_engine(engine_options)
           end
 
           # @return [Hash]
@@ -105,9 +105,10 @@ module DerivativeService
           private
 
           # @return [DerivativeService::Asset::OCR::Engine::Base, nil]
-          def create_ocr_engine
-            args = @engine_options.except(:type)
-            case @engine_options[:type]
+          # @param engine_options [Hash]
+          def create_ocr_engine(engine_options)
+            args = engine_options.except(:type)
+            case engine_options[:type]
             when PRINT_MATERIAL
               DerivativeService::Asset::OCR::Engine::Tesseract.new(**args)
             end
