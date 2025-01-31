@@ -6,7 +6,7 @@ class ItemChangeSet < ChangeSet
   include LockableChangeSet
 
   DERIVATIVE_TYPES = %w[iiif_manifest].freeze
-  OCR_TYPES = %w[printed].freeze
+  OCR_TYPES = DerivativeService::Asset::Generator::Image::OCR::ALL_ENGINES.freeze
 
   # ChangeSet for Structural Metadata
   class StructuralMetadataChangeSet < ChangeSet
