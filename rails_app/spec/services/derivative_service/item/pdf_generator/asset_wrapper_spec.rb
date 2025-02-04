@@ -34,15 +34,31 @@ describe DerivativeService::Item::PDFGenerator::AssetWrapper do
     end
   end
 
-  describe 'label' do
+  describe '#label' do
     it 'returns expected value' do
       expect(asset_wrapper.label).to eql 'Front'
     end
   end
 
-  describe 'annotations' do
+  describe '#annotations' do
     it 'returns expected value' do
       expect(asset_wrapper.annotations).to match_array('Front of Card')
+    end
+  end
+
+  describe '#cleanup' do
+    it 'cleans up image file' do
+      image = instance_double('image', cleanup!: nil)
+      allow(asset_wrapper).to receive(:image).and_return(image)
+      asset_wrapper.cleanup!
+      expect(image).to have_received(:cleanup!)
+    end
+
+    it 'cleans up textonly_pdf file' do
+      textonly_pdf = instance_double('textonly_pdf', close: nil)
+      allow(asset_wrapper).to receive(:textonly_pdf).and_return(textonly_pdf)
+      asset_wrapper.cleanup!
+      expect(textonly_pdf).to have_received(:close)
     end
   end
 end
