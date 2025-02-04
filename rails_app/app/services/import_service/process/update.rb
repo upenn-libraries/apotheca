@@ -124,8 +124,7 @@ module ImportService
         return failure(details: ["Files in storage missing for: #{missing.join(', ')}"]) if missing.present?
 
         # Creating new assets
-        result = batch_create_assets(new_assets_data, { imported_by: imported_by, ocr_language: ocr_language,
-                                                        viewing_direction: viewing_direction })
+        result = batch_create_assets(new_assets_data, { imported_by: imported_by, **ocr_options })
         @created_assets = result.value! if result.success?
         result
       end
@@ -138,8 +137,7 @@ module ImportService
         results = existing_assets.map do |asset|
           asset_data = asset_set.find { |a| a.filename == asset.original_filename }
 
-          asset_data.update_asset(asset: asset, imported_by: imported_by, ocr_language: ocr_language,
-                                  viewing_direction: viewing_direction).then do |result|
+          asset_data.update_asset(asset: asset, imported_by: imported_by, **ocr_options).then do |result|
             if result.success?
               result
             else

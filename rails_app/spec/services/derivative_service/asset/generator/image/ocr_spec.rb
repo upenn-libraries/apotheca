@@ -5,13 +5,23 @@ describe DerivativeService::Asset::Generator::Image::OCR do
     Valkyrie::StorageAdapter::StreamFile.new(id: 1,
                                              io: File.open(file_fixture('files/trade_card/original/front.tif')))
   end
-  let(:asset) { AssetChangeSet.new(AssetResource.new, ocr_language: ['eng']) }
+  let(:engine_options) { { type: described_class::PRINT_MATERIAL, language: ['eng'], viewing_direction: nil } }
   let(:ocr) do
-    described_class.new(file: file, engine_options: { language: asset.ocr_language, viewing_direction: nil })
+    described_class.new(file: file, engine_options: engine_options)
   end
 
   describe '#generate' do
     let(:derivative_files) { ocr.generate }
+
+    context 'with blank ocr type' do
+      let(:engine_options) do
+        { type: nil, language: ['eng'], viewing_direction: nil }
+      end
+
+      it 'returns a hash containing nil values' do
+        expect(derivative_files).to eq({ textonly_pdf: nil, text: nil, hocr: nil })
+      end
+    end
 
     context 'when ocr text is extracted from asset' do
       after { derivative_files.each { |_k, file| file.cleanup! } }

@@ -6,6 +6,7 @@ class ItemChangeSet < ChangeSet
   include LockableChangeSet
 
   DERIVATIVE_TYPES = %w[iiif_manifest].freeze
+  OCR_TYPES = DerivativeService::Asset::Generator::Image::OCR::ALL_ENGINES.freeze
 
   # ChangeSet for Structural Metadata
   class StructuralMetadataChangeSet < ChangeSet
@@ -57,12 +58,15 @@ class ItemChangeSet < ChangeSet
 
   property :asset_ids, multiple: true, required: false
 
+  property :ocr_type, multiple: false, required: false
+
   # Validations
   validates :human_readable_name, presence: true
   validates :published, inclusion: [true, false]
   validates :thumbnail_asset_id, presence: true, included_in: :asset_ids, unless: ->(item) { item.asset_ids.blank? }
   validates :unique_identifier, presence: true, format: { with: %r{\Aark:/}, message: 'must be an ARK' }
   validate :ensure_arranged_asset_ids_are_valid
+  validates :ocr_type, inclusion: OCR_TYPES, allow_nil: true
 
   # Ensuring arranged_asset_ids are also present in asset_ids.
   def ensure_arranged_asset_ids_are_valid
@@ -74,5 +78,9 @@ class ItemChangeSet < ChangeSet
 
   def internal_notes=(values)
     super(compact_value(values))
+  end
+
+  def ocr_type=(value)
+    super(compact_value(value))
   end
 end

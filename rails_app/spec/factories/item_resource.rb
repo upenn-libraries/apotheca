@@ -52,6 +52,10 @@ FactoryBot.define do
       updated_by { users.sample }
     end
 
+    trait :printed do
+      ocr_type { 'printed' }
+    end
+
     trait :published do
       published { true }
       first_published_at { DateTime.current }
