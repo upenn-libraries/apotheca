@@ -13,7 +13,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
     subject(:iiif_service) { described_class.new(item) }
 
     context 'when item contains image assets' do
-      subject(:json) { JSON.parse(iiif_service.v2_manifest) }
+      subject(:json) { JSON.parse(iiif_service.v2_manifest.read) }
 
       let(:item) do
         persist(
