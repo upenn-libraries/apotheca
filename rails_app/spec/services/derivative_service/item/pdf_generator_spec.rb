@@ -29,7 +29,7 @@ describe DerivativeService::Item::PDFGenerator do
         expect(derivative_file.length).not_to be 0
       end
 
-      it 'pdf contains expected number of pages' do
+      it 'contains expected number of pages' do
         expect(pdf.pages.count).to eql item.arranged_assets.count
       end
     end
