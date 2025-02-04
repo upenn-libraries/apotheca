@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Asset::OCR::TesseractEngine::LanguagePreparer do
+describe DerivativeService::Asset::OCR::Engine::Tesseract::LanguagePreparer do
   let(:languages) { [] }
   let(:viewing_direction) { nil }
   let(:language_preparer) { described_class.new(languages: languages, viewing_direction: viewing_direction) }

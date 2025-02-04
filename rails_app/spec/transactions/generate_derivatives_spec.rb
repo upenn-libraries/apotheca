@@ -6,7 +6,7 @@ describe GenerateDerivatives do
 
     let(:transaction) { described_class.new }
     let(:asset) { persist(:asset_resource, :with_preservation_file, :with_metadata) }
-    let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
+    let(:item) { persist(:item_resource, :printed, asset_ids: [asset.id]) }
     let(:result) { transaction.call(id: item.asset_ids.first, updated_by: 'initiator@example.com') }
 
     context 'when derivatives not present' do
@@ -37,10 +37,21 @@ describe GenerateDerivatives do
       end
     end
 
+    context 'when ocr_type is blank' do
+      let(:item) { persist(:item_resource, ocr_type: nil, asset_ids: [asset.id]) }
+
+      it 'does not generate OCR derivatives' do
+        expect(updated_asset.derivatives.length).to be 2
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access')
+      end
+    end
+
     context 'when item descriptive metadata has a valid language' do
       let(:item) do
-        persist(:item_resource, descriptive_metadata: { language: [{ value: 'English' }, { value: 'German' }] },
-                                asset_ids: [asset.id])
+        persist(
+          :item_resource, :printed, asset_ids: [asset.id],
+                                    descriptive_metadata: { language: [{ value: 'English' }, { value: 'German' }] }
+        )
       end
 
       it 'generates OCR derivatives' do
@@ -56,7 +67,8 @@ describe GenerateDerivatives do
       end
 
       let(:item) do
-        persist(:item_resource, descriptive_metadata: { bibnumber: [{ value: 'sample-bib' }] }, asset_ids: [asset.id])
+        persist(:item_resource, :printed, descriptive_metadata: { bibnumber: [{ value: 'sample-bib' }] },
+                                          asset_ids: [asset.id])
       end
 
       it 'generates OCR derivatives' do

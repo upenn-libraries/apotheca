@@ -20,7 +20,7 @@ module DerivativeService
       # TODO: Later we could use the IIIF Preservation v3 API to display audio and video assets.
       #
       # @return [NilClass] if no images are present
-      # @return [String] iiif v2 manifest json
+      # @return [DerivativeFile] file containing iiif v2 manifest json
       def v2_manifest
         return nil unless arranged_assets.any?(&:image?)
 
@@ -58,7 +58,11 @@ module DerivativeService
         end
 
         manifest.sequences << sequence
-        manifest.to_json
+
+        derivative_file = DerivativeFile.new(mime_type: 'application/json', iiif_manifest: true)
+        derivative_file.write(manifest.to_json)
+        derivative_file.rewind
+        derivative_file
       end
 
       private

@@ -159,7 +159,7 @@ describe ImportService::Process::Create do
       end
 
       it 'generates derivatives' do
-        expect(assets[0].derivatives.length).to be 5
+        expect(assets[0].derivatives.length).to be 2
         expect(assets[1].derivatives.length).to be 2
       end
     end
@@ -252,9 +252,20 @@ describe ImportService::Process::Create do
       end
     end
 
+    context 'when ocr_type is blank' do
+      let(:process) do
+        build(:import_process, :create, :with_asset_metadata, ocr_type: nil,
+                                                              metadata: { 'title' => [{ value: 'Trade card' }], 'language' => [{ value: 'English' }, { value: 'German' }] })
+      end
+
+      it 'does not generate OCR derivatives' do
+        expect(assets[0].derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+      end
+    end
+
     context 'when creating an item with multiple languages' do
       let(:process) do
-        build(:import_process, :create, :with_asset_metadata,
+        build(:import_process, :create, :printed, :with_asset_metadata,
               metadata: { 'title' => [{ value: 'Trade card' }], 'language' => [{ value: 'English' }, { value: 'German' }] })
       end
 
@@ -270,7 +281,8 @@ describe ImportService::Process::Create do
 
     context 'when creating an item without language metadata or bibnumber' do
       let(:process) do
-        build(:import_process, :create, :with_asset_metadata, metadata: { 'title' => [{ value: 'Trade card' }] })
+        build(:import_process, :create, :printed, :with_asset_metadata,
+              metadata: { 'title' => [{ value: 'Trade card' }] })
       end
 
       it 'is successful' do
@@ -289,8 +301,8 @@ describe ImportService::Process::Create do
       end
 
       let(:process) do
-        build(:import_process, :create, :with_asset_metadata, metadata: { 'title' => [{ value: 'Trade card' }],
-                                                                          'bibnumber' => [{ value: 'sample-bib' }] })
+        build(:import_process, :create, :printed, :with_asset_metadata, metadata: { 'title' => [{ value: 'Trade card' }],
+                                                                                    'bibnumber' => [{ value: 'sample-bib' }] })
       end
 
       it 'is successful' do
