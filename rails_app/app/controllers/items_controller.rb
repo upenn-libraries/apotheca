@@ -98,6 +98,14 @@ class ItemsController < ResourcesController
     end
   end
 
+  def generate_asset_and_item_derivatives
+    if GenerateAssetAndItemDerivativesJob.perform_async(@item.id.to_s, current_user.email)
+      redirect_to item_path(@item), notice: I18n.t('actions.item.generate_asset_and_item_derivatives.success')
+    else
+      redirect_to item_path(@item), notice: I18n.t('actions.item.generate_asset_and_item_derivatives.failure')
+    end
+  end
+
   def refresh_all_ils_metadata
     if EnqueueBulkRefreshIlsMetadataJob.perform_async(current_user.email)
       redirect_to system_actions_path, notice: I18n.t('actions.item.refresh_all_ILS.success')
