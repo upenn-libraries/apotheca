@@ -55,8 +55,7 @@ module ImportService
         assets_result = batch_create_assets(
           asset_set.all, { created_by: created_by,
                            imported_by: imported_by,
-                           ocr_language: ocr_language,
-                           viewing_direction: viewing_direction }
+                           **ocr_options }
         )
 
         return assets_result if assets_result.failure?

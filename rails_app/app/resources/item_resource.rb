@@ -31,6 +31,8 @@ class ItemResource < Valkyrie::Resource
   # Item-level derivatives, like IIIF Manifest.
   attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
+  attribute :ocr_type, Valkyrie::Types::Strict::String.optional
+
   # @return [Integer]
   def asset_count
     Array.wrap(asset_ids).length
@@ -66,6 +68,11 @@ class ItemResource < Valkyrie::Resource
     derivatives.find(&:iiif_manifest?)
   end
 
+  # @return [DerivativeResource]
+  def pdf
+    derivatives.find(&:pdf?)
+  end
+
   # @param [Boolean] include_assets
   def to_json_export(include_assets: false)
     bulk_export_hash = {
@@ -80,12 +87,11 @@ class ItemResource < Valkyrie::Resource
       internal_notes: internal_notes,
       published: published,
       asset_count: asset_count,
+      ocr_type: ocr_type,
       first_published_at: first_published_at&.to_fs(:display),
       last_published_at: last_published_at&.to_fs(:display),
-      structural: {
-        viewing_direction: structural_metadata.viewing_direction,
-        viewing_hint: structural_metadata.viewing_hint
-      }
+      structural: { viewing_direction: structural_metadata.viewing_direction,
+                    viewing_hint: structural_metadata.viewing_hint }
     }
 
     if include_assets

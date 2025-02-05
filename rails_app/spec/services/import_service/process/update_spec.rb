@@ -365,6 +365,25 @@ describe ImportService::Process::Update do
       end
     end
 
+    context 'when ocr_type is blank' do
+      let(:item) { persist(:item_resource, :with_faker_metadata) }
+      let(:updated_assets) do
+        updated_item.asset_ids.map do |id|
+          Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: id)
+        end
+      end
+
+      let(:process) do
+        build(:import_process, :update, unique_identifier: item.unique_identifier, ocr_type: nil,
+                                        assets: { arranged_filenames: 'front.tif', storage: 'sceti_digitized',
+                                                  path: 'trade_card/original' })
+      end
+
+      it 'does not generate OCR derivatives' do
+        expect(updated_assets.first.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+      end
+    end
+
     context 'when adding new assets without providing language metadata' do
       let(:item) { persist(:item_resource, :with_faker_metadata) }
       let(:updated_assets) do
@@ -375,7 +394,7 @@ describe ImportService::Process::Update do
 
       let(:process) do
         build(
-          :import_process, :update,
+          :import_process, :update, :printed,
           assets: { arranged_filenames: 'front.tif', storage: 'sceti_digitized', path: 'trade_card/original' },
           unique_identifier: item.unique_identifier
         )
@@ -397,7 +416,7 @@ describe ImportService::Process::Update do
 
       let(:process) do
         build(
-          :import_process, :update,
+          :import_process, :update, :printed,
           metadata: { language: [{ value: 'English' }] },
           assets: { arranged_filenames: 'front.tif', storage: 'sceti_digitized', path: 'trade_card/updated' },
           unique_identifier: item.unique_identifier

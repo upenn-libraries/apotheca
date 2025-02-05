@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe DerivativeService::Item::Derivatives do
+  let(:item) { ItemChangeSet.new(ItemResource.new) }
+
   describe '#new' do
     context 'when item is not an ItemResource' do
       let(:item) { AssetChangeSet.new(AssetResource.new) }
@@ -12,14 +14,22 @@ describe DerivativeService::Item::Derivatives do
   end
 
   describe '#iiif_manifest' do
-    let(:item) { ItemChangeSet.new(ItemResource.new) }
-
     it 'calls the correct generator' do
       iiif_generator = instance_spy(DerivativeService::Item::IIIFManifestGenerator)
       allow(DerivativeService::Item::IIIFManifestGenerator).to receive(:new).with(item.resource)
                                                                             .and_return(iiif_generator)
       described_class.new(item).iiif_manifest
       expect(iiif_generator).to have_received(:v2_manifest)
+    end
+  end
+
+  describe '#pdf' do
+    it 'calls the correct generator' do
+      pdf_generator = instance_spy(DerivativeService::Item::PDFGenerator)
+      allow(DerivativeService::Item::PDFGenerator).to receive(:new).with(item.resource)
+                                                                   .and_return(pdf_generator)
+      described_class.new(item).pdf
+      expect(pdf_generator).to have_received(:pdf)
     end
   end
 end

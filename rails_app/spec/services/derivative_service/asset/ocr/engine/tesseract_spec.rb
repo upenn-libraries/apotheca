@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Asset::OCR::TesseractEngine do
+describe DerivativeService::Asset::OCR::Engine::Tesseract do
   let(:input_path) { Rails.root.join('spec/fixtures/files/trade_card/original/front.tif') }
   let(:output_path) { Pathname.new("#{Dir.tmpdir}/tesseract-test") }
   let(:tesseract) { described_class.new(language: ['eng'], viewing_direction: nil) }

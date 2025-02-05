@@ -32,8 +32,8 @@ module ImportService
         result.success do |a|
           update_transaction.call(
             id: a.id, file: file, expected_checksum: @expected_checksum,
-            migrated_from: migrated_from, updated_by: imported_by, ocr_language: additional_attrs[:ocr_language],
-            viewing_direction: additional_attrs[:viewing_direction]
+            migrated_from: migrated_from, updated_by: imported_by, ocr_type: additional_attrs[:ocr_type],
+            ocr_language: additional_attrs[:ocr_language], viewing_direction: additional_attrs[:viewing_direction]
           ).tap do |update_result|
             # Delete asset if update failed, then return update_result value
             PurgeAsset.new.call(id: a.id) if update_result.failure?
