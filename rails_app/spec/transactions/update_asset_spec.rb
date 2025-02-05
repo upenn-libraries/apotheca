@@ -105,7 +105,7 @@ describe UpdateAsset do
       end
 
       it 'marks derivatives as stale' do
-        expect(updated_asset.derivatives.length).to be 2
+        expect(updated_asset.derivatives.length).to be 3
         expect(updated_asset.derivatives.all?(&:stale)).to be true
       end
 

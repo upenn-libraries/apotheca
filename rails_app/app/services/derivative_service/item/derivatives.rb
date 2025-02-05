@@ -22,6 +22,14 @@ module DerivativeService
       def iiif_manifest
         IIIFManifestGenerator.new(item).v2_manifest
       end
+
+      # Generates a PDF representation of an Item.
+      #
+      # @return [DerivativeService::DerivativeFile] when a pdf was generated
+      # @return [NilClass] when a pdf could not be generated
+      def pdf
+        PDFGenerator.new(item).pdf
+      end
     end
   end
 end

@@ -68,6 +68,11 @@ class ItemResource < Valkyrie::Resource
     derivatives.find(&:iiif_manifest?)
   end
 
+  # @return [DerivativeResource]
+  def pdf
+    derivatives.find(&:pdf?)
+  end
+
   # @param [Boolean] include_assets
   def to_json_export(include_assets: false)
     bulk_export_hash = {

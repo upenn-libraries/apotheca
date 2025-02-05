@@ -35,14 +35,14 @@ describe PublishingService::Client do
                 'filename' => 'front.tif',
                 'iiif' => true,
                 'original_file' => { 'path' => be_a(String), 'size' => 291_455, 'mime_type' => 'image/tiff' },
-                'thumbnail_file' => { 'path' => be_a(String), 'size' => 291_455, 'mime_type' => 'image/tiff' }
+                'thumbnail_file' => { 'path' => be_a(String), 'size' => 7_499, 'mime_type' => 'image/jpeg' }
               },
               {
                 'id' => be_a(String),
                 'filename' => 'back.tif',
                 'iiif' => true,
                 'original_file' => { 'path' => be_a(String), 'size' => 291_455, 'mime_type' => 'image/tiff' },
-                'thumbnail_file' => { 'path' => be_a(String), 'size' => 291_455, 'mime_type' => 'image/tiff' }
+                'thumbnail_file' => { 'path' => be_a(String), 'size' => 5_471, 'mime_type' => 'image/jpeg' }
               }
             ]
           }

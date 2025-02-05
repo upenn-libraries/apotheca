@@ -8,149 +8,149 @@ FactoryBot.define do
     original_filename { 'front.tif' }
     created_by { 'admin@library.upenn.edu' }
     updated_by { 'admin@library.upenn.edu' }
-  end
 
-  trait :with_metadata do
-    label { 'Front' }
-    annotations { [{ text: 'Front of Card' }] }
-  end
-
-  trait :with_image_file do
-    technical_metadata do
-      {
-        size: 291_455,
-        mime_type: 'image/tiff',
-        sha256: ['sha256checksum'],
-        height: 238,
-        width: 400,
-        dpi: 600,
-        raw: '<?xml version="1.0" encoding="UTF-8"?>'
-      }
+    trait :with_metadata do
+      label { 'Front' }
+      annotations { [{ text: 'Front of Card' }] }
     end
 
-    transient do
-      preservation_file { 'trade_card/original/front.tif' }
-    end
-  end
-
-  trait :with_pdf_file do
-    original_filename { 'dummy.pdf' }
-
-    technical_metadata do
-      {
-        size: 13_264,
-        mime_type: 'application/pdf',
-        sha256: ['sha256checksum']
-      }
-    end
-
-    transient do
-      preservation_file { 'dummy.pdf' }
-    end
-  end
-
-  trait :with_audio_file do
-    technical_metadata do
-      {
-        mime_type: 'audio/x-wave',
-        size: 30_804,
-        duration: 0.17,
-        sha256: ['sha256checksum']
-      }
-    end
-
-    transient do
-      preservation_file { 'bell.wav' }
-    end
-  end
-
-  trait :with_video_file do
-    technical_metadata do
-      {
-        mime_type: 'video/quicktime',
-        size: 480_754,
-        duration: 1.134,
-        height: 480,
-        width: 640,
-        sha256: ['sha256checksum']
-      }
-    end
-
-    transient do
-      preservation_file { 'video.mov' }
-    end
-  end
-
-  # Defaults to using image file.
-  trait :with_preservation_file do
-    with_image_file
-
-    transient do
-      preservation_backup { false }
-      access_copy { false }
-      thumbnail { false }
-    end
-
-    # Attach file as preservation file. If `preservation_backup` flag is set to true also
-    # backs up preservation file. If `access_copy` is set to true generates access copy derivative.
-    after(:create) do |asset, evaluator|
-      uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: File.new(Rails.root.join("spec/fixtures/files/#{evaluator.preservation_file}")),
-        filename: asset.original_filename, type: asset.technical_metadata.mime_type
-      )
-      preservation_storage = Valkyrie::StorageAdapter.find(:preservation)
-      file = preservation_storage.upload(file: uploaded_file, resource: asset,
-                                         original_filename: asset.original_filename)
-      asset.preservation_file_id = file.id
-
-      if evaluator.preservation_backup
-        preservation_file = Valkyrie::StorageAdapter.find_by(id: asset.preservation_file_id)
-
-        preservation_copy_storage = Valkyrie::StorageAdapter.find(:preservation_copy)
-        file = preservation_copy_storage.upload(
-          file: preservation_file, resource: asset, original_filename: asset.original_filename
-        )
-        asset.preservation_copies_ids = [file.id]
+    trait :with_image_file do
+      technical_metadata do
+        {
+          size: 291_455,
+          mime_type: 'image/tiff',
+          sha256: ['sha256checksum'],
+          height: 238,
+          width: 400,
+          dpi: 600,
+          raw: '<?xml version="1.0" encoding="UTF-8"?>'
+        }
       end
 
-      if evaluator.access_copy
-        uploaded_file.rewind
-
-        iiif_derivative_storage = Valkyrie::StorageAdapter.find(:iiif_derivatives)
-        file = iiif_derivative_storage.upload(
-          file: uploaded_file, resource: asset, original_filename: 'access'
-        )
-
-        asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                                    size: asset.technical_metadata.size, type: 'access',
-                                                    generated_at: DateTime.current)
-      end
-
-      if evaluator.thumbnail
-        uploaded_file.rewind
-
-        derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
-        file = derivative_storage.upload(
-          file: uploaded_file, resource: asset, original_filename: 'thumbnail'
-        )
-
-        asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                                    size: asset.technical_metadata.size, type: 'thumbnail',
-                                                    generated_at: DateTime.current)
+      transient do
+        preservation_file { 'trade_card/original/front.tif' }
       end
     end
-  end
 
-  trait :with_preservation_backup do
-    transient do
-      preservation_backup { true }
+    trait :with_pdf_file do
+      original_filename { 'dummy.pdf' }
+
+      technical_metadata do
+        {
+          size: 13_264,
+          mime_type: 'application/pdf',
+          sha256: ['sha256checksum']
+        }
+      end
+
+      transient do
+        preservation_file { 'dummy.pdf' }
+      end
     end
-  end
 
-  trait :with_derivatives do
-    transient do
-      access_copy { true }
-      thumbnail { true }
+    trait :with_audio_file do
+      technical_metadata do
+        {
+          mime_type: 'audio/x-wave',
+          size: 30_804,
+          duration: 0.17,
+          sha256: ['sha256checksum']
+        }
+      end
+
+      transient do
+        preservation_file { 'bell.wav' }
+      end
+    end
+
+    trait :with_video_file do
+      technical_metadata do
+        {
+          mime_type: 'video/quicktime',
+          size: 480_754,
+          duration: 1.134,
+          height: 480,
+          width: 640,
+          sha256: ['sha256checksum']
+        }
+      end
+
+      transient do
+        preservation_file { 'video.mov' }
+      end
+    end
+
+    # Defaults to using image file.
+    trait :with_preservation_file do
+      with_image_file
+
+      transient do
+        preservation_backup { false }
+        access { false }
+        thumbnail { false }
+        textonly_pdf { false }
+      end
+
+      # Attach file as preservation file. If `preservation_backup` flag is set to true also
+      # backs up preservation file. If `access_copy` is set to true generates access copy derivative.
+      after(:create) do |asset, evaluator|
+        uploaded_file = ActionDispatch::Http::UploadedFile.new(
+          tempfile: File.new(Rails.root.join("spec/fixtures/files/#{evaluator.preservation_file}")),
+          filename: asset.original_filename, type: asset.technical_metadata.mime_type
+        )
+        preservation_storage = Valkyrie::StorageAdapter.find(:preservation)
+        file = preservation_storage.upload(file: uploaded_file, resource: asset,
+                                           original_filename: asset.original_filename)
+        asset.preservation_file_id = file.id
+
+        if evaluator.preservation_backup
+          preservation_file = Valkyrie::StorageAdapter.find_by(id: asset.preservation_file_id)
+
+          preservation_copy_storage = Valkyrie::StorageAdapter.find(:preservation_copy)
+          file = preservation_copy_storage.upload(
+            file: preservation_file, resource: asset, original_filename: asset.original_filename
+          )
+          asset.preservation_copies_ids = [file.id]
+        end
+
+        change_set = AssetChangeSet.new(asset)
+        change_set.ocr_type = 'printed'
+        change_set.ocr_language = ['eng']
+        derivative_service = DerivativeService::Asset::Derivatives.new(change_set)
+
+        %w[access thumbnail textonly_pdf].each do |type|
+          next unless evaluator.send(type) # Check if derivative was requested.
+
+          derivative = derivative_service.send(type)
+
+          next if derivative.nil? # Return early if no derivative could be generated.
+
+          derivative_storage = if derivative.iiif_image
+                                 Valkyrie::StorageAdapter.find(:iiif_derivatives)
+                               else
+                                 Valkyrie::StorageAdapter.find(:derivatives)
+                               end
+
+          file = derivative_storage.upload(file: derivative, resource: asset, original_filename: type)
+
+          asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: derivative.mime_type,
+                                                      size: derivative.size, type: type, generated_at: DateTime.current)
+        end
+      end
+    end
+
+    trait :with_preservation_backup do
+      transient do
+        preservation_backup { true }
+      end
+    end
+
+    trait :with_derivatives do
+      transient do
+        access { true }
+        thumbnail { true }
+        textonly_pdf { true }
+      end
     end
   end
 end
