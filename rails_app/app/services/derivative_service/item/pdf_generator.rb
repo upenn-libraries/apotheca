@@ -67,9 +67,15 @@ module DerivativeService
       # @return [HexaPDF::Document]
       def create_pdf(assets)
         HexaPDF::Document.new.tap do |doc|
+          add_cover_page(doc)      # Adds cover page.
           add_pages(doc, assets)   # Adds page for each asset.
           add_outline(doc, assets) # Add labels and annotations to the document outline.
         end
+      end
+
+      # Adds cover page to document.
+      def add_cover_page(doc)
+        CoverPage.new(item).add_to(doc)
       end
 
       # Add a page for each asset that includes its image and is overlayed with any available OCR.
@@ -103,7 +109,7 @@ module DerivativeService
       # Add labels and annotations for each asset as part of the document outline.
       def add_outline(doc, assets)
         assets.each.with_index do |asset, index|
-          doc.outline.add_item(asset.label || (index + 1).to_s, destination: index) do |section|
+          doc.outline.add_item(asset.label || (index + 1).to_s, destination: index + 1) do |section|
             asset.annotations.each do |annotation|
               section.add_item(annotation, destination: index)
             end

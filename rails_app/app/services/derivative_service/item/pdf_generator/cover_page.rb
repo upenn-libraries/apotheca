@@ -16,54 +16,46 @@ module DerivativeService
 
         class Error < StandardError; end
 
-        attr_reader :item, :composer
+        attr_reader :item
 
         # @param item [ItemResource, ItemResourcePresenter]
-        def initialize(item:)
+        def initialize(item)
           @item = item
-          @composer = HexaPDF::Composer.new(page_size: PAGE_SIZE, margin: MARGIN)
+        end
+
+        # Adds a cover page to target document
+        #
+        # @param [HexaPDF::Document]
+        def add_to(document)
+          composer = HexaPDF::Composer.new(page_size: PAGE_SIZE, margin: MARGIN)
+          set_styles(composer)
+          set_page_layout(composer)
+          draw_main_content(composer)
+          import_to_document(composer, document)
+        rescue StandardError =>  e
+          raise Error, "Failed to generate pdf cover page for item #{item.id}: #{e.message}"
+        end
+
+        private
+
+        # Adds required styles to document composer.
+        def set_styles(composer)
           composer.styles(**Styles::MAPPING)
           composer.document.config['font.map'] = Styles::FONTS
           composer.document.config['font.fallback'] = Styles::FONTS.keys
         end
 
-        # generates HexaPDF::Type::Page object that can be added to a HexaPDF::Document.
-        # @example
-        #   document = HexaPDF::Document.new
-        #   cover_page = CoverPage.new(item: item)
-        #   document.pages.add(document.import(cover_page.page))
-        # @return [HexaPDF::Type::Page]
-        def page
-          @page ||= begin
-            set_page_layout
-            draw_main_content
-            composer.page
-          rescue StandardError => e
-            raise Error, "Failed to generate pdf cover page for item #{item.id}: #{e.message}"
-          end
-        end
-
-        # Write cover PDF file at the given path
-        # @param path [String]
-        # @see HexaPDF::Writer#write
-        # @return [Array<Integer, HexaPDF::XRefSection]
-        def write(path:)
-          page
-          composer.document.write(path)
-        end
-
-        private
-
-        # lays out foundational elements of the page (thumbnail, logo, and frame)
-        def set_page_layout
-          draw_thumbnail
+        # Lays out foundational elements of the page (thumbnail, logo, and frame).
+        def set_page_layout(composer)
+          draw_thumbnail(composer)
           # ensure text is not placed in the space under the thumbnail by removing the rectangle from the frame
           composer.frame.remove_area(Geom2D::Rectangle(START_X_COORD, START_Y_COORD, THUMBNAIL_WIDTH + MARGIN,
                                                        composer.frame.available_height))
-          draw_logo
+          draw_logo(composer)
         end
 
-        def draw_main_content
+        # Adds descriptive metadata to cover page.
+        def draw_main_content(composer)
           composer.text(descriptive_metadata_text(:title), style: :title)
 
           pdf_metadata.each do |field, value|
@@ -78,11 +70,18 @@ module DerivativeService
           end
         end
 
-        def draw_thumbnail
+        # Imports cover page to provided document.
+        def import_to_document(composer, document)
+          composer.document.dispatch_message(:complete_objects)
+          composer.document.validate
+          document.pages.insert(0, document.import(composer.page))
+        end
+
+        def draw_thumbnail(composer)
           composer.image(thumbnail_file, width: THUMBNAIL_WIDTH, position: :float)
         end
 
-        def draw_logo
+        def draw_logo(composer)
           composer.image(logo_file, width: LOGO_WIDTH, position: [LOGO_X_COORD, START_Y_COORD])
         end
 
