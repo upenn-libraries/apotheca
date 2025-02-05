@@ -86,7 +86,7 @@ FactoryBot.define do
 
       transient do
         preservation_backup { false }
-        access_copy { false }
+        access { false }
         thumbnail { false }
         textonly_pdf { false }
       end
@@ -113,48 +113,28 @@ FactoryBot.define do
           asset.preservation_copies_ids = [file.id]
         end
 
-        if evaluator.access_copy
-          uploaded_file.rewind
+        change_set = AssetChangeSet.new(asset)
+        change_set.ocr_type = 'printed'
+        change_set.ocr_language = ['eng']
+        derivative_service = DerivativeService::Asset::Derivatives.new(change_set)
 
-          iiif_derivative_storage = Valkyrie::StorageAdapter.find(:iiif_derivatives)
-          file = iiif_derivative_storage.upload(
-            file: uploaded_file, resource: asset, original_filename: 'access'
-          )
+        %w[access thumbnail textonly_pdf].each do |type|
+          next unless evaluator.send(type) # Check if derivative was requested.
 
-          asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                                      size: asset.technical_metadata.size, type: 'access',
-                                                      generated_at: DateTime.current)
-        end
+          derivative = derivative_service.send(type)
 
-        if evaluator.thumbnail
-          uploaded_file.rewind
+          next if derivative.nil? # Return early if no derivative could be generated.
 
-          derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
-          file = derivative_storage.upload(
-            file: uploaded_file, resource: asset, original_filename: 'thumbnail'
-          )
+          derivative_storage = if derivative.iiif_image
+                                 Valkyrie::StorageAdapter.find(:iiif_derivatives)
+                               else
+                                 Valkyrie::StorageAdapter.find(:derivatives)
+                               end
 
-          asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: asset.technical_metadata.mime_type,
-                                                      size: asset.technical_metadata.size, type: 'thumbnail',
-                                                      generated_at: DateTime.current)
-        end
+          file = derivative_storage.upload(file: derivative, resource: asset, original_filename: type)
 
-        # Using canned pdf file for now
-        if evaluator.textonly_pdf
-          textonly_pdf = ActionDispatch::Http::UploadedFile.new(
-            tempfile: File.new(Rails.root.join('spec/fixtures/files/trade_card/derivatives/front-textonly_pdf.pdf')),
-            filename: 'textonly_pdf', type: 'application/pdf'
-          )
-
-          derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
-          file = derivative_storage.upload(
-            file: textonly_pdf, resource: asset, original_filename: 'textonly_pdf'
-          )
-
-          asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: 'application/pdf',
-                                                      size: textonly_pdf.size, type: 'textonly_pdf',
-                                                      generated_at: DateTime.current)
-
+          asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: derivative.mime_type,
+                                                      size: derivative.size, type: type, generated_at: DateTime.current)
         end
       end
     end
@@ -167,7 +147,7 @@ FactoryBot.define do
 
     trait :with_derivatives do
       transient do
-        access_copy { true }
+        access { true }
         thumbnail { true }
         textonly_pdf { true }
       end
