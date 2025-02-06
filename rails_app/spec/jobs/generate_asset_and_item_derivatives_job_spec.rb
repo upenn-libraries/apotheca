@@ -49,10 +49,13 @@ describe GenerateAssetAndItemDerivativesJob do
     context 'when item is not published' do
       let(:item) { persist(:item_resource, :with_full_assets_all_arranged, published: false) }
 
-      it 'does not publish item' do
+      before do
         allow(PublishItem).to receive(:new).and_return(publish_item)
         allow(publish_item).to receive(:call).with(any_args).and_call_original
-        job.transaction(item.id.to_s, Settings.system_user)
+      end
+
+      it 'does not publish item' do
+        result
         expect(publish_item).not_to have_received(:call).with(id: item.id.to_s, updated_by: Settings.system_user)
       end
     end

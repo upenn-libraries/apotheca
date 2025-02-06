@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Job to regenerate derivatives for all of an Item's child Assets and then publish the Item (which will also
-# regenerate the IIIF manifest and PDF). Publish action to regenerate Item-level derivatives will
+# regenerates the IIIF manifest and PDF). Publish action to regenerate Item-level derivatives will
 # only be run the Item has been previously published.
 class GenerateAssetAndItemDerivativesJob < TransactionJob
   include Sidekiq::Job
