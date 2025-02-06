@@ -23,30 +23,30 @@ module DerivativeService
           @item = item
         end
 
-        # Adds a cover page to target document
+        # Adds a cover page to target document.
         #
         # @param [HexaPDF::Document]
         def add_to(document)
           composer = HexaPDF::Composer.new(page_size: PAGE_SIZE, margin: MARGIN)
-          set_styles(composer)
-          set_page_layout(composer)
+          add_styles(composer)
+          add_page_layout(composer)
           draw_main_content(composer)
           import_to_document(composer, document)
-        rescue StandardError =>  e
+        rescue StandardError => e
           raise Error, "Failed to generate pdf cover page for item #{item.id}: #{e.message}"
         end
 
         private
 
         # Adds required styles to document composer.
-        def set_styles(composer)
+        def add_styles(composer)
           composer.styles(**Styles::MAPPING)
           composer.document.config['font.map'] = Styles::FONTS
           composer.document.config['font.fallback'] = Styles::FONTS.keys
         end
 
         # Lays out foundational elements of the page (thumbnail, logo, and frame).
-        def set_page_layout(composer)
+        def add_page_layout(composer)
           draw_thumbnail(composer)
           # ensure text is not placed in the space under the thumbnail by removing the rectangle from the frame
           composer.frame.remove_area(Geom2D::Rectangle(START_X_COORD, START_Y_COORD, THUMBNAIL_WIDTH + MARGIN,
