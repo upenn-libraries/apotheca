@@ -41,7 +41,7 @@ Rails.application.routes.draw do
         post :refresh_ils_metadata, to: 'items#refresh_ils_metadata'
         post :publish, to: 'items#publish'
         post :unpublish, to: 'items#unpublish'
-        post :regenerate_asset_and_item_derivatives, to: 'items#regenerate_asset_and_item_derivatives'
+        post :regenerate_all_derivatives, to: 'items#regenerate_all_derivatives'
       end
 
       collection do
