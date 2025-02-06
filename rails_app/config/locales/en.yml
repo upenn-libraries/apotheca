@@ -66,11 +66,11 @@ en:
         failure: "An error occurred while enqueuing job to refresh all ILS metadata."
         description: "Refreshes metadata from catalog for every item with a bibnumber included in the descriptive metadata. This action will republish to Colenda any item already published."
         confirm_message: "All records with bibnumbers will have their ILS metadata refreshed. Records that are already published to Colenda will be republished."
-      generate_asset_and_item_derivatives:
+      regenerate_asset_and_item_derivatives:
         success: "Job to generate Asset and Item derivatives enqueued."
         failure: "An error occurred while enqueuing job to generate Asset and Item derivatives"
         description: "Regenerates child Asset derivatives and publishes Item (thus regenerating IIIF manifest and PDF). Publish will only occur if the Item has already been published."
-        confirm_message: "All Asset and Item derivatives will be generated."
+        confirm_message: "All Asset and Item derivatives will be regenerated."
     bulk_import:
       cancel_all:
         confirm_message: "You will permanently cancel all queued imports."

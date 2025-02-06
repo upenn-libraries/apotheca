@@ -34,14 +34,14 @@
     <% end %>
   <% end %>
 
-  <% if can?(:generate_asset_and_item_derivatives, @item) %>
-    <%= component.with_action(description: I18n.t('actions.item.generate_asset_and_item_derivatives.description')) do |action| %>
-      <% action.with_form_component(name: 'generate_asset_and_item_derivatives',
-                                    url: generate_asset_and_item_derivatives_item_path(@item, anchor: 'actions'),
+  <% if can?(:regenerate_asset_and_item_derivatives, @item) %>
+    <%= component.with_action(description: I18n.t('actions.item.regenerate_asset_and_item_derivatives.description')) do |action| %>
+      <% action.with_form_component(name: 'regenerate_asset_and_item_derivatives',
+                                    url: regenerate_asset_and_item_derivatives_item_path(@item, anchor: 'actions'),
                                     method: :post) do |form_component| %>
-        <% form_component.with_error(@error) if @errors_for == 'generate_asset_and_item_derivatives' %>
-        <% form_component.with_submit('Generate Asset And Item Derivatives',
-                                      confirm: I18n.t('actions.item.generate_asset_and_item_derivatives.confirm_message'),
+        <% form_component.with_error(@error) if @errors_for == 'regenerate_asset_and_item_derivatives' %>
+        <% form_component.with_submit('Regenerate Asset And Item Derivatives',
+                                      confirm: I18n.t('actions.item.regenerate_asset_and_item_derivatives.confirm_message'),
                                       variant: :primary) %>
       <% end %>
     <% end %>
