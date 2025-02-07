@@ -32,7 +32,7 @@ FactoryBot.define do
         {
           title: [{ value: human_readable_name }],
           description: Faker::Lorem.paragraphs.map { |p| { value: p } },
-          physical_location: [{ value: Faker::IDNumber.spanish_foreign_citizen_number }],
+          physical_location: [{ value: Faker::IdNumber.spanish_foreign_citizen_number }],
           collection: [{ value: "#{Faker::GreekPhilosophers.name} collection" }],
           date: [{ value: Faker::Date.backward.to_s }],
           physical_format: [{ value: format_type }],

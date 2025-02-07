@@ -18,7 +18,7 @@ require 'webmock/rspec'
 WebMock.disable_net_connect!(
   allow_localhost: true,
   allow: [
-    Settings.minio.endpoint, /#{Settings.solr.url}/, /#{Settings.fits.url}/, /#{Settings.chrome.url}/
+    /#{Settings.minio.endpoint}/, /#{Settings.solr.url}/, /#{Settings.fits.url}/, /#{Settings.chrome.url}/
   ]
 )
 
