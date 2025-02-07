@@ -10,8 +10,8 @@ module DerivativeService
         PAGE_SIZE = :A4
         MARGIN = 36
         THUMBNAIL_WIDTH = 100
-        LOGO_WIDTH = 100
-        LOGO_X_COORD = 400
+        LOGO_WIDTH = 150
+        LOGO_X_COORD = 350
         LOGO_FILE_PATH = 'app/assets/images/Penn Libraries Logo 2020_RGB.png'
 
         class Error < StandardError; end
