@@ -98,6 +98,14 @@ class ItemsController < ResourcesController
     end
   end
 
+  def regenerate_all_derivatives
+    if GenerateAllDerivativesJob.perform_async(@item.id.to_s, current_user.email)
+      redirect_to item_path(@item), notice: I18n.t('actions.item.regenerate_all_derivatives.success')
+    else
+      redirect_to item_path(@item), notice: I18n.t('actions.item.regenerate_all_derivatives.failure')
+    end
+  end
+
   def refresh_all_ils_metadata
     if EnqueueBulkRefreshIlsMetadataJob.perform_async(current_user.email)
       redirect_to system_actions_path, notice: I18n.t('actions.item.refresh_all_ILS.success')

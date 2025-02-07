@@ -34,6 +34,19 @@
     <% end %>
   <% end %>
 
+  <% if can?(:regenerate_all_derivatives, @item) %>
+    <%= component.with_action(description: I18n.t('actions.item.regenerate_all_derivatives.description')) do |action| %>
+      <% action.with_form_component(name: 'regenerate_all_derivatives',
+                                    url: regenerate_all_derivatives_item_path(@item, anchor: 'actions'),
+                                    method: :post) do |form_component| %>
+        <% form_component.with_error(@error) if @errors_for == 'regenerate_all_derivatives' %>
+        <% form_component.with_submit('Regenerate All Derivatives',
+                                      confirm: I18n.t('actions.item.regenerate_all_derivatives.confirm_message'),
+                                      variant: :primary) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <% if can?(:delete, @item) %>
     <%= component.with_action(description: I18n.t('actions.item.delete.description')) do |action| %>
       <% action.with_form_component(name: 'delete_item', url: item_path(@item, anchor: 'actions'),
