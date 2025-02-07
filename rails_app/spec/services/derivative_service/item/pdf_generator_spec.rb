@@ -10,7 +10,7 @@ describe DerivativeService::Item::PDFGenerator do
   end
 
   describe '#pdf' do
-    let(:item) { persist(:item_resource, :with_full_assets_all_arranged) }
+    let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_assets_all_arranged) }
     let(:generator) { described_class.new(item) }
 
     context 'when pdf can be generated' do
@@ -30,7 +30,11 @@ describe DerivativeService::Item::PDFGenerator do
       end
 
       it 'contains expected number of pages' do
-        expect(pdf.pages.count).to eql item.arranged_assets.count
+        expect(pdf.pages.count).to eql item.arranged_assets.count + 1
+      end
+
+      it 'contains cover page with title' do
+        expect(pdf.pages.first.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
       end
     end
   end
