@@ -3,7 +3,7 @@
 # Job to regenerate derivatives for all of an Item's child Assets and then publish the Item (which will also
 # regenerates the IIIF manifest and PDF). Publish action to regenerate Item-level derivatives will
 # only be run the Item has been previously published.
-class GenerateAssetAndItemDerivativesJob < TransactionJob
+class GenerateAllDerivativesJob < TransactionJob
   include Sidekiq::Job
 
   sidekiq_options queue: :medium

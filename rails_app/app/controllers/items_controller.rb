@@ -99,7 +99,7 @@ class ItemsController < ResourcesController
   end
 
   def regenerate_all_derivatives
-    if GenerateAssetAndItemDerivativesJob.perform_async(@item.id.to_s, current_user.email)
+    if GenerateAllDerivativesJob.perform_async(@item.id.to_s, current_user.email)
       redirect_to item_path(@item), notice: I18n.t('actions.item.regenerate_all_derivatives.success')
     else
       redirect_to item_path(@item), notice: I18n.t('actions.item.regenerate_all_derivatives.failure')

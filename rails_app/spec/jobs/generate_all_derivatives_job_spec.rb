@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe GenerateAssetAndItemDerivativesJob do
+describe GenerateAllDerivativesJob do
   let(:job) { described_class.new }
 
   describe '#transaction' do
