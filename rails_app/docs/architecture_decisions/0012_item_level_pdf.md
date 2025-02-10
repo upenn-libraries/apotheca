@@ -17,14 +17,16 @@ should reflect the order of the item's arranged assets.
 
 ## Decision
 
-1. Use VIPS to generate a temporary derivative JPEG for each asset.
+1. Use VIPS to generate a temporary derivative JPEG for each asset from the access copy.
 2. Use HexaPDF to build item level PDF and combine temporary JPEGs with existing text-only PDFs.
-3. Generate item level PDF after a successful publish enqueue job.
-4. Store the item level PDF in the derivatives storage.
+3. Include cover page containing information about Item. 
+4. Include labels and annotations as bookmarks in the PDF.
+4. Generate item level PDF during publishing.
+5. Store the item level PDF in the derivatives storage.
 
 ## Consequences
 
 1. Leverages existing VIPS installation for image processing.
 2. Supports creating a cover page, bookmarks, and labels for PDFs.
-3. Publish job will not be slowed down by PDF generation.
-4. Requires using more derivative storage space.
+3. Publish job will be slowed down by PDF generation.
+4. Requires using additional derivative storage space.
