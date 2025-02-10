@@ -21,8 +21,8 @@ should reflect the order of the item's arranged assets.
 2. Use HexaPDF to build item level PDF and combine temporary JPEGs with existing text-only PDFs.
 3. Include cover page containing information about Item. 
 4. Include labels and annotations as bookmarks in the PDF.
-4. Generate item level PDF during publishing.
-5. Store the item level PDF in the derivatives storage.
+5. Generate item level PDF during publishing.
+6. Store the item level PDF in the derivatives storage.
 
 ## Consequences
 
