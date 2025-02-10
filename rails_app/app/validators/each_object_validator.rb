@@ -9,7 +9,7 @@ class EachObjectValidator < ActiveModel::EachValidator
   VALIDATIONS = [REQUIRED, ACCEPTED_VALUES].freeze
 
   def check_validity!
-    options.each do |_field, validations|
+    options.each_value do |validations|
       validations.each do |validation, args|
         raise ArgumentError, "#{validation} validation is not supported" unless VALIDATIONS.include?(validation)
 

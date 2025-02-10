@@ -118,7 +118,7 @@ RSpec.configure do |config|
 
   # Clean out all Valkyrie Storage adapters.
   def wipe_storage_adapters!
-    Valkyrie::StorageAdapter.storage_adapters.each do |_short_name, adapter|
+    Valkyrie::StorageAdapter.storage_adapters.each_value do |adapter|
       adapter.shrine.clear! if adapter.is_a? Valkyrie::Storage::Shrine
     end
   end
