@@ -24,7 +24,7 @@ describe DerivativeService::Asset::Generator::Image::OCR do
     end
 
     context 'when ocr text is extracted from asset' do
-      after { derivative_files.each { |_k, file| file.cleanup! } }
+      after { derivative_files.each_value(&:cleanup!) }
 
       it 'returns a hash containing DerivativeService::DerivativeFiles' do
         expect(derivative_files).to include({ textonly_pdf: be_a(DerivativeService::DerivativeFile),

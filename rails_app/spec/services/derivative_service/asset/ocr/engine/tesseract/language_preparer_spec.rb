@@ -68,7 +68,7 @@ describe DerivativeService::Asset::OCR::Engine::Tesseract::LanguagePreparer do
       let(:languages) { ['invalid', '', nil] }
 
       it 'returns nil' do
-        expect(language_preparer.argument).to be nil
+        expect(language_preparer.argument).to be_nil
       end
     end
 

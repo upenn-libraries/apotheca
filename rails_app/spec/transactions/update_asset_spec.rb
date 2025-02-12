@@ -18,13 +18,13 @@ describe UpdateAsset do
   describe '#call' do
     let(:transaction) { described_class.new }
 
-    let(:file1) do
+    let(:file) do
       ActionDispatch::Http::UploadedFile.new(
         tempfile: File.open(file_fixture('files/trade_card/original/front.tif')),
         filename: 'front.tif'
       )
     end
-    let(:file2) do
+    let(:update_file) do
       ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('files/bell.wav')), filename: 'bell.wav'
     end
 
@@ -33,7 +33,7 @@ describe UpdateAsset do
 
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
+        transaction.call(id: asset.id, file: file, label: 'Front of Card', updated_by: 'initiator@example.com')
       end
 
       include_examples 'enqueues jobs'
@@ -67,9 +67,8 @@ describe UpdateAsset do
 
       let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives) }
       let(:result) do
-        transaction.call(
-          id: asset.id, file: file2, original_filename: 'bell.wav', label: 'First', updated_by: 'initiator@example.com'
-        )
+        transaction.call(id: asset.id, file: update_file, original_filename: 'bell.wav',
+                         label: 'First', updated_by: 'initiator@example.com')
       end
 
       include_examples 'enqueues jobs'
@@ -150,12 +149,12 @@ describe UpdateAsset do
 
     context 'when preservation file does not have original filename' do
       # File that does not respond to original_filename
-      let(:file1) do
+      let(:file) do
         ActionDispatch::Http::UploadedFile.new tempfile: file_fixture('files/trade_card/original/front.tif').open
       end
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
+        transaction.call(id: asset.id, file: file, label: 'Front of Card', updated_by: 'initiator@example.com')
       end
 
       include_examples 'does not enqueue jobs'
@@ -168,13 +167,13 @@ describe UpdateAsset do
 
     context 'when preservation file has an unsupported file extension' do
       # File with unsupported file extension
-      let(:file1) do
+      let(:file) do
         ActionDispatch::Http::UploadedFile.new tempfile: File.open(file_fixture('imports/bulk_import_data.csv')),
                                                filename: 'bulk_import_data.csv'
       end
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com')
+        transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com')
       end
 
       include_examples 'does not enqueue jobs'
@@ -188,7 +187,7 @@ describe UpdateAsset do
     context 'when expected_checksum does not match ingested file' do
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, expected_checksum: '1234', updated_by: 'initiator@example.com')
+        transaction.call(id: asset.id, file: file, expected_checksum: '1234', updated_by: 'initiator@example.com')
       end
 
       include_examples 'does not enqueue jobs'
@@ -201,7 +200,7 @@ describe UpdateAsset do
 
     context 'when asset update fails' do
       let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives) }
-      let(:result) { transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com') }
+      let(:result) { transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com') }
 
       before do
         step_double = instance_double(Steps::Validate)
@@ -230,7 +229,7 @@ describe UpdateAsset do
     context 'when preservation file has an invalid mime_type' do
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, updated_by: 'test@example.com')
+        transaction.call(id: asset.id, file: file, updated_by: 'test@example.com')
       end
 
       before do
@@ -255,7 +254,7 @@ describe UpdateAsset do
 
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, label: 'Front of Card', updated_by: 'initiator@example.com')
+        transaction.call(id: asset.id, file: file, label: 'Front of Card', updated_by: 'initiator@example.com')
       end
 
       include_examples 'creates a resource event', :update_asset, 'initiator@example.com', true do
@@ -285,7 +284,7 @@ describe UpdateAsset do
       let(:transaction) { described_class.new.with_step_args(generate_derivatives: [skip: false]) }
       let(:asset) { persist(:asset_resource) }
       let(:result) do
-        transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com')
+        transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com')
       end
 
       context 'when transaction successful' do
@@ -334,7 +333,7 @@ describe UpdateAsset do
         let(:transaction) { described_class.new.with_step_args(generate_derivatives: [skip: false]) }
         let(:asset) { persist(:asset_resource) }
         let(:result) do
-          transaction.call(id: asset.id, file: file1, updated_by: 'initiator@example.com', ocr_type: 'printed',
+          transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com', ocr_type: 'printed',
                            ocr_language: %w[eng fra])
         end
 

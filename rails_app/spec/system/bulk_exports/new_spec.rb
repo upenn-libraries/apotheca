@@ -30,7 +30,7 @@ describe 'Bulk Export New Page' do
       it 'fills Search Params field with search params' do
         expect(page).to have_field('bulk-export-search-params', disabled: true)
         field = find_field('bulk-export-search-params', disabled: true)
-        expect(field.value).to have_text '"all"=>"Green"'
+        expect(field.value).to have_text '"all" => "Green"'
       end
 
       it 'creates a bulk export and redirects to bulk export index page' do

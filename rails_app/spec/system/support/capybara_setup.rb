@@ -26,7 +26,7 @@ Capybara.app_host = "http://#{`hostname`.strip&.downcase || '0.0.0.0'}"
 RSpec.configure do |config|
   # Not loading Bootstrap Icons from CDN to prevent inconsistent errors from accept_confirm
   config.before(:each, type: :system) do
-    page.driver.browser.url_blacklist = ['https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css']
+    page.driver.browser.url_blacklist = [%r{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css}]
   end
   # Make sure this hook runs before others
   config.prepend_before(:each, type: :system) do

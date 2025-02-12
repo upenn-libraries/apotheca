@@ -145,7 +145,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
       end
 
       it 'returns nil' do
-        expect(iiif_service.v2_manifest).to be nil
+        expect(iiif_service.v2_manifest).to be_nil
       end
     end
   end

@@ -29,7 +29,7 @@ describe DerivativeService::Item::PDFGenerator::AssetWrapper do
       let(:asset) { persist(:asset_resource, :with_preservation_file, :with_metadata) }
 
       it 'returns nil' do
-        expect(asset_wrapper.textonly_pdf).to be nil
+        expect(asset_wrapper.textonly_pdf).to be_nil
       end
     end
   end
@@ -48,14 +48,14 @@ describe DerivativeService::Item::PDFGenerator::AssetWrapper do
 
   describe '#cleanup' do
     it 'cleans up image file' do
-      image = instance_double('image', cleanup!: nil)
+      image = instance_double(DerivativeService::DerivativeFile, cleanup!: nil)
       allow(asset_wrapper).to receive(:image).and_return(image)
       asset_wrapper.cleanup!
       expect(image).to have_received(:cleanup!)
     end
 
     it 'cleans up textonly_pdf file' do
-      textonly_pdf = instance_double('textonly_pdf', close: nil)
+      textonly_pdf = instance_double(Valkyrie::StorageAdapter::StreamFile, close: nil)
       allow(asset_wrapper).to receive(:textonly_pdf).and_return(textonly_pdf)
       asset_wrapper.cleanup!
       expect(textonly_pdf).to have_received(:close)
