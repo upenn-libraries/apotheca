@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe PublishingService::Client do
-  let(:client) { described_class.new(url: Settings.publish.url, token: Settings.publish.token) }
-  let(:url) { Settings.publish.url }
+  let(:endpoint) { PublishingService::Endpoint.colenda }
+  let(:client) { described_class.new(endpoint) }
 
   describe '.new' do
     it 'creates connection' do
@@ -50,17 +50,17 @@ describe PublishingService::Client do
       end
 
       before do
-        stub_request(:post, "#{Settings.publish.url}/items")
+        stub_request(:post, "#{endpoint.base_url}/items")
           .with(
             body: expected_payload,
-            headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.token}" }
+            headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{endpoint.token}" }
           )
           .to_return(status: 200, headers: { 'Content-Type': 'application/json' })
       end
 
       it 'makes publish request with expected payload' do
         client.publish(item)
-        expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
+        expect(a_request(:post, "#{endpoint.base_url}/items")).to have_been_made
       end
     end
 
@@ -84,7 +84,7 @@ describe PublishingService::Client do
 
       it 'makes unpublish request' do
         client.unpublish(item)
-        expect(a_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")).to have_been_made
+        expect(a_request(:delete, "#{endpoint.base_url}/items/#{item.unique_identifier}")).to have_been_made
       end
     end
 
@@ -98,16 +98,16 @@ describe PublishingService::Client do
 
     context 'when request returns 404' do
       before do
-        stub_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")
+        stub_request(:delete, "#{endpoint.base_url}/items/#{item.unique_identifier}")
           .with(
-            headers: { 'Authorization': "Token token=#{Settings.publish.token}" }
+            headers: { 'Authorization': "Token token=#{endpoint.token}" }
           )
           .to_return(status: 404, body: { error: 'Not Found' }.to_json, headers: { 'Content-Type': 'application/json' })
       end
 
       it 'makes unpublish request' do
         client.unpublish(item)
-        expect(a_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")).to have_been_made
+        expect(a_request(:delete, "#{endpoint.base_url}/items/#{item.unique_identifier}")).to have_been_made
       end
 
       it 'does not raise error' do

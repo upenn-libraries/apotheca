@@ -20,7 +20,7 @@ describe UnpublishItem do
 
       it 'publishes item' do
         result
-        expect(a_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")).to have_been_made
+        expect(a_request(:delete, "#{Settings.publish.colenda.base_url}/items/#{item.unique_identifier}")).to have_been_made
       end
 
       it 'sets published flag to false' do

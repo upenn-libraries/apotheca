@@ -17,7 +17,7 @@ class PublishItem
 
     add_published_values(change_set)
 
-    client = PublishingService::Client.new(**Settings.publish)
+    client = PublishingService::Client.new(PublishingService::Endpoint.colenda)
     client.publish(change_set)
 
     Success(change_set)

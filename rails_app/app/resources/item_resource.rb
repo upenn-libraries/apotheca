@@ -46,10 +46,8 @@ class ItemResource < Valkyrie::Resource
   # @todo memoize to prevent duplicate queries & sorting?
   # @return [Array<AssetResource>]
   def arranged_assets
-    pg_query_service.find_many_by_ids(ids: structural_metadata.arranged_asset_ids.dup)
-                    .sort_by do |asset|
-      structural_metadata.arranged_asset_ids.index(asset.id)
-    end
+    @arranged_assets ||= pg_query_service.find_many_by_ids(ids: structural_metadata.arranged_asset_ids.dup)
+                                         .sort_by { |a| structural_metadata.arranged_asset_ids.index(a.id) }
   end
 
   # Is a given Asset ID the designated Asset ID for this Item's thumbnail?

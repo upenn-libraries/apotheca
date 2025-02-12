@@ -73,3 +73,12 @@ iiif:
     item_link_base_url: 'https://colenda.library.upenn.edu/catalog/'
 publish:
   skip: true
+  colenda:
+    base_url: https://colenda.library.upenn.edu
+    token: sample_token
+    item_path: items
+    asset_path: assets
+    public_item_path: catalog
+    pdf_path: pdf
+    original_path: original
+    manifest_path: manifest

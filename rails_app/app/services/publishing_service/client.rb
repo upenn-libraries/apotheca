@@ -9,19 +9,19 @@ module PublishingService
   class Client
     class Error < StandardError; end
 
-    attr_reader :connection
+    attr_reader :endpoint, :connection
 
-    # @param [String] url
-    # @param [String] token
-    def initialize(url:, token:, **)
-      @connection = create_connection(url, token)
+    # @param [PublishingService::Endpoint] endpoint
+    def initialize(endpoint)
+      @endpoint = endpoint
+      @connection = create_connection(endpoint.base_url, endpoint.token)
     end
 
     # Publish record. Sends request to external application to add/update an record (item).
     #
     # @param [ItemChangeSet] change_set
     def publish(change_set)
-      connection.post('items', { item: serialize(change_set) })
+      connection.post(endpoint.item_path, { item: serialize(change_set) })
     rescue Faraday::ClientError, Faraday::ServerError => e # Raising error if publishing request failed
       raise Error, "Request to publishing endpoint failed: #{e.response[:body]['error']}"
     end
@@ -30,7 +30,7 @@ module PublishingService
     #
     # @param [ItemChangeSet|ItemResource] change_set
     def unpublish(change_set)
-      connection.delete("items/#{change_set.unique_identifier}")
+      connection.delete("#{endpoint.item_path}/#{change_set.unique_identifier}")
     rescue Faraday::ResourceNotFound
       # Not raising error when attemping to unpublish an item that hasn't been published.
     rescue Faraday::ClientError, Faraday::ServerError => e
