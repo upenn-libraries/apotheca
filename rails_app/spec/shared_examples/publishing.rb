@@ -8,7 +8,8 @@ shared_context 'with successful publish request' do
     stub_request(:post, "#{Settings.publish.colenda.base_url}/items")
       .with(
         body: be_a(String),
-        headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.colenda.token}" }
+        headers: { 'Content-Type': 'application/json',
+                   'Authorization': "Token token=#{Settings.publish.colenda.token}" }
       )
       .to_return(status: 200, headers: { 'Content-Type': 'application/json' })
   end
@@ -20,7 +21,8 @@ shared_context 'with unsuccessful publish request' do
     stub_request(:post, "#{Settings.publish.colenda.base_url}/items")
       .with(
         body: be_a(String),
-        headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{Settings.publish.colenda.token}" }
+        headers: { 'Content-Type': 'application/json',
+                   'Authorization': "Token token=#{Settings.publish.colenda.token}" }
       )
       .to_return(
         status: 500,

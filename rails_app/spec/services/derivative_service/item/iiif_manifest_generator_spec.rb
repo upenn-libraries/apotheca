@@ -79,6 +79,14 @@ describe DerivativeService::Item::IIIFManifestGenerator do
         expect(sequence['canvases'].count).to be 2
       end
 
+      it 'includes rendering in sequence' do
+        expect(json['sequences'][0]['rendering']).to include(
+          '@id' => starting_with('https://colenda.library.upenn.edu/items'),
+          'label' => 'Download PDF',
+          'format' => 'application/pdf'
+        )
+      end
+
       it 'includes canvases in sequence' do
         canvases = json['sequences'][0]['canvases']
         expect(canvases[0]).to include(

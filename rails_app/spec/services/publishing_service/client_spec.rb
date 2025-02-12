@@ -12,7 +12,7 @@ describe PublishingService::Client do
 
   describe '#publish' do
     let(:item) do
-      resource = persist(:item_resource, :with_full_assets_all_arranged, :published, :with_iiif_manifest)
+      resource = persist(:item_resource, :with_full_assets_all_arranged, :published, :with_derivatives)
       ItemChangeSet.new(resource)
     end
 
@@ -28,6 +28,7 @@ describe PublishingService::Client do
               'title' => [{ 'value' => 'New Item' }]
             ),
             'iiif_manifest_path' => be_a(String),
+            'pdf_path' => be_a(String),
             'thumbnail_asset_id' => be_a(String),
             'assets' => [
               {
@@ -75,7 +76,7 @@ describe PublishingService::Client do
 
   describe '#unpublish' do
     let(:item) do
-      resource = persist(:item_resource, :published, :with_iiif_manifest)
+      resource = persist(:item_resource, :published)
       ItemChangeSet.new(resource)
     end
 

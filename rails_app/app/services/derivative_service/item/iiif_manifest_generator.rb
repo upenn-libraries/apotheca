@@ -38,7 +38,8 @@ module DerivativeService
 
         sequence = IIIF::Presentation::Sequence.new(
           '@id' => "#{item_url}/sequence/normal",
-          'label' => 'Current order'
+          'label' => 'Current order',
+          'rendering' => [pdf_file]
         )
 
         item.arranged_assets.select(&:image?).map.with_index do |asset, i|
@@ -164,6 +165,16 @@ module DerivativeService
           'label' => label,
           'ranges' => subranges
         )
+      end
+
+      def pdf_file
+        return unless DerivativeService::Item::PDFGenerator.new(item.object).pdfable?
+
+        {
+          '@id' => colenda.pdf_url(item.unique_identifier),
+          'label' => 'Download PDF',
+          'format' => 'application/pdf'
+        }
       end
 
       def download_original_file(asset)

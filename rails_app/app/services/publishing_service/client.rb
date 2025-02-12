@@ -63,6 +63,7 @@ module PublishingService
         last_published_at: change_set.last_published_at.utc.iso8601,
         descriptive_metadata: resource.presenter.descriptive_metadata.to_h,
         iiif_manifest_path: change_set.derivatives.find { |d| d.type == 'iiif_manifest' }&.file_id.to_s.split('://').last,
+        pdf_path: change_set.derivatives.find { |d| d.type == 'pdf' }&.file_id.to_s.split('://').last,
         assets: serialize_assets(resource)
       }
 
