@@ -77,7 +77,7 @@ module ImportService
           internal_notes: internal_notes,
           descriptive_metadata: descriptive_metadata,
           structural_metadata: structural_metadata
-        }.compact_blank
+        }.compact_blank.merge(item_attrs)
 
         if asset_set
           item_attributes[:structural_metadata] = item_attributes.fetch(:structural_metadata, {})

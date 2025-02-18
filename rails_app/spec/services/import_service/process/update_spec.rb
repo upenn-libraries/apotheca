@@ -423,6 +423,10 @@ describe ImportService::Process::Update do
         )
       end
 
+      it 'sets ocr_type' do
+        expect(updated_item).to have_attributes(ocr_type: 'printed')
+      end
+
       it 'generates ocr derivatives' do
         expect(updated_assets.first.derivatives.map(&:type)).to include('textonly_pdf', 'hocr', 'text')
       end

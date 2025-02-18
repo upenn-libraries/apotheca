@@ -30,7 +30,7 @@ class GenerateDerivatives
 
     change_set.ocr_type = item.ocr_type
     change_set.viewing_direction = item.structural_metadata.viewing_direction
-    change_set.ocr_language = ocr_language(item)
+    change_set.ocr_language = item.language_codes
 
     Success(change_set)
   rescue StandardError => e
@@ -54,18 +54,6 @@ class GenerateDerivatives
   end
 
   private
-
-  # @param item [ItemResource]
-  # @return [Array<String>]
-  def ocr_language(item)
-    extract_language_codes(item.presenter.descriptive_metadata.language)
-  end
-
-  # @param data [Array]
-  # @return [Array<String>]
-  def extract_language_codes(data)
-    Array.wrap(data).pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l.capitalize)&.first(2) }.compact_blank
-  end
 
   # @param resource [AssetResource]
   # @return [ItemResource]
