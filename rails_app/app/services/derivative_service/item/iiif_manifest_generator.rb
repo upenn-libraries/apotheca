@@ -36,11 +36,8 @@ module DerivativeService
           }
         )
 
-        sequence = IIIF::Presentation::Sequence.new(
-          '@id' => "#{item_url}/sequence/normal",
-          'label' => 'Current order',
-          'rendering' => [pdf_file]
-        )
+        sequence = IIIF::Presentation::Sequence.new('@id' => "#{item_url}/sequence/normal", 'label' => 'Current order')
+        sequence['rendering'] = [pdf_file] if pdf_file
 
         item.arranged_assets.select(&:image?).map.with_index do |asset, i|
           raise MissingDerivative, "Derivatives missing for #{asset.original_filename}" unless asset.access
