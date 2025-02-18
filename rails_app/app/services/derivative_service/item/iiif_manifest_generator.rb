@@ -203,7 +203,7 @@ module DerivativeService
       end
 
       def colenda
-        PublishingService::Endpoint.colenda
+        @colenda ||= PublishingService::Endpoint.colenda
       end
     end
   end
