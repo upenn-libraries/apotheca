@@ -6,6 +6,7 @@ class Report < ApplicationRecord
 
   has_one_attached :report_json
   validates :generated_at, presence: true, if: -> { report_json.attached? }
+  # TODO: validate report_type is in a constant REPORT_TYPES array
   # TODO: more validations potentially?
   # bulk_export validate state in the model, but that validation is already included in Queueable
 
