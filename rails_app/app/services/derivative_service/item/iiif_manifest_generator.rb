@@ -190,12 +190,12 @@ module DerivativeService
 
         filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
 
-        URI.join(image_server.url, CGI.escape(filepath)).to_s
+        URI.join(image_server.url, "#{image_server.prefix}/#{CGI.escape(filepath)}").to_s
       end
 
       # Image server configuration.
       def image_server
-        Settings.iiif.image_server
+        Settings.image_server
       end
 
       def item_url
