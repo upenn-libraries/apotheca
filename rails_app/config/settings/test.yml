@@ -23,6 +23,10 @@ ezid:
   password: apitest
 marmite:
   url: http://mdproc.library.upenn.edu:9292
+image_server:
+  url: https://serverless_iiif.library.upenn.edu
+  prefix: iiif/2
+  profile: http://iiif.io/api/image/2/level2.json
 
 # File Storage
 minio: &minio
@@ -59,13 +63,6 @@ migration:
   colenda_url: https://colenda-dev.library.upenn.edu
 
 # Item/Asset Resource Configuration
-iiif:
-  image_server:
-    url: 'https://serverless_iiif.libary.upenn.edu'
-    profile: 'http://iiif.io/api/image/2/level2.json'
-  manifest:
-    base_url: 'https://colenda.library.upenn.edu/items/'
-    item_link_base_url: 'https://colenda.library.upenn.edu/catalog/'
 publish:
   colenda:
     base_url: https://colenda.library.upenn.edu

@@ -23,6 +23,10 @@ marmite:
   url: http://mdproc.library.upenn.edu:9292
 honeybadger:
   api_key: <%= DockerSecrets.lookup(:honeybadger_api_key) %>
+image_server:
+  url: https://iiif-images-staging.library.upenn.edu
+  prefix: iiif/2
+  profile: http://iiif.io/api/image/2/level2.json
 
 # File Storage
 aws: &aws
@@ -74,13 +78,6 @@ migration:
 # Item/Asset Resource Configuration
 ezid_metadata_update:
   skip: true
-iiif:
-  image_server:
-    url: 'https://iiif-images-staging.library.upenn.edu/iiif/2'
-    profile: 'http://iiif.io/api/image/2/level2.json'
-  manifest:
-    base_url: 'https://colenda-dev.library.upenn.edu/items/'
-    item_link_base_url: 'https://colenda-dev.library.upenn.edu/catalog/'
 publish:
   colenda:
     base_url: https://colenda-dev.library.upenn.edu

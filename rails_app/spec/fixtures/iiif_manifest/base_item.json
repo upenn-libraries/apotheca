@@ -38,14 +38,14 @@
               "@type":"oa:Annotation",
               "motivation":"sc:painting",
               "resource": {
-                "@id": "https://serverless_iiif.libary.upenn.edu/f2f6368b-bcc8-41b6-9981-4d9fb13ed630%2Faccess/full/!200,200/0/default.jpg",
+                "@id": "https://serverless_iiif.library.upenn.edu/iiif/2/f2f6368b-bcc8-41b6-9981-4d9fb13ed630%2Faccess/full/!200,200/0/default.jpg",
                 "@type": "dctypes:Image",
                 "format": "image/jpeg",
                 "width": 400,
                 "height": 238,
                 "service": {
                   "@context": "http://iiif.io/api/image/2/context.json",
-                  "@id": "https://serverless_iiif.libary.upenn.edu/f2f6368b-bcc8-41b6-9981-4d9fb13ed630%2Faccess",
+                  "@id": "https://serverless_iiif.library.upenn.edu/iiif/2/f2f6368b-bcc8-41b6-9981-4d9fb13ed630%2Faccess",
                   "profile": "http://iiif.io/api/image/2/level2.json"
                 }
               },
@@ -71,14 +71,14 @@
               "@type": "oa:Annotation",
               "motivation": "sc:painting",
               "resource":{
-                "@id": "https://serverless_iiif.libary.upenn.edu/50e168dd-992b-4de4-b7c2-5e0e61b37d6a%2Faccess/full/!200,200/0/default.jpg",
+                "@id": "https://serverless_iiif.library.upenn.edu/iiif/2/50e168dd-992b-4de4-b7c2-5e0e61b37d6a%2Faccess/full/!200,200/0/default.jpg",
                 "@type": "dctypes:Image",
                 "format": "image/jpeg",
                 "width": 400,
                 "height": 238,
                 "service": {
                   "@context": "http://iiif.io/api/image/2/context.json",
-                  "@id": "https://serverless_iiif.libary.upenn.edu/50e168dd-992b-4de4-b7c2-5e0e61b37d6a%2Faccess",
+                  "@id": "https://serverless_iiif.library.upenn.edu/iiif/2/50e168dd-992b-4de4-b7c2-5e0e61b37d6a%2Faccess",
                   "profile": "http://iiif.io/api/image/2/level2.json"
                 }
               },
