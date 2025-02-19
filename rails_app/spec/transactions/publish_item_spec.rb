@@ -37,7 +37,7 @@ describe PublishItem do
 
       it 'publishes item' do
         result
-        expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
+        expect(a_request(:post, "#{Settings.publish.colenda.base_url}/items")).to have_been_made
       end
 
       it 'adds expected publishing attributes' do
@@ -73,7 +73,7 @@ describe PublishItem do
 
       it 'publishes item' do
         result
-        expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
+        expect(a_request(:post, "#{Settings.publish.colenda.base_url}/items")).to have_been_made
       end
 
       it 'adds expected publishing attributes' do

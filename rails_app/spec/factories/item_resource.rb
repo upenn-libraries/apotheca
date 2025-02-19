@@ -62,25 +62,28 @@ FactoryBot.define do
       last_published_at { DateTime.current }
     end
 
-    trait :with_iiif_manifest do
+    trait :with_derivatives do
       transient do
         iiif_manifest { true }
+        pdf { true }
       end
 
       after(:create) do |item, evaluator|
-        if evaluator.iiif_manifest
+        derivative_service = DerivativeService::Item::Derivatives.new(ItemChangeSet.new(item))
 
-          uploaded_file = ActionDispatch::Http::UploadedFile.new(
-            tempfile: File.new(Rails.root.join('spec/fixtures/iiif_manifest/base_item.json')),
-            filename: 'iiif_manifest', type: 'iiif_manifest'
-          )
+        %w[iiif_manifest pdf].each do |type|
+          next unless evaluator.send(type) # Check if derivative was requested.
+
+          derivative = derivative_service.send(type)
+
+          next if derivative.nil? # Return early if no derivative could be generated.
+
           derivative_storage = Valkyrie::StorageAdapter.find(:derivatives)
 
-          file = derivative_storage.upload(file: uploaded_file, resource: item, original_filename: 'iiif_manifest')
+          file = derivative_storage.upload(file: derivative, resource: item, original_filename: type)
 
-          item.derivatives << DerivativeResource.new(file_id: file.id, mime_type: 'application/json',
-                                                     type: 'iiif_manifest',
-                                                     generated_at: DateTime.current)
+          item.derivatives << DerivativeResource.new(file_id: file.id, mime_type: derivative.mime_type,
+                                                     size: derivative.size, type: type, generated_at: DateTime.current)
         end
       end
     end

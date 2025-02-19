@@ -22,11 +22,11 @@ module DerivativeService
       # @return [NilClass] if no images are present
       # @return [DerivativeFile] file containing iiif v2 manifest json
       def v2_manifest
-        return nil unless arranged_assets.any?(&:image?)
+        return nil unless item.arranged_assets.any?(&:image?)
 
         manifest = IIIF::Presentation::Manifest.new(
           {
-            '@id' => uri(base_uri, 'manifest'),
+            '@id' => colenda.manifest_url(item.unique_identifier),
             'label' => item.descriptive_metadata.title.pluck(:value).join('; '),
             'attribution' => 'Provided by the University of Pennsylvania Libraries.',
             'viewing_hint' => item.structural_metadata.viewing_hint || 'individuals',
@@ -36,12 +36,10 @@ module DerivativeService
           }
         )
 
-        sequence = IIIF::Presentation::Sequence.new(
-          '@id' => uri(base_uri, 'sequence/normal'),
-          'label' => 'Current order'
-        )
+        sequence = IIIF::Presentation::Sequence.new('@id' => "#{item_url}/sequence/normal", 'label' => 'Current order')
+        sequence['rendering'] = [pdf_file] if pdf_file
 
-        arranged_assets.select(&:image?).map.with_index do |asset, i|
+        item.arranged_assets.select(&:image?).map.with_index do |asset, i|
           raise MissingDerivative, "Derivatives missing for #{asset.original_filename}" unless asset.access
 
           index = i + 1
@@ -71,15 +69,14 @@ module DerivativeService
       def thumbnail
         return {} unless item.thumbnail&.access
 
-        filepath = item.thumbnail.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
-        thumbnail_url = uri(image_server_url, CGI.escape(filepath))
+        thumbnail_url = iiif_image_url(item.thumbnail)
 
         {
           "@id": "#{thumbnail_url}/full/!200,200/0/default.jpg",
           "service": {
             "@context": 'http://iiif.io/api/image/2/context.json',
             "@id": thumbnail_url,
-            "profile": image_server_profile
+            "profile": image_server.profile
           }
         }
       end
@@ -89,9 +86,7 @@ module DerivativeService
         metadata = [
           {
             label: 'Available Online',
-            value: [
-              uri(Settings.iiif.manifest.item_link_base_url, item.unique_identifier.gsub('ark:/', '').tr('/', '-'))
-            ]
+            value: [colenda.public_item_url(item.unique_identifier)]
           }
         ]
 
@@ -117,28 +112,23 @@ module DerivativeService
         metadata
       end
 
-      def arranged_assets
-        @arranged_assets ||= item.arranged_assets
-      end
-
       # Returns canvas with one annotated image. The canvas and image size are the same.
       #
       # @param asset [AssetResource] asset displayed on canvas
       # @param index [Integer] canvas number, used to create identifiers
       def canvas(asset:, index:)
         canvas = IIIF::Presentation::Canvas.new
-        canvas['@id'] = uri(base_uri, "canvas/p#{index}")
+        canvas['@id'] = item_url + "/canvas/p#{index}"
         canvas.label  = asset.label || "p. #{index}"
         canvas.height = asset.technical_metadata.height
         canvas.width  = asset.technical_metadata.width
 
         annotation = IIIF::Presentation::Annotation.new
-        filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
 
         # By providing width, height and profile, we avoid the IIIF gem fetching the data again.
         annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(
-          service_id: uri(image_server_url, CGI.escape(filepath)), width: asset.technical_metadata.width,
-          height: asset.technical_metadata.height, profile: image_server_profile
+          service_id: iiif_image_url(asset), width: asset.technical_metadata.width,
+          height: asset.technical_metadata.height, profile: image_server.profile
         )
         annotation['on'] = canvas['@id']
 
@@ -161,53 +151,59 @@ module DerivativeService
       def range(index:, label:, annotations:)
         subranges = annotations.map.with_index do |annotation, subrange_index|
           IIIF::Presentation::Range.new(
-            '@id' => uri(base_uri, "range/r#{index}-#{subrange_index + 1}"),
+            '@id' => item_url + "/range/r#{index}-#{subrange_index + 1}",
             'label' => annotation,
-            'canvases' => [uri(base_uri, "canvas/p#{index}")]
+            'canvases' => [item_url + "/canvas/p#{index}"]
           )
         end
 
         IIIF::Presentation::Range.new(
-          '@id' => uri(base_uri, "range/r#{index}"),
+          '@id' => item_url + "/range/r#{index}",
           'label' => label,
           'ranges' => subranges
         )
       end
 
-      def iiif_image_url(asset)
-        raise "#{asset.original_filename} is missing access copy" unless asset.access?
+      def pdf_file
+        return unless DerivativeService::Item::PDFGenerator.new(item.object).pdfable?
 
-        uri(image_server_url, filepath)
+        {
+          '@id' => colenda.pdf_url(item.unique_identifier),
+          'label' => 'Download PDF',
+          'format' => 'application/pdf'
+        }
       end
 
-      # TODO: We could make the asset download path configurable in the future.
       def download_original_file(asset)
         {
-          '@id' => uri(base_uri, "assets/#{asset.id}/original"),
+          '@id' => colenda.original_url(item.unique_identifier, asset.id),
           'label' => "Original File - #{asset.technical_metadata.size.to_fs(:human_size)}",
           'format' => asset.technical_metadata.mime_type
         }
       end
 
-      def image_server_url
-        Settings.iiif.image_server.url
+      # URL to image in IIIF Image service.
+      #
+      # @param [AssetResource] asset
+      def iiif_image_url(asset)
+        raise "#{asset.original_filename} is missing access copy" unless asset.access
+
+        filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
+
+        URI.join(image_server.url, CGI.escape(filepath)).to_s
       end
 
-      # Profile that image server supports.
-      def image_server_profile
-        Settings.iiif.image_server.profile
+      # Image server configuration.
+      def image_server
+        Settings.iiif.image_server
       end
 
-      def base_uri
-        @base_uri ||= uri(Settings.iiif.manifest.base_url, item.unique_identifier)
+      def item_url
+        @item_url ||= colenda.item_url(item.unique_identifier)
       end
 
-      # Helper method to append path to url.
-      def uri(base_url, path)
-        base_url = "#{base_url}/" unless base_url.end_with?('/') # Add trailing slash to url.
-        path = path[1..] if path.starts_with?('/') # Remove starting slash from path.
-
-        base_url + path
+      def colenda
+        @colenda ||= PublishingService::Endpoint.colenda
       end
     end
   end

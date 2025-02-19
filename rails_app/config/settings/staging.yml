@@ -82,5 +82,14 @@ iiif:
     base_url: 'https://colenda-dev.library.upenn.edu/items/'
     item_link_base_url: 'https://colenda-dev.library.upenn.edu/catalog/'
 publish:
-  url: https://colenda-dev.library.upenn.edu
-  token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>
+  colenda:
+    base_url: https://colenda-dev.library.upenn.edu
+    token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>
+    item_path: items
+    asset_path: assets
+    public_item_path: catalog
+    pdf_path: pdf
+    original_path: original
+    manifest_path: manifest
+
+

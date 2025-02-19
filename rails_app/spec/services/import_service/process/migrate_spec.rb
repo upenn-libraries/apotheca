@@ -199,7 +199,7 @@ describe ImportService::Process::Migrate do
 
       it 'makes publishing request' do
         result
-        expect(a_request(:post, "#{Settings.publish.url}/items")).to have_been_made
+        expect(a_request(:post, "#{Settings.publish.colenda.base_url}/items")).to have_been_made
       end
 
       it 'sets publishing values' do

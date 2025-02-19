@@ -17,7 +17,7 @@ class DeleteItem
     resource = attributes[:resource]
 
     if resource.published
-      client = PublishingService::Client.new(**Settings.publish)
+      client = PublishingService::Client.new(PublishingService::Endpoint.colenda)
       client.unpublish(resource)
     end
 
