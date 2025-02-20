@@ -445,7 +445,8 @@ describe ImportService::Process::Update do
         allow(generate_all_derivatives).to receive(:call).with(any_args).and_call_original
         result
         expect(generate_all_derivatives).to have_received(:call).with(id: updated_item.id.to_s,
-                                                                      updated_by: 'importer@example.com')
+                                                                      updated_by: 'importer@example.com',
+                                                                      republish: false)
       end
     end
   end

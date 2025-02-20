@@ -96,7 +96,7 @@ module ImportService
             end
 
             if regenerate
-              regenerate_result = GenerateAllDerivatives.new.call(id: i.id.to_s, updated_by: imported_by)
+              regenerate_result = GenerateAllDerivatives.new.call(id: i.id.to_s, updated_by: imported_by, republish: false)
               return regenerate_result unless regenerate_result.success?
             end
 
