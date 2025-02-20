@@ -13,7 +13,8 @@ class Ability
     can [:read], Import
 
     if user.viewer?
-      can :read, [ItemResource, AssetResource]
+      # viewer is the base level role, so all users can read the following
+      can :read, [ItemResource, AssetResource, Report]
     elsif user.editor?
       can %i[read create update], AssetResource
       can %i[read create update publish unpublish reorder_assets refresh_ils_metadata regenerate_all_derivatives],
