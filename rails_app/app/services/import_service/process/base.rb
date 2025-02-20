@@ -8,7 +8,7 @@ module ImportService
       include Dry::Monads[:result]
 
       attr_reader :errors, :imported_by, :descriptive_metadata, :structural_metadata, :publish,
-                  :asset_set, :unique_identifier, :human_readable_name, :internal_notes, :thumbnail, :item_attrs
+                  :asset_set, :unique_identifier, :human_readable_name, :internal_notes, :thumbnail, :item_args
 
       # Initializes object to conduct import. For the time being this class will only import Items.
       #
@@ -30,7 +30,7 @@ module ImportService
 
         # Extracting top-level item attributes in a Hash, because we need to know if a key was present or not.
         # @todo Perhaps other values can be added to this hash, a refactor is probably in order.
-        @item_attrs           = args.slice(:ocr_type)
+        @item_args            = args.slice(:ocr_type)
         @errors               = []
       end
 
@@ -172,7 +172,7 @@ module ImportService
 
       # @return [Hash{Symbol->Array<String> | String}]
       def ocr_options
-        { ocr_type: item_attrs[:ocr_type], ocr_language: ocr_language, viewing_direction: viewing_direction }
+        { ocr_type: item_args[:ocr_type], ocr_language: ocr_language, viewing_direction: viewing_direction }
       end
 
       # @return [String, nil]

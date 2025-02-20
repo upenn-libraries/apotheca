@@ -87,7 +87,6 @@ describe ImportService::Process::Update do
     end
 
     context 'when updating an item\'s descriptive metadata' do
-      let(:item) { persist(:item_resource) }
       let(:process) do
         build(
           :import_process, :update,
@@ -132,6 +131,15 @@ describe ImportService::Process::Update do
 
       it 'does not publish item' do
         expect(updated_item).to have_attributes(published: false, last_published_at: nil, first_published_at: nil)
+      end
+
+      it 'does not regenerates all asset derivatives' do
+        generate_all_derivatives = GenerateAllDerivatives.new
+        allow(GenerateAllDerivatives).to receive(:new).and_return(generate_all_derivatives)
+        allow(generate_all_derivatives).to receive(:call).with(any_args).and_call_original
+        result
+        expect(generate_all_derivatives).not_to have_received(:call).with(id: updated_item.id.to_s,
+                                                                          updated_by: 'importer@example.com')
       end
     end
 
@@ -429,6 +437,65 @@ describe ImportService::Process::Update do
 
       it 'generates ocr derivatives' do
         expect(updated_assets.first.derivatives.map(&:type)).to include('textonly_pdf', 'hocr', 'text')
+      end
+
+      it 'regenerates all asset derivatives' do
+        generate_all_derivatives = GenerateAllDerivatives.new
+        allow(GenerateAllDerivatives).to receive(:new).and_return(generate_all_derivatives)
+        allow(generate_all_derivatives).to receive(:call).with(any_args).and_call_original
+        result
+        expect(generate_all_derivatives).to have_received(:call).with(id: updated_item.id.to_s,
+                                                                      updated_by: 'importer@example.com')
+      end
+    end
+  end
+
+  describe '#regenerate_asset_derivatives?' do
+    subject(:regenerate_asset_derivatives) { process.send(:regenerate_asset_derivatives?) }
+
+    let(:process) do
+      build(:import_process, :update, unique_identifier: item.unique_identifier)
+    end
+
+    context 'when ocr_type is nil' do
+      let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_asset) }
+
+      context 'when ocr_type not updated' do
+        it { is_expected.to be false }
+      end
+
+      context 'when ocr_type updated' do
+        let(:process) do
+          build(:import_process, :update, :printed, unique_identifier: item.unique_identifier)
+        end
+
+        it { is_expected.to be true }
+      end
+    end
+
+    context 'when ocr_type is printed' do
+      let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_asset, :printed) }
+
+      it 'when language nor viewing direction are changed' do
+        expect(regenerate_asset_derivatives).to be false
+      end
+
+      context 'when language is changed' do
+        let(:process) do
+          build(:import_process, :update, unique_identifier: item.unique_identifier,
+                                          metadata: { language: [{ value: 'French' }] })
+        end
+
+        it { is_expected.to be true }
+      end
+
+      context 'when viewing_direction is changed' do
+        let(:process) do
+          build(:import_process, :update, unique_identifier: item.unique_identifier,
+                                          structural: { viewing_direction: 'left-to-right' })
+        end
+
+        it { is_expected.to be true }
       end
     end
   end

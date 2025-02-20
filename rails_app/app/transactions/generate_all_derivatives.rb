@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-#
+
 # Transaction to regenerate derivatives for all of an Item's child Assets and then optionally
 # republishing the Item. A republish will only occur if the Item has been previously published.
 # Publishing the item will generate the item-level derivatives.
@@ -14,7 +14,7 @@ class GenerateAllDerivatives
   def generate_all_asset_derivatives(resource:, updated_by:, republish: true)
     generate_derivatives = GenerateDerivatives.new
 
-    resource.asset_ids.each do |asset_id|
+    Array.wrap(resource.asset_ids).each do |asset_id|
       result = generate_derivatives.call(id: asset_id.to_s, updated_by: updated_by)
 
       return result if result.failure?
