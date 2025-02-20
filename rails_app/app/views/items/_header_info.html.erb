@@ -7,7 +7,7 @@
   <% component.with_field('Published') do %>
     <% if @item.published %>
       <span>Yes</span>
-      <a href="<%= URI.join(Settings.publish.url, "catalog/#{@item.unique_identifier.gsub('ark:/', '').tr('/', '-')}").to_s %>"
+      <a href="<%= PublishingService::Endpoint.colenda.public_item_url(@item.unique_identifier) %>"
          target="_blank"
          class="link-underline link-underline-opacity-0">
         (View in Colenda)

@@ -47,12 +47,14 @@ describe DeleteItem do
 
       it 'makes unpublish request' do
         result
-        expect(a_request(:delete, "#{Settings.publish.url}/items/#{item.unique_identifier}")).to have_been_made
+        expect(
+          a_request(:delete, "#{Settings.publish.colenda.base_url}/items/#{item.unique_identifier}")
+        ).to have_been_made
       end
     end
 
     context 'when item has iiif manifest' do
-      let!(:item) { persist(:item_resource, :with_iiif_manifest) }
+      let!(:item) { persist(:item_resource, :with_full_assets_all_arranged, :with_derivatives) }
 
       it 'deletes derivatives' do
         expect(Valkyrie::StorageAdapter.find_by(id: item.derivatives.first.file_id)).to be_present

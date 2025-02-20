@@ -26,7 +26,6 @@ describe DerivativeService::Item::IIIFManifestGenerator do
           }
         )
       end
-      let(:expected_manifest) { JSON.parse(file_fixture('iiif_manifest/base_item.json').read) }
 
       it 'includes top level attributes' do
         expect(json).to include(
@@ -50,11 +49,11 @@ describe DerivativeService::Item::IIIFManifestGenerator do
 
       it 'includes thumbnail' do
         expect(json['thumbnail']).to a_hash_including(
-          '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/')
+          '@id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2')
                      .and(ending_with('/full/!200,200/0/default.jpg')),
           'service' => {
             '@context' => 'http://iiif.io/api/image/2/context.json',
-            '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/'),
+            '@id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2'),
             'profile' => 'http://iiif.io/api/image/2/level2.json'
           }
         )
@@ -79,6 +78,14 @@ describe DerivativeService::Item::IIIFManifestGenerator do
         expect(sequence['canvases'].count).to be 2
       end
 
+      it 'includes rendering in sequence' do
+        expect(json['sequences'][0]['rendering']).to include(
+          '@id' => starting_with('https://colenda.library.upenn.edu/items'),
+          'label' => 'Download PDF',
+          'format' => 'application/pdf'
+        )
+      end
+
       it 'includes canvases in sequence' do
         canvases = json['sequences'][0]['canvases']
         expect(canvases[0]).to include(
@@ -89,7 +96,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
           'images' => contain_exactly(
             a_hash_including(
               'resource' => a_hash_including(
-                '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/'),
+                '@id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2'),
                 'width' => 400,
                 'height' => 238
               )
@@ -109,7 +116,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
           'images' => contain_exactly(
             a_hash_including(
               'resource' => a_hash_including(
-                '@id' => starting_with('https://serverless_iiif.libary.upenn.edu/'),
+                '@id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2'),
                 'width' => 400,
                 'height' => 238
               )

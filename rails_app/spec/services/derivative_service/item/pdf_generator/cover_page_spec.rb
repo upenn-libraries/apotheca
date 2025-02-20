@@ -19,7 +19,7 @@ describe DerivativeService::Item::PDFGenerator::CoverPage do
     end
 
     it 'adds Colenda link to cover page' do
-      url = "#{Settings.iiif.manifest.item_link_base_url}#{item.unique_identifier.gsub('ark:/', '').tr('/', '-')}"
+      url = "https://colenda.library.upenn.edu/catalog/#{item.unique_identifier.gsub('ark:/', '').tr('/', '-')}"
       expect(document.pages.first.contents).to match(/#{url}/)
     end
   end

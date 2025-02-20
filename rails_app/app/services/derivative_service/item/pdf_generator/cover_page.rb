@@ -108,7 +108,7 @@ module DerivativeService
 
         # @return [String (frozen)]
         def colenda_url
-          "#{Settings.iiif.manifest.item_link_base_url}#{item.unique_identifier.gsub('ark:/', '').tr('/', '-')}"
+          PublishingService::Endpoint.colenda.public_item_url(item.unique_identifier)
         end
 
         # @return [File]
