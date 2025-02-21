@@ -45,6 +45,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
               role: [{ value: 'printer' }] }
           ],
           collection: [{ value: 'Edgar Fahs Smith Memorial Collection (University of Pennsylvania)' }],
+          physical_format: [{ uri: 'http://vocab.getty.edu/aat/300028051', value: 'books' }],
           physical_location: [{ value: 'Kislak Center for Special Collections, Rare Books and Manuscripts, E.F. Smith Collection, Folio TN664 .E7 1598' }],
           title: [
             { value: 'Beschreibung aller fürnemisten Mineralischen Ertzt vnnd Berckwercksarten : wie dieselbigen vnd eine jede in Sonderheit jrer Natur vnd Eygenschafft nach, auff alle Metalla probirt, vnd im kleinen Fewr sollen versucht werden, mit Erklärung etlicher fürnemer nützlicher Schmeltzwerck im grossen Feuwer, auch Scheidung Goldts, Silbers, vnd anderer Metalln, sampt einem Bericht des Kupffer Saigerns, Messing brennens, vnd Salpeter Siedens, auch aller saltzigen Minerischen proben, vnd was denen allen anhengig : in fünff Bücher verfast, dessgleichen zuvorn niemals in Druck kommen ... : auffs newe an vielen Orten mit besserer Aussführung, vnd mehreren Figurn erklärt' }
@@ -87,6 +88,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
             { value: 'Kislak Center for Special Collections, Rare Books and Manuscripts, Manuscripts, Folio GrC St812 Ef512g' }
           ],
           physical_format: [
+            { value: 'manuscripts (documents)', uri: 'http://vocab.getty.edu/aat/300028569' },
             { value: 'Chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
             { value: 'Manuscripts, Latin' },
             { value: 'Manuscripts, Renaissance' }
