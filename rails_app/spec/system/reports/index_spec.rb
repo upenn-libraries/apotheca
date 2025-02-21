@@ -43,7 +43,7 @@ describe 'Report Index Page' do
     it 'links to the report file' do
       within('#reports tbody') do
         successful_tr = all('tr').last
-        expect(successful_tr).to have_link(successful_report.report_json.filename.to_s,
+        expect(successful_tr).to have_link(successful_report.file.filename.to_s,
                                            href: %r{/rails/active_storage/blobs})
       end
     end

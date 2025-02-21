@@ -43,10 +43,10 @@
       <td><%= report.state.titleize %></td>
       <td><%= distance_of_time(report.duration) if report.duration %></td>
       <td><%= report.generated_at&.to_fs(:display) %></td>
-      <td><%= number_to_human_size(report.report_json&.byte_size) if report.report_json.attached? %></td>
+      <td><%= number_to_human_size(report.file&.byte_size) if report.file.attached? %></td>
       <td>
-        <% if report.report_json.attached? %>
-          <%= link_to(report.report_json.filename, report.report_json, disposition: 'attachment',
+        <% if report.file.attached? %>
+          <%= link_to(report.file.filename, report.file, disposition: 'attachment',
                       title: "Download file generated at #{report.generated_at}",
                       class: 'card-link col-2 text-center') %>
         <% end %>
