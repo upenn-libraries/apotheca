@@ -4,7 +4,6 @@ FactoryBot.define do
   factory :report do
     # Replace with a valid value if REPORT_TYPES is defined
     report_type { 'repository_growth' }
-    # Should the default state be queued? BulkExport is SUCCESS
     state { Report::STATE_QUEUED }
 
     trait :queued do
@@ -33,7 +32,6 @@ FactoryBot.define do
         report.file.attach(
           io: StringIO.new('{"example": "data"}'),
           filename: 'report.json',
-          # TODO: do some research on whether the activestorage blob can return mime type
           content_type: 'application/json'
         )
       end
