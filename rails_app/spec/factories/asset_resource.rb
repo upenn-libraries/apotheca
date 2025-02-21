@@ -103,7 +103,7 @@ FactoryBot.define do
     end
 
     # **This trait is not meant to be used directly!!**
-    # To add a file to an asset_resource use the file specific traits below: with_image_file, with_pdf_file, etc.
+    # To add a file to an asset_resource use the file specific traits above: with_image_file, with_pdf_file, etc.
     trait :with_preservation_file do
       transient do
         preservation_file { nil }
