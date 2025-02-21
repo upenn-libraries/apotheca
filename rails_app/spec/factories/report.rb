@@ -6,7 +6,6 @@ FactoryBot.define do
     report_type { 'repository_growth' }
     # Should the default state be queued? BulkExport is SUCCESS
     state { Report::STATE_QUEUED }
-    duration { rand(10..300) }
 
     trait :queued do
       state { Report::STATE_QUEUED }
@@ -29,6 +28,7 @@ FactoryBot.define do
     trait :successful do
       state { Report::STATE_SUCCESSFUL }
       generated_at { Time.current }
+      duration { rand(10..300) }
       after(:build) do |report|
         report.file.attach(
           io: StringIO.new('{"example": "data"}'),
