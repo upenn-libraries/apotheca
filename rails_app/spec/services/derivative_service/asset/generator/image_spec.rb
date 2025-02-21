@@ -3,7 +3,7 @@
 require_relative 'base'
 
 describe DerivativeService::Asset::Generator::Image do
-  let(:resource) { persist(:asset_resource, :with_preservation_file) }
+  let(:resource) { persist(:asset_resource, :with_image_file) }
   let(:generator) { described_class.new(AssetChangeSet.new(resource, ocr_type: 'printed', ocr_language: ['eng'])) }
   let(:ocr_types) { described_class::OCR::TYPE_MAP.keys }
 
@@ -74,7 +74,7 @@ describe DerivativeService::Asset::Generator::Image do
 
     context 'when OCR text has not been extracted from the asset' do
       let(:resource) do
-        persist(:asset_resource, :with_preservation_file, preservation_file: 'trade_card/original/back.tif')
+        persist(:asset_resource, :with_image_file, preservation_file: 'trade_card/original/back.tif')
       end
 
       it { is_expected.to be_nil }
@@ -106,7 +106,7 @@ describe DerivativeService::Asset::Generator::Image do
 
     context 'when OCR text has not been extracted from the asset' do
       let(:resource) do
-        persist(:asset_resource, :with_preservation_file, preservation_file: 'trade_card/original/back.tif')
+        persist(:asset_resource, :with_image_file, preservation_file: 'trade_card/original/back.tif')
       end
 
       it { is_expected.to be_nil }
@@ -138,7 +138,7 @@ describe DerivativeService::Asset::Generator::Image do
 
     context 'when OCR text has not been extracted from the asset' do
       let(:resource) do
-        persist(:asset_resource, :with_preservation_file, preservation_file: 'trade_card/original/back.tif')
+        persist(:asset_resource, :with_image_file, preservation_file: 'trade_card/original/back.tif')
       end
 
       it { is_expected.to be_nil }

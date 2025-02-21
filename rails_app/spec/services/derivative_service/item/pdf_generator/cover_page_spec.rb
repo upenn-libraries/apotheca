@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DerivativeService::Item::PDFGenerator::CoverPage do
-  let(:asset) { persist(:asset_resource, :with_preservation_file, :with_derivatives) }
+  let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
   let(:item) { persist(:item_resource, :with_faker_metadata, asset_ids: [asset.id], thumbnail_asset_id: asset.id) }
   let(:cover_page) { described_class.new(item) }
   let(:document) { HexaPDF::Document.new }

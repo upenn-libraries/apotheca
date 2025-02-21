@@ -4,7 +4,7 @@ require 'system_helper'
 
 describe 'Asset Show Page' do
   let(:user) { create(:user, role) }
-  let(:asset) { persist(:asset_resource, :with_preservation_file) }
+  let(:asset) { persist(:asset_resource, :with_image_file) }
   let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
 
   before do

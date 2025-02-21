@@ -133,7 +133,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
     end
 
     context 'when item contains image assets that are missing derivatives' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file) }
+      let(:asset) { persist(:asset_resource, :with_image_file) }
       let(:item) do
         persist(:item_resource, asset_ids: [asset.id], structural_metadata: { arranged_asset_ids: [asset.id] })
       end

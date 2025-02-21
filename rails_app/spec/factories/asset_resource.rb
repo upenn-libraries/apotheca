@@ -15,6 +15,8 @@ FactoryBot.define do
     end
 
     trait :with_image_file do
+      with_preservation_file
+
       technical_metadata do
         {
           size: 291_455,
@@ -33,6 +35,8 @@ FactoryBot.define do
     end
 
     trait :with_pdf_file do
+      with_preservation_file
+
       original_filename { 'dummy.pdf' }
 
       technical_metadata do
@@ -49,6 +53,8 @@ FactoryBot.define do
     end
 
     trait :with_audio_file do
+      with_preservation_file
+
       technical_metadata do
         {
           mime_type: 'audio/x-wave',
@@ -64,6 +70,8 @@ FactoryBot.define do
     end
 
     trait :with_video_file do
+      with_preservation_file
+
       technical_metadata do
         {
           mime_type: 'video/quicktime',
@@ -80,11 +88,25 @@ FactoryBot.define do
       end
     end
 
-    # Defaults to using image file.
-    trait :with_preservation_file do
-      with_image_file
-
+    trait :with_preservation_backup do
       transient do
+        preservation_backup { true }
+      end
+    end
+
+    trait :with_derivatives do
+      transient do
+        access { true }
+        thumbnail { true }
+        textonly_pdf { true }
+      end
+    end
+
+    # **This trait is not meant to be used directly!!**
+    # To add a file to an asset_resource use the file specific traits below: with_image_file, with_pdf_file, etc.
+    trait :with_preservation_file do
+      transient do
+        preservation_file { nil }
         preservation_backup { false }
         access { false }
         thumbnail { false }
@@ -136,20 +158,6 @@ FactoryBot.define do
           asset.derivatives << DerivativeResource.new(file_id: file.id, mime_type: derivative.mime_type,
                                                       size: derivative.size, type: type, generated_at: DateTime.current)
         end
-      end
-    end
-
-    trait :with_preservation_backup do
-      transient do
-        preservation_backup { true }
-      end
-    end
-
-    trait :with_derivatives do
-      transient do
-        access { true }
-        thumbnail { true }
-        textonly_pdf { true }
       end
     end
   end

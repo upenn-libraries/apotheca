@@ -3,7 +3,7 @@
 require_relative 'base'
 
 describe DerivativeService::Asset::Generator::Audio do
-  let(:resource) { persist(:asset_resource, :with_preservation_file, :with_audio_file) }
+  let(:resource) { persist(:asset_resource, :with_audio_file) }
   let(:generator) { described_class.new(AssetChangeSet.new(resource)) }
 
   it_behaves_like 'a DerivativeService::Asset::Generator::Base'

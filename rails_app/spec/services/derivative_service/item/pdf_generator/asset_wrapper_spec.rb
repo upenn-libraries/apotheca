@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DerivativeService::Item::PDFGenerator::AssetWrapper do
-  let(:asset) { persist(:asset_resource, :with_preservation_file, :with_derivatives, :with_metadata) }
+  let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives, :with_metadata) }
   let(:asset_wrapper) { described_class.new(asset) }
 
   describe '#image_dpi' do
@@ -26,7 +26,7 @@ describe DerivativeService::Item::PDFGenerator::AssetWrapper do
     end
 
     context 'when textonly_pdf not present' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_metadata) }
+      let(:asset) { persist(:asset_resource, :with_image_file, :with_metadata) }
 
       it 'returns nil' do
         expect(asset_wrapper.textonly_pdf).to be_nil

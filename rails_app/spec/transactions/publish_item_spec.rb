@@ -51,7 +51,7 @@ describe PublishItem do
       include_context 'with successful publish request'
 
       let(:item) do
-        asset = persist(:asset_resource, :with_preservation_file, :with_pdf_file)
+        asset = persist(:asset_resource, :with_pdf_file)
         persist(:item_resource, asset_ids: [asset.id], structural_metadata: { arranged_asset_ids: [asset.id] })
       end
 
