@@ -10,11 +10,10 @@ class Ability
     can %i[read create], BulkExport
     can %i[update destroy cancel regenerate], BulkExport, created_by: user
     can %i[read csv], BulkImport
-    can [:read], Import
+    can [:read], [Import, Report]
 
     if user.viewer?
-      # viewer is the base level role, so all users can read the following
-      can :read, [ItemResource, AssetResource, Report]
+      can :read, [ItemResource, AssetResource]
     elsif user.editor?
       can %i[read create update], AssetResource
       can %i[read create update publish unpublish reorder_assets refresh_ils_metadata regenerate_all_derivatives],
