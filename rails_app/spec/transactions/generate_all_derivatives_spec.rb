@@ -52,7 +52,7 @@ describe GenerateAllDerivatives do
         end
       end
 
-      it 'return failure' do
+      it 'returns failure' do
         expect(result).to be_a Dry::Monads::Failure
         expect(result.failure[:error]).to be :error_generating_derivatives
       end
