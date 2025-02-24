@@ -9,7 +9,7 @@
 
 <section class="my-4">
   <%= bootstrap_form_tag(url: reports_path, method: 'get') do |form| %>
-    <div class="row align-items-end justify-content-end">
+    <div class="row align-items-end">
       <div class="col-auto">
         <%= form.select 'per_page',
                         options_for_select(PerPage::PER_PAGE_OPTIONS, per_page_from_session(controller_name)),

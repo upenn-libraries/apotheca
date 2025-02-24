@@ -28,7 +28,8 @@ class Report < ApplicationRecord
   private
 
   # @return ActiveStorage::Filename
-  def filename
-    ActiveStorage::Filename.new("#{report_type}_#{generated_at&.strftime('%Y%m%d_%H%M%S')}")
+  def filename(content_type)
+    extension = Rack::Mime::MIME_TYPES.invert[content_type]
+    ActiveStorage::Filename.new("#{report_type}_#{generated_at&.strftime('%Y%m%d_%H%M%S')}#{extension}")
   end
 end
