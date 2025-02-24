@@ -28,9 +28,10 @@ class Report < ApplicationRecord
   private
 
   # @return ActiveStorage::Filename
-  def filename(content_type: 'application/json')
+  def filename(content_type)
     # Get extension based on content_type, will return something like '.json'
-    extension = Rack::Mime::MIME_TYPES.invert[content_type]
+    # Default to '.json' for now, as we expect this will be the initial format
+    extension = content_type ? Rack::Mime::MIME_TYPES.invert[content_type] : 'application/json'
     ActiveStorage::Filename.new("#{report_type}_#{generated_at&.strftime('%Y%m%d_%H%M%S')}#{extension}")
   end
 end
