@@ -29,6 +29,6 @@ class Report < ApplicationRecord
 
   # @return ActiveStorage::Filename
   def filename
-    ActiveStorage::Filename.new("#{report_type}_#{generated_at.strftime('%Y%m%d_%H%M%S')}")
+    ActiveStorage::Filename.new("#{report_type}_#{generated_at&.strftime('%Y%m%d_%H%M%S')}")
   end
 end
