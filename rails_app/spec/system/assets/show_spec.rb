@@ -26,7 +26,8 @@ describe 'Asset Show Page' do
     end
 
     it 'displays timestamps in the same timezone' do
-      expect(page).to have_text(asset.date_created.to_fs(:display), count: 2)
+      expect(page).to have_text(asset.date_created.to_fs(:display))
+      expect(page).to have_text(asset.date_updated.to_fs(:display))
     end
 
     it 'shows download button for preservation file' do
