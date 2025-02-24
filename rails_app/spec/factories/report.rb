@@ -29,11 +29,7 @@ FactoryBot.define do
       generated_at { Time.current }
       duration { rand(10..300) }
       after(:build) do |report|
-        report.file.attach(
-          io: StringIO.new('{"example": "data"}'),
-          filename: 'report.json',
-          content_type: 'application/json'
-        )
+        report.attach_file(io: StringIO.new('{"example": "data"}'), content_type: 'application/json')
       end
     end
   end

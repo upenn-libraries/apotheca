@@ -19,4 +19,16 @@ class Report < ApplicationRecord
     #
     # call `success!` if everything succeeds, rescue errors and call `failure!`
   end
+
+  # @param [IO] io
+  def attach_file(io:, content_type:)
+    file.attach(io: io, filename: filename, content_type: content_type)
+  end
+
+  private
+
+  # @return ActiveStorage::Filename
+  def filename
+    ActiveStorage::Filename.new("#{report_type}_#{generated_at.strftime('%Y%m%d_%H%M%S')}")
+  end
 end
