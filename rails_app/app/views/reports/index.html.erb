@@ -1,8 +1,6 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
-  <% component.with_breadcrumb(href: "/") do %>Home
-  <% end %>
-  <% component.with_breadcrumb(active: true) do %>Reports
-  <% end %>
+  <% component.with_breadcrumb(href: "/") { 'Home' } %>
+  <% component.with_breadcrumb(active: true) { 'Reports' } %>
 <% end %>
 
 <%= render(Header::Component.new) do |header| %>
@@ -18,7 +16,7 @@
                         label: 'Per Page'
         %>
       </div>
-      <div class="col-auto my-3"><%= form.submit 'Submit', name: nil, class: 'btn btn-primary' %></div>
+      <div class="col-auto my-3"><%= form.submit 'Apply', name: nil, class: 'btn btn-primary' %></div>
     </div>
   <% end %>
 </section>

@@ -27,7 +27,7 @@
         <% end %>
         <li class="nav-item">
           <a class="nav-link <%= 'active' if request.path.starts_with?(reports_path)  %>"
-          href="<%= reports_path %>">Reports</a>
+             href="<%= reports_path %>">Reports</a>
         </li>
         <% if can? :manage, User %>
           <li class="nav-item">
