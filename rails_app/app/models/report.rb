@@ -22,13 +22,14 @@ class Report < ApplicationRecord
 
   # @param [IO] io
   def attach_file(io:, content_type:)
-    file.attach(io: io, filename: filename, content_type: content_type)
+    file.attach(io: io, filename: filename(content_type), content_type: content_type)
   end
 
   private
 
   # @return ActiveStorage::Filename
-  def filename(content_type)
+  def filename(content_type: 'application/json')
+    # Get extension based on content_type, will return something like '.json'
     extension = Rack::Mime::MIME_TYPES.invert[content_type]
     ActiveStorage::Filename.new("#{report_type}_#{generated_at&.strftime('%Y%m%d_%H%M%S')}#{extension}")
   end
