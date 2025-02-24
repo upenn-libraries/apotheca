@@ -147,7 +147,7 @@ class ItemResource < Valkyrie::Resource
     pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
   end
 
-  # Converts languages found in metadata to a list of ISO 639-2 language codes. We return both 
+  # Converts languages found in metadata to a list of ISO 639-2 language codes. We return both
   # the bibliographic and terminological codes when present. Usually these
   # language codes are used when running OCR on images.
   #
