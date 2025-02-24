@@ -45,7 +45,7 @@ module MetadataExtractor
           # @param [String] control008 field
           # @return [Array<Hash>]
           def self.map_to_aat(leader, control008)
-            # @see {RULES}
+            # @see RULES
             RULES.filter_map do |rule|
               return rule[:term] if match(rule[:leader], leader) && match(rule[:control008], control008)
             end
