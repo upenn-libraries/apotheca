@@ -82,7 +82,7 @@ describe ImportService::Process::Create do
       end
 
       it 'creates expected Item' do
-        expect(item.human_readable_name).to eql 'Trade card; J. Rosenblatt & Co.'
+        expect(item).to have_attributes(human_readable_name: 'Trade card; J. Rosenblatt & Co.')
         expect(
           item.descriptive_metadata.collection.first.value
         ).to eql 'Arnold and Deanne Kaplan Collection of Early American Judaica (University of Pennsylvania)'
@@ -263,7 +263,7 @@ describe ImportService::Process::Create do
       end
     end
 
-    context 'when creating an item with multiple languages' do
+    context 'when creating a printed item with multiple languages' do
       let(:process) do
         build(:import_process, :create, :printed, :with_asset_metadata,
               metadata: { 'title' => [{ value: 'Trade card' }], 'language' => [{ value: 'English' }, { value: 'German' }] })
@@ -272,6 +272,10 @@ describe ImportService::Process::Create do
       it 'is successful' do
         expect(result).to be_a Dry::Monads::Success
         expect(item).to be_a ItemResource
+      end
+
+      it 'adds ocr_type' do
+        expect(item).to have_attributes(ocr_type: 'printed')
       end
 
       it 'generates OCR derivatives' do

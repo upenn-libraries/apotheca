@@ -75,7 +75,7 @@ module ImportService
           descriptive_metadata: descriptive_metadata,
           structural_metadata: structural_metadata.merge({ arranged_asset_ids: arranged_assets }),
           asset_ids: all_assets.map(&:id)
-        }
+        }.merge(item_args)
 
         CreateItem.new.call(item_attributes) do |result|
           result.success do |i|

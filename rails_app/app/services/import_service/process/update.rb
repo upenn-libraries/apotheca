@@ -77,7 +77,7 @@ module ImportService
           internal_notes: internal_notes,
           descriptive_metadata: descriptive_metadata,
           structural_metadata: structural_metadata
-        }.compact_blank
+        }.compact_blank.merge(item_args)
 
         if asset_set
           item_attributes[:structural_metadata] = item_attributes.fetch(:structural_metadata, {})
@@ -85,11 +85,19 @@ module ImportService
           item_attributes[:asset_ids] = Array.wrap(item.asset_ids) + created_assets.map(&:id)
         end
 
+        # Save response before updating item.
+        regenerate = regenerate_asset_derivatives?
+
         UpdateItem.new.call(item_attributes) do |result|
           result.success do |i|
             if asset_set.present?
               update_result = update_existing_assets
               return update_result unless update_result.success?
+            end
+
+            if regenerate
+              regenerate_result = GenerateAllDerivatives.new.call(id: i.id.to_s, updated_by: imported_by, republish: false)
+              return regenerate_result unless regenerate_result.success?
             end
 
             publish ? publish_item(i) : Success(i)
@@ -105,6 +113,18 @@ module ImportService
       end
 
       private
+
+      # Determines whether asset derivatives should be generated. Asset derivatives
+      # should be regenerated if the ocr_type, viewing_direction or language has changed.
+      def regenerate_asset_derivatives?
+        return false if item.ocr_type.nil? && item_args[:ocr_type].nil?
+        return true if descriptive_metadata.key?(:language) && item.language_codes.uniq.sort != ocr_language.uniq.sort
+        return true if item_args.key?(:ocr_type) && item_args[:ocr_type] != item.ocr_type
+        return true if structural_metadata.key?(:viewing_direction) &&
+                       structural_metadata[:viewing_direction] != item.structural_metadata.viewing_direction
+
+        false
+      end
 
       def existing_assets
         @existing_assets ||= query_service.find_many_by_ids(ids: item.asset_ids || [])

@@ -47,7 +47,6 @@ FactoryBot.define do
       end
       internal_notes { Faker::Lorem.sentences(number: 2) }
       unique_identifier { "ark:/#{Faker::Number.number(digits: 8)}/random" }
-      published { [true, false].sample }
       created_by { users.sample }
       updated_by { users.sample }
     end
