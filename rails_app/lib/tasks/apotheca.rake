@@ -70,6 +70,18 @@ namespace :apotheca do
     end
   end
 
+  desc 'Generate sample Reports'
+  task generate_reports: :environment do
+    sample_count = 5
+    report_states = Report.aasm.states.map(&:name)
+
+    # Ensure that at least one is successful
+    FactoryBot.create(:report, Report::STATE_SUCCESSFUL)
+    1.upto(sample_count - 1).each do
+      FactoryBot.create(:report, report_states.sample)
+    end
+  end
+
   desc 'Create preservation, derivative and working storage buckets for development and test environments'
   task create_buckets: :environment do
     configs = [

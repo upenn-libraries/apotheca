@@ -60,6 +60,8 @@ Rails.application.routes.draw do
 
   resources :events, only: [:index, :show]
 
+  resources :reports, only: [:index]
+
   authenticate :user, ->(u) { u.can? :manage, :sidekiq_dashboard } do
     mount Sidekiq::Web => '/sidekiq'
   end

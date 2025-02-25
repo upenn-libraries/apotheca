@@ -16,12 +16,6 @@ describe BulkExport do
     expect(bulk_export.valid?).to be false
   end
 
-  it 'requires state to be set' do
-    bulk_export = build(:bulk_export, state: nil)
-    expect(bulk_export.valid?).to be false
-    expect(bulk_export.errors['state']).to include "can't be blank"
-  end
-
   it 'requires generated_by if csv is attached' do
     bulk_export = build(:bulk_export)
     bulk_export.csv.attach(io: StringIO.new('contents'), filename: 'file.csv')

@@ -1,0 +1,57 @@
+<%= render(Breadcrumbs::Component.new) do |component| %>
+  <% component.with_breadcrumb(href: "/") { 'Home' } %>
+  <% component.with_breadcrumb(active: true) { 'Reports' } %>
+<% end %>
+
+<%= render(Header::Component.new) do |header| %>
+  <%= header.with_title { 'Reports' } %>
+<% end %>
+
+<section class="my-4">
+  <%= bootstrap_form_tag(url: reports_path, method: 'get') do |form| %>
+    <div class="row align-items-end">
+      <div class="col-auto">
+        <%= form.select 'per_page',
+                        options_for_select(PerPage::PER_PAGE_OPTIONS, per_page_from_session(controller_name)),
+                        label: 'Per Page'
+        %>
+      </div>
+      <div class="col-auto my-3"><%= form.submit 'Apply', name: nil, class: 'btn btn-primary' %></div>
+    </div>
+  <% end %>
+</section>
+
+<%= page_entries_info @reports, entry_name: 'report' %>
+
+<table id="reports" class="table table-striped table-responsive">
+  <thead>
+  <tr>
+    <th scope="col">Type</th>
+    <th scope="col">State</th>
+    <th scope="col">Duration</th>
+    <th scope="col">Generated At</th>
+    <th scope="col">Size</th>
+    <th scope="col">File</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @reports.each do |report| %>
+    <tr>
+      <td><%= report.report_type&.titleize %></td>
+      <td><%= report.state.titleize %></td>
+      <td><%= distance_of_time(report.duration) if report.duration %></td>
+      <td><%= report.generated_at&.to_fs(:display) %></td>
+      <td><%= number_to_human_size(report.file&.byte_size) if report.file.attached? %></td>
+      <td>
+        <% if report.file.attached? %>
+          <%= link_to(report.file.filename, report.file, disposition: 'attachment',
+                      title: "Download file generated at #{report.generated_at}",
+                      class: 'card-link col-2 text-center') %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @reports %>

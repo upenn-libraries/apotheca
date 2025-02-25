@@ -15,6 +15,7 @@ describe 'Ability' do
     it { is_expected.not_to be_able_to(:view, BulkImport) }
     it { is_expected.not_to be_able_to(:view, BulkExport) }
     it { is_expected.not_to be_able_to(:view, User) }
+    it { is_expected.not_to be_able_to(:view, Report) }
   end
 
   context 'with a viewer user' do
@@ -49,6 +50,8 @@ describe 'Ability' do
     it { is_expected.not_to be_able_to(:destroy, bulk_export) }
     it { is_expected.not_to be_able_to(:cancel, bulk_export) }
     it { is_expected.not_to be_able_to(:regenerate, bulk_export) }
+
+    it { is_expected.to be_able_to(:read, Report) }
 
     it { is_expected.not_to be_able_to(:view, User) }
   end
@@ -89,6 +92,8 @@ describe 'Ability' do
     it { is_expected.not_to be_able_to(:destroy, bulk_export) }
     it { is_expected.not_to be_able_to(:cancel, bulk_export) }
     it { is_expected.not_to be_able_to(:regenerate, bulk_export) }
+
+    it { is_expected.to be_able_to(:read, Report) }
 
     it { is_expected.not_to be_able_to(:manage, User) }
   end

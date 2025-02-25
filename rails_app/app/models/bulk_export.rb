@@ -7,7 +7,6 @@ class BulkExport < ApplicationRecord
   belongs_to :created_by, class_name: 'User'
 
   has_one_attached :csv
-  validates :state, presence: true
   validates :generated_at, presence: true, if: -> { csv.attached? }
   validate :restrict_number_of_bulk_exports, on: :create
   validate :restrict_search_params_to_hash
