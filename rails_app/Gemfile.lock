@@ -239,6 +239,7 @@ GEM
       webrick (~> 1.7)
       websocket-driver (>= 0.6, < 0.8)
     ffi (1.17.1-aarch64-linux-gnu)
+    ffi (1.17.1-arm64-darwin)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -276,6 +277,9 @@ GEM
       reline (>= 0.4.2)
     iso-639 (0.3.8)
       csv
+    jbuilder (2.13.0)
+      actionview (>= 5.0.0)
+      activesupport (>= 5.0.0)
     jmespath (1.6.2)
     json (2.9.1)
     json-canonicalization (1.0.0)
@@ -336,6 +340,8 @@ GEM
       net-protocol
     nio4r (2.7.4)
     nokogiri (1.18.2-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.2-arm64-darwin)
       racc (~> 1.4)
     omniauth (2.1.2)
       hashie (>= 3.4.6)
@@ -605,6 +611,7 @@ GEM
 
 PLATFORMS
   aarch64-linux
+  arm64-darwin-23
 
 DEPENDENCIES
   aasm
@@ -634,6 +641,7 @@ DEPENDENCIES
   iiif-presentation
   importmap-rails
   iso-639
+  jbuilder
   kaminari
   mime-types
   omniauth (~> 2.0)
