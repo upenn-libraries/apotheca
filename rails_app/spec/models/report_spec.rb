@@ -17,13 +17,20 @@ describe Report do
     let(:report) { create(:report, :queued) }
 
     before do
-      persist(:item_resource, :with_faker_metadata)
+      persist(:item_resource, :with_faker_metadata, :with_full_asset)
       report.run
     end
 
-    it 'assigns items'
-    it 'generates calls build'
-    it 'attaches json when successful'
-    it 'raises error when failure'
+    it 'calls build'
+
+    context 'when successful' do
+      it 'assigns generated_at'
+      it 'assigns duration'
+      it 'attaches json'
+    end
+
+    context 'when failure' do
+      it 'raises error'
+    end
   end
 end

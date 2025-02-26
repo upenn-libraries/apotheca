@@ -18,7 +18,10 @@ class Report < ApplicationRecord
     # maybe something like `result = ReportService.build(...)`
     #
     # call `success!` if everything succeeds, rescue errors and call `failure!`
-    ReportService::Growth.new
+    report = ReportService::Growth.new.build
+    self.generated_at = Time.zone.now
+    attach_file(io: StringIO.new(report), content_type: 'application/json')
+    success!
   end
 
   # @param [IO] io

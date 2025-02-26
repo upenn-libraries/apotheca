@@ -38,7 +38,7 @@ FactoryBot.define do
           physical_format: [{ value: format_type }],
           subject: (0..rand(1..5)).to_a.map { { value: Faker::Educator.subject } },
           identifier: [{ value: Faker::Code.isbn }],
-          item_type: [{ value: format_type }],
+          item_type: [{ value: format_type, uri: 'https://test-uri.com/uri' }],
           language: [{ value: 'English' }, { value: Faker::Nation.language }]
         }
       end
