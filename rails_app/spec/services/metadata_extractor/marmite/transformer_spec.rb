@@ -88,10 +88,10 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
             { value: 'Kislak Center for Special Collections, Rare Books and Manuscripts, Manuscripts, Folio GrC St812 Ef512g' }
           ],
           physical_format: [
-            { value: 'manuscripts (documents)', uri: 'http://vocab.getty.edu/aat/300028569' },
             { value: 'Chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
             { value: 'Manuscripts, Latin' },
-            { value: 'Manuscripts, Renaissance' }
+            { value: 'Manuscripts, Renaissance' },
+            { value: 'manuscripts (documents)', uri: 'http://vocab.getty.edu/aat/300028569' }
           ],
           provenance: [{ value: 'Sold by Bernard M. Rosenthal (New York), 1964.' }],
           relation: [
@@ -111,6 +111,31 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
 
       it 'generates expected xml' do
         expect(transformer.to_descriptive_metadata).to eq expected_metadata
+      end
+    end
+
+    context 'when record is a periodical' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0" encoding="UTF-8"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:leader>07339cas a2201009 a 4500</marc:leader>
+              <marc:controlfield tag="001">9931746853503681</marc:controlfield>
+              <marc:controlfield tag="005">20230914075419.0</marc:controlfield>
+              <marc:controlfield tag="008">830729d18601926enkmr p       0   a0eng c</marc:controlfield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      let(:physical_format) do
+        [{ uri: 'http://vocab.getty.edu/aat/300026642', value: 'serials (publications)'},
+         { uri: 'http://vocab.getty.edu/aat/300026657', value: 'periodicals' }]
+      end
+
+      it 'extracts expected physical_format' do
+        expect(transformer.to_descriptive_metadata[:physical_format]).to match_array(physical_format)
       end
     end
 

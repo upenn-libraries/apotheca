@@ -18,7 +18,7 @@ module MetadataExtractor
       def to_descriptive_metadata
         mapped_values = {}
 
-        # Map control fields
+        # For each control and data field, apply each rule defined for that field.
         (marc.controlfields + marc.datafields).each do |marc_field|
           mappings.rules_for(marc_field.type, marc_field.tag).each do |config|
             field = config[:to] # descriptive metadata field name
@@ -37,6 +37,17 @@ module MetadataExtractor
             mapped_values[field] ||= []
             mapped_values[field] << values
           end
+        end
+
+        # Apply rules that require access to the whole MARC record.
+        mappings.rules_for(:marc).each do |config|
+          field = config[:to] # descriptive metadata field name
+          values = config[:transform].call(marc)
+
+          next if values.blank?
+
+          mapped_values[field] ||= []
+          mapped_values[field] += Array.wrap(values)
         end
 
         strip_punctuation!(mapped_values, %i[collection title subject geographic_subject physical_format publisher name coverage])

@@ -4,7 +4,7 @@ module MetadataExtractor
   class Marmite
     class Transformer
       class DefaultMappingRules
-        # Module that contains rules for mapping MARC leader and control 008 fields to appropriate AAT terms.
+        # Module that contains rules for mapping MARC to appropriate AAT terms.
         module MARCToAAT
           # AAT terms
           BOOKS        = { value: 'books',                         uri: 'http://vocab.getty.edu/aat/300028051' }.freeze
@@ -44,10 +44,10 @@ module MetadataExtractor
           # @param [String] leader field
           # @param [String] control008 field
           # @return [Array<Hash>]
-          def self.map_to_aat(leader, control008)
+          def self.map(leader, control008)
             # @see RULES
             RULES.filter_map do |rule|
-              return rule[:term] if match(rule[:leader], leader) && match(rule[:control008], control008)
+              match(rule[:leader], leader) && match(rule[:control008], control008) ? rule[:term] : nil
             end
           end
 
