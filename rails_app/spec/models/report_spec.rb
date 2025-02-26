@@ -12,4 +12,18 @@ describe Report do
       expect(report.errors['generated_at']).to include "can't be blank"
     end
   end
+
+  describe '#run' do
+    let(:report) { create(:report, :queued) }
+
+    before do
+      persist(:item_resource, :with_faker_metadata)
+      report.run
+    end
+
+    it 'assigns items'
+    it 'generates calls build'
+    it 'attaches json when successful'
+    it 'raises error when failure'
+  end
 end

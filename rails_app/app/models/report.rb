@@ -18,6 +18,7 @@ class Report < ApplicationRecord
     # maybe something like `result = ReportService.build(...)`
     #
     # call `success!` if everything succeeds, rescue errors and call `failure!`
+    ReportService::Growth.new
   end
 
   # @param [IO] io
