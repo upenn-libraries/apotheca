@@ -130,7 +130,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
       end
 
       let(:physical_format) do
-        [{ uri: 'http://vocab.getty.edu/aat/300026642', value: 'serials (publications)'},
+        [{ uri: 'http://vocab.getty.edu/aat/300026642', value: 'serials (publications)' },
          { uri: 'http://vocab.getty.edu/aat/300026657', value: 'periodicals' }]
       end
 

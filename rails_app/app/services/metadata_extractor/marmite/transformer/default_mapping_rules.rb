@@ -24,7 +24,7 @@ module MetadataExtractor
 
         # Maps value in the MARC leader and MARC 008 control field to an AAT format term.
         def self.extract_aat_terms(marc)
-          leader = marc.xpath("//records/record/leader").text
+          leader = marc.xpath('//records/record/leader').text
           control008 = marc.xpath("//records/record/controlfield[@tag='008']").text
 
           MARCToAAT.map(leader, control008).deep_dup
