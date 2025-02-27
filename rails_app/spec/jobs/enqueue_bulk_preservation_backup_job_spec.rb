@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe EnqueueBulkPreservationBackupJob do
-  let!(:with_preservation_backup) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }
+  let!(:with_preservation_backup) { persist(:asset_resource, :with_image_file, :with_preservation_backup) }
   let!(:without_preservation_backup) do
-    persist(:asset_resource, :with_preservation_file, preservation_copies_ids: nil)
+    persist(:asset_resource, :with_image_file, preservation_copies_ids: nil)
   end
   let(:job) { described_class }
 
@@ -31,7 +31,7 @@ describe EnqueueBulkPreservationBackupJob do
 
   context 'with items without backed up assets' do
     let!(:additional_asset_to_backup) do
-      persist(:asset_resource, :with_preservation_file, preservation_copies_ids: nil)
+      persist(:asset_resource, :with_image_file, preservation_copies_ids: nil)
     end
 
     before do

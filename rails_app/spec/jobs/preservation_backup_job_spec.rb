@@ -3,7 +3,7 @@
 require_relative 'transaction_job'
 
 describe PreservationBackupJob do
-  let(:asset) { persist(:asset_resource, :with_preservation_file) }
+  let(:asset) { persist(:asset_resource, :with_image_file) }
 
   it_behaves_like 'TransactionJob' do
     let(:args) { [asset.id.to_s, asset.updated_by] }

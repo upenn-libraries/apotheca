@@ -13,7 +13,7 @@ module DerivativeService
           nil
         end
 
-        def textonlypdf
+        def textonly_pdf
           nil
         end
 

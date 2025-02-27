@@ -65,7 +65,7 @@ describe UpdateAsset do
     context 'when updating file' do
       subject(:updated_asset) { result.value! }
 
-      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives) }
+      let(:asset) { persist(:asset_resource, :with_image_file, :with_preservation_backup, :with_derivatives) }
       let(:result) do
         transaction.call(id: asset.id, file: update_file, original_filename: 'bell.wav',
                          label: 'First', updated_by: 'initiator@example.com')
@@ -104,7 +104,7 @@ describe UpdateAsset do
       end
 
       it 'marks derivatives as stale' do
-        expect(updated_asset.derivatives.length).to be 3
+        expect(updated_asset.derivatives.length).to be 5
         expect(updated_asset.derivatives.all?(&:stale)).to be true
       end
 
@@ -120,7 +120,7 @@ describe UpdateAsset do
       subject(:updated_asset) { result.value! }
 
       let(:asset) do
-        persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives)
+        persist(:asset_resource, :with_image_file, :with_preservation_backup, :with_derivatives)
       end
       let(:result) do
         transaction.call(
@@ -199,7 +199,7 @@ describe UpdateAsset do
     end
 
     context 'when asset update fails' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives) }
+      let(:asset) { persist(:asset_resource, :with_image_file, :with_preservation_backup, :with_derivatives) }
       let(:result) { transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com') }
 
       before do

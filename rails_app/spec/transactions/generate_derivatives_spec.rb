@@ -5,7 +5,7 @@ describe GenerateDerivatives do
     subject(:updated_asset) { result.value! }
 
     let(:transaction) { described_class.new }
-    let(:asset) { persist(:asset_resource, :with_preservation_file, :with_metadata) }
+    let(:asset) { persist(:asset_resource, :with_image_file, :with_metadata) }
     let(:item) { persist(:item_resource, :printed, asset_ids: [asset.id]) }
     let(:result) { transaction.call(id: item.asset_ids.first, updated_by: 'initiator@example.com') }
 
@@ -108,7 +108,7 @@ describe GenerateDerivatives do
         XML
       end
       let(:asset) do
-        persist(:asset_resource, :with_preservation_file, :with_metadata,
+        persist(:asset_resource, :with_image_file, :with_metadata,
                 technical_metadata: { size: 291_455, mime_type: 'image/tiff', sha256: ['sha256checksum'],
                                       height: 238, width: 400, dpi: nil, raw: fits_xml })
       end

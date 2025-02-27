@@ -8,7 +8,7 @@ describe PreservationBackup do
     let(:result) { transaction.call(id: asset.id, updated_by: 'initiator@example.com') }
 
     context 'when preservation file already backed up' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }
+      let(:asset) { persist(:asset_resource, :with_image_file, :with_preservation_backup) }
 
       it 'succeeds' do
         expect(result.success?).to be true
@@ -16,7 +16,7 @@ describe PreservationBackup do
     end
 
     context 'when preservation file is not backed up' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file) }
+      let(:asset) { persist(:asset_resource, :with_image_file) }
 
       include_examples 'creates a resource event', :preservation_backup, 'initiator@example.com', true do
         let(:resource) { updated_asset }
@@ -37,7 +37,7 @@ describe PreservationBackup do
     end
 
     context 'when preservation backup fails' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file) }
+      let(:asset) { persist(:asset_resource, :with_image_file) }
 
       before do
         step_double = instance_double(Steps::Validate)

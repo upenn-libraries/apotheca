@@ -62,7 +62,7 @@ describe DeleteAsset do
     end
 
     context 'when not set as thumbnail' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup, :with_derivatives) }
+      let(:asset) { persist(:asset_resource, :with_image_file, :with_preservation_backup, :with_derivatives) }
       let(:item) do
         persist(:item_resource, asset_ids: [asset.id], structural_metadata: { arranged_asset_ids: [asset.id] })
       end

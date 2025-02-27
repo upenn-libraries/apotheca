@@ -102,7 +102,7 @@ FactoryBot.define do
       with_asset
 
       transient do
-        asset { persist(:asset_resource, :with_preservation_file, :with_metadata) }
+        asset { persist(:asset_resource, :with_image_file, :with_metadata) }
       end
     end
 
@@ -129,9 +129,9 @@ FactoryBot.define do
     # Item with two arranged Asset containing metadata and a preservation file.
     trait :with_full_assets_all_arranged do
       transient do
-        asset1 { persist(:asset_resource, :with_preservation_file, :with_derivatives, :with_metadata) }
+        asset1 { persist(:asset_resource, :with_image_file, :with_derivatives, :with_metadata) }
         asset2 do
-          persist(:asset_resource, :with_preservation_file, :with_derivatives,
+          persist(:asset_resource, :with_image_file, :with_derivatives,
                   original_filename: 'back.tif', preservation_file: 'trade_card/original/back.tif')
         end
       end
