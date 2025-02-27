@@ -23,13 +23,13 @@ shared_examples_for 'a DerivativeService::Asset::Generator::Base' do
     end
   end
 
-  describe 'text' do
+  describe '#text' do
     it 'does not raise error' do
       expect { generator.text }.not_to raise_error
     end
   end
 
-  describe 'hocr' do
+  describe '#hocr' do
     it 'does not raise error' do
       expect { generator.hocr }.not_to raise_error
     end
