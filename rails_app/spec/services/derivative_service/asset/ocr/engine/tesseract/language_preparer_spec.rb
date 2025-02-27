@@ -32,7 +32,7 @@ describe DerivativeService::Asset::OCR::Engine::Tesseract::LanguagePreparer do
       let(:languages) { %w[rus deu] }
 
       it 'includes the german fraktur language code' do
-        expect(language_preparer.prepared_languages).to contain_exactly('rus', 'deu', 'frk')
+        expect(language_preparer.prepared_languages).to contain_exactly('rus', 'deu', 'deu_latf')
       end
     end
 
