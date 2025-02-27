@@ -4,11 +4,13 @@
 class Report < ApplicationRecord
   include Queueable
 
+  REPORT_TYPES = %w[repository_growth].freeze
+
   has_one_attached :file
   validates :generated_at, presence: true, if: -> { file.attached? }
-  # TODO: validate report_type is in a constant REPORT_TYPES array
+  validates :duration, presence: true, if: -> { state == STATE_SUCCESSFUL.to_s }
+  validates :report_type, inclusion: REPORT_TYPES, presence: true
   # In bulkexport there's some more validations for other attributes
-  # REPORT_TYPES = [:repository_growth]
 
   def run
     report = nil

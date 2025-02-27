@@ -13,8 +13,30 @@ describe Report do
     end
   end
 
+  context 'with a report_type' do
+    it 'requires inclusion' do
+      report = build(:report, report_type: 'not_valid_type')
+      expect(report.valid?).to be false
+      expect(report.errors['report_type']).to include 'is not included in the list'
+    end
+  end
+
+  context 'with a successful state' do
+    it 'requires duration' do
+      report = build(:report, :successful, duration: nil)
+      expect(report.valid?).to be false
+      expect(report.errors['duration']).to include "can't be blank"
+    end
+  end
+
+  it 'requires report_type' do
+    report = build(:report, report_type: nil)
+    expect(report.valid?).to be false
+    expect(report.errors['report_type']).to include "can't be blank"
+  end
+
   describe '#run' do
-    let(:report) { create(:report, :processing, report_type: :growth) }
+    let(:report) { create(:report, :processing) }
 
     it 'calls build'
 
@@ -38,7 +60,7 @@ describe Report do
 
       # TODO: maybe do a json parse and check for a few attributes (has_attributes)
       it 'attaches file with the expected data' do
-        expect(report.file.download).to eq ReportService::Growth.new.build.read
+        expect(report.file.download).to eq ReportService::RepositoryGrowth.new.build.read
       end
 
       it 'changes state to successful' do
@@ -53,7 +75,7 @@ describe Report do
       end
 
       it 'changes state to failed' do
-        expect(report.state).to described_class::STATE_FAILED.to_s
+        expect(report.state).to eq described_class::STATE_FAILED.to_s
       end
     end
   end

@@ -20,8 +20,6 @@ FactoryBot.define do
 
     trait :failed do
       state { Report::STATE_FAILED }
-      # TODO: maybe we need process errors like bulk export?
-      # process_errors { ['This is an error message!'] }
     end
 
     trait :successful do
