@@ -7,18 +7,10 @@ class Report < ApplicationRecord
   has_one_attached :file
   validates :generated_at, presence: true, if: -> { file.attached? }
   # TODO: validate report_type is in a constant REPORT_TYPES array
-  # TODO: more validations potentially?
-  # bulk_export validate state in the model, but that validation is already included in Queueable
+  # In bulkexport there's some more validations for other attributes
+  # REPORT_TYPES = [:repository_growth]
 
   def run
-    # TODO: implement run method when repository growth report details are finalized
-    #
-    # this method will likely call a service that generates the report given all item data
-    # and send that data to the file (i think...)
-    # maybe something like `result = ReportService.build(...)`
-    #
-    # call `success!` if everything succeeds, rescue errors and call `failure!`
-
     report = nil
     elapsed_time = Benchmark.realtime { report = report_service.build }
     self.generated_at = DateTime.now
@@ -27,6 +19,8 @@ class Report < ApplicationRecord
     success!
   rescue StandardError => e
     Honeybadger.notify(e)
+    # TODO: maybe a cleanup method that unsets some assigned attributes?
+    # other classes implement this pattern, maybe bulkexport or import...
     file.purge if file.attached?
     failure!
   end

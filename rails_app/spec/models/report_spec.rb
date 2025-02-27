@@ -36,6 +36,7 @@ describe Report do
         expect(report.file).to be_attached
       end
 
+      # TODO: maybe do a json parse and check for a few attributes (has_attributes)
       it 'attaches file with the expected data' do
         expect(report.file.download).to eq ReportService::Growth.new.build.read
       end

@@ -2,6 +2,7 @@
 
 # Module to add custom date fields, created_by and update_by to Valkyrie resources.
 #
+# TODO: update this documentation a little bit
 # Because we want to track the time an Item was created in a previous or in another system, we need our own timestamp.
 # Valkyrie's created_at and updated_at attributes are reserved and cannot (and should not) be modified. We added
 # `first_created_at` to represent the original date of creation. `date_created` will return the original date an item
