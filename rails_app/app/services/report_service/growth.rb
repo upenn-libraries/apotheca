@@ -4,7 +4,7 @@ module ReportService
   # Growth report
   class Growth < Base
     def build
-      Jbuilder.encode do |json|
+      report = Jbuilder.encode do |json|
         json.items(items.to_a) do |item|
           json.unique_identifier item.unique_identifier
           json.create_date item.date_created
@@ -30,6 +30,7 @@ module ReportService
           end
         end
       end
+      StringIO.new(report)
     end
 
     private

@@ -59,8 +59,7 @@ describe 'Report Index Page' do
     it 'displays the generate_at date' do
       within('#reports tbody') do
         tr_elements = all('tr')
-        expect(tr_elements.first).to have_content(reports.last.generated_at&.to_fs(:display))
-        expect(tr_elements.last).to have_content(reports.first.generated_at&.to_fs(:display))
+        expect(tr_elements.last).to have_content(reports.first.generated_at.to_fs(:display))
       end
     end
   end

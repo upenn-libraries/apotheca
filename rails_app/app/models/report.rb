@@ -18,10 +18,17 @@ class Report < ApplicationRecord
     # maybe something like `result = ReportService.build(...)`
     #
     # call `success!` if everything succeeds, rescue errors and call `failure!`
-    report = ReportService::Growth.new.build
-    self.generated_at = Time.zone.now
-    attach_file(io: StringIO.new(report), content_type: 'application/json')
+
+    report = nil
+    elapsed_time = Benchmark.realtime { report = report_service.build }
+    self.generated_at = DateTime.now
+    self.duration = elapsed_time
+    attach_file(io: report, content_type: 'application/json')
     success!
+  rescue StandardError => e
+    Honeybadger.notify(e)
+    file.purge if file.attached?
+    failure!
   end
 
   # @param [IO] io
@@ -37,5 +44,10 @@ class Report < ApplicationRecord
     # Default to '.json' for now, as we expect this will be the initial format
     extension = Rack::Mime::MIME_TYPES.invert[content_type]
     ActiveStorage::Filename.new("#{report_type}_#{generated_at&.strftime('%Y%m%d_%H%M%S')}#{extension}")
+  end
+
+  # @return [ReportService::Base]
+  def report_service
+    "ReportService::#{report_type.to_s.camelize}".safe_constantize.new
   end
 end
