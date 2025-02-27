@@ -3,7 +3,7 @@
 ARG IMAGE_NAME=gitlab.library.upenn.edu/dld/digital-repository/apotheca-base-image
 
 # Image tag
-ARG IMAGE_TAG=32965eed
+ARG IMAGE_TAG=0a816cf7
 
 # Rails env
 ARG RAILS_ENV=development
@@ -26,12 +26,17 @@ ENV RAILS_ENV=${RAILS_ENV}
 
 ENV BUNDLE_APP_CONFIG="${PROJECT_ROOT}/.bundle"
 
-COPY --from=base ${PROJECT_ROOT}/ocr_languages.txt ${PROJECT_ROOT}/ocr_languages.txt
-RUN apt-get update && apt-get install -y --no-recommends $(xargs -I {} echo tesseract-ocr-{} < ./ocr_languages.txt)
-
-COPY --chown=app:app --chmod=755 --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
+COPY --chown=app:app --chmod=755 ./docker-entrypoint.sh /usr/local/bin/
 
 WORKDIR ${PROJECT_ROOT}
+
+COPY ocr_languages.txt ./ocr_languages.txt
+RUN apt-get update && apt-get install -y --no-install-recommends wget && \
+    for language in $(cat ocr_languages.txt); do \
+      wget "https://github.com/tesseract-ocr/tessdata/raw/refs/heads/main/${language}.traineddata" \
+        -O "/usr/local/share/tessdata/${language}.traineddata"; \
+    done && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY Gemfile* ./
 
