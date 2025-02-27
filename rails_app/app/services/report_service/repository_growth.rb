@@ -2,8 +2,7 @@
 
 module ReportService
   # Growth report
-  # TODO: rename this class to RepositoryGrowth
-  class Growth < Base
+  class RepositoryGrowth < Base
     def build
       report = Jbuilder.encode do |json|
         json.items(items.to_a) do |item|
@@ -36,7 +35,6 @@ module ReportService
           end
         end
       end
-      # TODO: maybe builder has an IO method? check docs
       StringIO.new(report)
     end
 
