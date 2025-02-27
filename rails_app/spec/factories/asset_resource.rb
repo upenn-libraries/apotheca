@@ -98,6 +98,8 @@ FactoryBot.define do
       transient do
         access { true }
         thumbnail { true }
+        text { true }
+        hocr { true }
         textonly_pdf { true }
       end
     end
@@ -110,6 +112,8 @@ FactoryBot.define do
         preservation_backup { false }
         access { false }
         thumbnail { false }
+        text { false }
+        hocr { false }
         textonly_pdf { false }
       end
 
@@ -140,7 +144,7 @@ FactoryBot.define do
         change_set.ocr_language = ['eng']
         derivative_service = DerivativeService::Asset::Derivatives.new(change_set)
 
-        %w[access thumbnail textonly_pdf].each do |type|
+        AssetChangeSet::DERIVATIVE_TYPES.each do |type|
           next unless evaluator.send(type) # Check if derivative was requested.
 
           derivative = derivative_service.send(type)
