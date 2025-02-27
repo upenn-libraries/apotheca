@@ -38,4 +38,42 @@ describe DerivativeService::Item::PDFGenerator do
       end
     end
   end
+
+  describe '#pdfable?' do
+    let(:generator) { described_class.new(item) }
+
+    context 'when contains arranged image assets' do
+      let(:item) { persist(:item_resource, :with_full_assets_all_arranged) }
+
+      it 'returns true' do
+        expect(generator.pdfable?).to be true
+      end
+    end
+
+    context 'when does not contain any arranged assets' do
+      let(:item) { persist(:item_resource) }
+
+      it 'returns false' do
+        expect(generator.pdfable?).to be false
+      end
+    end
+
+    context 'when contains a non-image arranged asset' do
+      let(:item) do
+        persist(:item_resource, :with_full_assets_all_arranged, asset1: persist(:asset_resource, :with_pdf_file))
+      end
+
+      it 'returns false' do
+        expect(generator.pdfable?).to be false
+      end
+    end
+
+    context 'when contains more than 2000 arranged assets' do
+      let(:item) { persist(:item_resource, structural_metadata: { arranged_assets_ids: (1...2002).to_a }) }
+
+      it 'returns false' do
+        expect(generator.pdfable?).to be false
+      end
+    end
+  end
 end
