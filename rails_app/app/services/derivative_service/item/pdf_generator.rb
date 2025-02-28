@@ -4,6 +4,7 @@ module DerivativeService
   module Item
     # Class to generate a PDF for an ItemResource
     class PDFGenerator
+      MAX_ASSETS = 2000
       POINTS_PER_INCH = 72.0 # PDF points per inch
       START_COORDINATES = [0, 0].freeze # PDF start coordinates (bottom, left)
 
@@ -58,7 +59,7 @@ module DerivativeService
       # @return [Boolean]
       def pdfable?
         return false if item.structural_metadata.arranged_asset_ids.blank?
-        return false if item.structural_metadata.arranged_asset_ids.count > 2000
+        return false if item.structural_metadata.arranged_asset_ids.count > MAX_ASSETS
         return false unless item.arranged_assets.all?(&:image?)
 
         true

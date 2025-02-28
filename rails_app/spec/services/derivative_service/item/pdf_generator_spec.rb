@@ -69,7 +69,12 @@ describe DerivativeService::Item::PDFGenerator do
     end
 
     context 'when item contains more than 2000 arranged assets' do
-      let(:item) { persist(:item_resource, structural_metadata: { arranged_assets_ids: (1...2002).to_a }) }
+      let(:item) { persist(:item_resource, structural_metadata: { arranged_asset_ids: (0..max_assets).to_a }) }
+      let(:max_assets) { DerivativeService::Item::PDFGenerator::MAX_ASSETS }
+
+      it 'contains 2001 asset ids' do
+        expect(item.structural_metadata.arranged_asset_ids.count).to be > max_assets
+      end
 
       it 'returns false' do
         expect(generator.pdfable?).to be false
