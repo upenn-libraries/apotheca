@@ -7,7 +7,7 @@ describe DerivativeService::Asset::OCR::Engine::Tesseract::LanguagePreparer do
 
   describe '.supported_languages' do
     it 'returns expected number of language codes' do
-      expect(described_class.supported_languages.size).to eq 32
+      expect(described_class.supported_languages.size).to eq 31
     end
   end
 
