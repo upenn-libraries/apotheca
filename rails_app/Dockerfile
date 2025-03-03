@@ -33,7 +33,7 @@ WORKDIR ${PROJECT_ROOT}
 COPY ocr_languages.txt ./ocr_languages.txt
 RUN apt-get update && apt-get install -y --no-install-recommends wget && \
     for language in $(cat ocr_languages.txt); do \
-      wget "https://github.com/tesseract-ocr/tessdata/raw/refs/heads/main/${language}.traineddata" \
+      wget "https://github.com/tesseract-ocr/tessdata_fast/raw/refs/heads/main/${language}.traineddata" \
         -O "/usr/local/share/tessdata/${language}.traineddata"; \
     done && \
     rm -rf /var/lib/apt/lists/*
