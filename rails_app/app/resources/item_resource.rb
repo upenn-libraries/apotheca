@@ -153,7 +153,7 @@ class ItemResource < Valkyrie::Resource
   # @return [Array<String>]
   def language_codes
     languages = Array.wrap(presenter.descriptive_metadata.language)
-    languages.pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l.capitalize)&.first(2) }.compact_blank
+    languages.pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l)&.first(2) }.compact_blank
   end
 
   private
