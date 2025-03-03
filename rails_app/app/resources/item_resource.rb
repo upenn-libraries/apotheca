@@ -43,7 +43,6 @@ class ItemResource < Valkyrie::Resource
     Array.wrap(asset_ids) - structural_metadata.arranged_asset_ids
   end
 
-  # @todo memoize to prevent duplicate queries & sorting?
   # @return [Array<AssetResource>]
   def arranged_assets
     @arranged_assets ||= pg_query_service.find_many_by_ids(ids: structural_metadata.arranged_asset_ids.dup)
