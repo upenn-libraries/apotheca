@@ -69,7 +69,7 @@ module DerivativeService
           class LanguagePreparer
             # Include fraktur when language is German, Include both Chinese traditional and Chinese Simplified
             # when language is Chinese
-            LANGUAGE_EXPANSIONS = { deu: %w[deu frk], chi: %w[chi_tra chi_sim] }.freeze
+            LANGUAGE_EXPANSIONS = { deu: %w[deu deu_latf], chi: %w[chi_tra chi_sim] }.freeze
             # Chinese, Japanese, and Korean language codes require special consideration because they have 'vertical'
             # versions for text meant to be read in vertical columns from right-to-left.
             CJK_LANGUAGE_CODES = %w[jpn kor chi_tra chi_sim].freeze
