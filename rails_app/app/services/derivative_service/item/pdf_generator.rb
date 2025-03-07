@@ -54,13 +54,15 @@ module DerivativeService
       # Criteria for generating a pdf:
       #   - must have arranged assets
       #   - all arranged assets must be images
-      #   - can have no more than 2000 arranged assets.
+      #   - can have no more than 2000 arranged assets
+      #   - assets must all have a DPI set
       #
       # @return [Boolean]
       def pdfable?
         return false if item.structural_metadata.arranged_asset_ids.blank?
         return false if item.structural_metadata.arranged_asset_ids.count > MAX_ASSETS
         return false unless item.arranged_assets.all?(&:image?)
+        return false unless item.arranged_assets.all? { |a| a.technical_metadata.dpi.present? }
 
         true
       end
