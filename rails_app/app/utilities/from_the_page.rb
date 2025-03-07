@@ -13,12 +13,13 @@ class FromThePage
   #
   # @return [Array<String>] collection_ids
   def collection_ids(user_id)
-    response = connection.get('/iiif/collections/upenn')
+    response = connection.get("/iiif/collections/#{user_id}")
 
     # Extract Collection IDs.
-    collection_ids = response.body['collections'].filter_map do |collection_or_set|
+    response.body['collections'].filter_map do |collection_or_set|
       id = collection_or_set['@id']
       next unless id.start_with?("#{url}/iiif/collection")
+
       id.gsub("#{url}/iiif/collection/", '')
     end
   end
@@ -45,6 +46,7 @@ class FromThePage
     end
   end
 
+  # Class to extract data from the IIIF manifest.
   class Manifest
     attr_reader :json, :connection
 
@@ -60,7 +62,7 @@ class FromThePage
       source_data = json['metadata'].find { |i| i['label'] == 'dc:source' }
       source_url = Array.wrap(source_data['value']).compact_blank.first
 
-      match = source_url.match(/https:\/\/colenda.library.upenn.edu\/.+\/(81431)-(p3[a-zA-Z0-9]+)/)
+      match = source_url.match(%r{https://colenda.library.upenn.edu/.+/(81431)-(p3[a-zA-Z0-9]+)})
 
       return if match.nil?
 

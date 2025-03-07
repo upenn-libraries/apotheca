@@ -20,7 +20,7 @@ namespace :fromthepage do
     collection_ids = from_the_page.collection_ids('upenn')
 
     # Skip some collections.
-    collection_ids = collection_ids - skip_collections
+    collection_ids -= skip_collections
 
     # Extract all manifest URLs from all collections.
     manifest_urls = collection_ids.flat_map { |id| from_the_page.work_manifests(id) }
@@ -37,18 +37,24 @@ namespace :fromthepage do
       resource = query_service.custom_queries.find_by_unique_identifier(unique_identifier: unique_identifier)
 
       next "#{unique_identifier}: Resource not found!" unless resource
-      next "#{unique_identifier}: Transcriptions already present!" if resource.arranged_assets.any? { |a| a.transcriptions.present? }
+
+      if resource.arranged_assets.any? { |a| a.transcriptions.present? }
+        next "#{unique_identifier}: Transcriptions already present!"
+      end
 
       transcriptions = manifest.transcriptions
 
-      next "#{unique_identifier}: Number of pages in FromThePage does not match Item!" if transcriptions.count != resource.arranged_assets.count
+      if transcriptions.count != resource.arranged_assets.count
+        next "#{unique_identifier}: Number of pages in FromThePage does not match Item!"
+      end
 
       results = resource.arranged_assets.map.with_index do |asset, index|
         transcription = transcriptions[index].strip
 
         next if transcription.blank?
 
-        UpdateAsset.new.call(id: asset.id.to_s, updated_by: updated_by, transcriptions: [{ contents: transcription, mime_type: 'text/plain' }])
+        UpdateAsset.new.call(id: asset.id.to_s, updated_by: updated_by,
+                             transcriptions: [{ contents: transcription, mime_type: 'text/plain' }])
       end
 
       if results.compact.all?(&:success?)
