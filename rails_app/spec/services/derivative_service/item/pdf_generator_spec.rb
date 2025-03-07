@@ -80,5 +80,21 @@ describe DerivativeService::Item::PDFGenerator do
         expect(generator.pdfable?).to be false
       end
     end
+
+    context 'when item contains assets without dpi' do
+      let(:asset1) do
+        persist(:asset_resource, :with_image_file,
+                technical_metadata: {
+                  size: 291_455, mime_type: 'image/tiff', sha256: ['sha256checksum'], height: 238, width: 400
+                })
+      end
+      let(:item) do
+        persist(:item_resource, :with_full_assets_all_arranged, asset1: asset1)
+      end
+
+      it 'returns false' do
+        expect(generator.pdfable?).to be false
+      end
+    end
   end
 end
