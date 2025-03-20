@@ -7,7 +7,7 @@ describe DerivativeService::Asset::OCR::Engine::Tesseract::LanguagePreparer do
 
   describe '.supported_languages' do
     it 'returns expected number of language codes' do
-      expect(described_class.supported_languages.size).to eq 32
+      expect(described_class.supported_languages.size).to eq 31
     end
   end
 
@@ -32,7 +32,7 @@ describe DerivativeService::Asset::OCR::Engine::Tesseract::LanguagePreparer do
       let(:languages) { %w[rus deu] }
 
       it 'includes the german fraktur language code' do
-        expect(language_preparer.prepared_languages).to contain_exactly('rus', 'deu', 'frk')
+        expect(language_preparer.prepared_languages).to contain_exactly('rus', 'deu', 'deu_latf')
       end
     end
 

@@ -8,7 +8,7 @@ describe PurgeAsset do
     let(:result) { transaction.call(id: asset.id, deleted_by: 'initiator@example.com') }
 
     context 'when the asset is not attached' do
-      let(:asset) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }
+      let(:asset) { persist(:asset_resource, :with_image_file, :with_preservation_backup) }
 
       before do
         ResourceEvent.record_event_for(resource: asset, event_type: :sample_event)

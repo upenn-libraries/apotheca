@@ -6,8 +6,8 @@ RSpec.describe PreservationBackupQueries do
   let(:query_service) do
     Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
-  let(:asset_with_pres_backup) { persist(:asset_resource, :with_preservation_file, :with_preservation_backup) }
-  let(:asset_without_pres_backup) { persist(:asset_resource, :with_preservation_file) }
+  let(:asset_with_pres_backup) { persist(:asset_resource, :with_image_file, :with_preservation_backup) }
+  let(:asset_without_pres_backup) { persist(:asset_resource, :with_image_file) }
 
   describe '#missing_preservation_backup' do
     context 'when no assets backed up' do

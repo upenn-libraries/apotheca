@@ -45,6 +45,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
               role: [{ value: 'printer' }] }
           ],
           collection: [{ value: 'Edgar Fahs Smith Memorial Collection (University of Pennsylvania)' }],
+          physical_format: [{ uri: 'http://vocab.getty.edu/aat/300028051', value: 'books' }],
           physical_location: [{ value: 'Kislak Center for Special Collections, Rare Books and Manuscripts, E.F. Smith Collection, Folio TN664 .E7 1598' }],
           title: [
             { value: 'Beschreibung aller fürnemisten Mineralischen Ertzt vnnd Berckwercksarten : wie dieselbigen vnd eine jede in Sonderheit jrer Natur vnd Eygenschafft nach, auff alle Metalla probirt, vnd im kleinen Fewr sollen versucht werden, mit Erklärung etlicher fürnemer nützlicher Schmeltzwerck im grossen Feuwer, auch Scheidung Goldts, Silbers, vnd anderer Metalln, sampt einem Bericht des Kupffer Saigerns, Messing brennens, vnd Salpeter Siedens, auch aller saltzigen Minerischen proben, vnd was denen allen anhengig : in fünff Bücher verfast, dessgleichen zuvorn niemals in Druck kommen ... : auffs newe an vielen Orten mit besserer Aussführung, vnd mehreren Figurn erklärt' }
@@ -89,7 +90,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           physical_format: [
             { value: 'Chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
             { value: 'Manuscripts, Latin' },
-            { value: 'Manuscripts, Renaissance' }
+            { value: 'Manuscripts, Renaissance' },
+            { value: 'manuscripts (documents)', uri: 'http://vocab.getty.edu/aat/300028569' }
           ],
           provenance: [{ value: 'Sold by Bernard M. Rosenthal (New York), 1964.' }],
           relation: [
@@ -109,6 +111,31 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
 
       it 'generates expected xml' do
         expect(transformer.to_descriptive_metadata).to eq expected_metadata
+      end
+    end
+
+    context 'when record is a periodical' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0" encoding="UTF-8"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:leader>07339cas a2201009 a 4500</marc:leader>
+              <marc:controlfield tag="001">9931746853503681</marc:controlfield>
+              <marc:controlfield tag="005">20230914075419.0</marc:controlfield>
+              <marc:controlfield tag="008">830729d18601926enkmr p       0   a0eng c</marc:controlfield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      let(:physical_format) do
+        [{ uri: 'http://vocab.getty.edu/aat/300026642', value: 'serials (publications)' },
+         { uri: 'http://vocab.getty.edu/aat/300026657', value: 'periodicals' }]
+      end
+
+      it 'extracts expected physical_format' do
+        expect(transformer.to_descriptive_metadata[:physical_format]).to match_array(physical_format)
       end
     end
 

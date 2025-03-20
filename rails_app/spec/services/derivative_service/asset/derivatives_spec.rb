@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 describe DerivativeService::Asset::Derivatives do
-  let(:asset) do
-    resource = persist(:asset_resource, :with_preservation_file, technical_metadata: { mime_type: mime_type })
-    AssetChangeSet.new(resource)
-  end
-
   describe '#new' do
     context 'when asset is not a AssetChangeSet' do
       let(:asset) { ItemChangeSet.new(ItemResource.new) }
@@ -29,7 +24,7 @@ describe DerivativeService::Asset::Derivatives do
     let(:derivatives) { described_class.new(asset) }
 
     context 'when mime_type not supported' do
-      let(:mime_type) { 'application/pdf' }
+      let(:asset) { AssetChangeSet.new(persist(:asset_resource, :with_pdf_file)) }
 
       it 'returns Generator::Default' do
         expect(derivatives.generator).to be_a DerivativeService::Asset::Generator::Default
@@ -37,7 +32,7 @@ describe DerivativeService::Asset::Derivatives do
     end
 
     context 'when mime_type is supported by image generator' do
-      let(:mime_type) { 'image/tiff' }
+      let(:asset) { AssetChangeSet.new(persist(:asset_resource, :with_image_file)) }
 
       it 'returns Generator::Image' do
         expect(derivatives.generator).to be_a DerivativeService::Asset::Generator::Image

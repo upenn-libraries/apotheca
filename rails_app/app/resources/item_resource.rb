@@ -43,7 +43,6 @@ class ItemResource < Valkyrie::Resource
     Array.wrap(asset_ids) - structural_metadata.arranged_asset_ids
   end
 
-  # @todo memoize to prevent duplicate queries & sorting?
   # @return [Array<AssetResource>]
   def arranged_assets
     @arranged_assets ||= pg_query_service.find_many_by_ids(ids: structural_metadata.arranged_asset_ids.dup)
@@ -154,7 +153,7 @@ class ItemResource < Valkyrie::Resource
   # @return [Array<String>]
   def language_codes
     languages = Array.wrap(presenter.descriptive_metadata.language)
-    languages.pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l.capitalize)&.first(2) }.compact_blank
+    languages.pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l)&.first(2) }.compact_blank
   end
 
   private

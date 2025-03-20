@@ -22,6 +22,14 @@ module MetadataExtractor
           end
         end
 
+        # Maps value in the MARC leader and MARC 008 control field to an AAT format term.
+        def self.extract_aat_terms(marc)
+          leader = marc.xpath('//records/record/leader').text
+          control008 = marc.xpath("//records/record/controlfield[@tag='008']").text
+
+          MARCToAAT.map(leader, control008).deep_dup
+        end
+
         # Adding role value to name.
         def self.add_role_to_name(datafield, extracted_values)
           role_subfield = datafield.tag == '111' || datafield.tag == '711' ? 'j' : 'e'
@@ -88,6 +96,8 @@ module MetadataExtractor
         def self.format_edtf_value(date1, date2, range)
           range ? "#{date1}/#{date2}".gsub(/#{UNKNOWN_DATE}/, '').tr('u', 'X') : date1.tr('u', 'X')
         end
+
+        map_marc to: :physical_format, transform: method(:extract_aat_terms)
 
         map_controlfield '008', to: :date, value: { chars: (6..14).to_a }, custom: method(:convert_to_edtf)
         map_controlfield '008', to: :language, value: { chars: (35..37).to_a }, custom: method(:language_transformation)

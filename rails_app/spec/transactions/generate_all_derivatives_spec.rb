@@ -14,6 +14,11 @@ describe GenerateAllDerivatives do
     end
 
     context 'when item published' do
+      include_examples 'creates a resource event', :generate_all_derivatives, Settings.system_user, false do
+        let(:resource) { item }
+        before { result }
+      end
+
       it 'is successful' do
         expect(result.success?).to be true
       end

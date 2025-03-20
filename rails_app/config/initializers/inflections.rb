@@ -18,6 +18,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'MARC'
   inflect.acronym 'RDA'
   inflect.acronym 'DCMI'
+  inflect.acronym 'AAT'
   inflect.acronym 'IIIF'
   inflect.acronym 'OCR'
   inflect.acronym 'PDF'

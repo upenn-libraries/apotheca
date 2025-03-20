@@ -10,6 +10,7 @@ class GenerateAllDerivatives
   step :require_updated_by, with: 'attributes.require_updated_by'
   step :generate_all_asset_derivatives
   tee :republish
+  tee :record_event
 
   def generate_all_asset_derivatives(resource:, updated_by:, republish: true)
     generate_derivatives = GenerateDerivatives.new
@@ -27,5 +28,10 @@ class GenerateAllDerivatives
     return unless republish && resource.published
 
     PublishItemJob.perform_async(resource.id.to_s, updated_by)
+  end
+
+  def record_event(resource:, updated_by:, **)
+    ResourceEvent.record_event_for(resource: resource, event_type: :generate_all_derivatives,
+                                   json: false, initiated_by: updated_by)
   end
 end

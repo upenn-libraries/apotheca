@@ -88,10 +88,12 @@ module DerivativeService
         # @return [Hash{Symbol->String (frozen)}]
         def pdf_metadata
           @pdf_metadata ||= {
-            date: descriptive_metadata_text(:date), available_online: colenda_url,
+            available_online: colenda_url,
             physical_location: descriptive_metadata_text(:physical_location),
             description: descriptive_metadata_text(:description),
-            collection: descriptive_metadata_text(:collection), rights: descriptive_metadata_uri(:rights),
+            collection: descriptive_metadata_text(:collection),
+            rights: descriptive_metadata_uri(:rights),
+            rights_note: descriptive_metadata_text(:rights_note),
             date_generated: DateTime.now.to_fs(:display)
           }
         end

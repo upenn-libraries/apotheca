@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require_relative 'base'
+
 describe DerivativeService::Asset::Generator::Video do
-  let(:resource) { persist(:asset_resource, :with_preservation_file, :with_video_file) }
+  let(:resource) { persist(:asset_resource, :with_video_file) }
   let(:generator) { described_class.new(AssetChangeSet.new(resource)) }
+
+  it_behaves_like 'a DerivativeService::Asset::Generator::Base'
 
   describe '#thumbnail' do
     subject(:derivative_file) { generator.thumbnail }

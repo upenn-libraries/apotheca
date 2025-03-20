@@ -46,7 +46,7 @@ describe 'Asset Requests' do
     end
 
     context 'when the file exists' do
-      let(:asset) { persist :asset_resource, :with_preservation_file }
+      let(:asset) { persist :asset_resource, :with_image_file }
 
       before { get file_asset_path(asset, type: :preservation) }
 
