@@ -55,7 +55,7 @@ class Container
     end
 
     register 'generate_derivatives' do
-      Steps::GenerateDerivatives.new(DerivativeService::Item::Derivatives, :iiif_manifest, :pdf)
+      Steps::GenerateDerivatives.new(DerivativeService::Item::Derivatives, :iiif_manifest, :pdf, :preview)
     end
   end
 

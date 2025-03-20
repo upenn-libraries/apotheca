@@ -30,6 +30,15 @@ module DerivativeService
       def pdf
         PDFGenerator.new(item).pdf
       end
+
+      # Generates or returns pointer to IIIF-image derivative
+      #
+      # @return [NilClass] when no preview could be generated for the item
+      # @return [DerivativeResource] when preview was already generate for the asset
+      # @return [DerivativeService::DerivativeFile] when a preview was generated
+      def preview
+        PreviewGenerator.new(item).preview
+      end
     end
   end
 end

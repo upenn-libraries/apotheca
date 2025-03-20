@@ -35,22 +35,37 @@ module Steps
       derivative_generator = derivative_class.new(change_set)
 
       types.filter_map do |type|
-        begin
-          derivative_file = derivative_generator.send(type)
+        derivative = derivative_generator.send(type)
 
-          next if derivative_file.nil? # Skip if no derivative was created
+        next if derivative.nil? # Skip if no derivative was created
 
-          # Save file to storage, create derivative resource and clean up derivative file.
-          storage = find_storage(derivative_file)
-          file = storage.upload(file: derivative_file, resource: change_set.resource,
-                                original_filename: type.to_s, content_type: derivative_file.mime_type)
-          size = derivative_file.size
-        ensure
-          derivative_file&.cleanup!
+        if derivative.is_a? DerivativeService::DerivativeFile
+          derivative_resource(derivative, change_set, type)
+
+        elsif derivative.is_a? DerivativeResource
+          derivative.type = type.to_s # TODO: don't like this
+          derivative
+        else
+          # raise error?
         end
-        DerivativeResource.new(file_id: file.id, mime_type: derivative_file.mime_type, size: size,
-                               type: type.to_s, generated_at: DateTime.current)
       end
+    end
+
+    # Loads derivative file to storage and creates DerivativeResource object.
+    #
+    # @param [DerivativeService::DerivativeFile]
+    # @return [DerivativeResource]
+    def derivative_resource(derivative_file, change_set, type)
+      # Save file to storage, create derivative resource and clean up derivative file.
+      storage = find_storage(derivative_file)
+      file = storage.upload(file: derivative_file, resource: change_set.resource,
+                            original_filename: type.to_s, content_type: derivative_file.mime_type)
+      size = derivative_file.size
+
+      DerivativeResource.new(file_id: file.id, mime_type: derivative_file.mime_type, size: size,
+                             type: type.to_s, generated_at: DateTime.current)
+    ensure
+      derivative_file.cleanup!
     end
 
     def find_storage(derivative_file)
