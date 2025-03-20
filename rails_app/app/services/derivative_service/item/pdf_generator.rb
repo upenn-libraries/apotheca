@@ -77,10 +77,17 @@ module DerivativeService
       # @return [HexaPDF::Document]
       def create_pdf(assets)
         HexaPDF::Document.new.tap do |doc|
+          add_document_metadata(doc)
           add_cover_page(doc)      # Adds cover page.
           add_pages(doc, assets)   # Adds page for each asset.
           add_outline(doc, assets) # Add labels and annotations to the document outline.
         end
+      end
+
+      # @param [HexaPDF::Document] doc
+      def add_document_metadata(doc)
+        doc.metadata.title(item.human_readable_name)
+        doc.catalog[:Lang] = item.language_codes.first
       end
 
       # Adds cover page to document.

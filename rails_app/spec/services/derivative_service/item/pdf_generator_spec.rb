@@ -36,6 +36,14 @@ describe DerivativeService::Item::PDFGenerator do
       it 'contains cover page with title' do
         expect(pdf.pages.first.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
       end
+
+      it 'adds the title to document metadata' do
+        expect(pdf.metadata.title).to eq item.human_readable_name
+      end
+
+      it 'adds the language to document metadata' do
+        expect(pdf.metadata.default_language).to eq item.language_codes.first
+      end
     end
   end
 
