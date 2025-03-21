@@ -21,9 +21,7 @@ class Report < ApplicationRecord
     success!
   rescue StandardError => e
     Honeybadger.notify(e)
-    # TODO: maybe a cleanup method that unsets some assigned attributes?
-    # other classes implement this pattern, maybe bulkexport or import...
-    file.purge if file.attached?
+    cleanup!
     failure!
   end
 
@@ -33,6 +31,13 @@ class Report < ApplicationRecord
   end
 
   private
+
+  # Cleanup file and set attributes to nil
+  def cleanup!
+    file.purge if file.attached?
+    self.generated_at = nil
+    self.duration = nil
+  end
 
   # @return ActiveStorage::Filename
   def filename(content_type = 'application/json')

@@ -37,8 +37,16 @@ describe Report do
 
   describe '#run' do
     let(:report) { create(:report, :processing) }
+    let(:report_service) do
+      instance_double("ReportService::#{report.report_type.to_s.camelize}".safe_constantize)
+    end
 
-    it 'calls build'
+    it 'calls #build on report service' do
+      allow(report).to receive(:report_service).and_return(report_service)
+      allow(report_service).to receive(:build)
+      report.run
+      expect(report_service).to have_received(:build)
+    end
 
     context 'when successful' do
       before do
@@ -70,12 +78,21 @@ describe Report do
 
     context 'when an error is raised' do
       before do
-        allow(report).to receive(:attach_file).and_raise(StandardError.new)
+        allow(report).to receive(:attach_file).and_raise(StandardError)
         report.run
       end
 
       it 'changes state to failed' do
         expect(report.state).to eq described_class::STATE_FAILED.to_s
+      end
+
+      it 'does not attach the file' do
+        expect(report.file).not_to be_attached
+      end
+
+      it 'resets attributes' do
+        expect(report.generated_at).to be_nil
+        expect(report.duration).to be_nil
       end
     end
   end
