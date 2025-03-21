@@ -10,7 +10,6 @@ class Report < ApplicationRecord
   validates :generated_at, presence: true, if: -> { file.attached? }
   validates :duration, presence: true, if: -> { state == STATE_SUCCESSFUL.to_s }
   validates :report_type, inclusion: REPORT_TYPES, presence: true
-  # In bulkexport there's some more validations for other attributes
 
   def run
     report = nil

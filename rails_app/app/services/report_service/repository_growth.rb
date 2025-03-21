@@ -44,7 +44,7 @@ module ReportService
 
     # Build assets
     # @param json [Jbuilder]
-    # @param asset [AssetResource]
+    # @param item [ItemResource]
     # @return [Hash]
     def build_assets(json, item)
       json.assets(all_assets(item)) do |asset|
