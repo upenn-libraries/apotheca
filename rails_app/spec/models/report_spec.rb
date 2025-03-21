@@ -49,8 +49,10 @@ describe Report do
     end
 
     context 'when successful' do
+      let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_asset) }
+
       before do
-        persist(:item_resource, :with_faker_metadata, :with_full_asset)
+        item
         report.run
       end
 
@@ -66,13 +68,19 @@ describe Report do
         expect(report.file).to be_attached
       end
 
-      # TODO: maybe do a json parse and check for a few attributes (has_attributes)
       it 'attaches file with the expected data' do
         expect(report.file.download).to eq ReportService::RepositoryGrowth.new.build.read
       end
 
       it 'changes state to successful' do
         expect(report.state).to eq described_class::STATE_SUCCESSFUL.to_s
+      end
+
+      it 'assigns some attributes' do
+        items = JSON.parse(report.file.download)['items']
+        expect(items.first['unique_identifier']).to eq item.unique_identifier
+        expect(items.first.dig('descriptive_metadata', 'title')
+          .first['value']).to eq item.descriptive_metadata.title.first.value
       end
     end
 
