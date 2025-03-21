@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+# Generate a report
+class GenerateReportJob
+  include Sidekiq::Job
+  sidekiq_options queue: :medium
+
+  # Default to repository growth report
+  def perform(report_type = 'repository_growth')
+    return unless report_type
+
+    Report.create(report_type: report_type).process!
+  end
+end
