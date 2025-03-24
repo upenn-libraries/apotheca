@@ -100,15 +100,5 @@ describe ReportService::RepositoryGrowth do
       expect(report['items'].first['assets'].first['size']).to eq asset.technical_metadata.size
       expect(report['items'].last['assets'].first['size']).to eq asset.technical_metadata.size
     end
-
-    it 'returns asset created_at' do
-      expect(report['items'].first['assets'].first['created_at']).to eq asset.created_at.iso8601
-      expect(report['items'].last['assets'].first['created_at']).to eq asset.created_at.iso8601
-    end
-
-    it 'returns asset updated_at' do
-      expect(report['items'].first['assets'].first['updated_at']).to eq asset.updated_at.iso8601
-      expect(report['items'].last['assets'].first['updated_at']).to eq asset.updated_at.iso8601
-    end
   end
 end

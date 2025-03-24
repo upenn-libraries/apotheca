@@ -51,8 +51,6 @@ module ReportService
         json.filename asset.original_filename
         json.mime_type asset.technical_metadata[:mime_type]
         json.size asset.technical_metadata[:size]
-        json.created_at asset.created_at.iso8601
-        json.updated_at asset.updated_at.iso8601
       end
     end
 
