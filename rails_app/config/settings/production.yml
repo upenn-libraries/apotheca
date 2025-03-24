@@ -39,6 +39,8 @@ wasabi: &wasabi
   endpoint: https://s3.us-west-1.wasabisys.com
   region: us-west-1
   force_path_style: true
+  upload_options:
+    checksum_algorithm: CRC32
 preservation_storage:
   <<: *aws
   bucket: upennlib-apotheca-preservation-prod
