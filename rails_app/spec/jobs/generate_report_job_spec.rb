@@ -3,7 +3,7 @@
 describe GenerateReportJob do
   let(:report) { create(:report, :queued) }
 
-  before { allow(Report).to receive(:create).and_return(report) }
+  before { allow(Report).to receive(:create!).and_return(report) }
 
   context 'when performing the job later' do
     it 'enqueues the job' do

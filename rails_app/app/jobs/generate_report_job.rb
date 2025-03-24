@@ -7,9 +7,7 @@ class GenerateReportJob
 
   # Default to repository growth report
   def perform(report_type = 'repository_growth')
-    report = Report.create(report_type: report_type)
-    return unless report
-
+    report = Report.create!(report_type: report_type)
     report.process!
   end
 end
