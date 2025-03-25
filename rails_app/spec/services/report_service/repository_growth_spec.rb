@@ -43,20 +43,8 @@ describe ReportService::RepositoryGrowth do
     it 'returns expected descriptive metadata' do
       first_descriptive_metadata = report['items'].first['descriptive_metadata']
       last_descriptive_metadata = report['items'].last['descriptive_metadata']
-      expect(first_descriptive_metadata).to include(
-        'title' => [{ 'value' => items.first.descriptive_metadata.title.first.value }],
-        'collection' => [{ 'value' => items.first.descriptive_metadata.collection.first.value }],
-        'item_type' => [{ 'value' => items.first.descriptive_metadata.item_type.first.value,
-                          'uri' => items.first.descriptive_metadata.item_type.first.uri }],
-        'physical_format' => [{ 'value' => items.first.descriptive_metadata.physical_format.first.value }]
-      )
-      expect(last_descriptive_metadata).to include(
-        'title' => [{ 'value' => items.last.descriptive_metadata.title.first.value }],
-        'collection' => [{ 'value' => items.last.descriptive_metadata.collection.first.value }],
-        'item_type' => [{ 'value' => items.last.descriptive_metadata.item_type.first.value,
-                          'uri' => items.last.descriptive_metadata.item_type.first.uri }],
-        'physical_format' => [{ 'value' => items.last.descriptive_metadata.physical_format.first.value }]
-      )
+      expect(first_descriptive_metadata.deep_symbolize_keys).to include(items.first.presenter.descriptive_metadata.to_h)
+      expect(last_descriptive_metadata.deep_symbolize_keys).to include(items.last.presenter.descriptive_metadata.to_h)
     end
 
     it 'returns an empty array for blank descriptive metadata values' do

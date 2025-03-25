@@ -22,23 +22,8 @@ module ReportService
         json.updated_at item.date_updated.iso8601
         json.published item.published
         json.first_published_at item.first_published_at&.iso8601
-        build_descriptive_metadata(json, item)
+        json.descriptive_metadata item.presenter.descriptive_metadata.to_h
         build_assets(json, item)
-      end
-    end
-
-    # Build descriptive metadata
-    # @param json [Jbuilder]
-    # @param item [ItemResource]
-    # @return [Hash]
-    def build_descriptive_metadata(json, item)
-      json.descriptive_metadata do
-        json.title item.descriptive_metadata.title.map(&:to_json_export)
-        json.collection item.descriptive_metadata.collection.map(&:to_json_export)
-        json.bibnumber item.descriptive_metadata.bibnumber.map(&:to_json_export)
-        json.item_type item.descriptive_metadata.item_type.map(&:to_json_export)
-        json.physical_format item.descriptive_metadata.physical_format.map(&:to_json_export)
-        json.rights item.descriptive_metadata.rights.map(&:to_json_export)
       end
     end
 
