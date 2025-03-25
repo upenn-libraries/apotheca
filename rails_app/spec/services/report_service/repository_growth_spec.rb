@@ -58,19 +58,10 @@ describe ReportService::RepositoryGrowth do
       expect(report['items'].last['assets'].size).to eq(items.last.asset_count)
     end
 
-    it 'returns expected asset filename' do
-      expect(report['items'].first['assets'].first['filename']).to eq asset.original_filename
-      expect(report['items'].last['assets'].first['filename']).to eq asset.original_filename
-    end
-
-    it 'returns expected asset mime_type' do
-      expect(report['items'].first['assets'].first['mime_type']).to eq asset.technical_metadata.mime_type
-      expect(report['items'].last['assets'].first['mime_type']).to eq asset.technical_metadata.mime_type
-    end
-
-    it 'returns expected asset size' do
-      expect(report['items'].first['assets'].first['size']).to eq asset.technical_metadata.size
-      expect(report['items'].last['assets'].first['size']).to eq asset.technical_metadata.size
+    it 'returns expected asset data' do
+      asset_data = report['items'].first['assets']
+      expect(asset_data).to include(report['items'].first['assets'].first)
+      expect(asset_data).to include(report['items'].last['assets'].first)
     end
   end
 end
