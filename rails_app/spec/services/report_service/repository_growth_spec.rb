@@ -40,39 +40,23 @@ describe ReportService::RepositoryGrowth do
       expect(report['items'].last['system_create_date']).to eq items.last.created_at.iso8601
     end
 
-    it 'returns expected title' do
-      first_title = report['items'].first['descriptive_metadata']['title'].first['value']
-      last_title = report['items'].last['descriptive_metadata']['title'].first['value']
-      expect(first_title).to eq(items.first.descriptive_metadata.title.first.value)
-      expect(last_title).to eq(items.last.descriptive_metadata.title.first.value)
-    end
-
-    it 'returns expected collection' do
-      first_collection = report['items'].first['descriptive_metadata']['collection'].first['value']
-      last_collection = report['items'].last['descriptive_metadata']['collection'].first['value']
-      expect(first_collection).to eq(items.first.descriptive_metadata.collection.first.value)
-      expect(last_collection).to eq(items.last.descriptive_metadata.collection.first.value)
-    end
-
-    it 'returns expected item_type value' do
-      first_item_type = report['items'].first['descriptive_metadata']['item_type'].first['value']
-      last_item_type = report['items'].last['descriptive_metadata']['item_type'].first['value']
-      expect(first_item_type).to eq(items.first.descriptive_metadata.item_type.first.value)
-      expect(last_item_type).to eq(items.last.descriptive_metadata.item_type.first.value)
-    end
-
-    it 'returns expected URIs' do
-      first_uri = report['items'].first['descriptive_metadata']['item_type'].first['uri']
-      last_uri = report['items'].last['descriptive_metadata']['item_type'].first['uri']
-      expect(first_uri).to eq(items.first.descriptive_metadata.item_type.first.uri)
-      expect(last_uri).to eq(items.last.descriptive_metadata.item_type.first.uri)
-    end
-
-    it 'returns expect physical_format' do
-      first_physical_format = report['items'].first['descriptive_metadata']['physical_format'].first['value']
-      last_physical_format = report['items'].last['descriptive_metadata']['physical_format'].first['value']
-      expect(first_physical_format).to eq(items.first.descriptive_metadata.physical_format.first.value)
-      expect(last_physical_format).to eq(items.last.descriptive_metadata.physical_format.first.value)
+    it 'returns expected descriptive metadata' do
+      first_descriptive_metadata = report['items'].first['descriptive_metadata']
+      last_descriptive_metadata = report['items'].last['descriptive_metadata']
+      expect(first_descriptive_metadata).to include(
+        'title' => [{ 'value' => items.first.descriptive_metadata.title.first.value }],
+        'collection' => [{ 'value' => items.first.descriptive_metadata.collection.first.value }],
+        'item_type' => [{ 'value' => items.first.descriptive_metadata.item_type.first.value,
+                          'uri' => items.first.descriptive_metadata.item_type.first.uri }],
+        'physical_format' => [{ 'value' => items.first.descriptive_metadata.physical_format.first.value }]
+      )
+      expect(last_descriptive_metadata).to include(
+        'title' => [{ 'value' => items.last.descriptive_metadata.title.first.value }],
+        'collection' => [{ 'value' => items.last.descriptive_metadata.collection.first.value }],
+        'item_type' => [{ 'value' => items.last.descriptive_metadata.item_type.first.value,
+                          'uri' => items.last.descriptive_metadata.item_type.first.uri }],
+        'physical_format' => [{ 'value' => items.last.descriptive_metadata.physical_format.first.value }]
+      )
     end
 
     it 'returns an empty array for blank descriptive metadata values' do
