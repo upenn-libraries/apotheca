@@ -62,5 +62,12 @@ describe 'Report Index Page' do
         expect(tr_elements.last).to have_content(reports.first.generated_at.to_fs(:display))
       end
     end
+
+    it 'lists the number of errors' do
+      within('#reports tbody') do
+        tr_elements = all('tr')
+        expect(tr_elements.last).to have_content(reports.last.process_errors.size.to_s)
+      end
+    end
   end
 end

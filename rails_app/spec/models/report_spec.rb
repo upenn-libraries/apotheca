@@ -102,6 +102,10 @@ describe Report do
         expect(report.generated_at).to be_nil
         expect(report.duration).to be_nil
       end
+
+      it 'sets process_errors' do
+        expect(report.process_errors).not_to be_empty
+      end
     end
   end
 end

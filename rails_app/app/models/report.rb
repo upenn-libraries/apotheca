@@ -20,6 +20,8 @@ class Report < ApplicationRecord
     success!
   rescue StandardError => e
     Honeybadger.notify(e)
+    self.process_errors = [e.message]
+
     cleanup!
     failure!
   end
