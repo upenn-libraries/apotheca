@@ -145,7 +145,7 @@ FactoryBot.define do
     trait :with_bibnumber do
       descriptive_metadata do
         {
-          bibnumber: [{ value: 'sample-bib' }],
+          bibnumber: [{ value: '991234563681' }],
           abstract: [],
           date: [{ value: '1900' }, { value: '1475' }],
           collection: [{ value: 'Fake Collection' }],

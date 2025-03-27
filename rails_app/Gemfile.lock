@@ -239,6 +239,7 @@ GEM
       webrick (~> 1.7)
       websocket-driver (>= 0.6, < 0.8)
     ffi (1.17.1-aarch64-linux-gnu)
+    ffi (1.17.1-x86_64-linux-gnu)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -336,6 +337,8 @@ GEM
       net-protocol
     nio4r (2.7.4)
     nokogiri (1.18.4-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.4-x86_64-linux-gnu)
       racc (~> 1.4)
     omniauth (2.1.3)
       hashie (>= 3.4.6)
@@ -605,6 +608,7 @@ GEM
 
 PLATFORMS
   aarch64-linux
+  x86_64-linux
 
 DEPENDENCIES
   aasm

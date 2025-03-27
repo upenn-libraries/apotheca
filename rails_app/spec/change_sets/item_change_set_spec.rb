@@ -51,8 +51,14 @@ describe ItemChangeSet do
   end
 
   it 'does not require title if bibnumber is set' do
-    change_set.validate(descriptive_metadata: { title: [], bibnumber: [{ value: '123456789' }] })
+    change_set.validate(descriptive_metadata: { title: [], bibnumber: [{ value: '991234563681' }] })
     expect(change_set.valid?).to be true
+  end
+
+  it 'requires a well-formed bibnumber if one is provided' do
+    change_set.validate(descriptive_metadata: { title: ['Blah'], bibnumber: [{ value: '1234' }] })
+    expect(change_set.valid?).to be false
+    expect(change_set.errors[:bibnumber]).to include 'is not a well-formed bib number'
   end
 
   it 'requires unique identifier to be an ARK' do
