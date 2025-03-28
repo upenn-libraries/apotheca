@@ -108,6 +108,7 @@
         <td>
           <%= import.resource.present? ? link_to(import.resource.unique_identifier, item_path(import.resource))
                                          : '[Unknown]' %>
+        </td>
         <td>
           <%= link_to 'Details', bulk_import_import_path(@bulk_import, import), class: 'btn btn-sm btn-primary' %>
         </td>
