@@ -1,29 +1,29 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
-  <% component.with_breadcrumb(href: "/") { "Home" } %>
-  <% component.with_breadcrumb(active: true) { "Reports" } %>
+  <% component.with_breadcrumb(href: '/') { 'Home' } %>
+  <% component.with_breadcrumb(active: true) { 'Reports' } %>
 <% end %>
 
 <%= render(Header::Component.new) do |header| %>
-  <%= header.with_title { "Reports" } %>
+  <%= header.with_title { 'Reports' } %>
 <% end %>
 
 <section class="my-4">
   <%= bootstrap_form_tag(url: reports_path, method: 'get') do |form| %>
     <div class="row align-items-end">
       <div class="col-auto">
-        <%= form.select "per_page",
-                    options_for_select(
-                      PerPage::PER_PAGE_OPTIONS,
-                      per_page_from_session(controller_name),
-                    ),
-                    label: "Per Page" %>
+        <%= form.select 'per_page',
+                        options_for_select(
+                          PerPage::PER_PAGE_OPTIONS,
+                          per_page_from_session(controller_name)
+                        ),
+                        label: 'Per Page' %>
       </div>
-      <div class="col-auto my-3"><%= form.submit "Apply", name: nil, class: "btn btn-primary" %></div>
+      <div class="col-auto my-3"><%= form.submit 'Apply', name: nil, class: 'btn btn-primary' %></div>
     </div>
   <% end %>
 </section>
 
-<%= page_entries_info @reports, entry_name: "report" %>
+<%= page_entries_info @reports, entry_name: 'report' %>
 
 <table id="reports" class="table table-striped table-responsive">
   <thead>
@@ -48,24 +48,24 @@
         <td>
           <% if report.file.attached? %>
             <%= link_to(
-              report.file.filename,
-              report.file,
-              disposition: "attachment",
-              title: "Download file generated at #{report.generated_at}",
-              class: "card-link col-2 text-center",
-            ) %>
+                  report.file.filename,
+                  report.file,
+                  disposition: 'attachment',
+                  title: "Download file generated at #{report.generated_at}",
+                  class: 'card-link col-2 text-center'
+                ) %>
           <% end %>
         </td>
         <td data-controller="popover--initialize">
           <% if report.process_errors.present? %>
             <%= render(
-              Popover::Component.new(
-                title:
-                  "#{report.process_errors.count} #{"Error".pluralize(report.process_errors.count)}",
-                popover_content: report.process_errors.join(", "),
-                text: report.process_errors.count,
-              ),
-            ) %>
+                  Popover::Component.new(
+                    title:
+                      "#{report.process_errors.count} #{'Error'.pluralize(report.process_errors.count)}",
+                    popover_content: report.process_errors.join(', '),
+                    text: report.process_errors.count
+                  )
+                ) %>
           <% end %>
         </td>
       </tr>
