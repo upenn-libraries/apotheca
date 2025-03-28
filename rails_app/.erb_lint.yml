@@ -1,0 +1,15 @@
+---
+EnableDefaultLinters: true
+exclude:
+  - '**/vendor/**/*'
+  - '**/node_modules/**/*'
+  # - 'app/views/kaminari/_page.html.erb'
+linters:
+  Rubocop:
+    enabled: true
+    rubocop_config:
+      inherit_from:
+        - .rubocop.yml
+        - .erb-lint_rubocop.yml
+      AllCops:
+        DisabledByDefault: true
