@@ -63,7 +63,8 @@
                     title:
                       "#{report.process_errors.count} #{'Error'.pluralize(report.process_errors.count)}",
                     popover_content: report.process_errors.join(', '),
-                    text: report.process_errors.count
+                    text: report.process_errors.count,
+                    link_style: 'danger'
                   )
                 ) %>
           <% end %>
