@@ -43,11 +43,6 @@ FactoryBot.define do
       action { ImportService::Process::UPDATE }
     end
 
-    trait :migrate do
-      action { ImportService::Process::MIGRATE }
-      ignored_assets { [] }
-    end
-
     trait :publish do
       publish { 'true' }
     end
