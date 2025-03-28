@@ -145,7 +145,7 @@ FactoryBot.define do
     trait :with_bibnumber do
       descriptive_metadata do
         {
-          bibnumber: [{ value: '991234563681' }],
+          bibnumber: [{ value: MMSIDValidator::EXAMPLE_VALID_MMS_ID }],
           abstract: [],
           date: [{ value: '1900' }, { value: '1475' }],
           collection: [{ value: 'Fake Collection' }],
