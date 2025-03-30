@@ -5,7 +5,7 @@ class MMSIDValidator < ActiveModel::Validator
   EXAMPLE_VALID_MMS_ID = '991234563681'
   MMS_ID_VALIDITY_REGEX = /99.*?3681/
 
-  # @param [ItemChangeSet::DescriptiveMetadataChangeSet] record
+  # @param record [ItemChangeSet::DescriptiveMetadataChangeSet]
   def validate(record)
     field = options[:attributes].first
 
