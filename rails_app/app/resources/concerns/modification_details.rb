@@ -23,6 +23,10 @@ module ModificationDetails
     attributes[:updated_at]
   end
 
+  # The `first_created_at` attribute was added when an item was migrated. When setting the `item_attribtes`,
+  # `first_created_at` was assigned to `created_at` from the migrated resource. This preserved the original date
+  # of creation, as the `created_at` attribute is reserved by Valkyrie.
+  #
   # Overriding getter method to use created_at date if a first_created_at is not set. Things added in this system and
   # not imported from another system will properly hold the time and date of creation in the `Valkyrie::Resource`
   # `created_at` attribute.
