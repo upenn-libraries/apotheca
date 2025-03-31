@@ -51,21 +51,11 @@ iiif_manifest_storage:
   <<: *minio
   bucket: iiif-manifests-dev
 
-# Bulk Import/Migration
+# Bulk Import
 working_storage:
   sceti_digitized:
     <<: *minio
     bucket: sceti-digitized
-  ceph:
-    access_key_id: fake-id
-    secret_access_key: fake-key
-    endpoint: https://ceph.library.upenn.edu
-    region: us-east-1
-    force_path_style: true
-migration:
-  storage: ceph
-  colenda_url: https://colenda.library.upenn.edu
-
 
 # Item/Asset Resource Configuration
 publish:

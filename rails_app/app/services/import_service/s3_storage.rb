@@ -68,8 +68,7 @@ module ImportService
         max_keys: 1,
         prefix: modify_path(path)
       )
-      # Ceph doesn't return key_count in response body.
-      (list.key_count || list.contents.count) == 1
+      list.key_count == 1
     end
 
     # Returns all the files available at the given path. Ignores subdirectories.

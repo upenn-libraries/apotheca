@@ -51,16 +51,11 @@ iiif_manifest_storage:
   <<: *minio
   bucket: iiif-manifest-test
 
-# Bulk Import/Migration
+# Bulk Import
 working_storage:
   sceti_digitized:
     <<: *minio
     bucket: sceti-digitized-test
-  ceph_test:
-    <<: *minio
-migration:
-  storage: ceph_test
-  colenda_url: https://colenda-dev.library.upenn.edu
 
 # Item/Asset Resource Configuration
 publish:
