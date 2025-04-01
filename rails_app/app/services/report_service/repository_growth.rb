@@ -3,6 +3,8 @@
 module ReportService
   # Growth report
   class RepositoryGrowth < Base
+    DESCRIPTIVE_METADATA_FIELDS = %i[title collection bibnumber item_type physical_format rights].freeze
+
     # Build a repository growth report
     # @return [StringIO]
     def build
@@ -22,7 +24,7 @@ module ReportService
         json.updated_at item.date_updated.iso8601
         json.published item.published
         json.first_published_at item.first_published_at&.iso8601
-        json.descriptive_metadata item.presenter.descriptive_metadata.to_h
+        json.descriptive_metadata refine_descriptive_metadata(item.presenter.descriptive_metadata.to_h)
         build_assets(json, item)
       end
     end
@@ -40,6 +42,12 @@ module ReportService
     end
 
     private
+
+    # @param desciptive_metdata [Hash]
+    # @return [Hash]
+    def refine_descriptive_metadata(descriptive_metadata)
+      descriptive_metadata.select { |k, _v| DESCRIPTIVE_METADATA_FIELDS.include?(k) }
+    end
 
     # @param item [ItemResource]
     # @return [Array<AssetResource>]

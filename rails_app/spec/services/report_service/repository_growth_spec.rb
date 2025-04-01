@@ -40,11 +40,12 @@ describe ReportService::RepositoryGrowth do
       expect(report['items'].last['system_create_date']).to eq items.last.created_at.iso8601
     end
 
-    it 'returns expected descriptive metadata' do
+    it 'returns refined descriptive metadata' do
       first_descriptive_metadata = report['items'].first['descriptive_metadata']
       last_descriptive_metadata = report['items'].last['descriptive_metadata']
-      expect(first_descriptive_metadata.deep_symbolize_keys).to include(items.first.presenter.descriptive_metadata.to_h)
-      expect(last_descriptive_metadata.deep_symbolize_keys).to include(items.last.presenter.descriptive_metadata.to_h)
+      fields = described_class::DESCRIPTIVE_METADATA_FIELDS
+      expect(first_descriptive_metadata.deep_symbolize_keys.keys).to match_array(fields)
+      expect(last_descriptive_metadata.deep_symbolize_keys.keys).to match_array(fields)
     end
 
     it 'returns an empty array for blank descriptive metadata values' do
