@@ -57,7 +57,7 @@ iiif_manifest_storage:
   <<: *aws
   bucket: upennlib-apotheca-iiif-manifests-staging
 
-# Bulk Import/Migration
+# Bulk Import
 working_storage:
   sceti-short-term:
     <<: *aws
@@ -65,15 +65,6 @@ working_storage:
   sceti-patron-requests:
     <<: *aws
     bucket: upennlib-sceti-patron-request
-  ceph:
-    access_key_id: <%= DockerSecrets.lookup(:ceph_access_key_id) %>
-    secret_access_key: <%= DockerSecrets.lookup(:ceph_secret_access_key) %>
-    endpoint: <%= DockerSecrets.lookup(:ceph_endpoint, 'http://ceph_endpoint_placeholder') %>
-    region: us-east-1
-    force_path_style: true
-migration:
-  storage: ceph
-  colenda_url: https://colenda.library.upenn.edu
 
 # Item/Asset Resource Configuration
 ezid_metadata_update:

@@ -21,5 +21,13 @@ namespace :apotheca do
         PublishItemJob.perform_async(item.id.to_s, email) if item.published
       end
     end
+
+    desc 'Generate item-level pdfs for all published items without one'
+    task generate_pdf_derivatives: :environment do
+      query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
+      query_service.custom_queries.items_without_derivative(type: :pdf).each do |item|
+        PublishItemJob.perform_async(item.id.to_s, Settings.system_user) if item.published
+      end
+    end
   end
 end
