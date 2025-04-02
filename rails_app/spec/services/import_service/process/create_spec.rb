@@ -305,8 +305,9 @@ describe ImportService::Process::Create do
       end
 
       let(:process) do
-        build(:import_process, :create, :printed, :with_asset_metadata, metadata: { 'title' => [{ value: 'Trade card' }],
-                                                                                    'bibnumber' => [{ value: 'sample-bib' }] })
+        build(:import_process, :create, :printed, :with_asset_metadata,
+              metadata: { 'title' => [{ value: 'Trade card' }],
+                          'bibnumber' => [{ value: MMSIDValidator::EXAMPLE_VALID_MMS_ID }] })
       end
 
       it 'is successful' do

@@ -67,8 +67,9 @@ describe GenerateDerivatives do
       end
 
       let(:item) do
-        persist(:item_resource, :printed, descriptive_metadata: { bibnumber: [{ value: 'sample-bib' }] },
-                                          asset_ids: [asset.id])
+        persist(:item_resource, :printed, descriptive_metadata: {
+                  bibnumber: [{ value: MMSIDValidator::EXAMPLE_VALID_MMS_ID }]
+                }, asset_ids: [asset.id])
       end
 
       it 'generates OCR derivatives' do

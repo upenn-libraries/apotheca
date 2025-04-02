@@ -51,8 +51,18 @@ describe ItemChangeSet do
   end
 
   it 'does not require title if bibnumber is set' do
-    change_set.validate(descriptive_metadata: { title: [], bibnumber: [{ value: '123456789' }] })
+    change_set.validate(
+      descriptive_metadata: { title: [], bibnumber: [{ value: MMSIDValidator::EXAMPLE_VALID_MMS_ID }] }
+    )
     expect(change_set.valid?).to be true
+  end
+
+  it 'requires a well-formed bibnumber if one is provided' do
+    change_set.validate(descriptive_metadata: { bibnumber: [{ value: '1234' }] })
+    expect(change_set.valid?).to be false
+    expect(
+      change_set.errors[:'descriptive_metadata.bibnumber']
+    ).to include 'includes an MMS ID in the incorrect format (1234)'
   end
 
   it 'requires unique identifier to be an ARK' do

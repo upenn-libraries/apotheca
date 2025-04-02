@@ -105,9 +105,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_26_172704) do
     t.string "report_type"
     t.string "state"
     t.integer "duration"
-    t.string "process_errors", array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "process_errors", array: true
   end
 
   create_table "resource_events", force: :cascade do |t|
