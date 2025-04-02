@@ -16,3 +16,10 @@ ils_metadata:
   queue: high
   args:
     - "<%= Settings.system_user %>"
+repository_growth_report:
+  cron: "0 4 1 * *" # 4am on the first day of the month
+  class: "GenerateReportJob"
+  queue: medium
+  describe: "Generates a repository growth report"
+  args:
+    - repository_growth

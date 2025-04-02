@@ -17,7 +17,7 @@ describe MetadataExtractor::Marmite do
     subject(:metadata) { marmite.descriptive_metadata(bibnumber) }
 
     let(:marmite) { described_class.new(url: url) }
-    let(:bibnumber) { 'sample-bib' }
+    let(:bibnumber) { MMSIDValidator::EXAMPLE_VALID_MMS_ID }
 
     context 'when record is found' do
       include_context 'with successful Marmite request' do

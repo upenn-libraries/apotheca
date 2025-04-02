@@ -16,7 +16,7 @@ describe MetadataExtractor::Marmite::Client do
 
   describe '#marc21' do
     let(:marmite) { described_class.new(url: url) }
-    let(:bibnumber) { 'sample-bib' }
+    let(:bibnumber) { MMSIDValidator::EXAMPLE_VALID_MMS_ID }
 
     context 'when request is successful' do
       include_context 'with successful Marmite request' do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_18_172727) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_26_172704) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -107,6 +107,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_18_172727) do
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "process_errors", array: true
   end
 
   create_table "resource_events", force: :cascade do |t|

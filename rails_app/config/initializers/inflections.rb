@@ -22,4 +22,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'IIIF'
   inflect.acronym 'OCR'
   inflect.acronym 'PDF'
+  inflect.acronym 'DPI'
+  inflect.acronym 'MMSID'
 end

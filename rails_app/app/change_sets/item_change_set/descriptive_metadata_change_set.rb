@@ -17,6 +17,7 @@ class ItemChangeSet
     end
 
     validate :validate_roles
+    validates :bibnumber, mmsid: true, if: ->(metadata) { metadata.bibnumber.present? }
     validates :title, length: { minimum: 1, message: 'can\'t be blank' }, if: ->(metadata) { metadata.bibnumber.blank? }
 
     # Validating that each :role included with a :name contains a :value
