@@ -37,8 +37,8 @@ describe GenerateDerivatives do
       end
     end
 
-    context 'when ocr_type is blank' do
-      let(:item) { persist(:item_resource, ocr_type: nil, asset_ids: [asset.id]) }
+    context 'when ocr_strategy is blank' do
+      let(:item) { persist(:item_resource, ocr_strategy: nil, asset_ids: [asset.id]) }
 
       it 'does not generate OCR derivatives' do
         expect(updated_asset.derivatives.length).to be 2

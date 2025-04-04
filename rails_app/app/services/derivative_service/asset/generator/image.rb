@@ -71,7 +71,7 @@ module DerivativeService
         private
 
         def ocr
-          @ocr ||= OCR.new(file: file, engine_options: { type: @asset.ocr_type, language: @asset.ocr_language,
+          @ocr ||= OCR.new(file: file, engine_options: { type: @asset.ocr_strategy, language: @asset.ocr_language,
                                                          viewing_direction: @asset.viewing_direction }).generate
         end
 
