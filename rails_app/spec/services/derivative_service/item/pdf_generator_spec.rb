@@ -10,7 +10,10 @@ describe DerivativeService::Item::PDFGenerator do
   end
 
   describe '#pdf' do
-    let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_assets_all_arranged) }
+    let(:item) do
+      persist(:item_resource, :with_faker_metadata, :with_full_assets_all_arranged,
+              human_readable_name: 'Line Breaks and Other Mishaps')
+    end
     let(:generator) { described_class.new(item) }
 
     context 'when pdf can be generated' do
