@@ -29,6 +29,7 @@ describe ItemQueries do
 
   describe '#find_by_ocr_type' do
     before { persist(:item_resource) }
+
     context 'when item with printed ocr_type exists' do
       let(:item) { persist(:item_resource, ocr_type: 'printed') }
 
