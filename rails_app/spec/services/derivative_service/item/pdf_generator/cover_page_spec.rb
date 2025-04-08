@@ -2,7 +2,10 @@
 
 describe DerivativeService::Item::PDFGenerator::CoverPage do
   let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
-  let(:item) { persist(:item_resource, :with_faker_metadata, asset_ids: [asset.id], thumbnail_asset_id: asset.id) }
+  let(:item) do
+    persist(:item_resource, :with_faker_metadata, asset_ids: [asset.id], thumbnail_asset_id: asset.id,
+                                                  human_readable_name: 'Line Breaks and Other Mishaps')
+  end
   let(:cover_page) { described_class.new(item) }
   let(:document) { HexaPDF::Document.new }
 
@@ -14,7 +17,6 @@ describe DerivativeService::Item::PDFGenerator::CoverPage do
     end
 
     it 'adds expected metadata values to cover page' do
-      expect(document.pages.first.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
       expect(document.pages.first.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
     end
 
