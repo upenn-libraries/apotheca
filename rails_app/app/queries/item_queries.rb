@@ -8,7 +8,7 @@ class ItemQueries
 
   attr_reader :query_service
 
-  delegate :resource_factory, :run_query, :find_inverse_references_query, to: :query_service
+  delegate :resource_factory, :run_query, :find_inverse_references_with_type_query, to: :query_service
   delegate :orm_class, to: :resource_factory
 
   def initialize(query_service:)
@@ -35,6 +35,6 @@ class ItemQueries
 
   def run_field_query(field, value)
     internal_array = "{\"#{field}\": [\"#{value}\"]}"
-    run_query(find_inverse_references_query, internal_array)
+    run_query(find_inverse_references_with_type_query, internal_array, ItemResource)
   end
 end
