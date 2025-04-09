@@ -333,7 +333,7 @@ describe UpdateAsset do
         let(:transaction) { described_class.new.with_step_args(generate_derivatives: [skip: false]) }
         let(:asset) { persist(:asset_resource) }
         let(:result) do
-          transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com', ocr_type: 'printed',
+          transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com', ocr_strategy: 'printed',
                            ocr_language: %w[eng fra])
         end
 

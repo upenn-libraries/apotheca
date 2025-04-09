@@ -29,5 +29,13 @@ namespace :apotheca do
         PublishItemJob.perform_async(item.id.to_s, Settings.system_user) if item.published
       end
     end
+
+    desc 'Migrate ocr_type to ocr_strategy'
+    task migrate_ocr_type: :environment do
+      query_service = Valkyrie::MetadataAdapter.find(:postgres).query_service
+      query_service.custom_queries.find_by_ocr_type(ocr_type: 'printed').each do |item|
+        UpdateItem.new.call(id: item.id.to_s, ocr_strategy: item.ocr_type, updated_by: Settings.system_user)
+      end
+    end
   end
 end

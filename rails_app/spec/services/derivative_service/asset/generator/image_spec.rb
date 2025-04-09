@@ -4,7 +4,7 @@ require_relative 'base'
 
 describe DerivativeService::Asset::Generator::Image do
   let(:resource) { persist(:asset_resource, :with_image_file) }
-  let(:generator) { described_class.new(AssetChangeSet.new(resource, ocr_type: 'printed', ocr_language: ['eng'])) }
+  let(:generator) { described_class.new(AssetChangeSet.new(resource, ocr_strategy: 'printed', ocr_language: ['eng'])) }
   let(:ocr_types) { described_class::OCR::TYPE_MAP.keys }
 
   it_behaves_like 'a DerivativeService::Asset::Generator::Base'

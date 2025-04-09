@@ -52,7 +52,7 @@ FactoryBot.define do
     end
 
     trait :printed do
-      ocr_type { 'printed' }
+      ocr_strategy { 'printed' }
     end
 
     trait :published do

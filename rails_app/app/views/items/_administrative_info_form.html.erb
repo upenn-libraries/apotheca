@@ -7,7 +7,7 @@
   <% form.with_error(@error) if @errors_for == 'administrative-info' %>
 
   <% form.with_field(:human_readable_name, type: :text) %>
-  <% form.with_field(:ocr_type, type: :select, choices: ItemChangeSet::OCR_TYPES, include_blank: true) %>
+  <% form.with_field(:ocr_strategy, type: :select, choices: ItemChangeSet::OCR_STRATEGIES, include_blank: true) %>
   <% form.with_field(:internal_notes, type: :text) %>
   <% form.with_field(:first_published_at, value: @item.first_published_at&.to_fs(:display), type: :readonly) %>
   <% form.with_field(:last_published_at, value: @item.last_published_at&.to_fs(:display), type: :readonly) %>

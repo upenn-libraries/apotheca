@@ -32,7 +32,7 @@ module ImportService
         result.success do |a|
           update_transaction.call(
             id: a.id, file: file, expected_checksum: @expected_checksum, updated_by: imported_by,
-            ocr_type: additional_attrs[:ocr_type], ocr_language: additional_attrs[:ocr_language],
+            ocr_strategy: additional_attrs[:ocr_strategy], ocr_language: additional_attrs[:ocr_language],
             viewing_direction: additional_attrs[:viewing_direction]
           ).tap do |update_result|
             # Delete asset if update failed, then return update_result value

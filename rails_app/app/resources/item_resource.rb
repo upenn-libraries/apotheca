@@ -31,7 +31,10 @@ class ItemResource < Valkyrie::Resource
   # Item-level derivatives, like IIIF Manifest.
   attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
+  # Keeping this here temporarily so we can access old ocr_type values. @todo: After migration should be deleted.
   attribute :ocr_type, Valkyrie::Types::Strict::String.optional
+
+  attribute :ocr_strategy, Valkyrie::Types::Strict::String.optional
 
   # @return [Integer]
   def asset_count
@@ -84,7 +87,7 @@ class ItemResource < Valkyrie::Resource
       internal_notes: internal_notes,
       published: published,
       asset_count: asset_count,
-      ocr_type: ocr_type,
+      ocr_strategy: ocr_strategy,
       first_published_at: first_published_at&.to_fs(:display),
       last_published_at: last_published_at&.to_fs(:display),
       structural: { viewing_direction: structural_metadata.viewing_direction,

@@ -88,7 +88,7 @@ Rails.application.config.to_prepare do
 
   # Register custom queries for Postgres adapter
   [
-    UniqueIdentifierQueries,
+    ItemQueries,
     PreservationBackupQueries,
     DescriptiveMetadataQueries,
     TechnicalMetadataQueries,

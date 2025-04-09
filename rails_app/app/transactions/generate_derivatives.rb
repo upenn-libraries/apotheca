@@ -28,7 +28,7 @@ class GenerateDerivatives
 
     item = find_parent_item(change_set.resource)
 
-    change_set.ocr_type = item.ocr_type
+    change_set.ocr_strategy = item.ocr_strategy
     change_set.viewing_direction = item.structural_metadata.viewing_direction
     change_set.ocr_language = item.language_codes
 

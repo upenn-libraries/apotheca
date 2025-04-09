@@ -181,7 +181,7 @@ class ItemsController < ResourcesController
     end
 
     params.require(:item).permit(
-      :human_readable_name, :thumbnail_asset_id, :ocr_type,
+      :human_readable_name, :thumbnail_asset_id, :ocr_strategy,
       internal_notes: [],
       descriptive_metadata: metadata_fields,
       structural_metadata: [

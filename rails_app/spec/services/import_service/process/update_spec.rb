@@ -373,7 +373,7 @@ describe ImportService::Process::Update do
       end
     end
 
-    context 'when ocr_type is blank' do
+    context 'when ocr_strategy is blank' do
       let(:item) { persist(:item_resource, :with_faker_metadata) }
       let(:updated_assets) do
         updated_item.asset_ids.map do |id|
@@ -382,7 +382,7 @@ describe ImportService::Process::Update do
       end
 
       let(:process) do
-        build(:import_process, :update, unique_identifier: item.unique_identifier, ocr_type: nil,
+        build(:import_process, :update, unique_identifier: item.unique_identifier, ocr_strategy: nil,
                                         assets: { arranged_filenames: 'front.tif', storage: 'sceti_digitized',
                                                   path: 'trade_card/original' })
       end
@@ -431,8 +431,8 @@ describe ImportService::Process::Update do
         )
       end
 
-      it 'sets ocr_type' do
-        expect(updated_item).to have_attributes(ocr_type: 'printed')
+      it 'sets ocr_strategy' do
+        expect(updated_item).to have_attributes(ocr_strategy: 'printed')
       end
 
       it 'generates ocr derivatives' do
@@ -458,14 +458,14 @@ describe ImportService::Process::Update do
       build(:import_process, :update, unique_identifier: item.unique_identifier)
     end
 
-    context 'when ocr_type is nil' do
+    context 'when ocr_strategy is nil' do
       let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_asset) }
 
-      context 'when ocr_type not updated' do
+      context 'when ocr_strategy not updated' do
         it { is_expected.to be false }
       end
 
-      context 'when ocr_type updated' do
+      context 'when ocr_strategy updated' do
         let(:process) do
           build(:import_process, :update, :printed, unique_identifier: item.unique_identifier)
         end
@@ -474,7 +474,7 @@ describe ImportService::Process::Update do
       end
     end
 
-    context 'when ocr_type is printed' do
+    context 'when ocr_strategy is printed' do
       let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_asset, :printed) }
 
       it 'when language nor viewing direction are changed' do

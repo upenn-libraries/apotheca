@@ -140,7 +140,7 @@ FactoryBot.define do
         end
 
         change_set = AssetChangeSet.new(asset)
-        change_set.ocr_type = 'printed'
+        change_set.ocr_strategy = 'printed'
         change_set.ocr_language = ['eng']
         derivative_service = DerivativeService::Asset::Derivatives.new(change_set)
 
