@@ -17,12 +17,12 @@ describe DerivativeService::Item::PDFGenerator::CoverPage do
     end
 
     it 'adds expected metadata values to cover page' do
-      expect(document.pages.first.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
+      expect(document.pages.first).to have_pdf_text(item.descriptive_metadata.title.first.value)
     end
 
     it 'adds Colenda link to cover page' do
-      url = "https://colenda.library.upenn.edu/catalog/#{item.unique_identifier.gsub('ark:/', '').tr('/', '-')}"
-      expect(document.pages.first.contents).to match(/#{url}/)
+      url = PublishingService::Endpoint.colenda.public_item_url(item.unique_identifier)
+      expect(document.pages.first).to have_pdf_text(url)
     end
   end
 end

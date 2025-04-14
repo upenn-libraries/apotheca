@@ -130,34 +130,34 @@ module DerivativeService
           LINK_COLOR = [14, 86, 150].freeze
 
           MAPPING = {
-            base: { font_size: 16, font: 'Helvetica', fill_color: 'black' },
-            field: { font: 'Helvetica bold', margin: [0, 0, 5, 15], padding: [0, 0, 0, 5] },
+            base: { font_size: 14, font: 'Noto-Sans', fill_color: 'black' },
+            field: { font: 'Noto-Sans bold', margin: [0, 0, 5, 15], padding: [0, 0, 0, 5] },
             metadata_value: { base: :base, margin: [0, 0, 15, 15], padding: [0, 0, 0, 10] },
-            metadata_uri: { base: :metadata_value, fill_color: LINK_COLOR, font_size: 14, underline: true },
-            title: { base: :base, font: 'Helvetica bold', font_size: 22, margin: [0, 0, 20, 15] }
+            metadata_uri: { base: :metadata_value, fill_color: LINK_COLOR, font_size: 12, underline: true },
+            title: { base: :base, font: 'Noto-Sans bold', font_size: 18, margin: [0, 0, 20, 15] }
           }.freeze
 
-          FALLBACK_FONTS_PATH = 'app/assets/fonts/noto_sans/'
+          FONTS_PATH = 'app/assets/fonts/noto_sans/'
 
           FONTS = {
             'Noto-Sans' => {
-              none: Rails.root.join("#{FALLBACK_FONTS_PATH}NotoSans-Regular.ttf"),
-              bold: Rails.root.join("#{FALLBACK_FONTS_PATH}NotoSans-Bold.ttf")
+              none: Rails.root.join("#{FONTS_PATH}NotoSans-Regular.ttf"),
+              bold: Rails.root.join("#{FONTS_PATH}NotoSans-Bold.ttf")
             },
 
             'Noto-Sans-CJK' => {
-              none: Rails.root.join("#{FALLBACK_FONTS_PATH}cjk/NotoSansCJKtc-Regular.ttf"),
-              bold: Rails.root.join("#{FALLBACK_FONTS_PATH}cjk/NotoSansCJKtc-Bold.ttf")
+              none: Rails.root.join("#{FONTS_PATH}cjk/NotoSansCJKtc-Regular.ttf"),
+              bold: Rails.root.join("#{FONTS_PATH}cjk/NotoSansCJKtc-Bold.ttf")
             },
 
             'Noto-Sans-Hebrew' => {
-              none: Rails.root.join("#{FALLBACK_FONTS_PATH}hebrew/NotoSansHebrew-Regular.ttf"),
-              bold: Rails.root.join("#{FALLBACK_FONTS_PATH}hebrew/NotoSansHebrew-Bold.ttf")
+              none: Rails.root.join("#{FONTS_PATH}hebrew/NotoSansHebrew-Regular.ttf"),
+              bold: Rails.root.join("#{FONTS_PATH}hebrew/NotoSansHebrew-Bold.ttf")
             },
 
             'Noto-Sans-Arabic' => {
-              none: Rails.root.join("#{FALLBACK_FONTS_PATH}arabic/NotoSansArabic-Regular.ttf"),
-              bold: Rails.root.join("#{FALLBACK_FONTS_PATH}arabic/NotoSansArabic-Bold.ttf")
+              none: Rails.root.join("#{FONTS_PATH}arabic/NotoSansArabic-Regular.ttf"),
+              bold: Rails.root.join("#{FONTS_PATH}arabic/NotoSansArabic-Bold.ttf")
             }
           }.freeze
         end
