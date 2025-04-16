@@ -10,6 +10,10 @@ describe DerivativeService::Item::PDFGenerator::Cover do
   let(:cover) { described_class.new(item) }
   let(:target) { HexaPDF::Document.new }
 
+  before { freeze_time }
+
+  after  { unfreeze_time }
+
   describe '#add_pages_to' do
     before { cover.add_pages_to(target) }
 
@@ -26,8 +30,8 @@ describe DerivativeService::Item::PDFGenerator::Cover do
       expect(target.pages.first).to have_pdf_text(url)
     end
 
-    it 'adds collection to last page' do
-      expect(target.pages.to_a.last).to have_pdf_text(item.descriptive_metadata.collection.first.value)
+    it 'adds date generated to last page' do
+      expect(target.pages.to_a.last).to have_pdf_text(DateTime.now.to_fs(:display))
     end
   end
 end
