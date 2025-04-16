@@ -449,6 +449,32 @@ describe ImportService::Process::Update do
                                                                       republish: false)
       end
     end
+
+    context 'when updating language and regenerating all derivatives raises error' do
+      let(:process) do
+        build(
+          :import_process, :update, :printed, metadata: { language: [{ value: 'English' }] },
+                                              unique_identifier: item.unique_identifier
+        )
+      end
+
+      before do
+        generate_derivatives = instance_double(GenerateDerivatives)
+        allow(GenerateDerivatives).to receive(:new).and_return(generate_derivatives)
+        allow(generate_derivatives).to receive(:call).and_return(
+          Dry::Monads::Failure.new(error: :error_generating_derivatives, exception: StandardError.new('Random Error'))
+        )
+      end
+
+      it 'fails' do
+        expect(result).to be_a Dry::Monads::Failure
+      end
+
+      it 'return expected failure object' do
+        expect(result.failure[:error]).to be :import_failed
+        expect(result.failure[:details]).to contain_exactly('Error generating derivatives', "\tRandom Error")
+      end
+    end
   end
 
   describe '#regenerate_asset_derivatives?' do
