@@ -25,13 +25,17 @@ FactoryBot.define do
     end
 
     trait :with_faker_metadata do
+      transient do
+        description_count { 1 }
+      end
+
       users = (0..5).map { Faker::Internet.email }
       human_readable_name { Faker::Book.title }
       descriptive_metadata do
         format_type = ['Book', 'Manuscript', 'Audio Recording', 'Video Recording', 'Ancient Utensil'].sample
         {
           title: [{ value: human_readable_name }],
-          description: Faker::Lorem.paragraphs.map { |p| { value: p } },
+          description: Faker::Lorem.paragraphs(number: description_count).map { |p| { value: p } },
           physical_location: [{ value: Faker::IdNumber.spanish_foreign_citizen_number }],
           collection: [{ value: "#{Faker::GreekPhilosophers.name} collection" }],
           date: [{ value: Faker::Date.backward.to_s }],
