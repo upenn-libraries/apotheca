@@ -21,10 +21,10 @@ class Import < ApplicationRecord
       self.resource_identifier = result.value!.unique_identifier
       success!
     else
-      error_message = result.failure[:exception].presence ||
-                      "#{result.failure[:error]}: #{result.failure[:details].join('; ')}"
-      Honeybadger.notify(error_message)
-      self.process_errors = result.failure[:details]
+      error = result.failure[:exception].presence ||
+              "#{result.failure[:error]}: #{result.failure[:details].join('; ')}"
+      Honeybadger.notify(error)
+      self.process_errors = result.failure[:details].presence || [result.failure[:exception].message]
       failure!
     end
   end

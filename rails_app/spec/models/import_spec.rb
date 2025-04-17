@@ -43,12 +43,10 @@ describe Import do
 
     let(:bulk_import) { create(:bulk_import) }
 
-    before do
-      import.run
-    end
-
     context 'when Success monad is returned' do
       let(:import) { create(:import, :processing, bulk_import: bulk_import) }
+
+      before { import.run }
 
       it 'is successful' do
         expect(import.state).to eq described_class::STATE_SUCCESSFUL.to_s
@@ -66,6 +64,8 @@ describe Import do
     context 'when Failure monad is returned' do
       let(:import) { create(:import, :processing, :with_no_assets, bulk_import: bulk_import) }
 
+      before { import.run }
+
       it 'is not successful' do
         expect(import.state).to eq described_class::STATE_FAILED.to_s
       end
@@ -77,6 +77,28 @@ describe Import do
       it 'adds Failure monad information to process_errors' do
         expect(import.process_errors).to contain_exactly('assets must be provided to create an object',
                                                          'asset storage and path must be provided')
+      end
+    end
+
+    context 'when Failure monad is returned without error details' do
+      before do
+        import_service = instance_double(ImportService::Process::Create)
+        allow(ImportService::Process::Create).to receive(:new).and_return(import_service)
+        allow(import_service).to receive(:run).and_return(
+          Dry::Monads::Failure.new(error: :error_generating_derivatives, exception: StandardError.new('Random Error'))
+        )
+
+        import.run
+      end
+
+      let(:import) { create(:import, :processing, bulk_import: bulk_import) }
+
+      it 'is not successful' do
+        expect(import.state).to eq described_class::STATE_FAILED.to_s
+      end
+
+      it 'adds Failure monad information to process_errors' do
+        expect(import.process_errors).to contain_exactly('Random Error')
       end
     end
   end

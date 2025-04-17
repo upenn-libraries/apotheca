@@ -96,7 +96,7 @@ module ImportService
             end
 
             if regenerate
-              regenerate_result = GenerateAllDerivatives.new.call(id: i.id.to_s, updated_by: imported_by, republish: false)
+              regenerate_result = generate_all_derivatives
               return regenerate_result unless regenerate_result.success?
             end
 
@@ -113,6 +113,14 @@ module ImportService
       end
 
       private
+
+      # Regenerating all derivatives for item.
+      def generate_all_derivatives
+        GenerateAllDerivatives.new.call(id: item.id.to_s, updated_by: imported_by, republish: false) do |result|
+          result.success { |updated_item| Success(updated_item) }
+          result.failure { |failure_hash| failure(**failure_hash) }
+        end
+      end
 
       # Determines whether asset derivatives should be generated. Asset derivatives
       # should be regenerated if the ocr_strategy, viewing_direction or language has changed.
