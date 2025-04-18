@@ -62,7 +62,8 @@ describe ReportService::RepositoryGrowth do
     it 'returns expected asset data' do
       report['items'].each do |item_hash|
         expect(item_hash['assets'].first).to a_hash_including(
-          "filename" => asset.original_filename, "mime_type" => asset.technical_metadata.mime_type, "size" => asset.technical_metadata.size,
+          'filename' => asset.original_filename, 'mime_type' => asset.technical_metadata.mime_type,
+          'size' => asset.technical_metadata.size
         )
       end
     end
