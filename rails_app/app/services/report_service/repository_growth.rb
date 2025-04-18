@@ -52,6 +52,8 @@ module ReportService
     # @param item [ItemResource]
     # @return [Array<AssetResource>]
     def all_assets(item)
+      return [] if item.asset_ids.blank?
+
       query_service.find_many_by_ids(ids: item.asset_ids)
     end
   end
