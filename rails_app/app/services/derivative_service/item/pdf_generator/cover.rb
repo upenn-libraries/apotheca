@@ -28,7 +28,7 @@ module DerivativeService
             target.pages.insert(i, target.import(page))
           end
         rescue StandardError => e
-          raise Error, "Failed to generate pdf cover page for item #{item.id}: #{e.message}"
+          raise Error, "Failed to generate pdf cover page for item #{item.id}: #{e.message}", cause: e
         end
 
         # Creates document containing cover pages.
