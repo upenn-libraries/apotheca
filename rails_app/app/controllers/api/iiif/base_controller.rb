@@ -4,7 +4,7 @@ module API
   module IIIF
     # Base controller for IIIF API-compliant responses
     class BaseController < ApplicationController
-      include ApiBehaviors
+      include APIBehaviors
     end
   end
 end
