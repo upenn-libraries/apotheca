@@ -9,6 +9,27 @@ Rails.application.routes.draw do
     post 'sign_out', to: 'devise/sessions#destroy'
   end
 
+  # NOTE: may need to add a subdomain constraint, e.g., `constraints: { subdomain: 'api.apotheca.library' }`
+  scope module: :api do
+    scope :v1 do
+      scope :items, module: :resources do
+        get '/:uuid', to: 'items#show'
+        get '/lookup/:ark', to: 'items#lookup', constraints: { ark: /\S+/ }
+        get '/:uuid/preview', to: 'items#preview'
+        get '/:uuid/pdf', to: 'items#pdf'
+      end
+      scope :assets, module: :resources do
+        get '/:uuid', to: 'assets#show'
+        get '/:uuid/:file', to: 'assets#file'
+      end
+    end
+    namespace :iiif do
+      scope :items do
+        get ':uuid/manifest', to: 'items#manifest'
+      end
+    end
+  end
+
   resources :alert_messages, only: %w[index update]
   resources :users, except: :destroy
   scope :bulk_imports do
