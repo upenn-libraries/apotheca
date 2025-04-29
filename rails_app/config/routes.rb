@@ -13,19 +13,19 @@ Rails.application.routes.draw do
   scope module: :api do
     scope :v1 do
       scope :items, module: :resources do
-        get '/:uuid', to: 'items#show'
-        get '/lookup/:ark', to: 'items#lookup', constraints: { ark: /\S+/ }
-        get '/:uuid/preview', to: 'items#preview'
-        get '/:uuid/pdf', to: 'items#pdf'
+        get '/:uuid', to: 'items#show', as: :api_item_resource
+        get '/lookup/:ark', to: 'items#lookup', constraints: { ark: /\S+/ }, as: :api_ark_lookup
+        get '/:uuid/preview', to: 'items#preview', as: :api_item_preview
+        get '/:uuid/pdf', to: 'items#pdf', as: :api_item_pdf
       end
       scope :assets, module: :resources do
-        get '/:uuid', to: 'assets#show'
-        get '/:uuid/:file', to: 'assets#file'
+        get '/:uuid', to: 'assets#show', as: :api_asset_resource
+        get '/:uuid/:file', to: 'assets#file', as: :api_asset_file
       end
     end
     namespace :iiif do
       scope :items do
-        get ':uuid/manifest', to: 'items#manifest'
+        get ':uuid/manifest', to: 'items#manifest', as: :api_item_iiif_manifest
       end
     end
   end

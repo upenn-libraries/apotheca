@@ -53,6 +53,9 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::IntegrationHelpers, type: :system
 
+  # JSON API helper for request specs
+  config.include APIHelpers, type: :request
+
   # Adding Valkyrie persist strategy for FactoryBot
   FactoryBot.register_strategy(:persist, ValkyriePersistStrategy)
 
