@@ -7,7 +7,6 @@ module DerivativeService
       class Cover
         PAGE_SIZE = :A4
         MARGIN = 36
-        THUMBNAIL_WIDTH = 125
         LOGO_WIDTH = 175
         LOGO_FILE_PATH = 'app/assets/images/Penn Libraries Logo 2020_RGB.png'
 
@@ -54,7 +53,7 @@ module DerivativeService
           composer.document.config['font.fallback'] = Styles::FONTS.keys
         end
 
-        # Lays out foundational elements of the cover (logo, thumbnail, logo, and text).
+        # Lays out foundational elements of the cover (logo, thumbnail, and text).
         def add_main_contents(composer)
           draw_logo(composer)
           draw_thumbnail(composer)
@@ -87,8 +86,12 @@ module DerivativeService
         end
 
         def draw_thumbnail(composer)
-          composer.image(thumbnail_file, width: THUMBNAIL_WIDTH, position: :float, align: :right,
-                                         margin: [0, 0, 15, 15])
+          # Thumbnails are produced with the default VIPS DPI of 72. So, we can use the thumbnail
+          # height and width in pixels to explicitly set the size of the image instead of attempting
+          # to resize. Hopefully this fixes the inconsistent error we are seeing.
+          thumbnail = composer.document.images.add(thumbnail_file)
+          composer.image(thumbnail, width: thumbnail.width, height: thumbnail.height, position: :float, align: :right,
+                                    margin: [0, 0, 15, 15])
         end
 
         def draw_logo(composer)
