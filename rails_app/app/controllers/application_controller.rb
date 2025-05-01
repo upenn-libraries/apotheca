@@ -3,20 +3,6 @@
 # Parent of all Controller classes.
 #
 # Configures application-wide actions, making them available in each of the controllers.
-class ApplicationController < ActionController::Base
-  include HeaderAlert
-
-  before_action :authenticate_user!
-
-  rescue_from 'CanCan::AccessDenied' do |_e|
-    redirect_to root_path, alert: 'You are not authorized to access this area.'
-  end
-
-  def after_sign_out_path_for(_user_scope)
-    if params[:type] == 'saml'
-      'https://idp.pennkey.upenn.edu/logout'
-    else
-      root_path
-    end
-  end
-end
+# See UIController for shared behavior for HTML-rendering controllers.
+# See APIController for shared behavior for JSON-rendering controllers.
+class ApplicationController < ActionController::Base; end

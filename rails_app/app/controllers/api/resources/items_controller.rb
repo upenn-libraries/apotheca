@@ -3,7 +3,7 @@
 module API
   module Resources
     # API actions for ItemResources
-    class ItemsController < API::Resources::BaseController
+    class ItemsController < APIController
       before_action :load_item, except: :lookup
       before_action :authorize_item
 

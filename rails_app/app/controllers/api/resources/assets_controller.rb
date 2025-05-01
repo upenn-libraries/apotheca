@@ -3,7 +3,7 @@
 module API
   module Resources
     # API actions for AssetResources
-    class AssetsController < API::Resources::BaseController
+    class AssetsController < APIController
       def show; end
 
       def file; end

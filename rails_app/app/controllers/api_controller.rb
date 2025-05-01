@@ -1,17 +1,7 @@
 # frozen_string_literal: true
 
-# Shared behaviors for API controllers
-module APIBehaviors
-  extend ActiveSupport::Concern
-
-  included do
-    skip_before_action :authenticate_user!
-
-    # Seems like the order of precedence here is inverted
-    rescue_from(StandardError, with: :error_response)
-    rescue_from(*API_FAILURES.keys, with: :failure_response)
-  end
-
+# Shared behavior for JSON-rendering controllers
+class APIController < ApplicationController
   class ResourceNotFound < StandardError; end
   class NotPublishedError < StandardError; end
   class ResourceMismatchError < StandardError; end
@@ -22,6 +12,9 @@ module APIBehaviors
     NotPublishedError => :not_found,
     ResourceMismatchError => :bad_request
   }.freeze
+
+  rescue_from(StandardError, with: :error_response)
+  rescue_from(*API_FAILURES.keys, with: :failure_response)
 
   private
 

@@ -3,7 +3,7 @@
 module API
   module IIIF
     # API actions for Item-level IIIF-compliant responses
-    class ItemsController < API::IIIF::BaseController
+    class ItemsController < APIController
       def manifest; end
     end
   end
