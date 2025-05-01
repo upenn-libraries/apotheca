@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # actions for Assets
-class AssetsController < UIController
+class AssetsController < ResourcesController
   class FileNotFound < StandardError; end
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
