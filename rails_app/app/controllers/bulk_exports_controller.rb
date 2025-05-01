@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # controller actions for BulkExport
-class BulkExportsController < ApplicationController
+class BulkExportsController < UIController
   include PerPage
 
   load_and_authorize_resource

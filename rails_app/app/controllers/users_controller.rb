@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Controller actions for Users
-class UsersController < ApplicationController
+class UsersController < UIController
   include PerPage
 
   load_and_authorize_resource
