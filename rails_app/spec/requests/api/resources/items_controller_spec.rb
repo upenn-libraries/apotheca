@@ -49,7 +49,11 @@ describe 'IIIF Resource Item API' do
       end
     end
 
-    xit 'returns item information' # TODO: pending implementation
+    it 'returns item information' do
+      item = persist :item_resource, :published
+      get api_item_resource_path(item.id), headers: { "ACCEPT" => "application/json" }
+      expect(json_body).to eq({ id: item.id.to_s, ark: item.unique_identifier })
+    end
   end
 
   describe 'GET #lookup' do

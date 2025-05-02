@@ -1,0 +1,10 @@
+item = {
+  id: @item.id.to_s,
+  ark: @item.unique_identifier
+}
+
+if params[:assets] == 'true'
+  item[:assets] = []
+end
+
+item

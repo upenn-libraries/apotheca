@@ -278,6 +278,7 @@ GEM
       reline (>= 0.4.2)
     iso-639 (0.3.8)
       csv
+    jb (0.8.2)
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -645,6 +646,7 @@ DEPENDENCIES
   iiif-presentation
   importmap-rails
   iso-639
+  jb
   jbuilder
   kaminari
   mime-types
