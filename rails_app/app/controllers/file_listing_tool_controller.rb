@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A tool for listing file on a specified attached drive at a specified path
-class FileListingToolController < ApplicationController
+class FileListingToolController < UIController
   def tool; end
 
   def file_list

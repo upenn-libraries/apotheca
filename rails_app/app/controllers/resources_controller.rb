@@ -3,7 +3,7 @@
 # Parent of Asset and Item Controllers
 #
 # Contains functionality that is shared among all resource controllers.
-class ResourcesController < ApplicationController
+class ResourcesController < UIController
   private
 
   # @param [Symbol] type

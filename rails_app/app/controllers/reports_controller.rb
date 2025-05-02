@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # controller actions for Report
-class ReportsController < ApplicationController
+class ReportsController < UIController
   include PerPage
 
   load_and_authorize_resource

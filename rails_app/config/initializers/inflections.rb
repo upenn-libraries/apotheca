@@ -24,4 +24,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'PDF'
   inflect.acronym 'DPI'
   inflect.acronym 'MMSID'
+  inflect.acronym 'API'
+  inflect.acronym 'UI'
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # display of ResourceEvents
-class EventsController < ApplicationController
+class EventsController < UIController
   before_action :load_resource, only: :index
 
   def index
