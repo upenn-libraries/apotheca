@@ -1,0 +1,20 @@
+# frozen_string_literal: true
+
+{
+  id: asset.id.to_s,
+  item_id: item.id.to_s,
+  label: asset.label,
+  preservation_file: {
+    mime_type: asset.technical_metadata.mime_type,
+    original_filename: asset.original_filename,
+    size_bytes: asset.technical_metadata.size,
+    url: api_asset_file_url(uuid: asset.id.to_s, file: :preservation)
+  },
+  derivatives: asset.derivatives.map do |d|
+    { d.type => {
+      mime_type: d.mime_type,
+      size_bytes: d.size,
+      url: 'TODO' # TODO: calculate URL to derivative file
+    } }
+  end
+}

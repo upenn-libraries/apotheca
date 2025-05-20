@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+assets.map do |a|
+  render 'asset', asset: a
+end

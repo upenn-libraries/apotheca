@@ -49,10 +49,35 @@ describe 'IIIF Resource Item API' do
       end
     end
 
-    it 'returns item information' do
-      item = persist :item_resource, :published
-      get api_item_resource_path(item.id), headers: { 'ACCEPT' => 'application/json' }
-      expect(json_body).to be_present
+    context 'with ItemResource information only' do
+      let!(:item) do
+        persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives)
+      end
+
+      before { get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' } }
+
+      it 'returns item identifiers' do
+        expect(json_body[:id]).to eq item.id.to_s
+        expect(json_body[:ark]).to eq item.unique_identifier
+      end
+
+      it 'includes descriptive metadata' do
+        expect(json_body).to have_key :descriptive_metadata
+      end
+
+      it 'includes item-level derivatives' do
+        expect(json_body[:derivatives].flat_map(&:keys)).to include :pdf, :iiif_manifest
+      end
+    end
+
+    context 'with AssetResource information included' do
+      let(:item) { persist(:item_resource, :published) }
+      let(:json) { get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' } }
+
+      it 'includes asset information if requested' do
+        get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' }
+        expect(json_body).to be_present
+      end
     end
   end
 
