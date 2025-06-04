@@ -4,25 +4,46 @@ json = {
   id: @item.id.to_s,
   ark: @item.unique_identifier,
   first_published_at: @item.first_published_at,
-  last_published_at: @item.last_published_at
+  last_published_at: @item.last_published_at,
+  descriptive_metadata: @item.descriptive_metadata.to_json_export,
+  structural_metadata: {
+    viewing_direction: @item.structural_metadata.viewing_direction,
+    viewing_hint: @item.structural_metadata.viewing_hint
+  },
+  derivatives: {},
+  related: {
+    assets: api_item_resource_url(@item.id, assets: true)
+  }
 }
 
-# json[:descriptive_metadata] = render 'descriptive_metadata', item: @item
-json[:descriptive_metadata] = @item.descriptive_metadata.to_json_export
-
-json[:structural_metadata] = {
-  viewing_direction: @item.structural_metadata.viewing_direction,
-  viewing_hint: @item.structural_metadata.viewing_hint
-}
-
-json[:derivatives] = @item.derivatives.map do |d|
-  { d.type => {
-    mime_type: d.mime_type,
-    size_bytes: d.size,
-    url: 'TODO' # TODO: calculate URL to derivative file
-  } }
+# Add preview derivative if thumbnail present.
+if @item.thumbnail_image?
+  json[:derivatives][:preview] = {
+    mime_type: @item.thumbnail.thumbnail.mime_type,
+    size_bytes: @item.thumbnail.thumbnail.size,
+    url: api_item_preview_url(@item.id)
+  }
 end
 
+# Add pdf derivative if present.
+if (pdf = @item.pdf)
+  json[:derivatives][:pdf] = {
+    mime_type: pdf.mime_type,
+    size_bytes: pdf.size,
+    url: api_item_pdf_url(@item.id)
+  }
+end
+
+# Add iiif_manifest derivative if present.
+if (iiif_manifest = @item.iiif_manifest)
+  json[:derivatives][:iiif_manifest] = {
+    mime_type: iiif_manifest.mime_type,
+    size_bytes: iiif_manifest.size,
+    url: '' # TODO: need to add this link later when new iiif manifest endpoint is present.
+  }
+end
+
+# Add in assets if requested.
 if params[:assets] == 'true'
   json[:assets] = @item.arranged_assets.map do |a|
     render 'api/resources/assets/asset', asset: a, item: @item

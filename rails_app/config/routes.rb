@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   # NOTE: may need to add a subdomain constraint, e.g., `constraints: { subdomain: 'api.apotheca.library' }`
   scope module: :api do
-    scope :v1 do
+    scope :v1, defaults: { format: :json } do
       scope :items, module: :resources do
         get '/:uuid', to: 'items#show', as: :api_item_resource
         get '/lookup/:ark', to: 'items#lookup', constraints: { ark: /\S+/ }, as: :api_ark_lookup

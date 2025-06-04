@@ -66,17 +66,25 @@ describe 'IIIF Resource Item API' do
       end
 
       it 'includes item-level derivatives' do
-        expect(json_body[:derivatives].flat_map(&:keys)).to include :pdf, :iiif_manifest
+        expect(json_body[:derivatives].keys).to include :pdf, :iiif_manifest
+      end
+
+      it 'includes related assets' do
+        expect(json_body[:related][:assets]).to eql "http://www.example.com/v1/items/#{item.id}?assets=true"
       end
     end
 
     context 'with AssetResource information included' do
-      let(:item) { persist(:item_resource, :published) }
+      let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives) }
       let(:json) { get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' } }
 
-      it 'includes asset information if requested' do
+      before do
         get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' }
-        expect(json_body).to be_present
+      end
+
+      it 'includes asset information if requested' do
+        expect(json_body[:assets].count).to be 2
+        expect(json_body[:assets].first.keys).to contain_exactly(:id, :label, :preservation_file, :derivatives)
       end
     end
   end
