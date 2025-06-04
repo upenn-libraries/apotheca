@@ -310,6 +310,35 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
         )
       end
     end
+
+    context 'when MARC XML contains non-aat terms' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:datafield ind1=" " ind2="7" tag="655">
+                <marc:subfield code="a">Notated music.</marc:subfield>
+                <marc:subfield code="2">lcgft</marc:subfield>
+                <marc:subfield code="0">http://id.loc.gov/authorities/genreForms/gf2014027184</marc:subfield>
+              </marc:datafield>
+              <marc:datafield ind1=" " ind2="7" tag="655">
+                <marc:subfield code="a">Scores.</marc:subfield>
+                <marc:subfield code="2">lcgft</marc:subfield>
+                 <marc:subfield code="0">http://id.loc.gov/authorities/genreForms/gf2014027077</marc:subfield>
+              </marc:datafield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'maps physical format to aat terms' do
+        expect(transformer.to_descriptive_metadata[:physical_format]).to contain_exactly(
+          { value: 'sheet music', uri: 'https://vocab.getty.edu/aat/300026430' },
+          { value: 'scores (documents for music)', uri: 'http://vocab.getty.edu/aat/300026427' }
+        )
+      end
+    end
   end
 
   describe '#remove_duplicates!' do
