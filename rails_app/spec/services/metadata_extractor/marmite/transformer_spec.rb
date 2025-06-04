@@ -325,7 +325,15 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
               <marc:datafield ind1=" " ind2="7" tag="655">
                 <marc:subfield code="a">Scores.</marc:subfield>
                 <marc:subfield code="2">lcgft</marc:subfield>
-                 <marc:subfield code="0">http://id.loc.gov/authorities/genreForms/gf2014027077</marc:subfield>
+                <marc:subfield code="0">http://id.loc.gov/authorities/genreForms/gf2014027077</marc:subfield>
+              </marc:datafield>
+              <marc:datafield ind1=" " ind2="7" tag="655">
+                <marc:subfield code="a">Piano music.</marc:subfield>
+                <marc:subfield code="2">fast</marc:subfield>
+                <marc:subfield code="0">http://id.worldcat.org/fast/1063403</marc:subfield>
+              </marc:datafield>
+              <marc:datafield ind1=" " ind2="0" tag="655">
+                <marc:subfield code="a">Hybrid Music</marc:subfield>
               </marc:datafield>
             </marc:record>
           </marc:records>
@@ -335,7 +343,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
       it 'maps physical format to aat terms' do
         expect(transformer.to_descriptive_metadata[:physical_format]).to contain_exactly(
           { value: 'sheet music', uri: 'https://vocab.getty.edu/aat/300026430' },
-          { value: 'scores (documents for music)', uri: 'http://vocab.getty.edu/aat/300026427' }
+          { value: 'scores (documents for music)', uri: 'http://vocab.getty.edu/aat/300026427' },
+          { value: 'Hybrid Music' }
         )
       end
     end
