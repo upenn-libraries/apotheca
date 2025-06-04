@@ -7,6 +7,7 @@ describe 'API::Resources::AssetsController', type: :routing do
 
   it 'routes /v1/assets/:uuid properly' do
     expect(get: '/v1/assets/123-abc').to route_to(
+      format: :json,
       controller: controller,
       action: 'show',
       uuid: '123-abc'
@@ -15,6 +16,7 @@ describe 'API::Resources::AssetsController', type: :routing do
 
   it 'routes /v1/assets/:uuid/:file properly' do
     expect(get: '/v1/assets/123-abc/thumbnail').to route_to(
+      format: :json,
       controller: controller,
       action: 'file',
       uuid: '123-abc',
