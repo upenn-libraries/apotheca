@@ -21,7 +21,7 @@ module DerivativeService
       #
       # @return [NilClass] if no images are present
       # @return [DerivativeFile] file containing iiif v2 manifest json
-      def v2_manifest
+      def manifest
         return nil unless item.arranged_assets.any?(&:image?)
 
         manifest = IIIF::Presentation::Manifest.new(

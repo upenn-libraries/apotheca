@@ -19,7 +19,7 @@ describe DerivativeService::Item::Derivatives do
       allow(DerivativeService::Item::V2IIIFManifestGenerator).to receive(:new).with(item.resource)
                                                                             .and_return(iiif_generator)
       described_class.new(item).iiif_manifest
-      expect(iiif_generator).to have_received(:v2_manifest)
+      expect(iiif_generator).to have_received(:manifest)
     end
   end
 

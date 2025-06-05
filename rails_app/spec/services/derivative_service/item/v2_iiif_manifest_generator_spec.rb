@@ -9,11 +9,11 @@ describe DerivativeService::Item::V2IIIFManifestGenerator do
     end
   end
 
-  describe '#v2_manifest' do
+  describe '#manifest' do
     subject(:iiif_service) { described_class.new(item) }
 
     context 'when item contains image assets' do
-      subject(:json) { JSON.parse(iiif_service.v2_manifest.read) }
+      subject(:json) { JSON.parse(iiif_service.manifest.read) }
 
       let(:item) do
         persist(
@@ -139,7 +139,7 @@ describe DerivativeService::Item::V2IIIFManifestGenerator do
       end
 
       it 'raises an error' do
-        expect { iiif_service.v2_manifest }.to raise_error(
+        expect { iiif_service.manifest }.to raise_error(
           DerivativeService::Item::IIIFManifestGenerator::MissingDerivative
         )
       end
@@ -152,7 +152,7 @@ describe DerivativeService::Item::V2IIIFManifestGenerator do
       end
 
       it 'returns nil' do
-        expect(iiif_service.v2_manifest).to be_nil
+        expect(iiif_service.manifest).to be_nil
       end
     end
   end
