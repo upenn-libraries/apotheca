@@ -17,30 +17,24 @@ json = {
 }
 
 # Add preview derivative if thumbnail present.
-if @item.thumbnail_image?
-  json[:derivatives][:preview] = {
-    mime_type: @item.thumbnail.thumbnail.mime_type,
-    size_bytes: @item.thumbnail.thumbnail.size,
-    url: api_item_preview_url(@item.id)
-  }
+if (thumbnail = @item.thumbnail&.thumbnail)
+  json[:derivatives][:preview] = render('api/resources/derivative',
+                                        derivative: thumbnail,
+                                        url: api_item_preview_url(@item.id))
 end
 
 # Add pdf derivative if present.
 if (pdf = @item.pdf)
-  json[:derivatives][:pdf] = {
-    mime_type: pdf.mime_type,
-    size_bytes: pdf.size,
-    url: api_item_pdf_url(@item.id)
-  }
+  json[:derivatives][:pdf] = render('api/resources/derivative',
+                                    derivative: pdf,
+                                    url: api_item_pdf_url(@item.id))
 end
 
 # Add iiif_manifest derivative if present.
 if (iiif_manifest = @item.iiif_manifest)
-  json[:derivatives][:iiif_manifest] = {
-    mime_type: iiif_manifest.mime_type,
-    size_bytes: iiif_manifest.size,
-    url: '' # TODO: need to add this link later when new iiif manifest endpoint is present.
-  }
+  json[:derivatives][:iiif_manifest] = render('api/resources/derivative',
+                                              derivative: iiif_manifest,
+                                              url: iiif_api_item_iiif_manifest_url(@item.id))
 end
 
 # Add in assets if requested.

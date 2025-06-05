@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-{
+json = {
   id: asset.id.to_s,
   label: asset.label,
   preservation_file: {
@@ -9,7 +9,19 @@
     size_bytes: asset.technical_metadata.size,
     url: api_asset_file_url(uuid: asset.id.to_s, file: :preservation)
   },
-  derivatives: asset.derivatives.map { |d|
-    [d.type, { mime_type: d.mime_type, size_bytes: d.size, url: api_asset_file_url(asset.id, d.type) }]
-  }.to_h
+  derivatives: {}
 }
+
+if (thumbnail = asset.thumbnail)
+  json[:derivatives][:thumbnail] = render('api/resources/derivative',
+                                          derivative: thumbnail,
+                                          url: api_asset_file_url(uuid: asset.id.to_s, file: :thumbnail))
+end
+
+if (access = asset.access)
+  json[:derivatives][:access] = render('api/resources/derivative',
+                                       derivative: access,
+                                       url: api_asset_file_url(uuid: asset.id.to_s, file: :access))
+end
+
+json
