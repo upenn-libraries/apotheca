@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::IIIFManifestGenerator do
+describe DerivativeService::Item::V2IIIFManifestGenerator do
   describe '.new' do
     context 'when parameters do not include an Item' do
       it 'returns an error' do

@@ -3,7 +3,7 @@
 module DerivativeService
   module Item
     # Class to generate a IIIF Manifest for an ItemResource
-    class IIIFManifestGenerator
+    class V2IIIFManifestGenerator
       class MissingDerivative < StandardError; end
 
       attr_reader :item
