@@ -61,12 +61,24 @@ describe 'IIIF Resource Item API' do
         expect(json_body[:ark]).to eq item.unique_identifier
       end
 
-      it 'includes descriptive metadata' do
-        expect(json_body).to have_key :descriptive_metadata
+      it 'returns first and last published_at' do
+        expect(json_body[:first_published_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
+        expect(json_body[:last_published_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
       end
 
-      it 'includes item-level derivatives' do
-        expect(json_body[:derivatives].keys).to include :pdf, :iiif_manifest
+      it 'includes descriptive metadata' do
+        expect(json_body).to have_key :descriptive_metadata
+        expect(json_body[:descriptive_metadata].keys).to match_array(ItemResource::DescriptiveMetadata::Fields.all)
+      end
+
+      %i[preview pdf iiif_manifest].each do |type|
+        it "includes item-level #{type} derivatives" do
+          expect(json_body[:derivatives][type]).to match(
+            mime_type: an_instance_of(String),
+            size_bytes: an_instance_of(Integer),
+            url: a_string_starting_with('http://www.example.com/')
+          )
+        end
       end
 
       it 'includes related assets' do

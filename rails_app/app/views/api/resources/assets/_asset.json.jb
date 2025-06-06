@@ -9,7 +9,11 @@ json = {
     size_bytes: asset.technical_metadata.size,
     url: api_asset_file_url(uuid: asset.id.to_s, file: :preservation)
   },
-  derivatives: {}
+  # Setting default derivative values.
+  derivatives: {
+    thumbnail: nil,
+    access: nil
+  }
 }
 
 if (thumbnail = asset.thumbnail)
