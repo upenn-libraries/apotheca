@@ -140,7 +140,7 @@ describe DerivativeService::Item::V2IIIFManifestGenerator do
 
       it 'raises an error' do
         expect { iiif_service.manifest }.to raise_error(
-          DerivativeService::Item::IIIFManifestGenerator::MissingDerivative
+          DerivativeService::Item::V2IIIFManifestGenerator::MissingDerivative
         )
       end
     end
