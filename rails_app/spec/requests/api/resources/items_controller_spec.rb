@@ -61,6 +61,28 @@ describe 'IIIF Resource Item API' do
   end
 
   describe 'GET #pdf' do
-    xit 'redirects to a PDF download' # TODO: pending implementation
+    before { get api_item_pdf_path(item.id) }
+
+    context 'when PDF is available' do
+      let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives) }
+
+      it 'redirects to a PDF download' do
+        expect(request).to redirect_to %r{\Ahttp://minio-dev.library.upenn.edu/derivatives-dev/#{item.id}/pdf}
+        expect(request).to have_http_status(:temporary_redirect)
+      end
+    end
+
+    context 'when PDF is not available' do
+      let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged) }
+
+      it 'returns a 404 status code' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
+      end
+    end
   end
 end
