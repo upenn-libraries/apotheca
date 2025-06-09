@@ -27,7 +27,7 @@ services:
       APP_GID: ${GID:-1000}
       CHROME_URL: "http://chrome:${CHROME_PORT}"
       SOLR_TEST_URL: "${SOLR_TEST_URL}"
-      MINIO_URL: "http://minio:${MINIO_PORT}"
+      MINIO_URL: "${MINIO_URL}"
     healthcheck:
       retries: 20
       start_period: 5m
