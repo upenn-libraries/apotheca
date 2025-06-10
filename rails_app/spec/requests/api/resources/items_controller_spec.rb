@@ -67,8 +67,9 @@ describe 'IIIF Resource Item API' do
       let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives) }
 
       it 'redirects to a PDF download' do
-        expect(request).to redirect_to %r{\Ahttp://minio-dev.library.upenn.edu/derivatives-dev/#{item.id}/pdf}
-        expect(request).to have_http_status(:temporary_redirect)
+        expected_presigned_url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{item.id}/pdf}
+        expect(response).to redirect_to(expected_presigned_url)
+        expect(response).to have_http_status(:temporary_redirect)
       end
     end
 

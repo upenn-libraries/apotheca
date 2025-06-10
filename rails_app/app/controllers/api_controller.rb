@@ -51,9 +51,8 @@ class APIController < ApplicationController
     content_disposition = "inline; filename=\"#{filename}\""
 
     signer = Aws::S3::Presigner.new(client: shrine.client)
-    url = signer.presigned_url(
-      :get_object, bucket: shrine.bucket.name, key: key, expires_in: 300, response_content_disposition: content_disposition
-    )
+    url = signer.presigned_url(:get_object, bucket: shrine.bucket.name, key: key, expires_in: 300,
+                                            response_content_disposition: content_disposition)
 
     redirect_to url, status: :temporary_redirect
   end
