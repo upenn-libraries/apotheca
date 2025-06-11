@@ -17,7 +17,7 @@ describe DerivativeService::Item::Derivatives do
     it 'calls the correct generator' do
       iiif_generator = instance_spy(DerivativeService::Item::V2IIIFManifestGenerator)
       allow(DerivativeService::Item::V2IIIFManifestGenerator).to receive(:new).with(item.resource)
-                                                                            .and_return(iiif_generator)
+                                                                              .and_return(iiif_generator)
       described_class.new(item).iiif_manifest
       expect(iiif_generator).to have_received(:manifest)
     end
