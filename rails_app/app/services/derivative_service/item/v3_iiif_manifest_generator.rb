@@ -56,6 +56,9 @@ module DerivativeService
         IIIF::V3::Presentation::Manifest.new(manifest_attributes)
       end
 
+      # Core manifest attributes
+      #
+      # @return [Hash]
       def manifest_attributes
         {
           'id' => colenda.manifest_url(item.unique_identifier),
