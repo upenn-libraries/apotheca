@@ -53,14 +53,19 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
       end
 
       it 'includes thumbnail' do
-        expect(json['thumbnail']).to a_hash_including(
-          'id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/3')
+        expect(json['thumbnail'].first).to include(
+          'id' => starting_with("#{Settings.image_server.url}/#{Settings.image_server.prefix}")
                      .and(ending_with('/full/!200,200/0/default.jpg')),
-          'service' => {
-            'context' => 'http://iiif.io/api/image/3/context.json',
-            'id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/3'),
-            'profile' => 'http://iiif.io/api/image/3/level2.json'
-          }
+          'type' => 'Image',
+          'format' => 'image/jpeg',
+          'service' => contain_exactly(
+            a_hash_including(
+              'context' => 'http://iiif.io/api/image/3/context.json',
+              'type' => 'ImageServer3',
+              'id' => starting_with("#{Settings.image_server.url}/#{Settings.image_server.prefix}"),
+              'profile' => 'http://iiif.io/api/image/3/level2.json'
+            )
+          )
         )
       end
 
@@ -113,7 +118,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
               'type' => 'Annotation',
               'motivation' => 'painting',
               'body' => a_hash_including(
-                'id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2'),
+                'id' => starting_with("#{Settings.image_server.url}/#{Settings.image_server.prefix}"),
                 'height' => 238,
                 'width' => 400
               )

@@ -6,90 +6,131 @@ module DerivativeService
   module Item
     # Class to generate a IIIF Manifest for an ItemResource
     class V3IIIFManifestGenerator
+      DEFAULT_VIEWING_HINT = 'individuals'
+      DEFAULT_VIEWING_DIRECTION = 'left-to-right'
+
       class MissingDerivative < StandardError; end
 
       attr_reader :item
 
-      # @param [ItemResource]
+      delegate :image_server, to: :Settings
+
+      # Initialize the manifest generator
+      #
+      # @param item [ItemResource] the item resource to generate a manifest for
+      # @raise [ArgumentError] if item is not an ItemResource
       def initialize(item)
         raise ArgumentError, 'IIIF manifest can only be generated for ItemResource' unless item.is_a?(ItemResource)
 
         @item = item.presenter
       end
 
-      # Returns a IIIF Preservation v3 Manifest only representing images.
+      # Returns a IIIF Presentation v3 Manifest representing images only
       #
-      # TODO: add support for audio and video
-      #
+      # @note Currently only supports images. Audio and video support is planned.
       # @return [NilClass] if no images are present
-      # @return [DerivativeFile] file containing iiif v3 manifest json
+      # @return [DerivativeFile] file containing IIIF v3 manifest JSON
       def manifest
-        return nil unless item.arranged_assets.any?(&:image?)
+        return nil unless image_assets.any?
 
-        manifest = IIIF::V3::Presentation::Manifest.new(
-          {
-            'id' => colenda.manifest_url(item.unique_identifier),
-            'label' => { 'none' => [item.descriptive_metadata.title.pluck(:value).join('; ')] },
-            'required_statement' => {
-              'label' => { 'none' => ['Attribution'] },
-              'value' => { 'none' => ['Provided by the University of Pennsylvania Libraries.'] }
-            },
-            'behavior' => [item.structural_metadata.viewing_hint || 'individuals'],
-            'viewing_direction' => item.structural_metadata.viewing_direction || 'left-to-right',
-            'metadata' => iiif_metadata,
-            'thumbnail' => [thumbnail]
-          }
-        )
-
+        manifest = build_manifest
         manifest['rendering'] = [pdf_file] if pdf_file
 
-        item.arranged_assets.select(&:image?).map.with_index do |asset, i|
-          raise MissingDerivative, "Derivatives missing for #{asset.original_filename}" unless asset.access
+        populate_manifest_content(manifest)
+        create_derivative_file(manifest)
+      end
+
+      private
+
+      # Get all image assets from the item
+      #
+      # @return [Array<AssetResource>] filtered list of image assets
+      def image_assets
+        @image_assets ||= item.arranged_assets.select(&:image?)
+      end
+
+      # Build the basic manifest structure
+      #
+      # @return [IIIF::V3::Presentation::Manifest] configured manifest object
+      def build_manifest
+        IIIF::V3::Presentation::Manifest.new(manifest_attributes)
+      end
+
+      def manifest_attributes
+        {
+          'id' => colenda.manifest_url(item.unique_identifier),
+          'label' => { 'none' => [item.descriptive_metadata.title.pluck(:value).join('; ')] },
+          'required_statement' => {
+            'label' => { 'none' => ['Attribution'] },
+            'value' => { 'none' => ['Provided by the University of Pennsylvania Libraries.'] }
+          },
+          'behavior' => [item.structural_metadata.viewing_hint || DEFAULT_VIEWING_HINT],
+          'viewing_direction' => item.structural_metadata.viewing_direction || DEFAULT_VIEWING_DIRECTION,
+          'metadata' => iiif_metadata,
+          'thumbnail' => [thumbnail]
+        }
+      end
+
+      # Add canvases and structures to the manifest
+      #
+      # @param manifest [IIIF::V3::Presentation::Manifest] manifest to populate
+      # @return [void]
+      def populate_manifest_content(manifest)
+        image_assets.each_with_index do |asset, i|
+          validate_asset_derivatives!(asset)
 
           index = i + 1
           manifest.items << canvas(index: index, asset: asset)
-          if asset.annotations&.any?
-            manifest.structures << range(
-              index: index, label: asset.label || "p. #{index}", annotations: asset.annotations.map(&:text)
-            )
-          end
-        end
+          next unless asset.annotations&.any?
 
+          manifest.structures << range(
+            index: index, label: asset.label || "p. #{index}", annotations: asset.annotations.map(&:text)
+          )
+        end
+      end
+
+      # Validate that an asset has required derivatives
+      #
+      # @param asset [AssetResource] asset to validate
+      # @raise [MissingDerivative] if access derivative is missing
+      # @return [void]
+      def validate_asset_derivatives!(asset)
+        return if asset.access
+
+        raise MissingDerivative, "Derivatives missing for #{asset.original_filename}"
+      end
+
+      # Create a derivative file from the manifest
+      #
+      # @param manifest [IIIF::V3::Presentation::Manifest] completed manifest
+      # @return [DerivativeFile] file ready for storage
+      def create_derivative_file(manifest)
         derivative_file = DerivativeFile.new(mime_type: 'application/json', iiif_manifest: true)
         derivative_file.write(manifest.to_json)
         derivative_file.rewind
         derivative_file
       end
 
-      private
-
-      # Manifest-level thumbnail.
+      # Generate manifest-level thumbnail
+      #
+      # @return [Hash] IIIF thumbnail structure
+      # @return [Hash] empty hash if no thumbnail available
       def thumbnail
         return {} unless item.thumbnail&.access
 
         thumbnail_url = iiif_image_url(item.thumbnail)
 
-        # TODO: the whole thumbnail thing needs its own evaluation of v3 compliance;
-        # this is not a complete implementation, just enough to stop erroring out
         {
           'id' => "#{thumbnail_url}/full/!200,200/0/default.jpg",
           'type' => 'Image',
           'format' => 'image/jpeg',
-          'service' => {
+          'service' => [{
             'context' => 'http://iiif.io/api/image/3/context.json',
+            'type' => 'ImageServer3',
             'id' => thumbnail_url,
             'profile' => image_server.profile
-          }
+          }]
         }
-        # This is the OG v2 hash - v3 will error out with it
-        # {
-        #   "@id": "#{thumbnail_url}/full/!200,200/0/default.jpg",
-        #   "service": {
-        #     "@context": 'http://iiif.io/api/image/2/context.json',
-        #     "@id": thumbnail_url,
-        #     "profile": image_server.profile
-        #   }
-        # }
       end
 
       # Metadata to display in image viewer.
@@ -119,8 +160,8 @@ module DerivativeService
                               end
 
           metadata << {
-            'label' => { 'none' => [field.to_s.titleize] },  # Language map
-            'value' => { 'none' => normalized_values }       # Language map
+            'label' => { 'none' => [field.to_s.titleize] },
+            'value' => { 'none' => normalized_values }
           }
         end
         metadata
@@ -186,6 +227,9 @@ module DerivativeService
         )
       end
 
+      # Generate PDF download link if available
+      #
+      # @return [Hash, nil] PDF rendering structure or nil if not available
       def pdf_file
         return unless DerivativeService::Item::PDFGenerator.new(item.object).pdfable?
 
@@ -197,6 +241,10 @@ module DerivativeService
         }
       end
 
+      # Generate download link for original file
+      #
+      # @param asset [AssetResource] asset to create download link for
+      # @return [Hash] rendering structure for original file download
       def download_original_file(asset)
         {
           'id' => colenda.original_url(item.unique_identifier, asset.id),
@@ -217,13 +265,16 @@ module DerivativeService
         URI.join(image_server.url, "#{image_server.prefix}/#{CGI.escape(filepath)}").to_s
       end
 
-      # Image server configuration.
-      delegate :image_server, to: :Settings
-
+      # Get the base URL for this item
+      #
+      # @return [String] item URL used as base for canvas and range IDs
       def item_url
         @item_url ||= colenda.item_url(item.unique_identifier)
       end
 
+      # Get the Colenda publishing endpoint configuration
+      #
+      # @return [PublishingService::Endpoint] Colenda endpoint configuration
       def colenda
         @colenda ||= PublishingService::Endpoint.colenda
       end
