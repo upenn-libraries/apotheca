@@ -195,7 +195,7 @@ module DerivativeService
 
       # Image server configuration.
       def image_server
-        Settings.image_server
+        Settings.v2_image_server
       end
 
       def item_url

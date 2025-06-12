@@ -23,10 +23,14 @@ ezid:
   password: apitest
 marmite:
   url: http://mdproc.library.upenn.edu:9292
-image_server:
+v2_image_server:
   url: https://serverless_iiif.library.upenn.edu
   prefix: iiif/2
   profile: http://iiif.io/api/image/2/level2.json
+v3_image_server:
+  url: http://localhost:8182
+  prefix: iiif/3
+  profile: http://iiif.io/api/image/3/level2.json
 
 # File Storage
 minio: &minio

@@ -13,7 +13,7 @@ module DerivativeService
 
       attr_reader :item
 
-      delegate :image_server, to: :Settings
+      delegate :v3_image_server, to: :Settings
 
       # Initialize the manifest generator
       #
@@ -131,7 +131,7 @@ module DerivativeService
             'context' => 'http://iiif.io/api/image/3/context.json',
             'type' => 'ImageServer3',
             'id' => thumbnail_url,
-            'profile' => image_server.profile
+            'profile' => v3_image_server.profile
           }]
         }
       end
@@ -191,12 +191,13 @@ module DerivativeService
         # Create the image body
         annotation.body = IIIF::V3::Presentation::ImageResource.create_image_api_image_resource(
           service_id: iiif_image_url(asset), width: asset.technical_metadata.width,
-          height: asset.technical_metadata.height, profile: image_server.profile
+          height: asset.technical_metadata.height, profile: v3_image_server.profile
         )
         annotation['target'] = canvas['id']
 
-        canvas.items << annotation
+        annotation_page.items << annotation
 
+        canvas.items << annotation_page
         canvas['rendering'] = [download_original_file(asset)]
 
         canvas
@@ -265,7 +266,7 @@ module DerivativeService
 
         filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
 
-        URI.join(image_server.url, "#{image_server.prefix}/#{CGI.escape(filepath)}").to_s
+        URI.join(v3_image_server.url, "#{v3_image_server.prefix}/#{CGI.escape(filepath)}").to_s
       end
 
       # Get the base URL for this item

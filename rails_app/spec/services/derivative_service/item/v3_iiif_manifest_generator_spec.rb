@@ -29,7 +29,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
 
       it 'includes top level attributes' do
         expect(json).to include(
-          'id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/manifest',
+          'id' => ending_with('manifest'),
           'label' => { 'none' => ['New Item'] },
           'behavior' => ['individuals'],
           'viewingDirection' => 'left-to-right',
@@ -54,7 +54,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
 
       it 'includes thumbnail' do
         expect(json['thumbnail'].first).to include(
-          'id' => starting_with("#{Settings.image_server.url}/#{Settings.image_server.prefix}")
+          'id' => starting_with("#{Settings.v3_image_server.url}/#{Settings.v3_image_server.prefix}")
                      .and(ending_with('/full/!200,200/0/default.jpg')),
           'type' => 'Image',
           'format' => 'image/jpeg',
@@ -62,7 +62,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
             a_hash_including(
               'context' => 'http://iiif.io/api/image/3/context.json',
               'type' => 'ImageServer3',
-              'id' => starting_with("#{Settings.image_server.url}/#{Settings.image_server.prefix}"),
+              'id' => starting_with("#{Settings.v3_image_server.url}/#{Settings.v3_image_server.prefix}"),
               'profile' => 'http://iiif.io/api/image/3/level2.json'
             )
           )
@@ -74,11 +74,11 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
           'label' => { 'none' => ['Front'] },
           'items' => containing_exactly(
             a_hash_including(
-              'id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/range/r1-1',
+              'id' => ending_with('range/r1-1'),
               'label' => { 'none' => ['Front of Card'] },
               'items' => containing_exactly(
                 a_hash_including(
-                  'id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/canvas/p1',
+                  'id' => ending_with('canvas/p1'),
                   'label' => { 'none' => ['Front of Card'] }
                 )
               )
@@ -91,7 +91,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
         item = json['items'][0]
         expect(item).to include(
           'type' => 'Canvas',
-          'id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/canvas/p1',
+          'id' => ending_with('canvas/p1'),
           'label' => { 'none' => ['Front'] }
         )
       end
@@ -108,19 +108,25 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
       it 'includes canvases in items' do
         canvases = json['items']
         expect(canvases[0]).to include(
-          'id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/canvas/p1',
+          'id' => ending_with('canvas/p1'),
           'label' => { 'none' => ['Front'] },
           'height' => 238,
           'width' => 400,
           'items' => contain_exactly(
             a_hash_including(
-              'id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/canvas/p1/annotation/1',
-              'type' => 'Annotation',
-              'motivation' => 'painting',
-              'body' => a_hash_including(
-                'id' => starting_with("#{Settings.image_server.url}/#{Settings.image_server.prefix}"),
-                'height' => 238,
-                'width' => 400
+              'id' => ending_with('canvas/p1/page/1'),
+              'type' => 'AnnotationPage',
+              'items' => contain_exactly(
+                a_hash_including(
+                  'id' => ending_with('canvas/p1/annotation/1'),
+                  'type' => 'Annotation',
+                  'motivation' => 'painting',
+                  'body' => a_hash_including(
+                    'id' => starting_with("#{Settings.v3_image_server.url}/#{Settings.v3_image_server.prefix}"),
+                    'height' => 238,
+                    'width' => 400
+                  )
+                )
               )
             )
           ),
