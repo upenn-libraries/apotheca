@@ -30,7 +30,7 @@ v2_image_server:
 v3_image_server:
   url: http://localhost:8182
   prefix: iiif/3
-  profile: http://iiif.io/api/image/3/level2.json
+  profile: level2
 
 # File Storage
 minio: &minio

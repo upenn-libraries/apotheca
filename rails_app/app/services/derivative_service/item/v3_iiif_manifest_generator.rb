@@ -70,7 +70,7 @@ module DerivativeService
           'behavior' => [item.structural_metadata.viewing_hint || DEFAULT_VIEWING_HINT],
           'viewing_direction' => item.structural_metadata.viewing_direction || DEFAULT_VIEWING_DIRECTION,
           'metadata' => iiif_metadata,
-          'thumbnail' => [thumbnail]
+          'thumbnail' => [item_thumbnail]
         }
       end
 
@@ -116,12 +116,25 @@ module DerivativeService
 
       # Generate manifest-level thumbnail
       #
-      # @return [Hash] IIIF thumbnail structure
+      # @return [Hash] IIIF item thumbnail structure
       # @return [Hash] empty hash if no thumbnail available
-      def thumbnail
+      def item_thumbnail
         return {} unless item.thumbnail&.access
 
         thumbnail_url = iiif_image_url(item.thumbnail)
+
+        {
+          'id' => "#{thumbnail_url}/full/!200,200/0/default.jpg",
+          'type' => 'Image',
+          'format' => 'image/jpeg'
+        }
+      end
+
+      # Generate asset-level thumbnail
+      #
+      # @return [Hash] IIIF asset thumbnail structure
+      def asset_thumbnail(asset)
+        thumbnail_url = iiif_image_url(asset)
 
         {
           'id' => "#{thumbnail_url}/full/!200,200/0/default.jpg",
@@ -180,20 +193,23 @@ module DerivativeService
         canvas.label  = { 'none' => [asset.label || "p. #{index}"] }
         canvas.height = asset.technical_metadata.height
         canvas.width  = asset.technical_metadata.width
+        canvas.thumbnail = [asset_thumbnail(asset)]
 
         annotation_page = IIIF::V3::Presentation::AnnotationPage.new
-        annotation_page['id'] = item_url + "/canvas/p#{index}/page/1"
+        annotation_page['id'] = item_url + "/canvas/p#{index}/annotation-page"
 
         annotation = IIIF::V3::Presentation::Annotation.new
         annotation['id'] = item_url + "/canvas/p#{index}/annotation/1"
         annotation['motivation'] = 'painting'
+        annotation['target'] = canvas['id']
 
         # Create the image body
         annotation.body = IIIF::V3::Presentation::ImageResource.create_image_api_image_resource(
           service_id: iiif_image_url(asset), width: asset.technical_metadata.width,
           height: asset.technical_metadata.height, profile: v3_image_server.profile
         )
-        annotation['target'] = canvas['id']
+        # Manually set the type of service, this SHOULD be done in the `iiif-presentation` gem
+        annotation.body.service.first.type = 'ImageService3'
 
         annotation_page.items << annotation
 

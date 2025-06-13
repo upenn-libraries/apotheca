@@ -52,20 +52,12 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
         )
       end
 
-      it 'includes thumbnail' do
+      it 'includes item level thumbnail' do
         expect(json['thumbnail'].first).to include(
           'id' => starting_with("#{Settings.v3_image_server.url}/#{Settings.v3_image_server.prefix}")
                      .and(ending_with('/full/!200,200/0/default.jpg')),
           'type' => 'Image',
-          'format' => 'image/jpeg',
-          'service' => contain_exactly(
-            a_hash_including(
-              'context' => 'http://iiif.io/api/image/3/context.json',
-              'type' => 'ImageServer3',
-              'id' => starting_with("#{Settings.v3_image_server.url}/#{Settings.v3_image_server.prefix}"),
-              'profile' => 'http://iiif.io/api/image/3/level2.json'
-            )
-          )
+          'format' => 'image/jpeg'
         )
       end
 
@@ -114,7 +106,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
           'width' => 400,
           'items' => contain_exactly(
             a_hash_including(
-              'id' => ending_with('canvas/p1/page/1'),
+              'id' => ending_with('canvas/p1/annotation-page'),
               'type' => 'AnnotationPage',
               'items' => contain_exactly(
                 a_hash_including(
@@ -132,7 +124,9 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
           ),
           'rendering' => containing_exactly(
             a_hash_including(
+              'id' => ending_with('original'),
               'label' => { 'none' => ['Original File - 291 KB'] },
+              'type' => 'Image',
               'format' => 'image/tiff'
             )
           )
