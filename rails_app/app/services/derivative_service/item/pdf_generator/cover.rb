@@ -171,6 +171,16 @@ module DerivativeService
             'Noto-Sans-Arabic' => {
               none: Rails.root.join("#{FONTS_PATH}arabic/NotoSansArabic-Regular.ttf"),
               bold: Rails.root.join("#{FONTS_PATH}arabic/NotoSansArabic-Bold.ttf")
+            },
+
+            'Noto-Sans-Bengali' => {
+              none: Rails.root.join("#{FONTS_PATH}bengali/NotoSansBengali-Regular.ttf"),
+              bold: Rails.root.join("#{FONTS_PATH}bengali/NotoSansBengali-Bold.ttf")
+            },
+
+            'Noto-Sans-Thai' => {
+              none: Rails.root.join("#{FONTS_PATH}thai/NotoSansThai-Regular.ttf"),
+              bold: Rails.root.join("#{FONTS_PATH}thai/NotoSansThai-Bold.ttf")
             }
           }.freeze
         end
