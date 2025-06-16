@@ -1,0 +1,31 @@
+# frozen_string_literal: true
+
+json = {
+  id: asset.id.to_s,
+  label: asset.label,
+  preservation_file: {
+    mime_type: asset.technical_metadata.mime_type,
+    original_filename: asset.original_filename,
+    size_bytes: asset.technical_metadata.size,
+    url: api_asset_file_url(uuid: asset.id.to_s, file: :preservation)
+  },
+  # Setting default derivative values.
+  derivatives: {
+    thumbnail: nil,
+    access: nil
+  }
+}
+
+if (thumbnail = asset.thumbnail)
+  json[:derivatives][:thumbnail] = render('api/resources/derivative',
+                                          derivative: thumbnail,
+                                          url: api_asset_file_url(uuid: asset.id.to_s, file: :thumbnail))
+end
+
+if (access = asset.access)
+  json[:derivatives][:access] = render('api/resources/derivative',
+                                       derivative: access,
+                                       url: api_asset_file_url(uuid: asset.id.to_s, file: :access))
+end
+
+json

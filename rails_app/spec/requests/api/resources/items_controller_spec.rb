@@ -49,7 +49,56 @@ describe 'IIIF Resource Item API' do
       end
     end
 
-    xit 'returns item information' # TODO: pending implementation
+    context 'with ItemResource information only' do
+      let!(:item) do
+        persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives)
+      end
+
+      before { get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' } }
+
+      it 'returns item identifiers' do
+        expect(json_body[:id]).to eq item.id.to_s
+        expect(json_body[:ark]).to eq item.unique_identifier
+      end
+
+      it 'returns first and last published_at' do
+        expect(json_body[:first_published_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
+        expect(json_body[:last_published_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
+      end
+
+      it 'includes descriptive metadata' do
+        expect(json_body).to have_key :descriptive_metadata
+        expect(json_body[:descriptive_metadata].keys).to match_array(ItemResource::DescriptiveMetadata::Fields.all)
+      end
+
+      %i[preview pdf iiif_manifest].each do |type|
+        it "includes item-level #{type} derivatives" do
+          expect(json_body[:derivatives][type]).to match(
+            mime_type: an_instance_of(String),
+            size_bytes: an_instance_of(Integer),
+            url: a_string_starting_with('http://www.example.com/')
+          )
+        end
+      end
+
+      it 'includes related assets' do
+        expect(json_body[:related][:assets]).to eql "http://www.example.com/v1/items/#{item.id}?assets=true"
+      end
+    end
+
+    context 'with AssetResource information included' do
+      let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives) }
+      let(:json) { get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' } }
+
+      before do
+        get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' }
+      end
+
+      it 'includes asset information if requested' do
+        expect(json_body[:assets].count).to be 2
+        expect(json_body[:assets].first.keys).to contain_exactly(:id, :label, :preservation_file, :derivatives)
+      end
+    end
   end
 
   describe 'GET #lookup' do
