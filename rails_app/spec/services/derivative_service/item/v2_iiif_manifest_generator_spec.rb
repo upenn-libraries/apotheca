@@ -49,7 +49,7 @@ describe DerivativeService::Item::V2IIIFManifestGenerator do
 
       it 'includes thumbnail' do
         expect(json['thumbnail']).to a_hash_including(
-          '@id' => starting_with("#{Settings.image_server.url}")
+          '@id' => starting_with(Settings.image_server.url.to_s)
                      .and(ending_with('/full/!200,200/0/default.jpg')),
           'service' => {
             '@context' => 'http://iiif.io/api/image/2/context.json',
