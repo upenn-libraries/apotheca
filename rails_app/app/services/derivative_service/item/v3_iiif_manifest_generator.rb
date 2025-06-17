@@ -70,7 +70,7 @@ module DerivativeService
           'behavior' => [item.structural_metadata.viewing_hint || DEFAULT_VIEWING_HINT],
           'viewing_direction' => item.structural_metadata.viewing_direction || DEFAULT_VIEWING_DIRECTION,
           'metadata' => iiif_metadata,
-          'thumbnail' => [item_thumbnail]
+          'thumbnail' => [thumbnail]
         }
       end
 
@@ -118,7 +118,7 @@ module DerivativeService
       #
       # @return [Hash] IIIF item thumbnail structure
       # @return [Hash] empty hash if no thumbnail available
-      def item_thumbnail
+      def thumbnail
         return {} unless item.thumbnail&.access
 
         thumbnail_url = iiif_image_url(item.thumbnail)
@@ -127,25 +127,6 @@ module DerivativeService
           'id' => "#{thumbnail_url}/full/!200,200/0/default.jpg",
           'type' => 'Image',
           'format' => 'image/jpeg'
-        }
-      end
-
-      # Generate asset-level thumbnail
-      #
-      # @return [Hash] IIIF asset thumbnail structure
-      def asset_thumbnail(asset)
-        thumbnail_url = iiif_image_url(asset)
-
-        {
-          'id' => "#{thumbnail_url}/full/!200,200/0/default.jpg",
-          'type' => 'Image',
-          'format' => 'image/jpeg',
-          'service' => [{
-            'context' => 'http://iiif.io/api/image/3/context.json',
-            'type' => 'ImageServer3',
-            'id' => thumbnail_url,
-            'profile' => v3_image_server.profile
-          }]
         }
       end
 
@@ -193,7 +174,6 @@ module DerivativeService
         canvas.label  = { 'none' => [asset.label || "p. #{index}"] }
         canvas.height = asset.technical_metadata.height
         canvas.width  = asset.technical_metadata.width
-        canvas.thumbnail = [asset_thumbnail(asset)]
 
         annotation_page = IIIF::V3::Presentation::AnnotationPage.new
         annotation_page['id'] = item_url + "/canvas/p#{index}/annotation-page"
