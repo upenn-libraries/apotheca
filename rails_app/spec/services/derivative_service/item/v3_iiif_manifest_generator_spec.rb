@@ -54,7 +54,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
 
       it 'includes item level thumbnail' do
         expect(json['thumbnail'].first).to include(
-          'id' => starting_with("#{Settings.v3_image_server.url}/#{Settings.v3_image_server.prefix}")
+          'id' => starting_with("#{Settings.image_server.url}/iiif/3")
                      .and(ending_with('/full/!200,200/0/default.jpg')),
           'type' => 'Image',
           'format' => 'image/jpeg'
@@ -114,7 +114,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
                   'type' => 'Annotation',
                   'motivation' => 'painting',
                   'body' => a_hash_including(
-                    'id' => starting_with("#{Settings.v3_image_server.url}/#{Settings.v3_image_server.prefix}"),
+                    'id' => starting_with("#{Settings.image_server.url}/iiif/3"),
                     'height' => 238,
                     'width' => 400
                   )

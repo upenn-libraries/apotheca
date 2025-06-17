@@ -13,7 +13,7 @@ module DerivativeService
 
       attr_reader :item
 
-      delegate :v3_image_server, to: :Settings
+      delegate :image_server, to: :Settings
 
       # Initialize the manifest generator
       #
@@ -186,7 +186,7 @@ module DerivativeService
         # Create the image body
         annotation.body = IIIF::V3::Presentation::ImageResource.create_image_api_image_resource(
           service_id: iiif_image_url(asset), width: asset.technical_metadata.width,
-          height: asset.technical_metadata.height, profile: v3_image_server.profile
+          height: asset.technical_metadata.height, profile: 'level2'
         )
         # Manually set the type of service, this SHOULD be done in the `iiif-presentation` gem
         annotation.body.service.first.type = 'ImageService3'
@@ -262,7 +262,7 @@ module DerivativeService
 
         filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
 
-        URI.join(v3_image_server.url, "#{v3_image_server.prefix}/#{CGI.escape(filepath)}").to_s
+        URI.join(image_server.url, "iiif/3/#{CGI.escape(filepath)}").to_s
       end
 
       # Get the base URL for this item

@@ -23,14 +23,8 @@ marmite:
   url: http://mdproc.library.upenn.edu:9292
 honeybadger:
   api_key: <%= DockerSecrets.lookup(:honeybadger_api_key) %>
-v2_image_server:
+image_server:
   url: https://iiif-images.library.upenn.edu
-  prefix: iiif/2
-  profile: http://iiif.io/api/image/2/level2.json
-v3_image_server:
-  url: https://iiif-images.library.upenn.edu
-  prefix: iiif/3
-  profile: level2
 
 # File Storage
 aws: &aws

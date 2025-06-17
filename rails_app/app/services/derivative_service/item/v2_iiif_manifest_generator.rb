@@ -76,7 +76,7 @@ module DerivativeService
           "service": {
             "@context": 'http://iiif.io/api/image/2/context.json',
             "@id": thumbnail_url,
-            "profile": image_server.profile
+            "profile": 'http://iiif.io/api/image/2/level2.json'
           }
         }
       end
@@ -128,7 +128,8 @@ module DerivativeService
         # By providing width, height and profile, we avoid the IIIF gem fetching the data again.
         annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(
           service_id: iiif_image_url(asset), width: asset.technical_metadata.width,
-          height: asset.technical_metadata.height, profile: image_server.profile
+          height: asset.technical_metadata.height, profile: 'http://iiif.io/api/image/2/level2.json
+'
         )
         annotation['on'] = canvas['@id']
 
@@ -190,12 +191,12 @@ module DerivativeService
 
         filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
 
-        URI.join(image_server.url, "#{image_server.prefix}/#{CGI.escape(filepath)}").to_s
+        URI.join(image_server.url, "iiif/2/#{CGI.escape(filepath)}").to_s
       end
 
       # Image server configuration.
       def image_server
-        Settings.v2_image_server
+        Settings.image_server
       end
 
       def item_url
