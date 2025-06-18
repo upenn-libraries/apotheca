@@ -1,52 +1,11 @@
 # frozen_string_literal: true
 
-json = {
-  id: @item.id.to_s,
-  ark: @item.unique_identifier,
-  first_published_at: @item.first_published_at.utc.iso8601,
-  last_published_at: @item.last_published_at.utc.iso8601,
-  descriptive_metadata: @item.presenter.descriptive_metadata.to_h,
-  structural_metadata: {
-    viewing_direction: @item.structural_metadata.viewing_direction,
-    viewing_hint: @item.structural_metadata.viewing_hint
-  },
-  # Setting default derivative values.
-  derivatives: {
-    preview: nil,
-    pdf: nil,
-    iiif_manifest: nil
-  },
-  related: {
-    assets: api_item_resource_url(@item.id, assets: true)
+{
+  status: 'success',
+  data: {
+    item: render('api/resources/items/item'),
+    related: {
+      assets: api_item_resource_url(@item.id, assets: true)
+    }
   }
 }
-
-# Add preview derivative if thumbnail present.
-if (thumbnail = @item.thumbnail&.thumbnail)
-  json[:derivatives][:preview] = render('api/resources/derivative',
-                                        derivative: thumbnail,
-                                        url: api_item_preview_url(@item.id))
-end
-
-# Add pdf derivative if present.
-if (pdf = @item.pdf)
-  json[:derivatives][:pdf] = render('api/resources/derivative',
-                                    derivative: pdf,
-                                    url: api_item_pdf_url(@item.id))
-end
-
-# Add iiif_manifest derivative if present.
-if (iiif_manifest = @item.iiif_manifest)
-  json[:derivatives][:iiif_manifest] = render('api/resources/derivative',
-                                              derivative: iiif_manifest,
-                                              url: iiif_api_item_iiif_manifest_url(@item.id))
-end
-
-# Add in assets if requested.
-if params[:assets] == 'true'
-  json[:assets] = @item.arranged_assets.map do |a|
-    render 'api/resources/assets/asset', asset: a, item: @item
-  end
-end
-
-json

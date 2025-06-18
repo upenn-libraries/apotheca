@@ -53,27 +53,28 @@ describe 'IIIF Resource Item API' do
       let!(:item) do
         persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives)
       end
+      let(:item_json) { json_body[:data][:item] }
 
       before { get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' } }
 
       it 'returns item identifiers' do
-        expect(json_body[:id]).to eq item.id.to_s
-        expect(json_body[:ark]).to eq item.unique_identifier
+        expect(item_json[:id]).to eq item.id.to_s
+        expect(item_json[:ark]).to eq item.unique_identifier
       end
 
       it 'returns first and last published_at' do
-        expect(json_body[:first_published_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
-        expect(json_body[:last_published_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
+        expect(item_json[:first_published_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
+        expect(item_json[:last_published_at]).to match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/)
       end
 
       it 'includes descriptive metadata' do
-        expect(json_body).to have_key :descriptive_metadata
-        expect(json_body[:descriptive_metadata].keys).to match_array(ItemResource::DescriptiveMetadata::Fields.all)
+        expect(item_json).to have_key :descriptive_metadata
+        expect(item_json[:descriptive_metadata].keys).to match_array(ItemResource::DescriptiveMetadata::Fields.all)
       end
 
       %i[preview pdf iiif_manifest].each do |type|
         it "includes item-level #{type} derivatives" do
-          expect(json_body[:derivatives][type]).to match(
+          expect(item_json[:derivatives][type]).to match(
             mime_type: an_instance_of(String),
             size_bytes: an_instance_of(Integer),
             url: a_string_starting_with('http://www.example.com/')
@@ -82,21 +83,21 @@ describe 'IIIF Resource Item API' do
       end
 
       it 'includes related assets' do
-        expect(json_body[:related][:assets]).to eql "http://www.example.com/v1/items/#{item.id}?assets=true"
+        expect(json_body[:data][:related][:assets]).to eql "http://www.example.com/v1/items/#{item.id}?assets=true"
       end
     end
 
     context 'with AssetResource information included' do
       let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives) }
-      let(:json) { get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' } }
+      let(:item_json) { json_body[:data][:item] }
 
       before do
         get api_item_resource_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' }
       end
 
       it 'includes asset information if requested' do
-        expect(json_body[:assets].count).to be 2
-        expect(json_body[:assets].first.keys).to contain_exactly(:id, :label, :preservation_file, :derivatives)
+        expect(item_json[:assets].count).to be 2
+        expect(item_json[:assets].first.keys).to contain_exactly(:id, :label, :preservation_file, :derivatives)
       end
     end
   end
