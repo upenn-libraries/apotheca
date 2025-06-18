@@ -16,7 +16,7 @@ services:
 {% if is_development == true %}
       APP_UID: ${UID:-1000}
       APP_GID: ${GID:-1000}
-      MINIO_URL: "http://minio:{{ minio.port }}"
+      MINIO_URL: "http://{{ minio.server_url }}"
 {% endif %}
       DATABASE_NAME: "{{ postgres.database }}"
       DATABASE_PASSWORD: /run/secrets/database_password

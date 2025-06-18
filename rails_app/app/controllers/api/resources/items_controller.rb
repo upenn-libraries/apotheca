@@ -13,7 +13,15 @@ module API
 
       def preview; end
 
-      def pdf; end
+      def pdf
+        pdf_derivative = @item.pdf
+
+        raise FileNotFound, I18n.t('api.exceptions.file_not_found') unless pdf_derivative
+
+        filename = "#{@item.presenter.descriptive_metadata.title.first[:value].parameterize}.pdf"
+
+        redirect_to_presigned_url pdf_derivative.file_id, filename
+      end
 
       private
 
