@@ -125,7 +125,14 @@ module DerivativeService
         {
           'id' => "#{thumbnail_url}/full/!200,200/0/default.jpg",
           'type' => 'Image',
-          'format' => 'image/jpeg'
+          'format' => 'image/jpeg',
+          'service' => [
+            {
+              'id' => thumbnail_url,
+              'type' => "ImageService3",
+              'profile' => 'level2'
+            }
+          ]
         }
       end
 
