@@ -34,8 +34,7 @@ module DerivativeService
         return nil unless image_assets.any?
 
         manifest = build_manifest
-        manifest['rendering'] = [pdf_file] if pdf_file
-
+        add_pdf_download(manifest)
         populate_manifest_content(manifest)
         create_derivative_file(manifest)
       end
@@ -227,13 +226,13 @@ module DerivativeService
         )
       end
 
-      # Generate PDF download link if available
+      # Add PDF to manifest rendering if it exists
       #
-      # @return [Hash, nil] PDF rendering structure or nil if not available
-      def pdf_file
+      # @return [nil]
+      def add_pdf_download(manifest)
         return unless DerivativeService::Item::PDFGenerator.new(item.object).pdfable?
 
-        {
+        manifest.rendering << {
           'id' => colenda.pdf_url(item.unique_identifier),
           'label' => { 'none' => ['Download PDF'] },
           'type' => 'Text',
