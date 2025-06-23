@@ -31,9 +31,6 @@ class ItemResource < Valkyrie::Resource
   # Item-level derivatives, like IIIF Manifest.
   attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
-  # Keeping this here temporarily so we can access old ocr_type values. @todo: After migration should be deleted.
-  attribute :ocr_type, Valkyrie::Types::Strict::String.optional
-
   attribute :ocr_strategy, Valkyrie::Types::Strict::String.optional
 
   # @return [Integer]
