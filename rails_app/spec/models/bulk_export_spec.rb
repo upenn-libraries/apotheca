@@ -166,6 +166,11 @@ describe BulkExport do
       it 'generates csv with the correct filename' do
         expect(bulk_export.csv.filename.to_s).to eq("#{bulk_export.generated_at.strftime('%Y%m%d_%H%M%S')}.csv")
       end
+
+      it 'generates csv with uuid' do
+        expect(bulk_export.csv.download).to include(item1.id)
+        expect(bulk_export.csv.download).to include(item2.id)
+      end
     end
 
     context 'when successful and contains one search results' do
