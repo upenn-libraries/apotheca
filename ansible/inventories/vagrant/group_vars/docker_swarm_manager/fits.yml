@@ -1,7 +1,7 @@
 ---
 fits:
   image:
-    name: "gitlab.library.upenn.edu/dld/digital-repository/fits-servlet"
-    tag: "v1.1.0"
-  port: 8080
-  replicas: 1
+    name: "{{ apotheca_vault_values.secret.fits_image_name }}"
+    tag: "{{ apotheca_vault_values.secret.fits_image_tag }}"
+  port: "{{ apotheca_vault_values.secret.fits_port }}"
+  replicas: "{{ apotheca_vault_values.secret.fits_replicas }}"

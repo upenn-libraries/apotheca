@@ -1,16 +1,16 @@
 ---
 postgres:
-  database: "apotheca_dev"
+  database: "{{ apotheca_vault_values.secret.postgres_database }}"
   dev_env:
-    log_connections: "on"
-    log_disconnections: "on"
-    log_statement: "all"
+    log_connections: "{{ apotheca_vault_values.secret.postgres_dev_env_log_connections }}"
+    log_disconnections: "{{ apotheca_vault_values.secret.postgres_dev_env_log_disconnections }}"
+    log_statement: "{{ apotheca_vault_values.secret.postgres_dev_env_log_statement }}"
   image:
-    name: "postgres"
-    tag: "15.2-alpine"
-  replicas: 1
+    name: "{{ apotheca_vault_values.secret.postgres_image_name }}"
+    tag: "{{ apotheca_vault_values.secret.postgres_image_tag }}"
+  replicas: "{{ apotheca_vault_values.secret.postgres_replicas }}"
   versioned_secrets:
     password:
-      value: "123456abcde"
-      version: 1
-  user: "rails"
+      value: "{{ apotheca_vault_values.secret.postgres_versioned_secrets_password_value }}"
+      version: "{{ apotheca_vault_values.secret.postgres_versioned_secrets_password_version }}"
+  user: "{{ apotheca_vault_values.secret.postgres_user }}"
