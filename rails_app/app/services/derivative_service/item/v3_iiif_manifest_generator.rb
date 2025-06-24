@@ -87,9 +87,8 @@ module DerivativeService
           manifest.items << canvas(index: index, asset: asset)
           next unless asset.annotations&.any?
 
-          manifest.structures << range(
-            index: index, label: asset.label || "p. #{index}", annotations: asset.annotations.map(&:text)
-          )
+          manifest.structures.concat ranges(index: index, label: asset.label || "p. #{index}",
+                                            annotations: asset.annotations.map(&:text))
         end
       end
 
@@ -207,32 +206,38 @@ module DerivativeService
         canvas
       end
 
-      # Returns range with sub ranges for each annotations entry. Each annotation entry will
-      # point to the entire canvas.
+      # Get array of ranges for each annotation
       #
-      # Note: If at some point coordinates are provided for each annotation entry we can point directly
-      # to the coordinates given.
+      # NOTE: The `items` array here is practically useless - the actual annotation is coming from
+      # the `label` property on the Range itself. However, validation of the manifest fails with an
+      # empty `items` array on a Range. This is kind of hacky to support top level annotations.
       #
       # @param index [Integer] range number, used to create identifiers
       # @param label [String]
       # @param annotations [Array<String>] list of annotations
-      def range(index:, label:, annotations:)
-        subranges = annotations.map.with_index do |annotation, subrange_index|
+      # @return [Array<IIIF::V3::Presentation::Range>]
+      def ranges(index:, label:, annotations:)
+        annotations.map.with_index do |annotation, annotation_index|
           IIIF::V3::Presentation::Range.new(
-            'id' => item_url + "/range/r#{index}-#{subrange_index + 1}",
-            'label' => { 'none' => [annotation] },
+            'id' => item_url + "/range/r#{index}",
+            'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
-              'id' => item_url + "/canvas/p#{index}",
-              'label' => { 'none' => [annotation] }
+              'id' => item_url + "/canvas/c#{index}-#{annotation_index + 1}",
+              'label' => { 'none' => [label] }
             )]
           )
         end
+      end
 
-        IIIF::V3::Presentation::Range.new(
-          'id' => item_url + "/range/r#{index}",
-          'label' => { 'none' => [label] },
-          'items' => subranges
-        )
+      # Append the label (something like `1r`) to the end of the annotation if it isn't already present
+      #
+      # @param label [String]
+      # @param annotation [String]
+      # @return [String]
+      def labeled_annotation(label:, annotation:)
+        return annotation if /#{Regexp.escape(label)}\s*\z/.match?(annotation)
+
+        [annotation, label].join ', '
       end
 
       # Add PDF to manifest rendering if it exists

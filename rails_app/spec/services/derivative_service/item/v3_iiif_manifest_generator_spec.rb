@@ -61,19 +61,14 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
         )
       end
 
-      it 'includes ranges' do
+      it 'includes structures' do
         expect(json['structures'].first).to include(
-          'label' => { 'none' => ['Front'] },
+          'id' => ending_with('range/r1'),
+          'label' => { 'none' => ['Front of Card, Front'] },
           'items' => containing_exactly(
             a_hash_including(
-              'id' => ending_with('range/r1-1'),
-              'label' => { 'none' => ['Front of Card'] },
-              'items' => containing_exactly(
-                a_hash_including(
-                  'id' => ending_with('canvas/p1'),
-                  'label' => { 'none' => ['Front of Card'] }
-                )
-              )
+              'id' => ending_with('canvas/c1-1'),
+              'label' => { 'none' => ['Front'] }
             )
           )
         )
