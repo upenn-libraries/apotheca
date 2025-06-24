@@ -46,6 +46,10 @@ describe ItemResource do
       it 'returns the Apotheca URL for the ItemResource' do
         expect(export).to include(:apotheca_url)
       end
+
+      it 'returns the UUID for the ItemResource' do
+        expect(export).to include(:uuid)
+      end
     end
 
     context 'when there are assets' do

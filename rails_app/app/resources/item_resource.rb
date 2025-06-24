@@ -74,6 +74,7 @@ class ItemResource < Valkyrie::Resource
   def to_json_export(include_assets: false)
     bulk_export_hash = {
       unique_identifier: unique_identifier,
+      uuid: id,
       human_readable_name: human_readable_name,
       apotheca_url: presenter.apotheca_url,
       metadata: descriptive_metadata.to_json_export,
