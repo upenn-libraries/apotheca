@@ -13,22 +13,23 @@ shared_examples_for 'a ImportService::Process::Base' do
     end
 
     context 'with malformed bibnumber' do
+      let(:bibnumber) { '123456789' }
+
       it 'adds error' do
-        process = build(:import_process, :create,
-                        metadata: { 'bibnumber' => [{ value: '123456789' }] })
+        process = build(:import_process, :create, metadata: { 'bibnumber' => [{ value: bibnumber }] })
         expect(process.valid?).to be false
-        expect(process.errors).to include('failed to retrieve marmite metadata: bibnumber must be valid')
+        expect(process.errors).to include("bibnumber #{bibnumber} is invalid or could not be found")
       end
     end
 
     context 'when marmite fails to retrieve metadata when provided properly formatted bibnumber' do
       include_context 'with unsuccessful Marmite request'
+      let(:bibnumber) { MMSIDValidator::EXAMPLE_VALID_MMS_ID }
 
       it 'adds error' do
-        process = build(:import_process, :create,
-                        metadata: { 'bibnumber' => [{ value: MMSIDValidator::EXAMPLE_VALID_MMS_ID }] })
+        process = build(:import_process, :create, metadata: { 'bibnumber' => [{ value: bibnumber }] })
         expect(process.valid?).to be false
-        expect(process.errors).to include('failed to retrieve marmite metadata: bibnumber must be valid')
+        expect(process.errors).to include("bibnumber #{bibnumber} is invalid or could not be found")
       end
     end
   end

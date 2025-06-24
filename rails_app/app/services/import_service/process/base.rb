@@ -43,7 +43,7 @@ module ImportService
 
         @errors << 'imported_by must always be provided' unless imported_by
 
-        @errors << 'failed to retrieve marmite metadata: bibnumber must be valid' unless valid_bibnumber?
+        @errors << "bibnumber #{bibnumber} is invalid or could not be found" unless valid_bibnumber?
 
         @errors.concat(asset_set.errors) if asset_set&.invalid?
       end
