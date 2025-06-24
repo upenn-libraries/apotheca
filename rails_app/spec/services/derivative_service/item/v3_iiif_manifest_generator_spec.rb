@@ -90,7 +90,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
 
       it 'includes rendering for pdf' do
         expect(json['rendering'][0]).to include(
-          'id' => starting_with('https://colenda.library.upenn.edu/items'),
+          'id' => ending_with('pdf'),
           'label' => { 'none' => ['Download PDF'] },
           'type' => 'Text',
           'format' => 'application/pdf'
@@ -124,7 +124,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
           ),
           'rendering' => containing_exactly(
             a_hash_including(
-              'id' => ending_with('original'),
+              'id' => ending_with('preservation'),
               'label' => { 'none' => ['Original File - 291 KB'] },
               'type' => 'Image',
               'format' => 'image/tiff'

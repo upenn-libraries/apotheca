@@ -8,6 +8,8 @@ module DerivativeService
     class V3IIIFManifestGenerator
       DEFAULT_VIEWING_HINT = 'individuals'
       DEFAULT_VIEWING_DIRECTION = 'left-to-right'
+      API_BASE_URL = 'https://apotheca.library.upenn.edu'
+      API_VERSION = 'v1'
 
       class MissingDerivative < StandardError; end
 
@@ -60,7 +62,7 @@ module DerivativeService
       # @return [Hash]
       def manifest_attributes
         {
-          'id' => colenda.manifest_url(item.unique_identifier),
+          'id' => "#{API_BASE_URL}/iiif/items/#{item.unique_identifier}/manifest",
           'label' => { 'none' => [item.descriptive_metadata.title.pluck(:value).join('; ')] },
           'required_statement' => {
             'label' => { 'none' => ['Attribution'] },
@@ -129,7 +131,7 @@ module DerivativeService
           'service' => [
             {
               'id' => thumbnail_url,
-              'type' => "ImageService3",
+              'type' => 'ImageService3',
               'profile' => 'level2'
             }
           ]
@@ -240,7 +242,7 @@ module DerivativeService
         return unless DerivativeService::Item::PDFGenerator.new(item.object).pdfable?
 
         manifest.rendering << {
-          'id' => colenda.pdf_url(item.unique_identifier),
+          'id' => pdf_url,
           'label' => { 'none' => ['Download PDF'] },
           'type' => 'Text',
           'format' => 'application/pdf'
@@ -253,7 +255,7 @@ module DerivativeService
       # @return [Hash] rendering structure for original file download
       def download_original_file(asset)
         {
-          'id' => colenda.original_url(item.unique_identifier, asset.id),
+          'id' => original_file_url(asset),
           'label' => { 'none' => ["Original File - #{asset.technical_metadata.size.to_fs(:human_size)}"] },
           'type' => 'Image',
           'format' => asset.technical_metadata.mime_type
@@ -275,7 +277,21 @@ module DerivativeService
       #
       # @return [String] item URL used as base for canvas and range IDs
       def item_url
-        @item_url ||= colenda.item_url(item.unique_identifier)
+        @item_url ||= "#{API_BASE_URL}/#{API_VERSION}/items/#{item.unique_identifier}"
+      end
+
+      # Get the pdf URL for this item
+      #
+      # @return [String] pdf url for download
+      def pdf_url
+        @pdf_url ||= "#{API_BASE_URL}/#{API_VERSION}/item/#{item.unique_identifier}/pdf"
+      end
+
+      # Get the original file URL for this item
+      #
+      # @return [String] preservation URL
+      def original_file_url(asset)
+        "#{API_BASE_URL}/#{API_VERSION}/assets/#{asset.id}/preservation"
       end
 
       # Get the Colenda publishing endpoint configuration
