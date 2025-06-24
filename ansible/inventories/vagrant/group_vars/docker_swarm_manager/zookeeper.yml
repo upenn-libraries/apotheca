@@ -1,2 +1,2 @@
 ---
-zookeeper_instances: "{{ apotheca_vault_values.secret.zookeeper_instances }}"
+zookeeper_instances: 1

@@ -12,10 +12,10 @@ apotheca_solr_test_url: "{{ apotheca_vault_values.secret.apotheca_solr_test_url 
 apotheca_versioned_secrets:
   rails_master_key:
     value: "{{ apotheca_vault_values.secret.rails_master_key }}"
-    version: "{{ apotheca_vault_values.secret.rails_master_key_version }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
   solr_username:
     value: "{{ solr_custom_env_variables.SOLR_ADMIN_USERNAME }}"
-    version: "{{ apotheca_vault_values.secret.solr_username_version }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
   solr_password:
     value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
-    version: "{{ apotheca_vault_values.secret.solr_password_version }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"

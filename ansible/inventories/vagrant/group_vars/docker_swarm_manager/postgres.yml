@@ -12,5 +12,5 @@ postgres:
   versioned_secrets:
     password:
       value: "{{ apotheca_vault_values.secret.postgres_versioned_secrets_password_value }}"
-      version: "{{ apotheca_vault_values.secret.postgres_versioned_secrets_password_version }}"
+      version: "{{ apotheca_vault_values.metadata.version }}"
   user: "{{ apotheca_vault_values.secret.postgres_user }}"

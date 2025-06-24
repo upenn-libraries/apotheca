@@ -8,7 +8,7 @@ redis:
   versioned_configs:
     redis_conf:
       filename: "{{ apotheca_vault_values.secret.redis_versioned_configs_redis_conf_filename }}"
-      version: "{{ apotheca_vault_values.secret.redis_versioned_configs_redis_conf_version }}"
+      version: "{{ apotheca_vault_values.metadata.version }}"
     users_acl:
       filename: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_filename }}"
       users: [
@@ -16,13 +16,13 @@ redis:
           name: "sidekiq",
           acl_rules: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_acl_rules }}",
           password: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_users_password }}",
-          version: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_users_version }}"
+          version: "{{ apotheca_vault_values.metadata.version }}"
         },
         {
           name: "default",
           acl_rules: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_acl_rules }}",
           password: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_users_password }}",
-          version: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_users_version }}"
+          version: "{{ apotheca_vault_values.metadata.version }}"
         }
       ]
-      version: "{{ apotheca_vault_values.secret.redis_versioned_configs_version}}"
+      version: "{{ apotheca_vault_values.metadata.version }}"

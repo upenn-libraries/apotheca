@@ -16,7 +16,7 @@ solr_configsets:
     path: "{{ apotheca_vault_values.secret.solr_configsets_path }}"
 
 solr_docker_image_tag: "{{ apotheca_vault_values.secret.solr_docker_image_tag }}"
-solr_instances: "{{ apotheca_vault_values.secret.solr_instances }}"
+solr_instances: 1
 solr_limits_cpu: "{{ apotheca_vault_values.secret.solr_limits_cpu }}"
 solr_limits_mem: "{{ apotheca_vault_values.secret.solr_limits_mem }}"
 solr_proxy_host: "{{ apotheca_vault_values.secret.solr_proxy_host }}"
