@@ -6,7 +6,7 @@ module MetadataExtractor
       class DefaultMappingRules
         # Module that contains AAT terms.
         module AAT
-          AUTHORITY = 'aat'.freeze
+          AUTHORITY = 'aat'
 
           ATLASES      = { value: 'atlases',                       uri: 'http://vocab.getty.edu/aat/300028053' }.freeze
           BOOKS        = { value: 'books',                         uri: 'http://vocab.getty.edu/aat/300028051' }.freeze
