@@ -23,6 +23,10 @@ module MetadataExtractor
           end
 
           # Normalize 655 values by mapping them to AAT terms.
+          #
+          # @param datafield [MetadataExtractor::Marmite::Transformer::MARCDocument::DataField]
+          # @param extracted_values [<Hash>] values extracted from the MARC field as defined
+          # @return [Array<String>]
           def self.normalize(datafield, extracted_values)
             authority = datafield.subfield_at('2')
 

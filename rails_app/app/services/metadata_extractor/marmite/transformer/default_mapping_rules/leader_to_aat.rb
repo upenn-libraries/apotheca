@@ -40,6 +40,7 @@ module MetadataExtractor
           #
           # @param [Hash<Integer, Array<Symbol>>] conditions
           # @param [String] field
+          # @return [Boolean]
           def self.match(conditions, field)
             conditions.compact_blank.all? do |index, values|
               char = field[index]
