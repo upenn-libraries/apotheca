@@ -128,8 +128,7 @@ module DerivativeService
         # By providing width, height and profile, we avoid the IIIF gem fetching the data again.
         annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(
           service_id: iiif_image_url(asset), width: asset.technical_metadata.width,
-          height: asset.technical_metadata.height, profile: 'http://iiif.io/api/image/2/level2.json
-'
+          height: asset.technical_metadata.height, profile: 'http://iiif.io/api/image/2/level2.json'
         )
         annotation['on'] = canvas['@id']
 
