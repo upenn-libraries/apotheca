@@ -177,16 +177,18 @@ module DerivativeService
       # @param index [Integer] canvas number, used to create identifiers
       def canvas(asset:, index:)
         canvas = IIIF::V3::Presentation::Canvas.new
-        canvas['id'] = item_url + "/canvas/p#{index}"
+        asset_base_url = "#{API_BASE_URL}/iiif/assets/#{asset.id}"
+
+        canvas['id'] = asset_base_url + '/canvas'
         canvas.label  = { 'none' => [asset.label || "p. #{index}"] }
         canvas.height = asset.technical_metadata.height
         canvas.width  = asset.technical_metadata.width
 
         annotation_page = IIIF::V3::Presentation::AnnotationPage.new
-        annotation_page['id'] = item_url + "/canvas/p#{index}/annotation-page"
+        annotation_page['id'] = asset_base_url + "/annotation-page/#{index}"
 
         annotation = IIIF::V3::Presentation::Annotation.new
-        annotation['id'] = item_url + "/canvas/p#{index}/annotation/1"
+        annotation['id'] = asset_base_url + "/annotation/#{index}"
         annotation['motivation'] = 'painting'
         annotation['target'] = canvas['id']
 
@@ -219,10 +221,10 @@ module DerivativeService
       def ranges(index:, label:, annotations:)
         annotations.map.with_index do |annotation, annotation_index|
           IIIF::V3::Presentation::Range.new(
-            'id' => item_url + "/range/r#{index}",
+            'id' => item_url + "/range/#{index}",
             'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
-              'id' => item_url + "/canvas/c#{index}-#{annotation_index + 1}",
+              'id' => item_url + "/canvas/#{index}-#{annotation_index + 1}",
               'label' => { 'none' => [label] }
             )]
           )
@@ -289,7 +291,7 @@ module DerivativeService
       #
       # @return [String] pdf url for download
       def pdf_url
-        @pdf_url ||= "#{API_BASE_URL}/#{API_VERSION}/item/#{item.unique_identifier}/pdf"
+        @pdf_url ||= item_url + '/pdf'
       end
 
       # Get the original file URL for this item

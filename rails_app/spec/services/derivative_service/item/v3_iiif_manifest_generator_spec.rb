@@ -63,11 +63,11 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
 
       it 'includes structures' do
         expect(json['structures'].first).to include(
-          'id' => ending_with('range/r1'),
+          'id' => ending_with('range/1'),
           'label' => { 'none' => ['Front of Card, Front'] },
           'items' => containing_exactly(
             a_hash_including(
-              'id' => ending_with('canvas/c1-1'),
+              'id' => ending_with('canvas/1-1'),
               'label' => { 'none' => ['Front'] }
             )
           )
@@ -78,7 +78,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
         item = json['items'][0]
         expect(item).to include(
           'type' => 'Canvas',
-          'id' => ending_with('canvas/p1'),
+          'id' => ending_with('canvas'),
           'label' => { 'none' => ['Front'] }
         )
       end
@@ -95,17 +95,17 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
       it 'includes canvases in items' do
         canvases = json['items']
         expect(canvases[0]).to include(
-          'id' => ending_with('canvas/p1'),
+          'id' => ending_with('canvas'),
           'label' => { 'none' => ['Front'] },
           'height' => 238,
           'width' => 400,
           'items' => contain_exactly(
             a_hash_including(
-              'id' => ending_with('canvas/p1/annotation-page'),
+              'id' => ending_with('annotation-page/1'),
               'type' => 'AnnotationPage',
               'items' => contain_exactly(
                 a_hash_including(
-                  'id' => ending_with('canvas/p1/annotation/1'),
+                  'id' => ending_with('annotation/1'),
                   'type' => 'Annotation',
                   'motivation' => 'painting',
                   'body' => a_hash_including(
