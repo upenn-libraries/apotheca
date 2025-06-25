@@ -342,8 +342,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
 
       it 'maps physical format to aat terms' do
         expect(transformer.to_descriptive_metadata[:physical_format]).to contain_exactly(
-          { value: 'sheet music', uri: 'https://vocab.getty.edu/aat/300026430' },
-          { value: 'scores (documents for music)', uri: 'http://vocab.getty.edu/aat/300026427' },
+          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SHEET_MUSIC,
+          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SCORES,
           { value: 'Hybrid Music' }
         )
       end
