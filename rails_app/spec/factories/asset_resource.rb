@@ -11,7 +11,7 @@ FactoryBot.define do
 
     trait :with_metadata do
       label { 'Front' }
-      annotations { [{ text: 'Front of Card' }] }
+      annotations { [{ id: '1234', text: 'Front of Card' }] }
     end
 
     trait :without_label_in_annotation do

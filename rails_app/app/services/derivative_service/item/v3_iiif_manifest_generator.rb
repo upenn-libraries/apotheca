@@ -87,8 +87,7 @@ module DerivativeService
           manifest.items << canvas(index: index, asset: asset)
           next unless asset.annotations&.any?
 
-          manifest.structures.concat ranges(index: index, label: asset.label || "p. #{index}",
-                                            annotations: asset.annotations.map(&:text))
+          manifest.structures.concat ranges(asset: asset, index: index)
         end
       end
 
@@ -214,17 +213,17 @@ module DerivativeService
       # the `label` property on the Range itself. However, validation of the manifest fails with an
       # empty `items` array on a Range. This is kind of hacky to support top level annotations.
       #
-      # @param index [Integer] range number, used to create identifiers
-      # @param label [String]
-      # @param annotations [Array<String>] list of annotations
+      # @param asset [AssetResource]
+      # @param index [Integer]
       # @return [Array<IIIF::V3::Presentation::Range>]
-      def ranges(index:, label:, annotations:)
-        annotations.map.with_index do |annotation, annotation_index|
+      def ranges(asset:, index:)
+        label = asset.label || "p. #{index}"
+        asset.annotations.map do |annotation|
           IIIF::V3::Presentation::Range.new(
-            'id' => item_url + "/range/#{index}",
-            'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation)] },
+            'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/annotation/#{annotation.id}",
+            'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation.text)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
-              'id' => item_url + "/canvas/#{index}-#{annotation_index + 1}",
+            'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/canvas/#{annotation.id}",
               'label' => { 'none' => [label] }
             )]
           )
