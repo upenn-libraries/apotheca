@@ -178,7 +178,7 @@ module DerivativeService
         canvas = IIIF::V3::Presentation::Canvas.new
         asset_base_url = "#{API_BASE_URL}/iiif/assets/#{asset.id}"
 
-        canvas['id'] = asset_base_url + '/canvas'
+        canvas['id'] = "#{asset_base_url}/canvas"
         canvas.label  = { 'none' => [asset.label || "p. #{index}"] }
         canvas.height = asset.technical_metadata.height
         canvas.width  = asset.technical_metadata.width
@@ -223,7 +223,7 @@ module DerivativeService
             'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/annotation/#{annotation.id}",
             'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation.text)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
-            'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/canvas/#{annotation.id}",
+              'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/canvas/#{annotation.id}",
               'label' => { 'none' => [label] }
             )]
           )
@@ -290,7 +290,7 @@ module DerivativeService
       #
       # @return [String] pdf url for download
       def pdf_url
-        @pdf_url ||= item_url + '/pdf'
+        @pdf_url ||= "#{item_url}/pdf"
       end
 
       # Get the original file URL for this item
