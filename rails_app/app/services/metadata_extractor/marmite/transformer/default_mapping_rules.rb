@@ -23,11 +23,11 @@ module MetadataExtractor
         end
 
         # Maps value in the MARC leader and MARC 008 control field to an AAT format term.
-        def self.extract_aat_terms(marc)
+        def self.additional_aat_terms(marc)
           leader = marc.xpath('//records/record/leader').text
           control008 = marc.xpath("//records/record/controlfield[@tag='008']").text
 
-          MARCToAAT.map(leader, control008).deep_dup
+          LeaderToAAT.map(leader, control008).deep_dup
         end
 
         # Adding role value to name.
@@ -97,7 +97,7 @@ module MetadataExtractor
           range ? "#{date1}/#{date2}".gsub(/#{UNKNOWN_DATE}/, '').tr('u', 'X') : date1.tr('u', 'X')
         end
 
-        map_marc to: :physical_format, transform: method(:extract_aat_terms)
+        map_marc to: :physical_format, transform: method(:additional_aat_terms)
 
         map_controlfield '008', to: :date, value: { chars: (6..14).to_a }, custom: method(:convert_to_edtf)
         map_controlfield '008', to: :language, value: { chars: (35..37).to_a }, custom: method(:language_transformation)
@@ -139,7 +139,9 @@ module MetadataExtractor
         map_datafield '651', to: :geographic_subject, value: { subfields: A_TO_Z, join: ' -- ' },
                              uri: { subfields: '0' }
         map_datafield '651', to: :coverage, value: { subfields: 'y' }
-        map_datafield '655', to: :physical_format, value: { subfields: 'a' }, uri: { subfields: '0' }
+        map_datafield '655', to: :physical_format, value: { subfields: 'a' }, uri: { subfields: '0' },
+                             if: ->(datafield) { PhysicalFormat.select?(datafield) },
+                             custom: ->(datafield, values) { PhysicalFormat.normalize(datafield, values) }
         map_datafield '700', to: :provenance, value: { subfields: %w[a b c d e], join: SPACE },
                              if: method(:role_is_provenance?)
         map_datafield '700', to: :name, value: { subfields: %w[a b c d q], join: SPACE },
