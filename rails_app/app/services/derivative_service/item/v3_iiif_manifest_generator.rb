@@ -184,10 +184,10 @@ module DerivativeService
         canvas.width  = asset.technical_metadata.width
 
         annotation_page = IIIF::V3::Presentation::AnnotationPage.new
-        annotation_page['id'] = asset_base_url + "/annotation-page/#{index}"
+        annotation_page['id'] = asset_base_url + "/annotation-page/1"
 
         annotation = IIIF::V3::Presentation::Annotation.new
-        annotation['id'] = asset_base_url + "/annotation/#{index}"
+        annotation['id'] = asset_base_url + "/annotation/1"
         annotation['motivation'] = 'painting'
         annotation['target'] = canvas['id']
 
