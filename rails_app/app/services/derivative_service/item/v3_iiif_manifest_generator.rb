@@ -218,10 +218,10 @@ module DerivativeService
         asset.annotations.map.with_index do |annotation, annotation_index|
           annotation_index += 1
           IIIF::V3::Presentation::Range.new(
-            'id' => "https://#{Settings.api_url}/iiif/assets/#{asset.id}/toc/#{annotation_index}",
+            'id' => "https://#{Settings.app_url}/iiif/assets/#{asset.id}/toc/#{annotation_index}",
             'label' => { 'none' => [labeled_annotation(label: asset.label, annotation: annotation.text)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
-              'id' => "https://#{Settings.api_url}/iiif/assets/#{asset.id}/canvas",
+              'id' => "https://#{Settings.app_url}/iiif/assets/#{asset.id}/canvas",
               'label' => { 'none' => [asset.label] }
             )]
           )
@@ -281,7 +281,7 @@ module DerivativeService
       #
       # @return [String] item URL used as base for canvas and range IDs
       def item_url
-        @item_url ||= "https://#{Settings.api_url}/#{API_VERSION}/items/#{item.id}"
+        @item_url ||= "https://#{Settings.app_url}/#{API_VERSION}/items/#{item.id}"
       end
 
       # Get the pdf URL for this item
@@ -295,7 +295,7 @@ module DerivativeService
       #
       # @return [String] preservation URL
       def original_file_url(asset)
-        "https://#{Settings.api_url}/#{API_VERSION}/assets/#{asset.id}/preservation"
+        "https://#{Settings.app_url}/#{API_VERSION}/assets/#{asset.id}/preservation"
       end
 
       # Get the Colenda publishing endpoint configuration
