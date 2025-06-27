@@ -62,7 +62,7 @@ module DerivativeService
       # @return [Hash]
       def manifest_attributes
         {
-          'id' => "#{API_BASE_URL}/iiif/items/#{item.unique_identifier}/manifest",
+          'id' => "#{API_BASE_URL}/iiif/items/#{item.id}/manifest",
           'label' => { 'none' => [item.descriptive_metadata.title.pluck(:value).join('; ')] },
           'required_statement' => {
             'label' => { 'none' => ['Attribution'] },
@@ -141,7 +141,7 @@ module DerivativeService
         metadata = [
           {
             'label' => { 'none' => ['Available Online'] },
-            'value' => { 'none' => [colenda.public_item_url(item.unique_identifier)] }
+            'value' => { 'none' => [colenda.public_item_url(item.id.to_s)] }
           }
         ]
 
@@ -249,7 +249,7 @@ module DerivativeService
 
         manifest.rendering << {
           'id' => pdf_url,
-          'label' => { 'none' => ['Download PDF'] },
+          'label' => { 'en' => ['Download PDF'] },
           'type' => 'Text',
           'format' => 'application/pdf'
         }
@@ -262,7 +262,7 @@ module DerivativeService
       def download_original_file(asset)
         {
           'id' => original_file_url(asset),
-          'label' => { 'none' => ["Original File - #{asset.technical_metadata.size.to_fs(:human_size)}"] },
+          'label' => { 'en' => ["Original File - #{asset.technical_metadata.size.to_fs(:human_size)}"] },
           'type' => 'Image',
           'format' => asset.technical_metadata.mime_type
         }
@@ -283,7 +283,7 @@ module DerivativeService
       #
       # @return [String] item URL used as base for canvas and range IDs
       def item_url
-        @item_url ||= "#{API_BASE_URL}/#{API_VERSION}/items/#{item.unique_identifier}"
+        @item_url ||= "#{API_BASE_URL}/#{API_VERSION}/items/#{item.id}"
       end
 
       # Get the pdf URL for this item
