@@ -67,7 +67,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
           'label' => { 'none' => ['Front of Card, Front'] },
           'items' => containing_exactly(
             a_hash_including(
-              'id' => ending_with('toc-canvas/1'),
+              'id' => ending_with('canvas'),
               'label' => { 'none' => ['Front'] }
             )
           )

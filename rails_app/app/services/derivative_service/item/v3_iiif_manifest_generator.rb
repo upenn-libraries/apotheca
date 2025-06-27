@@ -141,7 +141,7 @@ module DerivativeService
         metadata = [
           {
             'label' => { 'none' => ['Available Online'] },
-            'value' => { 'none' => [colenda.public_item_url(item.id.to_s)] }
+            'value' => { 'none' => [colenda.public_item_url(item.unique_identifier)] }
           }
         ]
 
@@ -209,9 +209,8 @@ module DerivativeService
 
       # Get array of ranges for each annotation
       #
-      # NOTE: The `items` array here is practically useless - the actual annotation is coming from
-      # the `label` property on the Range itself. However, validation of the manifest fails with an
-      # empty `items` array on a Range. This is kind of hacky to support top level annotations.
+      # NOTE: the items array here actually contains the canvas that the TOC annotation is attached to, so it
+      # it necessary for the annotation to resolve properly to the right asset
       #
       # @param asset [AssetResource]
       # @param index [Integer]
@@ -224,7 +223,7 @@ module DerivativeService
             'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/toc/#{annotation_index}",
             'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation.text)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
-              'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/toc-canvas/#{annotation_index}",
+              'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/canvas",
               'label' => { 'none' => [label] }
             )]
           )
