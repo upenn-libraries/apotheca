@@ -84,7 +84,7 @@ module DerivativeService
 
           index = i + 1
           manifest.items << canvas(asset: asset, index: index)
-          next unless asset.annotations&.any? && asset.label.present?
+          next unless asset.annotations&.any?
 
           manifest.structures.concat ranges(asset: asset)
         end
@@ -236,7 +236,7 @@ module DerivativeService
       def labeled_annotation(label:, annotation:)
         return annotation if /#{Regexp.escape(label)}\s*\z/.match?(annotation)
 
-        [annotation, label].join ', '
+        [annotation, label].compact_blank.join ', '
       end
 
       # Add PDF to manifest rendering if it exists
