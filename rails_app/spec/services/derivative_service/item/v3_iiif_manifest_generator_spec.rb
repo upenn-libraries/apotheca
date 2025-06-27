@@ -63,11 +63,11 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
 
       it 'includes structures' do
         expect(json['structures'].first).to include(
-          'id' => ending_with('annotation/1234'),
+          'id' => ending_with('toc/1234'),
           'label' => { 'none' => ['Front of Card, Front'] },
           'items' => containing_exactly(
             a_hash_including(
-              'id' => ending_with('canvas/1234'),
+              'id' => ending_with('toc-canvas/1234'),
               'label' => { 'none' => ['Front'] }
             )
           )

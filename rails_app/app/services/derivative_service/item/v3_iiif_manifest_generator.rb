@@ -220,10 +220,10 @@ module DerivativeService
         label = asset.label || "p. #{index}"
         asset.annotations.map do |annotation|
           IIIF::V3::Presentation::Range.new(
-            'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/annotation/#{annotation.id}",
+            'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/toc/#{annotation.id}",
             'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation.text)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
-              'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/canvas/#{annotation.id}",
+              'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/toc-canvas/#{annotation.id}",
               'label' => { 'none' => [label] }
             )]
           )
