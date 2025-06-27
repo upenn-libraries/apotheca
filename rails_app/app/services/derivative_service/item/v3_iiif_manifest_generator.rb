@@ -83,7 +83,7 @@ module DerivativeService
           validate_asset_derivatives!(asset)
 
           index = i + 1
-          manifest.items << canvas(index: index, asset: asset)
+          manifest.items << canvas(asset: asset, index: index)
           next unless asset.annotations&.any? && asset.label.present?
 
           manifest.structures.concat ranges(asset: asset)
