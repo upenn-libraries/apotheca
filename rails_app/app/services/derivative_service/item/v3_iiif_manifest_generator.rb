@@ -84,9 +84,9 @@ module DerivativeService
 
           index = i + 1
           manifest.items << canvas(index: index, asset: asset)
-          next unless asset.annotations&.any?
+          next unless asset.annotations&.any? && asset.label.present?
 
-          manifest.structures.concat ranges(asset: asset, index: index)
+          manifest.structures.concat ranges(asset: asset)
         end
       end
 
@@ -214,16 +214,15 @@ module DerivativeService
       # @param asset [AssetResource]
       # @param index [Integer]
       # @return [Array<IIIF::V3::Presentation::Range>]
-      def ranges(asset:, index:)
-        label = asset.label || "p. #{index}"
+      def ranges(asset:)
         asset.annotations.map.with_index do |annotation, annotation_index|
           annotation_index += 1
           IIIF::V3::Presentation::Range.new(
             'id' => "https://#{Settings.api_url}/iiif/assets/#{asset.id}/toc/#{annotation_index}",
-            'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation.text)] },
+            'label' => { 'none' => [labeled_annotation(label: asset.label, annotation: annotation.text)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
               'id' => "https://#{Settings.api_url}/iiif/assets/#{asset.id}/canvas",
-              'label' => { 'none' => [label] }
+              'label' => { 'none' => [asset.label] }
             )]
           )
         end
