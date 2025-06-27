@@ -219,7 +219,7 @@ module DerivativeService
       def ranges(asset:, index:)
         label = asset.label || "p. #{index}"
         asset.annotations.map.with_index do |annotation, annotation_index|
-          annotation_index = annotation_index + 1
+          annotation_index += 1
           IIIF::V3::Presentation::Range.new(
             'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/toc/#{annotation_index}",
             'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation.text)] },
