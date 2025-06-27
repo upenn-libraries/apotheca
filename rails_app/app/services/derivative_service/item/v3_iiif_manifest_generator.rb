@@ -8,7 +8,6 @@ module DerivativeService
     class V3IIIFManifestGenerator
       DEFAULT_VIEWING_HINT = 'individuals'
       DEFAULT_VIEWING_DIRECTION = 'left-to-right'
-      API_BASE_URL = 'https://apotheca.library.upenn.edu'
       API_VERSION = 'v1'
 
       class MissingDerivative < StandardError; end
@@ -62,7 +61,7 @@ module DerivativeService
       # @return [Hash]
       def manifest_attributes
         {
-          'id' => "#{API_BASE_URL}/iiif/items/#{item.id}/manifest",
+          'id' => "https://#{Settings.app_url}/iiif/items/#{item.id}/manifest",
           'label' => { 'none' => [item.descriptive_metadata.title.pluck(:value).join('; ')] },
           'required_statement' => {
             'label' => { 'none' => ['Attribution'] },
@@ -176,7 +175,7 @@ module DerivativeService
       # @param index [Integer] canvas number, used to create identifiers
       def canvas(asset:, index:)
         canvas = IIIF::V3::Presentation::Canvas.new
-        asset_base_url = "#{API_BASE_URL}/iiif/assets/#{asset.id}"
+        asset_base_url = "https://#{Settings.app_url}/iiif/assets/#{asset.id}"
 
         canvas['id'] = "#{asset_base_url}/canvas"
         canvas.label  = { 'none' => [asset.label || "p. #{index}"] }
@@ -220,10 +219,10 @@ module DerivativeService
         asset.annotations.map.with_index do |annotation, annotation_index|
           annotation_index += 1
           IIIF::V3::Presentation::Range.new(
-            'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/toc/#{annotation_index}",
+            'id' => "https://#{Settings.api_url}/iiif/assets/#{asset.id}/toc/#{annotation_index}",
             'label' => { 'none' => [labeled_annotation(label: label, annotation: annotation.text)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
-              'id' => API_BASE_URL + "/iiif/assets/#{asset.id}/canvas",
+              'id' => "https://#{Settings.api_url}/iiif/assets/#{asset.id}/canvas",
               'label' => { 'none' => [label] }
             )]
           )
@@ -283,7 +282,7 @@ module DerivativeService
       #
       # @return [String] item URL used as base for canvas and range IDs
       def item_url
-        @item_url ||= "#{API_BASE_URL}/#{API_VERSION}/items/#{item.id}"
+        @item_url ||= "https://#{Settings.api_url}/#{API_VERSION}/items/#{item.id}"
       end
 
       # Get the pdf URL for this item
@@ -297,7 +296,7 @@ module DerivativeService
       #
       # @return [String] preservation URL
       def original_file_url(asset)
-        "#{API_BASE_URL}/#{API_VERSION}/assets/#{asset.id}/preservation"
+        "https://#{Settings.api_url}/#{API_VERSION}/assets/#{asset.id}/preservation"
       end
 
       # Get the Colenda publishing endpoint configuration
