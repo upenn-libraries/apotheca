@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::IIIFManifestGenerator do
+describe DerivativeService::Item::V2IIIFManifestGenerator do
   describe '.new' do
     context 'when parameters do not include an Item' do
       it 'returns an error' do
@@ -9,11 +9,11 @@ describe DerivativeService::Item::IIIFManifestGenerator do
     end
   end
 
-  describe '#v2_manifest' do
+  describe '#manifest' do
     subject(:iiif_service) { described_class.new(item) }
 
     context 'when item contains image assets' do
-      subject(:json) { JSON.parse(iiif_service.v2_manifest.read) }
+      subject(:json) { JSON.parse(iiif_service.manifest.read) }
 
       let(:item) do
         persist(
@@ -49,11 +49,11 @@ describe DerivativeService::Item::IIIFManifestGenerator do
 
       it 'includes thumbnail' do
         expect(json['thumbnail']).to a_hash_including(
-          '@id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2')
+          '@id' => starting_with(Settings.image_server.url.to_s)
                      .and(ending_with('/full/!200,200/0/default.jpg')),
           'service' => {
             '@context' => 'http://iiif.io/api/image/2/context.json',
-            '@id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2'),
+            '@id' => starting_with("#{Settings.image_server.url}/iiif/2"),
             'profile' => 'http://iiif.io/api/image/2/level2.json'
           }
         )
@@ -96,7 +96,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
           'images' => contain_exactly(
             a_hash_including(
               'resource' => a_hash_including(
-                '@id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2'),
+                '@id' => starting_with("#{Settings.image_server.url}/iiif/2"),
                 'width' => 400,
                 'height' => 238
               )
@@ -116,7 +116,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
           'images' => contain_exactly(
             a_hash_including(
               'resource' => a_hash_including(
-                '@id' => starting_with('https://serverless_iiif.library.upenn.edu/iiif/2'),
+                '@id' => starting_with("#{Settings.image_server.url}/iiif/2"),
                 'width' => 400,
                 'height' => 238
               )
@@ -139,8 +139,8 @@ describe DerivativeService::Item::IIIFManifestGenerator do
       end
 
       it 'raises an error' do
-        expect { iiif_service.v2_manifest }.to raise_error(
-          DerivativeService::Item::IIIFManifestGenerator::MissingDerivative
+        expect { iiif_service.manifest }.to raise_error(
+          DerivativeService::Item::V2IIIFManifestGenerator::MissingDerivative
         )
       end
     end
@@ -152,7 +152,7 @@ describe DerivativeService::Item::IIIFManifestGenerator do
       end
 
       it 'returns nil' do
-        expect(iiif_service.v2_manifest).to be_nil
+        expect(iiif_service.manifest).to be_nil
       end
     end
   end

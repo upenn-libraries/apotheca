@@ -24,9 +24,7 @@ ezid:
 marmite:
   url: http://mdproc.library.upenn.edu:9292
 image_server:
-  url: https://serverless_iiif.library.upenn.edu
-  prefix: iiif/2
-  profile: http://iiif.io/api/image/2/level2.json
+  url: http://localhost:8182
 
 # File Storage
 minio: &minio
