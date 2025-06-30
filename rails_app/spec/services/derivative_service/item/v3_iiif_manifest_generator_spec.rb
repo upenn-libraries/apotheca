@@ -145,7 +145,7 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
       it 'generates a manifest with default page numbering' do
         expect(json['items'][0]).to include(
           'id' => ending_with('canvas'),
-          'label' => { 'none' => ['p. 1'] },
+          'label' => { 'none' => ['p. 1'] }
         )
       end
 
@@ -153,6 +153,19 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
         expect(json).to include(
           'id' => ending_with('manifest'),
           'label' => { 'none' => ['Item Without Asset Labels'] }
+        )
+      end
+
+      it 'includes structures information' do
+        expect(json['structures'].first).to include(
+          'id' => ending_with('toc/1'),
+          'label' => { 'none' => ['Illuminated P'] },
+          'items' => containing_exactly(
+            a_hash_including(
+              'id' => ending_with('canvas'),
+              'label' => { 'none' => [''] }
+            )
+          )
         )
       end
     end

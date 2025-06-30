@@ -222,7 +222,7 @@ module DerivativeService
             'label' => { 'none' => [labeled_annotation(label: asset.label, annotation: annotation.text)] },
             'items' => [IIIF::V3::Presentation::Canvas.new(
               'id' => "https://#{Settings.app_url}/iiif/assets/#{asset.id}/canvas",
-              'label' => { 'none' => [asset.label] }
+              'label' => { 'none' => [asset.label.to_s] }
             )]
           )
         end
