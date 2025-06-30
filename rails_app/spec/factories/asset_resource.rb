@@ -14,6 +14,10 @@ FactoryBot.define do
       annotations { [{ text: 'Front of Card' }] }
     end
 
+    trait :with_metadata_no_label do
+      annotations { [{ text: 'Illuminated P' }] }
+    end
+
     trait :with_image_file do
       with_preservation_file
 

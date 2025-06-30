@@ -66,6 +66,11 @@ class ItemResource < Valkyrie::Resource
   end
 
   # @return [DerivativeResource]
+  def iiif_v3_manifest
+    derivatives.find(&:iiif_v3_manifest?)
+  end
+
+  # @return [DerivativeResource]
   def pdf
     derivatives.find(&:pdf?)
   end
