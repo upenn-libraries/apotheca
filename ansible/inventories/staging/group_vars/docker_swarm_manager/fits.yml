@@ -5,3 +5,4 @@ fits:
     tag: "v1.1.0"
   port: 8080
   replicas: 1
+  
