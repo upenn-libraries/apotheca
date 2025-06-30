@@ -32,9 +32,14 @@ class APIController < ApplicationController
 
   # @param identifier [String] uuid of resource to retrieve
   def find(identifier:)
-    Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by id: identifier
+    query_service.find_by id: identifier
   rescue Valkyrie::Persistence::ObjectNotFoundError
     raise ResourceNotFound, I18n.t('api.exceptions.not_found') # Raise our own exception so we can set a message
+  end
+
+  # @return [Valkyrie::Persistence::Postgres::QueryService]
+  def query_service
+    Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
 
   # Redirects to an AWS pre-signed URLs to view/download file.
