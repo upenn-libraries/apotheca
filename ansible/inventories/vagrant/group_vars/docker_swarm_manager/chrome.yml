@@ -1,6 +1,6 @@
 ---
 chrome:
   image:
-    name: "{{ apotheca_vault_values.secret.chrome_image_name }}"
-    tag: "{{ apotheca_vault_values.secret.chrome_image_tag }}"
-  port: "{{ apotheca_vault_values.secret.chrome_port }}"
+    name: "browserless/chrome"
+    tag: "latest"
+  port: 3333
