@@ -234,9 +234,10 @@ module DerivativeService
       # @param annotation [String]
       # @return [String]
       def labeled_annotation(label:, annotation:)
+        return annotation if label.blank?
         return annotation if /#{Regexp.escape(label)}\s*\z/.match?(annotation)
 
-        [annotation, label].compact_blank.join ', '
+        [annotation, label].join ', '
       end
 
       # Add PDF to manifest rendering if it exists

@@ -129,6 +129,34 @@ describe DerivativeService::Item::V3IIIFManifestGenerator do
       end
     end
 
+    context 'when item contains assets without labels' do
+      subject(:json) { JSON.parse(iiif_service.manifest.read) }
+
+      let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives, :with_metadata_no_label) }
+      let(:item) do
+        persist(
+          :item_resource, :with_full_assets_all_arranged,
+          asset_ids: [asset.id],
+          structural_metadata: { arranged_asset_ids: [asset.id] },
+          descriptive_metadata: { title: [{ value: 'Item Without Asset Labels' }] }
+        )
+      end
+
+      it 'generates a manifest with default page numbering' do
+        expect(json['items'][0]).to include(
+          'id' => ending_with('canvas'),
+          'label' => { 'none' => ['p. 1'] },
+        )
+      end
+
+      it 'includes basic manifest information' do
+        expect(json).to include(
+          'id' => ending_with('manifest'),
+          'label' => { 'none' => ['Item Without Asset Labels'] }
+        )
+      end
+    end
+
     context 'when item contains image assets that are missing derivatives' do
       let(:asset) { persist(:asset_resource, :with_image_file) }
       let(:item) do

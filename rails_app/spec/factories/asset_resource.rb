@@ -14,8 +14,7 @@ FactoryBot.define do
       annotations { [{ text: 'Front of Card' }] }
     end
 
-    trait :without_label_in_annotation do
-      label { '1r' }
+    trait :with_metadata_no_label do
       annotations { [{ text: 'Illuminated P' }] }
     end
 
