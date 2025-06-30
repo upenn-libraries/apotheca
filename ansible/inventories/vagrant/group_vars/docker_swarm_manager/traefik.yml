@@ -1,2 +1,2 @@
 ---
-traefik_dashboard_enable: "{{ apotheca_vault_values.secret.traefik_dashboard_enable }}"
+traefik_dashboard_enable: true

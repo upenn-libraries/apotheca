@@ -1,26 +1,26 @@
 ---
 redis:
   image:
-    name: "{{ apotheca_vault_values.secret.redis_image_name }}"
-    tag: "{{ apotheca_vault_values.secret.redis_image_tag }}"
-  port: "{{ apotheca_vault_values.secret.redis_port }}"
-  replicas: "{{ apotheca_vault_values.secret.redis_replicas }}"
+    name: "redis"
+    tag: "7.0-alpine"
+  port: 6379
+  replicas: 1
   versioned_configs:
     redis_conf:
-      filename: "{{ apotheca_vault_values.secret.redis_versioned_configs_redis_conf_filename }}"
-      version: "{{ apotheca_vault_values.metadata.version }}"
+      filename: "redis.conf.j2"
+      version: 1
     users_acl:
-      filename: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_filename }}"
+      filename: "users.acl.j2"
       users: [
         {
           name: "sidekiq",
-          acl_rules: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_acl_rules }}",
+          acl_rules: "+@all ~*",
           password: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_users_password }}",
           version: "{{ apotheca_vault_values.metadata.version }}"
         },
         {
           name: "default",
-          acl_rules: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_acl_rules }}",
+          acl_rules: "+@all ~*",
           password: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_users_password }}",
           version: "{{ apotheca_vault_values.metadata.version }}"
         }

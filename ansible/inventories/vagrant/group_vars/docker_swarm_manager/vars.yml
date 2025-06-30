@@ -1,5 +1,5 @@
 ---
 apotheca_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'apotheca/vagrant', engine_mount_point='kv-applications') }}"
-ingress_ip: "{{ apotheca_vault_values.secret.ingress_ip }}"
-is_development: "{{ apotheca_vault_values.secret.is_development }}"
-project_root: "{{ apotheca_vault_values.secret.project_root }}"
+ingress_ip: "10.10.2.137"
+is_development: true
+project_root: "/opt/devops"

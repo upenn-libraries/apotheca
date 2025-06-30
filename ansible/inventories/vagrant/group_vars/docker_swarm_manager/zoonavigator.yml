@@ -1,2 +1,2 @@
 ---
-zoonavigator_proxy_host: "{{ apotheca_vault_values.secret.zoonavigator_proxy_host }}"
+zoonavigator_proxy_host: "apotheca-dev.library.upenn.int"
