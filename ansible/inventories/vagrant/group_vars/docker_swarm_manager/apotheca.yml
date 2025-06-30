@@ -1,14 +1,14 @@
 ---
-apotheca_build_docker_image: "{{ apotheca_vault_values.secret.apotheca_build_docker_image }}"
-apotheca_image_name: "{{ apotheca_vault_values.secret.apotheca_image_name }}"
-apotheca_image_registry: "{{ apotheca_vault_values.secret.apotheca_image_registry }}"
-apotheca_image_tag: "{{ apotheca_vault_values.secret.apotheca_image_tag }}"
-apotheca_port: "{{ apotheca_vault_values.secret.apotheca_port }}"
-apotheca_rails_env: "{{ apotheca_vault_values.secret.apotheca_rails_env }}"
-apotheca_replicas: "{{ apotheca_vault_values.secret.apotheca_replicas }}"
-apotheca_url: "{{ apotheca_vault_values.secret.apotheca_url }}"
-apotheca_solr_url: "{{ apotheca_vault_values.secret.apotheca_solr_url }}"
-apotheca_solr_test_url: "{{ apotheca_vault_values.secret.apotheca_solr_test_url }}"
+apotheca_build_docker_image: false
+apotheca_image_name: "apotheca"
+apotheca_image_registry: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
+apotheca_image_tag: "main-development"
+apotheca_port: 3000
+apotheca_rails_env: "development"
+apotheca_replicas: 1
+apotheca_url: "apotheca-dev.library.upenn.edu"
+apotheca_solr_url: "http://apotheca-dev.library.upenn.int/solr/apotheca-dev"
+apotheca_solr_test_url: "http://apotheca-dev.library.upenn.int/solr/apotheca-test"
 apotheca_versioned_secrets:
   rails_master_key:
     value: "{{ apotheca_vault_values.secret.rails_master_key }}"
