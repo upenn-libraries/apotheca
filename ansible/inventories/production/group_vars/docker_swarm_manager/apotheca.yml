@@ -11,6 +11,9 @@ apotheca_versioned_secrets:
   rails_master_key:
     value: "{{ apotheca_vault_values.secret.rails_master_key }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
+  sidekiq_pro_credentials:
+    value: "{{ dld_sidekiq_pro_vault_values.secret.credentials }}"
+    version: "{{ dld_sidekiq_pro_vault_values.metadata.version }}"
   solr_username:
     value: "{{ apotheca_vault_values.secret.solr_username }}"
     version: "{{ apotheca_vault_values.metadata.version }}"

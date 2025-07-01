@@ -10,4 +10,4 @@
         type: value
         value: "{{ dld_sidekiq_pro_vault_values.secret.credentials }}"
     args:
-      RAILS_ENV: "{{ apothea_rails_env }}"
+      RAILS_ENV: "{{ apotheca_rails_env }}"

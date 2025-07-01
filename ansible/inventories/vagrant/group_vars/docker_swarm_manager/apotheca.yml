@@ -1,5 +1,5 @@
 ---
-apotheca_build_docker_image: false
+apotheca_build_docker_image: true
 apotheca_image_name: "apotheca"
 apotheca_image_registry: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
 apotheca_image_tag: "main-development"
@@ -19,3 +19,6 @@ apotheca_versioned_secrets:
   solr_password:
     value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
+  sidekiq_pro_credentials:
+    value: "{{ dld_sidekiq_pro_vault_values.secret.credentials }}"
+    version: "{{ dld_sidekiq_pro_vault_values.metadata.version }}"
