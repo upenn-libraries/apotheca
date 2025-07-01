@@ -51,6 +51,9 @@ RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     rm -rf ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/cache/*.gem && \
     find ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/gems/ \( -name "*.c" -o -name "*.o" \) -delete
 
+RUN --mount=type=secret,id=sidekiq_pro_credentials \
+    bundle config set --local gems.contribsys.com $(cat /run/secrets/sidekiq_pro_credentials)
+
 COPY . .
 
 RUN find . -type d -exec chmod 755 {} + && \
