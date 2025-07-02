@@ -33,7 +33,7 @@ module API
                 elsif params[:ark]
                   find_by_ark ark: params[:ark].to_s
                 else
-                  raise ResourceNotFound, I18n.t('api.exceptions.not_found')
+                  raise MissingIdentifierError, I18n.t('api.exceptions.missing_identifier')
                 end
       end
 

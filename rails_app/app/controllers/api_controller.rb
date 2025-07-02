@@ -6,13 +6,15 @@ class APIController < ApplicationController
   class FileNotFound < StandardError; end
   class NotPublishedError < StandardError; end
   class ResourceMismatchError < StandardError; end
+  class MissingIdentifierError < StandardError; end
   # class NotAuthorizedError < StandardError; end
 
   API_FAILURES = {
     ResourceNotFound => :not_found,
     FileNotFound => :not_found,
     NotPublishedError => :not_found,
-    ResourceMismatchError => :bad_request
+    ResourceMismatchError => :bad_request,
+    MissingIdentifierError => :bad_request
   }.freeze
 
   rescue_from(StandardError, with: :error_response)
