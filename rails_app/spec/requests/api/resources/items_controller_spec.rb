@@ -25,6 +25,7 @@ describe 'Resource Item API' do
 
       it 'returns a failure object with the expected values' do
         expect(response).to have_http_status(:not_found)
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.not_published')
       end
     end
 
