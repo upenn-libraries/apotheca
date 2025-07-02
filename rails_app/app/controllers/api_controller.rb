@@ -56,4 +56,12 @@ class APIController < ApplicationController
 
     redirect_to url, status: :temporary_redirect
   end
+
+  def redirect_to_json(file_id)
+    shrine = Valkyrie::StorageAdapter.adapter_for(id: file_id).shrine
+    key = file_id.id.split('://').last
+
+    response = shrine.client.get_object(bucket: shrine.bucket.name, key: key)
+    send_data response.body.read, type: 'application/json', disposition: :inline
+  end
 end

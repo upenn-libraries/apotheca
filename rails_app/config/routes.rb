@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     end
     namespace :iiif do
       scope :items do
-        get ':uuid/manifest', to: 'items#manifest', as: :api_item_iiif_manifest
+        get ':uuid/manifest', to: 'items#manifest', as: :api_item_manifest
       end
     end
   end
