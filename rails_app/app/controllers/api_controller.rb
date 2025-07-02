@@ -68,8 +68,8 @@ class APIController < ApplicationController
 
   # Redirect to IIIF image server.
   #
-  # @param [AssetResource] asset resource
-  # @param [String] size of image in valid IIIF format (ex. `w,h`)
+  # @param asset [AssetResource]
+  # @param size [String] dimensions of image in valid IIIF format (ex. `w,h`)
   def redirect_to_iiif_image_server(asset, size)
     redirect_to "#{Settings.image_server.url}/iiif/3/#{asset.id}%2Faccess/full/#{size}/0/default.jpg",
                 status: :temporary_redirect
