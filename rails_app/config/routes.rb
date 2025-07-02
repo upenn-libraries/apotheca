@@ -14,7 +14,8 @@ Rails.application.routes.draw do
     scope :v1, defaults: { format: :json } do
       scope :items, module: :resources do
         get '/:uuid', to: 'items#show', as: :api_item_resource
-        get '/lookup/:ark', to: 'items#lookup', constraints: { ark: /\S+/ }, as: :api_ark_lookup
+        get '/lookup/*ark', to: 'items#lookup', constraints: ->(req) { req.params[:ark] =~ %r{\Aark:/\d+/\w+\z} },
+                            as: :api_ark_lookup
         get '/:uuid/preview', to: 'items#preview', as: :api_item_preview
         get '/:uuid/pdf', to: 'items#pdf', as: :api_item_pdf
       end

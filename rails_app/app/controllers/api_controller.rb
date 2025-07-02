@@ -6,13 +6,15 @@ class APIController < ApplicationController
   class FileNotFound < StandardError; end
   class NotPublishedError < StandardError; end
   class ResourceMismatchError < StandardError; end
+  class MissingIdentifierError < StandardError; end
   # class NotAuthorizedError < StandardError; end
 
   API_FAILURES = {
     ResourceNotFound => :not_found,
     FileNotFound => :not_found,
     NotPublishedError => :not_found,
-    ResourceMismatchError => :bad_request
+    ResourceMismatchError => :bad_request,
+    MissingIdentifierError => :bad_request
   }.freeze
 
   rescue_from(StandardError, with: :error_response)
@@ -32,9 +34,14 @@ class APIController < ApplicationController
 
   # @param identifier [String] uuid of resource to retrieve
   def find(identifier:)
-    Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by id: identifier
+    query_service.find_by id: identifier
   rescue Valkyrie::Persistence::ObjectNotFoundError
     raise ResourceNotFound, I18n.t('api.exceptions.not_found') # Raise our own exception so we can set a message
+  end
+
+  # @return [Valkyrie::Persistence::Postgres::QueryService]
+  def query_service
+    Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
 
   # Redirects to an AWS pre-signed URLs to view/download file.
