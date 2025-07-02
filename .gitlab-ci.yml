@@ -36,6 +36,11 @@ include:
       vault_auth_role: ${JWT_ROLE}
       vault_ssh_client_role: ${VAULT_SSH_CLIENT_ROLE}
       image_tag: ${CI_COMMIT_TAG}
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/general/vault_jwt_auth@~latest
+    inputs:
+      vault_auth_role: "${VAULT_AUTH_ROLE}"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/general/install_hashicorp_vault@~latest
+
 
 stages:
   - build_and_push:tmp_base_image
@@ -53,6 +58,8 @@ stages:
 build_and_push_base_app_image:
   stage: build_and_push:tmp_base_image
   extends:
+    - .install_hashicorp_vault
+    - .vault_jwt_auth
     - .build_and_push_docker_images
   parallel:
     matrix:
@@ -61,7 +68,9 @@ build_and_push_base_app_image:
       - RUNNER: build
         DOCKER_BUILD_PLATFORM: "linux/amd64"
   before_script:
-    - !reference [.build_and_push_docker_images, before_script]
+    - !reference [.install_hashicorp_vault, before_script]
+    - !reference [.vault_jwt_auth, before_script]
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
     - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
   variables:
     DOCKER_BUILD_CONTEXT: "rails_app/"
@@ -79,8 +88,12 @@ build_and_push_base_app_image:
 build_and_push_dev_app_image:
   stage: build_and_push:tmp_dev_image
   extends:
+    - .install_hashicorp_vault
+    - .vault_jwt_auth 
     - .build_and_push_docker_images
   before_script:
+    - !reference [.install_hashicorp_vault, before_script]
+    - !reference [.vault_jwt_auth, before_script]
     - !reference [.build_and_push_docker_images, before_script]
     - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
   parallel:
@@ -222,6 +235,8 @@ rubocop_app_test:
 build_and_push_prod_app_image:
   stage: build_and_push:tmp_prod_image
   extends:
+    - .install_hashicorp_vault
+    - .vault_jwt_auth 
     - .build_and_push_docker_images
   parallel:
     matrix:
@@ -230,6 +245,8 @@ build_and_push_prod_app_image:
       - RUNNER: build
         DOCKER_BUILD_PLATFORM: "linux/amd64"
   before_script:
+    - !reference [.install_hashicorp_vault, before_script]
+    - !reference [.vault_jwt_auth, before_script]
     - !reference [.build_and_push_docker_images, before_script]
     - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
   variables:
