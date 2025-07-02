@@ -6,13 +6,15 @@ class APIController < ApplicationController
   class FileNotFound < StandardError; end
   class NotPublishedError < StandardError; end
   class ResourceMismatchError < StandardError; end
+  class InvalidSize < StandardError; end
   # class NotAuthorizedError < StandardError; end
 
   API_FAILURES = {
     ResourceNotFound => :not_found,
     FileNotFound => :not_found,
     NotPublishedError => :not_found,
-    ResourceMismatchError => :bad_request
+    ResourceMismatchError => :bad_request,
+    InvalidSize => :bad_request
   }.freeze
 
   rescue_from(StandardError, with: :error_response)
@@ -55,5 +57,14 @@ class APIController < ApplicationController
                                             response_content_disposition: content_disposition)
 
     redirect_to url, status: :temporary_redirect
+  end
+
+  # Redirect to IIIF image server.
+  #
+  # @param [AssetResource] asset resource
+  # @param [String] size of image in valid IIIF format (ex. `w,h`)
+  def redirect_to_iiif_image_server(asset, size)
+    redirect_to "#{Settings.image_server.url}/iiif/3/#{asset.id}%2Faccess/full/#{size}/0/default.jpg",
+                status: :temporary_redirect
   end
 end

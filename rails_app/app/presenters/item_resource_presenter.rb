@@ -16,6 +16,14 @@ class ItemResourcePresenter < BasePresenter
     url_for(controller: 'items', action: 'show', id: object.id, host: Settings.app_url)
   end
 
+  # Returning string that doesn't have any special characters or spaces that can be
+  # used for a filename or url.
+  #
+  # @return [String]
+  def parameterize
+    descriptive_metadata.title.first[:value].parameterize
+  end
+
   # @return [ItemResourcePresenter::DescriptiveMetadataPresenter]
   def descriptive_metadata
     @descriptive_metadata ||= DescriptiveMetadataPresenter.new(

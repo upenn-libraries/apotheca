@@ -107,7 +107,78 @@ describe 'IIIF Resource Item API' do
   end
 
   describe 'GET #preview' do
-    xit 'redirects to an image URL' # TODO: pending implementation
+    let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged) }
+    let(:size) { nil }
+
+    before { get api_item_preview_path(item.id, size: size) }
+
+    context 'when size is not provided' do
+      it 'redirects to presigned_url for thumbnail' do
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{item.thumbnail.id}/thumbnail}
+        expect(response).to redirect_to(url)
+        expect(response).to have_http_status(:temporary_redirect)
+      end
+    end
+
+    context 'when size is 200,200' do
+      let(:size) { '200,200' }
+
+      it 'redirects to presigned_url for thumbnail' do
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{item.thumbnail.id}/thumbnail}
+        expect(response).to redirect_to(url)
+        expect(response).to have_http_status(:temporary_redirect)
+      end
+    end
+
+    context 'when size is 400,400' do
+      let(:size) { '400,400' }
+
+      it 'redirects to IIIF image server' do
+        url = %r{\A#{Settings.image_server.url}/iiif/3/#{item.thumbnail.id}%2Faccess/full/!#{size}/0/default.jpg}
+        expect(response).to redirect_to(url)
+        expect(response).to have_http_status(:temporary_redirect)
+      end
+    end
+
+    context 'when size is greater than 600,600' do
+      let(:size) { '800,800' }
+
+      it 'returns a 400 status code' do
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.invalid_size')
+      end
+    end
+
+    context 'when size is invalid' do
+      let(:size) { '600' }
+
+      it 'returns a 400 status code' do
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.invalid_size')
+      end
+    end
+
+    context 'when item\'s thumbnail is not an image' do
+      let(:asset) { persist(:asset_resource, :with_audio_file, :with_derivatives, :with_metadata) }
+      let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged, asset1: asset) }
+
+      it 'returns a 404 status code' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
+      end
+    end
   end
 
   describe 'GET #pdf' do
