@@ -35,6 +35,7 @@ describe 'IIIF Resource Item API' do
 
       it 'returns a failure object with the expected values' do
         expect(response).to have_http_status(:bad_request)
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.resource_mismatch', resource: ItemResource.to_s)
       end
     end
 
