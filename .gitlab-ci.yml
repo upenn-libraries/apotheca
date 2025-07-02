@@ -58,8 +58,6 @@ stages:
 build_and_push_base_app_image:
   stage: build_and_push:tmp_base_image
   extends:
-    - .install_hashicorp_vault
-    - .vault_jwt_auth
     - .build_and_push_docker_images
   parallel:
     matrix:
@@ -88,13 +86,11 @@ build_and_push_base_app_image:
 build_and_push_dev_app_image:
   stage: build_and_push:tmp_dev_image
   extends:
-    - .install_hashicorp_vault
-    - .vault_jwt_auth 
     - .build_and_push_docker_images
   before_script:
     - !reference [.install_hashicorp_vault, before_script]
     - !reference [.vault_jwt_auth, before_script]
-    - !reference [.build_and_push_docker_images, before_script]
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
     - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
   parallel:
     matrix:
@@ -235,8 +231,6 @@ rubocop_app_test:
 build_and_push_prod_app_image:
   stage: build_and_push:tmp_prod_image
   extends:
-    - .install_hashicorp_vault
-    - .vault_jwt_auth 
     - .build_and_push_docker_images
   parallel:
     matrix:
@@ -247,7 +241,7 @@ build_and_push_prod_app_image:
   before_script:
     - !reference [.install_hashicorp_vault, before_script]
     - !reference [.vault_jwt_auth, before_script]
-    - !reference [.build_and_push_docker_images, before_script]
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
     - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
   variables:
     DOCKER_BUILD_ARGS: "--build-arg RAILS_ENV=production"
