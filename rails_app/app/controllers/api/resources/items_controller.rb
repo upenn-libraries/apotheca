@@ -42,7 +42,7 @@ module API
         raise NotPublishedError, I18n.t('api.exceptions.not_published') unless @item.published
       end
 
-      # @param [String] ark id
+      # @param ark [String] id
       # @return [ItemResource]
       def find_by_ark(ark:)
         query_service.custom_queries.find_by_unique_identifier(unique_identifier: ark.to_s)
