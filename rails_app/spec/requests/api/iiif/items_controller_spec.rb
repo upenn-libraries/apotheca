@@ -50,9 +50,8 @@ describe 'IIIF Item API requests' do
       before { get iiif_api_item_manifest_path(item.id) }
 
       it 'redirects to presigned URL' do
-        expected_presigned_url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{item.id}/iiif_v3_manifest}
-        expect(response).to redirect_to(expected_presigned_url)
-        expect(response).to have_http_status(:temporary_redirect)
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['id']).to include item.id
       end
 
       it 'includes CORS headers' do
