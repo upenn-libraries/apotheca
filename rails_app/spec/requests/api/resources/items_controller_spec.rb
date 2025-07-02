@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'IIIF Resource Item API' do
+describe 'Resource Item API' do
   describe 'GET #show' do
     context 'when no resource is found' do
       before do
