@@ -38,7 +38,9 @@ module API
       end
 
       def authorize_item
-        raise ResourceMismatchError, I18n.t('api.exceptions.resource_mismatch') unless @item.is_a? ItemResource
+        unless @item.is_a? ItemResource
+          raise ResourceMismatchError, I18n.t('api.exceptions.resource_mismatch', resource: ItemResource.to_s)
+        end
         raise NotPublishedError, I18n.t('api.exceptions.not_published') unless @item.published
       end
 

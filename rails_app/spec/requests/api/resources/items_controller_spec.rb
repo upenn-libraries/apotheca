@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'IIIF Resource Item API' do
+describe 'Resource Item API' do
   describe 'GET #show' do
     context 'when no resource is found' do
       before do
@@ -25,6 +25,7 @@ describe 'IIIF Resource Item API' do
 
       it 'returns a failure object with the expected values' do
         expect(response).to have_http_status(:not_found)
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.not_published')
       end
     end
 
@@ -35,6 +36,7 @@ describe 'IIIF Resource Item API' do
 
       it 'returns a failure object with the expected values' do
         expect(response).to have_http_status(:bad_request)
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.resource_mismatch', resource: ItemResource.to_s)
       end
     end
 
