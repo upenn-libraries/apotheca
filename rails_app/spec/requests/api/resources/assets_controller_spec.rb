@@ -19,7 +19,7 @@ describe 'Resource Asset API requests' do
     end
 
     context 'when no item is found' do
-      let!(:asset) { persist(:asset_resource) }
+      let(:asset) { persist(:asset_resource) }
 
       before { get api_asset_resource_path(asset.id) }
 
@@ -49,7 +49,7 @@ describe 'Resource Asset API requests' do
     end
 
     context 'with an identifier for an ItemResource' do
-      let!(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged) }
+      let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged) }
 
       before { get api_asset_resource_path(item.id) }
 
@@ -71,7 +71,7 @@ describe 'Resource Asset API requests' do
     end
 
     context 'with an identifier for an AssetResource' do
-      let!(:item) do
+      let(:item) do
         persist(:item_resource, :published, :with_full_assets_all_arranged)
       end
       let(:asset) { item.arranged_assets.first }
