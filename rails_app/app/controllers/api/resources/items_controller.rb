@@ -8,7 +8,8 @@ module API
       before_action :authorize_item
       before_action :parse_size!, only: :preview
 
-      DEFAULT_SIZE = '200,200'
+      DEFAULT_SIZE = 200
+      MAX_SIZE = 600
 
       def show; end
 
@@ -19,7 +20,7 @@ module API
       # Returns preview image for Item. If requested image size is 200,200 or nil redirects to
       # thumbnail, otherwise redirects to IIIF image service.
       def preview
-        if @width == 200 && @height == 200 && @item.thumbnail_image?
+        if @width == DEFAULT_SIZE && @height == DEFAULT_SIZE && @item.thumbnail_image?
           filename = "#{@item.presenter.parameterize}-thumbnail.jpeg"
           redirect_to_presigned_url @item.thumbnail.thumbnail.file_id, filename
         elsif @item.thumbnail&.access&.mime_type == 'image/tiff'
@@ -65,14 +66,14 @@ module API
       end
 
       def parse_size!
-        size = /^(\d{1,3}),(\d{1,3})$/.match(params.fetch(:size, DEFAULT_SIZE))
+        size = /^(\d{1,3}),(\d{1,3})$/.match(params.fetch(:size, "#{DEFAULT_SIZE},#{DEFAULT_SIZE}"))
 
         raise InvalidSize, I18n.t('api.exceptions.invalid_size') unless size
 
         @width = size[1].to_i
         @height = size[2].to_i
 
-        raise InvalidSize, I18n.t('api.exceptions.invalid_size') if @width > 600 || @height > 600
+        raise InvalidSize, I18n.t('api.exceptions.invalid_size') if @width > MAX_SIZE || @height > MAX_SIZE
       end
     end
   end

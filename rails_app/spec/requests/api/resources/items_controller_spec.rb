@@ -201,8 +201,8 @@ describe 'IIIF Resource Item API' do
       end
     end
 
-    context 'when size is 200,200' do
-      let(:size) { '200,200' }
+    context 'when size is default size' do
+      let(:size) { "#{API::Resources::ItemsController::DEFAULT_SIZE},#{API::Resources::ItemsController::DEFAULT_SIZE}" }
 
       it 'redirects to presigned_url for thumbnail' do
         url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{item.thumbnail.id}/thumbnail}
