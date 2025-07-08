@@ -54,7 +54,7 @@ class APIController < ApplicationController
   # Defaults to inline disposition because this allows the browser to choose the best course of action
   # based on its capabilities. This should allow us to support embedding images and allowing for downloads.
   #
-  # @param [Valkyrie::ID] file_id identifier for file that contains storage location
+  # @param [Valkyrie::Types::ID] file_id identifier for file that contains storage location
   # @param [String] filename to use when serving up file
   def redirect_to_presigned_url(file_id, filename)
     shrine = Valkyrie::StorageAdapter.adapter_for(id: file_id).shrine
