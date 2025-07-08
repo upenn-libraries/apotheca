@@ -8,12 +8,14 @@ class APIController < ApplicationController
   class ResourceMismatchError < StandardError; end
   class InvalidSize < StandardError; end
   class MissingIdentifierError < StandardError; end
+  class InvalidParameterError < StandardError; end
   # class NotAuthorizedError < StandardError; end
 
   API_FAILURES = {
     ResourceNotFound => :not_found,
     FileNotFound => :not_found,
     NotPublishedError => :not_found,
+    InvalidParameterError => :bad_request,
     ResourceMismatchError => :bad_request,
     InvalidSize => :bad_request,
     MissingIdentifierError => :bad_request
@@ -26,7 +28,8 @@ class APIController < ApplicationController
 
   # @param exception [Exception]
   def failure_response(exception)
-    render json: { status: :fail, message: exception.message }, status: API_FAILURES[exception.class]
+    status = API_FAILURES[exception.class] || API_FAILURES.find { |klass, _| exception.is_a?(klass) }&.last
+    render json: { status: :fail, message: exception.message }, status: status
   end
 
   # @param exception [Exception]
