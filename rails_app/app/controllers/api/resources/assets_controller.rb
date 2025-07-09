@@ -6,7 +6,7 @@ module API
     class AssetsController < APIController
       class FileTypeError < InvalidParameterError; end
 
-      FILES = %w[thumbnail iiif_image preservation].freeze
+      FILES = %w[thumbnail access preservation].freeze
       IIIF_IMAGE_SIZE = 'max'
 
       before_action :load_asset
