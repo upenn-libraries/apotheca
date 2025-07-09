@@ -5,7 +5,7 @@ describe 'IIIF Item API requests' do
     context 'when no resource is found' do
       before do
         allow(Valkyrie::MetadataAdapter).to receive(:find).and_raise(Valkyrie::Persistence::ObjectNotFoundError)
-        get iiif_api_item_manifest_path('1234-fooo-5678-quux')
+        get iiif_api_item_iiif_manifest_path('1234-fooo-5678-quux')
       end
 
       it 'returns a 404 status code' do
@@ -21,7 +21,7 @@ describe 'IIIF Item API requests' do
     context 'when an item is not published' do
       let(:item) { persist(:item_resource, published: false) }
 
-      before { get iiif_api_item_manifest_path(item.id) }
+      before { get iiif_api_item_iiif_manifest_path(item.id) }
 
       it 'returns a 404 status code' do
         expect(response).to have_http_status(:not_found)
@@ -36,7 +36,7 @@ describe 'IIIF Item API requests' do
     context 'with an error that does not have explicit handling' do
       before do
         allow(Valkyrie::MetadataAdapter).to receive(:find).and_raise(Valkyrie::Persistence::StaleObjectError)
-        get iiif_api_item_manifest_path('1234-fooo-5678-quux')
+        get iiif_api_item_iiif_manifest_path('1234-fooo-5678-quux')
       end
 
       it 'returns a failure object with the expected values' do
@@ -47,7 +47,7 @@ describe 'IIIF Item API requests' do
     context 'when a IIIF manifest is available' do
       let(:item) { persist(:item_resource, :with_full_assets_all_arranged, :with_derivatives, :published) }
 
-      before { get iiif_api_item_manifest_path(item.id) }
+      before { get iiif_api_item_iiif_manifest_path(item.id) }
 
       it 'redirects to presigned URL' do
         expect(response).to have_http_status(:ok)
@@ -62,7 +62,7 @@ describe 'IIIF Item API requests' do
     context 'when a IIIF manifest is not available' do
       let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged) }
 
-      before { get iiif_api_item_manifest_path(item.id) }
+      before { get iiif_api_item_iiif_manifest_path(item.id) }
 
       it 'returns a 404 status code' do
         expect(response).to have_http_status(:not_found)
