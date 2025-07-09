@@ -6,7 +6,6 @@ class APIController < ApplicationController
   class FileNotFound < StandardError; end
   class NotPublishedError < StandardError; end
   class ResourceMismatchError < StandardError; end
-  class InvalidSize < StandardError; end
   class MissingIdentifierError < StandardError; end
   class InvalidParameterError < StandardError; end
   # class NotAuthorizedError < StandardError; end
@@ -17,7 +16,6 @@ class APIController < ApplicationController
     NotPublishedError => :not_found,
     InvalidParameterError => :bad_request,
     ResourceMismatchError => :bad_request,
-    InvalidSize => :bad_request,
     MissingIdentifierError => :bad_request
   }.freeze
 
