@@ -18,7 +18,9 @@ module API
 
         raise FileTypeError, I18n.t('api.exceptions.invalid_param.file_type', type: type) unless type.in? FILES
 
-        redirect_to_file(type)
+        return redirect_to_derivative_file(type) if type.in? FILES - ['preservation']
+
+        redirect_to_preservation_file
       end
 
       private
@@ -38,20 +40,19 @@ module API
         raise NotPublishedError, I18n.t('api.exceptions.not_published') unless @item.published
       end
 
-      def redirect_to_file(type)
-        case type
-        when 'thumbnail' then redirect_to_presigned_url(@asset.thumbnail.file_id, thumbnail_filename)
-        when 'iiif_image' then redirect_to_iiif_image_server(@asset, IIIF_IMAGE_SIZE)
-        when 'preservation' then redirect_to_presigned_url(@asset.preservation_file_id, @asset.original_filename)
-        else
-          raise FileTypeError, I18n.t('api.exceptions.invalid_param.file_type', type: type)
-        end
+      # @param type [ActionController::Parameters]
+      def redirect_to_derivative_file(type)
+        derivative = @asset.send(type.to_sym)
+        raise FileNotFound, I18n.t('api.exceptions.file_not_found') unless derivative
+
+        filename = "#{File.basename(@asset.original_filename,
+                                    File.extname(@asset.original_filename))}-#{type}.#{derivative.extension}"
+
+        redirect_to_presigned_url(derivative.file_id, filename)
       end
 
-      # @return [String]
-      def thumbnail_filename
-        "#{File.basename(@asset.original_filename,
-                         File.extname(@asset.original_filename))}-thumbnail.#{@asset.thumbnail.extension}"
+      def redirect_to_preservation_file
+        redirect_to_presigned_url(@asset.preservation_file_id, @asset.original_filename)
       end
     end
   end
