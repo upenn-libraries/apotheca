@@ -6,16 +6,16 @@ class APIController < ApplicationController
   class FileNotFound < StandardError; end
   class NotPublishedError < StandardError; end
   class ResourceMismatchError < StandardError; end
-  class InvalidSize < StandardError; end
   class MissingIdentifierError < StandardError; end
+  class InvalidParameterError < StandardError; end
   # class NotAuthorizedError < StandardError; end
 
   API_FAILURES = {
     ResourceNotFound => :not_found,
     FileNotFound => :not_found,
     NotPublishedError => :not_found,
+    InvalidParameterError => :bad_request,
     ResourceMismatchError => :bad_request,
-    InvalidSize => :bad_request,
     MissingIdentifierError => :bad_request
   }.freeze
 
@@ -26,7 +26,8 @@ class APIController < ApplicationController
 
   # @param exception [Exception]
   def failure_response(exception)
-    render json: { status: :fail, message: exception.message }, status: API_FAILURES[exception.class]
+    status = API_FAILURES[exception.class] || API_FAILURES.find { |klass, _| exception.is_a?(klass) }&.last
+    render json: { status: :fail, message: exception.message }, status: status
   end
 
   # @param exception [Exception]
@@ -51,7 +52,7 @@ class APIController < ApplicationController
   # Defaults to inline disposition because this allows the browser to choose the best course of action
   # based on its capabilities. This should allow us to support embedding images and allowing for downloads.
   #
-  # @param [Valkyrie::ID] file_id identifier for file that contains storage location
+  # @param [Valkyrie::Types::ID] file_id identifier for file that contains storage location
   # @param [String] filename to use when serving up file
   def redirect_to_presigned_url(file_id, filename)
     shrine = Valkyrie::StorageAdapter.adapter_for(id: file_id).shrine
