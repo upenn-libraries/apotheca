@@ -120,7 +120,7 @@ describe 'Resource Asset API requests' do
 
     before { get api_asset_file_path(asset.id, file: file) }
 
-    context 'with invalid file parameter' do
+    context 'when the file parameter is invalid' do
       let(:file)  { 'invalid' }
 
       it 'returns a 400 status code' do
@@ -133,7 +133,7 @@ describe 'Resource Asset API requests' do
       end
     end
 
-    context 'with thumbnail file parameter' do
+    context 'when requesting a thumbnail' do
       let(:file) { 'thumbnail' }
 
       it 'redirects to a thumbnail download' do
@@ -143,17 +143,47 @@ describe 'Resource Asset API requests' do
       end
     end
 
-    context 'with iiif_image file parameter' do
-      let(:file) { 'iiif_image' }
+    context 'when requesting a thumbnail but none exists' do
+      let(:item) { persist(:item_resource, :published, :with_asset) }
+      let(:asset) { item.asset_ids.first }
+      let(:file) { 'thumbnail' }
 
-      it 'redirects to IIIF image server' do
-        url = %r{\A#{Settings.image_server.url}/iiif/3/#{item.thumbnail.id}%2Faccess/full/max/0/default.jpg}
+      it 'returns a 404 status code' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
+      end
+    end
+
+    context 'when requesting access derivative' do
+      let(:file) { 'access' }
+
+      it 'redirects to access derivative download' do
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.iiif_derivative_storage.bucket}/#{asset.id}/}
         expect(response).to redirect_to(url)
         expect(response).to have_http_status(:temporary_redirect)
       end
     end
 
-    context 'with preservation file parameter' do
+    context 'when requesting access derivative but none exists' do
+      let(:item) { persist(:item_resource, :published, :with_asset) }
+      let(:asset) { item.asset_ids.first }
+      let(:file) { 'access' }
+
+      it 'returns a 404 status code' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
+      end
+    end
+
+    context 'when requesting preservation file' do
       let(:file) { 'preservation' }
 
       it 'redirects to a preservation file download' do
