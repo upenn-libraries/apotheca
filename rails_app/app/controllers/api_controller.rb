@@ -6,6 +6,7 @@ class APIController < ApplicationController
   class FileNotFound < StandardError; end
   class NotPublishedError < StandardError; end
   class ResourceMismatchError < StandardError; end
+  class InvalidSize < StandardError; end
   class MissingIdentifierError < StandardError; end
   # class NotAuthorizedError < StandardError; end
 
@@ -14,6 +15,7 @@ class APIController < ApplicationController
     FileNotFound => :not_found,
     NotPublishedError => :not_found,
     ResourceMismatchError => :bad_request,
+    InvalidSize => :bad_request,
     MissingIdentifierError => :bad_request
   }.freeze
 
@@ -70,5 +72,15 @@ class APIController < ApplicationController
 
     response = shrine.client.get_object(bucket: shrine.bucket.name, key: key)
     send_data response.body.read, type: 'application/json', disposition: :inline
+  end
+
+  # Redirect to IIIF image server.
+  #
+  # @param asset [AssetResource]
+  # @param size [String] dimensions of image in valid IIIF format (ex. `w,h`)
+  def redirect_to_iiif_image_server(asset, size)
+    # @note These links will change once we migrate over to using an iiif_image derivative.
+    redirect_to "#{Settings.image_server.url}/iiif/3/#{asset.id}%2Faccess/full/#{size}/0/default.jpg",
+                status: :temporary_redirect
   end
 end
