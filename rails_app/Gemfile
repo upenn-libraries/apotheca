@@ -43,7 +43,7 @@ gem 'rouge', '~> 4.2'
 gem 'rsolr'
 gem 'ruby-vips'
 gem 'sassc-rails' # Use Sass to process CSS
-gem 'sidekiq'
+gem 'sidekiq-pro', source: 'https://gems.contribsys.com'
 gem 'sidekiq-cron'
 gem 'sprockets-rails'
 gem 'stimulus-rails'

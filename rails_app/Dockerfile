@@ -40,6 +40,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget && \
 
 COPY Gemfile* ./
 
+RUN --mount=type=secret,id=sidekiq_pro_credentials \
+    bundle config set --local gems.contribsys.com $(cat /run/secrets/sidekiq_pro_credentials)
+
 RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     set -eux; \
     if [ "${RAILS_ENV}" = "development" ]; then \
@@ -50,9 +53,6 @@ RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     MAKE="make -j $(nproc)" bundle install && \
     rm -rf ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/cache/*.gem && \
     find ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}/gems/ \( -name "*.c" -o -name "*.o" \) -delete
-
-RUN --mount=type=secret,id=sidekiq_pro_credentials \
-    bundle config set --local gems.contribsys.com $(cat /run/secrets/sidekiq_pro_credentials)
 
 COPY . .
 
