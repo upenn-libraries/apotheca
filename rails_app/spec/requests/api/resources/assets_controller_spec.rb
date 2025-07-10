@@ -113,6 +113,19 @@ describe 'Resource Asset API requests' do
         expect(json_body[:data][:related][:item]).to eql "http://www.example.com/v1/items/#{item.id}?assets=true"
       end
     end
+
+    context 'when derivatives do not exist' do
+      let(:item) { persist(:item_resource, :published, :with_asset) }
+      let(:asset) { item.asset_ids.first }
+      let(:asset_json) { json_body[:data][:asset] }
+
+      before { get api_asset_resource_path(asset.id), headers: { 'ACCEPT' => 'application/json' } }
+
+      it 'includes the expected keys and values' do
+        expect(asset_json[:derivatives].keys).to contain_exactly(:thumbnail, :access)
+        expect(asset_json[:derivatives].values).to eq [nil, nil]
+      end
+    end
   end
 
   describe 'GET #file' do
