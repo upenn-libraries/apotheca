@@ -217,7 +217,7 @@ describe 'Resource Item API' do
       let(:size) { '400,400' }
 
       it 'redirects to IIIF image server' do
-        url = %r{\A#{Settings.image_server.url}/iiif/3/#{item.thumbnail.id}%2Faccess/full/!#{size}/0/default.jpg}
+        url = %r{\A#{Settings.image_server.url}/iiif/3/#{item.thumbnail.id}%2Fiiif_image/full/!#{size}/0/default.jpg}
         expect(response).to redirect_to(url)
         expect(response).to have_http_status(:temporary_redirect)
       end
