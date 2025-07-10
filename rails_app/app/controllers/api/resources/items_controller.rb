@@ -6,6 +6,8 @@ module API
     class ItemsController < APIController
       include ItemLoadable
 
+      class InvalidSize < InvalidParameterError; end
+
       before_action :parse_size!, only: :preview
 
       DEFAULT_SIZE = 200
@@ -45,12 +47,12 @@ module API
       def parse_size!
         size = /^(\d{1,3}),(\d{1,3})$/.match(params.fetch(:size, "#{DEFAULT_SIZE},#{DEFAULT_SIZE}"))
 
-        raise InvalidSize, I18n.t('api.exceptions.invalid_size') unless size
+        raise InvalidSize, I18n.t('api.exceptions.invalid_param.size') unless size
 
         @width = size[1].to_i
         @height = size[2].to_i
 
-        raise InvalidSize, I18n.t('api.exceptions.invalid_size') if @width > MAX_SIZE || @height > MAX_SIZE
+        raise InvalidSize, I18n.t('api.exceptions.invalid_param.size') if @width > MAX_SIZE || @height > MAX_SIZE
       end
     end
   end

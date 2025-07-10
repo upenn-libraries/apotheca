@@ -232,7 +232,7 @@ describe 'Resource Item API' do
 
       it 'returns a failure object with the expected values' do
         expect(json_body[:status]).to eq 'fail'
-        expect(json_body[:message]).to eq I18n.t('api.exceptions.invalid_size')
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.invalid_param.size')
       end
     end
 
@@ -245,7 +245,7 @@ describe 'Resource Item API' do
 
       it 'returns a failure object with the expected values' do
         expect(json_body[:status]).to eq 'fail'
-        expect(json_body[:message]).to eq I18n.t('api.exceptions.invalid_size')
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.invalid_param.size')
       end
     end
 

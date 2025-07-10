@@ -115,6 +115,82 @@ describe 'Resource Asset API requests' do
   end
 
   describe 'GET #file' do
-    xit 'redirects to file specified in params' # TODO: pending implementation
+    let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives) }
+    let(:asset) { item.arranged_assets.first }
+
+    before { get api_asset_file_path(asset.id, file: file) }
+
+    context 'when the file parameter is invalid' do
+      let(:file)  { 'invalid' }
+
+      it 'returns a 400 status code' do
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.invalid_param.file_type', type: file)
+      end
+    end
+
+    context 'when requesting a thumbnail' do
+      let(:file) { 'thumbnail' }
+
+      it 'redirects to a thumbnail download' do
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{asset.id}/#{file}}
+        expect(response).to redirect_to(url)
+        expect(response).to have_http_status(:temporary_redirect)
+      end
+    end
+
+    context 'when requesting a thumbnail but none exists' do
+      let(:item) { persist(:item_resource, :published, :with_asset) }
+      let(:asset) { item.asset_ids.first }
+      let(:file) { 'thumbnail' }
+
+      it 'returns a 404 status code' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
+      end
+    end
+
+    context 'when requesting access derivative' do
+      let(:file) { 'access' }
+
+      it 'redirects to access derivative download' do
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.iiif_derivative_storage.bucket}/#{asset.id}/}
+        expect(response).to redirect_to(url)
+        expect(response).to have_http_status(:temporary_redirect)
+      end
+    end
+
+    context 'when requesting access derivative but none exists' do
+      let(:item) { persist(:item_resource, :published, :with_asset) }
+      let(:asset) { item.asset_ids.first }
+      let(:file) { 'access' }
+
+      it 'returns a 404 status code' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a failure object with the expected values' do
+        expect(json_body[:status]).to eq 'fail'
+        expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
+      end
+    end
+
+    context 'when requesting preservation file' do
+      let(:file) { 'preservation' }
+
+      it 'redirects to a preservation file download' do
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.preservation_storage.bucket}/#{asset.id}/}
+        expect(response).to redirect_to(url)
+        expect(response).to have_http_status(:temporary_redirect)
+      end
+    end
   end
 end
