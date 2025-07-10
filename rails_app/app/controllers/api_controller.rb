@@ -56,15 +56,23 @@ class APIController < ApplicationController
   # @param [String] filename to use when serving up file
   def redirect_to_presigned_url(file_id, filename)
     shrine = Valkyrie::StorageAdapter.adapter_for(id: file_id).shrine
-
     key = file_id.id.split('://').last
-    content_disposition = "inline; filename=\"#{filename}\""
 
+    content_disposition = "inline; filename=\"#{filename}\""
     signer = Aws::S3::Presigner.new(client: shrine.client)
     url = signer.presigned_url(:get_object, bucket: shrine.bucket.name, key: key, expires_in: 300,
                                             response_content_disposition: content_disposition)
 
     redirect_to url, status: :temporary_redirect
+  end
+
+  # Redirects to a JSON file from storage (useful for returning generated IIIF manifests from storage)
+  #
+  # @param [Valkyrie::ID] file_id identifier for file that contains storage location
+  def serve_json(file_id)
+    manifest_file = Valkyrie::StorageAdapter.find_by id: file_id
+
+    send_data manifest_file.read, type: 'application/json', disposition: :inline
   end
 
   # Redirect to IIIF image server.

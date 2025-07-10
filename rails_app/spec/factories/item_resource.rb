@@ -68,13 +68,14 @@ FactoryBot.define do
     trait :with_derivatives do
       transient do
         iiif_manifest { true }
+        iiif_v3_manifest { true }
         pdf { true }
       end
 
       after(:create) do |item, evaluator|
         derivative_service = DerivativeService::Item::Derivatives.new(ItemChangeSet.new(item))
 
-        %w[iiif_manifest pdf].each do |type|
+        %w[iiif_manifest iiif_v3_manifest pdf].each do |type|
           next unless evaluator.send(type) # Check if derivative was requested.
 
           derivative = derivative_service.send(type)
