@@ -93,10 +93,10 @@ module DerivativeService
       # Validate that an asset has required derivatives
       #
       # @param asset [AssetResource] asset to validate
-      # @raise [MissingDerivative] if access derivative is missing
+      # @raise [MissingDerivative] if iiif_image derivative is missing
       # @return [void]
       def validate_asset_derivatives!(asset)
-        return if asset.access
+        return if asset.iiif_image
 
         raise MissingDerivative, "Derivatives missing for #{asset.original_filename}"
       end
@@ -117,7 +117,7 @@ module DerivativeService
       # @return [Hash] IIIF item thumbnail structure
       # @return [Hash] empty hash if no thumbnail available
       def thumbnail
-        return {} unless item.thumbnail&.access
+        return {} unless item.thumbnail&.iiif_image
 
         thumbnail_url = iiif_image_url(item.thumbnail)
 
@@ -271,9 +271,9 @@ module DerivativeService
       #
       # @param [AssetResource] asset
       def iiif_image_url(asset)
-        raise "#{asset.original_filename} is missing access copy" unless asset.access
+        raise "#{asset.original_filename} is missing iiif_image derivative file" unless asset.iiif_image
 
-        filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
+        filepath = asset.iiif_image.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
 
         URI.join(image_server.url, "iiif/3/#{CGI.escape(filepath)}").to_s
       end
