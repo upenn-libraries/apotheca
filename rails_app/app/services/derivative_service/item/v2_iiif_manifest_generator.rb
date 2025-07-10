@@ -40,7 +40,7 @@ module DerivativeService
         sequence['rendering'] = [pdf_file] if pdf_file
 
         item.arranged_assets.select(&:image?).map.with_index do |asset, i|
-          raise MissingDerivative, "Derivatives missing for #{asset.original_filename}" unless asset.access
+          raise MissingDerivative, "Derivatives missing for #{asset.original_filename}" unless asset.iiif_image
 
           index = i + 1
 
@@ -67,7 +67,7 @@ module DerivativeService
 
       # Manifest-level thumbnail.
       def thumbnail
-        return {} unless item.thumbnail&.access
+        return {} unless item.thumbnail&.iiif_image
 
         thumbnail_url = iiif_image_url(item.thumbnail)
 
@@ -186,9 +186,9 @@ module DerivativeService
       #
       # @param [AssetResource] asset
       def iiif_image_url(asset)
-        raise "#{asset.original_filename} is missing access copy" unless asset.access
+        raise "#{asset.original_filename} is missing iiif_image derivative" unless asset.iiif_image
 
-        filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
+        filepath = asset.iiif_image.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
 
         URI.join(image_server.url, "iiif/2/#{CGI.escape(filepath)}").to_s
       end
