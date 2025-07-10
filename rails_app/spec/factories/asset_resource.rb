@@ -100,6 +100,7 @@ FactoryBot.define do
 
     trait :with_derivatives do
       transient do
+        iiif_image { true}
         access { true }
         thumbnail { true }
         text { true }
@@ -114,6 +115,7 @@ FactoryBot.define do
       transient do
         preservation_file { nil }
         preservation_backup { false }
+        iiif_image { false}
         access { false }
         thumbnail { false }
         text { false }
