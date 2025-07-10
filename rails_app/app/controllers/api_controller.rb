@@ -69,12 +69,10 @@ class APIController < ApplicationController
   # Redirects to a JSON file from storage (useful for returning generated IIIF manifests from storage)
   #
   # @param [Valkyrie::ID] file_id identifier for file that contains storage location
-  def redirect_to_json(file_id)
-    shrine = Valkyrie::StorageAdapter.adapter_for(id: file_id).shrine
-    key = file_id.id.split('://').last
+  def serve_json(file_id)
+    manifest_file = Valkyrie::StorageAdapter.find_by id: file_id
 
-    response = shrine.client.get_object(bucket: shrine.bucket.name, key: key)
-    send_data response.body.read, type: 'application/json', disposition: :inline
+    send_data manifest_file.read, type: 'application/json', disposition: :inline
   end
 
   # Redirect to IIIF image server.

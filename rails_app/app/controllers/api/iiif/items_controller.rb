@@ -15,7 +15,7 @@ module API
         response.headers['Access-Control-Allow-Origin'] = '*'
         manifest_file_id = @item.iiif_v3_manifest.file_id
 
-        redirect_to_json(manifest_file_id)
+        serve_json(manifest_file_id)
       end
     end
   end
