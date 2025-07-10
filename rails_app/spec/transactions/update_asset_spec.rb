@@ -339,7 +339,7 @@ describe UpdateAsset do
 
         it 'generates ocr derivatives' do
           expect(updated_asset.derivatives.count).to be 5
-          expect(updated_asset.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail', 'text',
+          expect(updated_asset.derivatives.map(&:type)).to contain_exactly('iiif_image', 'thumbnail', 'text',
                                                                            'textonly_pdf', 'hocr')
         end
       end
