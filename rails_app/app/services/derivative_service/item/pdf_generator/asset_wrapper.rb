@@ -59,8 +59,8 @@ module DerivativeService
         #
         # @return [DerivativeFile]
         def create_jpg
-          # Read in access derivative.
-          file = Valkyrie::StorageAdapter.find_by(id: asset.access.file_id)
+          # Read in iiif_image derivative.
+          file = Valkyrie::StorageAdapter.find_by(id: asset.iiif_image.file_id)
 
           # Create JPEG image
           image = Vips::Image.new_from_buffer(file.read, '')
