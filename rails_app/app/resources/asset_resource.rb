@@ -59,6 +59,11 @@ class AssetResource < Valkyrie::Resource
   end
 
   # @return [DerivativeResource]
+  def iiif_image
+    derivatives.find(&:iiif_image?)
+  end
+
+  # @return [DerivativeResource]
   def textonly_pdf
     derivatives.find(&:textonly_pdf?)
   end

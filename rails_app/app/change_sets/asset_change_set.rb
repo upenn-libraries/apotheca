@@ -6,7 +6,7 @@ class AssetChangeSet < ChangeSet
   include LockableChangeSet
 
   TRANSCRIPTION_MIME_TYPES = ['text/plain'].freeze
-  DERIVATIVE_TYPES = %w[thumbnail access textonly_pdf text hocr].freeze
+  DERIVATIVE_TYPES = %w[thumbnail iiif_image access textonly_pdf text hocr].freeze
 
   # ChangeSet for Technical Metadata
   class TechnicalMetadataChangeSet < ChangeSet

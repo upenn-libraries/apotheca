@@ -6,7 +6,7 @@ module DerivativeService
     class Derivatives
       attr_reader :asset
 
-      delegate :thumbnail, :access, :textonly_pdf, :text, :hocr, to: :generator
+      delegate :thumbnail, :access, :iiif_image, :textonly_pdf, :text, :hocr, to: :generator
 
       # @param asset [AssetChangeSet]
       def initialize(asset)

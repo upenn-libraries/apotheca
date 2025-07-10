@@ -7,7 +7,7 @@ module DerivativeService
       class Image < Base
         VALID_MIME_TYPES = ['image/tiff'].freeze
 
-        # @return [DerivativeService::Generator::DerivativeFile]
+        # @return [DerivativeService::DerivativeFile]
         def thumbnail
           # TODO: We might need to apply `page: 0` if the image file is a tiff. Vips says it defaults to 0 though
           #   but before we have had to specify the page/layer for some tiffs.
@@ -22,7 +22,8 @@ module DerivativeService
           raise Generator::Error, "Error generating image thumbnail: #{e.class} #{e.message}", e.backtrace
         end
 
-        def access
+        # @return [DerivativeService::DerivativeFile]
+        def iiif_image
           file.rewind
           image = Vips::Image.new_from_buffer(file.read, '')
           image = image.autorot
@@ -51,6 +52,11 @@ module DerivativeService
           derivative_file
         rescue StandardError => e
           raise Generator::Error, "Error generating image access copy: #{e.class} #{e.message}", e.backtrace
+        end
+
+        # @return [nil]
+        def access
+          nil
         end
 
         # @return [DerivativeService::DerivativeFile, nil]
