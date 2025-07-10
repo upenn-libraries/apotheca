@@ -46,6 +46,16 @@ module AssetInfo
               class: classes)
     end
 
+    # @return [ActiveSupport::SafeBuffer]
+    def iiif_image_download_link
+      classes = %w[stretched-link list-group-item list-group-item-action]
+      classes.push('disabled') unless asset.iiif_image
+
+      link_to('Download IIIF Image',
+              file_asset_path(asset, type: :iiif_image, disposition: 'attachment'),
+              class: classes)
+    end
+
     def thumbnail_form_classes
       form_classes = %w[list-group-item list-group-item-action]
       form_classes.push('disabled') if item.thumbnail?(asset.id)

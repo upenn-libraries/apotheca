@@ -44,6 +44,7 @@
         <%= set_as_thumbnail %>
       <% end %>
       <%= access_download_link %>
+      <%= iiif_image_download_link %>
       <%= preservation_download_link %>
       <%= link_to 'More Details', asset_path(asset), class: 'stretched-link list-group-item list-group-item-action' %>
       <% if user.can?(:update, @asset) %>
