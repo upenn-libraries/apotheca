@@ -11,9 +11,26 @@ describe DerivativeService::Item::PDFGenerator::AssetWrapper do
   end
 
   describe '#image' do
-    it 'returns derivative file' do
-      expect(asset_wrapper.image).to be_a DerivativeService::DerivativeFile
-      expect(asset_wrapper.image.length).not_to be 0
+    context 'when iiif_image present' do
+      it 'returns derivative file' do
+        expect(asset_wrapper.image).to be_a DerivativeService::DerivativeFile
+        expect(asset_wrapper.image.length).not_to be 0
+      end
+    end
+
+    context 'when iiif_image not present, but access copy present' do
+      let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
+
+      before do
+        iiif_image = asset.derivatives.find(&:iiif_image?)
+        iiif_image.type = 'access'
+        asset.derivatives = [iiif_image]
+      end
+
+      it 'returns derivative file' do
+        expect(asset_wrapper.image).to be_a DerivativeService::DerivativeFile
+        expect(asset_wrapper.image.length).not_to be 0
+      end
     end
   end
 
