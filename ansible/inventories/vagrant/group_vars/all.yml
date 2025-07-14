@@ -1,5 +1,6 @@
 ---
 docker_swarm_addr: "{{ ansible_host }}"
+dld_sidekiq_pro_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'sidekiq_pro', engine_mount_point='dld') }}"
 
 # Docker swarm setup vars
 skip_repo: false
