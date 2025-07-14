@@ -3,6 +3,33 @@
 
 require 'rbconfig'
 
+class Token
+  def to_s
+    begin
+      Vault.address = "https://vault.library.upenn.edu"
+      vault_instance = Vault.auth.token(ENV.fetch('VAULT_TOKEN', ''))
+      token = ENV.fetch('VAULT_TOKEN')
+
+    rescue
+      begin
+        puts "\nInvalid local Vault token, or local Vault token does not exist. Please enter Vault credentials."
+
+        print "HashiCorp Vault username: "
+        hv_user = STDIN.gets.chomp
+        print "HashiCorp Vault password: "
+        hv_pass = STDIN.noecho(&:gets).chomp
+
+        Vault.address = "https://vault.library.upenn.edu"
+        vault_instance = Vault.auth.ldap(hv_user, hv_pass)
+        vault_instance.auth.client_token
+      rescue
+        puts "Invalid Vault credentials, try again."
+        retry
+      end
+    end
+  end
+end
+
 # Determine if arch is ARM
 def arm_architecture?
   RbConfig::CONFIG['host_cpu'].downcase.start_with?('arm')
@@ -83,7 +110,10 @@ Vagrant.configure("2") do |config|
         cfg.vm.provision :ansible_local do |ansible|
           ansible.config_file = "/apotheca/ansible/ansible.cfg"
           ansible.extra_vars = {
-            ansible_python_interpreter: "/usr/bin/python3"
+            ansible_python_interpreter: "/usr/bin/python3",
+            ansible_hashi_vault_token: Token.new,
+            ansible_hashi_vault_url: "https://vault.library.upenn.edu",
+            ansible_user: "vagrant"
           }
           ansible.install_mode = "pip3"
           ansible.inventory_path = "/apotheca/ansible/inventories/vagrant"

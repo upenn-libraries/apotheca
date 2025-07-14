@@ -36,6 +36,11 @@ include:
       vault_auth_role: ${JWT_ROLE}
       vault_ssh_client_role: ${VAULT_SSH_CLIENT_ROLE}
       image_tag: ${CI_COMMIT_TAG}
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/general/vault_jwt_auth@~latest
+    inputs:
+      vault_auth_role: "${VAULT_AUTH_ROLE}"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/general/install_hashicorp_vault@~latest
+
 
 stages:
   - build_and_push:tmp_base_image
@@ -53,6 +58,7 @@ stages:
 build_and_push_base_app_image:
   stage: build_and_push:tmp_base_image
   extends:
+    - .vault_jwt_auth
     - .build_and_push_docker_images
   parallel:
     matrix:
@@ -60,10 +66,17 @@ build_and_push_base_app_image:
         DOCKER_BUILD_PLATFORM: "linux/arm64"
       - RUNNER: build
         DOCKER_BUILD_PLATFORM: "linux/amd64"
+  before_script:
+    - !reference [.install_hashicorp_vault, before_script]
+    - !reference [.vault_jwt_auth, before_script]
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
   variables:
     DOCKER_BUILD_CONTEXT: "rails_app/"
     DOCKER_TARGET: "base"
     DOCKERFILE_PATH: "rails_app/"
+    DOCKER_BUILD_SECRETS: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
+    VAULT_AUTH_ROLE: "sidekiq_pro_ro"
     IMAGE_TAGS: "${CI_COMMIT_TAG} ${CI_COMMIT_REF_SLUG} ${CI_COMMIT_SHA} ${CI_COMMIT_SHORT_SHA} ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
     REGISTRY_REPOSITORY: "${CI_PIPELINE_ID}"
   tags:
@@ -74,7 +87,13 @@ build_and_push_base_app_image:
 build_and_push_dev_app_image:
   stage: build_and_push:tmp_dev_image
   extends:
+    - .vault_jwt_auth
     - .build_and_push_docker_images
+  before_script:
+    - !reference [.install_hashicorp_vault, before_script]
+    - !reference [.vault_jwt_auth, before_script]
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
   parallel:
     matrix:
       - RUNNER: build-arm
@@ -86,6 +105,8 @@ build_and_push_dev_app_image:
     DOCKER_BUILD_CONTEXT: "rails_app/"
     DOCKER_TARGET: "development"
     DOCKERFILE_PATH: "rails_app/"
+    DOCKER_BUILD_SECRETS: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
+    VAULT_AUTH_ROLE: "sidekiq_pro_ro"
     IMAGE_TAGS: "${CI_COMMIT_TAG} ${CI_COMMIT_REF_SLUG} ${CI_COMMIT_SHA} ${CI_COMMIT_SHORT_SHA} ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
     REGISTRY_REPOSITORY: "${CI_PIPELINE_ID}"
   needs:
@@ -212,6 +233,7 @@ rubocop_app_test:
 build_and_push_prod_app_image:
   stage: build_and_push:tmp_prod_image
   extends:
+    - .vault_jwt_auth
     - .build_and_push_docker_images
   parallel:
     matrix:
@@ -219,10 +241,17 @@ build_and_push_prod_app_image:
         DOCKER_BUILD_PLATFORM: "linux/arm64"
       - RUNNER: build
         DOCKER_BUILD_PLATFORM: "linux/amd64"
+  before_script:
+    - !reference [.install_hashicorp_vault, before_script]
+    - !reference [.vault_jwt_auth, before_script]
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
   variables:
     DOCKER_BUILD_ARGS: "--build-arg RAILS_ENV=production"
     DOCKER_BUILD_CONTEXT: "rails_app/"
     DOCKER_TARGET: "production"
+    DOCKER_BUILD_SECRETS: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
+    VAULT_AUTH_ROLE: "sidekiq_pro_ro"
     DOCKERFILE_PATH: "rails_app/"
     IMAGE_TAGS: "${CI_COMMIT_TAG} ${CI_COMMIT_REF_SLUG} ${CI_COMMIT_SHA} ${CI_COMMIT_SHORT_SHA} ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} ${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
     REGISTRY_REPOSITORY: "${CI_PIPELINE_ID}"

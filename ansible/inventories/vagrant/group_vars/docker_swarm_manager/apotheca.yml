@@ -11,11 +11,14 @@ apotheca_solr_url: "http://apotheca-dev.library.upenn.int/solr/apotheca-dev"
 apotheca_solr_test_url: "http://apotheca-dev.library.upenn.int/solr/apotheca-test"
 apotheca_versioned_secrets:
   rails_master_key:
-    value: "d387ab7464fc5b8bb2e5c0dcd4105355"
-    version: "1"
+    value: "{{ apotheca_vault_values.secret.rails_master_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
   solr_username:
     value: "{{ solr_custom_env_variables.SOLR_ADMIN_USERNAME }}"
-    version: "1"
+    version: "{{ apotheca_vault_values.metadata.version }}"
   solr_password:
     value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
-    version: "1"
+    version: "{{ apotheca_vault_values.metadata.version }}"
+  sidekiq_pro_credentials:
+    value: "{{ dld_sidekiq_pro_vault_values.secret.credentials }}"
+    version: "{{ dld_sidekiq_pro_vault_values.metadata.version }}"

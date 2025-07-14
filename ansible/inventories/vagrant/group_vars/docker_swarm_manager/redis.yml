@@ -15,14 +15,14 @@ redis:
         {
           name: "sidekiq",
           acl_rules: "+@all ~*",
-          password: "password",
-          version: 1
+          password: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_users_password }}",
+          version: "{{ apotheca_vault_values.metadata.version }}"
         },
         {
           name: "default",
           acl_rules: "+@all ~*",
-          password: "password",
-          version: 1
+          password: "{{ apotheca_vault_values.secret.redis_versioned_configs_users_acl_users_password }}",
+          version: "{{ apotheca_vault_values.metadata.version }}"
         }
       ]
-      version: 1
+      version: "{{ apotheca_vault_values.metadata.version }}"

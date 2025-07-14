@@ -9,3 +9,5 @@
   changed_when: false
   no_log: true
   loop: "{{ sidekiq.instances }}"
+  environment: 
+    SIDEKIQ_PRO_CREDENTIALS: "{{ 'apotheca_sidekiq_pro_credentials_v' ~ apotheca_versioned_secrets.sidekiq_pro_credentials.version }}"

@@ -11,6 +11,6 @@ postgres:
   replicas: 1
   versioned_secrets:
     password:
-      value: "123456abcde"
-      version: 1
+      value: "{{ apotheca_vault_values.secret.postgres_versioned_secrets_password_value }}"
+      version: "{{ apotheca_vault_values.metadata.version }}"
   user: "rails"

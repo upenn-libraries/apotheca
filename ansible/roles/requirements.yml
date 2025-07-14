@@ -1,4 +1,7 @@
 ---
+collections:
+  - community.docker
+
 roles:
   # the original repo can't handle python3 so we will use a fork until it can
   - name: atosatto.docker-swarm
