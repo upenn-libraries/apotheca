@@ -38,6 +38,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget && \
     done && \
     rm -rf /var/lib/apt/lists/*
 
+COPY Gemfile* ./
+
 RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     set -eux; \
     if [ "${RAILS_ENV}" = "development" ]; then \
@@ -45,8 +47,6 @@ RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     else \
     bundle config set without "development:test:assets"; \
     fi
-
-COPY Gemfile* ./
 
 RUN --mount=type=secret,id=sidekiq_pro_credentials \
   bundle config set --local gems.contribsys.com $(cat /run/secrets/sidekiq_pro_credentials)
