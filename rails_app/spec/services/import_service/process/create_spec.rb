@@ -259,7 +259,7 @@ describe ImportService::Process::Create do
       end
 
       it 'does not generate OCR derivatives' do
-        expect(assets[0].derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+        expect(assets[0].derivatives.map(&:type)).to contain_exactly('iiif_image', 'thumbnail')
       end
     end
 
@@ -295,7 +295,7 @@ describe ImportService::Process::Create do
       end
 
       it 'does not generate OCR derivatives' do
-        expect(assets[0].derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+        expect(assets[0].derivatives.map(&:type)).to contain_exactly('iiif_image', 'thumbnail')
       end
     end
 

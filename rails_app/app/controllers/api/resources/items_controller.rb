@@ -25,7 +25,7 @@ module API
         if @width == DEFAULT_SIZE && @height == DEFAULT_SIZE && @item.thumbnail_image?
           filename = "#{@item.presenter.parameterize}-thumbnail.jpeg"
           redirect_to_presigned_url @item.thumbnail.thumbnail.file_id, filename
-        elsif @item.thumbnail&.access&.mime_type == 'image/tiff'
+        elsif @item.thumbnail&.pyramidal_tiff
           redirect_to_iiif_image_server @item.thumbnail, "!#{@width},#{@height}"
         else
           raise FileNotFound, I18n.t('api.exceptions.file_not_found')

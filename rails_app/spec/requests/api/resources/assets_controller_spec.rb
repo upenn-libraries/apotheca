@@ -72,7 +72,8 @@ describe 'Resource Asset API requests' do
 
     context 'with an identifier for an AssetResource' do
       let(:item) do
-        persist(:item_resource, :published, :with_full_assets_all_arranged)
+        persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives,
+                asset1: persist(:asset_resource, :with_video_file, :with_derivatives, :with_metadata))
       end
       let(:asset) { item.arranged_assets.first }
       let(:asset_json) { json_body[:data][:asset] }
@@ -112,10 +113,26 @@ describe 'Resource Asset API requests' do
         expect(json_body[:data][:related][:item]).to eql "http://www.example.com/v1/items/#{item.id}?assets=true"
       end
     end
+
+    context 'when derivatives do not exist' do
+      let(:item) { persist(:item_resource, :published, :with_asset) }
+      let(:asset) { item.asset_ids.first }
+      let(:asset_json) { json_body[:data][:asset] }
+
+      before { get api_asset_resource_path(asset.id), headers: { 'ACCEPT' => 'application/json' } }
+
+      it 'includes the expected keys and values' do
+        expect(asset_json[:derivatives].keys).to contain_exactly(:thumbnail, :access)
+        expect(asset_json[:derivatives].values).to eq [nil, nil]
+      end
+    end
   end
 
   describe 'GET #file' do
-    let(:item) { persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives) }
+    let(:item) do
+      persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives,
+              asset1: persist(:asset_resource, :with_video_file, :with_derivatives, :with_metadata))
+    end
     let(:asset) { item.arranged_assets.first }
 
     before { get api_asset_file_path(asset.id, file: file) }
@@ -162,7 +179,7 @@ describe 'Resource Asset API requests' do
       let(:file) { 'access' }
 
       it 'redirects to access derivative download' do
-        url = %r{\A#{Settings.minio.endpoint}/#{Settings.iiif_derivative_storage.bucket}/#{asset.id}/}
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{asset.id}/#{file}}
         expect(response).to redirect_to(url)
         expect(response).to have_http_status(:temporary_redirect)
       end

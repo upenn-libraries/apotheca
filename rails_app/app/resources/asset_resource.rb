@@ -59,6 +59,19 @@ class AssetResource < Valkyrie::Resource
   end
 
   # @return [DerivativeResource]
+  def iiif_image
+    derivatives.find(&:iiif_image?)
+  end
+
+  # Finds pyramidal tiff from either iiif_image or access derivatives
+  # @return [DerivativeResource, nil]
+  def pyramidal_tiff
+    return unless image?
+
+    iiif_image || access
+  end
+
+  # @return [DerivativeResource]
   def textonly_pdf
     derivatives.find(&:textonly_pdf?)
   end

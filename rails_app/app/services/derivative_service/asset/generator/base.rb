@@ -32,6 +32,10 @@ module DerivativeService
         def hocr
           raise NotImplementedError
         end
+
+        def iiif_image
+          raise NotImplementedError
+        end
       end
     end
   end

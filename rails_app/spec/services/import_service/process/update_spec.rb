@@ -388,7 +388,7 @@ describe ImportService::Process::Update do
       end
 
       it 'does not generate OCR derivatives' do
-        expect(updated_assets.first.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+        expect(updated_assets.first.derivatives.map(&:type)).to contain_exactly('iiif_image', 'thumbnail')
       end
     end
 

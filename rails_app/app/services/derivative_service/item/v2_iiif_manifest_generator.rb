@@ -40,7 +40,7 @@ module DerivativeService
         sequence['rendering'] = [pdf_file] if pdf_file
 
         item.arranged_assets.select(&:image?).map.with_index do |asset, i|
-          raise MissingDerivative, "Derivatives missing for #{asset.original_filename}" unless asset.access
+          raise MissingDerivative, "Derivatives missing for #{asset.original_filename}" unless asset.pyramidal_tiff
 
           index = i + 1
 
@@ -67,7 +67,7 @@ module DerivativeService
 
       # Manifest-level thumbnail.
       def thumbnail
-        return {} unless item.thumbnail&.access
+        return {} unless item.thumbnail&.pyramidal_tiff
 
         thumbnail_url = iiif_image_url(item.thumbnail)
 
@@ -186,11 +186,14 @@ module DerivativeService
       #
       # @param [AssetResource] asset
       def iiif_image_url(asset)
-        raise "#{asset.original_filename} is missing access copy" unless asset.access
+        raise "#{asset.original_filename} is missing pyramidal tiff" unless asset.pyramidal_tiff
 
-        filepath = asset.access.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1]
-
-        URI.join(image_server.url, "iiif/2/#{CGI.escape(filepath)}").to_s
+        identifier = if asset.pyramidal_tiff.access?
+                       CGI.escape(asset.pyramidal_tiff.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1])
+                     else
+                       asset.id.to_s
+                     end
+        URI.join(image_server.url, "iiif/2/#{identifier}").to_s
       end
 
       # Image server configuration.

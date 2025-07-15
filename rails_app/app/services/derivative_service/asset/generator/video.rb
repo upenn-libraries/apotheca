@@ -36,14 +36,22 @@ module DerivativeService
           raise Generator::Error, "Error generating video thumbnail: #{e.class} #{e.message}", e.backtrace
         end
 
+        # @return [nil]
+        def iiif_image
+          nil
+        end
+
+        # @return [nil]
         def textonly_pdf
           nil
         end
 
+        # @return [nil]
         def text
           nil
         end
 
+        # @return [nil]
         def hocr
           nil
         end

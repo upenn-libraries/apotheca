@@ -106,7 +106,7 @@ class Container
 
     register 'generate_derivatives' do
       Steps::GenerateDerivatives.new(DerivativeService::Asset::Derivatives,
-                                     :thumbnail, :access, :textonly_pdf, :text, :hocr)
+                                     :thumbnail, :access, :iiif_image, :textonly_pdf, :text, :hocr)
     end
   end
 end
