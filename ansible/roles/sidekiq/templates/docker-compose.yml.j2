@@ -32,6 +32,16 @@ services:
       FITS_URL: "http://fits:{{ fits.port }}/fits"
     extra_hosts:
       - "{{ solr_proxy_host }}:{{ ingress_ip }}"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "ps aux | grep '[s]idekiq 7' || exit 1",
+        ]
+      interval: 30s
+      retries: 3
+      start_period: 1m
+      timeout: 30s
     logging:
       driver: json-file
       options:
