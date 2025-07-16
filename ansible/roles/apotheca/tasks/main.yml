@@ -69,6 +69,8 @@
     DATABASE_NAME: "{{ postgres.database }}"
     DATABASE_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
     DATABASE_USER: "{{ postgres.user }}"
+    EZID_PASSWORD: "{{ 'apotheca_ezid_password_v' ~ apotheca_versioned_secrets.ezid_password.version }}"
+    EZID_USER: "{{ 'apotheca_ezid_user_v' ~ apotheca_versioned_secrets.ezid_user.version }}"
     FITS_PORT: "{{ fits.port }}"
     INGRESS_IP: "{{ ingress_ip }}"
     MINIO_URL: "http://{{ minio.server_url }}"
