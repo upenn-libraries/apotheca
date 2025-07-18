@@ -49,6 +49,11 @@ class ItemResource < Valkyrie::Resource
                                          .sort_by { |a| structural_metadata.arranged_asset_ids.index(a.id) }
   end
 
+  # @return [Array<AssetResource>]
+  def assets
+    @assets ||= pg_query_service.find_many_by_ids(ids: asset_ids.dup)
+  end
+
   # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
   # @param [Valkyrie::ID] asset_id
   def thumbnail?(asset_id)
