@@ -55,7 +55,14 @@ class Container
     end
 
     register 'generate_derivatives' do
-      Steps::GenerateDerivatives.new(DerivativeService::Item::Derivatives, :iiif_manifest, :iiif_v3_manifest, :pdf)
+      Steps::GenerateDerivatives.new(DerivativeService::Item::Derivatives,
+                                     %i[iiif_manifest iiif_v3_manifest pdf])
+    end
+
+    register 'generate_iiif_manifests' do
+      Steps::GenerateDerivatives.new(DerivativeService::Item::Derivatives,
+                                     %i[iiif_manifest iiif_v3_manifest],
+                                     replace_all: false)
     end
   end
 
@@ -106,7 +113,7 @@ class Container
 
     register 'generate_derivatives' do
       Steps::GenerateDerivatives.new(DerivativeService::Asset::Derivatives,
-                                     :thumbnail, :access, :iiif_image, :textonly_pdf, :text, :hocr)
+                                     %i[thumbnail access iiif_image textonly_pdf text hocr])
     end
   end
 end
