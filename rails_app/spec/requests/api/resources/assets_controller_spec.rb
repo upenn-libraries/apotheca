@@ -71,14 +71,11 @@ describe 'Resource Asset API requests' do
     end
 
     context 'with an identifier for an AssetResource' do
-      let(:item) do
-        persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives,
-                asset1: persist(:asset_resource, :with_video_file, :with_derivatives, :with_metadata))
-      end
-      let(:asset) { item.arranged_assets.first }
+      let(:item) { persist(:item_resource, :published, :with_derivatives, asset_ids: [asset.id]) }
+      let(:asset) { persist(:asset_resource, :with_video_file, :with_derivatives, :with_metadata) }
       let(:asset_json) { json_body[:data][:asset] }
 
-      before { get api_asset_resource_path(asset.id), headers: { 'ACCEPT' => 'application/json' } }
+      before { get api_asset_resource_path(item.asset_ids.first), headers: { 'ACCEPT' => 'application/json' } }
 
       it 'returns asset identifier' do
         expect(asset_json[:id]).to eq asset.id.to_s
@@ -129,13 +126,10 @@ describe 'Resource Asset API requests' do
   end
 
   describe 'GET #file' do
-    let(:item) do
-      persist(:item_resource, :published, :with_full_assets_all_arranged, :with_derivatives,
-              asset1: persist(:asset_resource, :with_video_file, :with_derivatives, :with_metadata))
-    end
-    let(:asset) { item.arranged_assets.first }
+    let(:item) { persist(:item_resource, :published, :with_derivatives, asset_ids: [asset.id]) }
+    let(:asset) { persist(:asset_resource, :with_video_file, :with_derivatives, :with_metadata) }
 
-    before { get api_asset_file_path(asset.id, file: file) }
+    before { get api_asset_file_path(item.asset_ids.first, file: file) }
 
     context 'when the file parameter is invalid' do
       let(:file)  { 'invalid' }

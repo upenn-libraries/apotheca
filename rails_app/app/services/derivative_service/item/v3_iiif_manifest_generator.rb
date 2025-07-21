@@ -60,7 +60,7 @@ module DerivativeService
       #
       # @return [Hash]
       def manifest_attributes
-        {
+        hash = {
           'id' => "https://#{Settings.app_url}/iiif/items/#{item.id}/manifest",
           'label' => { 'none' => [item.descriptive_metadata.title.pluck(:value).join('; ')] },
           'required_statement' => {
@@ -69,9 +69,10 @@ module DerivativeService
           },
           'behavior' => [item.structural_metadata.viewing_hint || DEFAULT_VIEWING_HINT],
           'viewing_direction' => item.structural_metadata.viewing_direction || DEFAULT_VIEWING_DIRECTION,
-          'metadata' => iiif_metadata,
-          'thumbnail' => [thumbnail]
+          'metadata' => iiif_metadata
         }
+        hash['thumbnail'] = [thumbnail] if thumbnail.present?
+        hash
       end
 
       # Add canvases and structures to the manifest
