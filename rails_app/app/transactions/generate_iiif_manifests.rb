@@ -12,8 +12,6 @@ class GenerateIIIFManifests
   step :save, with: 'change_set.save'
   tee :record_event
 
-  # TODO: should maybe also republish?
-
   def record_event(resource)
     ResourceEvent.record_event_for(resource: resource, event_type: :generate_derivatives)
   end

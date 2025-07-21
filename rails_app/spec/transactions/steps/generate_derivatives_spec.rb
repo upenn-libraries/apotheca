@@ -66,7 +66,9 @@ describe Steps::GenerateDerivatives do
         generate_derivatives_step.call(change_set)
       end
 
-      let(:generate_derivatives_step) { described_class.new(derivative_generator_class, derivative_type, replace_all: false) }
+      let(:generate_derivatives_step) do
+        described_class.new(derivative_generator_class, derivative_type, replace_all: false)
+      end
       let(:derivative_file) { DerivativeService::DerivativeFile.new(mime_type: 'application/json') }
 
       it 'is successful' do

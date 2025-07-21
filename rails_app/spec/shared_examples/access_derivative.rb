@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 # Adds `access` derivative to asset. Requires `asset` variable to be set.
 shared_context 'with access derivative' do

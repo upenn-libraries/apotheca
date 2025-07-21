@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
 describe MigrateAccessToIIIFImageDerivativeJob do
-
-
   let(:job) { described_class.new }
 
   describe '#perform' do
     let(:asset) { persist(:asset_resource, :with_image_file) }
     let(:item) do
       persist(:item_resource, :published, asset_ids: [asset.id], thumbnail_asset_id: [asset.id],
-              structural_metadata: { arranged_asset_ids: [asset.id] })
+                                          structural_metadata: { arranged_asset_ids: [asset.id] })
     end
     let(:add_iiif_image_transaction) { AddIIIFImageDerivative.new }
     let(:iiif_manifest_transaction) { GenerateIIIFManifests.new }
@@ -88,12 +86,13 @@ describe MigrateAccessToIIIFImageDerivativeJob do
 
       let(:item) do
         persist(:item_resource, asset_ids: [asset.id], thumbnail_asset_id: [asset.id],
-                structural_metadata: { arranged_asset_ids: [asset.id] })
+                                structural_metadata: { arranged_asset_ids: [asset.id] })
       end
 
       it 'does not call GenerateIIIFManifests' do
         job.perform(item.id.to_s)
-        expect(iiif_manifest_transaction).not_to have_received(:call).with(id: item.id.to_s, updated_by: Settings.system_user)
+        expect(iiif_manifest_transaction).not_to have_received(:call).with(id: item.id.to_s,
+                                                                           updated_by: Settings.system_user)
       end
     end
 
@@ -102,12 +101,14 @@ describe MigrateAccessToIIIFImageDerivativeJob do
 
       it 'calls AddIIIFImageDerivative transaction for each asset' do
         job.perform(item.id.to_s)
-        expect(add_iiif_image_transaction).to have_received(:call).with(id: asset.id.to_s, updated_by: Settings.system_user)
+        expect(add_iiif_image_transaction).to have_received(:call).with(id: asset.id.to_s,
+                                                                        updated_by: Settings.system_user)
       end
 
       it 'calls GenerateIIIFManifests' do
         job.perform(item.id.to_s)
-        expect(iiif_manifest_transaction).to have_received(:call).with(id: item.id.to_s, updated_by: Settings.system_user)
+        expect(iiif_manifest_transaction).to have_received(:call).with(id: item.id.to_s,
+                                                                       updated_by: Settings.system_user)
       end
 
       it 'deletes access derivative files' do
