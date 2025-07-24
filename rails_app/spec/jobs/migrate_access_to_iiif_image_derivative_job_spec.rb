@@ -58,12 +58,12 @@ describe MigrateAccessToIIIFImageDerivativeJob do
 
       before do
         allow(add_iiif_image_transaction).to receive(:call).and_return(
-          Dry::Monads::Failure.new(:iiif_image_derivative_already_present)
+          Dry::Monads::Failure.new(error: :iiif_image_derivative_already_present)
         )
       end
 
       it 'raises an error' do
-        expect { job.perform(item.id.to_s) }.to raise_error("Error migrating to iiif_image derivative for #{asset.id}")
+        expect { job.perform(item.id.to_s) }.to raise_error("Error migrating to iiif_image for #{asset.id}")
       end
     end
 
@@ -72,7 +72,7 @@ describe MigrateAccessToIIIFImageDerivativeJob do
 
       before do
         allow(iiif_manifest_transaction).to receive(:call).and_return(
-          Dry::Monads::Failure.new(:error_generating_iiif_manifest)
+          Dry::Monads::Failure.new(error: :error_generating_iiif_manifest)
         )
       end
 

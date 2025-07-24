@@ -28,7 +28,7 @@ class MigrateAccessToIIIFImageDerivativeJob
 
       result = AddIIIFImageDerivative.new.call(id: asset.id.to_s, updated_by: Settings.system_user)
 
-      raise "Error migrating to iiif_image derivative for #{asset.id}" if result.failure?
+      raise "Error migrating to iiif_image for #{asset.id}", cause: result.failure[:exception] if result.failure?
     end
   end
 
@@ -36,9 +36,9 @@ class MigrateAccessToIIIFImageDerivativeJob
   def regenerate_iiif_manifests(item)
     return unless item.published # Skip regenerating iiif manifest if item is not published
 
-    iiif_manifest_result = GenerateIIIFManifests.new.call(id: item.id.to_s, updated_by: Settings.system_user)
+    result = GenerateIIIFManifests.new.call(id: item.id.to_s, updated_by: Settings.system_user)
 
-    raise 'Error regenerating IIIF manifest' if iiif_manifest_result.failure?
+    raise 'Error regenerating IIIF manifest', cause: result.failure[:exception] if result.failure?
   end
 
   # Remove `access` files from storage.
