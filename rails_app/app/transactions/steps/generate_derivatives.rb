@@ -5,15 +5,22 @@ module Steps
   class GenerateDerivatives
     include Dry::Monads[:result]
 
-    attr_reader :derivative_class, :types
+    attr_reader :derivative_class, :types, :replace_all
 
-    def initialize(derivative_class, *types)
+    # @param derivative_class [Class] derivative generator class
+    # @param types [Array<Symbol>] list of derivatives to create
+    # @param replace_all [Boolean] if derivatives created should replace all present derivatives
+    def initialize(derivative_class, types, replace_all: true)
       @derivative_class = derivative_class
       @types = Array.wrap(types)
+      @replace_all = replace_all
     end
 
     def call(change_set)
-      change_set.derivatives = derivatives_for(change_set)
+      derivatives = derivatives_for(change_set)
+      derivatives += change_set.resource.derivatives.reject { |d| types.include?(d.type.to_sym) } unless replace_all
+
+      change_set.derivatives = derivatives
 
       Success(change_set)
     rescue StandardError => e
