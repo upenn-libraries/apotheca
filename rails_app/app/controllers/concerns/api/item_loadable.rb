@@ -12,6 +12,8 @@ module API
 
     private
 
+    # @raise [APIController::MissingIdentifierError]
+    # @return [ItemResource]
     def load_item
       @item = if params[:uuid]
                 find identifier: params[:uuid].to_s
@@ -22,6 +24,8 @@ module API
               end
     end
 
+    # @raise [APIController::ResourceMismatchError, APIController::NotPublishedError]
+    # @return [Nil]
     def authorize_item
       unless @item.is_a? ItemResource
         raise APIController::ResourceMismatchError,
@@ -30,12 +34,14 @@ module API
       raise APIController::NotPublishedError, I18n.t('api.exceptions.not_published') unless @item.published
     end
 
-    # @param ark [String] id
+    # @param ark [String] ark id
+    # @raise [APIController::ResourceNotFound]
     # @return [ItemResource]
     def find_by_ark(ark:)
-      query_service.custom_queries.find_by_unique_identifier(unique_identifier: ark.to_s)
-    rescue Valkyrie::Persistence::ObjectNotFoundError
-      raise APIController::ResourceNotFound, I18n.t('api.exceptions.not_found')
+      item  = query_service.custom_queries.find_by_unique_identifier(unique_identifier: ark.to_s)
+      raise APIController::ResourceNotFound, I18n.t('api.exceptions.not_found') unless item
+
+      item
     end
   end
 end

@@ -112,11 +112,7 @@ describe 'Resource Item API' do
     end
 
     context 'when no resource is found' do
-      before do
-        allow(Valkyrie::MetadataAdapter).to receive(:find)
-          .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
-        get api_ark_lookup_path('ark:/123/456')
-      end
+      before { get api_ark_lookup_path('ark:/123/456') }
 
       it 'returns a 404 status code' do
         expect(response).to have_http_status(:not_found)
