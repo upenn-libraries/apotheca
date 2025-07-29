@@ -49,7 +49,7 @@
   with_dict:
     - "{{ apotheca_versioned_secrets }}"
   tags: versioned_secrets
-  no_log: true
+  no_log: false
 
 # Execute development env steps
 - name: Deploy apotheca development environment
