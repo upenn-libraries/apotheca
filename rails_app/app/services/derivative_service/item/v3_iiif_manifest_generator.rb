@@ -186,6 +186,33 @@ module DerivativeService
         annotation_page = IIIF::V3::Presentation::AnnotationPage.new
         annotation_page['id'] = "#{asset_base_url}/annotation-page/1"
 
+        # placeholder canvas for pre-viewer load image preview
+        placeholder_canvas = IIIF::V3::Presentation::Canvas.new
+        placeholder_canvas['id'] = "#{asset_base_url}/canvas/placeholder"
+        placeholder_canvas.label = { 'none' => [asset.label || "p. #{index}"] }
+
+        placeholder_canvas_annotation_page = IIIF::V3::Presentation::AnnotationPage.new
+        placeholder_canvas_annotation_page['id'] = "#{asset_base_url}/canvas/placeholder/annotation-page"
+
+        placeholder_canvas_annotation = IIIF::V3::Presentation::Annotation.new
+        placeholder_canvas_annotation['id'] = "#{asset_base_url}/canvas/placeholder/annotation-page/1"
+        placeholder_canvas_annotation['motivation'] = 'painting'
+
+        image_url = iiif_image_url(asset)
+        placeholder_canvas_annotation.body = IIIF::V3::Presentation::ImageResource.create_image_api_image_resource(
+          service_id: image_url,
+          resource_id: "#{image_url}/full/640,/0/default.jpg",
+          width: asset.technical_metadata.width,
+          height: asset.technical_metadata.height,
+          profile: 'level2'
+        )
+        placeholder_canvas_annotation['target'] = placeholder_canvas['id']
+        placeholder_canvas_annotation.body.service.first.type = 'ImageService3'
+
+        placeholder_canvas_annotation_page.items << placeholder_canvas_annotation
+        placeholder_canvas.items << placeholder_canvas_annotation_page
+        canvas['placeholderCanvas'] = placeholder_canvas
+
         annotation = IIIF::V3::Presentation::Annotation.new
         annotation['id'] = "#{asset_base_url}/annotation/1"
         annotation['motivation'] = 'painting'
