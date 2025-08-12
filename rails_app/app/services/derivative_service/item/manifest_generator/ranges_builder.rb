@@ -6,7 +6,7 @@ module DerivativeService
   module Item
     module ManifestGenerator
       # Builder for IIIF Presentation v3 Range objects (table of contents)
-      class RangeBuilder
+      class RangesBuilder
         attr_reader :asset
 
         def initialize(asset)
@@ -16,7 +16,7 @@ module DerivativeService
         # Build ranges for each annotation on the asset
         #
         # @return [Array<IIIF::V3::Presentation::Range>] array of range objects
-        def build_ranges
+        def build
           asset.annotations.map.with_index do |annotation, annotation_index|
             build_range(annotation, annotation_index + 1)
           end

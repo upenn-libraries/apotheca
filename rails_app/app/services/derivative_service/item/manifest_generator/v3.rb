@@ -68,7 +68,7 @@ module DerivativeService
             manifest.items << CanvasBuilder.new(asset, index).build
             next unless asset.annotations&.any?
 
-            manifest.structures.concat RangeBuilder.new(asset).build_ranges
+            manifest.structures.concat RangesBuilder.new(asset).build
           end
         end
 
