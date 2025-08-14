@@ -20,6 +20,14 @@ describe AssetResource do
       end
     end
 
+    context 'when the iiif_image derivative is present for video file' do
+      let(:asset) { persist(:asset_resource, :with_video_file, :with_derivatives) }
+
+      it 'returns the iiif_image derivative' do
+        expect(asset.pyramidal_tiff).to eq(asset.iiif_image)
+      end
+    end
+
     context 'when the iiif_image derivative is not present but the access image derivative is' do
       let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
 
