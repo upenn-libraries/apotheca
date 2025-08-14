@@ -39,15 +39,7 @@ module DerivativeService
 
           derivative_file = DerivativeFile.new mime_type: 'image/tiff', iiif_image: true
 
-          image.tiffsave(
-            derivative_file.path,
-            tile: true,
-            pyramid: true,
-            compression: :jpeg,
-            tile_width: 256,
-            tile_height: 256,
-            strip: true
-          )
+          image.tiffsave(derivative_file.path, **PYRAMIDAL_TIFF_OPTIONS)
 
           derivative_file
         rescue StandardError => e
