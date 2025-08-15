@@ -12,6 +12,16 @@ describe DerivativeService::Item::ManifestGenerator::CanvasBuilder do
     let(:index) { 1 }
     let(:canvas) { described_class.new(asset, index).build }
 
+    let(:annotations) { canvas.items.first.items }
+    let(:annotation) { annotations.first }
+    let(:image_resource) { annotation.body }
+
+    let(:annotation_page) { canvas.items.first }
+
+    let(:placeholder_canvas_annotation_page) { canvas['placeholderCanvas'].items.first }
+    let(:placeholder_canvas_annotation) { placeholder_canvas_annotation_page.items.first }
+    let(:placeholder_image_resource) { placeholder_canvas_annotation.body }
+
     context 'with a canvas' do
       it 'builds canvas' do
         expect(canvas).to be_a IIIF::V3::Presentation::Canvas
@@ -21,62 +31,62 @@ describe DerivativeService::Item::ManifestGenerator::CanvasBuilder do
         expect(canvas.id).to start_with("https://#{Settings.app_url}")
           .and(end_with('canvas'))
       end
-
-      it 'adds annotation-page to items' do
-        expect(canvas.items.first).to be_a IIIF::V3::Presentation::AnnotationPage
-      end
     end
 
     context 'with an annotation-page' do
+      it 'adds annotation-page to canvas items' do
+        expect(annotation_page).to be_a IIIF::V3::Presentation::AnnotationPage
+      end
+
       it 'assigns id' do
-        expect(canvas.items.first.id).to start_with("https://#{Settings.app_url}")
+        expect(annotation_page.id).to start_with("https://#{Settings.app_url}")
           .and(ending_with("annotation-page/#{index}"))
       end
     end
 
     context 'with an annotation' do
       it 'adds annotation to annotation-page items' do
-        expect(canvas.items.first.items).to be_an Array
-        expect(canvas.items.first.items.first).to be_a IIIF::V3::Presentation::Annotation
+        expect(annotations).to be_an Array
+        expect(annotation).to be_a IIIF::V3::Presentation::Annotation
       end
 
       it 'assigns id' do
-        expect(canvas.items.first.items.first.id).to start_with("https://#{Settings.app_url}")
+        expect(annotation.id).to start_with("https://#{Settings.app_url}")
           .and(ending_with('annotation/1'))
       end
 
       it 'assigns motivation' do
-        expect(canvas.items.first.items.first.motivation).to eq 'painting'
+        expect(annotation.motivation).to eq 'painting'
       end
 
       it 'assigns target' do
-        expect(canvas.items.first.items.first.target).to eq canvas.id
+        expect(annotation.target).to eq canvas.id
       end
 
       it 'assigns body' do
-        expect(canvas.items.first.items.first.body).to be_a IIIF::V3::Presentation::ImageResource
+        expect(annotation.body).to be_a IIIF::V3::Presentation::ImageResource
       end
     end
 
     context 'with an image resource' do
       it 'assigns id' do
-        expect(canvas.items.first.items.first.body.id).to end_with('iiif_image/full/!200,200/0/default.jpg')
+        expect(image_resource.id).to end_with('iiif_image/full/!200,200/0/default.jpg')
       end
 
       it 'assigns width' do
-        expect(canvas.items.first.items.first.body.width).to be_an Integer
+        expect(image_resource.width).to be_an Integer
       end
 
       it 'assigns height' do
-        expect(canvas.items.first.items.first.body.height).to be_an Integer
+        expect(image_resource.height).to be_an Integer
       end
 
       it 'assigns profile' do
-        expect(canvas.items.first.items.first.body.service.first.profile).to include 'level2'
+        expect(image_resource.service.first.profile).to include 'level2'
       end
 
       it 'assigns service type' do
-        expect(canvas.items.first.items.first.body.service.first.type).to eq 'ImageService3'
+        expect(image_resource.service.first.type).to eq 'ImageService3'
       end
     end
 
@@ -95,56 +105,56 @@ describe DerivativeService::Item::ManifestGenerator::CanvasBuilder do
 
       it 'assigns items' do
         expect(canvas['placeholderCanvas'].items).to be_an Array
-        expect(canvas['placeholderCanvas'].items.first).to be_an IIIF::V3::Presentation::AnnotationPage
+        expect(placeholder_canvas_annotation_page).to be_an IIIF::V3::Presentation::AnnotationPage
       end
 
       it 'assigns annotation-page id' do
-        expect(canvas['placeholderCanvas'].items.first.id).to end_with('placeholder/annotation-page')
+        expect(placeholder_canvas_annotation_page.id).to end_with('placeholder/annotation-page')
       end
 
       it 'assigns annotation-page items' do
-        expect(canvas['placeholderCanvas'].items.first.items.first).to be_a IIIF::V3::Presentation::Annotation
+        expect(placeholder_canvas_annotation).to be_a IIIF::V3::Presentation::Annotation
       end
     end
 
     context 'with placeholder canvas annotation' do
       it 'assigns id' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.id).to end_with('canvas/placeholder/annotation-page/1')
+        expect(placeholder_canvas_annotation.id).to end_with('canvas/placeholder/annotation-page/1')
       end
 
       it 'assigns motivation' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.motivation).to eq 'painting'
+        expect(placeholder_canvas_annotation.motivation).to eq 'painting'
       end
 
       it 'assigns target' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.target).to end_with('canvas/placeholder')
+        expect(placeholder_canvas_annotation.target).to end_with('canvas/placeholder')
       end
 
       it 'assigns body' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.body).to be_a IIIF::V3::Presentation::ImageResource
+        expect(placeholder_canvas_annotation.body).to be_a IIIF::V3::Presentation::ImageResource
       end
     end
 
     context 'with placeholder image resource' do
       it 'assigns id' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.body.id)
+        expect(placeholder_image_resource.id)
           .to end_with('iiif_image/full/640,/0/default.jpg')
       end
 
       it 'assigns width' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.body.width).to be_an Integer
+        expect(placeholder_image_resource.width).to be_an Integer
       end
 
       it 'assigns height' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.body.height).to be_an Integer
+        expect(placeholder_image_resource.height).to be_an Integer
       end
 
       it 'assigns profile' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.body.service.first.profile).to include 'level2'
+        expect(placeholder_image_resource.service.first.profile).to include 'level2'
       end
 
       it 'assigns service type' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.body.service.first.type).to eq 'ImageService3'
+        expect(placeholder_image_resource.service.first.type).to eq 'ImageService3'
       end
     end
 
