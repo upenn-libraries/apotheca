@@ -316,12 +316,6 @@ Style/MultipleComparison:
     - 'app/services/metadata_extractor/marmite/transformer/default_mapping_rules.rb'
 
 # Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantParentheses:
-  Exclude:
-    - 'app/transactions/steps/add_preservation_events.rb'
-
-# Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods, MaxChainLength.
 # AllowedMethods: present?, blank?, presence, try, try!
