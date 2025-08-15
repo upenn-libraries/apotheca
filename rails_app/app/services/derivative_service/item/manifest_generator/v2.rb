@@ -37,7 +37,8 @@ module DerivativeService
             }
           )
 
-          sequence = IIIF::Presentation::Sequence.new('@id' => "#{item_url}/sequence/normal", 'label' => 'Current order')
+          sequence = IIIF::Presentation::Sequence.new('@id' => "#{item_url}/sequence/normal",
+                                                      'label' => 'Current order')
           sequence['rendering'] = [pdf_file] if pdf_file
 
           item.arranged_assets.select(&:image?).map.with_index do |asset, i|
@@ -97,16 +98,16 @@ module DerivativeService
             next if values.blank?
 
             normalized_values = case field
-            when :rights
-              values.pluck(:uri).map(&:to_s)
-            when :name
-              values.map do |v|
-                roles = v[:role]&.pluck(:value)&.join(', ')
-                roles.present? ? "#{v[:value]} (#{roles})" : v[:value]
-              end
-            else
-              values.pluck(:value)
-            end
+                                when :rights
+                                  values.pluck(:uri).map(&:to_s)
+                                when :name
+                                  values.map do |v|
+                                    roles = v[:role]&.pluck(:value)&.join(', ')
+                                    roles.present? ? "#{v[:value]} (#{roles})" : v[:value]
+                                  end
+                                else
+                                  values.pluck(:value)
+                                end
 
             metadata << { label: field.to_s.titleize, value: normalized_values }
           end
@@ -190,10 +191,10 @@ module DerivativeService
           raise "#{asset.original_filename} is missing pyramidal tiff" unless asset.pyramidal_tiff
 
           identifier = if asset.pyramidal_tiff.access?
-            CGI.escape(asset.pyramidal_tiff.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1])
-          else
-            asset.id.to_s
-          end
+                         CGI.escape(asset.pyramidal_tiff.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1])
+                       else
+                         asset.id.to_s
+                       end
           URI.join(image_server.url, "iiif/2/#{identifier}").to_s
         end
 

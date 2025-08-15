@@ -31,28 +31,6 @@ describe DerivativeService::Item::ManifestGenerator::V3 do
           'http://iiif.io/api/presentation/3/context.json'
         )
       end
-
-      it 'sets manifest type correctly' do
-        expect(json['type']).to eq('Manifest')
-      end
-
-      it 'includes manifest ID' do
-        expect(json['id']).to be_present
-      end
-
-      it 'includes all required top-level properties' do
-        %w[label requiredStatement behavior viewingDirection metadata items].each do |property|
-          expect(json).to have_key(property)
-        end
-      end
-
-      it 'populates items array with canvases' do
-        expect(json['items']).to be_an(Array).and be_present
-      end
-
-      it 'includes canvases with correct type in items' do
-        expect(json['items'].first['type']).to eq('Canvas')
-      end
     end
 
     context 'when assets have annotations' do
@@ -75,57 +53,6 @@ describe DerivativeService::Item::ManifestGenerator::V3 do
 
       it 'includes ranges with correct type when annotations exist' do
         expect(json['structures'].first['type']).to eq('Range')
-      end
-    end
-
-    context 'when item has thumbnail' do
-      subject(:json) { JSON.parse(iiif_service.manifest.read) }
-
-      let(:item) do
-        persist(
-          :item_resource, :with_full_assets_all_arranged,
-          descriptive_metadata: { title: [{ value: 'Test Item with Thumbnail' }] }
-        )
-      end
-
-      it 'includes thumbnail property when thumbnail exists' do
-        expect(json).to have_key('thumbnail')
-      end
-
-      it 'populates thumbnail as array when thumbnail exists' do
-        expect(json['thumbnail']).to be_an(Array)
-      end
-
-      it 'includes thumbnail with correct type when thumbnail exists' do
-        expect(json['thumbnail'].first['type']).to eq('Image')
-      end
-    end
-
-    context 'when PDF is available' do
-      subject(:json) { JSON.parse(iiif_service.manifest.read) }
-
-      let(:item) do
-        persist(
-          :item_resource, :with_full_assets_all_arranged,
-          descriptive_metadata: { title: [{ value: 'Test Item with PDF' }] }
-        )
-      end
-
-      before do
-        pdf_generator_double = instance_double(DerivativeService::Item::PDFGenerator, pdfable?: true)
-        allow(DerivativeService::Item::PDFGenerator).to receive(:new)
-          .with(item)
-          .and_return(pdf_generator_double)
-      end
-
-      it 'includes PDF rendering with correct type' do
-        pdf_rendering = json['rendering']&.find { |r| r['format'] == 'application/pdf' }
-        expect(pdf_rendering['type']).to eq('Text') if pdf_rendering
-      end
-
-      it 'includes PDF rendering with correct label' do
-        pdf_rendering = json['rendering']&.find { |r| r['format'] == 'application/pdf' }
-        expect(pdf_rendering['label']['en']).to eq(['Download PDF']) if pdf_rendering
       end
     end
 

@@ -61,10 +61,9 @@ module DerivativeService
         # @param manifest [IIIF::V3::Presentation::Manifest] manifest to populate
         # @return [void]
         def populate_manifest_content(manifest)
-          image_assets.each_with_index do |asset, i|
+          image_assets.each.with_index(1) do |asset, index|
             validate_asset_derivatives!(asset)
 
-            index = i + 1
             manifest.items << CanvasBuilder.new(asset, index).build
             next unless asset.annotations&.any?
 

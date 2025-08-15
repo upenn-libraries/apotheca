@@ -10,7 +10,7 @@ module DerivativeService
         attr_reader :item
 
         def initialize(item)
-          @item = item
+          @item = item.presenter
         end
 
         # Build and configure the manifest with core attributes
