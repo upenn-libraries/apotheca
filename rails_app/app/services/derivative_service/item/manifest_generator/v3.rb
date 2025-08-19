@@ -64,7 +64,7 @@ module DerivativeService
           image_assets.each.with_index(1) do |asset, index|
             validate_asset_derivatives!(asset)
 
-            manifest.items << CanvasBuilder.new(asset, index).build
+            manifest.items << CanvasBuilder::Asset.new(asset, index).build
             next unless asset.annotations&.any?
 
             manifest.structures.concat RangesBuilder.new(asset).build

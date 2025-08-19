@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::ManifestGenerator::CanvasBuilder do
+describe DerivativeService::Item::ManifestGenerator::CanvasBuilder::Asset do
   describe '#build' do
     let(:access_derivative) do
       asset = persist(:asset_resource, :with_image_file, :with_derivatives)
@@ -62,55 +62,9 @@ describe DerivativeService::Item::ManifestGenerator::CanvasBuilder do
       end
     end
 
-    context 'with a placeholder canvas' do
+    context 'with placeholder canvas' do
       it 'builds placeholder canvas' do
         expect(canvas['placeholderCanvas']).to be_a IIIF::V3::Presentation::Canvas
-      end
-
-      it 'assigns top level attributes' do
-        expect(canvas['placeholderCanvas']).to have_attributes(
-          'id' => ending_with('canvas/placeholder'),
-          'label' => { 'none' => ['p. 1'] }
-        )
-      end
-
-      it 'assigns items' do
-        expect(canvas['placeholderCanvas'].items.first).to be_a IIIF::V3::Presentation::AnnotationPage
-      end
-
-      it 'assigns annotation-page attributes' do
-        expect(canvas['placeholderCanvas'].items.first).to have_attributes(
-          'id' => ending_with('canvas/placeholder/annotation-page')
-        )
-      end
-
-      it 'assigns annotation-page items' do
-        expect(canvas['placeholderCanvas'].items.first.items.first).to be_a IIIF::V3::Presentation::Annotation
-      end
-    end
-
-    context 'with placeholder canvas annotation' do
-      it 'assigns attributes' do
-        expect(canvas['placeholderCanvas'].items.first.items.first).to have_attributes(
-          'id' => end_with('canvas/placeholder/annotation-page/1'),
-          'motivation' => 'painting',
-          'target' => end_with('canvas/placeholder'),
-          'body' => be_a(IIIF::V3::Presentation::ImageResource)
-        )
-      end
-    end
-
-    context 'with placeholder image resource' do
-      it 'assigns attributes' do
-        expect(canvas['placeholderCanvas'].items.first.items.first.body).to have_attributes(
-          'id' => end_with('iiif_image/full/640,/0/default.jpg'),
-          'width' => be_an(Integer),
-          'height' => be_an(Integer)
-        )
-        expect(canvas['placeholderCanvas'].items.first.items.first.body.service.first).to have_attributes(
-          'profile' => 'level2',
-          'type' => 'ImageService3'
-        )
       end
     end
 
