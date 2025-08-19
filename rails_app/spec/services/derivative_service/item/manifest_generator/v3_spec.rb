@@ -45,9 +45,6 @@ describe DerivativeService::Item::ManifestGenerator::V3 do
 
       it 'includes structures property when annotations exist' do
         expect(json).to have_key('structures')
-      end
-
-      it 'populates structures as array when annotations exist' do
         expect(json['structures']).to be_an(Array)
       end
 
