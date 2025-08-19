@@ -17,61 +17,20 @@ module DerivativeService
           #
           # @return [IIIF::V3::Presentation::Canvas] placeholder canvas
           def build
-            canvas = create_canvas
-            canvas.items << create_annotation_page
+            canvas = create_canvas(id_suffix: 'canvas/placeholder',
+                                   height: scaled_height,
+                                   width: DOWNSCALED_WIDTH)
+            image_resource = create_image_resource(height: scaled_height,
+                                                   width: DOWNSCALED_WIDTH, resource_size: '640,')
+            image_annotation = create_image_annotation(id_suffix: 'canvas/placeholder/annotation-page/1',
+                                                       target_suffix: 'canvas/placeholder',
+                                                       image_resource: image_resource)
+            canvas.items << create_annotation_page(id_suffix: 'canvas/placeholder/annotation-page',
+                                                   image_annotation: image_annotation)
             canvas
           end
 
           private
-
-          # Create the main canvas structure
-          #
-          # @return [IIIF::V3::Presentation::Canvas] basic canvas object
-          def create_canvas
-            canvas = IIIF::V3::Presentation::Canvas.new
-            canvas['id'] = "#{asset_base_url}/canvas/placeholder"
-            canvas.label = label
-            canvas.height = scaled_height
-            canvas.width = DOWNSCALED_WIDTH
-            canvas
-          end
-
-          # Create annotation page for placeholder canvas
-          #
-          # @return [IIIF::V3::Presentation::AnnotationPage] placeholder annotation page
-          def create_annotation_page
-            annotation_page = IIIF::V3::Presentation::AnnotationPage.new
-            annotation_page['id'] = "#{asset_base_url}/canvas/placeholder/annotation-page"
-            annotation_page.items << create_image_annotation
-            annotation_page
-          end
-
-          # Create placeholder annotation with scaled image
-          #
-          # @return [IIIF::V3::Presentation::Annotation] placeholder annotation
-          def create_image_annotation
-            annotation = IIIF::V3::Presentation::Annotation.new
-            annotation['id'] = "#{asset_base_url}/canvas/placeholder/annotation-page/1"
-            annotation['motivation'] = 'painting'
-            annotation['target'] = "#{asset_base_url}/canvas/placeholder"
-            annotation.body = create_image_resource
-            annotation
-          end
-
-          # Create scaled image resource for placeholder
-          #
-          # @return [IIIF::V3::Presentation::ImageResource] placeholder image resource
-          def create_image_resource
-            image_resource = IIIF::V3::Presentation::ImageResource.create_image_api_image_resource(
-              service_id: iiif_image_url,
-              resource_id: "#{iiif_image_url}/full/640,/0/default.jpg",
-              width: DOWNSCALED_WIDTH,
-              height: scaled_height,
-              profile: 'level2'
-            )
-            image_resource.service.first.type = 'ImageService3'
-            image_resource
-          end
 
           # Calculate scaled height for placeholder image
           #
