@@ -51,8 +51,8 @@ describe DerivativeService::Item::ManifestGenerator::CanvasBuilder::Placeholder 
       it 'assigns attributes' do
         expect(canvas.items.first.items.first.body).to have_attributes(
           'id' => end_with('iiif_image/full/640,/0/default.jpg'),
-          'width' => be_an(Integer),
-          'height' => be_an(Integer)
+          'width' => 640,
+          'height' => 380
         )
         expect(canvas.items.first.items.first.body.service.first).to have_attributes(
           'profile' => 'level2',
