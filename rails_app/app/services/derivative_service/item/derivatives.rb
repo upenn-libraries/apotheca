@@ -20,7 +20,7 @@ module DerivativeService
       # @return [DerivativeService::DerivativeFile] when a manifest was generated
       # @return [NilClass] when a manifest could not be generated
       def iiif_manifest
-        V2IIIFManifestGenerator.new(item).manifest
+        ManifestGenerator::V2.new(item).manifest
       end
 
       # Generates V3 IIIF manifest
@@ -28,7 +28,7 @@ module DerivativeService
       # @return [DerivativeService::DerivativeFile] when a manifest was generated
       # @return [NilClass] when a manifest could not be generated
       def iiif_v3_manifest
-        V3IIIFManifestGenerator.new(item).manifest
+        ManifestGenerator::V3.new(item).manifest
       end
 
       # Generates a PDF representation of an Item.
