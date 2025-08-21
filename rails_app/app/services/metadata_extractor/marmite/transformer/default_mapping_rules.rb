@@ -9,7 +9,6 @@ module MetadataExtractor
         SPACE = ' '
         ALL = '*'
         A_TO_Z = ('a'..'z').to_a
-        PROVENANCE_NAME_VALUES = %w[donor owner].freeze
         UNKNOWN_DATE = 'uuuu'
 
         # Mapping language to standardized ISO639 english name and URI.
@@ -28,25 +27,6 @@ module MetadataExtractor
           control008 = marc.xpath("//records/record/controlfield[@tag='008']").text
 
           LeaderToAAT.map(leader, control008).deep_dup
-        end
-
-        # Adding role value to name.
-        def self.add_role_to_name(datafield, extracted_values)
-          role_subfield = datafield.tag == '111' || datafield.tag == '711' ? 'j' : 'e'
-
-          extracted_values.tap do |values|
-            if (role = datafield.subfield_at(role_subfield))
-              values[:role] = [{ value: role }]
-            end
-          end
-        end
-
-        # Check if the role is a provenance role.
-        def self.role_is_provenance?(datafield)
-          role = datafield.subfield_at('e')
-          return false unless role
-
-          PROVENANCE_NAME_VALUES.any? { |value| role.downcase.include?(value) }
         end
 
         # Adding location to the beginning of the value manually because currently the order of the fields is preserved.
@@ -106,12 +86,12 @@ module MetadataExtractor
         map_datafield '041', to: :language, value: { subfields: 'a' }, custom: method(:language_transformation)
         map_datafield '041', to: :language, value: { subfields: 'b' }, custom: method(:language_transformation)
         map_datafield '041', to: :language, value: { subfields: 'g' }, custom: method(:language_transformation)
-        map_datafield '100', to: :name, value: { subfields: %w[a b c d q], join: SPACE }, uri: { subfields: '0' },
-                             custom: method(:add_role_to_name)
-        map_datafield '110', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
-                             custom: method(:add_role_to_name)
-        map_datafield '111', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
-                             custom: method(:add_role_to_name)
+        map_datafield '100', to: :name, value: { subfields: %w[a b c d g j q], join: SPACE }, uri: { subfields: '0' },
+                             custom: Name.method(:add_role_to_name)
+        map_datafield '110', to: :name, value: { subfields: %w[a b c d g n], join: SPACE }, uri: { subfields: '0' },
+                             custom: Name.method(:add_role_to_name)
+        map_datafield '111', to: :name, value: { subfields: %w[a c d e g n q], join: SPACE }, uri: { subfields: '0' },
+                             custom: Name.method(:add_role_to_name)
         map_datafield '245', to: :title, value: { subfields: %w[a b f g k n p s], join: SPACE }
         map_datafield '246', to: :alt_title, value: { subfields: %w[a b n p], join: SPACE }
         map_datafield '260', to: :publisher, value: { subfields: 'b' }
@@ -140,17 +120,22 @@ module MetadataExtractor
                              uri: { subfields: '0' }
         map_datafield '651', to: :coverage, value: { subfields: 'y' }
         map_datafield '655', to: :physical_format, value: { subfields: 'a' }, uri: { subfields: '0' },
-                             if: ->(datafield) { PhysicalFormat.select?(datafield) },
-                             custom: ->(datafield, values) { PhysicalFormat.normalize(datafield, values) }
+                             if: PhysicalFormat.method(:select?),
+                             custom: PhysicalFormat.method(:normalize)
         map_datafield '700', to: :provenance, value: { subfields: %w[a b c d e], join: SPACE },
-                             if: method(:role_is_provenance?)
-        map_datafield '700', to: :name, value: { subfields: %w[a b c d q], join: SPACE },
-                             uri: { subfields: '0' },
-                             custom: method(:add_role_to_name), unless: method(:role_is_provenance?)
-        map_datafield '710', to: :name, value: { subfields: %w[a b d], join: SPACE }, uri: { subfields: '0' },
-                             custom: method(:add_role_to_name)
-        map_datafield '711', to: :name, value: { subfields: %w[a d], join: SPACE }, uri: { subfields: '0' },
-                             custom: method(:add_role_to_name)
+                             if: Name.method(:provenance?)
+        map_datafield '700', to: :note, value: { subfields: A_TO_Z, join: SPACE, prefix: 'Related Work: ' },
+                             if: Name.method(:related_work?)
+        map_datafield '700', to: :name, value: { subfields: %w[a b c d g j q], join: SPACE }, uri: { subfields: '0' },
+                             if: Name.method(:name?), custom: Name.method(:add_role_to_name)
+        map_datafield '710', to: :name, value: { subfields: %w[a b c d g n], join: SPACE }, uri: { subfields: '0' },
+                             unless: Name.method(:related_work?), custom: Name.method(:add_role_to_name)
+        map_datafield '710', to: :note, value: { subfields: A_TO_Z, join: SPACE, prefix: 'Related Work: ' },
+                             if: Name.method(:related_work?)
+        map_datafield '711', to: :name, value: { subfields: %w[a c d e g n q], join: SPACE }, uri: { subfields: '0' },
+                             unless: Name.method(:related_work?), custom: Name.method(:add_role_to_name)
+        map_datafield '711', to: :note, value: { subfields: A_TO_Z, join: SPACE, prefix: 'Related Work: ' },
+                             if: Name.method(:related_work?)
         map_datafield '752', to: :location, value: { subfields: %w[a b c d f g h], join: ' -- ' },
                              uri: { subfields: '0' }
         map_datafield '773', to: :collection, value: { subfields: 't' }
