@@ -18,6 +18,9 @@ class DerivativeResource < Valkyrie::Resource
   end
 
   def extension
+    # Manually set preferred extension for audio files
+    MIME::Types['audio/mpeg'].first.preferred_extension = 'mp3'
+
     MIME::Types[mime_type].first&.preferred_extension
   end
 end
