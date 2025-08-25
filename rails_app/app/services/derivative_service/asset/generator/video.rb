@@ -63,11 +63,15 @@ module DerivativeService
 
         # Thumbnail frame from video file. This frame is memoized to be used in thumbnail
         # and iiif_image derivative generation.
+        #
+        # @return [String]
         def thumbnail_frame
           @thumbnail_frame ||= generate_thumbnail_frame
         end
 
         # Generates thumbnail frame from video file.
+        #
+        # @return [String]
         def generate_thumbnail_frame
           frame = nil
           file.rewind
