@@ -20,12 +20,13 @@ module MetadataExtractor
           end
 
           # Return true if field is actually a name value and not a provenance or related work value.
-          # Note: This should only be used for 700/710/711.
+          # Note: This should only be used for the 700 field because only this name field holds provenance values.
           def self.name?(datafield)
             !provenance?(datafield) && !related_work?(datafield)
           end
 
           # Return true if the role for the name is a provenance role.
+          # Note: This should only be used for the 700 field.
           def self.provenance?(datafield)
             role = datafield.subfield_at('e')
             return false unless role
@@ -34,7 +35,7 @@ module MetadataExtractor
           end
 
           # Return true if name is actually a related work.
-          # For 700/710/711, related works have a subfield t.
+          # Only for 700/710/711 fields, related works have a subfield t.
           def self.related_work?(datafield)
             datafield.subfield_at('t').present?
           end
