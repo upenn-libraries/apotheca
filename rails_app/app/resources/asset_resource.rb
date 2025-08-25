@@ -66,7 +66,7 @@ class AssetResource < Valkyrie::Resource
   # Finds pyramidal tiff from either iiif_image or access derivatives
   # @return [DerivativeResource, nil]
   def pyramidal_tiff
-    return unless image?
+    return iiif_image unless image?
 
     iiif_image || access
   end

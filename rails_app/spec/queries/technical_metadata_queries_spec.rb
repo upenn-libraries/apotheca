@@ -36,4 +36,36 @@ describe TechnicalMetadataQueries do
       end
     end
   end
+
+  describe '#assets_by_mime_types' do
+    let(:video_asset) { persist(:asset_resource, :with_video_file) }
+    let(:image_asset) { persist(:asset_resource, :with_image_file) }
+    let(:audio_asset) { persist(:asset_resource, :with_audio_file) }
+
+    before do
+      video_asset
+      image_asset
+      audio_asset
+    end
+
+    context 'when one mime type provided' do
+      it 'returns matching asset' do
+        expect(query.assets_by_mime_types('video/quicktime').map(&:id)).to contain_exactly(video_asset.id)
+      end
+    end
+
+    context 'when multiple mime types provided' do
+      it 'returns matching assets' do
+        expect(
+          query.assets_by_mime_types('video/quicktime', 'image/tiff').map(&:id)
+        ).to contain_exactly(video_asset.id, image_asset.id)
+      end
+    end
+
+    context 'when no assets with matching mime types present' do
+      it 'returns empty array' do
+        expect(query.assets_by_mime_types('application/pdf').to_a).to be_blank
+      end
+    end
+  end
 end

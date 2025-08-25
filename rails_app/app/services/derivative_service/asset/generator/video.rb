@@ -25,20 +25,23 @@ module DerivativeService
         # @return [DerivativeService::Generator::DerivativeFile]
         def thumbnail
           derivative_file = DerivativeFile.new mime_type: 'image/jpeg'
-          file.rewind
-          file.disk_path do |path|
-            frame = FfmpegWrapper.thumbnail(input_path: path)
-            image = Vips::Image.new_from_buffer(frame, '').autorot.thumbnail_image(200, height: 200)
-            image.jpegsave(derivative_file.path, Q: 90, strip: true)
-          end
+
+          image = Vips::Image.new_from_buffer(thumbnail_frame, '').autorot.thumbnail_image(200, height: 200)
+          image.jpegsave(derivative_file.path, Q: 90, strip: true)
+
           derivative_file
         rescue StandardError => e
           raise Generator::Error, "Error generating video thumbnail: #{e.class} #{e.message}", e.backtrace
         end
 
-        # @return [nil]
+        # @return [DerivativeService::Generator::DerivativeFile]
         def iiif_image
-          nil
+          derivative_file = DerivativeFile.new mime_type: 'image/tiff', iiif_image: true
+
+          image = Vips::Image.new_from_buffer(thumbnail_frame, '')
+          image.tiffsave(derivative_file.path, **PYRAMIDAL_TIFF_OPTIONS)
+
+          derivative_file
         end
 
         # @return [nil]
@@ -54,6 +57,28 @@ module DerivativeService
         # @return [nil]
         def hocr
           nil
+        end
+
+        private
+
+        # Thumbnail frame from video file. This frame is memoized to be used in thumbnail
+        # and iiif_image derivative generation.
+        #
+        # @return [String]
+        def thumbnail_frame
+          @thumbnail_frame ||= generate_thumbnail_frame
+        end
+
+        # Generates thumbnail frame from video file.
+        #
+        # @return [String]
+        def generate_thumbnail_frame
+          frame = nil
+          file.rewind
+          file.disk_path do |path|
+            frame = FfmpegWrapper.thumbnail(input_path: path)
+          end
+          frame
         end
       end
     end

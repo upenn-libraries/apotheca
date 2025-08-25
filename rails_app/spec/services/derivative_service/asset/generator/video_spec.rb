@@ -43,4 +43,24 @@ describe DerivativeService::Asset::Generator::Video do
       expect(derivative_file.length).not_to be 0
     end
   end
+
+  describe '#iiif_image' do
+    subject(:derivative_file) { generator.iiif_image }
+
+    it 'returns DerivativeFile' do
+      expect(derivative_file).to be_a DerivativeService::DerivativeFile
+    end
+
+    it 'sets expected mime_type' do
+      expect(derivative_file.mime_type).to eql 'image/tiff'
+    end
+
+    it 'sets expected iiif_image value of true' do
+      expect(derivative_file.iiif_image).to be true
+    end
+
+    it 'adds file' do
+      expect(derivative_file.size).not_to be 0
+    end
+  end
 end
