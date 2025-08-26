@@ -82,7 +82,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
             { value: 'Decoration: 4-line initial (f. 2r) and 3-line initial (f. 1r) in red; paragraph marks in red followed by initials slashed with red on first page (f. 1r).' },
             { value: "Binding:  Bound with Strabo's Geographia (Paris:  Gourmont, 1512) in 18th-century calf including gilt spine title Initium Chronic[i] Sicebert[i] MS." },
             { value: 'Origin:  Probably written in Belgium, possibly in Gembloux (inscription on title page of printed work, Bibliotheca Gemblacensis), in the late 15th century (Zacour-Hirsch).' },
-            { value: 'Latin.' }
+            { value: 'Latin.' },
+            { value: 'Related Work: Sigebert, of Gembloux, approximately 1030-1112. Chronicon.' }
           ],
           physical_location: [
             { value: 'Kislak Center for Special Collections, Rare Books and Manuscripts, Manuscripts, Folio GrC St812 Ef512g' }
@@ -345,6 +346,29 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SHEET_MUSIC,
           MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SCORES,
           { value: 'Hybrid Music' }
+        )
+      end
+    end
+
+    context 'when MARC XML contains a related work in a 7XX field' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:datafield ind1="1" ind2="2" tag="700">
+                <marc:subfield code="a">Girard, François Narcisse,</marc:subfield>
+                <marc:subfield code="d">1796-1825.</marc:subfield>
+                <marc:subfield code="t">Traité de l'age du cheval.</marc:subfield>
+              </marc:datafield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'extracts related work' do
+        expect(transformer.to_descriptive_metadata[:note]).to include(
+          { value: "Related Work: Girard, François Narcisse, 1796-1825. Traité de l'age du cheval." }
         )
       end
     end
