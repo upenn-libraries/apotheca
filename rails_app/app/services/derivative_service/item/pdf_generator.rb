@@ -62,7 +62,12 @@ module DerivativeService
         return false if item.structural_metadata.arranged_asset_ids.blank?
         return false if item.structural_metadata.arranged_asset_ids.count > MAX_ASSETS
         return false unless item.arranged_assets.all?(&:image?)
-        return false unless item.arranged_assets.all? { |a| a.technical_metadata.dpi.present? }
+
+        # Check that DPI is present and is greater than 1. This protects against malformed DPIs.
+        # TODO: This is a temporary fix we should address this issue more robustly when we extract the dpi.
+        return false unless item.arranged_assets.all? do |a|
+          a.technical_metadata.dpi.present? && a.technical_metadata.dpi > 1
+        end
 
         true
       end
