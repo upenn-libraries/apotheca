@@ -22,7 +22,7 @@ module MetadataExtractor
           PERIODICALS  = { value: 'periodicals',                   uri: 'http://vocab.getty.edu/aat/300026657' }.freeze
           SCORES       = { value: 'scores (documents for music)',  uri: 'http://vocab.getty.edu/aat/300026427' }.freeze
           SERIALS      = { value: 'serials (publications)',        uri: 'http://vocab.getty.edu/aat/300026642' }.freeze
-          SHEET_MUSIC  = { value: 'sheet music',                   uri: 'https://vocab.getty.edu/aat/300026430' }.freeze
+          SHEET_MUSIC  = { value: 'sheet music',                   uri: 'http://vocab.getty.edu/aat/300026430' }.freeze
         end
       end
     end
