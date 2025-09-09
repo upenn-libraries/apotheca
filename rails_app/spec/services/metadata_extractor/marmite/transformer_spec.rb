@@ -10,7 +10,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
       let(:expected_metadata) do
         {
           coverage: [{ value: 'Early works to 1800' }],
-          language: [{ value: 'German', uri: 'https://id.loc.gov/vocabulary/iso639-2/ger' }],
+          language: [{ value: 'German', uri: 'http://id.loc.gov/vocabulary/iso639-2/ger' }],
           note: [
             { value: 'Leaves printed on both sides.' },
             { value: 'Signatures: )(⁴ A-Z⁴ a-k⁴ l⁶.' },
@@ -67,7 +67,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           date: [{ value: '1475' }],
           description: [{ value: "Beginning of Sigebert of Gembloux's continuation of the chronicle of Jerome, in which he traces the reigns of kings of various kingdoms.  The last reference is to Pope Zosimus (417 CE; f. 6v)." }],
           item_type: [{ value: 'Text', uri: 'http://purl.org/dc/dcmitype/Text' }],
-          language: [{ value: 'Latin', uri: 'https://id.loc.gov/vocabulary/iso639-2/lat' }],
+          language: [{ value: 'Latin', uri: 'http://id.loc.gov/vocabulary/iso639-2/lat' }],
           extent: [{ value: '10 leaves : paper ; 263 x 190 mm bound to 218 x 155 mm' }],
           name: [
             { value: 'Sigebert, of Gembloux, approximately 1030-1112',
@@ -157,8 +157,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
         XML
       end
       let(:languages) do
-        [{ value: 'English', uri: 'https://id.loc.gov/vocabulary/iso639-2/eng' },
-         { value: 'Russian', uri: 'https://id.loc.gov/vocabulary/iso639-2/rus' }]
+        [{ value: 'English', uri: 'http://id.loc.gov/vocabulary/iso639-2/eng' },
+         { value: 'Russian', uri: 'http://id.loc.gov/vocabulary/iso639-2/rus' }]
       end
 
       it 'extracts expected languages' do
