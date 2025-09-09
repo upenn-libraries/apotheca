@@ -15,7 +15,7 @@ module MetadataExtractor
         def self.language_transformation(_, extracted_values)
           code = extracted_values[:value]
           if (language = ISO_639.find_by_code(code))
-            { value: language.english_name, uri: "https://id.loc.gov/vocabulary/iso639-2/#{language.alpha3}" }
+            { value: language.english_name, uri: "http://id.loc.gov/vocabulary/iso639-2/#{language.alpha3}" }
           else
             {}
           end
