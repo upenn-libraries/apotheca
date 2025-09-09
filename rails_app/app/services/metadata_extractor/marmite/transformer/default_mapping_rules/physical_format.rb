@@ -36,7 +36,7 @@ module MetadataExtractor
             return extracted_values if authority == AAT::AUTHORITY
 
             uri = extracted_values[:uri]
-            value = extracted_values[:value]
+            value = extracted_values[:value].delete_suffix('.') # Remove trailing period bc it's a legacy MARC practice.
 
             match = mappings.find do |mapping|
               (mapping[:uri] == uri || mapping[:value] == value) && mapping[:authority] == authority
