@@ -6,21 +6,19 @@ module MetadataExtractor
       class DefaultMappingRules
         # Module that contains logic for extracting and mapping the physical format field. Includes logic
         # for choosing 655 values and logic for normalizing values to appropriate AAT terms (where applicable).
-        module PhysicalFormat
-          LCGFT = 'lcgft'
-          RBMSCV = 'rbmscv'
+        class PhysicalFormat
+          PREFERRED_AUTHORITIES = [AAT::AUTHORITY, 'lcgft', 'rbmscv'].freeze
 
-          PREFERRED_AUTHORITIES = [AAT::AUTHORITY, LCGFT, RBMSCV].freeze
+          # Path to mappings configuration.
+          def self.mappings_path
+            Rails.root.join('config/mappings/physical_format.yml')
+          end
 
-          # Mapping non-aat physical format values to aat terms.
-          MAP = [
-            { value: 'Excerpts', uri: 'http://id.loc.gov/authorities/genreForms/gf2014026097',
-              authority: LCGFT,  to: AAT::EXCERPTS },
-            { value: 'Scores',  uri: 'http://id.loc.gov/authorities/genreForms/gf2014027077',
-              authority: LCGFT, to: AAT::SCORES },
-            { value: 'Notated music', uri: 'http://id.loc.gov/authorities/genreForms/gf2014027184',
-              authority: LCGFT,       to: AAT::SHEET_MUSIC }
-          ].freeze
+          # Mappings of physical format terms to AAT terms.
+          def self.mappings
+            @mappings ||= YAML.safe_load(File.read(mappings_path), aliases: true, symbolize_names: true)
+                              .select { |a| a[:replace_with].present? }
+          end
 
           # Logic to select physical format values from 655 field.
           def self.select?(datafield)
@@ -38,13 +36,13 @@ module MetadataExtractor
             return extracted_values if authority == AAT::AUTHORITY
 
             uri = extracted_values[:uri]
-            value = extracted_values[:value]
+            value = extracted_values[:value].delete_suffix('.') # Remove trailing period bc it's a legacy MARC practice.
 
-            match = MAP.find do |mapping|
+            match = mappings.find do |mapping|
               (mapping[:uri] == uri || mapping[:value] == value) && mapping[:authority] == authority
             end
 
-            match ? match[:to].deep_dup : extracted_values
+            match ? match[:replace_with].deep_dup : extracted_values
           end
         end
       end
