@@ -5,7 +5,6 @@ class ItemChangeSet < ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet
 
-  DERIVATIVE_TYPES = %w[iiif_manifest iiif_v3_manifest pdf].freeze
   OCR_STRATEGIES = DerivativeService::Asset::Generator::Image::OCR::ALL_ENGINES.freeze
 
   # ChangeSet for Structural Metadata
@@ -36,7 +35,7 @@ class ItemChangeSet < ChangeSet
 
   # ChangeSet for Item Derivatives
   class ItemDerivativeChangeSet < DerivativeChangeSet
-    validates :type, inclusion: DERIVATIVE_TYPES
+    validates :type, inclusion: ItemResource::DERIVATIVE_TYPES
   end
 
   # Defining Fields
@@ -82,5 +81,12 @@ class ItemChangeSet < ChangeSet
 
   def ocr_strategy=(value)
     super(compact_value(value))
+  end
+
+  # Accessors for derivatives.
+  ItemResource::DERIVATIVE_TYPES.each do |symbol|
+    define_method symbol do
+      derivatives.find { |d| d.type == symbol }
+    end
   end
 end

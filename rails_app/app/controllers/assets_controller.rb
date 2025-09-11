@@ -81,7 +81,7 @@ class AssetsController < ResourcesController
 
   def file
     case params[:type]
-    when *AssetChangeSet::DERIVATIVE_TYPES
+    when *AssetResource::DERIVATIVE_TYPES
       serve_derivative_file resource: @asset, type: params[:type].to_sym
     when 'preservation'
       serve_preservation_file

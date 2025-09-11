@@ -6,7 +6,6 @@ class AssetChangeSet < ChangeSet
   include LockableChangeSet
 
   TRANSCRIPTION_MIME_TYPES = ['text/plain'].freeze
-  DERIVATIVE_TYPES = %w[thumbnail iiif_image access textonly_pdf text hocr].freeze
 
   # ChangeSet for Technical Metadata
   class TechnicalMetadataChangeSet < ChangeSet
@@ -23,7 +22,7 @@ class AssetChangeSet < ChangeSet
 
   # ChangeSet for Asset Derivatives
   class AssetDerivativeChangeSet < DerivativeChangeSet
-    validates :type, inclusion: DERIVATIVE_TYPES
+    validates :type, inclusion: AssetResource::DERIVATIVE_TYPES
   end
 
   # Defining Fields
@@ -89,5 +88,12 @@ class AssetChangeSet < ChangeSet
 
     @preservation_file ||= Valkyrie::StorageAdapter.find(:preservation)
                                                    .find_by(id: preservation_file_id)
+  end
+
+  # Accessors for derivatives.
+  AssetResource::DERIVATIVE_TYPES.each do |symbol|
+    define_method symbol do
+      derivatives.find { |d| d.type == symbol }
+    end
   end
 end

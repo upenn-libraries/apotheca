@@ -75,7 +75,7 @@ FactoryBot.define do
       after(:create) do |item, evaluator|
         derivative_service = DerivativeService::Item::Derivatives.new(ItemChangeSet.new(item))
 
-        %w[iiif_manifest iiif_v3_manifest pdf].each do |type|
+        ItemResource::DERIVATIVE_TYPES.each do |type|
           next unless evaluator.send(type) # Check if derivative was requested.
 
           derivative = derivative_service.send(type)

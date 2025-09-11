@@ -150,7 +150,7 @@ FactoryBot.define do
         change_set.ocr_language = ['eng']
         derivative_service = DerivativeService::Asset::Derivatives.new(change_set)
 
-        AssetChangeSet::DERIVATIVE_TYPES.each do |type|
+        AssetResource::DERIVATIVE_TYPES.each do |type|
           next unless evaluator.send(type) # Check if derivative was requested.
 
           derivative = derivative_service.send(type)

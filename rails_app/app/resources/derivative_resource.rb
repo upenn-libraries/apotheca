@@ -11,7 +11,7 @@ class DerivativeResource < Valkyrie::Resource
   attribute :stale, Valkyrie::Types::Strict::Bool
 
   # Methods to check what type of derivative this is.
-  (AssetChangeSet::DERIVATIVE_TYPES + ItemChangeSet::DERIVATIVE_TYPES).each do |symbol|
+  (AssetResource::DERIVATIVE_TYPES + ItemResource::DERIVATIVE_TYPES).each do |symbol|
     define_method "#{symbol}?" do
       symbol == type
     end
