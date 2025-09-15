@@ -63,7 +63,7 @@ class ItemsController < ResourcesController
 
   def file
     case params[:type]
-    when *ItemChangeSet::DERIVATIVE_TYPES
+    when *ItemResource::DERIVATIVE_TYPES
       serve_derivative_file resource: @item, type: params[:type].to_sym
     else
       raise UnsupportedFileType, 'Type is not supported'

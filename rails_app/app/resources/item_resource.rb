@@ -2,6 +2,8 @@
 
 # Item model; contains attributes and helper methods
 class ItemResource < Valkyrie::Resource
+  DERIVATIVE_TYPES = %w[iiif_manifest iiif_v3_manifest pdf].freeze
+
   include ModificationDetails
   include Lockable
 
@@ -65,19 +67,11 @@ class ItemResource < Valkyrie::Resource
     descriptive_metadata&.bibnumber.try(:any?)
   end
 
-  # @return [DerivativeResource]
-  def iiif_manifest
-    derivatives.find(&:iiif_manifest?)
-  end
-
-  # @return [DerivativeResource]
-  def iiif_v3_manifest
-    derivatives.find(&:iiif_v3_manifest?)
-  end
-
-  # @return [DerivativeResource]
-  def pdf
-    derivatives.find(&:pdf?)
+  # Accessors for derivatives.
+  DERIVATIVE_TYPES.each do |symbol|
+    define_method symbol do
+      derivatives.find { |d| d.type == symbol }
+    end
   end
 
   # @param [Boolean] include_assets

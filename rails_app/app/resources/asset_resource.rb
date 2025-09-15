@@ -2,6 +2,8 @@
 
 # Asset model; contains attributes and helper methods
 class AssetResource < Valkyrie::Resource
+  DERIVATIVE_TYPES = %w[thumbnail iiif_image access textonly_pdf text hocr].freeze
+
   include ModificationDetails
   include Lockable
 
@@ -48,19 +50,11 @@ class AssetResource < Valkyrie::Resource
 
   attribute :transcriptions, Valkyrie::Types::Array.of(Transcription)
 
-  # @return [DerivativeResource]
-  def thumbnail
-    derivatives.find(&:thumbnail?)
-  end
-
-  # @return [DerivativeResource]
-  def access
-    derivatives.find(&:access?)
-  end
-
-  # @return [DerivativeResource]
-  def iiif_image
-    derivatives.find(&:iiif_image?)
+  # Accessors for derivatives.
+  DERIVATIVE_TYPES.each do |symbol|
+    define_method symbol do
+      derivatives.find { |d| d.type == symbol }
+    end
   end
 
   # Finds pyramidal tiff from either iiif_image or access derivatives
@@ -69,21 +63,6 @@ class AssetResource < Valkyrie::Resource
     return iiif_image unless image?
 
     iiif_image || access
-  end
-
-  # @return [DerivativeResource]
-  def textonly_pdf
-    derivatives.find(&:textonly_pdf?)
-  end
-
-  # @return [DerivativeResource]
-  def text
-    derivatives.find(&:text?)
-  end
-
-  # @return [DerivativeResource]
-  def hocr
-    derivatives.find(&:hocr?)
   end
 
   # Return true if asset is an image
