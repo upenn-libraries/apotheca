@@ -336,6 +336,10 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
               <marc:datafield ind1=" " ind2="0" tag="655">
                 <marc:subfield code="a">Hybrid Music</marc:subfield>
               </marc:datafield>
+              <marc:datafield ind1=" " ind2="0" tag="655">
+                <marc:subfield code="a">Manuscripts.</marc:subfield>
+                <marc:subfield code="0">http://id.loc.gov/authorities/subjects/gf2022026088</marc:subfield>
+              </marc:datafield>
             </marc:record>
           </marc:records>
         XML
@@ -345,6 +349,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
         expect(transformer.to_descriptive_metadata[:physical_format]).to contain_exactly(
           MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SHEET_MUSIC,
           MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SCORES,
+          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::MANUSCRIPTS,
           { value: 'Hybrid Music' }
         )
       end
