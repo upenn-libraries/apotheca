@@ -57,16 +57,16 @@ en:
       publish:
         success: 'Job to publish item enqueued.'
         failure: 'An error occurred while enqueuing job to publish item.'
-        description: "Publishes this item to Colenda. If this item is already published to Colenda it will update the data that is present there."
-        confirm_message: "You will publish this item to Colenda"
+        description: "Publishes this item to Digital Collections. If this item is already published it will update the data that is present there."
+        confirm_message: "You will publish this item to Digital Collections"
       unpublish:
         success: 'Successfully unpublished item.'
-        description: 'Unpublishes (removes) item from Colenda.'
-        confirm_message: "You will unpublish this item from Colenda."
+        description: 'Unpublishes (removes) item from Digital Collections.'
+        confirm_message: "You will unpublish this item from Digital Collections."
       refresh_ILS:
         success: 'Job to refresh ILS metadata enqueued.'
         failure: 'An error occurred while enqueuing job to refresh ILS metadata.'
-        description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata. If this item is already published to Colenda, this action will republish it to Colenda."
+        description: "Refreshes metadata from catalog if a bibnumber is included in the descriptive metadata. If this item is already published, this action will republish it."
         confirm_message: "Your current ILS metadata will be updated."
       delete:
         success: 'Successfully deleted item.'
@@ -75,8 +75,8 @@ en:
       refresh_all_ILS:
         success: "Job to refresh all ILS metadata enqueued."
         failure: "An error occurred while enqueuing job to refresh all ILS metadata."
-        description: "Refreshes metadata from catalog for every item with a bibnumber included in the descriptive metadata. This action will republish to Colenda any item already published."
-        confirm_message: "All records with bibnumbers will have their ILS metadata refreshed. Records that are already published to Colenda will be republished."
+        description: "Refreshes metadata from catalog for every item with a bibnumber included in the descriptive metadata. This action will republish any items already published."
+        confirm_message: "All records with bibnumbers will have their ILS metadata refreshed. Records that are already published will be republished."
       regenerate_all_derivatives:
         success: "Job to generate all derivatives enqueued."
         failure: "An error occurred while enqueuing job to generate all derivatives"

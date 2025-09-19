@@ -16,7 +16,7 @@ class UnpublishItem
 
     change_set.published = false
 
-    client = PublishingService::Client.new(PublishingService::Endpoint.colenda)
+    client = PublishingService::Client.new(PublishingService::Endpoint.digital_collections)
     client.unpublish(change_set)
 
     Success(change_set)

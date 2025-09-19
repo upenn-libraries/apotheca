@@ -18,10 +18,10 @@ describe UnpublishItem do
         expect(result.success?).to be true
       end
 
-      it 'publishes item' do
+      it 'unpublishes item' do
         result
         expect(
-          a_request(:delete, "#{Settings.publish.colenda.base_url}/items/#{item.unique_identifier}")
+          a_request(:post, publishing_endpoint.webhook_url).with(body: hash_including(event: 'unpublish'))
         ).to have_been_made
       end
 

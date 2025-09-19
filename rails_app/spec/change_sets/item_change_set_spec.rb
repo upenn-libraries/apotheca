@@ -259,7 +259,9 @@ describe ItemChangeSet do
     let(:derivative_storage) { Valkyrie::StorageAdapter.find(:iiif_manifests) }
     let(:derivative) do
       derivative_storage.upload(
-        file: ActionDispatch::Http::UploadedFile.new(tempfile: file_fixture('iiif_manifest/base_item.json').open),
+        file: ActionDispatch::Http::UploadedFile.new(
+          tempfile: file_fixture('derivatives/sample_iiif_manifest.json').open
+        ),
         resource: resource,
         original_filename: 'iiif_manifest'
       )

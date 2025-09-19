@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe PublishingService::Client do
-  let(:endpoint) { PublishingService::Endpoint.colenda }
+  let(:endpoint) { PublishingService::Endpoint.digital_collections }
   let(:client) { described_class.new(endpoint) }
 
   describe '.new' do
@@ -19,39 +19,82 @@ describe PublishingService::Client do
     context 'when request successful' do
       let(:expected_payload) do
         {
-          'item' => {
-            'id' => start_with('ark:/'),
-            'uuid' => be_a(String),
-            'first_published_at' => end_with('Z'),
-            'last_published_at' => end_with('Z'),
-            'descriptive_metadata' => a_hash_including(
-              'title' => [{ 'value' => 'New Item' }]
-            ),
-            'iiif_manifest_path' => be_a(String),
-            'pdf_path' => be_a(String),
-            'thumbnail_asset_id' => be_a(String),
-            'assets' => [
-              {
-                'id' => be_a(String),
-                'filename' => 'front.tif',
-                'iiif' => true,
-                'original_file' => { 'path' => be_a(String), 'size' => 291_455, 'mime_type' => 'image/tiff' },
-                'thumbnail_file' => { 'path' => be_a(String), 'size' => 7_499, 'mime_type' => 'image/jpeg' }
+          'event' => 'publish',
+          'data' => {
+            'item' => {
+              'id' => be_a(String),
+              'ark' => start_with('ark:/'),
+              'first_published_at' => end_with('Z'),
+              'last_published_at' => end_with('Z'),
+              'descriptive_metadata' => a_hash_including(
+                'title' => [{ 'value' => 'New Item' }]
+              ),
+              'structural_metadata' => {
+                'viewing_direction' => nil,
+                'viewing_hint' => nil
               },
-              {
-                'id' => be_a(String),
-                'filename' => 'back.tif',
-                'iiif' => true,
-                'original_file' => { 'path' => be_a(String), 'size' => 291_455, 'mime_type' => 'image/tiff' },
-                'thumbnail_file' => { 'path' => be_a(String), 'size' => 5_471, 'mime_type' => 'image/jpeg' }
-              }
-            ]
+              'derivatives' => {
+                'preview' => {
+                  'mime_type' => 'image/jpeg',
+                  'size_bytes' => be_a(Integer),
+                  'url' => "http://example.org/v1/items/#{item.id}/preview"
+                },
+                'pdf' => {
+                  'mime_type' => 'application/pdf',
+                  'size_bytes' => be_a(Integer),
+                  'url' => "http://example.org/v1/items/#{item.id}/pdf"
+                },
+                'iiif_manifest' => a_hash_including(
+                  'mime_type' => 'application/json',
+                  'size_bytes' => be_a(Integer),
+                  'url' => "http://example.org/iiif/items/#{item.id}/manifest"
+                )
+              },
+              'assets' => [
+                {
+                  'id' => be_a(String),
+                  'label' => 'Front',
+                  'preservation_file' => {
+                    'original_filename' => 'front.tif',
+                    'size_bytes' => 291_455,
+                    'mime_type' => 'image/tiff',
+                    'url' => start_with('http://example.org/v1/assets/').and(end_with('/preservation'))
+                  },
+                  'derivatives' => {
+                    'thumbnail' => {
+                      'size_bytes' => 7_499,
+                      'mime_type' => 'image/jpeg',
+                      'url' => start_with('http://example.org/v1/assets/').and(end_with('/thumbnail'))
+                    },
+                    'access' => nil
+                  }
+                },
+                {
+                  'id' => be_a(String),
+                  'label' => nil,
+                  'preservation_file' => {
+                    'original_filename' => 'back.tif',
+                    'size_bytes' => 291_455,
+                    'mime_type' => 'image/tiff',
+                    'url' => start_with('http://example.org/v1/assets/').and(end_with('/preservation'))
+                  },
+                  'derivatives' => {
+                    'thumbnail' => {
+                      'size_bytes' => 5_471,
+                      'mime_type' => 'image/jpeg',
+                      'url' => start_with('http://example.org/v1/assets/').and(end_with('/thumbnail'))
+                    },
+                    'access' => nil
+                  }
+                }
+              ]
+            }
           }
         }
       end
 
       before do
-        stub_request(:post, "#{endpoint.base_url}/items")
+        stub_request(:post, "#{endpoint.host}/#{endpoint.webhook_path}")
           .with(
             body: expected_payload,
             headers: { 'Content-Type': 'application/json', 'Authorization': "Token token=#{endpoint.token}" }
@@ -61,7 +104,7 @@ describe PublishingService::Client do
 
       it 'makes publish request with expected payload' do
         client.publish(item)
-        expect(a_request(:post, "#{endpoint.base_url}/items")).to have_been_made
+        expect(a_request(:post, "#{endpoint.host}/#{endpoint.webhook_path}")).to have_been_made
       end
     end
 
@@ -85,7 +128,7 @@ describe PublishingService::Client do
 
       it 'makes unpublish request' do
         client.unpublish(item)
-        expect(a_request(:delete, "#{endpoint.base_url}/items/#{item.unique_identifier}")).to have_been_made
+        expect(a_request(:post, endpoint.webhook_url).with(body: hash_including(event: 'unpublish'))).to have_been_made
       end
     end
 
@@ -98,9 +141,12 @@ describe PublishingService::Client do
     end
 
     context 'when request returns 404' do
+      let(:expected_payload) { { event: 'unpublish', data: { item: { id: item.id } } } }
+
       before do
-        stub_request(:delete, "#{endpoint.base_url}/items/#{item.unique_identifier}")
+        stub_request(:post, endpoint.webhook_url)
           .with(
+            body: expected_payload,
             headers: { 'Authorization': "Token token=#{endpoint.token}" }
           )
           .to_return(status: 404, body: { error: 'Not Found' }.to_json, headers: { 'Content-Type': 'application/json' })
@@ -108,7 +154,9 @@ describe PublishingService::Client do
 
       it 'makes unpublish request' do
         client.unpublish(item)
-        expect(a_request(:delete, "#{endpoint.base_url}/items/#{item.unique_identifier}")).to have_been_made
+        expect(
+          a_request(:post, endpoint.webhook_url).with(body: expected_payload)
+        ).to have_been_made
       end
 
       it 'does not raise error' do

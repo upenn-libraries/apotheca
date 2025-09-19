@@ -76,7 +76,7 @@ module DerivativeService
         def availability_metadata
           {
             'label' => { 'none' => ['Available Online'] },
-            'value' => { 'none' => [colenda.public_item_url(item.unique_identifier)] }
+            'value' => { 'none' => [digital_collections.item_url(item.id)] }
           }
         end
 
@@ -148,11 +148,11 @@ module DerivativeService
           @item_url ||= "https://#{Settings.app_url}/#{V3::API_VERSION}/items/#{item.id}"
         end
 
-        # Get the Colenda publishing endpoint configuration
+        # Get the Digital Collections publishing endpoint configuration
         #
-        # @return [PublishingService::Endpoint] Colenda endpoint configuration
-        def colenda
-          @colenda ||= PublishingService::Endpoint.colenda
+        # @return [PublishingService::Endpoint] Digital Collections endpoint configuration
+        def digital_collections
+          @digital_collections ||= PublishingService::Endpoint.digital_collections
         end
       end
     end

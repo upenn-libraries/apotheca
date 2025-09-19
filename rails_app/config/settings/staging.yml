@@ -68,14 +68,10 @@ working_storage:
 ezid_metadata_update:
   skip: true
 publish:
-  colenda:
-    base_url: https://colenda-dev.library.upenn.edu
-    token: <%= DockerSecrets.lookup(:colenda_publish_token, 'sample_token') %>
+  digital_collections:
+    host: https://digitalcollections-staging.library.upenn.edu
+    token: <%= DockerSecrets.lookup(:digital_collections_publish_token, 'sample_token') %>
+    webhook_path: listen
     item_path: items
-    asset_path: assets
-    public_item_path: catalog
-    pdf_path: pdf
-    original_path: original
-    manifest_path: manifest
 
 

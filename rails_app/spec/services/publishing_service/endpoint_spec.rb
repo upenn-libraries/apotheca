@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 describe PublishingService::Endpoint do
-  let(:config) { Settings.publish.colenda }
+  let(:config) { Settings.publish.digital_collections }
   let(:endpoint) { described_class.new(config) }
-  let(:item_id) { 'ark:/1234/5678' }
-  let(:asset_id) { '8621662d-ef44-4888-99a8-0f70e340c3b8' }
+  let(:item_id) { SecureRandom.uuid }
 
   describe '.new' do
     context 'when missing configuration value' do
@@ -21,39 +20,7 @@ describe PublishingService::Endpoint do
     it 'returns expected url' do
       expect(
         endpoint.item_url(item_id)
-      ).to eql("https://colenda.library.upenn.edu/items/#{item_id}")
-    end
-  end
-
-  describe '#public_item_url' do
-    it 'returns expected url' do
-      expect(
-        endpoint.public_item_url(item_id)
-      ).to eql('https://colenda.library.upenn.edu/catalog/1234-5678')
-    end
-  end
-
-  describe '#pdf_url' do
-    it 'returns expected url' do
-      expect(
-        endpoint.pdf_url(item_id)
-      ).to eql("https://colenda.library.upenn.edu/items/#{item_id}/pdf")
-    end
-  end
-
-  describe '#manifest_url' do
-    it 'returns expected url' do
-      expect(
-        endpoint.manifest_url(item_id)
-      ).to eql("https://colenda.library.upenn.edu/items/#{item_id}/manifest")
-    end
-  end
-
-  describe '#original_url' do
-    it 'returns expected url' do
-      expect(
-        endpoint.original_url(item_id, asset_id)
-      ).to eql("https://colenda.library.upenn.edu/items/#{item_id}/assets/#{asset_id}/original")
+      ).to eql("https://digitalcollections.library.upenn.edu/items/#{item_id}")
     end
   end
 end

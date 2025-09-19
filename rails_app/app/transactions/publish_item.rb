@@ -17,7 +17,7 @@ class PublishItem
 
     return Success(change_set) if Settings.publish.skip
 
-    client = PublishingService::Client.new(PublishingService::Endpoint.colenda)
+    client = PublishingService::Client.new(PublishingService::Endpoint.digital_collections)
     client.publish(change_set)
 
     Success(change_set)
