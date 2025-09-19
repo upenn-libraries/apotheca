@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe MetadataExtractor::Marmite::Transformer do
+RSpec.describe MetadataExtractor::MARC::Transformer do
   let(:transformer) { described_class.new(xml) }
   let(:xml) { '' }
 
@@ -347,9 +347,9 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
 
       it 'maps physical format to aat terms' do
         expect(transformer.to_descriptive_metadata[:physical_format]).to contain_exactly(
-          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SHEET_MUSIC,
-          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SCORES,
-          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::MANUSCRIPTS,
+          MetadataExtractor::MARC::PennMappingRules::AAT::SHEET_MUSIC,
+          MetadataExtractor::MARC::PennMappingRules::AAT::SCORES,
+          MetadataExtractor::MARC::PennMappingRules::AAT::MANUSCRIPTS,
           { value: 'Hybrid Music' }
         )
       end

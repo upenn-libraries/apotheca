@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 module MetadataExtractor
-  class Marmite
+  module MARC
     # Transforms MARC XML into json-based descriptive metadata. The mapping rules specify what mappings actually are.
     # This class reads in the MARC XML and extracts the data based on the mapping rules given.
     class Transformer
       attr_reader :marc, :mappings
 
       # @param marc_xml [String]
-      # @param mappings [MetadataExtractor::Marmite::Transformer::MappingRules]
-      def initialize(marc_xml, mappings: DefaultMappingRules)
+      # @param mappings [MetadataExtractor::MARC::MappingRules]
+      def initialize(marc_xml, mappings: PennMappingRules)
         @marc = MARCDocument.new(marc_xml)
         @mappings = mappings
       end
