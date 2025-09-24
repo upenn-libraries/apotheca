@@ -36,7 +36,7 @@ module Solr
         MAP = {
           score: :score,
           title: :title_ssi,
-          created_at: :created_at_dtsi,
+          created_at: :date_created_dtsi,
           updated_at: :updated_at_dtsi,
           first_published_at: :first_published_at_dtsi,
           last_published_at: :last_published_at_dtsi
