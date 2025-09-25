@@ -4,7 +4,7 @@
 2024-02-29
 
 ## Status
-`Accepted`
+`Superseded`
 
 ## Context
 Apotheca and Colenda are two separate applications and we need some way for Apotheca to communicate to Colenda which items are to be displayed.
