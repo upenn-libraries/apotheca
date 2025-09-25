@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 describe DeleteOldBulkImportsJob do
-  let(:report) { create(:report, :queued) }
-
-  before { allow(Report).to receive(:create!).and_return(report) }
-
   context 'when has bulk imports older than 6 months' do
     before do
       create_list(:bulk_import, 2, updated_at: 7.months.ago)
