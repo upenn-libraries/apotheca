@@ -22,7 +22,8 @@
     <% section.with_field(value: @change_set.transcriptions.first&.contents,
                           field: "asset[transcriptions][][contents]",
                           label: 'Contents',
-                          type: :textarea) %>
+                          type: :textarea,
+                          rows: 10) %>
   <% end %>
 
   <% form.with_section do |section| %>
