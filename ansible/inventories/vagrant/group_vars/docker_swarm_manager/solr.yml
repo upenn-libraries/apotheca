@@ -25,8 +25,8 @@ solr_limits_mem: "3G"
 solr_proxy_host: "apotheca-dev.library.upenn.int"
 
 solr_custom_env_variables:
-  SOLR_ADMIN_PASSWORD: "{{ apotheca_vault_values.secret.solr_custom_env_variables_SOLR_ADMIN_PASSWORD }}"
-  SOLR_ADMIN_USERNAME: "{{ apotheca_vault_values.secret.solr_custom_env_variables_SOLR_ADMIN_USERNAME }}"
+  SOLR_ADMIN_PASSWORD: "{{ apotheca_vault_values.secret.solr_password }}"
+  SOLR_ADMIN_USERNAME: "{{ apotheca_vault_values.secret.solr_username }}"
   SOLR_ENABLE_AUTHENTICATION: "yes"
   SOLR_HEAP: "2G"
   SOLR_JAVA_MEM: "-Xms2G -Xmx2G"

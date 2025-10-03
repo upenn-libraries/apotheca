@@ -20,10 +20,10 @@ apotheca_versioned_secrets:
     value: "{{ apotheca_vault_values.secret.rails_master_key }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
   solr_username:
-    value: "{{ solr_custom_env_variables.SOLR_ADMIN_USERNAME }}"
+    value: "{{ apotheca_vault_values.secret.solr_username }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
   solr_password:
-    value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
+    value: "{{ apotheca_vault_values.secret.solr_password }}"
     version: "{{ apotheca_vault_values.metadata.version }}"
   sidekiq_pro_credentials:
     value: "{{ dld_sidekiq_pro_vault_values.secret.credentials }}"
