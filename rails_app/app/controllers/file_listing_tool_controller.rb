@@ -18,7 +18,7 @@ class FileListingToolController < UIController
         end
       else
         format.csv {}
-        format.json { render json: { error: 'Path invalid!' }, status: :unprocessable_entity }
+        format.json { render json: { error: 'Path invalid!' }, status: :unprocessable_content }
       end
     end
   end
