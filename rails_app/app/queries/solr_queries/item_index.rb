@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module SolrQueries
   # Query class for searching, filtering and sorting over ItemResources via Solr
   # Also note that search and facet field configuration also resides in the solrconfig.xml file

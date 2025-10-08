@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module SolrQueries
   # query class for returning stored ILS metadata from an ItemResource
   class ItemIlsMetadata
@@ -29,4 +30,3 @@ module SolrQueries
     end
   end
 end
-

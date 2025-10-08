@@ -49,4 +49,3 @@ module PostgresQueries
     end
   end
 end
-
