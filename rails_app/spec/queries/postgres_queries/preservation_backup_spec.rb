@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PreservationBackupQueries do
+RSpec.describe PostgresQueries::PreservationBackup do
   subject(:query) { described_class.new query_service: query_service }
 
   let(:query_service) do

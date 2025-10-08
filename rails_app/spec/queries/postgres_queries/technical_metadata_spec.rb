@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TechnicalMetadataQueries do
+describe PostgresQueries::TechnicalMetadata do
   let(:query) do
     described_class.new(query_service: Valkyrie::MetadataAdapter.find(:postgres).query_service)
   end
