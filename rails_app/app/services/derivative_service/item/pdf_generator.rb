@@ -62,7 +62,12 @@ module DerivativeService
         return false if item.structural_metadata.arranged_asset_ids.blank?
         return false if item.structural_metadata.arranged_asset_ids.count > MAX_ASSETS
         return false unless item.arranged_assets.all?(&:image?)
-        return false unless item.arranged_assets.all? { |a| a.technical_metadata.dpi.present? }
+
+        # Check that DPI is present and is greater than 1. This protects against malformed DPIs.
+        # TODO: This is a temporary fix we should address this issue more robustly when we extract the dpi.
+        return false unless item.arranged_assets.all? do |a|
+          a.technical_metadata.dpi.present? && a.technical_metadata.dpi > 1
+        end
 
         true
       end
@@ -78,7 +83,7 @@ module DerivativeService
       def create_pdf(assets)
         HexaPDF::Document.new.tap do |doc|
           add_document_metadata(doc)
-          add_cover_page(doc)      # Adds cover page.
+          add_cover_pages(doc)     # Adds cover pages.
           add_pages(doc, assets)   # Adds page for each asset.
           add_outline(doc, assets) # Add labels and annotations to the document outline.
         end
@@ -90,9 +95,9 @@ module DerivativeService
         doc.catalog[:Lang] = item.language_codes.first
       end
 
-      # Adds cover page to document.
-      def add_cover_page(doc)
-        CoverPage.new(item).add_to(doc)
+      # Adds cover pages to document.
+      def add_cover_pages(doc)
+        Cover.new(item).add_pages_to(doc)
       end
 
       # Add a page for each asset that includes its image and is overlayed with any available OCR.
@@ -125,10 +130,12 @@ module DerivativeService
 
       # Add labels and annotations for each asset as part of the document outline.
       def add_outline(doc, assets)
+        offset = doc.pages.count - assets.count # offset to account for cover pages.
+
         assets.each.with_index do |asset, index|
-          doc.outline.add_item(asset.label || (index + 1).to_s, destination: index + 1) do |section|
+          doc.outline.add_item(asset.label || (index + 1).to_s, destination: index + offset) do |section|
             asset.annotations.each do |annotation|
-              section.add_item(annotation, destination: index)
+              section.add_item(annotation, destination: index + offset)
             end
           end
         end

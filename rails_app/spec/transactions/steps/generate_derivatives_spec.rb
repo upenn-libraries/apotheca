@@ -3,7 +3,7 @@
 describe Steps::GenerateDerivatives do
   let(:generate_derivatives_step) { described_class.new(derivative_generator_class, derivative_type) }
   let(:derivative_generator_class) { DerivativeService::Item::Derivatives }
-  let(:derivative_type) { :iiif_manifest }
+  let(:derivative_type) { 'iiif_manifest' }
 
   before { freeze_time }
   after  { unfreeze_time }
@@ -55,6 +55,39 @@ describe Steps::GenerateDerivatives do
 
       it 'does not add a derivative resource' do
         expect(result.value!.derivatives.count).to be 0
+      end
+    end
+
+    context 'when keeping other derivatives that are already present' do
+      subject(:result) do
+        pdf_derivative = DerivativeResource.new(file_id: Valkyrie::ID.new(SecureRandom.uuid), type: 'pdf',
+                                                mime_type: 'application/pdf', size: 0, generated_at: DateTime.current)
+        change_set = ItemChangeSet.new(persist(:item_resource, derivatives: [pdf_derivative]))
+        generate_derivatives_step.call(change_set)
+      end
+
+      let(:generate_derivatives_step) do
+        described_class.new(derivative_generator_class, derivative_type, replace_all: false)
+      end
+      let(:derivative_file) { DerivativeService::DerivativeFile.new(mime_type: 'application/json') }
+
+      it 'is successful' do
+        expect(result.success?).to be true
+      end
+
+      it 'adds derivative resource' do
+        expect(result.value!.derivatives.count).to be 2
+        expect(result.value!.derivatives.map(&:type)).to contain_exactly('iiif_manifest', 'pdf')
+      end
+
+      it 'creates iiif manifest and stores it' do
+        iiif_manifest = result.value!.derivatives.find { |d| d.type == derivative_type }
+        expect(iiif_manifest).to have_attributes(file_id: an_instance_of(Valkyrie::ID),
+                                                 type: derivative_type.to_s,
+                                                 mime_type: 'application/json',
+                                                 size: 0,
+                                                 generated_at: DateTime.current)
+        expect(Valkyrie::StorageAdapter.find_by(id: iiif_manifest.file_id)).to be_a Valkyrie::StorageAdapter::File
       end
     end
 

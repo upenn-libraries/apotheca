@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Adds DPI to asset technical metadata
+# Adds or updates DPI for an asset.
 class AddDPI
   include Dry::Transaction(container: Container)
 
@@ -12,8 +12,6 @@ class AddDPI
   tee :record_event
 
   def add_dpi(change_set)
-    return Success(change_set) if change_set.resource.technical_metadata.dpi.present?
-
     change_set.technical_metadata.dpi = technical_metadata(change_set).dpi
 
     Success(change_set)

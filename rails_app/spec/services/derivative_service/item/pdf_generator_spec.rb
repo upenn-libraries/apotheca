@@ -10,7 +10,10 @@ describe DerivativeService::Item::PDFGenerator do
   end
 
   describe '#pdf' do
-    let(:item) { persist(:item_resource, :with_faker_metadata, :with_full_assets_all_arranged) }
+    let(:item) do
+      persist(:item_resource, :with_faker_metadata, :with_full_assets_all_arranged,
+              human_readable_name: 'Line Breaks and Other Mishaps')
+    end
     let(:generator) { described_class.new(item) }
 
     context 'when pdf can be generated' do
@@ -34,7 +37,7 @@ describe DerivativeService::Item::PDFGenerator do
       end
 
       it 'contains cover page with title' do
-        expect(pdf.pages.first.contents).to match(/#{item.descriptive_metadata.title.first.value}/)
+        expect(pdf.pages.first).to have_pdf_text(item.descriptive_metadata.title.first.value)
       end
 
       it 'adds the title to document metadata' do
@@ -94,6 +97,22 @@ describe DerivativeService::Item::PDFGenerator do
         persist(:asset_resource, :with_image_file,
                 technical_metadata: {
                   size: 291_455, mime_type: 'image/tiff', sha256: ['sha256checksum'], height: 238, width: 400
+                })
+      end
+      let(:item) do
+        persist(:item_resource, :with_full_assets_all_arranged, asset1: asset1)
+      end
+
+      it 'returns false' do
+        expect(generator.pdfable?).to be false
+      end
+    end
+
+    context 'when item contains assets with malformed dpi' do
+      let(:asset1) do
+        persist(:asset_resource, :with_image_file,
+                technical_metadata: {
+                  dpi: 1, size: 291_455, mime_type: 'image/tiff', sha256: ['sha256checksum'], height: 238, width: 400
                 })
       end
       let(:item) do

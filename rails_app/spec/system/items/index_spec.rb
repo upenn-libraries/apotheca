@@ -27,8 +27,8 @@ describe 'Item Index Page' do
     end
 
     it 'selects the default sort options' do
-      expect(find_field('Sort By').value).to eq ItemIndex::DEFAULT_SORT[:field]
-      expect(find_field('Direction').value).to eq ItemIndex::DEFAULT_SORT[:direction]
+      expect(find_field('Sort By').value).to eq SolrQueries::ItemIndex::DEFAULT_SORT[:field]
+      expect(find_field('Direction').value).to eq SolrQueries::ItemIndex::DEFAULT_SORT[:direction]
     end
 
     it 'lists the items in descending order from newest to oldest' do

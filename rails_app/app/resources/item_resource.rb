@@ -2,6 +2,8 @@
 
 # Item model; contains attributes and helper methods
 class ItemResource < Valkyrie::Resource
+  DERIVATIVE_TYPES = %w[iiif_manifest iiif_v3_manifest pdf].freeze
+
   include ModificationDetails
   include Lockable
 
@@ -31,7 +33,7 @@ class ItemResource < Valkyrie::Resource
   # Item-level derivatives, like IIIF Manifest.
   attribute :derivatives, Valkyrie::Types::Array.of(DerivativeResource)
 
-  attribute :ocr_type, Valkyrie::Types::Strict::String.optional
+  attribute :ocr_strategy, Valkyrie::Types::Strict::String.optional
 
   # @return [Integer]
   def asset_count
@@ -49,6 +51,11 @@ class ItemResource < Valkyrie::Resource
                                          .sort_by { |a| structural_metadata.arranged_asset_ids.index(a.id) }
   end
 
+  # @return [Array<AssetResource>]
+  def assets
+    @assets ||= pg_query_service.find_many_by_ids(ids: asset_ids.dup)
+  end
+
   # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
   # @param [Valkyrie::ID] asset_id
   def thumbnail?(asset_id)
@@ -60,20 +67,18 @@ class ItemResource < Valkyrie::Resource
     descriptive_metadata&.bibnumber.try(:any?)
   end
 
-  # @return [DerivativeResource]
-  def iiif_manifest
-    derivatives.find(&:iiif_manifest?)
-  end
-
-  # @return [DerivativeResource]
-  def pdf
-    derivatives.find(&:pdf?)
+  # Accessors for derivatives.
+  DERIVATIVE_TYPES.each do |symbol|
+    define_method symbol do
+      derivatives.find { |d| d.type == symbol }
+    end
   end
 
   # @param [Boolean] include_assets
   def to_json_export(include_assets: false)
     bulk_export_hash = {
       unique_identifier: unique_identifier,
+      uuid: id,
       human_readable_name: human_readable_name,
       apotheca_url: presenter.apotheca_url,
       metadata: descriptive_metadata.to_json_export,
@@ -84,7 +89,7 @@ class ItemResource < Valkyrie::Resource
       internal_notes: internal_notes,
       published: published,
       asset_count: asset_count,
-      ocr_type: ocr_type,
+      ocr_strategy: ocr_strategy,
       first_published_at: first_published_at&.to_fs(:display),
       last_published_at: last_published_at&.to_fs(:display),
       structural: { viewing_direction: structural_metadata.viewing_direction,

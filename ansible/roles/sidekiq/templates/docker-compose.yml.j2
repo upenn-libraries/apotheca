@@ -16,7 +16,7 @@ services:
 {% if is_development == true %}
       APP_UID: ${UID:-1000}
       APP_GID: ${GID:-1000}
-      MINIO_URL: "http://minio:{{ minio.port }}"
+      MINIO_URL: "http://{{ minio.server_url }}"
 {% endif %}
       DATABASE_NAME: "{{ postgres.database }}"
       DATABASE_PASSWORD: /run/secrets/database_password
@@ -36,7 +36,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "ps aux | grep '[s]idekiq 7' || exit 1",
+          "ps aux | grep '[s]idekiq 8' || exit 1",
         ]
       interval: 30s
       retries: 3
@@ -52,6 +52,8 @@ services:
       - redis
       - traefik
     secrets:
+      - ezid_user
+      - ezid_password
       - database_password
       - source: rails_master_key
         target: "/home/app/config/credentials/{{ apotheca_rails_env }}.key"
@@ -61,6 +63,7 @@ services:
       - redis_sidekiq_password
       - solr_username
       - solr_password
+      - sidekiq_pro_credentials
 {% if is_development == false %}
       - honeybadger_api_key
       - aws_region
@@ -70,8 +73,6 @@ services:
       - ceph_access_key_id
       - ceph_secret_access_key
       - colenda_publish_token
-      - ezid_user
-      - ezid_password
       - wasabi_access_key_id
       - wasabi_secret_access_key
 {% endif %}
@@ -91,6 +92,12 @@ networks:
     external: true
 
 secrets:
+  ezid_user:
+    external: true
+    name: "{{ 'apotheca_ezid_user_v' ~ apotheca_versioned_secrets.ezid_user.version }}"
+  ezid_password:
+    external: true
+    name: "{{ 'apotheca_ezid_password_v' ~ apotheca_versioned_secrets.ezid_password.version }}"
   database_password:
     external: true
     name: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
@@ -106,6 +113,9 @@ secrets:
   solr_password:
     external: true
     name: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
+  sidekiq_pro_credentials:
+    external: true
+    name: ${SIDEKIQ_PRO_CREDENTIALS}
 {% if is_development == false %}
   honeybadger_api_key:
     external: true
@@ -131,12 +141,6 @@ secrets:
   colenda_publish_token:
     external: true
     name: "{{ 'apotheca_colenda_publish_token_v' ~ apotheca_versioned_secrets.colenda_publish_token.version }}"
-  ezid_user:
-    external: true
-    name: "{{ 'apotheca_ezid_user_v' ~ apotheca_versioned_secrets.ezid_user.version }}"
-  ezid_password:
-    external: true
-    name: "{{ 'apotheca_ezid_password_v' ~ apotheca_versioned_secrets.ezid_password.version }}"
   wasabi_access_key_id:
     external: true
     name: "{{ 'apotheca_wasabi_access_key_id_v' ~ apotheca_versioned_secrets.wasabi_access_key_id.version }}"

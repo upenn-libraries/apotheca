@@ -333,13 +333,13 @@ describe UpdateAsset do
         let(:transaction) { described_class.new.with_step_args(generate_derivatives: [skip: false]) }
         let(:asset) { persist(:asset_resource) }
         let(:result) do
-          transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com', ocr_type: 'printed',
+          transaction.call(id: asset.id, file: file, updated_by: 'initiator@example.com', ocr_strategy: 'printed',
                            ocr_language: %w[eng fra])
         end
 
         it 'generates ocr derivatives' do
           expect(updated_asset.derivatives.count).to be 5
-          expect(updated_asset.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail', 'text',
+          expect(updated_asset.derivatives.map(&:type)).to contain_exactly('iiif_image', 'thumbnail', 'text',
                                                                            'textonly_pdf', 'hocr')
         end
       end

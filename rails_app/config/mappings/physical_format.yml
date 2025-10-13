@@ -1,0 +1,1185 @@
+# Mapping physical_format terms to AAT.
+
+## AAT Terms
+- &abridgements
+  value: abridgements
+  uri: 'http://vocab.getty.edu/aat/300202489'
+- &academic_dissertations
+  value: academic dissertations
+  uri: 'http://vocab.getty.edu/aat/300417749'
+- &theses
+  value: theses
+  uri: 'http://vocab.getty.edu/aat/300028028'
+- &account_books
+  value: account books
+  uri: 'http://vocab.getty.edu/aat/300027483'
+- &acrostics
+  value: acrostics
+  uri: 'http://vocab.getty.edu/aat/300256198'
+- &adaptations
+  value: adaptations (literary works)
+  uri: 'http://vocab.getty.edu/aat/300410356'
+- &advertisements
+  value: advertisements
+  uri: 'http://vocab.getty.edu/aat/300193993'
+- &aerial_views
+  value: aerial views
+  uri: 'http://vocab.getty.edu/aat/300015527'
+- &albums
+  value: albums (books)
+  uri: 'http://vocab.getty.edu/aat/300026690'
+- &allegories
+  value: allegories (literary genre)
+  uri: 'http://vocab.getty.edu/aat/300202507'
+- &almanacs
+  value: almanacs
+  uri: 'http://vocab.getty.edu/aat/300026705'
+- &anecdotes
+  value: anecdotes
+  uri: 'http://vocab.getty.edu/aat/300417788'
+- &antiphonaries
+  value: antiphonaries
+  uri: 'http://vocab.getty.edu/aat/300188812'
+- &architectural_drawings
+  value: architectural drawings (visual works)
+  uri: 'http://vocab.getty.edu/aat/300034787'
+- &works_of_art
+  value: works of art
+  uri: 'http://vocab.getty.edu/aat/300133025'
+- &atlases
+  value: atlases
+  uri: 'http://vocab.getty.edu/aat/300028053'
+- &autobiographies
+  value: autobiographies (literary genre)
+  uri: 'http://vocab.getty.edu/aat/300080104'
+- &bibliographies
+  value: bibliographies
+  uri: 'http://vocab.getty.edu/aat/300026497'
+- &biographies
+  value: biographies (literary genre)
+  uri: 'http://vocab.getty.edu/aat/300080102'
+- &blank_forms
+  value: blank forms
+  uri: 'http://vocab.getty.edu/aat/300202519'
+- &booksellers_advertisements
+  value: booksellers' advertisements
+  uri: 'http://vocab.getty.edu/aat/300417799'
+- &booksellers_catalogs
+  value: booksellers' catalogs
+  uri: 'http://vocab.getty.edu/aat/300417772'
+- &broadsides
+  value: broadsides (notices)
+  uri: 'http://vocab.getty.edu/aat/300026739'
+- &burlesques
+  value: burlesques (literary genre)
+  uri: 'http://vocab.getty.edu/aat/300254804'
+- &bylaws
+  value: bylaws (administrative records)
+  uri: 'http://vocab.getty.edu/aat/300027433'
+- &cadastral_maps
+  value: cadastral maps
+  uri: 'http://vocab.getty.edu/aat/300028102'
+- &calendars
+  value: calendars (documents)
+  uri: 'http://vocab.getty.edu/aat/300026741'
+- &cantatas
+  value: cantatas (musical compositions)
+  uri: 'http://vocab.getty.edu/aat/300262934'
+- &canticles
+  value: canticles
+  uri: 'http://vocab.getty.edu/aat/300264398'
+- &caricatures
+  value: caricatures
+  uri: 'http://vocab.getty.edu/aat/300015634'
+- &cartoons
+  value: cartoons (humorous images)
+  uri: 'http://vocab.getty.edu/aat/300123430'
+- &catalogs
+  value: catalogs (documents)
+  uri: 'http://vocab.getty.edu/aat/300026059'
+- &catechisms
+  value: catechisms
+  uri: 'http://vocab.getty.edu/aat/300026460'
+- &chants
+  value: chants
+  uri: 'http://vocab.getty.edu/aat/300202525'
+- &chronologies
+  value: chronologies (lists)
+  uri: 'http://vocab.getty.edu/aat/300252008'
+- &collages
+  value: collages (visual works)
+  uri: 'http://vocab.getty.edu/aat/300033963'
+- &comedy_plays
+  value: comedy plays
+  uri: 'http://vocab.getty.edu/aat/300417801'
+- &commentaries
+  value: commentaries
+  uri: 'http://vocab.getty.edu/aat/300026098'
+- &concerts
+  value: concerts (performances)
+  uri: 'http://vocab.getty.edu/aat/300069210'
+- &constitutions
+  value: constitutions
+  uri: 'http://vocab.getty.edu/aat/300027437'
+- &controlled_vocabularies
+  value: controlled vocabularies
+  uri: 'http://vocab.getty.edu/aat/300265266'
+- &cookbooks
+  value: cookbooks
+  uri: 'http://vocab.getty.edu/aat/300026109'
+- &death_registers
+  value: death registers
+  uri: 'http://vocab.getty.edu/aat/300027405'
+- &deeds
+  value: deeds
+  uri: 'http://vocab.getty.edu/aat/300027249'
+- &devotional_literature
+  value: devotional literature
+  uri: 'http://vocab.getty.edu/aat/300254377'
+- &dialogues
+  value: dialogues
+  uri: 'http://vocab.getty.edu/aat/300026185'
+- &diaries
+  value: diaries
+  uri: 'http://vocab.getty.edu/aat/300027112'
+- &dictionaries
+  value: dictionaries
+  uri: 'http://vocab.getty.edu/aat/300026186'
+- &directories
+  value: directories
+  uri: 'http://vocab.getty.edu/aat/300026234'
+- &drama
+  value: drama (literary genre)
+  uri: 'http://vocab.getty.edu/aat/300417554'
+- &drawings
+  value: drawings (visual works)
+  uri: 'http://vocab.getty.edu/aat/300033973'
+- &early_maps
+  value: early maps
+  uri: 'http://vocab.getty.edu/aat/300417810'
+- &encyclopedias
+  value: encyclopedias
+  uri: 'http://vocab.getty.edu/aat/300129439'
+- &engravings
+  value: engravings (prints)
+  uri: 'http://vocab.getty.edu/aat/300041340'
+- &ephemerides
+  value: ephemerides
+  uri: 'http://vocab.getty.edu/aat/300202531'
+- &epic_poems
+  value: epic poems
+  uri: 'http://vocab.getty.edu/aat/300253035'
+- &epigrams
+  value: epigrams
+  uri: 'http://vocab.getty.edu/aat/300202533'
+- &epistolary_novels
+  value: epistolary novels
+  uri: 'http://vocab.getty.edu/aat/300410324'
+- &essays
+  value: essays
+  uri: 'http://vocab.getty.edu/aat/300026291'
+- &examinations
+  value: examinations (documents)
+  uri: 'http://vocab.getty.edu/aat/300026936'
+- &excerpts
+  value: excerpts
+  uri: 'http://vocab.getty.edu/aat/300026939'
+- &exhibition_catalogs
+  value: exhibition catalogs
+  uri: 'http://vocab.getty.edu/aat/300026096'
+- &facsimiles
+  value: facsimiles (reproductions)
+  uri: 'http://vocab.getty.edu/aat/300121391'
+- &genealogies
+  value: genealogies (histories)
+  uri: 'http://vocab.getty.edu/aat/300027015'
+- &fantasias
+  value: fantasias (musical compositions)
+  uri: 'http://vocab.getty.edu/aat/300380291'
+- &Festschriften
+  value: Festschriften
+  uri: 'http://vocab.getty.edu/aat/300026297'
+- &fiction
+  value: fiction (general genre)
+  uri: 'http://vocab.getty.edu/aat/300055918'
+- &fine_bindings
+   value: fine bindings
+   uri: 'http://vocab.getty.edu/aat/300311788'
+- &fore-edge_paintings
+  value: fore-edge paintings (components)
+  uri: 'http://vocab.getty.edu/aat/300263621'
+- &funeral_books
+  value: funeral books
+  uri: 'http://vocab.getty.edu/aat/300263078'
+- &funeral_sermons
+  value: funeral sermons
+  uri: 'http://vocab.getty.edu/aat/300417771'
+- &genealogical_tables
+  value: genealogical tables
+  uri: 'http://vocab.getty.edu/aat/300027016'
+- &graduals
+  value: graduals
+  uri: 'http://vocab.getty.edu/aat/300026462'
+- &graphs
+  value: graphs
+  uri: 'http://vocab.getty.edu/aat/300027020'
+- &Gregorian_chants
+  value: Gregorian chants
+  uri: 'http://vocab.getty.edu/aat/300265207'
+- &guidebooks
+  value: guidebooks
+  uri: 'http://vocab.getty.edu/aat/300026300'
+- &hagiographies
+  value: hagiographies (literary genre)
+  uri: 'http://vocab.getty.edu/aat/300201063'
+- &hymnals
+  value: hymnals
+  uri: 'http://vocab.getty.edu/aat/300026463'
+- &hymns
+  value: hymns
+  uri: 'http://vocab.getty.edu/aat/300167054'
+- &illustrated_books
+  value: illustrated books
+  uri: 'http://vocab.getty.edu/aat/300311820'
+- &illustrated_works
+  value: illustrated works (documents)
+  uri: 'http://vocab.getty.edu/aat/300417769'
+- &incipits
+  value: incipits
+  uri: 'http://vocab.getty.edu/aat/300055029'
+- &incunabula
+  value: incunabula (books)
+  uri: 'http://vocab.getty.edu/aat/300055021'
+- &indulgences
+  value: indulgences (documents)
+  uri: 'http://vocab.getty.edu/aat/300201452'
+- &childrens_literature
+  value: children's literature
+  uri: 'http://vocab.getty.edu/aat/300263209'
+- &laws
+  value: laws (documents)
+  uri: 'http://vocab.getty.edu/aat/300027894'
+- &lectionaries
+  value: lectionaries
+  uri: 'http://vocab.getty.edu/aat/300026464'
+- &lectures
+  value: lectures
+  uri: 'http://vocab.getty.edu/aat/300026673'
+- &legends
+  value: legends (literary genre)
+  uri: 'http://vocab.getty.edu/aat/300055923'
+- &bills
+  value: bills (legislative records)
+  uri: 'http://vocab.getty.edu/aat/300027888'
+- &librettos
+  value: librettos (documents for music)
+  uri: 'http://vocab.getty.edu/aat/300026424'
+- &literature
+  value: literature (general genre)
+  uri: 'http://vocab.getty.edu/aat/300417585'
+- &lithographs
+  value: lithographs
+  uri: 'http://vocab.getty.edu/aat/300041379'
+- &little_magazines
+  value: little magazines
+  uri: 'http://vocab.getty.edu/aat/300202543'
+- &manuscripts
+  value: manuscripts (documents)
+  uri: 'http://vocab.getty.edu/aat/300028569'
+- &maps
+  value: maps (documents)
+  uri: 'http://vocab.getty.edu/aat/300028094'
+- &masques
+  value: masques (performances)
+  uri: 'http://vocab.getty.edu/aat/300189655'
+- &menus
+  value: menus
+  uri: 'http://vocab.getty.edu/aat/300027191'
+- &military_maps
+  value: military maps
+  uri: 'http://vocab.getty.edu/aat/300028253'
+- &minuets
+  value: minuets
+  uri: 'http://vocab.getty.edu/aat/300343612'
+- &minutes
+  value: minutes (administrative records)
+  uri: 'http://vocab.getty.edu/aat/300027440'
+- &missals
+  value: missals
+  uri: 'http://vocab.getty.edu/aat/300026472'
+- &mixed_media_works
+  value: mixed media works
+  uri: 'http://vocab.getty.edu/aat/300404586'
+- &musical_compositions
+  value: musical compositions
+  uri: 'http://vocab.getty.edu/aat/300417577'
+- &newspapers
+  value: newspapers
+  uri: 'http://vocab.getty.edu/aat/300026656'
+- &sheet_music
+  value: sheet music
+  uri: 'http://vocab.getty.edu/aat/300026430'
+- &notebooks
+  value: notebooks
+  uri: 'http://vocab.getty.edu/aat/300264354'
+- &novels
+  value: novels
+  uri: 'http://vocab.getty.edu/aat/300202580'
+- &odes
+  value: odes
+  uri: 'http://vocab.getty.edu/aat/300253045'
+- &operas
+  value: operas (musical compositions)
+  uri: 'http://vocab.getty.edu/aat/300417587'
+- &periodicals
+  value: periodicals
+  uri: 'http://vocab.getty.edu/aat/300026657'
+- &personal_correspondence
+  value: personal correspondence
+  uri: 'http://vocab.getty.edu/aat/300048730'
+- &personal_narratives
+  value: personal narratives
+  uri: 'http://vocab.getty.edu/aat/300417793'
+- &photobooks
+  value: photobooks
+  uri: 'http://vocab.getty.edu/aat/300265728'
+- &photographs
+  value: photographs
+  uri: 'http://vocab.getty.edu/aat/300046300'
+- &pictorial_maps
+  value: pictorial maps
+  uri: 'http://vocab.getty.edu/aat/300028385'
+- &pictures
+  value: pictures (object genre)
+  uri: 'http://vocab.getty.edu/aat/300264388'
+- &playbills
+  value: playbills
+  uri: 'http://vocab.getty.edu/aat/300027216'
+- &plays
+  value: plays (performing arts compositions)
+  uri: 'http://vocab.getty.edu/aat/300201028'
+- &poems
+  value: poems
+  uri: 'http://vocab.getty.edu/aat/300026451'
+- &political_cartoons
+  value: political cartoons
+  uri: 'http://vocab.getty.edu/aat/300123224'
+- &portraits
+  value: portraits
+  uri: 'http://vocab.getty.edu/aat/300015637'
+- &postcards
+  value: postcards
+  uri: 'http://vocab.getty.edu/aat/300026816'
+- &prayers
+  value: prayers (compositions)
+  uri: 'http://vocab.getty.edu/aat/300400521'
+- &primers
+  value: primers (books)
+  uri: 'http://vocab.getty.edu/aat/300026378'
+- &prints
+  value: prints (visual works)
+  uri: 'http://vocab.getty.edu/aat/300041273'
+- &self-instructional_materials
+  value: self-instructional materials
+  uri: 'http://vocab.getty.edu/aat/300026379'
+- &programs
+  value: programs (documents)
+  uri: 'http://vocab.getty.edu/aat/300027240'
+- &prompt_books
+  value: prompt books
+  uri: 'http://vocab.getty.edu/aat/300026488'
+- &psalms
+  value: psalms
+  uri: 'http://vocab.getty.edu/aat/300379856'
+- &psalters
+  value: psalters (books)
+  uri: 'http://vocab.getty.edu/aat/300026477'
+- &publishers_advertisements
+  value: publishers' advertisements
+  uri: 'http://vocab.getty.edu/aat/300417802'
+- &publishers_catalogs
+  value: publishers' catalogs
+  uri: 'http://vocab.getty.edu/aat/300417739'
+- &quotations
+  value: quotations (texts)
+  uri: 'http://vocab.getty.edu/aat/300026941'
+- &readers
+  value: readers
+  uri: 'http://vocab.getty.edu/aat/300202604'
+- &recipes
+  value: recipes
+  uri: 'http://vocab.getty.edu/aat/300027043'
+- &records
+  value: records (documents)
+  uri: 'http://vocab.getty.edu/aat/300026685'
+- &registers
+  value: registers (lists)
+  uri: 'http://vocab.getty.edu/aat/300027168'
+- &religious_objects
+  value: religious objects
+  uri: 'http://vocab.getty.edu/aat/300234098'
+- &road_maps
+  value: road maps
+  uri: 'http://vocab.getty.edu/aat/300400738'
+- &romances
+  value: romances (medieval narratives)
+  uri: 'http://vocab.getty.edu/aat/300191065'
+- &satires
+  value: satires (literary genre)
+  uri: 'http://vocab.getty.edu/aat/300251297'
+- &scores
+  value: scores (documents for music)
+  uri: 'http://vocab.getty.edu/aat/300026427'
+- &seals
+  value: seals (marks)
+  uri: 'http://vocab.getty.edu/aat/300417667'
+- &sermons
+  value: sermons
+  uri: 'http://vocab.getty.edu/aat/300026669'
+- &sonatas
+  value: sonatas (musical compositions)
+  uri: 'http://vocab.getty.edu/aat/300400548'
+- &songs
+  value: songs (musical compositions)
+  uri: 'http://vocab.getty.edu/aat/300167056'
+- &sonnets
+  value: sonnets
+  uri: 'http://vocab.getty.edu/aat/300266382'
+- &speeches
+  value: speeches (documents)
+  uri: 'http://vocab.getty.edu/aat/300026671'
+- &subscription_lists
+  value: subscription lists
+  uri: 'http://vocab.getty.edu/aat/300027139'
+- &symphonies
+  value: symphonies (musical compositions)
+  uri: 'http://vocab.getty.edu/aat/300400547'
+- &tables
+  value: tables (documents)
+  uri: 'http://vocab.getty.edu/aat/300027364'
+- &textbooks
+  value: textbooks
+  uri: 'http://vocab.getty.edu/aat/300026384'
+- &trade_catalogs
+  value: trade catalogs
+  uri: 'http://vocab.getty.edu/aat/300026063'
+- &visual_works
+  value: visual works (works)
+  uri: 'http://vocab.getty.edu/aat/300191086'
+- &woodcuts
+  value: woodcuts (prints)
+  uri: 'http://vocab.getty.edu/aat/300041405'
+- &world_maps
+  value: world maps
+  uri: 'http://vocab.getty.edu/aat/300028442'
+
+
+## Mappings
+- value: Abridgments
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026037'
+  authority: lcgft
+  replace_with: *abridgements
+- value: Academic dissertations
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00955'
+  authority: rbmscv
+  replace_with: *academic_dissertations
+- value: Academic theses
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026039'
+  authority: lcgft
+  replace_with: *theses
+- value: Account books
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017026136'
+  authority: lcgft
+  replace_with: *account_books
+- value: Acrostics (Poetry)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026214'
+  authority: lcgft
+  replace_with: *acrostics
+- value: Adaptations
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026041'
+  authority: lcgft
+  replace_with: *adaptations
+- value: Addresses
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00038'
+  authority: rbmscv
+  replace_with: *speeches
+- value: Advertisements
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00054'
+  authority: rbmscv
+  replace_with: *advertisements
+- value: Aerial views
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026033'
+  authority: lcgft
+  replace_with: *aerial_views
+- value: Albums (Books)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026173'
+  authority: lcgft
+  replace_with: *albums
+- value: Allegories
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026218'
+  authority: lcgft
+  replace_with: *allegories
+- value: Allegories
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00077'
+  authority: rbmscv
+  replace_with: *allegories
+- value: Almanacs
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00078'
+  authority: rbmscv
+  replace_with: *almanacs
+- value: Almanacs
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026042'
+  authority: lcgft
+  replace_with: *almanacs
+- value: Anecdotes
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026044'
+  authority: lcgft
+  replace_with: *anecdotes
+- value: Antiphonaries (Service books)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026636'
+  authority: lcgft
+  replace_with: *antiphonaries
+- value: Architectural drawings
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027217'
+  authority: lcgft
+  replace_with: *architectural_drawings
+- value: Art
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027218'
+  authority: lcgft
+  replace_with: *works_of_art
+- value: Atlases
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026058'
+  authority: lcgft
+  replace_with: *atlases
+- value: Autobiographies
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026047'
+  authority: lcgft
+  replace_with: *autobiographies
+- value: Bibliographies
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026048'
+  authority: lcgft
+  replace_with: *bibliographies
+- value: Biographies
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026049'
+  authority: lcgft
+  replace_with: *biographies
+- value: Blank forms
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01003'
+  authority: rbmscv
+  replace_with: *blank_forms
+- value: Blank forms
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026050'
+  authority: lcgft
+  replace_with: *blank_forms
+- value: Booksellers' advertisements
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00906'
+  authority: rbmscv
+  replace_with: *booksellers_advertisements
+- value: Booksellers' catalogs
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00907'
+  authority: rbmscv
+  replace_with: *booksellers_catalogs
+- value: Broadsides
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00912'
+  authority: rbmscv
+  replace_with: *broadsides
+- value: Burlesques
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01056'
+  authority: rbmscv
+  replace_with: *burlesques
+- value: By-laws
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026104'
+  authority: lcgft
+  replace_with: *bylaws
+- value: Cadastral maps
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026106'
+  authority: lcgft
+  replace_with: *cadastral_maps
+- value: Calendars
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026055'
+  authority: lcgft
+  replace_with: *calendars
+- value: Cantatas
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026688'
+  authority: lcgft
+  replace_with: *cantatas
+- value: Canticles
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026690'
+  authority: lcgft
+  replace_with: *canticles
+- value: Caricatures
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027224'
+  authority: lcgft
+  replace_with: *caricatures
+- value: Cartoons (Humor)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027225'
+  authority: lcgft
+  replace_with: *cartoons
+- value: Catalogs
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026057'
+  authority: lcgft
+  replace_with: *catalogs
+- value: Catechisms
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026029'
+  authority: lcgft
+  replace_with: *catechisms
+- value: Chants
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026707'
+  authority: lcgft
+  replace_with: *chants
+- value: Chronologies
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026062'
+  authority: lcgft
+  replace_with: *chronologies
+- value: Collages
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027227'
+  authority: lcgft
+  replace_with: *collages
+- value: Comedy plays
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026264'
+  authority: lcgft
+  replace_with: *comedy_plays
+- value: Commentaries
+  uri: 'http://id.loc.gov/authorities/subjects/sh99001957'
+  authority: lcsh
+  replace_with: *commentaries
+- value: Concertos
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026725'
+  authority: lcgft
+  replace_with: *concerts
+- value: Constitutions
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026167'
+  authority: lcgft
+  replace_with: *constitutions
+- value: Constitutions
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01169'
+  authority: rbmscv
+  replace_with: *constitutions
+- value: Controlled vocabularies
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026070'
+  authority: lcgft
+  replace_with: *controlled_vocabularies
+- value: Cookbooks
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026169'
+  authority: lcgft
+  replace_with: *cookbooks
+- value: Death registers
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026082'
+  authority: lcgft
+  replace_with: *death_registers
+- value: Deeds
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026193'
+  authority: lcgft
+  replace_with: *deeds
+- value: Devotional literature
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026057'
+  authority: lcgft
+  replace_with: *devotional_literature
+- value: Devotional literature
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01040'
+  authority: rbmscv
+  replace_with: *devotional_literature
+- value: Dialogues
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00936'
+  authority: rbmscv
+  replace_with: *dialogues
+- value: Dialogues (Literature)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026285'
+  authority: lcgft
+  replace_with: *dialogues
+- value: Diaries
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026085'
+  authority: lcgft
+  replace_with: *diaries
+- value: Dictionaries
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026086'
+  authority: lcgft
+  replace_with: *dictionaries
+- value: Dictionaries
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01241'
+  authority: rbmscv
+  replace_with: *dictionaries
+- value: Directories
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026087'
+  authority: lcgft
+  replace_with: *directories
+- value: Drama
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026297'
+  authority: lcgft
+  replace_with: *drama
+- value: Drawings
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027231'
+  authority: lcgft
+  replace_with: *drawings
+- value: Early maps
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026218'
+  authority: lcgft
+  replace_with: *early_maps
+- value: Encyclopedias
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026092'
+  authority: lcgft
+  replace_with: *encyclopedias
+- value: Engravings
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027232'
+  authority: lcgft
+  replace_with: *engravings
+- value: Ephemerides
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2013025048'
+  authority: lcgft
+  replace_with: *ephemerides
+- value: Epic poetry
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026310'
+  authority: lcgft
+  replace_with: *epic_poems
+- value: Epigrams
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026312'
+  authority: lcgft
+  replace_with: *epigrams
+- value: Epistolary novels
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01186'
+  authority: rbmscv
+  replace_with: *epistolary_novels
+- value: Essays
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026094'
+  authority: lcgft
+  replace_with: *essays
+- value: Examinations
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026096'
+  authority: lcgft
+  replace_with: *examinations
+- value: Excerpts
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026097'
+  authority: lcgft
+  replace_with: *excerpts
+- value: Exhibition catalogs
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026098'
+  authority: lcgft
+  replace_with: *exhibition_catalogs
+- value: Facsimiles
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026099'
+  authority: lcgft
+  replace_with: *facsimiles
+- value: Family histories
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026100'
+  authority: lcgft
+  replace_with: *genealogies
+- value: Fantasias (Music)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2018026018'
+  authority: lcgft
+  replace_with: *fantasias
+- value: Festschriften
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2016026082'
+  authority: lcgft
+  replace_with: *Festschriften
+- value: Fiction
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026339'
+  authority: lcgft
+  replace_with: *fiction
+- value: Fine bindings
+  uri: 'http://id.loc.gov/authorities/subjects/sh85015716'
+  authority: lcsh
+  replace_with: *fine_bindings
+- value: Fore-edge paintings
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00742'
+  authority: rbmscv
+  replace_with: *fore-edge_paintings
+- value: Funeral books
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01389'
+  authority: rbmscv
+  replace_with: *funeral_books
+- value: Funeral sermons
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01390'
+  authority: rbmscv
+  replace_with: *funeral_sermons
+- value: Genealogical tables
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026106'
+  authority: lcgft
+  replace_with: *genealogical_tables
+- value: Graduals (Service books)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026842'
+  authority: lcgft
+  replace_with: *graduals
+- value: Graphs
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026061'
+  authority: lcgft
+  replace_with: *graphs
+- value: Gregorian chants
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026843'
+  authority: lcgft
+  replace_with: *Gregorian_chants
+- value: Guidebooks
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026108'
+  authority: lcgft
+  replace_with: *guidebooks
+- value: Guidebooks
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01289'
+  authority: rbmscv
+  replace_with: *guidebooks
+- value: Hagiographies
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026032'
+  authority: lcgft
+  replace_with: *hagiographies
+- value: Hymnals
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01449'
+  authority: rbmscv
+  replace_with: *hymnals
+- value: Hymns
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026872'
+  authority: lcgft
+  replace_with: *hymns
+- value: Hymns
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01451'
+  authority: rbmscv
+  replace_with: *hymns
+- value: Illustrated books
+  uri: 'http://id.loc.gov/authorities/subjects/sh85064396'
+  authority: lcsh
+  replace_with: *illustrated_books
+- value: Illustrated works
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026111'
+  authority: lcgft
+  replace_with: *illustrated_works
+- value: Incipits
+  uri: 'http://id.loc.gov/authorities/subjects/sh85064749'
+  authority: lcsh
+  replace_with: *incipits
+- value: Incunabula
+  uri: 'http://id.loc.gov/authorities/subjects/sh85064810'
+  authority: lcsh
+  replace_with: *incunabula
+- value: Indulgences
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01464'
+  authority: rbmscv
+  replace_with: *indulgences
+- value: Juvenile literature
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00985'
+  authority: rbmscv
+  replace_with: *childrens_literature
+- value: Laws
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01509'
+  authority: rbmscv
+  replace_with: *laws
+- value: Lectionaries
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026038'
+  authority: lcgft
+  replace_with: *lectionaries
+- value: Lectures
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026122'
+  authority: lcgft
+  replace_with: *lectures
+- value: Legends
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026407'
+  authority: lcgft
+  replace_with: *legends
+- value: Legislative bills
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026360'
+  authority: lcgft
+  replace_with: *bills
+- value: Librettos
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026909'
+  authority: lcgft
+  replace_with: *librettos
+- value: Literature
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026415'
+  authority: lcgft
+  replace_with: *literature
+- value: Lithographs
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027241'
+  authority: lcgft
+  replace_with: *lithographs
+- value: Little magazines
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01543'
+  authority: rbmscv
+  replace_with: *little_magazines
+- value: Manuscripts
+  uri: 'http://id.loc.gov/authorities/subjects/sh85080672'
+  authority: lcsh
+  replace_with: *manuscripts
+- value: Maps
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026387'
+  authority: lcgft
+  replace_with: *maps
+- value: Masques
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01576'
+  authority: rbmscv
+  replace_with: *masques
+- value: Menus
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026127'
+  authority: lcgft
+  replace_with: *menus
+- value: Menus
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01585'
+  authority: rbmscv
+  replace_with: *menus
+- value: Military maps
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026396'
+  authority: lcgft
+  replace_with: *military_maps
+- value: Minuets (Music)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026940'
+  authority: lcgft
+  replace_with: *minuets
+- value: Minutes (Records)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026128'
+  authority: lcgft
+  replace_with: *minutes
+- value: Missals (Service books)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026941'
+  authority: lcgft
+  replace_with: *missals
+- value: Mixed media works
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027244'
+  authority: lcgft
+  replace_with: *mixed_media_works
+- value: Music
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026952'
+  authority: lcgft
+  replace_with: *musical_compositions
+- value: Newspapers
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026132'
+  authority: lcgft
+  replace_with: *newspapers
+- value: Newspapers
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01634'
+  authority: rbmscv
+  replace_with: *newspapers
+- value: Notated music
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014027184'
+  authority: lcgft
+  replace_with: *sheet_music
+- value: Notebooks
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026133'
+  authority: lcgft
+  replace_with: *notebooks
+- value: Novels
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026020'
+  authority: lcgft
+  replace_with: *novels
+- value: Odes
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01648'
+  authority: rbmscv
+  replace_with: *odes
+- value: Operas
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026976'
+  authority: lcgft
+  replace_with: *operas
+- value: Periodicals
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026139'
+  authority: lcgft
+  replace_with: *periodicals
+- value: Periodicals
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01121'
+  authority: rbmscv
+  replace_with: *periodicals
+- value: Personal correspondence
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026141'
+  authority: lcgft
+  replace_with: *personal_correspondence
+- value: Personal narratives
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026142'
+  authority: lcgft
+  replace_with: *personal_narratives
+- value: Photobooks
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026144'
+  authority: lcgft
+  replace_with: *photobooks
+- value: Photographs
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027249'
+  authority: lcgft
+  replace_with: *photographs
+- value: Pictorial maps
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026441'
+  authority: lcgft
+  replace_with: *pictorial_maps
+- value: Pictures
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027251'
+  authority: lcgft
+  replace_with: *pictures
+- value: Playbills
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00312'
+  authority: rbmscv
+  replace_with: *playbills
+- value: Plays
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00282'
+  authority: rbmscv
+  replace_with: *plays
+- value: Poems
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00203'
+  authority: rbmscv
+  replace_with: *poems
+- value: Poetry
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026481'
+  authority: lcgft
+  replace_with: *poems
+- value: Political cartoons
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027253'
+  authority: lcgft
+  replace_with: *political_cartoons
+- value: Portraits
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027254'
+  authority: lcgft
+  replace_with: *portraits
+- value: Postcards
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026151'
+  authority: lcgft
+  replace_with: *postcards
+- value: Prayers
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026049'
+  authority: lcgft
+  replace_with: *prayers
+- value: Prayers
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01760'
+  authority: rbmscv
+  replace_with: *prayers
+- value: Primers (Instructional books)
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01445'
+  authority: rbmscv
+  replace_with: *primers
+- value: Prints
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027255'
+  authority: lcgft
+  replace_with: *prints
+- value: Programmed instructional materials
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026155'
+  authority: lcgft
+  replace_with: *self-instructional_materials
+- value: Programs
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00311'
+  authority: rbmscv
+  replace_with: *programs
+- value: Promptbooks
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01784'
+  authority: rbmscv
+  replace_with: *prompt_books
+- value: Psalms (Music)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014027023'
+  authority: lcgft
+  replace_with: *psalms
+- value: Psalters
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026080'
+  authority: lcgft
+  replace_with: *psalters
+- value: Pubishers' advertisements
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01793'
+  authority: rbmscv
+  replace_with: *publishers_advertisements
+- value: Publishers' advertisements
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01793'
+  authority: rbmscv
+  replace_with: *publishers_advertisements
+- value: Publishers' catalogs
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01794'
+  authority: rbmscv
+  replace_with: *publishers_catalogs
+- value: Quotations
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026159'
+  authority: lcgft
+  replace_with: *quotations
+- value: Readers (Publications)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026160'
+  authority: lcgft
+  replace_with: *readers
+- value: Recipes
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026162'
+  authority: lcgft
+  replace_with: *recipes
+- value: Records (Documents)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026163'
+  authority: lcgft
+  replace_with: *records
+- value: Registers (Lists)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026166'
+  authority: lcgft
+  replace_with: *registers
+- value: Religious materials
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026026'
+  authority: lcgft
+  replace_with: *religious_objects
+- value: Road maps
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026536'
+  authority: lcgft
+  replace_with: *road_maps
+- value: Romances
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026517'
+  authority: lcgft
+  replace_with: *romances
+- value: Romances
+  uri: 'http://id.loc.gov/authorities/subjects/sh85114965'
+  authority: lcsh
+  replace_with: *romances
+- value: Satires
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00917'
+  authority: rbmscv
+  replace_with: *satires
+- value: Scores
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014027077'
+  authority: lcgft
+  replace_with: *scores
+- value: Scores
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01860'
+  authority: rbmscv
+  replace_with: *scores
+- value: Seals
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00267'
+  authority: rbmscv
+  replace_with: *seals
+- value: Sermons
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2015026051'
+  authority: lcgft
+  replace_with: *sermons
+- value: Sermons
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00099'
+  authority: rbmscv
+  replace_with: *sermons
+- value: Sonatas
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014027099'
+  authority: lcgft
+  replace_with: *sonatas
+- value: Songs
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014027103'
+  authority: lcgft
+  replace_with: *songs
+- value: Songs
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01452'
+  authority: rbmscv
+  replace_with: *songs
+- value: Sonnets
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026549'
+  authority: lcgft
+  replace_with: *sonnets
+- value: Speeches
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026363'
+  authority: lcgft
+  replace_with: *speeches
+- value: Subscription lists
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv01939'
+  authority: rbmscv
+  replace_with: *subscription_lists
+- value: Symphonies
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014027121'
+  authority: lcgft
+  replace_with: *symphonies
+- value: Tables (Data)
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026186'
+  authority: lcgft
+  replace_with: *tables
+- value: Textbooks
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2014026191'
+  authority: lcgft
+  replace_with: *textbooks
+- value: Trade catalogs
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00308'
+  authority: rbmscv
+  replace_with: *trade_catalogs
+- value: Visual works
+  uri: 'http://id.loc.gov/vocabulary/rbmscv/cv00942'
+  authority: rbmscv
+  replace_with: *visual_works
+- value: Woodcuts
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2017027269'
+  authority: lcgft
+  replace_with: *woodcuts
+- value: World maps
+  uri: 'http://id.loc.gov/authorities/genreForms/gf2011026743'
+  authority: lcgft
+  replace_with: *world_maps

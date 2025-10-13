@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # alert message application actions
-class AlertMessagesController < ApplicationController
+class AlertMessagesController < UIController
   before_action :authorize
 
   def index

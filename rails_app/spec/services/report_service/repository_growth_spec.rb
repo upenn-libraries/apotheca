@@ -60,9 +60,20 @@ describe ReportService::RepositoryGrowth do
     end
 
     it 'returns expected asset data' do
-      asset_data = report['items'].first['assets']
-      expect(asset_data).to include(report['items'].first['assets'].first)
-      expect(asset_data).to include(report['items'].last['assets'].first)
+      report['items'].each do |item_hash|
+        expect(item_hash['assets'].first).to a_hash_including(
+          'filename' => asset.original_filename, 'mime_type' => asset.technical_metadata.mime_type,
+          'size' => asset.technical_metadata.size
+        )
+      end
+    end
+
+    context 'when item has no assets' do
+      let(:items) { [persist(:item_resource, :with_faker_metadata)] }
+
+      it 'returns empty asset data' do
+        expect(report['items'].first['assets']).to eql []
+      end
     end
   end
 end

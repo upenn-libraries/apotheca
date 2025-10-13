@@ -14,6 +14,10 @@ FactoryBot.define do
       annotations { [{ text: 'Front of Card' }] }
     end
 
+    trait :with_metadata_no_label do
+      annotations { [{ text: 'Illuminated P' }] }
+    end
+
     trait :with_image_file do
       with_preservation_file
 
@@ -96,6 +100,7 @@ FactoryBot.define do
 
     trait :with_derivatives do
       transient do
+        iiif_image { true }
         access { true }
         thumbnail { true }
         text { true }
@@ -110,6 +115,7 @@ FactoryBot.define do
       transient do
         preservation_file { nil }
         preservation_backup { false }
+        iiif_image { false }
         access { false }
         thumbnail { false }
         text { false }
@@ -140,11 +146,11 @@ FactoryBot.define do
         end
 
         change_set = AssetChangeSet.new(asset)
-        change_set.ocr_type = 'printed'
+        change_set.ocr_strategy = 'printed'
         change_set.ocr_language = ['eng']
         derivative_service = DerivativeService::Asset::Derivatives.new(change_set)
 
-        AssetChangeSet::DERIVATIVE_TYPES.each do |type|
+        AssetResource::DERIVATIVE_TYPES.each do |type|
           next unless evaluator.send(type) # Check if derivative was requested.
 
           derivative = derivative_service.send(type)

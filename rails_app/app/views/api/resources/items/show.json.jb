@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+{
+  status: 'success',
+  data: {
+    item: render('api/resources/items/item'),
+    related: {
+      assets: api_item_resource_url(@item.id, assets: true)
+    }
+  }
+}

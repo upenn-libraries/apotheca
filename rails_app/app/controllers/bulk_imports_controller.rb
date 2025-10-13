@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # controller actions for BulkImport
-class BulkImportsController < ApplicationController
+class BulkImportsController < UIController
   load_and_authorize_resource
   # We have to skip auto-loading for the create action because
   # load_and_authorize_resource expects strong parameters

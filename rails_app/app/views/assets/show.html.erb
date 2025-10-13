@@ -15,6 +15,7 @@
   <%= render(StatusBadge::Component.new(test: @asset.preservation_copies_ids.any?, truthy: 'Backed Up', falsey: 'Pending Backup')) %>
   <%= render(StatusBadge::Component.new(test: @asset.thumbnail, truthy: 'Thumbnail', falsey: 'No Thumbnail')) %>
   <%= render(StatusBadge::Component.new(test: @asset.access, truthy: 'Access Copy', falsey: 'No Access Copy')) %>
+  <%= render(StatusBadge::Component.new(test: @asset.iiif_image, truthy: 'IIIF Image', falsey: 'No IIIF Image')) %>
 </div>
 
 <div class="d-flex">

@@ -30,7 +30,7 @@ module ImportService
 
         # Extracting top-level item attributes in a Hash, because we need to know if a key was present or not.
         # @todo Perhaps other values can be added to this hash, a refactor is probably in order.
-        @item_args            = args.slice(:ocr_type)
+        @item_args            = args.slice(:ocr_strategy)
         @errors               = []
       end
 
@@ -42,6 +42,8 @@ module ImportService
         @errors = [] # Clear out previously generated errors.
 
         @errors << 'imported_by must always be provided' unless imported_by
+
+        @errors << "bibnumber #{bibnumber} is invalid or could not be found" unless valid_bibnumber?
 
         @errors.concat(asset_set.errors) if asset_set&.invalid?
       end
@@ -63,6 +65,28 @@ module ImportService
         return nil unless unique_identifier
 
         @item ||= find_item(unique_identifier)
+      end
+
+      # @return [String, nil]
+      def bibnumber
+        return unless descriptive_metadata
+
+        @bibnumber ||= Array.wrap(descriptive_metadata[:bibnumber]).pick(:value)
+      end
+
+      # @return [Hash, nil]
+      def marmite_metadata
+        @marmite_metadata ||= begin
+          MetadataExtractor::Marmite.new(url: Settings.marmite.url).descriptive_metadata(bibnumber)
+        rescue MetadataExtractor::Marmite::Client::Error
+          nil
+        end
+      end
+
+      # @return [TrueClass, FalseClass]
+      def valid_bibnumber?
+        bibnumber.blank? ||
+          (bibnumber.present? && MMSIDValidator::MMS_ID_VALIDITY_REGEX.match?(bibnumber) && marmite_metadata.present?)
       end
 
       def query_service
@@ -172,7 +196,7 @@ module ImportService
 
       # @return [Hash{Symbol->Array<String> | String}]
       def ocr_options
-        { ocr_type: item_args[:ocr_type], ocr_language: ocr_language, viewing_direction: viewing_direction }
+        { ocr_strategy: item_args[:ocr_strategy], ocr_language: ocr_language, viewing_direction: viewing_direction }
       end
 
       # @return [String, nil]
@@ -186,9 +210,7 @@ module ImportService
 
         return language_codes if language_codes.present?
 
-        bibnumber = Array.wrap(descriptive_metadata[:bibnumber]).pick(:value)
-
-        language_codes = extract_language_codes(ils_language_metadata(bibnumber)) if bibnumber.present?
+        language_codes = extract_language_codes(ils_language_metadata) if bibnumber.present?
 
         return language_codes if language_codes.present? || item.blank?
 
@@ -201,10 +223,11 @@ module ImportService
         Array.wrap(data).pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l)&.first(2) }.compact_blank
       end
 
-      # @param bibnumber [String]
       # @return [Array]
-      def ils_language_metadata(bibnumber)
-        MetadataExtractor::Marmite.new(url: Settings.marmite.url).descriptive_metadata(bibnumber)[:language] || []
+      def ils_language_metadata
+        return [] if bibnumber.blank?
+
+        marmite_metadata[:language] || []
       end
     end
   end

@@ -13,7 +13,11 @@ Rails.application.config.to_prepare do
     Sidekiq.configure_server do |config|
       config.redis = redis_connection
       config.error_handlers << proc { |e, context| Honeybadger.notify(e, context: context) }
+      config.super_fetch!
+      config.reliable_scheduler!
     end
+
+    Sidekiq::Client.reliable_push!
 
     Sidekiq.configure_client do |config|
       config.redis = redis_connection

@@ -18,7 +18,11 @@ describe AddDPI do
   end
 
   context 'when the asset has DPI in its technical metadata' do
-    let(:asset) { persist(:asset_resource, :with_image_file) }
+    let(:technical_metadata) { build(:asset_resource, :with_image_file).technical_metadata.to_h }
+    let(:asset) do
+      persist(:asset_resource, :with_image_file,
+              technical_metadata: technical_metadata.merge(dpi: 400, raw: File.read(file_fixture('fits/image.xml'))))
+    end
 
     include_examples 'creates a resource event', :update_asset, 'initiator@example.com', true do
       let(:resource) { updated_asset }
@@ -26,6 +30,10 @@ describe AddDPI do
 
     it 'returns successful' do
       expect(result.success?).to be true
+    end
+
+    it 'updates the dpi' do
+      expect(updated_asset.technical_metadata.dpi).to eq 600
     end
   end
 

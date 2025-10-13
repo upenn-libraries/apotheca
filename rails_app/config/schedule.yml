@@ -23,3 +23,8 @@ repository_growth_report:
   describe: "Generates a repository growth report"
   args:
     - repository_growth
+delete_old_bulk_imports:
+  cron: "0 5 * * 1" # 4am every Monday
+  class: "DeleteOldBulkImportsJob"
+  queue: low
+  describe: "Delete old bulk imports"

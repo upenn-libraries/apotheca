@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+{
+  mime_type: derivative.mime_type,
+  size_bytes: derivative.size,
+  url: url
+}

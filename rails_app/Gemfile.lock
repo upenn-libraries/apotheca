@@ -1,88 +1,88 @@
 GEM
+  remote: https://gems.contribsys.com/
+  specs:
+    sidekiq-pro (7.3.6)
+      sidekiq (>= 7.3.7, < 8)
+
+GEM
   remote: https://rubygems.org/
   specs:
     aasm (5.5.0)
       concurrent-ruby (~> 1.0)
-    actioncable (7.1.5.1)
-      actionpack (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
+    actioncable (7.2.2.2)
+      actionpack (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
       nio4r (~> 2.0)
       websocket-driver (>= 0.6.1)
       zeitwerk (~> 2.6)
-    actionmailbox (7.1.5.1)
-      actionpack (= 7.1.5.1)
-      activejob (= 7.1.5.1)
-      activerecord (= 7.1.5.1)
-      activestorage (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
-      mail (>= 2.7.1)
-      net-imap
-      net-pop
-      net-smtp
-    actionmailer (7.1.5.1)
-      actionpack (= 7.1.5.1)
-      actionview (= 7.1.5.1)
-      activejob (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
-      mail (~> 2.5, >= 2.5.4)
-      net-imap
-      net-pop
-      net-smtp
+    actionmailbox (7.2.2.2)
+      actionpack (= 7.2.2.2)
+      activejob (= 7.2.2.2)
+      activerecord (= 7.2.2.2)
+      activestorage (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
+      mail (>= 2.8.0)
+    actionmailer (7.2.2.2)
+      actionpack (= 7.2.2.2)
+      actionview (= 7.2.2.2)
+      activejob (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
+      mail (>= 2.8.0)
       rails-dom-testing (~> 2.2)
-    actionpack (7.1.5.1)
-      actionview (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
+    actionpack (7.2.2.2)
+      actionview (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
       nokogiri (>= 1.8.5)
       racc
-      rack (>= 2.2.4)
+      rack (>= 2.2.4, < 3.2)
       rack-session (>= 1.0.1)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    actiontext (7.1.5.1)
-      actionpack (= 7.1.5.1)
-      activerecord (= 7.1.5.1)
-      activestorage (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
+      useragent (~> 0.16)
+    actiontext (7.2.2.2)
+      actionpack (= 7.2.2.2)
+      activerecord (= 7.2.2.2)
+      activestorage (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
       globalid (>= 0.6.0)
       nokogiri (>= 1.8.5)
-    actionview (7.1.5.1)
-      activesupport (= 7.1.5.1)
+    actionview (7.2.2.2)
+      activesupport (= 7.2.2.2)
       builder (~> 3.1)
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    activejob (7.1.5.1)
-      activesupport (= 7.1.5.1)
+    activejob (7.2.2.2)
+      activesupport (= 7.2.2.2)
       globalid (>= 0.3.6)
-    activemodel (7.1.5.1)
-      activesupport (= 7.1.5.1)
-    activerecord (7.1.5.1)
-      activemodel (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
+    activemodel (7.2.2.2)
+      activesupport (= 7.2.2.2)
+    activerecord (7.2.2.2)
+      activemodel (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
       timeout (>= 0.4.0)
-    activestorage (7.1.5.1)
-      actionpack (= 7.1.5.1)
-      activejob (= 7.1.5.1)
-      activerecord (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
+    activestorage (7.2.2.2)
+      actionpack (= 7.2.2.2)
+      activejob (= 7.2.2.2)
+      activerecord (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
       marcel (~> 1.0)
-    activesupport (7.1.5.1)
+    activesupport (7.2.2.2)
       base64
       benchmark (>= 0.3)
       bigdecimal
-      concurrent-ruby (~> 1.0, >= 1.0.2)
+      concurrent-ruby (~> 1.0, >= 1.3.1)
       connection_pool (>= 2.2.5)
       drb
       i18n (>= 1.6, < 2)
       logger (>= 1.4.2)
       minitest (>= 5.1)
-      mutex_m
       securerandom (>= 0.3)
-      tzinfo (~> 2.0)
+      tzinfo (~> 2.0, >= 2.0.5)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    after_commit_everywhere (1.5.0)
+    after_commit_everywhere (1.6.0)
       activerecord (>= 4.2)
       activesupport
     ast (2.4.2)
@@ -292,6 +292,7 @@ GEM
       reline (>= 0.4.2)
     iso-639 (0.3.8)
       csv
+    jb (0.8.2)
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -341,7 +342,6 @@ GEM
     msgpack (1.8.0)
     multi_json (1.15.0)
     multipart-post (2.4.1)
-    mutex_m (0.3.0)
     net-http (0.6.0)
       uri
     net-imap (0.5.5)
@@ -403,20 +403,20 @@ GEM
       rack (>= 1.3)
     rackup (2.2.1)
       rack (>= 3)
-    rails (7.1.5.1)
-      actioncable (= 7.1.5.1)
-      actionmailbox (= 7.1.5.1)
-      actionmailer (= 7.1.5.1)
-      actionpack (= 7.1.5.1)
-      actiontext (= 7.1.5.1)
-      actionview (= 7.1.5.1)
-      activejob (= 7.1.5.1)
-      activemodel (= 7.1.5.1)
-      activerecord (= 7.1.5.1)
-      activestorage (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
+    rails (7.2.2.2)
+      actioncable (= 7.2.2.2)
+      actionmailbox (= 7.2.2.2)
+      actionmailer (= 7.2.2.2)
+      actionpack (= 7.2.2.2)
+      actiontext (= 7.2.2.2)
+      actionview (= 7.2.2.2)
+      activejob (= 7.2.2.2)
+      activemodel (= 7.2.2.2)
+      activerecord (= 7.2.2.2)
+      activestorage (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
       bundler (>= 1.15.0)
-      railties (= 7.1.5.1)
+      railties (= 7.2.2.2)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
@@ -424,10 +424,10 @@ GEM
     rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
-    railties (7.1.5.1)
-      actionpack (= 7.1.5.1)
-      activesupport (= 7.1.5.1)
-      irb
+    railties (7.2.2.2)
+      actionpack (= 7.2.2.2)
+      activesupport (= 7.2.2.2)
+      irb (~> 1.13)
       rackup (>= 1.0.0)
       rake (>= 12.2)
       thor (~> 1.0, >= 1.2.2)
@@ -585,7 +585,8 @@ GEM
       rubocop-rake
       rubocop-rspec
     uri (1.0.2)
-    valkyrie (3.2.0)
+    useragent (0.16.11)
+    valkyrie (3.5.0)
       activemodel
       activesupport
       dry-struct
@@ -661,6 +662,7 @@ DEPENDENCIES
   iiif-presentation
   importmap-rails
   iso-639
+  jb
   jbuilder
   kaminari
   mime-types
@@ -669,7 +671,7 @@ DEPENDENCIES
   omniauth-saml (~> 2.0)
   pg (~> 1.1)
   puma (~> 6.0)
-  rails (~> 7.1.0)
+  rails (~> 7.2.0)
   rbtrace
   rouge (~> 4.2)
   rsolr
@@ -677,14 +679,14 @@ DEPENDENCIES
   rspec-sidekiq
   ruby-vips
   sassc-rails
-  sidekiq
   sidekiq-cron
+  sidekiq-pro!
   simplecov
   sprockets-rails
   stimulus-rails
   tzinfo-data
   upennlib-rubocop (~> 1.0)
-  valkyrie (~> 3.2.0)
+  valkyrie (~> 3.5.0)
   valkyrie-shrine
   view_component
   web-console

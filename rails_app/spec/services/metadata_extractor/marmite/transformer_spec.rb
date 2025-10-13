@@ -10,7 +10,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
       let(:expected_metadata) do
         {
           coverage: [{ value: 'Early works to 1800' }],
-          language: [{ value: 'German', uri: 'https://id.loc.gov/vocabulary/iso639-2/ger' }],
+          language: [{ value: 'German', uri: 'http://id.loc.gov/vocabulary/iso639-2/ger' }],
           note: [
             { value: 'Leaves printed on both sides.' },
             { value: 'Signatures: )(⁴ A-Z⁴ a-k⁴ l⁶.' },
@@ -67,7 +67,7 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
           date: [{ value: '1475' }],
           description: [{ value: "Beginning of Sigebert of Gembloux's continuation of the chronicle of Jerome, in which he traces the reigns of kings of various kingdoms.  The last reference is to Pope Zosimus (417 CE; f. 6v)." }],
           item_type: [{ value: 'Text', uri: 'http://purl.org/dc/dcmitype/Text' }],
-          language: [{ value: 'Latin', uri: 'https://id.loc.gov/vocabulary/iso639-2/lat' }],
+          language: [{ value: 'Latin', uri: 'http://id.loc.gov/vocabulary/iso639-2/lat' }],
           extent: [{ value: '10 leaves : paper ; 263 x 190 mm bound to 218 x 155 mm' }],
           name: [
             { value: 'Sigebert, of Gembloux, approximately 1030-1112',
@@ -82,7 +82,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
             { value: 'Decoration: 4-line initial (f. 2r) and 3-line initial (f. 1r) in red; paragraph marks in red followed by initials slashed with red on first page (f. 1r).' },
             { value: "Binding:  Bound with Strabo's Geographia (Paris:  Gourmont, 1512) in 18th-century calf including gilt spine title Initium Chronic[i] Sicebert[i] MS." },
             { value: 'Origin:  Probably written in Belgium, possibly in Gembloux (inscription on title page of printed work, Bibliotheca Gemblacensis), in the late 15th century (Zacour-Hirsch).' },
-            { value: 'Latin.' }
+            { value: 'Latin.' },
+            { value: 'Related Work: Sigebert, of Gembloux, approximately 1030-1112. Chronicon.' }
           ],
           physical_location: [
             { value: 'Kislak Center for Special Collections, Rare Books and Manuscripts, Manuscripts, Folio GrC St812 Ef512g' }
@@ -156,8 +157,8 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
         XML
       end
       let(:languages) do
-        [{ value: 'English', uri: 'https://id.loc.gov/vocabulary/iso639-2/eng' },
-         { value: 'Russian', uri: 'https://id.loc.gov/vocabulary/iso639-2/rus' }]
+        [{ value: 'English', uri: 'http://id.loc.gov/vocabulary/iso639-2/eng' },
+         { value: 'Russian', uri: 'http://id.loc.gov/vocabulary/iso639-2/rus' }]
       end
 
       it 'extracts expected languages' do
@@ -307,6 +308,72 @@ RSpec.describe MetadataExtractor::Marmite::Transformer do
         expect(transformer.to_descriptive_metadata).to eq(
           { note: [{ value: 'Table of contents: formatted contents note statement of responsibility title' },
                    { value: 'Table of contents: more contents' }] }
+        )
+      end
+    end
+
+    context 'when MARC XML contains non-aat terms' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:datafield ind1=" " ind2="7" tag="655">
+                <marc:subfield code="a">Notated music.</marc:subfield>
+                <marc:subfield code="2">lcgft</marc:subfield>
+                <marc:subfield code="0">http://id.loc.gov/authorities/genreForms/gf2014027184</marc:subfield>
+              </marc:datafield>
+              <marc:datafield ind1=" " ind2="7" tag="655">
+                <marc:subfield code="a">Scores.</marc:subfield>
+                <marc:subfield code="2">lcgft</marc:subfield>
+                <marc:subfield code="0">http://id.loc.gov/authorities/genreForms/gf2014027077</marc:subfield>
+              </marc:datafield>
+              <marc:datafield ind1=" " ind2="7" tag="655">
+                <marc:subfield code="a">Piano music.</marc:subfield>
+                <marc:subfield code="2">fast</marc:subfield>
+                <marc:subfield code="0">http://id.worldcat.org/fast/1063403</marc:subfield>
+              </marc:datafield>
+              <marc:datafield ind1=" " ind2="0" tag="655">
+                <marc:subfield code="a">Hybrid Music</marc:subfield>
+              </marc:datafield>
+              <marc:datafield ind1=" " ind2="0" tag="655">
+                <marc:subfield code="a">Manuscripts.</marc:subfield>
+                <marc:subfield code="0">http://id.loc.gov/authorities/subjects/gf2022026088</marc:subfield>
+              </marc:datafield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'maps physical format to aat terms' do
+        expect(transformer.to_descriptive_metadata[:physical_format]).to contain_exactly(
+          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SHEET_MUSIC,
+          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::SCORES,
+          MetadataExtractor::Marmite::Transformer::DefaultMappingRules::AAT::MANUSCRIPTS,
+          { value: 'Hybrid Music' }
+        )
+      end
+    end
+
+    context 'when MARC XML contains a related work in a 7XX field' do
+      let(:xml) do
+        <<~XML
+          <?xml version="1.0"?>
+          <marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+            <marc:record>
+              <marc:datafield ind1="1" ind2="2" tag="700">
+                <marc:subfield code="a">Girard, François Narcisse,</marc:subfield>
+                <marc:subfield code="d">1796-1825.</marc:subfield>
+                <marc:subfield code="t">Traité de l'age du cheval.</marc:subfield>
+              </marc:datafield>
+            </marc:record>
+          </marc:records>
+        XML
+      end
+
+      it 'extracts related work' do
+        expect(transformer.to_descriptive_metadata[:note]).to include(
+          { value: "Related Work: Girard, François Narcisse, 1796-1825. Traité de l'age du cheval." }
         )
       end
     end

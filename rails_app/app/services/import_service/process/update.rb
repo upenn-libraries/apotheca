@@ -96,7 +96,7 @@ module ImportService
             end
 
             if regenerate
-              regenerate_result = GenerateAllDerivatives.new.call(id: i.id.to_s, updated_by: imported_by, republish: false)
+              regenerate_result = generate_all_derivatives
               return regenerate_result unless regenerate_result.success?
             end
 
@@ -114,12 +114,20 @@ module ImportService
 
       private
 
+      # Regenerating all derivatives for item.
+      def generate_all_derivatives
+        GenerateAllDerivatives.new.call(id: item.id.to_s, updated_by: imported_by, republish: false) do |result|
+          result.success { |updated_item| Success(updated_item) }
+          result.failure { |failure_hash| failure(**failure_hash) }
+        end
+      end
+
       # Determines whether asset derivatives should be generated. Asset derivatives
-      # should be regenerated if the ocr_type, viewing_direction or language has changed.
+      # should be regenerated if the ocr_strategy, viewing_direction or language has changed.
       def regenerate_asset_derivatives?
-        return false if item.ocr_type.nil? && item_args[:ocr_type].nil?
+        return false if item.ocr_strategy.nil? && item_args[:ocr_strategy].nil?
         return true if descriptive_metadata.key?(:language) && item.language_codes.uniq.sort != ocr_language.uniq.sort
-        return true if item_args.key?(:ocr_type) && item_args[:ocr_type] != item.ocr_type
+        return true if item_args.key?(:ocr_strategy) && item_args[:ocr_strategy] != item.ocr_strategy
         return true if structural_metadata.key?(:viewing_direction) &&
                        structural_metadata[:viewing_direction] != item.structural_metadata.viewing_direction
 

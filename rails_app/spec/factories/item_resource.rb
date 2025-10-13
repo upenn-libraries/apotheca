@@ -25,13 +25,17 @@ FactoryBot.define do
     end
 
     trait :with_faker_metadata do
+      transient do
+        description_count { 1 }
+      end
+
       users = (0..5).map { Faker::Internet.email }
       human_readable_name { Faker::Book.title }
       descriptive_metadata do
         format_type = ['Book', 'Manuscript', 'Audio Recording', 'Video Recording', 'Ancient Utensil'].sample
         {
           title: [{ value: human_readable_name }],
-          description: Faker::Lorem.paragraphs.map { |p| { value: p } },
+          description: Faker::Lorem.paragraphs(number: description_count).map { |p| { value: p } },
           physical_location: [{ value: Faker::IdNumber.spanish_foreign_citizen_number }],
           collection: [{ value: "#{Faker::GreekPhilosophers.name} collection" }],
           date: [{ value: Faker::Date.backward.to_s }],
@@ -52,7 +56,7 @@ FactoryBot.define do
     end
 
     trait :printed do
-      ocr_type { 'printed' }
+      ocr_strategy { 'printed' }
     end
 
     trait :published do
@@ -64,13 +68,14 @@ FactoryBot.define do
     trait :with_derivatives do
       transient do
         iiif_manifest { true }
+        iiif_v3_manifest { true }
         pdf { true }
       end
 
       after(:create) do |item, evaluator|
         derivative_service = DerivativeService::Item::Derivatives.new(ItemChangeSet.new(item))
 
-        %w[iiif_manifest pdf].each do |type|
+        ItemResource::DERIVATIVE_TYPES.each do |type|
           next unless evaluator.send(type) # Check if derivative was requested.
 
           derivative = derivative_service.send(type)

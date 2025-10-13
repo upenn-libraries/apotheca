@@ -16,7 +16,7 @@ describe GenerateDerivatives do
 
       it 'generates and adds derivatives' do
         expect(updated_asset.derivatives.length).to be 2
-        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access')
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'iiif_image')
       end
     end
 
@@ -37,12 +37,12 @@ describe GenerateDerivatives do
       end
     end
 
-    context 'when ocr_type is blank' do
-      let(:item) { persist(:item_resource, ocr_type: nil, asset_ids: [asset.id]) }
+    context 'when ocr_strategy is blank' do
+      let(:item) { persist(:item_resource, ocr_strategy: nil, asset_ids: [asset.id]) }
 
       it 'does not generate OCR derivatives' do
         expect(updated_asset.derivatives.length).to be 2
-        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access')
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'iiif_image')
       end
     end
 
@@ -56,7 +56,7 @@ describe GenerateDerivatives do
 
       it 'generates OCR derivatives' do
         expect(updated_asset.derivatives.length).to be 5
-        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access', 'textonly_pdf',
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'iiif_image', 'textonly_pdf',
                                                                          'text', 'hocr')
       end
     end
@@ -74,8 +74,8 @@ describe GenerateDerivatives do
 
       it 'generates OCR derivatives' do
         expect(updated_asset.derivatives.length).to be 5
-        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'access', 'textonly_pdf',
-                                                                         'text', 'hocr')
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('thumbnail', 'iiif_image',
+                                                                         'textonly_pdf', 'text', 'hocr')
       end
     end
 
@@ -84,7 +84,7 @@ describe GenerateDerivatives do
 
       it 'does not generate OCR derivatives' do
         expect(updated_asset.derivatives.length).to be 2
-        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+        expect(updated_asset.derivatives.map(&:type)).to contain_exactly('iiif_image', 'thumbnail')
       end
     end
 

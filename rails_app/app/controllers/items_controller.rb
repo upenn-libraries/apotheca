@@ -63,7 +63,7 @@ class ItemsController < ResourcesController
 
   def file
     case params[:type]
-    when *ItemChangeSet::DERIVATIVE_TYPES
+    when *ItemResource::DERIVATIVE_TYPES
       serve_derivative_file resource: @item, type: params[:type].to_sym
     else
       raise UnsupportedFileType, 'Type is not supported'
@@ -181,7 +181,7 @@ class ItemsController < ResourcesController
     end
 
     params.require(:item).permit(
-      :human_readable_name, :thumbnail_asset_id, :ocr_type,
+      :human_readable_name, :thumbnail_asset_id, :ocr_strategy,
       internal_notes: [],
       descriptive_metadata: metadata_fields,
       structural_metadata: [

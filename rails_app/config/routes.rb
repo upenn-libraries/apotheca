@@ -1,12 +1,34 @@
 # frozen_string_literal: true
 
-require 'sidekiq/web'
+require 'sidekiq/pro/web'
 require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   devise_scope :user do
     post 'sign_out', to: 'devise/sessions#destroy'
+  end
+
+  # NOTE: may need to add a subdomain constraint, e.g., `constraints: { subdomain: 'api.apotheca.library' }`
+  scope module: :api do
+    scope :v1, defaults: { format: :json } do
+      scope :items, module: :resources do
+        get '/:uuid', to: 'items#show', as: :api_item_resource
+        get '/lookup/*ark', to: 'items#lookup', constraints: ->(req) { req.params[:ark] =~ %r{\Aark:/\d+/\w+\z} },
+                            as: :api_ark_lookup
+        get '/:uuid/preview', to: 'items#preview', as: :api_item_preview
+        get '/:uuid/pdf', to: 'items#pdf', as: :api_item_pdf
+      end
+      scope :assets, module: :resources do
+        get '/:uuid', to: 'assets#show', as: :api_asset_resource
+        get '/:uuid/:file', to: 'assets#file', as: :api_asset_file
+      end
+    end
+    namespace :iiif do
+      scope :items do
+        get ':uuid/manifest', to: 'items#manifest', as: :api_item_iiif_manifest
+      end
+    end
   end
 
   resources :alert_messages, only: %w[index update]

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A tool for listing file on a specified attached drive at a specified path
-class FileListingToolController < ApplicationController
+class FileListingToolController < UIController
   def tool; end
 
   def file_list
@@ -18,7 +18,7 @@ class FileListingToolController < ApplicationController
         end
       else
         format.csv {}
-        format.json { render json: { error: 'Path invalid!' }, status: :unprocessable_entity }
+        format.json { render json: { error: 'Path invalid!' }, status: :unprocessable_content }
       end
     end
   end

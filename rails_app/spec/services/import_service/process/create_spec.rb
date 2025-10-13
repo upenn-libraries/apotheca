@@ -252,14 +252,14 @@ describe ImportService::Process::Create do
       end
     end
 
-    context 'when ocr_type is blank' do
+    context 'when ocr_strategy is blank' do
       let(:process) do
-        build(:import_process, :create, :with_asset_metadata, ocr_type: nil,
+        build(:import_process, :create, :with_asset_metadata, ocr_strategy: nil,
                                                               metadata: { 'title' => [{ value: 'Trade card' }], 'language' => [{ value: 'English' }, { value: 'German' }] })
       end
 
       it 'does not generate OCR derivatives' do
-        expect(assets[0].derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+        expect(assets[0].derivatives.map(&:type)).to contain_exactly('iiif_image', 'thumbnail')
       end
     end
 
@@ -274,8 +274,8 @@ describe ImportService::Process::Create do
         expect(item).to be_a ItemResource
       end
 
-      it 'adds ocr_type' do
-        expect(item).to have_attributes(ocr_type: 'printed')
+      it 'adds ocr_strategy' do
+        expect(item).to have_attributes(ocr_strategy: 'printed')
       end
 
       it 'generates OCR derivatives' do
@@ -295,7 +295,7 @@ describe ImportService::Process::Create do
       end
 
       it 'does not generate OCR derivatives' do
-        expect(assets[0].derivatives.map(&:type)).to contain_exactly('access', 'thumbnail')
+        expect(assets[0].derivatives.map(&:type)).to contain_exactly('iiif_image', 'thumbnail')
       end
     end
 
