@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ItemQueries do
+describe PostgresQueries::ItemFinder do
   let(:query) do
     described_class.new(query_service: Valkyrie::MetadataAdapter.find(:postgres).query_service)
   end

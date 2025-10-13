@@ -80,23 +80,15 @@ Rails.application.config.to_prepare do
   )
 
   # Register custom queries for Solr
-  [ItemIndex, ItemIlsMetadata].each do |custom_query|
-    Valkyrie::MetadataAdapter.find(:index_solr)
-                             .query_service.custom_queries
-                             .register_query_handler(custom_query)
+  SolrQueries.constants.each do |klass|
+    query_class = "SolrQueries::#{klass}".constantize
+    Valkyrie::MetadataAdapter.find(:index_solr).query_service.custom_queries.register_query_handler(query_class)
   end
 
   # Register custom queries for Postgres adapter
-  [
-    ItemQueries,
-    PreservationBackupQueries,
-    DescriptiveMetadataQueries,
-    TechnicalMetadataQueries,
-    DerivativeQueries
-  ].each do |postgres_query_handler|
-    Valkyrie::MetadataAdapter.find(:postgres)
-                             .query_service.custom_queries
-                             .register_query_handler(postgres_query_handler)
+  PostgresQueries.constants.each do |klass|
+    query_class = "PostgresQueries::#{klass}".constantize
+    Valkyrie::MetadataAdapter.find(:postgres).query_service.custom_queries.register_query_handler(query_class)
   end
 
   ### VALKYRIE OVERRIDES ###

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ItemIlsMetadata do
+RSpec.describe SolrQueries::ItemIlsMetadata do
   subject(:query) { described_class.new query_service: query_service }
 
   let(:query_service) do
