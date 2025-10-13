@@ -227,6 +227,23 @@ rubocop_app_test:
         - rails_app/.rubocop.yml
   tags:
     - build
+
+erb_lint_app_test:
+  stage: test
+  image: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-development
+  needs:
+    - amend_tmp_base_dev_images
+  before_script:
+    - cd ${CI_PROJECT_DIR}/rails_app/
+  script:
+    - bundle exec erb_lint --lint-all
+  rules:
+    - if: $DISABLE_ERB_LINT == "true"
+      when: never
+    - exists:
+        - rails_app/.erb_lint.yml
+  tags:
+    - build
 # -- End - test dev image
 
 # -- Start - build and push temp prod image
@@ -258,6 +275,7 @@ build_and_push_prod_app_image:
   needs:
     - rspec_app_test
     - rubocop_app_test
+    - erb_lint_app_test
   tags:
     - ${RUNNER}
 
