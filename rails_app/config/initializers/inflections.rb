@@ -14,6 +14,7 @@
 
 # These inflection rules are supported:
 ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym 'JSON'
   inflect.acronym 'CSV'
   inflect.acronym 'MARC'
   inflect.acronym 'RDA'
