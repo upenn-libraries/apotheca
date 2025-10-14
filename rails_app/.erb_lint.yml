@@ -3,7 +3,6 @@ EnableDefaultLinters: true
 exclude:
   - '**/vendor/**/*'
   - '**/node_modules/**/*'
-  # - 'app/views/kaminari/_page.html.erb'
 linters:
   Rubocop:
     enabled: true
