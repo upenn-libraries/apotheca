@@ -37,7 +37,7 @@
     <div class="col-md-10">
       <div class="row">
         <div id="fielded-search-area" class="col-md-12" data-controller="item-search--field-search">
-          <% fielded_search_params.each do |field|  %>
+          <% fielded_search_params.each do |field| %>
             <div class="row g-1 mt-2 field-search-set" data-item-search--field-search-target="row">
               <div class="col-md-2">
                 <%= form.select 'search[fielded][][field]', search_fields_options(selected: field[:field]),

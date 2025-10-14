@@ -1,6 +1,6 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
-  <% component.with_breadcrumb(href: "/")      { 'Home' } %>
-  <% component.with_breadcrumb(active: true)   { 'System Actions' } %>
+  <% component.with_breadcrumb(href: '/') { 'Home' } %>
+  <% component.with_breadcrumb(active: true) { 'System Actions' } %>
 <% end %>
 
 <h1>System Actions</h1>

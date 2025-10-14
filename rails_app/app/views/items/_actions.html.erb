@@ -1,5 +1,5 @@
 <%= render(ActionsTable::Component.new) do |component| %>
-  <% if can? :publish, @item  %>
+  <% if can? :publish, @item %>
     <%= component.with_action(description: I18n.t('actions.item.publish.description')) do |action| %>
       <% action.with_form_component(name: 'publish_item', url: publish_item_path(@item, anchor: 'actions'), method: :post) do |form_component| %>
         <% form_component.with_error(@error) if @errors_for == 'publish_item' %>
@@ -8,7 +8,7 @@
     <% end %>
   <% end %>
 
-  <% if can? :unpublish, @item  %>
+  <% if can? :unpublish, @item %>
     <%= component.with_action(description: I18n.t('actions.item.unpublish.description')) do |action| %>
       <% action.with_form_component(name: 'unpublish_item', url: unpublish_item_path(@item, anchor: 'actions'), method: :post) do |form_component| %>
         <% form_component.with_error(@error) if @errors_for == 'unpublish_item' %>
@@ -51,7 +51,7 @@
     <%= component.with_action(description: I18n.t('actions.item.delete.description')) do |action| %>
       <% action.with_form_component(name: 'delete_item', url: item_path(@item, anchor: 'actions'),
                                     method: :delete) do |form_component| %>
-        <% form_component.with_error(@error) if @errors_for == 'delete_item'  %>
+        <% form_component.with_error(@error) if @errors_for == 'delete_item' %>
         <% form_component.with_submit('Delete Item',
                                       confirm: I18n.t('actions.item.delete.confirm_message'),
                                       variant: :danger) %>
