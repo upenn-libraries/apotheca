@@ -3,52 +3,69 @@
   hosts: docker_swarm_manager
   become: true
   tasks:
-    - ansible.builtin.import_tasks: "provision_docker.yml"
+    - name: "Import Docker provisioning tasks"
+      ansible.builtin.import_tasks: "provision_docker.yml"
 
 - name: "Deploy application"
   hosts: docker_swarm_manager
   become: true
   gather_facts: true
   tasks:
-    - ansible.builtin.import_role:
+    - name: "Import Traefik role"
+      ansible.builtin.import_role:
         name: traefik
       tags: traefik
-    - ansible.builtin.import_role:
+    - name: "Import Zookeeper role"
+      ansible.builtin.import_role:
         name: zookeeper
       tags: zookeeper
-    - ansible.builtin.import_role:
+    - name: "Import Zoonavigator role"
+      ansible.builtin.import_role:
         name: zoonavigator
       tags: zoonavigator
-      when: not is_development | default (false, true)
-    - ansible.builtin.import_role:
+      when: not is_development | default(false, true)
+    - name: "Import Solr role"
+      ansible.builtin.import_role:
         name: solr
       tags: solr
-    - ansible.builtin.import_role:
+    - name: "Import Redis role"
+      ansible.builtin.import_role:
         name: redis
       tags: redis
-    - ansible.builtin.import_role:
+    - name: "Import FITS role"
+      ansible.builtin.import_role:
         name: fits
       tags: fits
-    - ansible.builtin.import_role:
+    - name: "Import ClamAV role"
+      ansible.builtin.import_role:
         name: clamav
       tags: clamav
-    - ansible.builtin.import_role:
+    - name: "Import PostgreSQL role"
+      ansible.builtin.import_role:
         name: postgres
       tags: postgres
-    - ansible.builtin.import_role:
+    - name: "Import MinIO role"
+      ansible.builtin.import_role:
         name: minio
       tags: minio
-      when: is_development | default (false, true)
-    - ansible.builtin.import_role:
+      when: is_development | default(false, true)
+    - name: "Import Apotheca role"
+      ansible.builtin.import_role:
         name: apotheca
       tags: apotheca
-    - ansible.builtin.import_role:
+    - name: "Import API role"
+      ansible.builtin.import_role:
+        name: api
+      tags: api
+    - name: "Import Sidekiq role"
+      ansible.builtin.import_role:
         name: sidekiq
       tags: sidekiq
-    - ansible.builtin.import_role:
+    - name: "Import Chrome role"
+      ansible.builtin.import_role:
         name: chrome
       tags: chrome
-      when: is_development | default (false, true)
+      when: is_development | default(false, true)
   post_tasks:
     - name: Recursively remove project directory
       ansible.builtin.file:
@@ -60,4 +77,4 @@
         images_filters:
           dangling: false
           until: 2h
-      when: not is_development | default (false, true)
+      when: not is_development | default(false, true)

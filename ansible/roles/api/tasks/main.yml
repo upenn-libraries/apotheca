@@ -1,0 +1,123 @@
+---
+- name: Create symlink
+  ansible.builtin.file:
+    src: "../../../../rails_app"
+    dest: "{{ role_path + '/files/src' }}"
+    state: link
+    force: true
+  when: is_development | default (false, true)
+  tags: dev_environment
+
+- name: Create api dir
+  ansible.builtin.file:
+    path: "{{ project_root ~ '/api' }}"
+    state: directory
+    mode: "0440"
+
+# Execute development env steps
+- name: Deploy api development environment
+  community.docker.docker_stack:
+    name: "api"
+    compose:
+      - "{{ role_path ~ '/files/docker-compose.yml' }}"
+      - "{{ role_path ~ '/files/docker-compose.dev.yml' }}"
+    state: present
+  environment:
+    API_IMAGE_NAME: "{{ api_image_name }}"
+    API_IMAGE_TAG: "{{ api_image_tag }}"
+    API_PORT: "{{ api_port }}"
+    API_REPLICAS: "{{ api_replicas }}"
+    APP_URL: "{{ apotheca_app_url }}"
+    API_URL: "{{ api_url }}"
+    CHROME_PORT: "{{ chrome.port }}"
+    DATABASE_NAME: "{{ postgres.database }}"
+    DATABASE_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
+    DATABASE_USER: "{{ postgres.user }}"
+    EZID_PASSWORD: "{{ 'apotheca_ezid_password_v' ~ apotheca_versioned_secrets.ezid_password.version }}"
+    EZID_USER: "{{ 'apotheca_ezid_user_v' ~ apotheca_versioned_secrets.ezid_user.version }}"
+    FITS_PORT: "{{ fits.port }}"
+    INGRESS_IP: "{{ ingress_ip }}"
+    MINIO_URL: "http://{{ minio.server_url }}"
+    RAILS_ENV: "{{ api_rails_env }}"
+    RAILS_MASTER_KEY: "{{ 'apotheca_rails_master_key_v' ~ apotheca_versioned_secrets.rails_master_key.version }}"
+    REDIS_SIDEKIQ_USER: "sidekiq"
+    REDIS_SIDEKIQ_PASSWORD: >-
+      {{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users
+      | selectattr('name', 'equalto', 'sidekiq')
+      | map(attribute='version') | join('') }}
+    REDIS_PORT: "{{ redis.port }}"
+    SIDEKIQ_PRO_CREDENTIALS: "{{ 'apotheca_sidekiq_pro_credentials_v' ~ apotheca_versioned_secrets.sidekiq_pro_credentials.version }}"
+    SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
+    SOLR_PROXY_HOST: "{{ solr_proxy_host }}"
+    SOLR_URL: "{{ apotheca_solr_url }}"
+    SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
+    SOLR_TEST_URL: "{{ apotheca_solr_test_url }}"
+
+  changed_when: false
+  no_log: true
+  when: is_development | default (false, true)
+  tags: dev_environment
+
+# Execute staging/production steps
+- name: Copy docker-compose file
+  ansible.builtin.copy:
+    src: "../files/{{ item }}"
+    dest: "{{ project_root ~ '/api/' }}"
+  when: not is_development | default (false, true)
+  loop:
+    - "docker-compose.yml"
+    - "docker-compose.prod.yml"
+
+# Execute staging/production env steps
+- name: Deploy api
+  community.docker.docker_stack:
+    name: "apotheca"
+    compose:
+      - "{{ project_root ~ '/api/docker-compose.yml' }}"
+      - "{{ project_root ~ '/api/docker-compose.prod.yml' }}"
+    state: present
+  environment:
+    API_IMAGE_NAME: "{{ api_image_name }}"
+    API_IMAGE_TAG: "{{ api_image_tag }}"
+    API_PORT: "{{ api_port }}"
+    API_REPLICAS: "{{ api_replicas }}"
+    APP_URL: "{{ apotheca_app_url }}"
+    API_URL: "{{ api_url }}"
+    AWS_ACCESS_KEY_ID: "{{ 'apotheca_aws_access_key_id_v' ~ apotheca_versioned_secrets.aws_access_key_id.version }}"
+    AWS_REGION: "{{ 'apotheca_aws_region_v' ~ apotheca_versioned_secrets.aws_region.version }}"
+    AWS_SECRET_ACCESS_KEY: "{{ 'apotheca_aws_secret_access_key_v' ~ apotheca_versioned_secrets.aws_secret_access_key.version }}"
+    CEPH_ACCESS_KEY_ID: "{{ 'apotheca_ceph_access_key_id_v' ~ apotheca_versioned_secrets.ceph_access_key_id.version }}"
+    CEPH_ENDPOINT: "{{ 'apotheca_ceph_endpoint_v' ~ apotheca_versioned_secrets.ceph_endpoint.version }}"
+    CEPH_SECRET_ACCESS_KEY: "{{ 'apotheca_ceph_secret_access_key_v' ~ apotheca_versioned_secrets.ceph_secret_access_key.version }}"
+    COLENDA_PUBLISH_TOKEN: "{{ 'apotheca_colenda_publish_token_v' ~ apotheca_versioned_secrets.colenda_publish_token.version }}"
+    DATABASE_NAME: "{{ postgres.database }}"
+    DATABASE_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
+    DATABASE_USER: "{{ postgres.user }}"
+    EZID_PASSWORD: "{{ 'apotheca_ezid_password_v' ~ apotheca_versioned_secrets.ezid_password.version }}"
+    EZID_USER: "{{ 'apotheca_ezid_user_v' ~ apotheca_versioned_secrets.ezid_user.version }}"
+    FITS_PORT: "{{ fits.port }}"
+    HONEYBADGER_API_KEY: "{{ 'apotheca_honeybadger_api_key_v' ~ apotheca_versioned_secrets.honeybadger_api_key.version }}"
+    INGRESS_IP: "{{ ingress_ip }}"
+    RAILS_ENV: "{{ apotheca_rails_env }}"
+    RAILS_MASTER_KEY: "{{ 'apotheca_rails_master_key_v' ~ apotheca_versioned_secrets.rails_master_key.version }}"
+    REDIS_PORT: "{{ redis.port }}"
+    REDIS_SIDEKIQ_USER: "sidekiq"
+    REDIS_SIDEKIQ_PASSWORD: >-
+      {{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users
+      | selectattr('name', 'equalto', 'sidekiq')
+      | map(attribute='version') | join('') }}
+    SOLR_PROXY_HOST: "{{ solr_proxy_host }}"
+    SOLR_URL: "{{ apotheca_solr_url }}"
+    SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
+    SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
+    WASABI_ACCESS_KEY_ID: "{{ 'apotheca_wasabi_access_key_id_v' ~ apotheca_versioned_secrets.wasabi_access_key_id.version }}"
+    WASABI_SECRET_ACCESS_KEY: "{{ 'apotheca_wasabi_secret_access_key_v' ~ apotheca_versioned_secrets.wasabi_secret_access_key.version }}"
+  changed_when: false
+  no_log: true
+  when: not is_development | default (false, true)
+
+- name: Recursively remove project directory
+  ansible.builtin.file:
+    path: "{{ project_root ~ '/api' }}"
+    state: absent
+  when: not is_development | default (false, true)
