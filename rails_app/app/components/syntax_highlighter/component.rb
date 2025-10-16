@@ -12,7 +12,7 @@ module SyntaxHighlighter
 
     def call
       render(BaseComponent.new(:pre, class: 'highlight')) do
-        sanitize(highlighted_text, attributes: %w(style))
+        sanitize(highlighted_text, attributes: %w[style])
       end
     end
 
