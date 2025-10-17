@@ -122,7 +122,7 @@ module FileCharacterization
       def sampling_frequency_for(axis)
         @xml.xpath("/xmlns:fits/xmlns:metadata/xmlns:image/xmlns:#{axis}SamplingFrequency")
             .map(&:text)
-            .find { |f| f.match?(/[1-9]\d*/) }
+            .find { |f| f.match?(/[1-9]\d+/) }
             &.to_i
       end
 

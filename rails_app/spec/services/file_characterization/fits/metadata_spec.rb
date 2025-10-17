@@ -76,6 +76,20 @@ describe FileCharacterization::Fits::Metadata do
       end
     end
 
+    context 'when sampling frequency is one digit' do
+      let(:sampling_frequency_xml) do
+        <<~SAMPLINGFREQUENCY
+          <samplingFrequencyUnit toolname="Jhove" toolversion="1.26.1">in.</samplingFrequencyUnit>
+          <xSamplingFrequency toolname="Jhove" toolversion="1.26.1" status="CONFLICT">1</xSamplingFrequency>
+          <ySamplingFrequency toolname="Jhove" toolversion="1.26.1" status="CONFLICT">1</ySamplingFrequency>
+        SAMPLINGFREQUENCY
+      end
+
+      it 'returns nil' do
+        expect(metadata.dpi).to be_nil
+      end
+    end
+
     context 'when multiple sampling frequencies are present' do
       let(:sampling_frequency_xml) do
         <<~SAMPLINGFREQUENCY
