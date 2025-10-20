@@ -22,7 +22,7 @@ services:
       DATABASE_PASSWORD: /run/secrets/database_password
       DATABASE_USER: "{{ postgres.user }}"
       DB_POOL: {{ item.concurrency }}
-      APP_URL: "{{ apotheca_app_url }}"
+      APP_URL: "{{ apotheca_url }}"
       APP_IMAGE_TAG:  "{{ apotheca_image_tag }}"
       RAILS_ENV: "{{ apotheca_rails_env }}"
       REDIS_SIDEKIQ_USER: "sidekiq"

@@ -85,7 +85,6 @@
     SOLR_URL: "{{ apotheca_solr_url }}"
     SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
     SOLR_TEST_URL: "{{ apotheca_solr_test_url }}"
-
   changed_when: false
   no_log: true
   when: is_development | default (false, true)
