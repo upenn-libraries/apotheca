@@ -2,105 +2,62 @@
 
 module MetadataExtractor
   module MARC
-    # Transforms MARC XML into json-based descriptive metadata. The mapping rules specify what mappings actually are.
-    # This class reads in the MARC XML and extracts the data based on the mapping rules given.
+    # Transforms MARC XML into Apotheca's JSON-based descriptive metadata.
+    #
+    # The rules provided specify the field mappings and clean up rules that should be applied
+    # when extracting the data.
     class Transformer
-      attr_reader :marc, :mappings
-
-      # @param marc_xml [String]
-      # @param mappings [MetadataExtractor::MARC::MappingRules]
-      def initialize(marc_xml, mappings: PennMappingRules)
-        @marc = MARCDocument.new(marc_xml)
-        @mappings = mappings
+      # Initialize transformer object.
+      #
+      # @param rules [MetadataExtractor::MARC::Rules] field mappings and cleanup rules
+      def initialize(rules: PennRules)
+        @rules = rules
       end
 
-      # Converts MARC XML (provided by Marmite) to descriptive metadata fields.
-      def to_descriptive_metadata
-        mapped_values = {}
+      # Given a MARC XML document and a set of field mapping and cleanup rules, map the
+      # leader, controlfields and datafields in the MARC record to Apotheca's descriptive metadata schema.
+      def run(xml)
+        marc = MARC::XMLDocument.new(xml)
+        json = transform(marc)
 
-        # For each control and data field, apply each rule defined for that field.
-        (marc.controlfields + marc.datafields).each do |marc_field|
-          mappings.rules_for(marc_field.type, marc_field.tag).each do |config|
-            field = config[:to] # descriptive metadata field name
-
-            next if config[:if] && !config[:if].call(marc_field)
-            next if config[:unless] && config[:unless].call(marc_field)
-
-            values = config.slice(:value, :uri).transform_values { |c|
-              marc_field.values_at(**c.slice(*MARCDocument::VALUES_PARAMS)).join(c[:join]).prepend(c.fetch(:prefix, ''))
-            }.compact_blank
-
-            values = config[:custom].call(marc_field, values) if config[:custom]
-
-            next if values.blank?
-
-            mapped_values[field] ||= []
-            mapped_values[field] << values
-          end
-        end
-
-        # Apply rules that require access to the whole MARC record.
-        mappings.rules_for(:marc).each do |config|
-          field = config[:to] # descriptive metadata field name
-          values = config[:transform].call(marc)
-
-          next if values.blank?
-
-          mapped_values[field] ||= []
-          mapped_values[field] += Array.wrap(values)
-        end
-
-        strip_punctuation!(mapped_values, %i[collection title subject geographic_subject physical_format publisher name coverage])
-        mapped_values[:name]&.each { |n| strip_punctuation!(n, %i[role]) } # Strip punctuation from roles.
-        remove_duplicates!(mapped_values, %i[subject name language physical_format coverage])
-
-        mapped_values
-      rescue StandardError => e
-        raise StandardError, "Error mapping MARC XML: #{e.class} #{e.message}", e.backtrace
+        cleanup(json)
       end
 
       private
 
-      # Strip punctuation from selected fields.
-      def strip_punctuation!(mapped_values, fields)
-        fields.each do |f|
-          next unless mapped_values.key?(f)
+      # Apply field mapping rules to transform MARC XML to Apotheca's descriptive metadata schema.
+      #
+      # @param marc [MetadataExtractor::MARC::XMLDocument]
+      # @return [Hash<Symbol, Array<Hash>] Apotheca descriptive metadata
+      def transform(marc)
+        @rules.field_mappings.transform_values do |mappings|
+          marc.fields.flat_map do |field|
+            mappings.flat_map do |m|
+              next [] unless m.transform?(field)
 
-          mapped_values[f]&.each do |h|
-            # Remove trailing commas and semicolons
-            h[:value].sub!(%r{\s*[,;/:]\s*\Z}, '')
-
-            # Remove periods that are not preceded by a capital letter (could be an abbreviation).
-            h[:value].sub!(/(?<![A-Z])\s*\.\s*\Z/, '')
+              m.transform(field)
+            end
           end
         end
       end
 
-      # Removing duplicate values from selected fields.
-      def remove_duplicates!(mapped_values, fields)
-        fields.each do |f|
-          next unless mapped_values.key?(f)
+      # Apply cleanup rules to values that have been extracted and formated into Apotheca's descriptive
+      # metadata schema.
+      #
+      # @param json [Hash<Symbol, Array<Hash>] Apotheca descriptive metadata
+      # @return [Hash<Symbol, Array<Hash>] Apotheca descriptive metadata
+      def cleanup(json)
+        json.each do |field, values|
+          @rules.cleanups.each do |rule|
+            next unless rule.apply?(field)
 
-          mapped_values[f] = mapped_values[f].group_by { |i| i.except(:uri) }
-                                             .values
-                                             .sum([]) { |values| preferred_values(values) }
+            values = rule.apply(values)
+          end
+
+          json[field] = values
         end
-      end
 
-      # Selecting preferred values in a list of descriptive metadata values. It first removes any duplicates
-      # and returns the value if there is only one. Preferring values with LOC URIs, followed by values with any URI.
-      def preferred_values(values)
-        values = values.uniq
-
-        return values if values.count == 1
-
-        loc_headings = values.select { |v| v[:uri]&.starts_with?(%r{https*://id\.loc\.gov/}) }
-        return loc_headings if loc_headings.present?
-
-        with_uri = values.select { |v| v[:uri].present? }
-        return with_uri if with_uri.present?
-
-        values
+        json.compact_blank
       end
     end
   end

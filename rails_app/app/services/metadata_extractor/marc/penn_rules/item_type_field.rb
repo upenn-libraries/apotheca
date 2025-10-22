@@ -2,9 +2,9 @@
 
 module MetadataExtractor
   module MARC
-    class PennMappingRules
-      # Mapping for RDA content type to DCMI type.
-      module RDAContentTypeToDCMIType
+    class PennRules
+      # Custom rule to transform a 336 datafield containing an RDA content type to a DCMI type.
+      class ItemTypeField < DataField
         DATASET         = { value: 'Dataset',         uri: 'http://purl.org/dc/dcmitype/Dataset'        }.freeze
         IMAGE           = { value: 'Image',           uri: 'http://purl.org/dc/dcmitype/Image'          }.freeze
         MOVING_IMAGE    = { value: 'Moving Image',    uri: 'http://purl.org/dc/dcmitype/MovingImage'    }.freeze
@@ -39,6 +39,23 @@ module MetadataExtractor
           'tactile text' => TEXT,
           'text' => TEXT
         }.freeze
+
+        # Map value in 336 datafield to DCMI Type.
+        #
+        # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
+        # @return [Array<Hash>] list of extracted values in hash containing value and uri
+        def transform(field)
+          super.map do |transformed_value|
+            MAP.fetch(transformed_value[:value], {})
+          end
+        end
+
+        # Only transforming field if source is listed as `rdacontent`.
+        #
+        # @return [Boolean]
+        def transform?(field)
+          super && field.subfield_at('2') == 'rdacontent'
+        end
       end
     end
   end

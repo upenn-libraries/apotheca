@@ -2,11 +2,8 @@
 
 module MetadataExtractor
   module MARC
-
     # Wrapper around MARC XML document to help parse out the different fields.
-    class MARCDocument
-      VALUES_PARAMS = %i[subfields chars].freeze
-
+    class XMLDocument
       attr_reader :xml
 
       delegate_missing_to :xml
@@ -16,22 +13,31 @@ module MetadataExtractor
         @xml.remove_namespaces!
       end
 
+      def fields
+        [leader].compact + controlfields + datafields
+      end
+
+      def leader
+        xml.at_xpath('//records/record/leader')&.then { |node| Leader.new(node, self) }
+      end
+
       def controlfields
-        xml.xpath('//records/record/controlfield').map { |node| ControlField.new(node) }
+        xml.xpath('//records/record/controlfield').map { |node| ControlField.new(node, self) }
       end
 
       def datafields
-        xml.xpath('//records/record/datafield').map { |node| DataField.new(node) }
+        xml.xpath('//records/record/datafield').map { |node| DataField.new(node, self) }
       end
 
       # Base class that implements methods shared by different field classes.
       class BaseField
-        attr_reader :node
+        attr_reader :node, :document
 
         delegate_missing_to :node
 
-        def initialize(node)
+        def initialize(node, document)
           @node = node
+          @document = document # Reference to entire MARC document
         end
 
         def tag
@@ -59,10 +65,10 @@ module MetadataExtractor
         # Return subfield values for the subfield codes given.
         # If '*' is one of the values, all the subfield values are returned.
         #
-        # @param subfields [Array|String] subfield codes
+        # @param subfields [Array|String|Range] subfield codes
         # @return [Array<String>]
         def values_at(subfields:)
-          codes = Array.wrap(subfields)
+          codes = Array(subfields)
           subfields = node.xpath('./subfield')
 
           if codes.first != '*'
@@ -84,12 +90,20 @@ module MetadataExtractor
 
         # Return an array of the values at the given locations.
         #
-        # @param chars [Array|String]
+        # @param chars [Array|String|Range]
         # @return [Array<String>]
         def values_at(chars:)
-          chars = Array.wrap(chars)
+          chars = Array(chars)
           text = node.text
           chars.map { |i| text.slice(i) }
+        end
+      end
+
+      # Wrapper class for leader
+      class Leader < ControlField
+        # Return field type.
+        def type
+          :leader
         end
       end
     end
