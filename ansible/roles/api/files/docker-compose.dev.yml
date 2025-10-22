@@ -6,22 +6,22 @@ services:
       labels:
         - "traefik.enable=true"
 
-        - "traefik.http.routers.api.entrypoints=web"
-        - "traefik.http.routers.api.rule=Host(`${API_URL}` && (PathPrefix(`/iiif`) || PathPrefix(`/v1`)))"
-        - "traefik.http.routers.api.service=api"
-        - "traefik.http.services.api.loadbalancer.server.port=${API_PORT}"
+        - "traefik.http.routers.apotheca_api.entrypoints=web"
+        - "traefik.http.routers.apotheca_api.rule=Host(`${API_URL}`) && (PathPrefix(`/iiif`) || PathPrefix(`/v1`))"
+        - "traefik.http.routers.apotheca_api.service=apotheca_api"
+        - "traefik.http.services.apotheca_api.loadbalancer.server.port=${API_PORT}"
 
-        - "traefik.http.routers.api.middlewares=https"
-        - "traefik.http.middlewares.api.redirectscheme.scheme=https"
-        - "traefik.http.middlewares.api.redirectscheme.permanent=true"
+        - "traefik.http.routers.apotheca_api.middlewares=https"
+        - "traefik.http.middlewares.apotheca_api.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.apotheca_api.redirectscheme.permanent=true"
 
-        - "traefik.http.routers.api_secure.entrypoints=websecure"
-        - "traefik.http.routers.api_secure.rule=Host(`${API_URL}` && (PathPrefix(`/iiif`) || PathPrefix(`/v1`)))"
-        - "traefik.http.routers.api_secure.service=api_secure"
-        - "traefik.http.services.api_secure.loadbalancer.server.port=${API_PORT}"
+        - "traefik.http.routers.apotheca_api_secure.entrypoints=websecure"
+        - "traefik.http.routers.apotheca_api_secure.rule=Host(`${API_URL}`) && (PathPrefix(`/iiif`) || PathPrefix(`/v1`))"
+        - "traefik.http.routers.apotheca_api_secure.service=apotheca_api_secure"
+        - "traefik.http.services.apotheca_api_secure.loadbalancer.server.port=${API_PORT}"
 
-        - "traefik.http.routers.api_secure.tls=true"
-        - "traefik.http.routers.api_secure.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.apotheca_api_secure.tls=true"
+        - "traefik.http.routers.apotheca_api_secure.tls.certresolver=letsencrypt"
     environment:
       APP_UID: ${UID:-1000}
       APP_GID: ${GID:-1000}
