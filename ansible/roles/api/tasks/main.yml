@@ -5,7 +5,7 @@
     dest: "{{ role_path + '/files/src' }}"
     state: link
     force: true
-  when: is_development | default (false, true)
+  when: is_development | default(false, true)
   tags: dev_environment
 
 - name: Create api dir
@@ -17,7 +17,7 @@
 # Execute development env steps
 - name: Deploy api development environment
   community.docker.docker_stack:
-    name: "api"
+    name: "apotheca"
     compose:
       - "{{ role_path ~ '/files/docker-compose.yml' }}"
       - "{{ role_path ~ '/files/docker-compose.dev.yml' }}"
@@ -27,7 +27,8 @@
     API_IMAGE_TAG: "{{ api_image_tag }}"
     API_PORT: "{{ api_port }}"
     API_REPLICAS: "{{ api_replicas }}"
-    APP_URL: "{{ api_url }}"
+    APOTHECA_URL: "{{  apotheca_url }}"
+    API_URL: "{{ api_url }}"
     CHROME_PORT: "{{ chrome.port }}"
     DATABASE_NAME: "{{ postgres.database }}"
     DATABASE_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
@@ -51,36 +52,26 @@
     SOLR_URL: "{{ apotheca_solr_url }}"
     SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
     SOLR_TEST_URL: "{{ apotheca_solr_test_url }}"
-
   changed_when: false
   no_log: true
-  when: is_development | default (false, true)
+  when: is_development | default(false, true)
   tags: dev_environment
-
-# Execute staging/production steps
-- name: Copy docker-compose file
-  ansible.builtin.copy:
-    src: "../files/{{ item }}"
-    dest: "{{ project_root ~ '/api/' }}"
-  when: not is_development | default (false, true)
-  loop:
-    - "docker-compose.yml"
-    - "docker-compose.prod.yml"
 
 # Execute staging/production env steps
 - name: Deploy api
   community.docker.docker_stack:
     name: "apotheca"
     compose:
-      - "{{ project_root ~ '/api/docker-compose.yml' }}"
-      - "{{ project_root ~ '/api/docker-compose.prod.yml' }}"
+      - "{{ role_path ~ '/files/docker-compose.yml' }}"
+      - "{{ role_path ~ '/files/docker-compose.prod.yml' }}"
     state: present
   environment:
     API_IMAGE_NAME: "{{ api_image_name }}"
     API_IMAGE_TAG: "{{ api_image_tag }}"
     API_PORT: "{{ api_port }}"
     API_REPLICAS: "{{ api_replicas }}"
-    APP_URL: "{{ api_url }}"
+    APOTHECA_URL: "{{  apotheca_url }}"
+    API_URL: "{{ api_url }}"
     AWS_ACCESS_KEY_ID: "{{ 'apotheca_aws_access_key_id_v' ~ apotheca_versioned_secrets.aws_access_key_id.version }}"
     AWS_REGION: "{{ 'apotheca_aws_region_v' ~ apotheca_versioned_secrets.aws_region.version }}"
     AWS_SECRET_ACCESS_KEY: "{{ 'apotheca_aws_secret_access_key_v' ~ apotheca_versioned_secrets.aws_secret_access_key.version }}"
