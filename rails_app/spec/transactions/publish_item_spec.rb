@@ -13,7 +13,7 @@ describe PublishItem do
 
       let(:item) { persist(:item_resource, :with_full_assets_all_arranged) }
 
-      include_examples 'creates a resource event', :publish_item, 'initiator@example.com', true do
+      include_examples 'creates a resource event', :publish_item, 'initiator@example.com', false do
         let(:resource) { updated_item }
       end
 
@@ -55,7 +55,7 @@ describe PublishItem do
         persist(:item_resource, asset_ids: [asset.id], structural_metadata: { arranged_asset_ids: [asset.id] })
       end
 
-      include_examples 'creates a resource event', :publish_item, 'initiator@example.com', true do
+      include_examples 'creates a resource event', :publish_item, 'initiator@example.com', false do
         let(:resource) { updated_item }
       end
 

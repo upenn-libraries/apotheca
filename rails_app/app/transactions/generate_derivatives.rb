@@ -38,7 +38,7 @@ class GenerateDerivatives
   end
 
   def record_event(resource)
-    ResourceEvent.record_event_for(resource: resource, event_type: :generate_derivatives)
+    ResourceEvent.record_event_for(resource: resource, event_type: :generate_derivatives, json: false)
   end
 
   # Temporary step so we can set the dpi if it's not already set.

@@ -26,7 +26,7 @@ class PublishItem
   end
 
   def record_event(resource)
-    ResourceEvent.record_event_for(resource: resource, event_type: :publish_item)
+    ResourceEvent.record_event_for(resource: resource, event_type: :publish_item, json: false)
   end
 
   private
