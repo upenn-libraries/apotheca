@@ -10,7 +10,7 @@ describe GenerateDerivatives do
     let(:result) { transaction.call(id: item.asset_ids.first, updated_by: 'initiator@example.com') }
 
     context 'when derivatives not present' do
-      include_examples 'creates a resource event', :generate_derivatives, 'initiator@example.com', true do
+      include_examples 'creates a resource event', :generate_derivatives, 'initiator@example.com', false do
         let(:resource) { updated_asset }
       end
 
@@ -27,7 +27,7 @@ describe GenerateDerivatives do
         end
       end
 
-      include_examples 'creates a resource event', :generate_derivatives, 'initiator@example.com', true do
+      include_examples 'creates a resource event', :generate_derivatives, 'initiator@example.com', false do
         let(:resource) { updated_asset }
       end
 

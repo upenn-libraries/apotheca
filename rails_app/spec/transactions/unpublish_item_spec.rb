@@ -10,7 +10,7 @@ describe UnpublishItem do
     context 'with successful unpublish request' do
       include_context 'with successful unpublish request'
 
-      include_examples 'creates a resource event', :unpublish_item, 'initiator@example.com', true do
+      include_examples 'creates a resource event', :unpublish_item, 'initiator@example.com', false do
         let(:resource) { updated_item }
       end
 
