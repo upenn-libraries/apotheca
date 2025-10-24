@@ -2,10 +2,10 @@
   <div class="card-body table-responsive">
     <div class="row align-items-center">
       <h2 class="card-title col-10 fs-5">
-        <%= "#{@options[:count]}." if @options[:count].present?%>
+        <%= "#{@options[:count]}." if @options[:count].present? %>
         <%= title %>
       </h2>
-      <%= csv_download_link if bulk_export.csv.attached?%>
+      <%= csv_download_link if bulk_export.csv.attached? %>
     </div>
     <table class="table table-striped table-responsive">
       <thead>
@@ -28,7 +28,7 @@
         <td><%= bulk_export.created_by.email %></td>
         <td><%= bulk_export.generated_at&.to_fs(:display) %></td>
         <td>
-          <% if can_regenerate?%>
+          <% if can_regenerate? %>
             <%= render Form::Component.new(name: 'regenerate_bulk_export', url: regenerate_bulk_export_path(@bulk_export), method: :get) do |component| %>
               <% component.with_submit('Regenerate Export', confirm: I18n.t('actions.bulk_export.regenerate.confirm_message'), variant: 'outline-primary') %>
             <% end %>
@@ -49,6 +49,7 @@
           <% end %>
         </td>
       </tr>
+      </tbody>
     </table>
     <h5 class="card-text">Search Parameters</h5>
       <div class="row m-auto">
@@ -58,7 +59,7 @@
           </div>
           <div class="row">
             <div class="col-6 offset-6 col-md-8 offset-md-0 ">
-              <%= "#{bulk_export.search_params.dig('sort', 'field')}," if bulk_export.search_params.dig('sort', 'field')  %>
+              <%= "#{bulk_export.search_params.dig('sort', 'field')}," if bulk_export.search_params.dig('sort', 'field') %>
               <%= bulk_export.search_params.dig('sort', 'direction') %></div>
           </div>
         </div>
@@ -82,7 +83,7 @@
               <ul class="list-group">
                 <% bulk_export.search_params.dig('search', 'fielded')&.each do |fielded| %>
                   <li class="list-group-item border-0 p-0" style=background:none>
-                    <%= "#{fielded.dig("opr")} #{fielded.dig("field")}: '#{fielded.dig("term")}'"%>
+                    <%= "#{fielded['opr']} #{fielded['field']}: '#{fielded['term']}'" %>
                   </li>
                 <% end %>
               </ul>
@@ -93,14 +94,14 @@
           <div class="row mb-2 text-left">
           <strong>Filter(s)</strong>
           </div>
-          <% bulk_export.search_params.dig('filter')&.each do |key, value| %>
+          <% bulk_export.search_params['filter']&.each do |key, value| %>
             <% if value.present? %>
               <div class="row">
-                <div class="col-6 col-md-4 fw-bold"> <%= key.titleize%></div>
+                <div class="col-6 col-md-4 fw-bold"> <%= key.titleize %></div>
                 <% if value.is_a?(Array) %>
                   <div class="col-6 col-md-8">
                   <ul class="list-group">
-                  <%value.each do |element| %>
+                  <% value.each do |element| %>
                     <li class="list-group-item border-0 p-0" style=background:none>
                       <%= element %>
                     </li>
@@ -108,10 +109,10 @@
                   </ul>
                   </div>
                 <% else %>
-                <div class="col-6 col-md-8"><%=value %></div>
-                  <% end  %>
+                <div class="col-6 col-md-8"><%= value %></div>
+                  <% end %>
               </div>
-            <% end  %>
+            <% end %>
           <% end %>
         </div>
       </div>

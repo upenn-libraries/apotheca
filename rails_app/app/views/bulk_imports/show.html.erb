@@ -1,13 +1,12 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
-  <% component.with_breadcrumb(href: "/") do %>Home<% end %>
-  <% component.with_breadcrumb(href: bulk_imports_path) do %>Bulk Imports<% end %>
-  <% component.with_breadcrumb(active: true) do %> <%= @bulk_import.id %><% end %>
+  <% component.with_breadcrumb(href: '/') { 'Home' } %>
+  <% component.with_breadcrumb(href: bulk_imports_path) { 'Bulk Imports' } %>
+  <% component.with_breadcrumb(active: true) { @bulk_import.id } %>
 <% end %>
 
 <%= render(Header::Component.new) do |header| %>
   <%= header.with_title { 'Bulk Import' } %>
 <% end %>
-
 
 <%= render(SummaryInfo::Component.new(cols: 4, id: 'bulk-import-dl')) do |component| %>
 
@@ -52,13 +51,12 @@
 
 <div class="d-flex flex-column flex-sm-row justify-content-sm-between mb-4">
   <h4 class="mb-3 mb-sm-0">Imports</h4>
-  <% if @bulk_import.any_imports_queued? &&  can?(:cancel, @bulk_import)  %>
+  <% if @bulk_import.any_imports_queued? &&  can?(:cancel, @bulk_import) %>
     <%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(@bulk_import), method: :patch) do |component| %>
       <% component.with_submit('Cancel All Queued Imports',
                                confirm: I18n.t('actions.bulk_import.cancel_all.confirm_message'),
                                variant: :secondary,
-                               class: 'btn-sm')
-      %>
+                               class: 'btn-sm') %>
     <% end %>
   <% end %>
 </div>
@@ -69,17 +67,16 @@
        href="<%= bulk_import_path(@bulk_import) %>">
       All
       <span class="badge">
-      <%=@bulk_import.imports.count %>
+      <%= @bulk_import.imports.count %>
       </span>
     </a>
   </li>
   <% Import.aasm.states.each do |s| %>
     <li role="presentation" class="nav-item">
-      <a
-        class="nav-link <%=@state.eql?(s.name.to_s) ? 'active' : ''%><%= @bulk_import.imports.where(state: s.name.to_s).count.zero? ? 'disabled': '' %>"
-         href="<%= @bulk_import.imports.where(state: s.name.to_s).count.positive? ?  url_for(import_state: s) : '' %>">
+      <a class="nav-link <%= @state.eql?(s.name.to_s) ? 'active' : '' %><%= @bulk_import.imports.where(state: s.name.to_s).count.zero? ? 'disabled' : '' %>"
+         href="<%= @bulk_import.imports.where(state: s.name.to_s).count.positive? ? url_for(import_state: s) : '' %>">
         <%= s.name.to_s.titleize %>
-        <span class="badge text-bg-secondary"><%=@bulk_import.imports.where(state: s.name.to_s).count %></span>
+        <span class="badge text-bg-secondary"><%= @bulk_import.imports.where(state: s.name.to_s).count %></span>
       </a>
     </li>
   <% end %>
@@ -106,17 +103,16 @@
             <%= import.human_readable_name %>
         </td>
         <td>
-          <%= import.resource.present? ? link_to(import.resource.unique_identifier, item_path(import.resource))
-                                         : '[Unknown]' %>
+          <%= import.resource.present? ? link_to(import.resource.unique_identifier, item_path(import.resource)) : '[Unknown]' %>
+        </td>
         <td>
           <%= link_to 'Details', bulk_import_import_path(@bulk_import, import), class: 'btn btn-sm btn-primary' %>
         </td>
         <td>
-          <% if import.can_cancel?(current_user)  %>
+          <% if import.can_cancel?(current_user) %>
             <%= render Form::Component.new(name: 'cancel_import', url: cancel_bulk_import_import_path(import.bulk_import, import), method: :patch) do |component| %>
               <% component.with_submit('Cancel', confirm: I18n.t('actions.import.cancel.confirm_message'),
-                                       variant: :secondary, class: 'btn-sm')
-              %>
+                                                 variant: :secondary, class: 'btn-sm') %>
             <% end %>
           <% end %>
         </td>
