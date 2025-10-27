@@ -1,7 +1,15 @@
-<ul class="nav nav-tabs nav-fill" id="<%= @id %>" role="tablist" data-controller="tabs--tabs">
+<ul class="nav nav-tabs nav-fill" id="<%= @id %>" role="tablist" data-controller="tabs--tabs" data-tabs--tabs-default-tab-value="<%= default_tab.id %>">
   <% tabs.each do |tab| %>
     <li class="nav-item" role="presentation">
-      <button class="nav-link <%= tab.active ? 'active' : '' %> <%= tab.disabled ? 'disabled' : '' %>" id="<%= tab.id %>-tab" data-bs-toggle="tab" data-bs-target="#<%= tab.id %>" type="button" role="tab" aria-controls="<%= tab.id %>" aria-selected="<%= tab.active ? 'true' : 'false' %>" data-action="click->tabs--tabs#updateUrl">
+      <button class="nav-link <%= tab.disabled ? 'disabled' : '' %>"
+              id="<%= tab.id %>-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#<%= tab.id %>"
+              type="button"
+              role="tab"
+              aria-controls="<%= tab.id %>"
+              aria-selected="false"
+              data-tabs--tabs-target="tab">
         <%= tab.title %> <%= "<span class='badge bg-primary'>#{tab.count}</span>".html_safe if tab.count %>
       </button>
     </li>
@@ -10,7 +18,8 @@
 
 <div class="tab-content" id="<%= @id %>Content">
   <% tabs.each do |tab| %>
-    <div class="m-3 tab-pane fade <%= tab.active ? 'show active' : '' %>" id="<%= tab.id %>"
+    <div class="m-3 tab-pane fade"
+         id="<%= tab.id %>"
          role="tabpanel"
          aria-labelledby="<%= tab.id %>-tab">
       <%= tab %>
