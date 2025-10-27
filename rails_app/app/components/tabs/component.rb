@@ -11,7 +11,7 @@ module Tabs
 
     # Returns the default tab.
     def default_tab
-      tabs.find { |tab| tab.default }
+      tabs.find(&:default)
     end
 
     # Renders a single Tab component
