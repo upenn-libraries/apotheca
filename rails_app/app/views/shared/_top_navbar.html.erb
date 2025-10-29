@@ -26,7 +26,7 @@
           </li>
         <% end %>
         <li class="nav-item">
-          <a class="nav-link <%= 'active' if request.path.starts_with?(reports_path)  %>"
+          <a class="nav-link <%= 'active' if request.path.starts_with?(reports_path) %>"
              href="<%= reports_path %>">Reports</a>
         </li>
         <% if can? :manage, User %>
@@ -55,7 +55,7 @@
               <%= current_user_presenter.full_name %>
             </a>
             <ul class="dropdown-menu dropdown-menu-end <%= 'fixed-top' if @header_alert&.active? %>">
-              <li><%= button_to "Sign Out",
+              <li><%= button_to 'Sign Out',
                                 sign_out_path(type: current_user.provider),
                                 class: 'dropdown-item' %> </li>
             </ul>

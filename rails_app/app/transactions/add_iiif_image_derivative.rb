@@ -30,7 +30,7 @@ class AddIIIFImageDerivative
   end
 
   def record_event(resource)
-    ResourceEvent.record_event_for(resource: resource, event_type: :generate_derivatives)
+    ResourceEvent.record_event_for(resource: resource, event_type: :generate_derivatives, json: false)
   end
 
   private

@@ -1,7 +1,7 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
-  <% component.with_breadcrumb(href: "/")      { 'Home' } %>
+  <% component.with_breadcrumb(href: '/') { 'Home' } %>
   <% component.with_breadcrumb(href: items_path) { 'Items' } %>
-  <% component.with_breadcrumb(active: true)   { @item.human_readable_name } %>
+  <% component.with_breadcrumb(active: true) { @item.human_readable_name } %>
 <% end %>
 
 <h2><%= @item.human_readable_name %></h2>
@@ -39,13 +39,13 @@
     <%= render partial: 'resources/last_10_events', locals: { resource: @item } %>
   <% end %>
 
-  <% if can? :update, @item  %>
+  <% if can? :update, @item %>
     <% component.with_tab(title: 'Actions') do %>
       <%= render partial: 'actions' %>
     <% end %>
   <% end %>
 
-  <% component.with_tab(title: 'Assets', count: @item.asset_count) do  %>
+  <% component.with_tab(title: 'Assets', count: @item.asset_count) do %>
     <%= render partial: 'assets_list' %>
   <% end %>
 <% end %>

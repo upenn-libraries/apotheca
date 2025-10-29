@@ -111,8 +111,6 @@ Environment specific configuration values should be placed in the appropriate fi
 
 In production, configuration values that are secret should be set using docker secrets and the application should read them in from the filesystem.
 
-
-
 ## Rubocop
 This application uses Rubocop to enforce Ruby and Rails style guidelines. We centralize our UPenn specific configuration in
 [upennlib-rubocop](https://gitlab.library.upenn.edu/dld/upennlib-rubocop).
@@ -130,6 +128,16 @@ rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
 ```
 
 To change our default Rubocop config please open an MR in the `upennlib-rubocop` project.
+
+## ERB Lint
+This application uses [`erb_lint`](https://github.com/Shopify/erb_lint) to enforce styles on template files (`.html.erb`) and enforces our Rubocop styles in any embedded Ruby code. To view our configuration, see [.erb_lint.yml](.erb_lint.yml).
+
+To run `erb_lint`:
+```ruby
+bundle exec erb_lint --lint-all
+```
+
+In future, we might consider transitioning to [herb](https://herb-tools.dev/projects/linter).
 
 ## Contributing
 

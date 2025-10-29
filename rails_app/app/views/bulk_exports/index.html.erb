@@ -1,8 +1,6 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
-  <% component.with_breadcrumb(href: "/") do %>Home
-  <% end %>
-  <% component.with_breadcrumb(active: true) do %>Exports
-  <% end %>
+  <% component.with_breadcrumb(href: '/') { 'Home' } %>
+  <% component.with_breadcrumb(active: true) { 'Exports' } %>
 <% end %>
 
 <%= render(Header::Component.new) do |header| %>
@@ -14,7 +12,7 @@
 <%= page_entries_info @bulk_exports, entry_name: 'export' %>
 
   <% @bulk_exports.map.with_index do |bulk_export, index| %>
-        <%= render(BulkExportCard::Component.new(bulk_export: bulk_export, user: current_user, count: (index +1) )) %>
+    <%= render(BulkExportCard::Component.new(bulk_export: bulk_export, user: current_user, count: (index + 1))) %>
   <% end %>
 
 <%= paginate @bulk_exports %>

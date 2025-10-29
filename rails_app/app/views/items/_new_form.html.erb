@@ -11,9 +11,9 @@
     <% section.with_title { 'Descriptive Metadata' } %>
 
     <% ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field, type| %>
-      <% config = type == :name ? { type: :term, subfields: { role: { type: :term }} } : { type: type } %>
+      <% config = type == :name ? { type: :term, subfields: { role: { type: :term } } } : { type: type } %>
 
-      <% section.with_field(:descriptive_metadata, field, type: :descriptive_metadata, config: config ) %>
+      <% section.with_field(:descriptive_metadata, field, type: :descriptive_metadata, config: config) %>
     <% end %>
   <% end %>
 
@@ -28,7 +28,7 @@
     <% section.with_field(:structural_metadata, :viewing_direction,
                           type: :select,
                           choices: ItemChangeSet::StructuralMetadataChangeSet::VIEWING_DIRECTIONS,
-                          include_blank: true)  %>
+                          include_blank: true) %>
   <% end %>
 
   <% form.with_submit('Save') %>

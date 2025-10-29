@@ -15,7 +15,6 @@
   <% component.with_field(label: 'Initiated By', values: @event.initiated_by) %>
 <% end %>
 
-
 <% if @event.resource_json %>
   <h4>Resource JSON</h4>
   <pre class="bg-light"><%= JSON.pretty_generate(@event.resource_json) %></pre>

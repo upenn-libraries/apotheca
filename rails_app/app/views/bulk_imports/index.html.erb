@@ -1,5 +1,5 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
-  <% component.with_breadcrumb(href: "/") do %>Home<% end %>
+  <% component.with_breadcrumb(href: '/') do %>Home<% end %>
   <% component.with_breadcrumb(active: true) do %>Bulk Imports<% end %>
 <% end %>
 
@@ -45,8 +45,7 @@
                 <%= render Form::Component.new(name: 'cancel_all_imports', url: cancel_bulk_import_path(bulk_import), method: :patch) do |component| %>
                   <% component.with_submit('Cancel',
                                            confirm: I18n.t('actions.bulk_import.cancel_all.confirm_message'),
-                                           variant: :danger, class: 'btn-sm')
-                  %>
+                                           variant: :danger, class: 'btn-sm') %>
                 <% end %>
               <% end %>
             </td>
