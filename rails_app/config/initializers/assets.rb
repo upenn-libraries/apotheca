@@ -7,14 +7,9 @@ Rails.application.config.assets.version = '1.0'
 
 # Add additional assets to the asset load path.
 #
-# We need to add `app/components` to the assets paths so sprockets knows to compile
+# We need to add `app/components` to the assets paths so propshaft knows to look for
 # the `.js` files in that directory.
 Rails.application.config.assets.paths << Rails.root.join('app/components')
-
-# Precompile additional assets.
-# application.js, application.css, and all non-JS/CSS in the app/assets
-# folder are already added.
-Rails.application.config.assets.precompile += %w[bootstrap.min.js popper.js]
 
 # Adding additional js assets that are outside of app/javascript
 Rails.application.config.importmap.cache_sweepers << Rails.root.join('app/components')

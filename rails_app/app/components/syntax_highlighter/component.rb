@@ -12,14 +12,14 @@ module SyntaxHighlighter
 
     def call
       render(BaseComponent.new(:pre, class: 'highlight')) do
-        sanitize(highlighted_text)
+        sanitize(highlighted_text, attributes: %w[style])
       end
     end
 
     private
 
     def highlighted_text
-      formatter = Rouge::Formatters::HTML.new
+      formatter = Rouge::Formatters::HTMLInline.new(Rouge::Themes::Base16::Solarized)
       lexer = Rouge::Lexer.find(language)
       formatter.format(lexer.lex(text))
     end
