@@ -65,10 +65,6 @@ Rails.application.routes.draw do
         post :unpublish, to: 'items#unpublish'
         post :regenerate_all_derivatives, to: 'items#regenerate_all_derivatives'
       end
-
-      collection do
-        post 'refresh_all_ils_metadata', to: 'items#refresh_all_ils_metadata'
-      end
     end
     resources :assets, except: :index do
       member do
@@ -78,7 +74,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :system_actions, only: [:index]
+  resources :system_actions, only: [:index] do
+    collection do
+      post 'refresh_all_ils_metadata', to: 'refresh_all_ils_metadata'
+    end
+  end
 
   resources :events, only: [:index, :show]
 
