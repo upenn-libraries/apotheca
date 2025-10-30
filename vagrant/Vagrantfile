@@ -60,6 +60,7 @@ Vagrant.configure("2") do |config|
     "10.10.2.137" => [
       "apotheca-dev.library.upenn.edu",
       "apotheca-dev.library.upenn.int",
+      "digitalrepository-dev.library.upenn.edu",
       "minio-console-dev.library.upenn.edu",
       "minio-dev.library.upenn.edu",
       "traefik-dev.library.upenn.edu"

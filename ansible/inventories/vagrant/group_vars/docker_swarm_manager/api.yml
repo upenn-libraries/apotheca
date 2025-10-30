@@ -1,0 +1,8 @@
+---
+api_image_name: "apotheca"
+api_image_registry: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
+api_image_tag: "main-development"
+api_port: 3000
+api_rails_env: "development"
+api_replicas: 1
+api_url: "digitalrepository-dev.library.upenn.edu"

@@ -1,0 +1,7 @@
+---
+api_image_name: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
+api_image_tag: "{{ image_tag }}"
+api_port: 3000
+api_rails_env: "staging"
+api_replicas: 1
+api_url: "digitalrepository-staging.library.upenn.edu"
