@@ -57,13 +57,23 @@
   when: is_development | default(false, true)
   tags: dev_environment
 
+# Execute staging/production steps
+- name: Copy docker-compose file
+  copy:
+    src: "../files/{{ item }}"
+    dest: "{{ project_root ~ '/api/' }}"
+  when: not is_development | default (false) == true
+  loop:
+    - "docker-compose.yml"
+    - "docker-compose.prod.yml"
+
 # Execute staging/production env steps
 - name: Deploy api
   community.docker.docker_stack:
     name: "apotheca"
     compose:
-      - "{{ role_path ~ '/files/docker-compose.yml' }}"
-      - "{{ role_path ~ '/files/docker-compose.prod.yml' }}"
+      - "{{ project_root ~ '/api/docker-compose.yml' }}"
+      - "{{ project_root ~ '/api/docker-compose.prod.yml' }}"
     state: present
   environment:
     API_IMAGE_NAME: "{{ api_image_name }}"
