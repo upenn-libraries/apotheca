@@ -2,6 +2,8 @@
   <%= header.with_title(tag: :h3) { 'Assets' } %>
   <%= header.with_link(href: new_asset_path(item_id: @item.id)) { 'Add Asset' } if can? :create, AssetResource %>
   <%= header.with_link(href: reorder_assets_item_path(@item)) { 'Arrange Assets' } if can? :update, @item %>
+  <%= header.with_link(href: preservation_bulk_download_item_path(@item)) { 'Download Preservation Files' } %>
+  <%= header.with_link(href: access_bulk_download_item_path(@item)) { 'Download Access Files' } %>
   <%= header.with_link(href: '#assets-sidebar',
                        'class': 'd-lg-none',
                        'aria-controls': 'assets-sidebar',
