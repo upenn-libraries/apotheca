@@ -7,11 +7,13 @@ module MetadataExtractor
     class Rules
       class << self
         # MARC mappings for fields.
+        # @return [Hash]
         def field_mappings
           @field_mappings ||= {}
         end
 
         # Cleanup tasks to be done after mapping is complete.
+        # @return [Array]
         def cleanups
           @cleanups ||= []
         end
