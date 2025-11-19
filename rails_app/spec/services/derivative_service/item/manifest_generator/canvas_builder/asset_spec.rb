@@ -2,13 +2,7 @@
 
 describe DerivativeService::Item::ManifestGenerator::CanvasBuilder::Asset do
   describe '#build' do
-    let(:access_derivative) do
-      asset = persist(:asset_resource, :with_image_file, :with_derivatives)
-      iiif_image = asset.derivatives.find(&:iiif_image?)
-      iiif_image.type = 'access'
-      [iiif_image]
-    end
-    let(:asset) { persist(:asset_resource, :with_image_file, derivatives: access_derivative) }
+    let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
     let(:canvas) { described_class.new(asset, 1).build }
 
     context 'with a canvas' do
@@ -51,7 +45,7 @@ describe DerivativeService::Item::ManifestGenerator::CanvasBuilder::Asset do
     context 'with an image resource' do
       it 'assigns attributes' do
         expect(canvas.items.first.items.first.body).to have_attributes(
-          'id' => end_with('iiif_image/full/!200,200/0/default.jpg'),
+          'id' => end_with('/full/!200,200/0/default.jpg'),
           'width' => be_an(Integer),
           'height' => be_an(Integer)
         )

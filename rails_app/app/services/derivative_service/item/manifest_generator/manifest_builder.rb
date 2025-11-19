@@ -55,7 +55,7 @@ module DerivativeService
         # @return [Hash] IIIF item thumbnail structure
         # @return [Hash] empty hash if no thumbnail available
         def thumbnail
-          return {} unless item.thumbnail&.pyramidal_tiff
+          return {} unless item.thumbnail&.iiif_image
 
           ThumbnailBuilder.new(item.thumbnail).build
         end
