@@ -14,7 +14,7 @@ module MetadataExtractor
       end
 
       def fields
-        [leader].compact + controlfields + datafields
+        @fields ||= [leader].compact + controlfields + datafields
       end
 
       def leader
@@ -77,7 +77,7 @@ module MetadataExtractor
             end
           end
 
-          subfields.map { |v| v&.text&.strip }.compact_blank!
+          subfields.map { |v| v&.text&.strip }.compact_blank
         end
       end
 
