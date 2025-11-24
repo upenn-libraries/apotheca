@@ -2,7 +2,7 @@
   <% form.with_field(:title, type: :text) %>
   <% form.with_field(:search_params, type: :text, value: params[:search_params], disabled: true) %>
   <% form.with_field(:search_params, type: :hidden, value: params[:search_params].to_json) %>
-  <% form.with_field(:include_assets, type: :switch, label: "Include Assets?") %>
+  <% form.with_field(:include_assets, type: :switch, label: 'Include Assets?') %>
 
   <% form.with_submit('Create') %>
 <% end %>

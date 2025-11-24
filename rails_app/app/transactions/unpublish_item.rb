@@ -25,6 +25,6 @@ class UnpublishItem
   end
 
   def record_event(resource)
-    ResourceEvent.record_event_for(resource: resource, event_type: :unpublish_item)
+    ResourceEvent.record_event_for(resource: resource, event_type: :unpublish_item, json: false)
   end
 end

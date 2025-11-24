@@ -13,14 +13,14 @@
     <% section.with_title { 'Transcription' } %>
 
     <% section.with_field(value: @change_set.transcriptions.first&.mime_type,
-                          field: "asset[transcriptions][][mime_type]",
+                          field: 'asset[transcriptions][][mime_type]',
                           label: 'Mime Type',
                           type: :select,
                           include_blank: true,
                           choices: AssetChangeSet::TRANSCRIPTION_MIME_TYPES) %>
 
     <% section.with_field(value: @change_set.transcriptions.first&.contents,
-                          field: "asset[transcriptions][][contents]",
+                          field: 'asset[transcriptions][][contents]',
                           label: 'Contents',
                           type: :textarea,
                           rows: 10) %>

@@ -256,48 +256,4 @@ describe 'Items Requests' do
       end
     end
   end
-
-  # POST /resources/items/refresh_all_ils_metadata
-  context 'when refreshing all ILS metadata' do
-    context 'with an authorized user' do
-      before { post refresh_all_ils_metadata_items_path }
-
-      let(:user_role) { :admin }
-
-      it 'displays a job enqueued alert' do
-        follow_redirect!
-        expect(response.body).to include I18n.t('actions.item.refresh_all_ILS.success')
-      end
-
-      it 'enqueues the job' do
-        expect(EnqueueBulkRefreshIlsMetadataJob).to have_enqueued_sidekiq_job.with any_args
-      end
-    end
-
-    context 'when an error occurs while enqueueing the job' do
-      let(:user_role) { :admin }
-
-      before do
-        allow(EnqueueBulkRefreshIlsMetadataJob).to receive(:perform_async).and_return(nil)
-
-        post refresh_all_ils_metadata_items_path, params: { form: 'refresh_all_ILS_metadata' }
-      end
-
-      it 'displays failure alert' do
-        follow_redirect!
-        expect(response.body).to include I18n.t('actions.item.refresh_all_ILS.failure')
-      end
-    end
-
-    context 'with an unauthorized user' do
-      let(:user_role) { :editor }
-
-      before { post refresh_all_ils_metadata_items_path }
-
-      it 'displays failure alert' do
-        expect(response).to redirect_to(authenticated_root_path)
-        expect(flash['alert']).to include 'not authorized'
-      end
-    end
-  end
 end

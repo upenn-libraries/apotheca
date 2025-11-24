@@ -1,8 +1,8 @@
 # Ignore ansible galaxy collections
 collections
 
-# Ignore ansible galaxy roles
 roles/apotheca/files/src/*
+roles/api/files/src/*
 roles/atosatto.docker-swarm
 roles/hostsfile
 roles/solr

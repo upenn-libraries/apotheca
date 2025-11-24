@@ -1,3 +1,6 @@
-<li class="page-item<%= ' active' if page.current? %>">
-  <%= link_to page, url, { remote: remote, class: 'page-link', rel: page.next? ? 'next' : (page.prev? ? 'prev' : nil) } %>
+<li class='page-item<%= ' active' if page.current? %>'>
+  <% rel = nil %>
+  <% rel = 'next' if page.next? %>
+  <% rel = 'prev' if page.prev? %>
+  <%= link_to page, url, { remote: remote, class: 'page-link', rel: rel } %>
 </li>

@@ -13,6 +13,9 @@ app_url: <%= ENV.fetch('APP_URL', 'localhost:3000') %>
 # Email for "System User"
 system_user: 'system@apotheca.library.upenn.edu'
 
+# Bootstrap version used to load CSS/JS files from a CDN
+bootstrap_version: 5.3.8
+
 # External Services
 honeybadger:
   api_key: '12345'
