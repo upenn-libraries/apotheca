@@ -26,10 +26,7 @@ describe DerivativeService::Item::ManifestGenerator::V3 do
       end
 
       it 'creates a valid IIIF v3 manifest with correct context' do
-        expect(json['@context']).to include(
-          'http://www.w3.org/ns/anno.jsonld',
-          'http://iiif.io/api/presentation/3/context.json'
-        )
+        expect(json['@context']).to eql('http://iiif.io/api/presentation/3/context.json')
       end
     end
 

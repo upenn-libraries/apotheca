@@ -29,6 +29,7 @@ module DerivativeService
         # @return [Hash] manifest configuration hash
         def manifest_attributes
           hash = {
+            '@context' => 'http://iiif.io/api/presentation/3/context.json',
             'id' => "https://#{Settings.app_url}/iiif/items/#{item.id}/manifest",
             'label' => { 'none' => [item.descriptive_metadata.title.pluck(:value).join('; ')] },
             'required_statement' => required_statement,

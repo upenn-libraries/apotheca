@@ -29,7 +29,7 @@ module DerivativeService
         #
         # @return [String] thumbnail image URL
         def thumbnail_image_url
-          "#{iiif_image_url}/full/!200,200/0/default.jpg"
+          "#{iiif_image_url}/full/!600,600/0/default.jpg"
         end
 
         # Build thumbnail service structure

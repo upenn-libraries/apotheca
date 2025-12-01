@@ -74,7 +74,7 @@ module DerivativeService
           thumbnail_url = iiif_image_url(item.thumbnail)
 
           {
-            "@id": "#{thumbnail_url}/full/!200,200/0/default.jpg",
+            "@id": "#{thumbnail_url}/full/!600,600/0/default.jpg",
             "service": {
               "@context": 'http://iiif.io/api/image/2/context.json',
               "@id": thumbnail_url,
