@@ -4,7 +4,7 @@ module MetadataExtractor
   module MARC
     class PennRules
       # Custom cleanup rule to remove duplicate values.
-      class RemoveDuplicates < Rules::Cleanup
+      class RemoveDuplicates < Rules::FieldCleanup
         # @param values [Array<Hash>]
         # @return [Array<Hash>]
         def apply(values)

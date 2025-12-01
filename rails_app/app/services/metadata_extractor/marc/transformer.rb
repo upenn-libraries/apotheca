@@ -18,46 +18,18 @@ module MetadataExtractor
       # leader, controlfields and datafields in the MARC record to Apotheca's descriptive metadata schema.
       def run(xml)
         marc = MARC::XMLDocument.new(xml)
-        json = transform(marc)
+        descriptive_metadata = {}
 
-        cleanup(json)
-      end
+        @rules.each do |field_rules|
+          values = field_rules.extract_values(marc)
+          values = field_rules.apply_cleanups(values)
 
-      private
+          next if values.blank?
 
-      # Apply field mapping rules to transform MARC XML to Apotheca's descriptive metadata schema.
-      #
-      # @param marc [MetadataExtractor::MARC::XMLDocument]
-      # @return [Hash<Symbol, Array<Hash>] Apotheca descriptive metadata
-      def transform(marc)
-        @rules.field_mappings.transform_values do |mappings|
-          marc.fields.flat_map do |field|
-            mappings.flat_map do |m|
-              next [] unless m.transform?(field)
-
-              m.transform(field)
-            end
-          end
-        end
-      end
-
-      # Apply cleanup rules to values that have been extracted and formated into Apotheca's descriptive
-      # metadata schema.
-      #
-      # @param json [Hash<Symbol, Array<Hash>] Apotheca descriptive metadata
-      # @return [Hash<Symbol, Array<Hash>] Apotheca descriptive metadata
-      def cleanup(json)
-        json.each do |field, values|
-          @rules.cleanups.each do |rule|
-            next unless rule.apply?(field)
-
-            values = rule.apply(values)
-          end
-
-          json[field] = values
+          descriptive_metadata[field_rules.name] = values
         end
 
-        json.compact_blank
+        descriptive_metadata
       end
     end
   end

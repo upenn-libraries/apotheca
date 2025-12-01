@@ -4,7 +4,7 @@ module MetadataExtractor
   module MARC
     class PennRules
       # Custom cleanup rule to trim punctuation.
-      class TrimPunctuation < Rules::Cleanup
+      class TrimPunctuation < Rules::FieldCleanup
         # Trim punctuation from values.
         #
         # @param values [Array<Hash>]

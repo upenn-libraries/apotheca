@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe MetadataExtractor::MARC::PennRules::RemoveDuplicates do
-  let(:cleanup) { described_class.new(fields: []) }
+  let(:cleanup) { described_class.new }
 
   describe '#apply' do
     context 'when removing duplicate names' do

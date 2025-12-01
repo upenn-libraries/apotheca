@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe MetadataExtractor::MARC::PennRules::TrimPunctuation do
-  let(:cleanup) { described_class.new(fields: []) }
+  let(:cleanup) { described_class.new }
 
   describe '#apply' do
     context 'when values have trailing commas, colons or semicolons' do
