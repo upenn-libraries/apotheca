@@ -18,6 +18,8 @@ module Items
             IO.copy_stream(file.io, sink)
           end
         end
+      rescue => e
+        raise 'Error downloading preservation files', cause: e
       end
     end
 
@@ -28,6 +30,8 @@ module Items
         @item.assets.each do |asset|
           add_access_file(zip, asset)
         end
+      rescue => e
+        raise 'Error downloading access files', cause: e
       end
     end
 
