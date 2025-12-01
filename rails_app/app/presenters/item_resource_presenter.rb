@@ -24,6 +24,16 @@ class ItemResourcePresenter < BasePresenter
     descriptive_metadata.title.first[:value].parameterize
   end
 
+  # Return true if any of the assets have preservation files for download.
+  def preservation_bulk_download?
+    object.assets.any?(&:preservation_file_id)
+  end
+
+  # Return true if any of the assets have access or iiif_image files for download.
+  def access_bulk_download?
+    object.assets.any? { |a| a.access || a.iiif_image }
+  end
+
   # @return [ItemResourcePresenter::DescriptiveMetadataPresenter]
   def descriptive_metadata
     @descriptive_metadata ||= DescriptiveMetadataPresenter.new(

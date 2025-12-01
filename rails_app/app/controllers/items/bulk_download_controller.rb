@@ -26,7 +26,7 @@ module Items
     def access
       zip_kit_stream(filename: "#{@item.human_readable_name.parameterize}-access.zip") do |zip|
         @item.assets.each do |asset|
-          asset.access ? add_access_file(zip, asset) : add_iiif_image(zip, asset)
+          add_access_file(zip, asset)
         end
       end
     end
@@ -34,7 +34,17 @@ module Items
     private
 
     # Adding access file to zip.
+    # In cases where there is no access or iiif_image derivative, no access copy is added.
     def add_access_file(zip, asset)
+      if asset.access
+        add_access_derivative(zip, asset)
+      elsif asset.iiif_image
+        add_iiif_image(zip, asset)
+      end
+    end
+
+    # Adding access derivative to zip.
+    def add_access_derivative(zip, asset)
       file = Valkyrie::StorageAdapter.find_by id: asset.access.file_id
       filename = "#{File.basename(asset.original_filename, '.*')}.#{asset.access.extension}"
 
