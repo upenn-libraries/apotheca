@@ -58,6 +58,11 @@ Rails.application.routes.draw do
   scope :resources do
     resources :items do
       member do
+        scope path: :bulk_download, module: :items, controller: :bulk_download, as: :bulk_download do
+          get :access
+          get :preservation
+        end
+
         get :reorder_assets, to: 'items#reorder_assets'
         get 'file/:type', to: 'items#file', as: :file
         post :refresh_ils_metadata, to: 'items#refresh_ils_metadata'

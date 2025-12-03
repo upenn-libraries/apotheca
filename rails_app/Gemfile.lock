@@ -627,6 +627,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.3)
+    zip_kit (6.3.3)
 
 PLATFORMS
   aarch64-linux
@@ -689,6 +690,7 @@ DEPENDENCIES
   view_component
   web-console
   webmock
+  zip_kit
 
 RUBY VERSION
    ruby 3.4.1p0

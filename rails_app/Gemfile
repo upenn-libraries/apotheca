@@ -51,6 +51,7 @@ gem 'upennlib-rubocop', '~> 1.0', require: false
 gem 'valkyrie', '~> 3.5.0'
 gem 'valkyrie-shrine'
 gem 'view_component'
+gem 'zip_kit'
 
 group :development, :test do
   gem 'byebug'

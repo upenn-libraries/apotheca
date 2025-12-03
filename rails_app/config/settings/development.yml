@@ -24,7 +24,7 @@ ezid:
 marmite:
   url: http://mdproc.library.upenn.edu:9292
 image_server:
-  url: http://localhost:8182
+  url: http://10.211.55.2:8182
 
 # File Storage
 minio: &minio
