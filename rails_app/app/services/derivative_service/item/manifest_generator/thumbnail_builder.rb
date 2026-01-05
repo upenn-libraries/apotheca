@@ -47,14 +47,9 @@ module DerivativeService
         #
         # @return [String] IIIF image service URL
         def iiif_image_url
-          raise "#{asset.original_filename} is missing pyramidal tiff" unless asset.pyramidal_tiff
+          raise "#{asset.original_filename} is missing IIIF image" unless asset.iiif_image
 
-          identifier = if asset.pyramidal_tiff.access?
-                         CGI.escape(asset.pyramidal_tiff.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1])
-                       else
-                         asset.id.to_s
-                       end
-          URI.join(Settings.image_server.url, "iiif/3/#{identifier}").to_s
+          URI.join(Settings.image_server.url, "iiif/3/#{asset.id}").to_s
         end
       end
     end
