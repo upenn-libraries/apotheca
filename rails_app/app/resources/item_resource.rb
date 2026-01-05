@@ -45,14 +45,21 @@ class ItemResource < Valkyrie::Resource
     Array.wrap(asset_ids) - structural_metadata.arranged_asset_ids
   end
 
+  # @return [Array<AssetResource]
+  def unarranged_assets
+    @unarranged_assets ||= assets.reject { |a| structural_metadata.arranged_asset_ids.include?(a.id) }
+  end
+
   # @return [Array<AssetResource>]
   def arranged_assets
-    @arranged_assets ||= pg_query_service.find_many_by_ids(ids: structural_metadata.arranged_asset_ids.dup)
-                                         .sort_by { |a| structural_metadata.arranged_asset_ids.index(a.id) }
+    @arranged_assets ||= assets.select { |a| structural_metadata.arranged_asset_ids.include?(a.id) }
+                               .sort_by { |a| structural_metadata.arranged_asset_ids.index(a.id) }
   end
 
   # @return [Array<AssetResource>]
   def assets
+    return [] if asset_ids.blank?
+
     @assets ||= pg_query_service.find_many_by_ids(ids: asset_ids.dup)
   end
 

@@ -13,7 +13,7 @@ describe DerivativeService::Item::ManifestGenerator::ThumbnailBuilder do
 
     it 'assigns top-level attributes' do
       expect(thumbnail).to include(
-        'id' => ending_with('/full/!200,200/0/default.jpg'),
+        'id' => ending_with('/full/!600,600/0/default.jpg'),
         'type' => 'Image',
         'format' => 'image/jpeg',
         'service' => [include(
