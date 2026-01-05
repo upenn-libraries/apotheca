@@ -77,7 +77,7 @@ module DerivativeService
         # @raise [MissingDerivative] if pyramidal derivative is missing
         # @return [void]
         def validate_asset_derivatives!(asset)
-          return if asset.pyramidal_tiff
+          return if asset.iiif_image
 
           raise MissingDerivative, "Derivatives missing for #{asset.original_filename}"
         end

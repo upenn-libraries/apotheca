@@ -2,13 +2,7 @@
 
 describe DerivativeService::Item::ManifestGenerator::CanvasBuilder::Placeholder do
   describe '#build' do
-    let(:access_derivative) do
-      asset = persist(:asset_resource, :with_image_file, :with_derivatives)
-      iiif_image = asset.derivatives.find(&:iiif_image?)
-      iiif_image.type = 'access'
-      [iiif_image]
-    end
-    let(:asset) { persist(:asset_resource, :with_image_file, derivatives: access_derivative) }
+    let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
     let(:canvas) { described_class.new(asset, 1).build }
 
     it 'builds placeholder canvas' do
@@ -50,7 +44,7 @@ describe DerivativeService::Item::ManifestGenerator::CanvasBuilder::Placeholder 
     context 'with placeholder image resource' do
       it 'assigns attributes' do
         expect(canvas.items.first.items.first.body).to have_attributes(
-          'id' => end_with('iiif_image/full/640,/0/default.jpg'),
+          'id' => end_with('/full/640,/0/default.jpg'),
           'width' => 640,
           'height' => 380
         )

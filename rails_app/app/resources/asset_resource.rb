@@ -57,17 +57,22 @@ class AssetResource < Valkyrie::Resource
     end
   end
 
-  # Finds pyramidal tiff from either iiif_image or access derivatives
-  # @return [DerivativeResource, nil]
-  def pyramidal_tiff
-    return iiif_image unless image?
-
-    iiif_image || access
-  end
-
   # Return true if asset is an image
   def image?
     technical_metadata.mime_type.start_with?('image')
+  end
+
+  # Returns url for image in IIIF image service. Defaults to a JPEG image.
+  #
+  # @param region [String] See https://iiif.io/api/image/3.0/#41-region for valid regions
+  # @param size [String] See https://iiif.io/api/image/3.0/#42-size for valid sizes
+  # @param rotation [String] See https://iiif.io/api/image/3.0/#43-rotation for valid rotations
+  # @param format [String] See https://iiif.io/api/image/3.0/#45-format for valid formats
+  # @return [String|nil] url to image in IIIF Image service.
+  def iiif_image_url(region: 'full', size: 'max', rotation: '0', format: 'jpg')
+    return unless iiif_image
+
+    URI.join(Settings.image_server.url, "iiif/3/#{id}/#{region}/#{size}/#{rotation}/default.#{format}").to_s
   end
 
   # Best title to use when trying to represent asset. In most cases Assets should

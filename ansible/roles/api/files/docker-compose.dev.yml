@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  api:
+    deploy:
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.apotheca_api.entrypoints=web"
+        - "traefik.http.routers.apotheca_api.rule=Host(`${API_URL}`) && (PathPrefix(`/iiif`) || PathPrefix(`/v1`))"
+        - "traefik.http.routers.apotheca_api.service=apotheca_api"
+        - "traefik.http.services.apotheca_api.loadbalancer.server.port=${API_PORT}"
+
+        - "traefik.http.routers.apotheca_api.middlewares=https"
+        - "traefik.http.middlewares.apotheca_api.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.apotheca_api.redirectscheme.permanent=true"
+
+        - "traefik.http.routers.apotheca_api_secure.entrypoints=websecure"
+        - "traefik.http.routers.apotheca_api_secure.rule=Host(`${API_URL}`) && (PathPrefix(`/iiif`) || PathPrefix(`/v1`))"
+        - "traefik.http.routers.apotheca_api_secure.service=apotheca_api_secure"
+        - "traefik.http.services.apotheca_api_secure.loadbalancer.server.port=${API_PORT}"
+
+        - "traefik.http.routers.apotheca_api_secure.tls=true"
+        - "traefik.http.routers.apotheca_api_secure.tls.certresolver=letsencrypt"
+    environment:
+      APP_UID: ${UID:-1000}
+      APP_GID: ${GID:-1000}
+      CHROME_URL: "http://chrome:${CHROME_PORT}"
+      SOLR_TEST_URL: "${SOLR_TEST_URL}"
+      MINIO_URL: "${MINIO_URL}"
+    healthcheck:
+      retries: 20
+      start_period: 5m
+    secrets:
+      - sidekiq_pro_credentials
+    volumes:
+      - /apotheca/ansible/roles/api/files/src/:/home/app
+
+secrets:
+  sidekiq_pro_credentials:
+    external: true
+    name: ${SIDEKIQ_PRO_CREDENTIALS}

@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  api:
+    deploy:
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.api.entrypoints=web"
+        - "traefik.http.routers.api.rule=Host(`${API_URL}`) && (PathPrefix(`/iiif`) || PathPrefix(`/v1`))"
+        - "traefik.http.routers.api.service=api"
+        - "traefik.http.services.api.loadbalancer.server.port=${API_PORT}"
+    healthcheck:
+      interval: 10s
+      retries: 6
+      start_period: 60s
+      timeout: 120s
+    secrets:
+      - honeybadger_api_key
+      - aws_region
+      - aws_access_key_id
+      - aws_secret_access_key
+      - ceph_endpoint
+      - ceph_access_key_id
+      - ceph_secret_access_key
+      - colenda_publish_token
+      - wasabi_access_key_id
+      - wasabi_secret_access_key
+    volumes:
+      - api_storage:/home/app/storage
+
+secrets:
+  honeybadger_api_key:
+    external: true
+    name: ${HONEYBADGER_API_KEY}
+  aws_region:
+    external: true
+    name: ${AWS_REGION}
+  aws_access_key_id:
+    external: true
+    name: ${AWS_ACCESS_KEY_ID}
+  aws_secret_access_key:
+    external: true
+    name: ${AWS_SECRET_ACCESS_KEY}
+  ceph_endpoint:
+    external: true
+    name: ${CEPH_ENDPOINT}
+  ceph_access_key_id:
+    external: true
+    name: ${CEPH_ACCESS_KEY_ID}
+  ceph_secret_access_key:
+    external: true
+    name: ${CEPH_SECRET_ACCESS_KEY}
+  colenda_publish_token:
+    external: true
+    name: ${COLENDA_PUBLISH_TOKEN}
+  wasabi_access_key_id:
+    external: true
+    name: ${WASABI_ACCESS_KEY_ID}
+  wasabi_secret_access_key:
+    external: true
+    name: ${WASABI_SECRET_ACCESS_KEY}
+volumes:
+  api_storage:
+    name: api_storage

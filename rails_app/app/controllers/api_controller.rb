@@ -80,11 +80,7 @@ class APIController < ApplicationController
   # @param asset [AssetResource]
   # @param size [String] dimensions of image in valid IIIF format (ex. `w,h`)
   def redirect_to_iiif_image_server(asset, size)
-    # For pyramidal tiffs that are access copies using a slightly different url until we migrate over to using
-    # the iiif_image derivative.
-    identifier = asset.pyramidal_tiff.access? ? "#{asset.id}%2Faccess" : asset.id.to_s
-
-    redirect_to "#{Settings.image_server.url}/iiif/3/#{identifier}/full/#{size}/0/default.jpg",
+    redirect_to "#{Settings.image_server.url}/iiif/3/#{asset.id}/full/#{size}/0/default.jpg",
                 status: :temporary_redirect
   end
 end

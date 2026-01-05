@@ -5,54 +5,17 @@
     dest: "{{ role_path + '/files/src' }}"
     state: link
     force: true
-  when: is_development | default (false, true)
+  when: is_development | default(false, true)
   tags: dev_environment
 
-- name: Create apotheca dir
+- name: Create api dir
   ansible.builtin.file:
-    path: "{{ project_root ~ '/apotheca' }}"
+    path: "{{ project_root ~ '/api' }}"
     state: directory
-    mode: 0440
-
-# If is_development = true and apotheca_build_docker_image = false
-# Pull existing docker image from the registry to reduce build time
-- name: Pull and use docker image from registry
-  block:
-    # Pull registry image
-    - name: Pull the image from the registry
-      community.docker.docker_image:
-        force_source: true
-        force_tag: true
-        name: "{{ apotheca_image_registry ~ ':' ~ apotheca_image_tag }}"
-        repository: "{{ apotheca_image_name ~ ':' ~ apotheca_image_tag }}"
-        source: pull
-      when: is_development and not apotheca_build_docker_image | default (false, true)
-      tags: dev_environment
-  rescue:
-    # An error occurred in the process of pulling the registry so build the image instead
-    - name: Failed to find registry image - building image instead
-      import_tasks: "build_docker_image.yml"
-      when: is_development and not apotheca_build_docker_image | default (false, true)
-      tags: dev_environment
-
-# Build the docker image
-- name: "Build docker image"
-  import_tasks: "build_docker_image.yml"
-  when: is_development and apotheca_build_docker_image | default (false, true)
-  tags: dev_environment
-
-- name: Create versioned docker secrets
-  community.docker.docker_secret:
-    name: "{{ 'apotheca_' ~ item.key ~ '_v' ~ item.value.version }}"
-    data: "{{ item.value.value }}"
-    state: present
-  with_dict:
-    - "{{ apotheca_versioned_secrets }}"
-  tags: versioned_secrets
-  no_log: true
+    mode: "0440"
 
 # Execute development env steps
-- name: Deploy apotheca development environment
+- name: Deploy api development environment
   community.docker.docker_stack:
     name: "apotheca"
     compose:
@@ -60,11 +23,12 @@
       - "{{ role_path ~ '/files/docker-compose.dev.yml' }}"
     state: present
   environment:
-    APP_IMAGE_NAME: "{{ apotheca_image_name }}"
-    APP_IMAGE_TAG: "{{ apotheca_image_tag }}"
-    APP_PORT: "{{ apotheca_port }}"
-    APP_REPLICAS: "{{ apotheca_replicas }}"
-    APP_URL: "{{ apotheca_url }}"
+    API_IMAGE_NAME: "{{ api_image_name }}"
+    API_IMAGE_TAG: "{{ api_image_tag }}"
+    API_PORT: "{{ api_port }}"
+    API_REPLICAS: "{{ api_replicas }}"
+    APOTHECA_URL: "{{  apotheca_url }}"
+    API_URL: "{{ api_url }}"
     CHROME_PORT: "{{ chrome.port }}"
     DATABASE_NAME: "{{ postgres.database }}"
     DATABASE_PASSWORD: "{{ 'postgres_password_v' ~ postgres.versioned_secrets.password.version }}"
@@ -74,10 +38,13 @@
     FITS_PORT: "{{ fits.port }}"
     INGRESS_IP: "{{ ingress_ip }}"
     MINIO_URL: "http://{{ minio.server_url }}"
-    RAILS_ENV: "{{ apotheca_rails_env }}"
+    RAILS_ENV: "{{ api_rails_env }}"
     RAILS_MASTER_KEY: "{{ 'apotheca_rails_master_key_v' ~ apotheca_versioned_secrets.rails_master_key.version }}"
     REDIS_SIDEKIQ_USER: "sidekiq"
-    REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
+    REDIS_SIDEKIQ_PASSWORD: >-
+      {{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users
+      | selectattr('name', 'equalto', 'sidekiq')
+      | map(attribute='version') | join('') }}
     REDIS_PORT: "{{ redis.port }}"
     SIDEKIQ_PRO_CREDENTIALS: "{{ 'apotheca_sidekiq_pro_credentials_v' ~ apotheca_versioned_secrets.sidekiq_pro_credentials.version }}"
     SOLR_PASSWORD: "{{ 'apotheca_solr_password_v' ~ apotheca_versioned_secrets.solr_password.version }}"
@@ -87,33 +54,34 @@
     SOLR_TEST_URL: "{{ apotheca_solr_test_url }}"
   changed_when: false
   no_log: true
-  when: is_development | default (false, true)
+  when: is_development | default(false, true)
   tags: dev_environment
 
 # Execute staging/production steps
 - name: Copy docker-compose file
   copy:
     src: "../files/{{ item }}"
-    dest: "{{ project_root ~ '/apotheca/' }}"
+    dest: "{{ project_root ~ '/api/' }}"
   when: not is_development | default (false) == true
   loop:
     - "docker-compose.yml"
     - "docker-compose.prod.yml"
 
 # Execute staging/production env steps
-- name: Deploy apotheca
+- name: Deploy api
   community.docker.docker_stack:
     name: "apotheca"
     compose:
-      - "{{ project_root ~ '/apotheca/docker-compose.yml' }}"
-      - "{{ project_root ~ '/apotheca/docker-compose.prod.yml' }}"
+      - "{{ project_root ~ '/api/docker-compose.yml' }}"
+      - "{{ project_root ~ '/api/docker-compose.prod.yml' }}"
     state: present
   environment:
-    APP_IMAGE_NAME: "{{ apotheca_image_name }}"
-    APP_IMAGE_TAG: "{{ apotheca_image_tag }}"
-    APP_PORT: "{{ apotheca_port }}"
-    APP_REPLICAS: "{{ apotheca_replicas }}"
-    APP_URL: "{{ apotheca_url }}"
+    API_IMAGE_NAME: "{{ api_image_name }}"
+    API_IMAGE_TAG: "{{ api_image_tag }}"
+    API_PORT: "{{ api_port }}"
+    API_REPLICAS: "{{ api_replicas }}"
+    APOTHECA_URL: "{{  apotheca_url }}"
+    API_URL: "{{ api_url }}"
     AWS_ACCESS_KEY_ID: "{{ 'apotheca_aws_access_key_id_v' ~ apotheca_versioned_secrets.aws_access_key_id.version }}"
     AWS_REGION: "{{ 'apotheca_aws_region_v' ~ apotheca_versioned_secrets.aws_region.version }}"
     AWS_SECRET_ACCESS_KEY: "{{ 'apotheca_aws_secret_access_key_v' ~ apotheca_versioned_secrets.aws_secret_access_key.version }}"
@@ -133,7 +101,10 @@
     RAILS_MASTER_KEY: "{{ 'apotheca_rails_master_key_v' ~ apotheca_versioned_secrets.rails_master_key.version }}"
     REDIS_PORT: "{{ redis.port }}"
     REDIS_SIDEKIQ_USER: "sidekiq"
-    REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
+    REDIS_SIDEKIQ_PASSWORD: >-
+      {{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users
+      | selectattr('name', 'equalto', 'sidekiq')
+      | map(attribute='version') | join('') }}
     SOLR_PROXY_HOST: "{{ solr_proxy_host }}"
     SOLR_URL: "{{ apotheca_solr_url }}"
     SOLR_USERNAME: "{{ 'apotheca_solr_username_v' ~ apotheca_versioned_secrets.solr_username.version }}"
@@ -146,6 +117,6 @@
 
 - name: Recursively remove project directory
   ansible.builtin.file:
-    path: "{{ project_root ~ '/apotheca' }}"
+    path: "{{ project_root ~ '/api' }}"
     state: absent
   when: not is_development | default (false, true)

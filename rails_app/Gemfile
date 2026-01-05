@@ -9,7 +9,6 @@ gem 'aasm'
 gem 'after_commit_everywhere', '~> 1.0'
 gem 'aws-sdk-s3'
 gem 'bootsnap', require: false
-gem 'bootstrap', '~> 5.3.1'
 gem 'bootstrap_form', '~> 5.3.2'
 gem 'cancancan'
 gem 'clamby'
@@ -37,22 +36,22 @@ gem 'omniauth', '~> 2.0'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-saml', '~> 2.0'
 gem 'pg', '~> 1.1'
+gem 'propshaft'
 gem 'puma', '~> 6.0'
 gem 'rails', '~> 8.0.0'
 gem 'rbtrace'
 gem 'rouge', '~> 4.2'
 gem 'rsolr'
 gem 'ruby-vips'
-gem 'sassc-rails' # Use Sass to process CSS
 gem 'sidekiq-cron'
 gem 'sidekiq-pro', source: 'https://gems.contribsys.com'
-gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'upennlib-rubocop', '~> 1.0', require: false
 gem 'valkyrie', '~> 3.5.0'
 gem 'valkyrie-shrine'
 gem 'view_component'
+gem 'zip_kit'
 
 group :development, :test do
   gem 'byebug'

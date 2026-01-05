@@ -58,16 +58,17 @@ Rails.application.routes.draw do
   scope :resources do
     resources :items do
       member do
+        scope path: :bulk_download, module: :items, controller: :bulk_download, as: :bulk_download do
+          get :access
+          get :preservation
+        end
+
         get :reorder_assets, to: 'items#reorder_assets'
         get 'file/:type', to: 'items#file', as: :file
         post :refresh_ils_metadata, to: 'items#refresh_ils_metadata'
         post :publish, to: 'items#publish'
         post :unpublish, to: 'items#unpublish'
         post :regenerate_all_derivatives, to: 'items#regenerate_all_derivatives'
-      end
-
-      collection do
-        post 'refresh_all_ils_metadata', to: 'items#refresh_all_ils_metadata'
       end
     end
     resources :assets, except: :index do
@@ -78,7 +79,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :system_actions, only: [:index]
+  resources :system_actions, only: [:index] do
+    collection do
+      post 'refresh_all_ils_metadata', to: 'refresh_all_ils_metadata'
+    end
+  end
 
   resources :events, only: [:index, :show]
 

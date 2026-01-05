@@ -258,27 +258,6 @@ describe 'Resource Item API' do
         expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
       end
     end
-
-    context 'when iiif image is not present but access image derivative is' do
-      let(:access_derivative) do
-        asset = persist(:asset_resource, :with_image_file, :with_derivatives)
-        iiif_image = asset.derivatives.find(&:iiif_image?)
-        iiif_image.type = 'access'
-        [iiif_image]
-      end
-      let(:asset) { persist(:asset_resource, :with_image_file, derivatives: access_derivative) }
-      let(:item) do
-        persist(:item_resource, :published, asset_ids: [asset.id], thumbnail_asset_id: [asset.id],
-                                            structural_metadata: { arranged_asset_ids: [asset.id] })
-      end
-      let(:size) { '400,400' }
-
-      it 'uses the expected identifier when redirecting to the IIIF image url' do
-        url = %r{\A#{Settings.image_server.url}/iiif/3/#{item.thumbnail.id}%2Faccess/full/!#{size}/0/default.jpg}
-        expect(response).to redirect_to(url)
-        expect(response).to have_http_status(:temporary_redirect)
-      end
-    end
   end
 
   describe 'GET #pdf' do

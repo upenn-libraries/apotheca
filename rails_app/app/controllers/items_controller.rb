@@ -106,14 +106,6 @@ class ItemsController < ResourcesController
     end
   end
 
-  def refresh_all_ils_metadata
-    if EnqueueBulkRefreshIlsMetadataJob.perform_async(current_user.email)
-      redirect_to system_actions_path, notice: I18n.t('actions.item.refresh_all_ILS.success')
-    else
-      redirect_to system_actions_path, notice: I18n.t('actions.item.refresh_all_ILS.failure')
-    end
-  end
-
   private
 
   # Explicitly set the default per page for initial page load (when there are no params) only for the ItemResource
@@ -160,7 +152,7 @@ class ItemsController < ResourcesController
 
   def load_assets
     @arranged_assets = @item.arranged_assets
-    @unarranged_assets = pg_query_service.find_many_by_ids ids: @item.unarranged_asset_ids.deep_dup
+    @unarranged_assets = @item.unarranged_assets
   end
 
   # @param [StandardError] exception

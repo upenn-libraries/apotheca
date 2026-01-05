@@ -50,7 +50,7 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
       it 'includes thumbnail' do
         expect(json['thumbnail']).to a_hash_including(
           '@id' => starting_with(Settings.image_server.url.to_s)
-                     .and(ending_with('/full/!200,200/0/default.jpg')),
+                     .and(ending_with('/full/!600,600/0/default.jpg')),
           'service' => {
             '@context' => 'http://iiif.io/api/image/2/context.json',
             '@id' => starting_with("#{Settings.image_server.url}/iiif/2"),
@@ -153,28 +153,6 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
 
       it 'returns nil' do
         expect(iiif_service.manifest).to be_nil
-      end
-    end
-
-    context 'when the iiif_image is not present but the access image derivative is' do
-      subject(:json) { JSON.parse(iiif_service.manifest.read) }
-
-      let(:access_derivative) do
-        asset = persist(:asset_resource, :with_image_file, :with_derivatives)
-        iiif_image = asset.derivatives.find(&:iiif_image?)
-        iiif_image.type = 'access'
-        [iiif_image]
-      end
-      let(:asset) { persist(:asset_resource, :with_image_file, derivatives: access_derivative) }
-
-      let(:item) do
-        persist(:item_resource, asset_ids: [asset.id], thumbnail_asset_id: [asset.id],
-                                structural_metadata: { arranged_asset_ids: [asset.id] })
-      end
-
-      it 'uses the expected identifier in the IIIF image url' do
-        identifier = CGI.escape(asset.pyramidal_tiff.file_id.to_s.split(Valkyrie::Storage::Shrine::PROTOCOL)[1])
-        expect(json['thumbnail']['service']['@id']).to eq("#{Settings.image_server.url}/iiif/2/#{identifier}")
       end
     end
   end

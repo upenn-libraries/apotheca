@@ -13,10 +13,10 @@
     <% end %>
   <% end %>
 
-  <% if  can?(:delete, @asset) %>
+  <% if can?(:delete, @asset) %>
     <%= component.with_action(description: I18n.t('actions.asset.delete.description')) do |action| %>
       <%= action.with_form_component(name: 'delete_asset', url: asset_path(@asset, anchor: 'actions'),
-                                     method: :delete)do |form_component|%>
+                                     method: :delete) do |form_component|%>
         <% form_component.with_error(@error) if @errors_for == 'delete_asset' %>
         <% form_component.with_submit('Delete Asset', confirm: I18n.t('actions.asset.delete.confirm_message'),
                                      variant: :danger) %>
