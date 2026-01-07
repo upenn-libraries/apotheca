@@ -39,7 +39,7 @@ module MetadataExtractor
           @cleanups = []
         end
 
-        # Adds mapping.
+        # Adds mapping rule.
         #
         # @param klass [Class] class defining the field mapping
         # @param config [Hash] options to be sent to the mapping class
