@@ -8,8 +8,6 @@ describe ImportService::Process::Update do
   end
 
   describe '#valid?' do
-    let(:item) { persist(:item_resource, :with_asset) }
-
     it 'requires a unique_identifier' do
       process = build(:import_process, :update, unique_identifier: nil)
       expect(process.valid?).to be false
