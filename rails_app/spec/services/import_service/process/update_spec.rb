@@ -8,7 +8,7 @@ describe ImportService::Process::Update do
   end
 
   describe '#valid?' do
-    let(:item) { persist(:item_resource) }
+    let(:item) { persist(:item_resource, :with_asset) }
 
     it 'requires a unique_identifier' do
       process = build(:import_process, :update, unique_identifier: nil)
@@ -22,17 +22,25 @@ describe ImportService::Process::Update do
       expect(process.errors).to include 'unique_identifier does not belong to an Item'
     end
 
-    it 'requires provided item thumbnail to exist when assets are present' do
-      process = build(:import_process, :update, :with_asset_metadata,
-                      thumbnail: 'test.tif')
+    it 'is invalid when thumbnail does not exist in provided or existing assets' do
+      item = persist(:item_resource, :with_asset)
+      process = build(:import_process, :update, :with_asset_metadata, thumbnail: 'test.tif',
+                                                                      unique_identifier: item.unique_identifier)
       expect(process.valid?).to be false
-      expect(process.errors).to include 'provided thumbnail does not exist in provided assets'
+      expect(process.errors).to contain_exactly 'provided thumbnail does not exist in provided or existing assets'
     end
 
-    it 'requires provided item thumbnail to exist when assets are not present' do
-      process = build(:import_process, :update, thumbnail: 'test.tif', unique_identifier: item.unique_identifier)
-      expect(process.valid?).to be false
-      expect(process.errors).to include 'provided thumbnail does not exist in existing assets'
+    it 'is valid when thumbnail exists in provided assets' do
+      item = persist(:item_resource)
+      process = build(:import_process, :update, :with_asset_metadata, thumbnail: 'front.tif',
+                                                                      unique_identifier: item.unique_identifier)
+      expect(process.valid?).to be true
+    end
+
+    it 'is valid when thumbnail exists in existing assets' do
+      item = persist(:item_resource, :with_asset)
+      process = build(:import_process, :update, thumbnail: 'front.tif', unique_identifier: item.unique_identifier)
+      expect(process.valid?).to be true
     end
   end
 
