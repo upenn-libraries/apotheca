@@ -3,8 +3,8 @@
 module MetadataExtractor
   module MARC
     class PennRules
-      # Custom transformation rule to extract date and date ranges from the 008 field. Converts the date or range
-      # to EDTF.
+      # Custom mapping rule to extract date and date ranges from the 008 field.
+      # Converts the date or range to EDTF.
       class DateField < Rules::FieldMapping
         UNKNOWN_DATE = 'uuuu'
 
@@ -21,7 +21,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::ControlField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def transform(field)
+        def perform(field)
           date = edtf_date(field)
           date.blank? ? [] : [{ value: date }]
         end
@@ -30,7 +30,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           field.controlfield? && field.tag == tag
         end
 

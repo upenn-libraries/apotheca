@@ -3,11 +3,11 @@
 module MetadataExtractor
   module MARC
     class PennRules
-      # Custom rule for extracting language from a MARC datafield (041) and MARC controlfield (008).
+      # Custom rule for mapping language from a MARC datafield (041) and MARC controlfield (008).
       class LanguageField < Rules::FieldMapping
         attr_reader :config
 
-        # Initialize rule to transform language in MARC control field or datafield to Apotheca's JSON metadata schema.
+        # Initialize rule to map language in MARC control field or datafield to Apotheca's JSON metadata schema.
         #
         # @param config [Hash] options to use when choosing and extracting value from datafield/controlfield.
         # @option config [String] :tag (nil) name of field, used when choosing field
@@ -21,17 +21,17 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def transform(field)
+        def perform(field)
           extract_language_codes(field).filter_map do |code|
             normalize_language(code)
           end
         end
 
-        # Transforms controlfields or datafields that contain a matching tag.
+        # Maps controlfields or datafields that contain a matching tag.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           (field.datafield? || field.controlfield?) && field.tag == config[:tag]
         end
 

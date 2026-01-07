@@ -3,13 +3,13 @@
 module MetadataExtractor
   module MARC
     class PennRules
-      # Custom transformation rule to extract transliterated titles from the 880 datafield.
+      # Custom mapping rule to extract transliterated titles from the 880 datafield.
       class TransliteratedTitleField < DataField
-        # Only transform values that contain a transliterated title.
+        # Only maps values that contain a transliterated title.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           super && transliterated_title?(field)
         end
 

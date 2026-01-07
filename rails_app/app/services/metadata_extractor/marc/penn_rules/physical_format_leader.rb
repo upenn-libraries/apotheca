@@ -43,7 +43,7 @@ module MetadataExtractor
         #
         # @param leader [MetadataExtractor::MARC::XMLDocument::Leader]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def transform(leader)
+        def perform(leader)
           control008 = leader.document.at_xpath("//records/record/controlfield[@tag='008']").text
           leader = leader.text
 
@@ -54,7 +54,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           field.leader?
         end
 

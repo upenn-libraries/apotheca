@@ -3,7 +3,7 @@
 module MetadataExtractor
   module MARC
     class PennRules
-      # Custom logic to extract related works that are stored in the 7XX fields.
+      # Custom mapping rule to extract related works that are stored in the 7XX fields.
       class RelatedWorkField < DataField
         # Initializes related work rule and sets default prefix value.
         def initialize(**config)
@@ -12,11 +12,11 @@ module MetadataExtractor
           @config[:prefix] = 'Related Work: '
         end
 
-        # Only transforms field if it is a related work.
+        # Only maps field if it is a related work.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           super && related_work?(field)
         end
 

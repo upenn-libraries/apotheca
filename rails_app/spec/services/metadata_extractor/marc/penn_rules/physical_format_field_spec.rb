@@ -7,7 +7,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
     MetadataExtractor::MARC::XMLDocument::DataField.new(doc.children.first, doc)
   end
 
-  describe '#transform' do
+  describe '#perform' do
     context 'when field is lcgft term' do
       let(:xml) do
         <<~XML
@@ -20,7 +20,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
       end
 
       it 'maps value to AAT' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'scores (documents for music)', uri: 'http://vocab.getty.edu/aat/300026427' }
         )
       end
@@ -37,7 +37,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
       end
 
       it 'maps value to AAT' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'manuscripts (documents)', uri: 'http://vocab.getty.edu/aat/300028569' }
         )
       end
@@ -53,7 +53,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
       end
 
       it 'returns value' do
-        expect(field_mapping.transform(datafield)).to contain_exactly({ value: 'Hybrid Music' })
+        expect(field_mapping.perform(datafield)).to contain_exactly({ value: 'Hybrid Music' })
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
       end
 
       it 'maps value to AAT' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'menus', uri: 'http://vocab.getty.edu/aat/300027191' }
         )
       end
@@ -87,14 +87,14 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
       end
 
       it 'returns value' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'treatises', uri: 'http://vocab.getty.edu/aat/300026681' }
         )
       end
     end
   end
 
-  describe '#transform?' do
+  describe '#perform?' do
     context 'when field is one of the preferred authorities' do
       let(:xml) do
         <<~XML
@@ -106,7 +106,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
 
@@ -122,7 +122,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
       end
 
       it 'returns false' do
-        expect(field_mapping.transform?(datafield)).to be false
+        expect(field_mapping.perform?(datafield)).to be false
       end
     end
 
@@ -136,7 +136,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
   end

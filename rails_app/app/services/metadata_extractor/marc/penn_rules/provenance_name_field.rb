@@ -7,11 +7,11 @@ module MetadataExtractor
       class ProvenanceNameField < DataField
         ROLE_REGEX = /(donor|owner)/
 
-        # Only transform field if it's a role that implies it is a provenance name.
+        # Only maps field if it's a role that implies it is a provenance name.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           super && provenance?(field)
         end
 

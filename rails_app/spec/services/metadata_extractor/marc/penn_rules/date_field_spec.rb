@@ -7,7 +7,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
     MetadataExtractor::MARC::XMLDocument::ControlField.new(doc.children.first, doc)
   end
 
-  describe '#transform' do
+  describe '#perform' do
     context 'when controlfield contains a singular date' do
       let(:xml) do
         <<~XML
@@ -16,7 +16,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
       end
 
       it 'extracts year' do
-        expect(field_mapping.transform(controlfield)).to eql([{ value: '1753' }])
+        expect(field_mapping.perform(controlfield)).to eql([{ value: '1753' }])
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
       end
 
       it 'converts date to EDFT' do
-        expect(field_mapping.transform(controlfield)).to eql([{ value: '10XX/11XX' }])
+        expect(field_mapping.perform(controlfield)).to eql([{ value: '10XX/11XX' }])
       end
     end
 
@@ -40,7 +40,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
       end
 
       it 'converts date to EDFT' do
-        expect(field_mapping.transform(controlfield)).to eql([{ value: '/11XX' }])
+        expect(field_mapping.perform(controlfield)).to eql([{ value: '/11XX' }])
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
       end
 
       it 'converts date to EDFT' do
-        expect(field_mapping.transform(controlfield)).to eql [{ value: '10XX/' }]
+        expect(field_mapping.perform(controlfield)).to eql [{ value: '10XX/' }]
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
       end
 
       it 'sets blank date' do
-        expect(field_mapping.transform(controlfield)).to eql []
+        expect(field_mapping.perform(controlfield)).to eql []
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
       end
 
       it 'converts date to EDFT' do
-        expect(field_mapping.transform(controlfield)).to contain_exactly({ value: '10XX' })
+        expect(field_mapping.perform(controlfield)).to contain_exactly({ value: '10XX' })
       end
     end
   end

@@ -3,15 +3,14 @@
 module MetadataExtractor
   module MARC
     class PennRules
-      # Custom transformation rule for 7XX name fields. Excludes fields
-      # that are related work or provenance names. Includes name's roles
-      # in the extracted value.
+      # Custom mapping rule for 7XX name fields. Excludes fields that are related works
+      # or provenance names. Includes name's roles in the extracted value.
       class AdditionalNameField < NameField
-        # Only transforms datafield that doesn't contain related work or provenance values.
+        # Only maps datafields that don't contain related work or provenance values.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           super && !related_work?(field) && !provenance?(field)
         end
 

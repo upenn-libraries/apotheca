@@ -10,7 +10,7 @@ module MetadataExtractor
 
         attr_reader :config
 
-        # Initialize rule to transform MARC datafield to Apotheca's JSON metadata schema.
+        # Initialize rule to map MARC datafield to Apotheca's JSON metadata schema.
         #
         # @param config [Hash] options to use when choosing and extracting value from datafield
         # @option config [String] :tag (nil) name of datafield, used when choosing datafield
@@ -23,25 +23,25 @@ module MetadataExtractor
           @config = config
         end
 
-        # Transform datafield to JSON metadata field value. Retrieves appends all the subfields together
+        # Map datafield to JSON metadata field value. Retrieves appends all the subfields together
         # with a space to return one value from the field. Additionally, supports extracting URIs for terms as well.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def transform(field)
-          value = transform_value(field)
-          uri = transform_uri(field)
+        def perform(field)
+          value = extract_value(field)
+          uri = extract_uri(field)
 
           return [] if value.blank?
 
           [{ value: value, uri: uri }.compact_blank]
         end
 
-        # Return whether datafield should be transformed using this rule.
+        # Return whether datafield should be mapped using this rule.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           field.datafield? && matching_tag?(field) && matching_indicator2?(field)
         end
 
@@ -67,7 +67,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [String]
-        def transform_value(field)
+        def extract_value(field)
           field.values_at(subfields: config.fetch(:subfields, DEFAULT_SUBFIELDS))
                .join(config.fetch(:join, DEFAULT_JOIN))
                .prepend(config.fetch(:prefix, ''))
@@ -77,7 +77,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [String]
-        def transform_uri(field)
+        def extract_uri(field)
           return unless config[:uri]
 
           field.values_at(subfields: '0').first

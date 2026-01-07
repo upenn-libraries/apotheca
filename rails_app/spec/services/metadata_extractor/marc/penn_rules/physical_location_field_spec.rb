@@ -7,7 +7,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalLocationField do
     MetadataExtractor::MARC::XMLDocument::DataField.new(doc.children.first, doc)
   end
 
-  describe '#transform' do
+  describe '#perform' do
     let(:xml) do
       <<~XML
         <marc:datafield ind1=" " ind2=" " tag="AVA" xmlns:marc="http://www.loc.gov/MARC21/slim">
@@ -27,13 +27,13 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalLocationField do
     end
 
     it 'returns expected value' do
-      expect(field_mapping.transform(datafield)).to contain_exactly(
+      expect(field_mapping.perform(datafield)).to contain_exactly(
         { value: 'Kislak Center for Special Collections, Rare Book Collection, FC75 F8448 box 28 no. 771' }
       )
     end
   end
 
-  describe '#transform?' do
+  describe '#perform?' do
     context 'when subfield 8 present' do
       let(:xml) do
         <<~XML
@@ -46,7 +46,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalLocationField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
 
@@ -61,7 +61,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalLocationField do
       end
 
       it 'returns false' do
-        expect(field_mapping.transform?(datafield)).to be false
+        expect(field_mapping.perform?(datafield)).to be false
       end
     end
   end

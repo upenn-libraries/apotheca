@@ -6,7 +6,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
     MetadataExtractor::MARC::XMLDocument::DataField.new(doc.children.first, doc)
   end
 
-  describe '#transform' do
+  describe '#perform' do
     context 'when selecting a subset of subfields' do
       let(:field_mapping) { described_class.new(tag: '650', subfields: %w[a v z]) }
       let(:xml) do
@@ -21,7 +21,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'returns expected value' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'First Coalition, War of the, 1792-1797 Italy Early works to 1800.' }
         )
       end
@@ -41,7 +41,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'returns expected value' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'France History Reign of Terror, 1793-1794 Food supply.' }
         )
       end
@@ -61,7 +61,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'returns expected values' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'France History Reign of Terror, 1793-1794 Food supply.' }
         )
       end
@@ -81,7 +81,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'correctly joins subfields' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'France -- History -- Reign of Terror, 1793-1794 -- Food supply.' }
         )
       end
@@ -100,7 +100,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'prepends prefix' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'Table of contents: formatted contents note statement of responsibility title' }
         )
       end
@@ -120,7 +120,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'includes uri' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'Indians of South America Colombia Languages.',
             uri: 'http://id.loc.gov/authorities/subjects/sh85065601' }
         )
@@ -128,7 +128,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
     end
   end
 
-  describe '#transform?' do
+  describe '#perform?' do
     context 'when type and tag match' do
       let(:field_mapping) { described_class.new(tag: '500') }
 
@@ -141,7 +141,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
 
@@ -156,7 +156,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
 
@@ -171,7 +171,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'returns false' do
-        expect(field_mapping.transform?(datafield)).to be false
+        expect(field_mapping.perform?(datafield)).to be false
       end
     end
 
@@ -186,7 +186,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DataField do
       end
 
       it 'returns false' do
-        expect(field_mapping.transform?(datafield)).to be false
+        expect(field_mapping.perform?(datafield)).to be false
       end
     end
   end

@@ -10,7 +10,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::LanguageField do
     MetadataExtractor::MARC::XMLDocument::ControlField.new(doc.children.first, doc)
   end
 
-  describe '#transform' do
+  describe '#perform' do
     context 'when transforming controlfield' do
       let(:field_mapping) { described_class.new(tag: '008', chars: (35..37).to_a) }
       let(:xml) do
@@ -23,7 +23,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::LanguageField do
       end
 
       it 'extracts expected languages' do
-        expect(field_mapping.transform(controlfield)).to match_array(expected_languages)
+        expect(field_mapping.perform(controlfield)).to match_array(expected_languages)
       end
     end
 
@@ -53,12 +53,12 @@ RSpec.describe MetadataExtractor::MARC::PennRules::LanguageField do
       end
 
       it 'extracts expected languages' do
-        expect(field_mapping.transform(datafield)).to match_array(expected_languages)
+        expect(field_mapping.perform(datafield)).to match_array(expected_languages)
       end
     end
   end
 
-  describe '#transform?' do
+  describe '#perform?' do
     context 'when given a controlfield with matching tag' do
       let(:field_mapping) { described_class.new(tag: '008', chars: (35..37).to_a) }
       let(:xml) do
@@ -68,7 +68,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::LanguageField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(controlfield)).to be true
+        expect(field_mapping.perform?(controlfield)).to be true
       end
     end
 
@@ -84,7 +84,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::LanguageField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
 
@@ -100,7 +100,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::LanguageField do
       end
 
       it 'returns false' do
-        expect(field_mapping.transform?(datafield)).to be false
+        expect(field_mapping.perform?(datafield)).to be false
       end
     end
   end

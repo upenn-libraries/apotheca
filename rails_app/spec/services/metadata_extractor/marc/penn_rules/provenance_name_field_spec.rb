@@ -7,7 +7,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::ProvenanceNameField do
     MetadataExtractor::MARC::XMLDocument::DataField.new(doc.children.first, doc)
   end
 
-  describe '#transform?' do
+  describe '#perform?' do
     context 'when name field has a provenance role' do
       let(:xml) do
         <<~XML
@@ -22,7 +22,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::ProvenanceNameField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
 
@@ -38,7 +38,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::ProvenanceNameField do
       end
 
       it 'returns false' do
-        expect(field_mapping.transform?(datafield)).to be false
+        expect(field_mapping.perform?(datafield)).to be false
       end
     end
   end

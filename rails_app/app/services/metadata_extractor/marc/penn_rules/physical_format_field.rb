@@ -14,7 +14,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def transform(field)
+        def perform(field)
           extracted_values = super
 
           return [] if extracted_values.empty?
@@ -28,11 +28,11 @@ module MetadataExtractor
           end
         end
 
-        # Transforming field only if it is part of the preferred authority.
+        # Mapping field only if it is part of the preferred authority.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           super && PREFERRED_AUTHORITIES.include?(authority(field))
         end
 

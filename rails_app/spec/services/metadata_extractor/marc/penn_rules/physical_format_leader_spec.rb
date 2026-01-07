@@ -21,9 +21,9 @@ RSpec.describe MetadataExtractor::MARC::PennRules::PhysicalFormatLeader do
     XML
   end
 
-  describe '#transform' do
+  describe '#perform' do
     it 'maps leader and control008 to expected value' do
-      expect(field_mapping.transform(datafield)).to contain_exactly(
+      expect(field_mapping.perform(datafield)).to contain_exactly(
         { uri: 'http://vocab.getty.edu/aat/300026642', value: 'serials (publications)' },
         { uri: 'http://vocab.getty.edu/aat/300026657', value: 'periodicals' }
       )

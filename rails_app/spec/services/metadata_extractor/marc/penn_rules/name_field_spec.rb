@@ -7,7 +7,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::NameField do
     MetadataExtractor::MARC::XMLDocument::DataField.new(doc.children.first, doc)
   end
 
-  describe '#transform' do
+  describe '#perform' do
     context 'when name field has roles' do
       let(:xml) do
         <<~XML
@@ -22,7 +22,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::NameField do
       end
 
       it 'returns name value with roles' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'Mendes, Frederick de Sola, 1850-1927,', role: [{ value: 'author,' }, { value: 'publisher.' }] }
         )
       end
@@ -42,7 +42,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::NameField do
       end
 
       it 'returns value' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: 'Pius III, Pope, approximately 1440-1503.' }
         )
       end

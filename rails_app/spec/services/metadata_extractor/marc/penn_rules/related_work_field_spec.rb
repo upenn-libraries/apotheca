@@ -7,7 +7,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::RelatedWorkField do
     MetadataExtractor::MARC::XMLDocument::DataField.new(doc.children.first, doc)
   end
 
-  describe '#transform' do
+  describe '#perform' do
     context 'when 7XX datafield contains a related work' do
       let(:xml) do
         <<~XML
@@ -20,14 +20,14 @@ RSpec.describe MetadataExtractor::MARC::PennRules::RelatedWorkField do
       end
 
       it 'extracts related work' do
-        expect(field_mapping.transform(datafield)).to contain_exactly(
+        expect(field_mapping.perform(datafield)).to contain_exactly(
           { value: "Related Work: Girard, François Narcisse, 1796-1825. Traité de l'age du cheval." }
         )
       end
     end
   end
 
-  describe '#transform?' do
+  describe '#perform?' do
     context 'when datafield is a related work' do
       let(:xml) do
         <<~XML
@@ -40,7 +40,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::RelatedWorkField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::RelatedWorkField do
       end
 
       it 'returns false' do
-        expect(field_mapping.transform?(datafield)).to be false
+        expect(field_mapping.perform?(datafield)).to be false
       end
     end
   end

@@ -65,9 +65,9 @@ module MetadataExtractor
         def extract_values(marc)
           marc.fields.flat_map do |field|
             mappings.flat_map do |m|
-              next [] unless m.transform?(field)
+              next [] unless m.perform?(field)
 
-              m.transform(field)
+              m.perform(field)
             end
           end
         end
@@ -85,7 +85,7 @@ module MetadataExtractor
         end
       end
 
-      # Base class for creating rules for mapping marc fields.
+      # Base class for rules that map marc fields to values for Apotheca's JSON metadata schema.
       class FieldMapping
         attr_reader :config
 
@@ -93,19 +93,19 @@ module MetadataExtractor
           @config = config
         end
 
-        # Transform MARC field into a valid set of values for Apotheca's JSON metadata schema.
+        # Map MARC field into a valid set of values for Apotheca's JSON metadata schema.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Array<Hash>] list of extracted values in hash containing a value and (optionally) a uri key
-        def transform(field)
+        def perform(field)
           raise NotImplementedError
         end
 
-        # Returns whether the provided field can be transformed.
+        # Returns whether the provided field can be mapped.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           raise NotImplementedError
         end
       end

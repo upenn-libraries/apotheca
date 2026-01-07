@@ -7,7 +7,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::ItemTypeField do
     MetadataExtractor::MARC::XMLDocument::DataField.new(doc.children.first, doc)
   end
 
-  describe '#transform' do
+  describe '#perform' do
     let(:xml) do
       <<~XML
         <marc:datafield ind1=" " ind2=" " tag="336" xmlns:marc="http://www.loc.gov/MARC21/slim">
@@ -19,13 +19,13 @@ RSpec.describe MetadataExtractor::MARC::PennRules::ItemTypeField do
     end
 
     it 'maps type to expected DCMI term' do
-      expect(field_mapping.transform(datafield)).to contain_exactly(
+      expect(field_mapping.perform(datafield)).to contain_exactly(
         { value: 'Text', uri: 'http://purl.org/dc/dcmitype/Text' }
       )
     end
   end
 
-  describe '#transform?' do
+  describe '#perform?' do
     context 'when source is rdacontent' do
       let(:xml) do
         <<~XML
@@ -38,7 +38,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::ItemTypeField do
       end
 
       it 'returns true' do
-        expect(field_mapping.transform?(datafield)).to be true
+        expect(field_mapping.perform?(datafield)).to be true
       end
     end
 
@@ -54,7 +54,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::ItemTypeField do
       end
 
       it 'returns false' do
-        expect(field_mapping.transform?(datafield)).to be false
+        expect(field_mapping.perform?(datafield)).to be false
       end
     end
   end

@@ -3,13 +3,13 @@
 module MetadataExtractor
   module MARC
     class PennRules
-      # Custom mapping holdings information located in an Alma-specific datafield (AVA).
+      # Custom mapping rule for holdings information located in an Alma-specific datafield (AVA).
       class PhysicalLocationField < DataField
         # Extracting physical location information from AVA field.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def transform(field)
+        def perform(field)
           location = extract_location(field)
           return [] unless location
 
@@ -20,7 +20,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def transform?(field)
+        def perform?(field)
           super && field.subfield_at('8').present?
         end
 
