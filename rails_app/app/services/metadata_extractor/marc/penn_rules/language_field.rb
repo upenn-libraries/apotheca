@@ -53,6 +53,7 @@ module MetadataExtractor
         #
         # @param code [String]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri keys
+        # @return [nil] if language was not found
         def normalize_language(code)
           language = ISO_639.find_by_code(code)
 
