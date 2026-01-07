@@ -115,8 +115,8 @@ module MetadataExtractor
       class FieldCleanup
         # Cleans up the values provided.
         #
-        # @param _values [Array<Hash>] list of values for Apotheca metadata field
-        def apply(_values)
+        # @param values [Array<Hash>] list of values for Apotheca metadata field
+        def apply(values)
           raise NotImplementedError
         end
       end
