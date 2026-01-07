@@ -55,7 +55,7 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def transform?(field)
-          field.type == :leader
+          field.leader?
         end
 
         private

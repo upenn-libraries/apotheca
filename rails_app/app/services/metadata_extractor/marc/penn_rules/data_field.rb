@@ -42,18 +42,10 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def transform?(field)
-          datafield?(field) && matching_tag?(field) && matching_indicator2?(field)
+          field.datafield? && matching_tag?(field) && matching_indicator2?(field)
         end
 
         private
-
-        # Returns true if field is a datafield.
-        #
-        # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
-        # @return [Boolean]
-        def datafield?(field)
-          field.type == :datafield
-        end
 
         # Returns true if the tag of the field matches.
         #

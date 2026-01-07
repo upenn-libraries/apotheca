@@ -8,23 +8,38 @@ module MetadataExtractor
 
       delegate_missing_to :xml
 
+      # Initialize MARC XML document.
+      #
+      # @param marc_xml [String]
       def initialize(marc_xml)
         @xml = Nokogiri::XML(marc_xml)
         @xml.remove_namespaces!
       end
 
+      # Return leader, controlfields and datafields.
+      #
+      # @return [Array<BaseField>]
       def fields
         @fields ||= [leader].compact + controlfields + datafields
       end
 
+      # Return leader.
+      #
+      # @return [Leader, nil]
       def leader
         xml.at_xpath('//records/record/leader')&.then { |node| Leader.new(node, self) }
       end
 
+      # Return all controlfields.
+      #
+      # @return [Array<ControlField>]
       def controlfields
         xml.xpath('//records/record/controlfield').map { |node| ControlField.new(node, self) }
       end
 
+      # Return all datafields.
+      #
+      # @return [Array<Datafield>]
       def datafields
         xml.xpath('//records/record/datafield').map { |node| DataField.new(node, self) }
       end
@@ -35,29 +50,64 @@ module MetadataExtractor
 
         delegate_missing_to :node
 
+        # Initialize MARC field and keep reference to original XML document.
+        #
+        # @param node [Nokogiri::XML::Element]
+        # @param document [XMLDocument]
         def initialize(node, document)
           @node = node
           @document = document # Reference to entire MARC document
         end
 
+        # Tag (name) assigned to field. Usually a three-digit string, but custom
+        # Alma defined fields use a three-character string.
+        #
+        # @return [String]
         def tag
           attributes['tag'].value
+        end
+
+        # True if field is datafield.
+        #
+        # @return [Boolean]
+        def datafield?
+          type == :datafield
+        end
+
+        # True if field is controlfield.
+        #
+        # @return [Boolean]
+        def controlfield?
+          type == :controlfield
+        end
+
+        # True if field is leader.
+        #
+        # @return [Boolean]
+        def leader?
+          type == :leader
         end
       end
 
       # Wrapper class for data fields.
       class DataField < BaseField
-        # Return field type.
+        # Type of field.
+        #
+        # @return [Symbol]
         def type
           :datafield
         end
 
-        # Return the value of indicator2
+        # Return the value of indicator2.
+        #
+        # @return [String, nil]
         def indicator2
           attributes['ind2']&.value&.strip
         end
 
-        # Returns the subfield value for the code given. If no subfield with that code is present return `nil`.
+        # Returns the subfield value for the code given.
+        #
+        # @return [String, nil]
         def subfield_at(code)
           node.at_xpath("./subfield[@code='#{code}']")&.text
         end
@@ -83,7 +133,9 @@ module MetadataExtractor
 
       # Wrapper class for control fields.
       class ControlField < BaseField
-        # Return field type.
+        # Type of field.
+        #
+        # @return [Symbol]
         def type
           :controlfield
         end
@@ -101,7 +153,9 @@ module MetadataExtractor
 
       # Wrapper class for leader
       class Leader < ControlField
-        # Return field type.
+        # Type of field.
+        #
+        # @return [Symbol]
         def type
           :leader
         end

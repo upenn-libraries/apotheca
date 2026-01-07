@@ -31,7 +31,7 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def transform?(field)
-          field.type == :controlfield && field.tag == tag
+          field.controlfield? && field.tag == tag
         end
 
         private

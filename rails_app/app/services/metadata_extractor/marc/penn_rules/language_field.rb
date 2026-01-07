@@ -32,7 +32,7 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def transform?(field)
-          %i[datafield controlfield].include?(field.type) && field.tag == config[:tag]
+          (field.datafield? || field.controlfield?) && field.tag == config[:tag]
         end
 
         private
@@ -42,10 +42,9 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Array<String>]
         def extract_language_codes(field)
-          case field.type
-          when :datafield
+          if field.datafield?
             field.values_at(subfields: config[:subfields])
-          when :controlfield
+          elsif field.controlfield?
             [field.values_at(chars: config[:chars]).join]
           end
         end
