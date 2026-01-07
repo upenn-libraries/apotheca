@@ -33,6 +33,9 @@ module MetadataExtractor
       class FieldRules
         attr_reader :name, :mappings, :cleanups
 
+        # Create object to store field mappings and field cleanings.
+        #
+        # @param name [String] Apotheca descriptive metadata field rules should be applied for
         def initialize(name)
           @name = name
           @mappings = []
