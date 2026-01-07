@@ -114,7 +114,7 @@ module MetadataExtractor
         #
         # @param _values [Array<Hash>] list of values for Apotheca metadata field
         def apply(_values)
-          raise NotImplemented
+          raise NotImplementedError
         end
       end
     end
