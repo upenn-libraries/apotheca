@@ -21,7 +21,7 @@ module MetadataExtractor
         descriptive_metadata = {}
 
         @rules.each do |field_rules|
-          values = field_rules.extract_values(marc)
+          values = field_rules.perform_mappings(marc)
           values = field_rules.apply_cleanups(values)
 
           next if values.blank?

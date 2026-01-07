@@ -58,11 +58,11 @@ module MetadataExtractor
           cleanups << klass.new(**config)
         end
 
-        # Extract values from MARC following the mapping rules for this field.
+        # Extract values from MARC by running all the mapping rules for this field.
         #
         # @param marc [MetadataExtractor::MARC::XMLDocument]
         # @return [Array<Hash>] values for one Apotheca descriptive metadata field
-        def extract_values(marc)
+        def perform_mappings(marc)
           marc.fields.flat_map do |field|
             mappings.flat_map do |m|
               next [] unless m.perform?(field)
