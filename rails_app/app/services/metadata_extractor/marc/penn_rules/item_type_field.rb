@@ -5,6 +5,8 @@ module MetadataExtractor
     class PennRules
       # Custom rule to map a 336 datafield containing an RDA content type to a DCMI type.
       class ItemTypeField < DataField
+        RDACONTENT = 'rdacontent'
+
         DATASET         = { value: 'Dataset',         uri: 'http://purl.org/dc/dcmitype/Dataset'        }.freeze
         IMAGE           = { value: 'Image',           uri: 'http://purl.org/dc/dcmitype/Image'          }.freeze
         MOVING_IMAGE    = { value: 'Moving Image',    uri: 'http://purl.org/dc/dcmitype/MovingImage'    }.freeze
@@ -54,7 +56,7 @@ module MetadataExtractor
         #
         # @return [Boolean]
         def perform?(field)
-          super && field.subfield_at('2') == 'rdacontent'
+          super && field.subfield_at('2') == RDACONTENT
         end
       end
     end
