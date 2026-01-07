@@ -58,6 +58,16 @@ module MetadataExtractor
           cleanups << klass.new(**config)
         end
 
+        # Transform MARC to values for Apotheca's descriptive metadata schema
+        # using this field's mappings and cleanup rules.
+        #
+        # @param marc [MetadataExtractor::MARC::XMLDocument]
+        # @return [Array<Hash>] values for one Apotheca descriptive metadata field
+        def transform(marc)
+          values = perform_mappings(marc)
+          apply_cleanups(values)
+        end
+
         # Extract values from MARC by running all the mapping rules for this field.
         #
         # @param marc [MetadataExtractor::MARC::XMLDocument]
@@ -65,9 +75,7 @@ module MetadataExtractor
         def perform_mappings(marc)
           marc.fields.flat_map do |field|
             mappings.flat_map do |m|
-              next [] unless m.perform?(field)
-
-              m.perform(field)
+              m.perform_mapping(field)
             end
           end
         end
@@ -91,6 +99,17 @@ module MetadataExtractor
 
         def initialize(**config)
           @config = config
+        end
+
+        # Perform mapping for field, only if rule should be applied.
+        #
+        # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
+        # @return [Array<Hash>] list of extracted values in hash containing a value and (optionally) a uri key
+        # @return [Array] return empty array if field should not be used with this mapping
+        def perform_mapping(field)
+          return [] unless perform?(field)
+
+          perform(field)
         end
 
         # Map MARC field into a valid set of values for Apotheca's JSON metadata schema.
