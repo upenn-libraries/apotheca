@@ -6,7 +6,7 @@ describe 'Bulk Import New Page' do
   let(:user) { create(:user, :editor) }
 
   before do
-    sign_in user
+    login_as user
     visit new_bulk_import_path
   end
 

@@ -7,7 +7,7 @@ describe 'Bulk Export New Page' do
     let(:user) { create(:user, :viewer) }
 
     before do
-      sign_in user
+      login_as user
       persist(:item_resource)
       visit items_path
     end
