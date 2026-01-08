@@ -14,7 +14,7 @@ redis:
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
   password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
 chrome:
-  url: <%= ENV.fetch('CHROME_URL', 'http://chrome:3000') %>
+  url: <%= ENV.fetch('CHROME_URL', 'ws://chrome:3333') %>
 
 # External Services
 ezid:
