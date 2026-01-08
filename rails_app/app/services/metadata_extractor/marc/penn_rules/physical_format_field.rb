@@ -14,7 +14,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def perform(field)
+        def mapping(field)
           extracted_values = super
 
           return [] if extracted_values.empty?
@@ -32,7 +32,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def perform?(field)
+        def apply?(field)
           super && PREFERRED_AUTHORITIES.include?(authority(field))
         end
 

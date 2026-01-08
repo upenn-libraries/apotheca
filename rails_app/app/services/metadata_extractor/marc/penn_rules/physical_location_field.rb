@@ -9,7 +9,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def perform(field)
+        def mapping(field)
           location = extract_location(field)
           return [] unless location
 
@@ -20,7 +20,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def perform?(field)
+        def apply?(field)
           super && field.subfield_at('8').present?
         end
 

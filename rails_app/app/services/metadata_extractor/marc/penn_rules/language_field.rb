@@ -21,7 +21,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def perform(field)
+        def mapping(field)
           extract_language_codes(field).filter_map do |code|
             normalize_language(code)
           end
@@ -31,7 +31,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def perform?(field)
+        def apply?(field)
           (field.datafield? || field.controlfield?) && field.tag == config[:tag]
         end
 

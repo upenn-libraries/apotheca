@@ -21,7 +21,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::ControlField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def perform(field)
+        def mapping(field)
           date = edtf_date(field)
           date.blank? ? [] : [{ value: date }]
         end
@@ -30,7 +30,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def perform?(field)
+        def apply?(field)
           field.controlfield? && field.tag == tag
         end
 

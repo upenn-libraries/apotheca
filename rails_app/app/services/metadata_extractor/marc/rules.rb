@@ -64,7 +64,7 @@ module MetadataExtractor
         # @param marc [MetadataExtractor::MARC::XMLDocument]
         # @return [Array<Hash>] values for one Apotheca descriptive metadata field
         def transform(marc)
-          values = perform_mappings(marc)
+          values = apply_mappings(marc)
           apply_cleanups(values)
         end
 
@@ -72,10 +72,10 @@ module MetadataExtractor
         #
         # @param marc [MetadataExtractor::MARC::XMLDocument]
         # @return [Array<Hash>] values for one Apotheca descriptive metadata field
-        def perform_mappings(marc)
+        def apply_mappings(marc)
           marc.fields.flat_map do |field|
             mappings.flat_map do |m|
-              m.perform_mapping(field)
+              m.apply(field)
             end
           end
         end
@@ -106,17 +106,17 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Array<Hash>] list of extracted values in hash containing a value and (optionally) a uri key
         # @return [Array] return empty array if field should not be used with this mapping
-        def perform_mapping(field)
-          return [] unless perform?(field)
+        def apply(field)
+          return [] unless apply?(field)
 
-          perform(field)
+          mapping(field)
         end
 
-        # Map MARC field into a valid set of values for Apotheca's JSON metadata schema.
+        # Mapping for MARC field into a valid set of values for Apotheca's JSON metadata schema.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Array<Hash>] list of extracted values in hash containing a value and (optionally) a uri key
-        def perform(field)
+        def mapping(field)
           raise NotImplementedError
         end
 
@@ -124,7 +124,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def perform?(field)
+        def apply?(field)
           raise NotImplementedError
         end
       end

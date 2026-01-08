@@ -7,7 +7,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::TransliteratedTitleField do
     MetadataExtractor::MARC::XMLDocument::DataField.new(doc.children.first, doc)
   end
 
-  describe '#perform?' do
+  describe '#apply?' do
     context 'when datafield contains transliterated title' do
       let(:xml) do
         <<~XML
@@ -19,7 +19,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::TransliteratedTitleField do
       end
 
       it 'returns true' do
-        expect(field_mapping.perform?(datafield)).to be true
+        expect(field_mapping.apply?(datafield)).to be true
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::TransliteratedTitleField do
       end
 
       it 'returns false' do
-        expect(field_mapping.perform?(datafield)).to be false
+        expect(field_mapping.apply?(datafield)).to be false
       end
     end
   end

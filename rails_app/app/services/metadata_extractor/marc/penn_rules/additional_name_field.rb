@@ -12,7 +12,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def perform?(field)
+        def apply?(field)
           super && !related_work?(field) && !provenance?(field)
         end
 

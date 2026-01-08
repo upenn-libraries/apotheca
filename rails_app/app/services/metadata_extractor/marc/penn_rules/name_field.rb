@@ -9,7 +9,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [Array<Hash>] list of extracted values in hash containing value, uri and roles
-        def perform(field)
+        def mapping(field)
           super.map do |value|
             extracted_roles = roles(field)
             value[:role] = extracted_roles.map { |r| { value: r } } if extracted_roles.present?

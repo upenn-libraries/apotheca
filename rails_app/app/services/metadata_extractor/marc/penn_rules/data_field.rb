@@ -28,7 +28,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
-        def perform(field)
+        def mapping(field)
           value = extract_value(field)
           uri = extract_uri(field)
 
@@ -41,7 +41,7 @@ module MetadataExtractor
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
-        def perform?(field)
+        def apply?(field)
           field.datafield? && matching_tag?(field) && matching_indicator2?(field)
         end
 
