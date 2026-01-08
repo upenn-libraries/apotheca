@@ -12,7 +12,6 @@ module ImportService
       # @param [Hash] :asset # gets converted to an AssetSet
       def initialize(**args)
         super
-
         @asset_set = args[:assets].blank? ? nil : AssetSet.new(**args[:assets])
         @created_assets = []
       end
@@ -25,10 +24,10 @@ module ImportService
         @errors << 'unique_identifier does not belong to an Item' if unique_identifier && item.nil?
 
         # ensure that a user-specified thumbnail exists in the asset set (incoming assets) or the existing assets
-        if thumbnail.present? && asset_set.present? && asset_set.file_locations.filenames.exclude?(thumbnail)
-          @errors << 'provided thumbnail does not exist in provided assets'
-        elsif thumbnail.present? && @errors.empty? && existing_assets.map(&:original_filename).exclude?(thumbnail)
-          @errors << 'provided thumbnail does not exist in existing assets'
+        if thumbnail.present? &&
+           Array(asset_set&.file_locations&.filenames).exclude?(thumbnail) &&
+           existing_assets.map(&:original_filename).exclude?(thumbnail)
+          @errors << 'provided thumbnail does not exist in provided or existing assets'
         end
       end
 
