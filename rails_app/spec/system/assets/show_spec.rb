@@ -8,7 +8,7 @@ describe 'Asset Show Page' do
   let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
 
   before do
-    sign_in user
+    login_as user
     visit asset_path(item.asset_ids.first)
   end
 

@@ -11,7 +11,7 @@ module MetadataExtractor
 
     def descriptive_metadata(bibnumber)
       marc_xml = client.marc21(bibnumber)
-      Transformer.new(marc_xml).to_descriptive_metadata
+      MARC::Transformer.new.run(marc_xml)
     end
   end
 end

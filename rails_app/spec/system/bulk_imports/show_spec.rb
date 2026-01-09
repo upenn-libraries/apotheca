@@ -6,7 +6,7 @@ describe 'Bulk Import Show Page' do
   let(:user) { create(:user, role) }
 
   shared_examples_for 'any logged in user' do
-    before { sign_in user }
+    before { login_as user }
 
     context 'when viewing the bulk import show page' do
       let(:item_resource) { persist(:item_resource) }
@@ -109,7 +109,7 @@ describe 'Bulk Import Show Page' do
   end
 
   shared_examples_for 'a user that cannot update bulk imports belonging to other users' do
-    before { sign_in user }
+    before { login_as user }
 
     context 'when viewing a bulk import show page that belongs to another user' do
       let!(:bulk_import) { create(:bulk_import) }
@@ -130,7 +130,7 @@ describe 'Bulk Import Show Page' do
   end
 
   shared_examples_for 'a user that can update their own bulk imports' do
-    before { sign_in user }
+    before { login_as user }
 
     context 'when viewing their bulk import show page' do
       let(:bulk_import) { create(:bulk_import, created_by: user) }
@@ -209,7 +209,7 @@ describe 'Bulk Import Show Page' do
       let(:bulk_import) { create(:bulk_import) }
 
       before do
-        sign_in user
+        login_as user
         create(:import, :queued, bulk_import: bulk_import)
         visit bulk_import_path(bulk_import)
       end

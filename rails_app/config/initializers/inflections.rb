@@ -27,4 +27,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'MMSID'
   inflect.acronym 'API'
   inflect.acronym 'UI'
+  inflect.acronym 'XML'
 end
