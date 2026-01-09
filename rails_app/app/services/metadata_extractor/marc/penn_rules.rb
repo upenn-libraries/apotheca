@@ -71,6 +71,7 @@ module MetadataExtractor
         field.mapping DataField, tag: '542', subfields: 'a'..'s'
         field.mapping DataField, tag: '545', subfields: %w[a b u]
         field.mapping DataField, tag: '546', subfields: %w[a b]
+        field.mapping DataField, tag: '580', subfields: 'a'
         field.mapping DataField, tag: '590', subfields: 'a'
         field.mapping RelatedWorkField, tag: '700', subfields: 'a'..'z'
         field.mapping RelatedWorkField, tag: '710', subfields: 'a'..'z'
