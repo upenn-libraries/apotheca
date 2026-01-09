@@ -28,7 +28,7 @@ remote_chrome =
     false
   end
 
-remote_options = remote_chrome ? { url: REMOTE_CHROME_URL } : {}
+remote_options = remote_chrome ? { ws_url: REMOTE_CHROME_URL } : {}
 
 # Then, we need to register our driver to be able to use it later
 # with #driven_by method.
@@ -45,7 +45,8 @@ Capybara.register_driver(:better_cuprite) do |app|
       # Enable debugging capabilities
       inspector: true,
       js_errors: true,
-      timeout: 10
+      timeout: 10,
+      flatten: false
     }.merge(remote_options)
   )
 end

@@ -6,7 +6,7 @@ describe 'Item Show Page' do
   let(:user) { create(:user, role) }
 
   before do
-    sign_in user
+    login_as user
   end
 
   shared_examples_for 'any logged in user' do

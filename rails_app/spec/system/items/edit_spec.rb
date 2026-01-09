@@ -10,7 +10,7 @@ describe 'Item Edit Page' do
   include_context 'with successful requests to update EZID'
 
   before do
-    sign_in user
+    login_as user
     visit edit_item_path(item)
   end
 
