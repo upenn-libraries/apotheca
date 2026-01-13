@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+item_json = render('api/resources/items/item')
+
+item_json[:thumbnail_asset_id] = @item.thumbnail_asset_id.to_s
+
+item_json[:human_readable_name] = @item.human_readable_name
+
+item_json[:ocr_strategy] = @item.ocr_strategy
+
+item_json[:descriptive_metadata] = @item.presenter.descriptive_metadata.resource_metadata
+
+{
+  status: 'success',
+  data: {
+    item: item_json,
+    related: {
+      assets: api_item_resource_url(@item.id, assets: true)
+    }
+  }
+}
