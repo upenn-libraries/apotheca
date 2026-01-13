@@ -1,6 +1,43 @@
 # frozen_string_literal: true
 
 describe 'Resource Item API' do
+  describe 'GET #admin_show' do
+    context 'with ItemResource' do
+      include_context 'with successful Marmite request' do
+        let(:xml) { File.read(file_fixture('marmite/marc_xml/manuscript-1.xml')) }
+      end
+
+      let(:item) do
+        persist(:item_resource, :printed, :published, :with_full_assets_all_arranged, :with_derivatives,
+                :with_bibnumber)
+      end
+
+      let(:item_json) { json_body[:data][:item] }
+
+      before do
+        get api_item_resource_admin_path(item.id, assets: 'true'), headers: { 'ACCEPT' => 'application/json' }
+      end
+
+      it 'returns human readable name' do
+        expect(item_json[:human_readable_name]).to eq item.human_readable_name
+      end
+
+      it 'returns ocr_strategy' do
+        expect(item_json[:ocr_strategy]).to eq 'printed'
+      end
+
+      it 'returns thumbnail_asset_id' do
+        expect(item_json[:thumbnail_asset_id]).to eq item.thumbnail_asset_id.to_s
+      end
+
+      it 'returns original metadata' do
+        expect(item_json[:descriptive_metadata].deep_stringify_keys).not_to eq(item.presenter.descriptive_metadata.to_h)
+        expect(item_json[:descriptive_metadata].deep_stringify_keys).to eq(item.presenter.descriptive_metadata
+                                                                               .resource_metadata)
+      end
+    end
+  end
+
   describe 'GET #show' do
     context 'when no resource is found' do
       before do
