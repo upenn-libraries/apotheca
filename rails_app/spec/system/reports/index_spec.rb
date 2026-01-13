@@ -12,7 +12,7 @@ describe 'Report Index Page' do
     let(:reports) { [successful_report, failed_report] }
 
     before do
-      sign_in user
+      login_as user
       reports
       visit reports_path
     end

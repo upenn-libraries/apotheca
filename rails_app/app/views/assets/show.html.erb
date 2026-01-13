@@ -37,7 +37,7 @@
 </div>
 
 <%= render(Tabs::Component.new(id: 'asset-tabs')) do |component| %>
-  <% component.with_tab(title: 'Modification Details', active: true) do %>
+  <% component.with_tab(title: 'Modification Details', default: true) do %>
       <%= render partial: 'modification_details' %>
   <% end %>
 

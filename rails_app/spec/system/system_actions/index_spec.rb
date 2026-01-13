@@ -5,7 +5,7 @@ require 'system_helper'
 describe 'System Actions Page' do
   let(:user) { create(:user, role) }
 
-  before { sign_in user }
+  before { login_as user }
 
   context 'when viewing the system actions page' do
     let(:role) { :admin }

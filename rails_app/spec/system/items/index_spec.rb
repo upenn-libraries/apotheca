@@ -7,7 +7,7 @@ describe 'Item Index Page' do
   let!(:item) { persist(:item_resource, :with_asset) }
 
   before do
-    sign_in user
+    login_as user
   end
 
   context 'without incorporated ILS metadata' do
