@@ -122,4 +122,88 @@ namespace :apotheca do
       end
     end
   end
+
+  desc 'Use api to import from deployed environment'
+  task import_record: :environment do
+    include Rails.application.routes.url_helpers
+    raise ArgumentError, 'item id missing' unless ENV['id']
+
+    # Item uuid
+    id = ENV['id']
+
+    # Determine which api to use from deployed environments
+    deployed_env = ENV['staging'] == 'true' ? :staging : :production
+
+    # Establish faraday connection
+    connection = Faraday.new(url: URI::HTTPS.build(host: Settings.api.host[deployed_env])) do |config|
+      config.request :json # Sets the Content-Type header to application/json on each request.
+      config.options.timeout = 600 # Set connection timeout
+      config.response :follow_redirects # Follows api redirects to presigned S3 url
+      config.response :raise_error # Raises an error on 4xx and 5xx responses.
+      config.response :json # Parses JSON response bodies.
+    end
+
+    item_json = connection.get(api_item_resource_admin_path(uuid: id), { assets: true }).body['data']['item']
+
+    asset_json = item_json['assets']
+    thumbnail_asset_id = item_json['thumbnail_asset_id']
+
+    item_metadata = {
+      unique_identifier: item_json['ark'],
+      created_by: Settings.system_user,
+      human_readable_name: item_json['human_readable_name'] || 'TBA',
+      descriptive_metadata: item_json['descriptive_metadata'],
+      structural_metadata: {
+        viewing_direction: item_json['structural_metadata']['viewing_direction'],
+        viewing_hint: item_json['structural_metadata']['viewing_hint'],
+        arranged_asset_ids: []
+      },
+      thumbnail_asset_id: nil,
+      ocr_strategy: item_json['ocr_strategy'],
+      asset_ids: []
+    }
+
+    # Create Asset
+
+    asset_json.each do |asset|
+      asset_metadata = { filename: asset['preservation_file']['original_filename'],
+                         label: asset['label'],
+                         created_by: Settings.system_user }
+      # create asset
+
+      result = CreateAsset.new.call(**asset_metadata)
+
+      asset_id = result.value!.id
+
+      # Push asset id to item asset_ids and arranged_asset_ids array
+      item_metadata[:asset_ids] << asset_id
+      item_metadata[:structural_metadata][:arranged_asset_ids] << asset_id
+
+      # Set thumbnail_asset_id
+      item_metadata[:thumbnail_asset_id] = asset_id if thumbnail_asset_id == asset['id']
+
+      # Download preservation file
+      tempfile = Tempfile.new('preservation_file', binmode: true)
+
+      connection.get(URI.parse(asset['preservation_file']['url']).path) do |req|
+        req.options.on_data = proc do |chunk, _overall_received_bytes_, _env|
+          tempfile.write(chunk)
+        end
+      end
+
+      tempfile.rewind
+
+      # Present preservation file as a ActionDispatch::Http::UploadedFile
+      uploaded_file = ActionDispatch::Http::UploadedFile.new(tempfile: tempfile, filename: asset_metadata[:filename])
+
+      # Update asset with preservation file
+      UpdateAsset.new.call(id: asset_id, updated_by: item_metadata[:created_by], file: uploaded_file)
+
+      # Close and delete temp file
+      tempfile.close(true)
+    end
+
+    # Create Item
+    CreateItem.new.call(**item_metadata)
+  end
 end

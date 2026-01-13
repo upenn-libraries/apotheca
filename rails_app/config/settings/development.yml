@@ -67,3 +67,12 @@ publish:
     pdf_path: pdf
     original_path: original
     manifest_path: manifest
+
+# API
+api:
+  host:
+    production: apotheca.library.upenn.edu
+    staging: apotheca-staging.library.upenn.edu
+  resource:
+    items:
+      path: /v1/items
