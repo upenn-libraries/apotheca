@@ -151,7 +151,7 @@ namespace :apotheca do
     item_metadata = {
       unique_identifier: item_json['ark'],
       created_by: Settings.system_user,
-      human_readable_name: item_json['human_readable_name'] || 'TBA',
+      human_readable_name: item_json['human_readable_name'],
       descriptive_metadata: item_json['descriptive_metadata'],
       structural_metadata: {
         viewing_direction: item_json['structural_metadata']['viewing_direction'],
