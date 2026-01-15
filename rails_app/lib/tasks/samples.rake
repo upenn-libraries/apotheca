@@ -2,7 +2,6 @@
 
 namespace :apotheca do
   namespace :samples do
-
     desc 'Generate some sample item/assets using fake data'
     task generate_items: :environment do
       sample_records_count = 5
@@ -39,7 +38,6 @@ namespace :apotheca do
         # Create Item
         CreateItem.new.call(**item_metadata)
       end
-
     end
 
     desc 'Generate sample BulkImports'
@@ -176,7 +174,9 @@ namespace :apotheca do
       # Create Item
       CreateItem.new.call(**item_metadata) do |result|
         result.failure { |data| cleanup.call(item_metadata[:asset_ids], data[:error], :creating_an_item) }
-        result.success { |item| puts "Successfully imported #{id} from #{deployed_env}: #{item.presenter.apotheca_url}." }
+        result.success do |item|
+          puts "Successfully imported #{id} from #{deployed_env}: #{item.presenter.apotheca_url}."
+        end
       end
     end
   end
