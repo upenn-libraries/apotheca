@@ -97,7 +97,7 @@ namespace :apotheca do
       asset_json = item_json['assets']
 
       # Maximum number of assets an imported item can have unless force flag passed
-      asset_limit = 25
+      asset_limit = 40
 
       if asset_json.size > asset_limit && ENV['force'] != 'true'
         abort("Item's assets exceeds limit of #{asset_limit}. Aborting import.")

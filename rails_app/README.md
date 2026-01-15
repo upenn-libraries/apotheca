@@ -52,7 +52,7 @@ This task defaults to the `production` environment. If you want to import an ite
 ```bash
 bundle exec rake apotheca:samples:import_item id=item_id staging=true
 ```
-Items imported with this task may not have more than 25 assets. To override this limit set the `force=true` environment 
+Items imported with this task may not have more than 40 assets. To override this limit set the `force=true` environment 
 variable when executing the task.
 ```bash
 bundle exec rake apotheca:samples:import_item id=item_id force=true
