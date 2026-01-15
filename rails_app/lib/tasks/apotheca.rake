@@ -146,6 +146,14 @@ namespace :apotheca do
     item_json = connection.get(api_item_resource_admin_path(uuid: id), { assets: true }).body['data']['item']
 
     asset_json = item_json['assets']
+
+    # Maximum number of assets an imported item can have unless force flag passed
+    asset_limit = 25
+
+    if asset_json.size > asset_limit && ENV['force'] != 'true'
+      abort("Item's assets exceeds limit of #{asset_limit}. Aborting import.")
+    end
+
     thumbnail_asset_id = item_json['thumbnail_asset_id']
 
     item_metadata = {
