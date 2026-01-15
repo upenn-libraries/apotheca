@@ -171,7 +171,6 @@ namespace :apotheca do
       asset_ids: []
     }
 
-    # Create Asset
     cleanup = lambda do |asset_ids, error_msg, step|
       asset_ids.each { |a| PurgeAsset.new.call(id: a.id) }
       puts 'Assets purged'
@@ -179,12 +178,12 @@ namespace :apotheca do
       abort("Aborting import of item #{id} from #{deployed_env}.")
     end
 
+    # Create all arranged assets
 
     asset_json.each do |asset|
       asset_metadata = { filename: asset['preservation_file']['original_filename'],
                          label: asset['label'],
                          created_by: Settings.system_user }
-      # create asset
       asset_id = nil
 
       CreateAsset.new.call(**asset_metadata) do |result|
