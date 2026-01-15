@@ -172,16 +172,25 @@ namespace :apotheca do
     }
 
     # Create Asset
+    cleanup = lambda do |asset_ids, error_msg, step|
+      asset_ids.each { |a| PurgeAsset.new.call(id: a.id) }
+      puts 'Assets purged'
+      puts "Something went wrong while #{step.to_s.humanize.downcase}: #{error_msg.to_s.humanize}."
+      abort("Aborting import of item #{id} from #{deployed_env}.")
+    end
+
 
     asset_json.each do |asset|
       asset_metadata = { filename: asset['preservation_file']['original_filename'],
                          label: asset['label'],
                          created_by: Settings.system_user }
       # create asset
+      asset_id = nil
 
-      result = CreateAsset.new.call(**asset_metadata)
-
-      asset_id = result.value!.id
+      CreateAsset.new.call(**asset_metadata) do |result|
+        result.failure { |data| cleanup.call(item_metadata[:asset_ids], data[:error], :creating_an_asset) }
+        result.success { |item| asset_id = item.id }
+      end
 
       # Push asset id to item asset_ids and arranged_asset_ids array
       item_metadata[:asset_ids] << asset_id
@@ -205,13 +214,19 @@ namespace :apotheca do
       uploaded_file = ActionDispatch::Http::UploadedFile.new(tempfile: tempfile, filename: asset_metadata[:filename])
 
       # Update asset with preservation file
-      UpdateAsset.new.call(id: asset_id, updated_by: item_metadata[:created_by], file: uploaded_file)
+      UpdateAsset.new.call(id: asset_id, updated_by: item_metadata[:created_by], file: uploaded_file) do |result|
+        result.failure { |data| cleanup.call(item_metadata[:asset_ids], data[:error], :updating_an_asset) }
+        result.success { |updated_asset| "Asset #{updated_asset.id} updated with preservation file." }
+      end
 
       # Close and delete temp file
       tempfile.close(true)
     end
 
     # Create Item
-    CreateItem.new.call(**item_metadata)
+    CreateItem.new.call(**item_metadata) do |result|
+      result.failure { |data| cleanup.call(item_metadata[:asset_ids], data[:error], :creating_an_item) }
+      result.success { |item| puts "Successfully imported #{id} from #{deployed_env}: #{item.presenter.apotheca_url}." }
+    end
   end
 end
