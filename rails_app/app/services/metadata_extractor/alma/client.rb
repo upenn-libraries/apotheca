@@ -32,7 +32,7 @@ module MetadataExtractor
       # @return [Faraday::Connection]
       def faraday
         @faraday ||= Faraday.new(url: URI::HTTPS.build(host: Settings.alma.host)) do |config|
-          config.request :authorization, :apikey # TODO add api key
+          config.request :authorization, :apikey, Settings.alma.api_key
           config.request :json
           config.response :raise_error
           config.response :logger, Rails.logger, headers: true, bodies: false, log_level: :info do |fmt|
