@@ -2,7 +2,7 @@
   <leader>03252cam a2200517 a 4500</leader>
   <controlfield tag="001">9923478503503681</controlfield>
   <controlfield tag="005">20220610155713.0</controlfield>
-  <controlfield tag="008">981007s1598    gw a          000 0 ger </controlfield>
+  <controlfield tag="008">981007s1598    gw a          000 0 ger  </controlfield>
   <datafield ind1=" " ind2=" " tag="010">
     <subfield code="a">11007812</subfield>
   </datafield>
