@@ -13,6 +13,9 @@ module API
       DEFAULT_SIZE = 200
       MAX_SIZE = 600
 
+      # renders json with additional metadata required to import a record in a local environment
+      def admin_show; end
+
       def show; end
 
       def lookup

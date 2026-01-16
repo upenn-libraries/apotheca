@@ -20,67 +20,6 @@ namespace :apotheca do
     Solr::Reindexer.reindex_all
   end
 
-  desc 'Generate some sample item/assets'
-  task generate_samples: :environment do
-    sample_records_count = 5
-
-    sample_records_count.times do
-      fake_item = FactoryBot.build :item_resource, :with_faker_metadata
-
-      # Load file
-      uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: File.new(Rails.root.join('spec/fixtures/files/trade_card/original/front.tif')),
-        filename: 'front.tif'
-      )
-
-      # Create Asset
-      result = CreateAsset.new.call(created_by: fake_item.created_by, label: 'Front',
-                                    annotation: [{ text: 'Front of Card' }])
-      asset_id = result.value!.id
-
-      # Update Asset with preservation file
-      UpdateAsset.new.call(id: asset_id, updated_by: fake_item.created_by, file: uploaded_file)
-
-      # Prepare Item metadata
-      item_metadata = {
-        created_by: fake_item.created_by,
-        human_readable_name: fake_item.human_readable_name,
-        descriptive_metadata: fake_item.descriptive_metadata.to_json_export,
-        structural_metadata: {
-          viewing_hint: fake_item.structural_metadata.viewing_hint,
-          arranged_asset_ids: [asset_id]
-        },
-        asset_ids: [asset_id]
-      }
-
-      # Create Item
-      CreateItem.new.call(**item_metadata)
-    end
-  end
-
-  desc 'Generate sample BulkImports'
-  task generate_bulk_imports: :environment do
-    sample_count = 10
-    import_states = Import.aasm.states.map(&:name)
-    bulk_imports = FactoryBot.create_list(:bulk_import, sample_count)
-
-    0.upto(sample_count * 3).each do
-      FactoryBot.create(:import, import_states.sample, bulk_import: bulk_imports.sample)
-    end
-  end
-
-  desc 'Generate sample Reports'
-  task generate_reports: :environment do
-    sample_count = 5
-    report_states = Report.aasm.states.map(&:name)
-
-    # Ensure that at least one is successful
-    FactoryBot.create(:report, Report::STATE_SUCCESSFUL)
-    1.upto(sample_count - 1).each do
-      FactoryBot.create(:report, report_states.sample)
-    end
-  end
-
   desc 'Create preservation, derivative and working storage buckets for development and test environments'
   task create_buckets: :environment do
     configs = [

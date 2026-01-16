@@ -67,3 +67,18 @@ publish:
     pdf_path: pdf
     original_path: original
     manifest_path: manifest
+
+# API
+api:
+  host:
+    production: apotheca.library.upenn.edu
+    staging: apotheca-staging.library.upenn.edu
+  resource:
+    items:
+      path: /v1/items
+  sample_records:
+    - 4aec6af0-c57e-4f0d-b1f4-7945f4bf7212
+    - 362ba96f-2fab-4a35-bd42-98f6667da1d0
+    - e90ec77f-008c-43e9-b720-d73db60fe3a3
+    - 375a37c2-0cc4-4512-86f0-9113d9c80ca8
+    - faa4493e-ec40-4520-9c13-41a1527609b6
