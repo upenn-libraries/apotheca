@@ -17,6 +17,10 @@ chrome:
   url: <%= ENV.fetch('CHROME_URL', 'ws://chrome:3333') %>
 
 # External Services
+alma:
+  host:  api-na.hosted.exlibrisgroup.com
+  bibs:
+    path: /almaws/v1/bibs
 ezid:
   default_shoulder: 'ark:/99999/fk4'
   user: <%= DockerSecrets.lookup(:ezid_user, 'apitest') %>

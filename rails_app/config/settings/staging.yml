@@ -15,6 +15,10 @@ redis:
   password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
 
 # External Services
+alma:
+  url:  api-na.hosted.exlibrisgroup.com
+  bibs:
+    path: /almaws/v1/bibs
 ezid:
   default_shoulder: 'ark:/99999/fk4'
   user: <%= DockerSecrets.lookup(:ezid_user, 'apitest') %>
