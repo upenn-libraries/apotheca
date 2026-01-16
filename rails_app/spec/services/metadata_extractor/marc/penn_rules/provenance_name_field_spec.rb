@@ -41,5 +41,24 @@ RSpec.describe MetadataExtractor::MARC::PennRules::ProvenanceNameField do
         expect(field_mapping.apply?(datafield)).to be false
       end
     end
+
+    context 'when name field has a name role and provenance role' do
+      let(:xml) do
+        <<~XML
+          <marc:datafield ind1="1" ind2=" " tag="700" xmlns:marc="http://www.loc.gov/MARC21/slim">
+            <marc:subfield code="a">Berendt, C. Hermann</marc:subfield>
+            <marc:subfield code="q">(Carl Hermann),</marc:subfield>
+            <marc:subfield code="d">1817-1878,</marc:subfield>
+            <marc:subfield code="e">scribe,</marc:subfield>
+            <marc:subfield code="e">former owner.</marc:subfield>
+            <marc:subfield code="0">http://id.loc.gov/authorities/names/n93073368</marc:subfield>
+          </marc:datafield>
+        XML
+      end
+
+      it 'returns true' do
+        expect(field_mapping.apply?(datafield)).to be true
+      end
+    end
   end
 end
