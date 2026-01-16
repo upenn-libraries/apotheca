@@ -1,181 +1,172 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<marc:records xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
-  <marc:record>
-    <marc:leader>03252cam a2200517 a 4500</marc:leader>
-    <marc:controlfield tag="001">9923478503503681</marc:controlfield>
-    <marc:controlfield tag="005">20220610155713.0</marc:controlfield>
-    <marc:controlfield tag="008">981007s1598    gw a          000 0 ger  </marc:controlfield>
-    <marc:datafield ind1=" " ind2=" " tag="010">
-      <marc:subfield code="a">11007812</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="026">
-      <marc:subfield code="e">sts- n.r* n.n. di12 (3) 1598 (A)</marc:subfield>
-      <marc:subfield code="2">fei</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="035">
-      <marc:subfield code="a">(OCoLC)ocm16660686</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="035">
-      <marc:subfield code="a">(OCoLC)16660686</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="035">
-      <marc:subfield code="a">2347850</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="035">
-      <marc:subfield code="a">(PU)2347850-penndb-Voyager</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="040">
-      <marc:subfield code="a">DLC</marc:subfield>
-      <marc:subfield code="b">eng</marc:subfield>
-      <marc:subfield code="e">dcrb</marc:subfield>
-      <marc:subfield code="c">LRU</marc:subfield>
-      <marc:subfield code="d">PU</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1="0" ind2=" " tag="050">
-      <marc:subfield code="a">TN664</marc:subfield>
-      <marc:subfield code="b">.E7</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2="4" tag="050">
-      <marc:subfield code="a">TN664</marc:subfield>
-      <marc:subfield code="b">.E7 1598</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1="1" ind2=" " tag="100">
-      <marc:subfield code="a">Ercker, Lazarus,</marc:subfield>
-      <marc:subfield code="d">-1594.</marc:subfield>
-      <marc:subfield code="0">http://id.loc.gov/authorities/names/n85215805</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1="1" ind2="0" tag="245">
-      <marc:subfield code="a">Beschreibung aller fürnemisten Mineralischen Ertzt vnnd Berckwercksarten :</marc:subfield>
-      <marc:subfield code="b">wie dieselbigen vnd eine jede in Sonderheit jrer Natur vnd Eygenschafft nach, auff alle Metalla probirt, vnd im kleinen Fewr sollen versucht werden, mit Erklärung etlicher fürnemer nützlicher Schmeltzwerck im grossen Feuwer, auch Scheidung Goldts, Silbers, vnd anderer Metalln, sampt einem Bericht des Kupffer Saigerns, Messing brennens, vnd Salpeter Siedens, auch aller saltzigen Minerischen proben, vnd was denen allen anhengig : in fünff Bücher verfast, dessgleichen zuvorn niemals in Druck kommen ... : auffs newe an vielen Orten mit besserer Aussführung, vnd mehreren Figurn erklärt /</marc:subfield>
-      <marc:subfield code="c">durch den weitberühmten Lazarum Erckern, der Röm. Kay. May. Obersten Bergkmeister vnd Buchhalter in Königreich Böhem &amp;c. ...</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2="1" tag="264">
-      <marc:subfield code="a">Gedruckt zu Franckfurt am Mayn :</marc:subfield>
-      <marc:subfield code="b">Durch Johan Feyerabendt,</marc:subfield>
-      <marc:subfield code="c">1598.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="300">
-      <marc:subfield code="a">4 unnumbered leaves, 134 leaves, 4 unnumbered leaves :</marc:subfield>
-      <marc:subfield code="b">illustrations ;</marc:subfield>
-      <marc:subfield code="c">31 cm (folio)</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="336">
-      <marc:subfield code="a">text</marc:subfield>
-      <marc:subfield code="b">txt</marc:subfield>
-      <marc:subfield code="2">rdacontent</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="337">
-      <marc:subfield code="a">unmediated</marc:subfield>
-      <marc:subfield code="b">n</marc:subfield>
-      <marc:subfield code="2">rdamedia</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="338">
-      <marc:subfield code="a">volume</marc:subfield>
-      <marc:subfield code="b">nc</marc:subfield>
-      <marc:subfield code="2">rdacarrier</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="500">
-      <marc:subfield code="a">Leaves printed on both sides.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="500">
-      <marc:subfield code="a">Signatures: )(⁴ A-Z⁴ a-k⁴ l⁶.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="500">
-      <marc:subfield code="a">The last leaf is blank.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="500">
-      <marc:subfield code="a">Woodcut illustrations, initials and tail-pieces.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="500">
-      <marc:subfield code="a">Title page printed in black and red.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="500">
-      <marc:subfield code="a">Printed marginalia.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="500">
-      <marc:subfield code="a">"Erratum" on verso of last printed leaf.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="500">
-      <marc:subfield code="a">Online version available via Colenda</marc:subfield>
-      <marc:subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3df6k90j</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="590">
-      <marc:subfield code="a">Penn Libraries copy has Edgar Fahs Smith's autograph on front free endpaper; autograph of H. Wright on front free endpaper; effaced ms. inscription (autograph?) on title leaf.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2="7" tag="648">
-      <marc:subfield code="a">Early works to 1800.</marc:subfield>
-      <marc:subfield code="2">fast</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2="0" tag="650">
-      <marc:subfield code="a">Metallurgy</marc:subfield>
-      <marc:subfield code="v">Early works to 1800.</marc:subfield>
-      <marc:subfield code="0">http://id.loc.gov/authorities/subjects/sh2008107709</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2="7" tag="650">
-      <marc:subfield code="a">Metallurgy.</marc:subfield>
-      <marc:subfield code="2">fast</marc:subfield>
-      <marc:subfield code="0">http://id.worldcat.org/fast/1018005</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2="0" tag="650">
-      <marc:subfield code="a">Assaying</marc:subfield>
-      <marc:subfield code="v">Early works to 1800.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2="7" tag="650">
-      <marc:subfield code="a">Assaying.</marc:subfield>
-      <marc:subfield code="2">fast</marc:subfield>
-      <marc:subfield code="0">http://id.worldcat.org/fast/818995</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1="1" ind2=" " tag="700">
-      <marc:subfield code="a">Feyerabend, Johann,</marc:subfield>
-      <marc:subfield code="d">1550-1599,</marc:subfield>
-      <marc:subfield code="e">printer.</marc:subfield>
-      <marc:subfield code="0">http://id.loc.gov/authorities/names/nr95034041</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1="1" ind2=" " tag="700">
-      <subfield code="a">Beck, Helmut,</subfield>
-      <subfield code="d">1919-2001,</subfield>
-      <subfield code="e">former owner.</subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="752">
-      <marc:subfield code="a">Germany</marc:subfield>
-      <marc:subfield code="d">Frankfurt am Main.</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1="4" ind2="1" tag="856">
-      <marc:subfield code="z">Facsimile</marc:subfield>
-      <marc:subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3df6k90j</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="902">
-      <marc:subfield code="a">MARCIVE 2022</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="AVA">
-      <marc:subfield code="0">9923478503503681</marc:subfield>
-      <marc:subfield code="8">22252299940003681</marc:subfield>
-      <marc:subfield code="a">01UPENN_INST</marc:subfield>
-      <marc:subfield code="b">KislakCntr</marc:subfield>
-      <marc:subfield code="c">E.F. Smith Collection</marc:subfield>
-      <marc:subfield code="d">Folio TN664 .E7 1598</marc:subfield>
-      <marc:subfield code="e">check_holdings</marc:subfield>
-      <marc:subfield code="j">scsmith</marc:subfield>
-      <marc:subfield code="k">0</marc:subfield>
-      <marc:subfield code="p">1</marc:subfield>
-      <marc:subfield code="q">Kislak Center for Special Collections, Rare Books and Manuscripts</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="561">
-      <marc:subfield code="a">Smith, Edgar Fahs, 1854-1928 (autograph, 1917)</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1=" " ind2=" " tag="561">
-      <marc:subfield code="a">Wright, H. (autograph, 1870)</marc:subfield>
-    </marc:datafield>
-    <marc:datafield ind1="0" ind2="0" tag="773">
-      <marc:subfield code="t">Edgar Fahs Smith Memorial Collection (University of Pennsylvania)</marc:subfield>
-    </marc:datafield>
-    <marc:holdings>
-      <marc:holding>
-        <marc:holding_id>22252299940003681</marc:holding_id>
-        <marc:call_number>Folio TN664 .E7 1598</marc:call_number>
-        <marc:library>KislakCntr</marc:library>
-        <marc:location>scsmith</marc:location>
-      </marc:holding>
-    </marc:holdings>
-  </marc:record>
-</marc:records>
+<record>
+  <leader>03252cam a2200517 a 4500</leader>
+  <controlfield tag="001">9923478503503681</controlfield>
+  <controlfield tag="005">20220610155713.0</controlfield>
+  <controlfield tag="008">981007s1598    gw a          000 0 ger </controlfield>
+  <datafield ind1=" " ind2=" " tag="010">
+    <subfield code="a">11007812</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="026">
+    <subfield code="e">sts- n.r* n.n. di12 (3) 1598 (A)</subfield>
+    <subfield code="2">fei</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="035">
+    <subfield code="a">(OCoLC)ocm16660686</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="035">
+    <subfield code="a">(OCoLC)16660686</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="035">
+    <subfield code="a">2347850</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="035">
+    <subfield code="a">(PU)2347850-penndb-Voyager</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="040">
+    <subfield code="a">DLC</subfield>
+    <subfield code="b">eng</subfield>
+    <subfield code="e">dcrb</subfield>
+    <subfield code="c">LRU</subfield>
+    <subfield code="d">PU</subfield>
+  </datafield>
+  <datafield ind1="0" ind2=" " tag="050">
+    <subfield code="a">TN664</subfield>
+    <subfield code="b">.E7</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="4" tag="050">
+    <subfield code="a">TN664</subfield>
+    <subfield code="b">.E7 1598</subfield>
+  </datafield>
+  <datafield ind1="1" ind2=" " tag="100">
+    <subfield code="a">Ercker, Lazarus,</subfield>
+    <subfield code="d">-1594.</subfield>
+    <subfield code="0">http://id.loc.gov/authorities/names/n85215805</subfield>
+  </datafield>
+  <datafield ind1="1" ind2="0" tag="245">
+    <subfield code="a">Beschreibung aller fürnemisten Mineralischen Ertzt vnnd Berckwercksarten :</subfield>
+    <subfield code="b">wie dieselbigen vnd eine jede in Sonderheit jrer Natur vnd Eygenschafft nach, auff alle Metalla probirt, vnd im kleinen Fewr sollen versucht werden, mit Erklärung etlicher fürnemer nützlicher Schmeltzwerck im grossen Feuwer, auch Scheidung Goldts, Silbers, vnd anderer Metalln, sampt einem Bericht des Kupffer Saigerns, Messing brennens, vnd Salpeter Siedens, auch aller saltzigen Minerischen proben, vnd was denen allen anhengig : in fünff Bücher verfast, dessgleichen zuvorn niemals in Druck kommen ... : auffs newe an vielen Orten mit besserer Aussführung, vnd mehreren Figurn erklärt /</subfield>
+    <subfield code="c">durch den weitberühmten Lazarum Erckern, der Röm. Kay. May. Obersten Bergkmeister vnd Buchhalter in Königreich Böhem &amp;c. ...</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="1" tag="264">
+    <subfield code="a">Gedruckt zu Franckfurt am Mayn :</subfield>
+    <subfield code="b">Durch Johan Feyerabendt,</subfield>
+    <subfield code="c">1598.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="300">
+    <subfield code="a">4 unnumbered leaves, 134 leaves, 4 unnumbered leaves :</subfield>
+    <subfield code="b">illustrations ;</subfield>
+    <subfield code="c">31 cm (folio)</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="336">
+    <subfield code="a">text</subfield>
+    <subfield code="b">txt</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="337">
+    <subfield code="a">unmediated</subfield>
+    <subfield code="b">n</subfield>
+    <subfield code="2">rdamedia</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="338">
+    <subfield code="a">volume</subfield>
+    <subfield code="b">nc</subfield>
+    <subfield code="2">rdacarrier</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Leaves printed on both sides.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Signatures: )(⁴ A-Z⁴ a-k⁴ l⁶.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">The last leaf is blank.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Woodcut illustrations, initials and tail-pieces.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Title page printed in black and red.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Printed marginalia.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">"Erratum" on verso of last printed leaf.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Online version available via Colenda</subfield>
+    <subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3df6k90j</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="590">
+    <subfield code="a">Penn Libraries copy has Edgar Fahs Smith's autograph on front free endpaper; autograph of H. Wright on front free endpaper; effaced ms. inscription (autograph?) on title leaf.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="7" tag="648">
+    <subfield code="a">Early works to 1800.</subfield>
+    <subfield code="2">fast</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="0" tag="650">
+    <subfield code="a">Metallurgy</subfield>
+    <subfield code="v">Early works to 1800.</subfield>
+    <subfield code="0">http://id.loc.gov/authorities/subjects/sh2008107709</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="7" tag="650">
+    <subfield code="a">Metallurgy.</subfield>
+    <subfield code="2">fast</subfield>
+    <subfield code="0">http://id.worldcat.org/fast/1018005</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="0" tag="650">
+    <subfield code="a">Assaying</subfield>
+    <subfield code="v">Early works to 1800.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="7" tag="650">
+    <subfield code="a">Assaying.</subfield>
+    <subfield code="2">fast</subfield>
+    <subfield code="0">http://id.worldcat.org/fast/818995</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="4" tag="650">
+    <subfield code="a">CHR 1598</subfield>
+    <subfield code="5">PU</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="4" tag="650">
+    <subfield code="a">PRO Smith, Edgar Fahs, 1854-1928 (autograph, 1917)</subfield>
+    <subfield code="5">PU</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="4" tag="650">
+    <subfield code="a">PRO Wright, H. (autograph, 1870)</subfield>
+    <subfield code="5">PU</subfield>
+  </datafield>
+  <datafield ind1="1" ind2=" " tag="700">
+    <subfield code="a">Feyerabend, Johann,</subfield>
+    <subfield code="d">1550-1599,</subfield>
+    <subfield code="e">printer.</subfield>
+    <subfield code="0">http://id.loc.gov/authorities/names/nr95034041</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="752">
+    <subfield code="a">Germany</subfield>
+    <subfield code="d">Frankfurt am Main.</subfield>
+  </datafield>
+  <datafield ind1="2" ind2=" " tag="710">
+    <subfield code="a">Edgar Fahs Smith Memorial Collection (University of Pennsylvania)</subfield>
+    <subfield code="5">PU</subfield>
+  </datafield>
+  <datafield ind1="4" ind2="1" tag="856">
+    <subfield code="z">Facsimile</subfield>
+    <subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3df6k90j</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="902">
+    <subfield code="a">MARCIVE 2022</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="AVA">
+    <subfield code="0">9923478503503681</subfield>
+    <subfield code="8">22252299940003681</subfield>
+    <subfield code="a">01UPENN_INST</subfield>
+    <subfield code="b">KislakCntr</subfield>
+    <subfield code="c">E.F. Smith Collection</subfield>
+    <subfield code="d">Folio TN664 .E7 1598</subfield>
+    <subfield code="e">check_holdings</subfield>
+    <subfield code="j">scsmith</subfield>
+    <subfield code="k">0</subfield>
+    <subfield code="p">1</subfield>
+    <subfield code="q">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+  </datafield>
+</record>
