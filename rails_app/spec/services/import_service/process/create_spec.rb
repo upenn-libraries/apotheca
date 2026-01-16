@@ -301,7 +301,7 @@ describe ImportService::Process::Create do
 
     context 'when language metadata is only found in ils' do
       include_context 'with successful Alma request' do
-        let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+        let(:xml) { File.read(file_fixture('alma/marc_xml/book-1.xml')) }
       end
 
       let(:process) do

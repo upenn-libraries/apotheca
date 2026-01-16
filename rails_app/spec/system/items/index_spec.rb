@@ -42,7 +42,7 @@ describe 'Item Index Page' do
 
   context 'with incorporated ILS metadata' do
     include_context 'with successful Alma request' do
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/non-book-1.xml')) }
+      let(:xml) { File.read(file_fixture('alma/marc_xml/non-book-1.xml')) }
     end
 
     let(:user) { create(:user, :viewer) }

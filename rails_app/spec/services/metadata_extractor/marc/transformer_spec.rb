@@ -53,7 +53,7 @@ RSpec.describe MetadataExtractor::MARC::Transformer do
         }
       end
       # rubocop:enable Layout/LineLength
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+      let(:xml) { File.read(file_fixture('alma/marc_xml/book-1.xml')) }
 
       it 'generates_expected_xml' do
         expect(transformer.run(xml)).to eq expected_metadata
@@ -108,7 +108,7 @@ RSpec.describe MetadataExtractor::MARC::Transformer do
         }
       end
       # rubocop:enable Layout/LineLength
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/manuscript-1.xml')) }
+      let(:xml) { File.read(file_fixture('alma/marc_xml/manuscript-1.xml')) }
 
       it 'generates expected xml' do
         expect(transformer.run(xml)).to eq expected_metadata

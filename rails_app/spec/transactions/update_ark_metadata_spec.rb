@@ -9,7 +9,7 @@ describe UpdateArkMetadata do
 
     context 'when EZID requests valid' do
       include_context 'with successful Alma request' do
-        let(:xml) { File.read(file_fixture('marmite/marc_xml/manuscript-1.xml')) }
+        let(:xml) { File.read(file_fixture('alma/marc_xml/manuscript-1.xml')) }
       end
 
       let(:item) { persist(:item_resource, :with_bibnumber) }

@@ -14,7 +14,7 @@ describe EnqueueBulkRefreshIlsMetadataJob do
 
   context 'when there is at least one item with a bibnumber' do
     include_context 'with successful Alma request' do
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+      let(:xml) { File.read(file_fixture('alma/marc_xml/book-1.xml')) }
     end
 
     let!(:first_item_with_bib) { persist(:item_resource, :with_bibnumber) }

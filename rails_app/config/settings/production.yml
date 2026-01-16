@@ -24,8 +24,6 @@ ezid:
   default_shoulder: 'ark:/81431/p3'
   user: <%= DockerSecrets.lookup(:ezid_user, 'apitest') %>
   password: <%= DockerSecrets.lookup(:ezid_password, 'apitest') %>
-marmite:
-  url: http://mdproc.library.upenn.edu:9292
 honeybadger:
   api_key: <%= DockerSecrets.lookup(:honeybadger_api_key) %>
 image_server:
