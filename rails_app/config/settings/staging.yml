@@ -16,6 +16,7 @@ redis:
 
 # External Services
 alma:
+  api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
   url:  api-na.hosted.exlibrisgroup.com
   bibs:
     path: /almaws/v1/bibs

@@ -23,6 +23,7 @@
       - "{{ role_path ~ '/files/docker-compose.dev.yml' }}"
     state: present
   environment:
+    ALMA_API_KEY: "{{ 'apotheca_alma_api_key_v' ~ apotheca_versioned_secrets.alma_api_key.version }}"
     API_IMAGE_NAME: "{{ api_image_name }}"
     API_IMAGE_TAG: "{{ api_image_tag }}"
     API_PORT: "{{ api_port }}"
@@ -76,6 +77,7 @@
       - "{{ project_root ~ '/api/docker-compose.prod.yml' }}"
     state: present
   environment:
+    ALMA_API_KEY: "{{ 'apotheca_alma_api_key_v' ~ apotheca_versioned_secrets.alma_api_key.version }}"
     API_IMAGE_NAME: "{{ api_image_name }}"
     API_IMAGE_TAG: "{{ api_image_tag }}"
     API_PORT: "{{ api_port }}"
