@@ -62,7 +62,7 @@ describe GenerateDerivatives do
     end
 
     context 'when language metadata is only found in ils metadata' do
-      include_context 'with successful Marmite request' do
+      include_context 'with successful Alma request' do
         let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
       end
 

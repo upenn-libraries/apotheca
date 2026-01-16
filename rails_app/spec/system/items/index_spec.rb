@@ -41,7 +41,7 @@ describe 'Item Index Page' do
   end
 
   context 'with incorporated ILS metadata' do
-    include_context 'with successful Marmite request' do
+    include_context 'with successful Alma request' do
       let(:xml) { File.read(file_fixture('marmite/marc_xml/non-book-1.xml')) }
     end
 
@@ -49,7 +49,7 @@ describe 'Item Index Page' do
     let(:item_with_bibnumber) { persist(:item_resource, :with_bibnumber) }
 
     before do
-      item_with_bibnumber # build item after Marmite request has been stubbed
+      item_with_bibnumber # build item after Alma request has been stubbed
       visit items_path
     end
 

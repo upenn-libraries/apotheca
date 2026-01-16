@@ -22,8 +22,8 @@ shared_examples_for 'a ImportService::Process::Base' do
       end
     end
 
-    context 'when marmite fails to retrieve metadata when provided properly formatted bibnumber' do
-      include_context 'with unsuccessful Marmite request'
+    context 'when Alma fails to retrieve metadata when provided properly formatted bibnumber' do
+      include_context 'with unsuccessful Alma request'
       let(:bibnumber) { MMSIDValidator::EXAMPLE_VALID_MMS_ID }
 
       it 'adds error' do

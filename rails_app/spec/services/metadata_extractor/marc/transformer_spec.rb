@@ -90,7 +90,7 @@ RSpec.describe MetadataExtractor::MARC::Transformer do
           ],
           physical_format: [
             { value: 'manuscripts (documents)', uri: 'http://vocab.getty.edu/aat/300028569' },
-            { value: 'Chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
+            { value: 'chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
             { value: 'Manuscripts, Latin' },
             { value: 'Manuscripts, Renaissance' }
           ],
