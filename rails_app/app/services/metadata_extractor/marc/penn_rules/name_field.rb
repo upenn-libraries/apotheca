@@ -23,7 +23,7 @@ module MetadataExtractor
         #
         # @return [Array<String>]
         def roles(field)
-          role_subfield = %w[111 711].include?(field.tag) ? 'j' : 'e'
+          role_subfield = field.tag == '111' ? 'j' : 'e'
           field.values_at(subfields: role_subfield)
         end
       end

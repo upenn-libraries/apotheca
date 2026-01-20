@@ -3,42 +3,29 @@
 module MetadataExtractor
   module MARC
     class PennRules
-      # Custom mapping rule for 7XX name fields. Excludes fields that are related works
-      # or provenance names. Includes name's roles in the extracted value.
+      # Custom mapping rule for 7XX name fields. Excludes fields that are related works, collection names or
+      # provenance names. Includes roles in the extracted value.
       class AdditionalNameField < NameField
-        PROVENANCE_TAG = '700'
+        include AdditionalNameHelper
 
-        # Only maps datafields that don't contain related work or provenance values.
+        # Extracting name value, uri and roles. When extracting roles, makes sure to remove any provenance roles.
+        #
+        # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
+        # @return [Array<Hash>] list of extracted values in hash containing value, uri and roles
+        def mapping(field)
+          super.map do |value|
+            extracted_roles = name_roles(field)
+            value[:role] = extracted_roles.map { |r| { value: r } } if extracted_roles.present?
+            value
+          end
+        end
+
+        # Only maps datafields that don't contain related work, collection or provenance values.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def apply?(field)
-          super && !related_work?(field) && !provenance?(field)
-        end
-
-        private
-
-        # Return true if field is a related work.
-        #
-        # @return [Boolean]
-        def related_work?(field)
-          field.subfield_at('t').present?
-        end
-
-        # Return true if field contains a provenance value.
-        #
-        # Note: Only 700 fields can contain a provenance value.
-        #
-        # @return [Boolean]
-        def provenance?(field)
-          field.tag == PROVENANCE_TAG && provenance_roles?(field)
-        end
-
-        # Returns true if field contains a provenance role.
-        #
-        # @return [Boolean]
-        def provenance_roles?(field)
-          roles(field).any? { |role| role.match?(ProvenanceNameField::ROLE_REGEX) }
+          super && name?(field)
         end
       end
     end

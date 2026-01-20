@@ -3,9 +3,9 @@
 module MetadataExtractor
   module MARC
     class PennRules
-      # Extracts provenance from name fields. This mapping should only be used for the 700 field.
+      # Extracts provenance from name fields. This mapping should only be used for the 700 and 710 field.
       class ProvenanceNameField < DataField
-        ROLE_REGEX = /(donor|owner)/
+        include AdditionalNameHelper
 
         # Only maps field if it's a role that implies it is a provenance name.
         #
@@ -13,16 +13,6 @@ module MetadataExtractor
         # @return [Boolean]
         def apply?(field)
           super && provenance?(field)
-        end
-
-        private
-
-        # Return true if the role for the name is a provenance role.
-        # Note: Provenance name values are only contained in the 700 field.
-        def provenance?(field)
-          role = field.subfield_at('e')
-
-          role.present? && role.match?(ROLE_REGEX)
         end
       end
     end
