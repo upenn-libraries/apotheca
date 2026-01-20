@@ -131,7 +131,7 @@ RSpec.describe MetadataExtractor::MARC::PennRules::AdditionalNameField do
       end
     end
 
-    context 'when datafield is a regular and a provenance name' do
+    context 'when datafield has a name and a provenance role' do
       let(:xml) do
         <<~XML
           <marc:datafield ind1="1" ind2=" " tag="700" xmlns:marc="http://www.loc.gov/MARC21/slim">
