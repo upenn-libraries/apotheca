@@ -9,6 +9,7 @@ module MetadataExtractor
       end
 
       add_rules field: :collection do |field|
+        field.mapping CollectionNameField, tag: '710', subfields: 'a'
         field.mapping DataField, tag: '773', subfields: 't'
         field.cleanup TrimPunctuation
       end
@@ -87,7 +88,9 @@ module MetadataExtractor
 
       add_rules field: :provenance do |field|
         field.mapping DataField, tag: '561', subfields: 'a'
-        field.mapping ProvenanceNameField, tag: '700', subfields: %w[a b c d e]
+        field.mapping LegacyProvenanceField, tag: '650', subfields: 'a'
+        field.mapping ProvenanceNameField, tag: '700', subfields: %w[a b c d e g j q]
+        field.mapping ProvenanceNameField, tag: '710', subfields: %w[a b c d e g n]
       end
 
       add_rules field: :publisher do |field|
@@ -99,7 +102,7 @@ module MetadataExtractor
       add_rules field: :subject do |field|
         field.mapping DataField, tag: '600', subfields: 'a'..'z', uri: true
         field.mapping DataField, tag: '610', subfields: 'a'..'z', join: ' -- ', uri: true
-        field.mapping DataField, tag: '650', subfields: 'a'..'z', join: ' -- ', uri: true
+        field.mapping ExcludeLegacyValuesField, tag: '650', subfields: 'a'..'z', join: ' -- ', uri: true
         field.cleanup TrimPunctuation
         field.cleanup RemoveDuplicates
       end
