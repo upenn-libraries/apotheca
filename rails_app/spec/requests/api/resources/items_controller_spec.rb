@@ -3,8 +3,8 @@
 describe 'Resource Item API' do
   describe 'GET #admin_show' do
     context 'with ItemResource' do
-      include_context 'with successful Marmite request' do
-        let(:xml) { File.read(file_fixture('marmite/marc_xml/manuscript-1.xml')) }
+      include_context 'with successful Alma request' do
+        let(:xml) { File.read(file_fixture('alma/marc_xml/manuscript-1.xml')) }
       end
 
       let(:item) do
