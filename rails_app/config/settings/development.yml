@@ -74,8 +74,8 @@ publish:
 # API
 api:
   host:
-    production: apotheca.library.upenn.edu
-    staging: apotheca-staging.library.upenn.edu
+    production: digitalrepository.library.upenn.edu
+    staging: digitalrepository-staging.library.upenn.edu
   resource:
     items:
       path: /v1/items
