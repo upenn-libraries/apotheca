@@ -75,10 +75,10 @@ module ImportService
       end
 
       # @return [Hash, nil]
-      def marmite_metadata
-        @marmite_metadata ||= begin
-          MetadataExtractor::Marmite.new(url: Settings.marmite.url).descriptive_metadata(bibnumber)
-        rescue MetadataExtractor::Marmite::Client::Error
+      def alma_metadata
+        @alma_metadata ||= begin
+          MetadataExtractor::Alma.new.descriptive_metadata(bibnumber)
+        rescue MetadataExtractor::Alma::Client::Error
           nil
         end
       end
@@ -86,7 +86,7 @@ module ImportService
       # @return [TrueClass, FalseClass]
       def valid_bibnumber?
         bibnumber.blank? ||
-          (bibnumber.present? && MMSIDValidator::MMS_ID_VALIDITY_REGEX.match?(bibnumber) && marmite_metadata.present?)
+          (bibnumber.present? && MMSIDValidator::MMS_ID_VALIDITY_REGEX.match?(bibnumber) && alma_metadata.present?)
       end
 
       def query_service
@@ -227,7 +227,7 @@ module ImportService
       def ils_language_metadata
         return [] if bibnumber.blank?
 
-        marmite_metadata[:language] || []
+        alma_metadata[:language] || []
       end
     end
   end

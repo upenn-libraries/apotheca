@@ -13,7 +13,6 @@ module MetadataExtractor
       # @param marc_xml [String]
       def initialize(marc_xml)
         @xml = Nokogiri::XML(marc_xml)
-        @xml.remove_namespaces!
       end
 
       # Return leader, controlfields and datafields.
@@ -27,21 +26,21 @@ module MetadataExtractor
       #
       # @return [Leader, nil]
       def leader
-        xml.at_xpath('//records/record/leader')&.then { |node| Leader.new(node, self) }
+        xml.at_xpath('/record/leader')&.then { |node| Leader.new(node, self) }
       end
 
       # Return all controlfields.
       #
       # @return [Array<ControlField>]
       def controlfields
-        xml.xpath('//records/record/controlfield').map { |node| ControlField.new(node, self) }
+        xml.xpath('/record/controlfield').map { |node| ControlField.new(node, self) }
       end
 
       # Return all datafields.
       #
       # @return [Array<Datafield>]
       def datafields
-        xml.xpath('//records/record/datafield').map { |node| DataField.new(node, self) }
+        xml.xpath('/record/datafield').map { |node| DataField.new(node, self) }
       end
 
       # Base class that implements methods shared by different field classes.

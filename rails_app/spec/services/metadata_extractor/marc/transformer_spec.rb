@@ -28,7 +28,6 @@ RSpec.describe MetadataExtractor::MARC::Transformer do
           publisher: [{ value: 'Durch Johan Feyerabendt' }],
           relation: [{ value: 'Facsimile: https://colenda.library.upenn.edu/catalog/81431-p3df6k90j' }],
           provenance: [
-            { value: 'Beck, Helmut, 1919-2001, former owner.' },
             { value: 'Smith, Edgar Fahs, 1854-1928 (autograph, 1917)' },
             { value: 'Wright, H. (autograph, 1870)' }
           ],
@@ -53,7 +52,7 @@ RSpec.describe MetadataExtractor::MARC::Transformer do
         }
       end
       # rubocop:enable Layout/LineLength
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+      let(:xml) { File.read(file_fixture('alma/marc_xml/book-1.xml')) }
 
       it 'generates_expected_xml' do
         expect(transformer.run(xml)).to eq expected_metadata
@@ -90,7 +89,7 @@ RSpec.describe MetadataExtractor::MARC::Transformer do
           ],
           physical_format: [
             { value: 'manuscripts (documents)', uri: 'http://vocab.getty.edu/aat/300028569' },
-            { value: 'Chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
+            { value: 'chronicles', uri: 'http://vocab.getty.edu/aat/300026361' },
             { value: 'Manuscripts, Latin' },
             { value: 'Manuscripts, Renaissance' }
           ],
@@ -108,7 +107,7 @@ RSpec.describe MetadataExtractor::MARC::Transformer do
         }
       end
       # rubocop:enable Layout/LineLength
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/manuscript-1.xml')) }
+      let(:xml) { File.read(file_fixture('alma/marc_xml/manuscript-1.xml')) }
 
       it 'generates expected xml' do
         expect(transformer.run(xml)).to eq expected_metadata

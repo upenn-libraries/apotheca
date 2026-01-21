@@ -2,8 +2,8 @@
 
 describe RefreshIlsMetadata do
   describe '#call' do
-    include_context 'with successful Marmite request' do
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+    include_context 'with successful Alma request' do
+      let(:xml) { File.read(file_fixture('alma/marc_xml/book-1.xml')) }
     end
 
     let(:transaction) { described_class.new }

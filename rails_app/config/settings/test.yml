@@ -17,12 +17,15 @@ chrome:
   url: <%= ENV.fetch('CHROME_URL', 'ws://chrome:3333') %>
 
 # External Services
+alma:
+  api_key: password
+  host:  api-na.hosted.exlibrisgroup.com
+  bibs:
+    path: /almaws/v1/bibs
 ezid:
   default_shoulder: 'ark:/99999/fk4'
   user: <%= DockerSecrets.lookup(:ezid_user, 'apitest') %>
   password: <%= DockerSecrets.lookup(:ezid_password, 'apitest') %>
-marmite:
-  url: http://mdproc.library.upenn.edu:9292
 image_server:
   url: http://localhost:8182
 

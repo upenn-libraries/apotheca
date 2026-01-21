@@ -8,8 +8,8 @@ RSpec.describe PostgresQueries::DescriptiveMetadata do
   end
 
   describe '#items_with_bibnumber' do
-    include_context 'with successful Marmite request' do
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+    include_context 'with successful Alma request' do
+      let(:xml) { File.read(file_fixture('alma/marc_xml/book-1.xml')) }
     end
 
     context 'when there are items with bibnumbers' do

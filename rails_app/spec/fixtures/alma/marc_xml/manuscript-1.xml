@@ -1,0 +1,169 @@
+<record>
+  <leader>03012ctm a2200529Ia 4500</leader>
+  <controlfield tag="001">9961263533503681</controlfield>
+  <controlfield tag="005">20250826155605.0</controlfield>
+  <controlfield tag="008">140318q14751499pau           000 0 lat d</controlfield>
+  <datafield ind1=" " ind2=" " tag="035">
+    <subfield code="a">(OCoLC)ocn873818335</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="035">
+    <subfield code="a">(OCoLC)873818335</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="035">
+    <subfield code="a">(PU)6126353-penndb-Voyager</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="040">
+    <subfield code="a">PAULM</subfield>
+    <subfield code="b">eng</subfield>
+    <subfield code="e">amremm</subfield>
+    <subfield code="c">PAULM</subfield>
+    <subfield code="d">PAULM</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="049">
+    <subfield code="a">PAUM</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="079">
+    <subfield code="a">ocn873818334</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="9" tag="099">
+    <subfield code="a">Folio GrC St812 Ef512g</subfield>
+  </datafield>
+  <datafield ind1="0" ind2=" " tag="100">
+    <subfield code="a">Sigebert,</subfield>
+    <subfield code="c">of Gembloux,</subfield>
+    <subfield code="d">approximately 1030-1112.</subfield>
+    <subfield code="0">http://id.loc.gov/authorities/names/n87881954</subfield>
+  </datafield>
+  <datafield ind1="1" ind2="0" tag="245">
+    <subfield code="a">[Partial copy of Chronicon].</subfield>
+  </datafield>
+  <datafield ind1="3" ind2="8" tag="246">
+    <subfield code="a">Initium Chronici Siceberti.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="260">
+    <subfield code="a">[Belgium],</subfield>
+    <subfield code="c">[between 1475 and 1499?]</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="300">
+    <subfield code="a">10 leaves :</subfield>
+    <subfield code="b">paper ;</subfield>
+    <subfield code="c">263 x 190 mm bound to 218 x 155 mm</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="336">
+    <subfield code="a">text</subfield>
+    <subfield code="b">txt</subfield>
+    <subfield code="2">rdacontent</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="337">
+    <subfield code="a">unmediated</subfield>
+    <subfield code="b">n</subfield>
+    <subfield code="2">rdamedia</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="338">
+    <subfield code="a">volume</subfield>
+    <subfield code="b">nc</subfield>
+    <subfield code="2">rdacarrier</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Ms. gathering.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="520">
+    <subfield code="a">Beginning of Sigebert of Gembloux's continuation of the chronicle of Jerome, in which he traces the reigns of kings of various kingdoms.  The last reference is to Pope Zosimus (417 CE; f. 6v).</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Title supplied by cataloger.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Collation:  Paper, 10; 1² 2⁸ (f. 7-10 blank).</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Layout:  Written in 47-50 long lines; frame-ruled in lead.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Script:  Written in Gothic cursive script.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Decoration: 4-line initial (f. 2r) and 3-line initial (f. 1r) in red; paragraph marks in red followed by initials slashed with red on first page (f. 1r).</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Binding:  Bound with Strabo's Geographia (Paris:  Gourmont, 1512) in 18th-century calf including gilt spine title Initium Chronic[i] Sicebert[i] MS.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="500">
+    <subfield code="a">Origin:  Probably written in Belgium, possibly in Gembloux (inscription on title page of printed work, Bibliotheca Gemblacensis), in the late 15th century (Zacour-Hirsch).</subfield>
+  </datafield>
+  <datafield ind1="1" ind2=" " tag="561">
+    <subfield code="a">Sold by Bernard M. Rosenthal (New York), 1964.</subfield>
+  </datafield>
+  <datafield ind1="4" ind2=" " tag="510">
+    <subfield code="a">Described in Zacour, Norman P. and Hirsch, Rudolf. Catalogue of Manuscripts in the Libraries of the University of Pennsylvania to 1800 (Philadelphia: University of Pennsylvania Press, 1965), Supplement A (1) Library Chronicle 35 (1969), </subfield>
+    <subfield code="c">p. 5 (Ms. Latin 203).</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="546">
+    <subfield code="a">Latin.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="0" tag="650">
+    <subfield code="a">World history</subfield>
+    <subfield code="v">Early works to 1800.</subfield>
+    <subfield code="0">http://id.loc.gov/authorities/subjects/sh85148202</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="7" tag="650">
+    <subfield code="a">World history.</subfield>
+    <subfield code="2">fast</subfield>
+    <subfield code="0">http://id.worldcat.org/fast/1181345</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="7" tag="648">
+    <subfield code="a">Early works to 1800.</subfield>
+    <subfield code="2">fast</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="7" tag="655">
+    <subfield code="a">chronicles</subfield>
+    <subfield code="2">aat</subfield>
+    <subfield code="0">http://vocab.getty.edu/aat/300026361</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="0" tag="655">
+    <subfield code="a">Manuscripts, Latin.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2="0" tag="655">
+    <subfield code="a">Manuscripts, Renaissance.</subfield>
+  </datafield>
+  <datafield ind1="0" ind2=" " tag="700">
+    <subfield code="a">Sigebert,</subfield>
+    <subfield code="c">of Gembloux,</subfield>
+    <subfield code="d">approximately 1030-1112.</subfield>
+    <subfield code="t">Chronicon.</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="852">
+    <subfield code="a">Rare Book &amp; Manuscript Library</subfield>
+    <subfield code="b">University of Pennsylvania</subfield>
+    <subfield code="e">3420 Walnut Street, Philadelphia, Pennsylvania 19104-6206.</subfield>
+    <subfield code="j">Folio GrC St812 Ef512g</subfield>
+  </datafield>
+  <datafield ind1="4" ind2="1" tag="856">
+    <subfield code="z">Digital facsimile for browsing (Colenda)</subfield>
+    <subfield code="u">https://colenda.library.upenn.edu/catalog/81431-p3833nf29</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="902">
+    <subfield code="a">MARCIVE 2022</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="994">
+    <subfield code="a">C0</subfield>
+    <subfield code="b">PAULM</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="999">
+    <subfield code="a">DLA</subfield>
+    <subfield code="b">20170524</subfield>
+  </datafield>
+  <datafield ind1=" " ind2=" " tag="AVA">
+    <subfield code="0">9961263533503681</subfield>
+    <subfield code="8">22289064530003681</subfield>
+    <subfield code="a">01UPENN_INST</subfield>
+    <subfield code="b">KislakCntr</subfield>
+    <subfield code="c">Manuscripts</subfield>
+    <subfield code="d">Folio GrC St812 Ef512g</subfield>
+    <subfield code="e">check_holdings</subfield>
+    <subfield code="j">scmss</subfield>
+    <subfield code="k">8</subfield>
+    <subfield code="p">1</subfield>
+    <subfield code="q">Kislak Center for Special Collections, Rare Books and Manuscripts</subfield>
+  </datafield>
+</record>
