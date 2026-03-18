@@ -61,6 +61,7 @@
     state: present
   environment:
     ALMA_API_KEY: "{{ 'apotheca_alma_api_key_v' ~ apotheca_versioned_secrets.alma_api_key.version }}"
+    API_URL: "{{ api_url }}"
     APP_IMAGE_NAME: "{{ apotheca_image_name }}"
     APP_IMAGE_TAG: "{{ apotheca_image_tag }}"
     APP_PORT: "{{ apotheca_port }}"
@@ -111,6 +112,7 @@
     state: present
   environment:
     ALMA_API_KEY: "{{ 'apotheca_alma_api_key_v' ~ apotheca_versioned_secrets.alma_api_key.version }}"
+    API_URL: "{{ api_url }}"
     APP_IMAGE_NAME: "{{ apotheca_image_name }}"
     APP_IMAGE_TAG: "{{ apotheca_image_tag }}"
     APP_PORT: "{{ apotheca_port }}"

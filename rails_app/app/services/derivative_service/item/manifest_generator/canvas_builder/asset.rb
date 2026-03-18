@@ -37,7 +37,7 @@ module DerivativeService
           # @return [Hash] rendering structure for original file download
           def download_original_file
             {
-              'id' => "https://#{Settings.app_url}/v1/assets/#{asset.id}/preservation",
+              'id' => "https://#{Settings.api_url}/v1/assets/#{asset.id}/preservation",
               'label' => { 'en' => ["Original File - #{asset.technical_metadata.size.to_fs(:human_size)}"] },
               'type' => 'Image',
               'format' => asset.technical_metadata.mime_type

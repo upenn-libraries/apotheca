@@ -88,7 +88,7 @@ module DerivativeService
           # Constructs the base iiif URL for the asset
           # @return [String] The IIIF base URL for the asset
           def asset_base_url
-            "https://#{Settings.app_url}/iiif/assets/#{asset.id}"
+            "https://#{Settings.api_url}/iiif/assets/#{asset.id}"
           end
 
           # Provides a label for the asset

@@ -13,6 +13,7 @@ services:
         order: "start-first"
         parallelism: 1
     environment:
+      API_URL: ${API_URL}
       APP_URL: ${API_URL}
       APP_IMAGE_TAG: ${API_IMAGE_TAG}
       DATABASE_HOST: "postgres"
