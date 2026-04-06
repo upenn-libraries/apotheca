@@ -42,7 +42,7 @@ module DerivativeService
         # @param annotation_index [Integer] 1-based annotation index
         # @return [String] range identifier
         def range_id(annotation_index)
-          "https://#{Settings.app_url}/iiif/assets/#{asset.id}/toc/#{annotation_index}"
+          "https://#{Settings.api_url}/iiif/assets/#{asset.id}/toc/#{annotation_index}"
         end
 
         # Create canvas reference for range
@@ -50,7 +50,7 @@ module DerivativeService
         # @return [IIIF::V3::Presentation::Canvas] canvas reference
         def range_canvas
           IIIF::V3::Presentation::Canvas.new(
-            'id' => "https://#{Settings.app_url}/iiif/assets/#{asset.id}/canvas",
+            'id' => "https://#{Settings.api_url}/iiif/assets/#{asset.id}/canvas",
             'label' => { 'none' => [asset.label.to_s] }
           )
         end
