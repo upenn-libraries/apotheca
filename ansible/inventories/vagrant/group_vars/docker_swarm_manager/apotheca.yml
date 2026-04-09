@@ -10,6 +10,9 @@ apotheca_url: "apotheca-dev.library.upenn.edu"
 apotheca_solr_url: "http://apotheca-dev.library.upenn.int/solr/apotheca-dev"
 apotheca_solr_test_url: "http://apotheca-dev.library.upenn.int/solr/apotheca-test"
 apotheca_versioned_secrets:
+  alma_api_key:
+    value: "{{ apotheca_vault_values.secret.alma_api_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
   ezid_user:
     value: "{{ apotheca_vault_values.secret.ezid_user }}"
     version: "{{ apotheca_vault_values.metadata.version }}"

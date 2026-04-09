@@ -30,7 +30,7 @@ module DerivativeService
         def manifest_attributes
           hash = {
             '@context' => 'http://iiif.io/api/presentation/3/context.json',
-            'id' => "https://#{Settings.app_url}/iiif/items/#{item.id}/manifest",
+            'id' => "https://#{Settings.api_url}/iiif/items/#{item.id}/manifest",
             'label' => { 'none' => [item.descriptive_metadata.title.pluck(:value).join('; ')] },
             'required_statement' => required_statement,
             'behavior' => [item.structural_metadata.viewing_hint || V3::DEFAULT_VIEWING_HINT],
@@ -145,7 +145,7 @@ module DerivativeService
         #
         # @return [String] item URL used as base for canvas and range IDs
         def item_url
-          @item_url ||= "https://#{Settings.app_url}/#{V3::API_VERSION}/items/#{item.id}"
+          @item_url ||= "https://#{Settings.api_url}/#{V3::API_VERSION}/items/#{item.id}"
         end
 
         # Get the Digital Collections publishing endpoint configuration

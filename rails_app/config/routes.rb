@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   scope module: :api do
     scope :v1, defaults: { format: :json } do
       scope :items, module: :resources do
+        get '/:uuid/admin', to: 'items#admin_show', as: :api_item_resource_admin
         get '/:uuid', to: 'items#show', as: :api_item_resource
         get '/lookup/*ark', to: 'items#lookup', constraints: ->(req) { req.params[:ark] =~ %r{\Aark:/\d+/\w+\z} },
                             as: :api_ark_lookup

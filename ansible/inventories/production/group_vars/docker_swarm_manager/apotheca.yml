@@ -8,6 +8,9 @@ apotheca_replicas: 1
 apotheca_url: "apotheca.library.upenn.edu"
 apotheca_solr_url: "http://apothe-prod01.library.upenn.int/solr/apotheca-prod"
 apotheca_versioned_secrets:
+  alma_api_key:
+    value: "{{ apotheca_vault_values.secret.alma_api_key }}"
+    version: "{{ apotheca_vault_values.metadata.version }}"
   rails_master_key:
     value: "{{ apotheca_vault_values.secret.rails_master_key }}"
     version: "{{ apotheca_vault_values.metadata.version }}"

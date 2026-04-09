@@ -53,8 +53,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
 
   # @return [Hash]
   def extracted_metadata
-    MetadataExtractor::Marmite.new(url: Settings.marmite.url)
-                              .descriptive_metadata(resource.descriptive_metadata.bibnumber.first.value)
+    MetadataExtractor::Alma.new.descriptive_metadata(resource.descriptive_metadata.bibnumber.first.value)
   end
 
   # @return [Hash]

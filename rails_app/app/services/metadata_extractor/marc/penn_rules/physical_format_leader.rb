@@ -44,7 +44,7 @@ module MetadataExtractor
         # @param leader [MetadataExtractor::MARC::XMLDocument::Leader]
         # @return [Array<Hash>] list of extracted values in hash containing value and uri
         def mapping(leader)
-          control008 = leader.document.at_xpath("//records/record/controlfield[@tag='008']").text
+          control008 = leader.document.at_xpath("//record/controlfield[@tag='008']").text
           leader = leader.text
 
           map(leader, control008)

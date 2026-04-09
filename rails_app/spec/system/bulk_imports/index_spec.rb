@@ -5,7 +5,7 @@ require 'system_helper'
 describe 'Bulk Import Index Page' do
   let(:user) { create(:user, role) }
 
-  before { sign_in user }
+  before { login_as user }
 
   context 'with a viewer' do
     let(:role) { :viewer }
@@ -79,7 +79,7 @@ describe 'Bulk Import Index Page' do
     let(:user) { create(:user, :viewer) }
 
     before do
-      sign_in user
+      login_as user
       create(:bulk_import, original_filename: 'great_import.csv')
       create(:bulk_import, original_filename: 'lame_import.csv', note: 'awesome note!')
       visit bulk_imports_path
@@ -106,7 +106,7 @@ describe 'Bulk Import Index Page' do
     let(:user) { create(:user, :viewer) }
 
     before do
-      sign_in user
+      login_as user
       params = { 'filter[start_date]' => '2023-03-07', 'filter[end_date]' => '2023-03-20' }
       create(:bulk_import, original_filename: 'great_import.csv', created_at: Time.zone.local(2023, 0o2, 10, 12))
       create(:bulk_import, original_filename: 'lame_import.csv', created_at: Time.zone.local(2023, 0o3, 17, 12))
@@ -125,7 +125,7 @@ describe 'Bulk Import Index Page' do
     let(:other_user) { create(:user, :viewer) }
 
     before do
-      sign_in user
+      login_as user
       create(:bulk_import, created_by: user)
       create(:bulk_import, created_by: other_user)
       visit bulk_imports_path

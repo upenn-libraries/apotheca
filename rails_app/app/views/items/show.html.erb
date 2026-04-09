@@ -19,7 +19,7 @@
 <%= render partial: 'header_info' %>
 
 <%= render Tabs::Component.new(id: 'item-tabs') do |component| %>
-  <% component.with_tab(title: 'Descriptive Metadata', active: true) do %>
+  <% component.with_tab(title: 'Descriptive Metadata', default: true) do %>
     <%= render partial: 'descriptive_metadata' %>
   <% end %>
 

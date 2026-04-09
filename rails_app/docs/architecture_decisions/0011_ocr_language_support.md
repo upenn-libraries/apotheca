@@ -37,5 +37,5 @@ OCR Language Support
 2. Using language metadata does not require additional expensive calculations to automatically detect the script.
 3. Using our own language metadata will provide more reliable and accurate OCR
 4. Implementing workflow to retrieve language for OCR allows us to remain flexible when using other OCR engines.
-5. Requires making additional requests to Marmite when language metadata is not set on parent item.
+5. Requires making additional requests to Alma when language metadata is not set on parent item.
 6. Requires maintaining list of selected languages and routinely checking for new language packs

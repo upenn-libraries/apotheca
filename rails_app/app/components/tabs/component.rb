@@ -9,18 +9,24 @@ module Tabs
       @id = id
     end
 
+    # Returns the default tab.
+    def default_tab
+      tabs.find(&:default)
+    end
+
     # Renders a single Tab component
     class Tab < ViewComponent::Base
-      attr_reader :id, :active, :title, :count, :disabled
+      attr_reader :id, :title, :count, :disabled, :default
 
-      def initialize(title:, count: nil, active: false, disabled: false)
+      def initialize(title:, count: nil, default: false, disabled: false)
         @id = title.downcase.tr(' ', '-')
         @title = title
-        @active = active
+        @default = default
         @count = count
         @disabled = disabled
       end
 
+      # Tab contents.
       def call
         content
       end

@@ -14,15 +14,18 @@ redis:
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
   password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
 chrome:
-  url: <%= ENV.fetch('CHROME_URL', 'http://chrome:3000') %>
+  url: <%= ENV.fetch('CHROME_URL', 'ws://chrome:3333') %>
 
 # External Services
+alma:
+ api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
+ host:  api-na.hosted.exlibrisgroup.com
+ bibs:
+  path: /almaws/v1/bibs
 ezid:
   default_shoulder: 'ark:/99999/fk4'
   user: <%= DockerSecrets.lookup(:ezid_user, 'apitest') %>
   password: <%= DockerSecrets.lookup(:ezid_password, 'apitest') %>
-marmite:
-  url: http://mdproc.library.upenn.edu:9292
 image_server:
   url: http://10.211.55.2:8182
 
@@ -63,3 +66,18 @@ publish:
     token: sample_token
     webhook_path: listen
     item_path: items
+
+# API
+api:
+  host:
+    production: digitalrepository.library.upenn.edu
+    staging: digitalrepository-staging.library.upenn.edu
+  resource:
+    items:
+      path: /v1/items
+  sample_records:
+    - 4aec6af0-c57e-4f0d-b1f4-7945f4bf7212
+    - 362ba96f-2fab-4a35-bd42-98f6667da1d0
+    - e90ec77f-008c-43e9-b720-d73db60fe3a3
+    - 375a37c2-0cc4-4512-86f0-9113d9c80ca8
+    - faa4493e-ec40-4520-9c13-41a1527609b6

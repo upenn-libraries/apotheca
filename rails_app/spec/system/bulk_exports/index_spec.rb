@@ -8,7 +8,7 @@ describe 'Bulk Export Index Page' do
   shared_examples_for 'any logged in user' do
     before do
       persist(:item_resource)
-      sign_in user
+      login_as user
     end
 
     context 'when viewing bulk exports' do
@@ -199,7 +199,7 @@ describe 'Bulk Export Index Page' do
     let(:other_user) { create(:user, :admin) }
 
     before do
-      sign_in user
+      login_as user
       create(:bulk_export, created_by: user)
       create(:bulk_export, created_by: other_user)
       visit bulk_exports_path
@@ -222,7 +222,7 @@ describe 'Bulk Export Index Page' do
       persist(:item_resource)
       first_export.process!
       second_export.process!
-      sign_in user
+      login_as user
       visit bulk_exports_path
     end
 
@@ -244,7 +244,7 @@ describe 'Bulk Export Index Page' do
 
     context 'when viewing bulk exports that belong to other users' do
       before do
-        sign_in user
+        login_as user
         create_list(:bulk_export, 10)
         visit bulk_exports_path
       end
@@ -262,7 +262,7 @@ describe 'Bulk Export Index Page' do
 
     context 'when viewing bulk exports that belong to other users' do
       before do
-        sign_in user
+        login_as user
         create_list(:bulk_export, 10)
         visit bulk_exports_path
       end
@@ -280,7 +280,7 @@ describe 'Bulk Export Index Page' do
 
     context 'when viewing bulk exports that belong to other users' do
       before do
-        sign_in user
+        login_as user
         create_list(:bulk_export, 10)
         visit bulk_exports_path
       end

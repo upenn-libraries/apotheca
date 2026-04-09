@@ -3,7 +3,7 @@
 require 'system_helper'
 
 describe 'User Index Page' do
-  before { sign_in user }
+  before { login_as user }
 
   context 'with an Admin' do
     let(:user) { create(:user, :admin) }

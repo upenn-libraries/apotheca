@@ -47,8 +47,8 @@ RSpec.describe DescriptiveMetadataIndexer do
   end
 
   context 'when an item has a bibnumber' do
-    include_context 'with successful Marmite request' do
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+    include_context 'with successful Alma request' do
+      let(:xml) { File.read(file_fixture('alma/marc_xml/book-1.xml')) }
     end
 
     let(:resource) { persist(:item_resource, :with_bibnumber) }

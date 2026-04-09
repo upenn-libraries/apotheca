@@ -22,6 +22,7 @@ services:
       DATABASE_PASSWORD: /run/secrets/database_password
       DATABASE_USER: "{{ postgres.user }}"
       DB_POOL: {{ item.concurrency }}
+      API_URL: {{ api_url }}
       APP_URL: "{{ apotheca_url }}"
       APP_IMAGE_TAG:  "{{ apotheca_image_tag }}"
       RAILS_ENV: "{{ apotheca_rails_env }}"
@@ -52,6 +53,7 @@ services:
       - redis
       - traefik
     secrets:
+      - alma_api_key
       - ezid_user
       - ezid_password
       - database_password
@@ -92,6 +94,9 @@ networks:
     external: true
 
 secrets:
+  alma_api_key:
+    external: true
+    name: "{{ 'apotheca_alma_api_key_v' ~ apotheca_versioned_secrets.alma_api_key.version }}"
   ezid_user:
     external: true
     name: "{{ 'apotheca_ezid_user_v' ~ apotheca_versioned_secrets.ezid_user.version }}"

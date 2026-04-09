@@ -11,7 +11,7 @@ describe 'Import Show Page' do
     let(:import_with_errors) { create(:import, :failed) }
 
     before do
-      sign_in user
+      login_as user
       visit bulk_import_import_path(import.bulk_import, import)
     end
 
@@ -65,7 +65,7 @@ describe 'Import Show Page' do
     let(:import) { create(:import, :queued, bulk_import: bulk_import) }
 
     before do
-      sign_in user
+      login_as user
       visit bulk_import_import_path(import.bulk_import, import)
     end
 
@@ -86,7 +86,7 @@ describe 'Import Show Page' do
     let(:import) { create(:import, :queued, bulk_import: bulk_import) }
 
     before do
-      sign_in user
+      login_as user
       visit bulk_import_import_path(import.bulk_import, import)
     end
 
@@ -119,7 +119,7 @@ describe 'Import Show Page' do
     let(:import) { create(:import, :queued, bulk_import: bulk_import) }
 
     before do
-      sign_in user
+      login_as user
       visit bulk_import_import_path(import.bulk_import, import)
     end
 

@@ -8,7 +8,7 @@ describe 'Asset Edit Page' do
   let(:asset_label) { 'Test' }
 
   before do
-    sign_in user
+    login_as user
     visit edit_asset_path(item.asset_ids.first)
   end
 

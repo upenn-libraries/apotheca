@@ -6,7 +6,7 @@ describe 'Item Show Page' do
   let(:user) { create(:user, role) }
 
   before do
-    sign_in user
+    login_as user
   end
 
   shared_examples_for 'any logged in user' do
@@ -71,8 +71,8 @@ describe 'Item Show Page' do
   end
 
   context 'with incorporated ILS metadata' do
-    include_context 'with successful Marmite request' do
-      let(:xml) { File.read(file_fixture('marmite/marc_xml/book-1.xml')) }
+    include_context 'with successful Alma request' do
+      let(:xml) { File.read(file_fixture('alma/marc_xml/book-1.xml')) }
     end
 
     let(:user) { create(:user, :viewer) }

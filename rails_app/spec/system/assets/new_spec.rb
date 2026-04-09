@@ -7,7 +7,7 @@ describe 'Asset New Page' do
   let(:item) { persist(:item_resource) }
 
   before do
-    sign_in user
+    login_as user
     visit new_asset_path(item_id: item.id)
   end
 
