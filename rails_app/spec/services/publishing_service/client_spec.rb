@@ -104,7 +104,9 @@ describe PublishingService::Client do
 
       it 'makes publish request with expected payload' do
         client.publish(item)
-        expect(a_request(:post, "#{endpoint.host}/#{endpoint.webhook_path}")).to have_been_made
+        expect(
+          a_request(:post, "#{endpoint.host}/#{endpoint.webhook_path}").with(body: expected_payload)
+        ).to have_been_made
       end
     end
 
