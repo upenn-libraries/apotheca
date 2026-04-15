@@ -75,6 +75,7 @@ services:
       - ceph_access_key_id
       - ceph_secret_access_key
       - colenda_publish_token
+      - digital_collections_token
       - wasabi_access_key_id
       - wasabi_secret_access_key
 {% endif %}
@@ -146,6 +147,9 @@ secrets:
   colenda_publish_token:
     external: true
     name: "{{ 'apotheca_colenda_publish_token_v' ~ apotheca_versioned_secrets.colenda_publish_token.version }}"
+  digital_collections_token:
+    external: true
+    name: "{{ 'apotheca_digital_collections_token_v' ~ apotheca_versioned_secrets.digital_collections_token.version }}"
   wasabi_access_key_id:
     external: true
     name: "{{ 'apotheca_wasabi_access_key_id_v' ~ apotheca_versioned_secrets.wasabi_access_key_id.version }}"

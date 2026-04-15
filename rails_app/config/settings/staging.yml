@@ -73,7 +73,7 @@ ezid_metadata_update:
 publish:
   digital_collections:
     host: https://digitalcollections-staging.library.upenn.edu
-    token: <%= DockerSecrets.lookup(:digital_collections_publish_token, 'sample_token') %>
+    token: <%= DockerSecrets.lookup(:digital_collections_token, 'sample_token') %>
     webhook_path: listen
     item_path: items
 
