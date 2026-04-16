@@ -3,7 +3,10 @@
 module DerivativeService
   module Item
     module ManifestGenerator
-      # Class to generate a IIIF Manifest for an ItemResource
+      # Class to generate a IIIF V2 Manifest for an ItemResource. All the links in the manifest point to Colenda.
+      #
+      # @todo Remove the generation of V2 IIIF manifests when we migrate over completely to
+      #       the new digital collections platform.
       class V2
         class MissingDerivative < StandardError; end
 
@@ -27,7 +30,7 @@ module DerivativeService
 
           manifest = IIIF::Presentation::Manifest.new(
             {
-              '@id' => colenda.manifest_url(item.unique_identifier),
+              '@id' => "#{item_url}/manifest",
               'label' => item.descriptive_metadata.title.pluck(:value).join('; '),
               'attribution' => 'Provided by the University of Pennsylvania Libraries.',
               'viewing_hint' => item.structural_metadata.viewing_hint || 'individuals',
@@ -88,7 +91,7 @@ module DerivativeService
           metadata = [
             {
               label: 'Available Online',
-              value: [colenda.public_item_url(item.unique_identifier)]
+              value: [public_item_url]
             }
           ]
 
@@ -170,7 +173,7 @@ module DerivativeService
           return unless DerivativeService::Item::PDFGenerator.new(item.object).pdfable?
 
           {
-            '@id' => colenda.pdf_url(item.unique_identifier),
+            '@id' => "#{item_url}/pdf",
             'label' => 'Download PDF',
             'format' => 'application/pdf'
           }
@@ -178,7 +181,7 @@ module DerivativeService
 
         def download_original_file(asset)
           {
-            '@id' => colenda.original_url(item.unique_identifier, asset.id),
+            '@id' => "#{item_url}/assets/#{asset.id}/original",
             'label' => "Original File - #{asset.technical_metadata.size.to_fs(:human_size)}",
             'format' => asset.technical_metadata.mime_type
           }
@@ -199,11 +202,15 @@ module DerivativeService
         end
 
         def item_url
-          @item_url ||= colenda.item_url(item.unique_identifier)
+          "https://colenda.library.upenn.edu/items/#{item.unique_identifier}"
         end
 
-        def colenda
-          @colenda ||= PublishingService::Endpoint.colenda
+        # Link to public item url in colenda. This link uses a normalized version of the ark.
+        #
+        # @param [String] id item id
+        def public_item_url
+          id = item.unique_identifier.gsub('ark:/', '').tr('/', '-')
+          "https://colenda.library.upenn.edu/catalog/#{id}"
         end
       end
     end

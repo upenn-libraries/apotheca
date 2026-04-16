@@ -89,4 +89,13 @@ class ItemChangeSet < ChangeSet
       derivatives.find { |d| d.type == symbol }
     end
   end
+
+  # Returns thumbnail asset.
+  #
+  # @return [AssetResource]
+  def thumbnail
+    return unless thumbnail_asset_id
+
+    @thumbnail ||= Valkyrie::MetadataAdapter.find(:postgres).query_service.find_by(id: thumbnail_asset_id)
+  end
 end

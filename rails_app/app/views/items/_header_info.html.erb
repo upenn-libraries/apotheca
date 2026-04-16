@@ -7,10 +7,10 @@
   <% component.with_field('Published') do %>
     <% if @item.published %>
       <span>Yes</span>
-      <a href="<%= PublishingService::Endpoint.colenda.public_item_url(@item.unique_identifier) %>"
+      <a href="<%= PublishingService::Endpoint.digital_collections.item_url(@item.id) %>"
          target="_blank"
          class="link-underline link-underline-opacity-0">
-        (View in Colenda)
+        (View in Digital Collections)
       </a>
     <% else %>
       No

@@ -1,0 +1,173 @@
+{
+  "@context": [
+    "http://www.w3.org/ns/anno.jsonld",
+    "http://iiif.io/api/presentation/3/context.json"
+  ],
+  "id": "https://apotheca-dev.library.upenn.edu/iiif/items/f9b945fb-f471-46de-8879-8448a061a64b/manifest",
+  "label": {
+    "none": [
+      "new item"
+    ]
+  },
+  "requiredStatement": {
+    "label": {
+      "none": [
+        "Attribution"
+      ]
+    },
+    "value": {
+      "none": [
+        "Provided by the University of Pennsylvania Libraries."
+      ]
+    }
+  },
+  "behavior": [
+    "individuals"
+  ],
+  "viewingDirection": "left-to-right",
+  "metadata": [
+    {
+      "label": {
+        "none": [
+          "Available Online"
+        ]
+      },
+      "value": {
+        "none": [
+          "https://digitalcollections-dev.library.upenn.edu/items/f9b945fb-f471-46de-8879-8448a061a64b"
+        ]
+      }
+    },
+    {
+      "label": {
+        "none": [
+          "Title"
+        ]
+      },
+      "value": {
+        "none": [
+          "new item"
+        ]
+      }
+    }
+  ],
+  "thumbnail": [
+    {
+      "id": "http://localhost:8182/iiif/3/01fd33d9-5b38-49cc-a456-f655dfea9ca7/full/!200,200/0/default.jpg",
+      "type": "Image",
+      "format": "image/jpeg",
+      "service": [
+        {
+          "id": "http://localhost:8182/iiif/3/01fd33d9-5b38-49cc-a456-f655dfea9ca7",
+          "type": "ImageService3",
+          "profile": "level2"
+        }
+      ]
+    }
+  ],
+  "type": "Manifest",
+  "rendering": [
+    {
+      "id": "https://apotheca-dev.library.upenn.edu/v1/items/f9b945fb-f471-46de-8879-8448a061a64b/pdf",
+      "label": {
+        "en": [
+          "Download PDF"
+        ]
+      },
+      "type": "Text",
+      "format": "application/pdf"
+    }
+  ],
+  "items": [
+    {
+      "type": "Canvas",
+      "id": "https://apotheca-dev.library.upenn.edu/iiif/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/canvas",
+      "label": {
+        "none": [
+          "p. 1"
+        ]
+      },
+      "height": 4186,
+      "width": 3038,
+      "items": [
+        {
+          "type": "AnnotationPage",
+          "id": "https://apotheca-dev.library.upenn.edu/iiif/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/annotation-page/1",
+          "items": [
+            {
+              "type": "Annotation",
+              "motivation": "painting",
+              "id": "https://apotheca-dev.library.upenn.edu/iiif/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/annotation/1",
+              "target": "https://apotheca-dev.library.upenn.edu/iiif/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/canvas",
+              "body": {
+                "type": "Image",
+                "id": "http://localhost:8182/iiif/3/01fd33d9-5b38-49cc-a456-f655dfea9ca7/full/!200,200/0/default.jpg",
+                "format": "image/jpeg",
+                "width": 3038,
+                "height": 4186,
+                "service": [
+                  {
+                    "id": "http://localhost:8182/iiif/3/01fd33d9-5b38-49cc-a456-f655dfea9ca7",
+                    "profile": "level2",
+                    "type": "ImageService3"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "placeholderCanvas": {
+        "type": "Canvas",
+        "id": "https://apotheca-dev.library.upenn.edu/iiif/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/canvas/placeholder",
+        "label": {
+          "none": [
+            "p. 1"
+          ]
+        },
+        "height": 881,
+        "width": 640,
+        "items": [
+          {
+            "type": "AnnotationPage",
+            "id": "https://apotheca-dev.library.upenn.edu/iiif/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/canvas/placeholder/annotation-page",
+            "items": [
+              {
+                "type": "Annotation",
+                "motivation": "painting",
+                "id": "https://apotheca-dev.library.upenn.edu/iiif/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/canvas/placeholder/annotation-page/1",
+                "target": "https://apotheca-dev.library.upenn.edu/iiif/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/canvas/placeholder",
+                "body": {
+                  "type": "Image",
+                  "id": "http://localhost:8182/iiif/3/01fd33d9-5b38-49cc-a456-f655dfea9ca7/full/640,/0/default.jpg",
+                  "format": "image/jpeg",
+                  "width": 640,
+                  "height": 881,
+                  "service": [
+                    {
+                      "id": "http://localhost:8182/iiif/3/01fd33d9-5b38-49cc-a456-f655dfea9ca7",
+                      "profile": "level2",
+                      "type": "ImageService3"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "rendering": [
+        {
+          "id": "https://apotheca-dev.library.upenn.edu/v1/assets/01fd33d9-5b38-49cc-a456-f655dfea9ca7/preservation",
+          "label": {
+            "en": [
+              "Original File - 38.2 MB"
+            ]
+          },
+          "type": "Image",
+          "format": "image/tiff"
+        }
+      ]
+    }
+  ]
+}

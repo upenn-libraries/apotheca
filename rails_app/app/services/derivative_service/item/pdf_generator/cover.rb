@@ -101,7 +101,7 @@ module DerivativeService
         # @return [Hash{Symbol->Array<String>}]
         def pdf_metadata
           @pdf_metadata ||= {
-            available_online: [colenda_url],
+            available_online: [digital_collections_url],
             physical_location: descriptive_metadata_text(:physical_location),
             description: descriptive_metadata_text(:description),
             collection: descriptive_metadata_text(:collection),
@@ -122,8 +122,8 @@ module DerivativeService
         end
 
         # @return [String (frozen)]
-        def colenda_url
-          PublishingService::Endpoint.colenda.public_item_url(item.unique_identifier)
+        def digital_collections_url
+          PublishingService::Endpoint.digital_collections.item_url(item.id)
         end
 
         # @return [File]

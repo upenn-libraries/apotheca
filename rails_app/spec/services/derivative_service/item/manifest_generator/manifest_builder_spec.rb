@@ -27,7 +27,7 @@ describe DerivativeService::Item::ManifestGenerator::ManifestBuilder do
     it 'assigns metadata' do
       expect(manifest.metadata.first).to include(
         'label' => { 'none' => ['Available Online'] },
-        'value' => { 'none' => [include('colenda')] }
+        'value' => { 'none' => [include('digitalcollections')] }
       )
       expect(manifest.metadata.second).to include(
         'label' => { 'none' => ['Title'] },

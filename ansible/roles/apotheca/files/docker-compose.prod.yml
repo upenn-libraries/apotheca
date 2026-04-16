@@ -24,6 +24,7 @@ services:
       - ceph_access_key_id
       - ceph_secret_access_key
       - colenda_publish_token
+      - digital_collections_token
       - wasabi_access_key_id
       - wasabi_secret_access_key
     volumes:
@@ -54,6 +55,9 @@ secrets:
   colenda_publish_token:
     external: true
     name: ${COLENDA_PUBLISH_TOKEN}
+  digital_collections_token:
+    external: true
+    name: ${DIGITAL_COLLECTIONS_TOKEN}
   wasabi_access_key_id:
     external: true
     name: ${WASABI_ACCESS_KEY_ID}

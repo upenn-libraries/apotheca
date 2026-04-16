@@ -26,7 +26,7 @@ describe DerivativeService::Item::PDFGenerator::Cover do
     end
 
     it 'adds Colenda link to first page' do
-      url = PublishingService::Endpoint.colenda.public_item_url(item.unique_identifier)
+      url = PublishingService::Endpoint.digital_collections.item_url(item.id)
       expect(target.pages.first).to have_pdf_text(url)
     end
 
