@@ -147,11 +147,10 @@ describe PublishingService::Client do
 
       before do
         stub_request(:post, endpoint.webhook_url)
-          .with(
-            body: expected_payload,
-            headers: { 'Authorization': "Token token=#{endpoint.token}" }
-          )
-          .to_return(status: 404, body: { error: 'Not Found' }.to_json, headers: { 'Content-Type': 'application/json' })
+          .with(body: expected_payload, headers: { 'Authorization': "Token token=#{endpoint.token}" })
+          .to_return(status: 404,
+                     body: { status: 'error', message: 'Resource not found.' }.to_json,
+                     headers: { 'Content-Type': 'application/json' })
       end
 
       it 'makes unpublish request' do
