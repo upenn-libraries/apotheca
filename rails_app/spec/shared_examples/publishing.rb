@@ -30,7 +30,7 @@ shared_context 'with unsuccessful publish request' do
       )
       .to_return(
         status: 500,
-        body: { error: 'Crazy Solr error' }.to_json,
+        body: { status: 'error', message: 'Crazy Solr error' }.to_json,
         headers: { 'Content-Type': 'application/json' }
       )
   end
@@ -63,7 +63,8 @@ shared_context 'with unsuccessful unpublish request' do
         headers: { 'Authorization': "Token token=#{publishing_endpoint.token}" }
       )
       .to_return(
-        status: 500, body: { error: 'Crazy Solr error' }.to_json, headers: { 'Content-Type': 'application/json' }
+        status: 500,
+        body: { status: 'error', message: 'Crazy Solr error' }.to_json, headers: { 'Content-Type': 'application/json' }
       )
   end
 end
