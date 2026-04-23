@@ -65,7 +65,7 @@ namespace :apotheca do
 
     desc 'Import a set of sample items from production'
     task import_items: :environment do
-      Settings.api.sample_records.each do |id|
+      Settings.sample_records.production.items.each do |id|
         ENV['id'] = id
         Rake::Task['apotheca:samples:import_item'].reenable
         Rake::Task['apotheca:samples:import_item'].invoke
@@ -84,7 +84,7 @@ namespace :apotheca do
       deployed_env = ENV['staging'] == 'true' ? :staging : :production
 
       # Establish faraday connection
-      connection = Faraday.new(url: URI::HTTPS.build(host: Settings.api.host[deployed_env])) do |config|
+      connection = Faraday.new(url: URI::HTTPS.build(host: Settings.sample_records[deployed_env].host)) do |config|
         config.request :json # Sets the Content-Type header to application/json on each request.
         config.options.timeout = 600 # Set connection timeout
         config.response :follow_redirects # Follows api redirects to presigned S3 url

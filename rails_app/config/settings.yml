@@ -51,3 +51,16 @@ supported_mime_types:
 virus_check:
   skip: false
   size_threshold: 2000000000 # 2 GB
+
+# Configuration used to load sample records.
+sample_records:
+  staging:
+    host: digitalrepository-staging.library.upenn.edu
+  production:
+    host: digitalrepository.library.upenn.edu
+    items:
+      - 4aec6af0-c57e-4f0d-b1f4-7945f4bf7212
+      - 362ba96f-2fab-4a35-bd42-98f6667da1d0
+      - e90ec77f-008c-43e9-b720-d73db60fe3a3
+      - 375a37c2-0cc4-4512-86f0-9113d9c80ca8
+      - faa4493e-ec40-4520-9c13-41a1527609b6
