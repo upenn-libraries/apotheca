@@ -202,6 +202,10 @@ describe 'Resource Asset API requests' do
         expect(response).to redirect_to(url)
         expect(response).to have_http_status(:temporary_redirect)
       end
+
+      it 'includes CORS headers' do
+        expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+      end
     end
   end
 end

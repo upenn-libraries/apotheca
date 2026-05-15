@@ -18,6 +18,8 @@ module API
 
         raise FileTypeError, I18n.t('api.exceptions.invalid_param.file_type', type: type) unless type.in? FILES
 
+        response.headers['Access-Control-Allow-Origin'] = '*'
+
         return redirect_to_derivative_file(type) if type.in? FILES - ['preservation']
 
         redirect_to_preservation_file
