@@ -7,6 +7,7 @@ module MetadataExtractor
       # Converts the date or range to EDTF.
       class DateField < Rules::FieldMapping
         UNKNOWN_DATE = 'uuuu'
+        OPEN_DATE = '9999'
 
         attr_reader :tag
 
@@ -68,6 +69,9 @@ module MetadataExtractor
         # @return [String|nil]
         def edtf_range(start, finish)
           return if start == UNKNOWN_DATE && finish == UNKNOWN_DATE
+
+          # If open-ended range convert '9999' to '..'
+          finish = '..' if finish == OPEN_DATE
 
           "#{start}/#{finish}".gsub(/#{UNKNOWN_DATE}/, '').tr('u', 'X')
         end

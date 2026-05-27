@@ -56,6 +56,18 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
       end
     end
 
+    context 'when controlfield contains a date range with an open date range' do
+      let(:xml) do
+        <<~XML
+          <marc:controlfield tag="008">891003m19139999tu ac 000 0dota d</marc:controlfield>
+        XML
+      end
+
+      it 'converts date to EDFT' do
+        expect(field_mapping.mapping(controlfield)).to eql [{ value: '1913/..' }]
+      end
+    end
+
     context 'when controlfield contains a blank date value' do
       let(:xml) do
         <<~XML
