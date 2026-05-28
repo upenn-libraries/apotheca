@@ -27,7 +27,8 @@ module PublishingService
     def publish(change_set)
       connection.post(endpoint.webhook_path, { event: PUBLISH, data: { item: serialize(change_set) } })
     rescue Faraday::ClientError, Faraday::ServerError => e # Raising error if publishing request failed
-      raise Error, "Request to publishing endpoint failed: #{e.response[:body]['message']}"
+      message = e.response_body&.dig('message') || e.msg
+      raise Error, "Request to publishing endpoint failed: #{message}"
     end
 
     # Unpublish record. Send request to external application to remove record (item).
@@ -38,7 +39,8 @@ module PublishingService
     rescue Faraday::ResourceNotFound
       # Not raising error when attempting to unpublish an item that hasn't been published.
     rescue Faraday::ClientError, Faraday::ServerError => e
-      raise Error, "Request to publishing endpoint failed: #{e.response[:body]['message']}"
+      message = e.response_body&.dig('message') || e.msg
+      raise Error, "Request to publishing endpoint failed: #{message}"
     end
 
     private
