@@ -47,7 +47,7 @@ module PublishingService
 
     # Faraday connection object to use for all requests.
     def create_connection(url, token)
-      Faraday.new(url) do |conn|
+      Faraday.new(url, request: { timeout: 120 }) do |conn|
         conn.request :authorization, 'Token', "token=#{token}"
         conn.request :json
         conn.request :retry, exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed],
