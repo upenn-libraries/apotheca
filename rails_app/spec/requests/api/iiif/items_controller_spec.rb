@@ -68,6 +68,10 @@ describe 'IIIF Item API requests' do
         expect(response).to have_http_status(:not_found)
       end
 
+      it 'includes CORS headers' do
+        expect(response.headers['Access-Control-Allow-Origin']).to eq '*'
+      end
+
       it 'returns a failure object with the expected values' do
         expect(json_body[:status]).to eq 'fail'
         expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
