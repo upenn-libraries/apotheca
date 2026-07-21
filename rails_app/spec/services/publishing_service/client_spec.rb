@@ -37,7 +37,7 @@ describe PublishingService::Client do
                 'preview' => {
                   'mime_type' => 'image/jpeg',
                   'size_bytes' => be_a(Integer),
-                  'url' => "https://digitalrepository-dev.library.upenn.edu/v1/items/#{item.id}/preview"
+                  'url' => "https://#{Settings.api_url}/v1/items/#{item.id}/preview"
                 },
                 'pdf' => {
                   'mime_type' => 'application/pdf',
