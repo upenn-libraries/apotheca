@@ -98,6 +98,21 @@ RSpec.describe StructuredCSV do
       end
     end
 
+    context 'with CSV data containing null lines' do
+      let(:csv_string_data) do
+        <<~CSV
+          asset.drive,asset.path,unique_identifier
+          test,path/to/assets_1,ark:/9999/test
+          ,,
+          test,path/to/assets_2,ark:/9999/test2
+        CSV
+      end
+
+      it 'skips blank lines' do
+        expect(described_class.parse(csv_string_data).count).to be 2
+      end
+    end
+
     context 'with CSV containing leading spaces in headers' do
       let(:csv_string_data) do
         <<~CSV
