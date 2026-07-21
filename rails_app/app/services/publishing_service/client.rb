@@ -58,10 +58,11 @@ module PublishingService
     end
 
     def serialize(change_set)
-      json_string = ApplicationController.renderer.render('api/resources/items/_item',
-                                                          locals: { params: { assets: 'true' } },
-                                                          assigns: { item: change_set })
-      JSON.parse(json_string)
+      controller = ApplicationController.renderer.with_defaults(http_host: Settings.api_url, https: true)
+      rendered_json = controller.render('api/resources/items/_item',
+                                        locals: { params: { assets: 'true' } },
+                                        assigns: { item: change_set })
+      JSON.parse(rendered_json)
     end
   end
 end
