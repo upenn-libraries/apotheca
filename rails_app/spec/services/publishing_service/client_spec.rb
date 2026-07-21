@@ -42,12 +42,12 @@ describe PublishingService::Client do
                 'pdf' => {
                   'mime_type' => 'application/pdf',
                   'size_bytes' => be_a(Integer),
-                  'url' => "https://digitalrepository-dev.library.upenn.edu/v1/items/#{item.id}/pdf"
+                  'url' => "https://#{Settings.api_url}/v1/items/#{item.id}/pdf"
                 },
                 'iiif_manifest' => a_hash_including(
                   'mime_type' => 'application/json',
                   'size_bytes' => be_a(Integer),
-                  'url' => "https://digitalrepository-dev.library.upenn.edu/iiif/items/#{item.id}/manifest"
+                  'url' => "https://#{Settings.api_url}/iiif/items/#{item.id}/manifest"
                 )
               },
               'assets' => [
@@ -58,13 +58,13 @@ describe PublishingService::Client do
                     'original_filename' => 'front.tif',
                     'size_bytes' => 291_455,
                     'mime_type' => 'image/tiff',
-                    'url' => start_with('https://digitalrepository-dev.library.upenn.edu/v1/assets/').and(end_with('/preservation'))
+                    'url' => start_with("https://#{Settings.api_url}/v1/assets/").and(end_with('/preservation'))
                   },
                   'derivatives' => {
                     'thumbnail' => {
                       'size_bytes' => 7_499,
                       'mime_type' => 'image/jpeg',
-                      'url' => start_with('https://digitalrepository-dev.library.upenn.edu/v1/assets/').and(end_with('/thumbnail'))
+                      'url' => start_with("https://#{Settings.api_url}/v1/assets/").and(end_with('/thumbnail'))
                     },
                     'access' => nil
                   }
@@ -76,13 +76,13 @@ describe PublishingService::Client do
                     'original_filename' => 'back.tif',
                     'size_bytes' => 291_455,
                     'mime_type' => 'image/tiff',
-                    'url' => start_with('https://digitalrepository-dev.library.upenn.edu/v1/assets/').and(end_with('/preservation'))
+                    'url' => start_with("https://#{Settings.api_url}/v1/assets/").and(end_with('/preservation'))
                   },
                   'derivatives' => {
                     'thumbnail' => {
                       'size_bytes' => 5_471,
                       'mime_type' => 'image/jpeg',
-                      'url' => start_with('https://digitalrepository-dev.library.upenn.edu/v1/assets/').and(end_with('/thumbnail'))
+                      'url' => start_with("https://#{Settings.api_url}/v1/assets/").and(end_with('/thumbnail'))
                     },
                     'access' => nil
                   }
