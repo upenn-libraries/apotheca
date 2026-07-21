@@ -17,7 +17,8 @@ module StructuredCSV
   def self.parse(csv_data)
     rows = CSV.parse(csv_data, headers: true, strip: true, skip_blanks: true)
     validate_headers!(rows.headers)
-    rows.map { |row| parse_row(row) }
+    rows.select { |row| data_present?(row) }
+        .map { |row| parse_row(row) }
   end
 
   # Check if the headers from the parsed CSV include duplicates. Raise an exception if so with a message including the
@@ -30,6 +31,11 @@ module StructuredCSV
     return if duplicated_headers.empty? # no duplicates found
 
     raise CSV::MalformedCSVError.new "CSV contains duplicated column names (#{duplicated_headers.keys.join(', ')})", 1
+  end
+
+  # Return true if row has data present in any column.
+  def self.data_present?(row)
+    row.any? { |_, value| value.present? }
   end
 
   def self.parse_row(hash)
