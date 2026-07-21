@@ -164,7 +164,7 @@ rspec_app_test:
         SOLR_MODE: "solrcloud"
         SOLR_OPTS: "-Dsolr.disableConfigSetsCreateAuthChecks=true"
         ZK_CREATE_CHROOT: "true"
-    - name: clamav/clamav:1.1
+    - name: clamav/clamav-debian:1.4.3
       alias: clamav
   extends:
     - .rspec
