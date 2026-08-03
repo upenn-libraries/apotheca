@@ -3,7 +3,7 @@
 ARG IMAGE_NAME=gitlab.library.upenn.edu/dld/digital-repository/apotheca-base-image
 
 # Image tag
-ARG IMAGE_TAG=0a816cf7
+ARG IMAGE_TAG=438dc770
 
 # Rails env
 ARG RAILS_ENV=development
