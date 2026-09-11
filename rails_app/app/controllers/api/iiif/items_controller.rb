@@ -6,17 +6,31 @@ module API
     class ItemsController < APIController
       include ItemLoadable
 
-      # /iiif/items/:uuid/manifest
+      before_action :load_manifest, only: :manifest
+
+      # Return IIIF manifest. Support returning v2 and v3 manifests. Defaults to returning v3 manifests.
+      # /iiif(/:version)/items/:uuid/manifest
       def manifest
         response.headers['Access-Control-Allow-Origin'] = '*'
 
-        manifest = @item.iiif_v3_manifest
+        if @manifest
+          serve_json(@manifest.file_id)
+        else
+          raise FileNotFound, I18n.t('api.exceptions.file_not_found')
+        end
+      end
 
-        raise FileNotFound, I18n.t('api.exceptions.file_not_found') unless manifest
+      private
 
-        manifest_file_id = @item.iiif_v3_manifest.file_id
-
-        serve_json(manifest_file_id)
+      def load_manifest
+        @manifest = case params[:version]
+                    when '2'
+                      @item.iiif_manifest
+                    when '3'
+                      @item.iiif_v3_manifest
+                    else
+                      raise 'IIIF version number not supported'
+                    end
       end
     end
   end

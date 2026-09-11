@@ -29,7 +29,7 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
 
       it 'includes top level attributes' do
         expect(json).to include(
-          '@id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/manifest',
+          '@id' => match(%r{/iiif/2/items/.+/manifest$}),
           'label' => 'New Item',
           'viewingHint' => 'individuals',
           'viewingDirection' => 'left-to-right',
@@ -39,7 +39,8 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
 
       it 'includes manifest metadata' do
         expect(json['metadata']).to contain_exactly(
-          { 'label' => 'Available Online', 'value' => [starting_with('https://colenda.library.upenn.edu/catalog/')] },
+          { 'label' => 'Available Online',
+            'value' => [starting_with('https://digitalcollections.library.upenn.edu/items/')] },
           { 'label' => 'Title', 'value' => ['New Item'] },
           { 'label' => 'Name', 'value' => ['Random, Person (Illustrator, Creator)'] },
           { 'label' => 'Rights', 'value' => ['http://rightsstatements.org/vocab/InC/1.0/'] },
@@ -60,14 +61,11 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
       end
 
       it 'includes ranges' do
-        expect(json['structures'][0]).to include(
-          'label' => 'Front',
-          'ranges' => containing_exactly(
-            a_hash_including(
-              '@id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/range/r1-1',
-              'label' => 'Front of Card',
-              'canvases' => containing_exactly('https://colenda.library.upenn.edu/items/ark:/99999/fk4random/canvas/p1')
-            )
+        expect(json['structures']).to include(
+          a_hash_including(
+            '@id' => match(%r{/iiif/2/assets/.+/toc/1$}),
+            'label' => 'Front of Card',
+            'canvases' => contain_exactly(match(%r{/iiif/2/assets/.+/canvas$}))
           )
         )
       end
@@ -80,7 +78,7 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
 
       it 'includes rendering in sequence' do
         expect(json['sequences'][0]['rendering']).to include(
-          '@id' => starting_with('https://colenda.library.upenn.edu/items'),
+          '@id' => match(%r{/v1/items/.+/pdf$}),
           'label' => 'Download PDF',
           'format' => 'application/pdf'
         )
@@ -89,7 +87,7 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
       it 'includes canvases in sequence' do
         canvases = json['sequences'][0]['canvases']
         expect(canvases[0]).to include(
-          '@id' => 'https://colenda.library.upenn.edu/items/ark:/99999/fk4random/canvas/p1',
+          '@id' => match(%r{/iiif/2/assets/.+/canvas$}),
           'label' => 'Front',
           'height' => 238,
           'width' => 400,
@@ -104,6 +102,7 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
           ),
           'rendering' => containing_exactly(
             a_hash_including(
+              '@id' => match(%r{/v1/assets/.+/preservation$}),
               'label' => 'Original File - 291 KB',
               'format' => 'image/tiff'
             )
@@ -140,7 +139,7 @@ describe DerivativeService::Item::ManifestGenerator::V2 do
 
       it 'raises an error' do
         expect { iiif_service.manifest }.to raise_error(
-          DerivativeService::Item::ManifestGenerator::V2::MissingDerivative
+          DerivativeService::Item::ManifestGenerator::V2::ManifestBuilder::MissingDerivative
         )
       end
     end
