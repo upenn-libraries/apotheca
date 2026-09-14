@@ -13,7 +13,7 @@ module DerivativeService
         def initialize(item)
           raise ArgumentError, 'IIIF manifest can only be generated for ItemResource' unless item.is_a?(ItemResource)
 
-          @item = item.presenter
+          @item = item
         end
 
         # Generates manifest and writes it to a file.

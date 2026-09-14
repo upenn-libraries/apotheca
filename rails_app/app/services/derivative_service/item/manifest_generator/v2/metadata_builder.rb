@@ -8,6 +8,7 @@ module DerivativeService
         class MetadataBuilder
           attr_reader :item
 
+          # @param [ItemPresenter]
           def initialize(item)
             @item = item
           end

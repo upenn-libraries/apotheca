@@ -10,8 +10,9 @@ module DerivativeService
 
           attr_reader :item
 
+          # @param [ItemResource]
           def initialize(item)
-            @item = item
+            @item = item.presenter
           end
 
           # Returns a IIIF Preservation v2 Manifest only representing images.
