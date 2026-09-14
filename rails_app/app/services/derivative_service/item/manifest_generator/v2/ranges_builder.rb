@@ -23,10 +23,23 @@ module DerivativeService
             asset.annotations.map(&:text).map.with_index(1) do |annotation, index|
               IIIF::Presentation::Range.new(
                 '@id' => "https://#{Settings.api_url}/iiif/2/assets/#{asset.id}/toc/#{index}",
-                'label' => annotation,
+                'label' => labeled_annotation(annotation),
                 'canvases' => ["https://#{Settings.api_url}/iiif/2/assets/#{asset.id}/canvas"]
               )
             end
+          end
+
+          private
+
+          # Append the label to the annotation if it isn't already present
+          #
+          # @param annotation [String] annotation text
+          # @return [String] labeled annotation text
+          def labeled_annotation(annotation)
+            return annotation if asset.label.blank?
+            return annotation if /#{Regexp.escape(asset.label)}\s*\z/.match?(annotation)
+
+            [annotation, asset.label].join ', '
           end
         end
       end
