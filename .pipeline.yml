@@ -161,8 +161,6 @@ rspec_app_test:
     - curl -X POST --user "admin:Bitnami" --header "Content-Type:application/octet-stream" --data-binary @configset.zip "http://solr:8983/solr/admin/configs?action=UPLOAD&name=apotheca"
     - curl -v --user "admin:Bitnami" "http://solr:8983/solr/admin/collections?action=CREATE&name=apotheca-test&collection.configName=apotheca&numShards=1"
     - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
-  needs:
-    - amend_manifest_development
   coverage: '/\(\d+.\d+\%\) covered/'
   artifacts:
     paths:
@@ -184,8 +182,6 @@ rspec_app_test:
 rubocop_app_test:
   stage: test
   image: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-development
-  needs:
-    - amend_manifest_development
   extends:
     - .rubocop
   before_script:
@@ -201,8 +197,6 @@ rubocop_app_test:
 erb_lint_app_test:
   stage: test
   image: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-development
-  needs:
-    - amend_manifest_development
   before_script:
     - cd ${CI_PROJECT_DIR}/rails_app/
   script:
