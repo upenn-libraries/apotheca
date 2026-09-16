@@ -75,7 +75,7 @@ include:
   - component: gitlab.library.upenn.edu/devops/gitlab/components/general/vault_jwt_auth@~latest
     inputs:
       vault_auth_role: "${VAULT_AUTH_ROLE}"
-    - component: $CI_SERVER_FQDN/devops/gitlab/components/sast/trivy@~latest
+  - component: $CI_SERVER_FQDN/devops/gitlab/components/sast/trivy@~latest
     inputs:
       docker_tag_to_scan: "${CI_COMMIT_SHA}-production"
       job_image_tag: "29-dind"
