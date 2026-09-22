@@ -52,6 +52,13 @@ include:
         DOCKER_BUILD_PLATFORM: "linux/amd64"
     variables:
       SIDEKIQ_PRO_CREDENTIALS: "$SIDEKIQ_PRO_CREDENTIALS"
+  - component: $CI_SERVER_FQDN/devops/gitlab/components/docker/stage_finalize@~latest
+    inputs:
+      needs_copy:
+        - erb_lint_app_test
+        - rspec_app_test
+        - rubocop_app_test
+        - trivy_scan
   - component: gitlab.library.upenn.edu/devops/gitlab/components/deploy/deploy@~latest
     inputs:
       deploy_environment: "staging"
