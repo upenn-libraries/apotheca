@@ -1,6 +1,6 @@
 variables:
   FF_SCRIPT_SECTIONS: "true"
-  GIT_CLONE_PATH: "${CI_BUILDS_DIR}/${CI_PROJECT_NAME}/${CI_JOB_ID}"
+  GIT_CLONE_PATH: "${CI_BUILDS_DIR}/${CI_JOB_ID}/${CI_PIPELINE_ID}/${CI_PROJECT_NAME}"
 
 include:
   - project: "devops/gitlab/ci-templates/ruby"
