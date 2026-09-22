@@ -120,7 +120,7 @@ rspec_app_test:
       alias: fits
     - name: cgr.dev/chainguard/minio:latest
       alias: minio
-      command: [ "minio", "server", "/data" ]
+      command: [ "server", "/data" ]
       variables:
         MINIO_ROOT_USER: "minioadmin"
         MINIO_ROOT_PASSWORD: "minioadmin"
