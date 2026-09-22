@@ -90,10 +90,6 @@ include:
         - "amend_manifest_production"
       stage: "test"
   - component: gitlab.library.upenn.edu/devops/gitlab/components/general/install_hashicorp_vault@~latest
-  - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_finalize@~latest
-    inputs:
-      needs_copy:
-        - trivy_scan
  
 stages:
   - build_base
