@@ -39,14 +39,15 @@ include:
       SIDEKIQ_PRO_CREDENTIALS: "$SIDEKIQ_PRO_CREDENTIALS"
   - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_build@~latest
     inputs:
+      amend_tag_with_docker_target: "false"
       dockerfile_path: "rails_app/"
-      docker_build_context: "rails_app/"
-      stage: "build_production"
-      docker_build_secrets: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
       docker_additional_cache_targets: "base development"
+      docker_build_context: "rails_app/"
+      docker_build_secrets: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
       docker_build_args: "--build-arg RAILS_ENV=production"
       docker_target: "production"
       job_suffix: "_production"
+      stage: "build_production"
       matrix:
       - RUNNER: build
         DOCKER_BUILD_PLATFORM: "linux/amd64"
