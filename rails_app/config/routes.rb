@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       end
     end
     namespace :iiif do
-      scope :items do
+      scope "(:version)/items", defaults: { version: '3' } do
         get ':uuid/manifest', to: 'items#manifest', as: :api_item_iiif_manifest
       end
     end

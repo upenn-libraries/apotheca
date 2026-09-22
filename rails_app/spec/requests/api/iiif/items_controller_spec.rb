@@ -49,7 +49,7 @@ describe 'IIIF Item API requests' do
 
       before { get iiif_api_item_iiif_manifest_path(item.id) }
 
-      it 'redirects to presigned URL' do
+      it 'sends json' do
         expect(response).to have_http_status(:ok)
         expect(JSON.parse(response.body)['id']).to include item.id
       end
@@ -75,6 +75,28 @@ describe 'IIIF Item API requests' do
       it 'returns a failure object with the expected values' do
         expect(json_body[:status]).to eq 'fail'
         expect(json_body[:message]).to eq I18n.t('api.exceptions.file_not_found')
+      end
+    end
+
+    context 'when iiif version is not specified' do
+      let(:item) { persist(:item_resource, :with_full_assets_all_arranged, :with_derivatives, :published) }
+
+      before { get iiif_api_item_iiif_manifest_path(item.id) }
+
+      it 'returns v3 manifest' do
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['@context']).to eql 'http://iiif.io/api/presentation/3/context.json'
+      end
+    end
+
+    context 'when iiif version 2 is specified' do
+      let(:item) { persist(:item_resource, :with_full_assets_all_arranged, :with_derivatives, :published) }
+
+      before { get iiif_api_item_iiif_manifest_path(item.id, version: 2) }
+
+      it 'returns v2 manifest' do
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['@context']).to eql 'http://iiif.io/api/presentation/2/context.json'
       end
     end
   end
