@@ -118,7 +118,7 @@ rspec_app_test:
         PORT: 3333
     - name: gitlab.library.upenn.edu/dld/digital-repository/fits-servlet:main
       alias: fits
-    - name: minio/minio:latest
+    - name: cgr.dev/chainguard/minio:latest
       alias: minio
       command: [ "minio", "server", "/data" ]
       variables:
