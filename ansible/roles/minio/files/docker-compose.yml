@@ -4,7 +4,7 @@ version: "3.8"
 services:
   minio:
     image: ${MINIO_IMAGE_NAME}:${MINIO_IMAGE_TAG}
-    command: [ "minio", "server", "--console-address", ":9001", "/data" ]
+    command: [ "server", "--console-address", ":9001", "/data" ]
     deploy:
       labels:
         - "traefik.enable=true"
