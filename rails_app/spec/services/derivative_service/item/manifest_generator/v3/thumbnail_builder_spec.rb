@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::ManifestGenerator::ThumbnailBuilder do
+describe DerivativeService::Item::ManifestGenerator::V3::ThumbnailBuilder do
   describe '#build' do
     let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
     let(:thumbnail) { described_class.new(asset).build }

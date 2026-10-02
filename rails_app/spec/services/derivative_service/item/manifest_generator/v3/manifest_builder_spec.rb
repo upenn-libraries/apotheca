@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::ManifestGenerator::ManifestBuilder do
+describe DerivativeService::Item::ManifestGenerator::V3::ManifestBuilder do
   let(:item) do
     persist(:item_resource, :with_full_assets_all_arranged)
   end
