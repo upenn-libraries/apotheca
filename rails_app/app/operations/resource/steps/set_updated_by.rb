@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Resource
   module Steps
     # Sets updated by to the same as created_by. To be used when creating a resource.
