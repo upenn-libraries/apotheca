@@ -2,14 +2,15 @@
 
 module Item
   # Transaction that creates an item with the given attributes.
-  class Create < Item::Operation
+  class Create < Dry::Operation
+    include Steps
 
     def call(attributes)
       change_set = step create_change_set(attributes)
       step set_ark(change_set)
       step set_thumbnail(change_set)
       step set_updated_by(change_set)
-      step validation(change_set)
+      step validate(change_set)
       resource = step save(change_set)
 
       enqueue_ark_metadata_update(resource)

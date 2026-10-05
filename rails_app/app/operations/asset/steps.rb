@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Asset
-  class Operation < ResourceOperation
+  module Steps
+    include Resource::Steps
 
     def create_change_set(attributes)
       resource = attributes.delete(:resource) || AssetResource.new
@@ -13,8 +16,8 @@ module Asset
       end
     end
 
-    def add_preservation_events(change_set)
-      AddPreservationEvents.new.call(change_set)
+    def add_preservation_events(*args)
+      AddPreservationEvents.new.call(*args)
     end
   end
 end
