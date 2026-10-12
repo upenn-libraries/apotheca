@@ -18,8 +18,11 @@ module ImportService
     #  validity of the paths.
     def valid?
       @errors << 'asset storage name is blank' if storage_name.blank?
-      @errors << "assets storage invalid: '#{storage_name}'" if storage_name.present? && !WorkingStorage.valid?(storage_name)
       @errors << 'assets must contain at least one path' if paths.empty?
+
+      if storage_name.present? && !WorkingStorage.valid?(storage_name)
+        @errors << "assets storage invalid: '#{storage_name}'"
+      end
 
       if valid_paths?
         dups = duplicate_filenames
