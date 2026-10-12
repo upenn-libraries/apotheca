@@ -7,6 +7,8 @@ class ItemIndexer < BaseIndexer
     return {} unless resource.is_a? ItemResource
 
     {
+      uuid_ssi: resource.id,
+      unique_identifier_ssim: resource.unique_identifier,
       published_bsi: resource.published == true,
       first_published_at_dtsi: resource.first_published_at&.to_fs(:solr),
       last_published_at_dtsi: resource.last_published_at&.to_fs(:solr),

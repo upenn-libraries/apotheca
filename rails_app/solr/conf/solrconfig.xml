@@ -727,7 +727,11 @@
       <float name="tie">0.01</float>
 
       <str name="qf">
-        human_readable_name_tsim^10000
+        uuid_ssi^25000
+        identifier_ssim^20000
+        bibnumber_ssi^20000
+        unique_identifier_ssim^20000
+        human_readable_name_tsim^15000
         title_tsim^10000
         collection_tsim^5000
         description_tsim^2500
@@ -742,9 +746,6 @@
         physical_location_tsim^250
         publisher_tsim^250
         rights_note_tsim^250
-        identifier_ssim^2000
-        bibnumber_ssi^2000
-        unique_identifier_tsim^2000
         admin_search_tmiv
       </str>
       <str name="pf">
