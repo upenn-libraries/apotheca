@@ -8,6 +8,10 @@ RSpec.describe ItemIndexer do
   context 'when resource is unpublished' do
     let(:resource) { persist(:item_resource) }
 
+    it 'has indexed human_readable_name' do
+      expect(result[:human_readable_name_tsim]).to eq resource.human_readable_name
+    end
+
     it 'has indexed date_created' do
       expect(result[:date_created_dtsi]).to eql resource.created_at.to_fs(:solr)
     end

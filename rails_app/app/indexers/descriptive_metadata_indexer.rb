@@ -61,7 +61,7 @@ class DescriptiveMetadataIndexer < BaseIndexer
     @descriptive_metadata ||= resource.try(:descriptive_metadata).try(:to_json_export)
   end
 
-  # @return [TrueClass, FalseClass]
+  # @return [Boolean]
   def bibnumber_present?
     return false unless descriptive_metadata
 

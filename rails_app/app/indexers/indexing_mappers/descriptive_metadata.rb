@@ -6,6 +6,9 @@ module IndexingMappers
   # and return a hash that will be used to construct the JSON data sent to Solr to index a Resource.
   # While much of this looks repetitive, it leaves open each field for quick and easy customization,
   # while making indexed fields very explicit.
+  # Some guidelines for field usage:
+  # For a searchable, multivalued text field, use *_tsim
+  # For a value that will be used as a facet, use *_ssim (multivalued) or *_ssi (single valued)
   class DescriptiveMetadata
     attr_reader :data
 
@@ -62,8 +65,7 @@ module IndexingMappers
 
     # @return [Hash{Symbol->Unknown}]
     def item_type
-      { item_type_ssim: data[:item_type]&.pluck(:value),
-        item_type_ssi: data.dig(:item_type, 0, :value) }
+      { item_type_ssim: data[:item_type]&.pluck(:value) }
     end
 
     # @return [Hash{Symbol->Unknown}]
@@ -73,8 +75,7 @@ module IndexingMappers
 
     # @return [Hash{Symbol->Unknown}]
     def location
-      { location_tsim: data[:location]&.pluck(:value),
-        location_ssim: data[:location]&.pluck(:value) }
+      { location_tsim: data[:location]&.pluck(:value) }
     end
 
     # @return [Hash{Symbol->Unknown}]
@@ -142,8 +143,6 @@ module IndexingMappers
     # @return [Hash{Symbol->Unknown}]
     def title
       { title_tsim: data[:title]&.pluck(:value),
-        title_ssim: data[:title]&.pluck(:value),
-        title_tsi: data.dig(:title, 0, :value), # TODO: why index a single-vlued title?
         title_ssi: data.dig(:title, 0, :value) }
     end
   end
