@@ -6,6 +6,7 @@
 <% end %>
 
 <%= render(StaticFields::Component.new) do |component| %>
+  <% component.with_field(label: 'Apotheca ID', values: @item.id) %>
   <% component.with_field(label: 'Human Readable Name', values: @item.human_readable_name) %>
   <% component.with_field(label: 'OCR Strategy', values: @item.ocr_strategy) %>
   <% component.with_field(label: 'Internal Notes', values: @item.internal_notes) %>
