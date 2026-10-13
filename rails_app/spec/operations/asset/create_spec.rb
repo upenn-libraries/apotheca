@@ -2,12 +2,12 @@
 
 describe Asset::Create do
   describe '#call' do
-    let(:transaction) { described_class.new }
+    let(:operation) { described_class.new }
     let(:asset) { result.value! }
 
     context 'when all required attributes present' do
       let(:result) do
-        transaction.call(label: 'Front', created_by: 'initiator@example.com')
+        operation.call(label: 'Front', created_by: 'initiator@example.com')
       end
 
       include_examples 'creates a resource event', :create_asset, 'initiator@example.com', true do
@@ -37,7 +37,7 @@ describe Asset::Create do
 
     context 'when creating an asset with an original_filename' do
       let(:result) do
-        transaction.call(original_filename: original_filename, label: 'Front', created_by: 'admin@example.com')
+        operation.call(original_filename: original_filename, label: 'Front', created_by: 'admin@example.com')
       end
       let(:original_filename) { 'front.tif' }
 

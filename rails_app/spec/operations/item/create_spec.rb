@@ -5,13 +5,13 @@ describe Item::Create do
     include_context 'with successful requests to mint EZID'
     include_context 'with successful requests to update EZID'
 
-    let(:transaction) { described_class.new }
+    let(:operation) { described_class.new }
 
     context 'when all required attributes present' do
       subject(:item) { result.value! }
 
       let(:result) do
-        transaction.call(
+        operation.call(
           human_readable_name: 'New Item',
           descriptive_metadata: { title: [{ value: 'A New Item' }] },
           created_by: 'initiator@example.com',
@@ -57,7 +57,7 @@ describe Item::Create do
 
     context 'when missing created_by' do
       subject(:result) do
-        transaction.call(
+        operation.call(
           human_readable_name: 'New Item',
           descriptive_metadata: { title: [{ value: 'A New Item' }] }
         )
