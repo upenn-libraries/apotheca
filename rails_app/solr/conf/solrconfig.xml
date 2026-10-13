@@ -727,7 +727,7 @@
       <float name="tie">0.01</float>
 
       <str name="qf">
-        uuid_ssi^25000
+        id^25000
         identifier_ssim^20000
         bibnumber_ssi^20000
         unique_identifier_ssim^20000
