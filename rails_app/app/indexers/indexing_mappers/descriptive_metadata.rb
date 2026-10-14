@@ -3,12 +3,10 @@
 module IndexingMappers
   # Mapping from source data to Solr fields
   # Methods here should be named after values in the ItemResource::DescriptiveMetadata::FIELDS array,
-  # and return a hash that will be used to construct the JSON data sent to Solr to index a Resource.
-  # While much of this looks repetitive, it leaves open each field for quick and easy customization,
-  # while making indexed fields very explicit.
+  # and return a hash that will be used in the JSON data sent to Solr to index a Resource.
   # Some guidelines for field usage:
-  # For a searchable, multivalued text field, use *_tsim
-  # For a value that will be used as a facet, use *_ssim (multivalued) or *_ssi (single valued)
+  #   For a searchable, multivalued text field, use *_tsim
+  #   For a value that will be used as a facet, use *_ssim (multivalued) or *_ssi (single valued)
   class DescriptiveMetadata
     attr_reader :data
 
