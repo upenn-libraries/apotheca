@@ -28,7 +28,7 @@ RSpec.describe DescriptiveMetadataIndexer do
     end
 
     it 'has indexed title from the Resource' do
-      expect(result[:title_tsi]).to eq resource.descriptive_metadata.title.first.value
+      expect(result[:title_tsim]).to eq resource.descriptive_metadata.title.collect(&:value)
     end
 
     it 'has indexed names from the Resource' do
