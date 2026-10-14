@@ -6,7 +6,6 @@ module Resource
   # Includes steps that can be shared across resources. Define `resource_class` and `change_set_class` in
   # subclasses to use all available steps.
   class Operation < Dry::Operation
-
     # Convenience method to use `call` method without instantiating the operation.
     def self.call(...)
       new.call(...)
