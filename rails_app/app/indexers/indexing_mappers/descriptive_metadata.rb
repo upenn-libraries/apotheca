@@ -46,6 +46,7 @@ module IndexingMappers
       { description_tsim: data[:description]&.pluck(:value) }
     end
 
+    # @return [Hash{Symbol->Unknown}]
     def extent
       { extent_tsim: data[:extent]&.pluck(:value) }
     end
@@ -128,6 +129,7 @@ module IndexingMappers
       { rights_tsim: data[:rights]&.pluck(:value) }
     end
 
+    # @return [Hash{Symbol->Unknown}]
     def rights_note
       { rights_note_tsim: data[:rights_note]&.pluck(:value) }
     end
