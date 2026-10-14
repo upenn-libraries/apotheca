@@ -5,6 +5,7 @@
 <% end %>
 
 <h2><%= @item.human_readable_name %></h2>
+<p title="UUID" class="text-body-secondary user-select-all"><%= @item.id %></p>
 
 <div class="align-self-center mb-2">
   <% if @item.asset_count.zero? %>
