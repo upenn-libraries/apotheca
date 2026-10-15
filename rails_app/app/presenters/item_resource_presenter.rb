@@ -11,6 +11,13 @@ class ItemResourcePresenter < BasePresenter
     @ils_metadata = ils_metadata
   end
 
+  # Best title to use when trying to represent an item.
+  #
+  # @return [String]
+  def display_title
+    human_readable_name
+  end
+
   # @return [String] The URL for this ItemResource on the Apotheca site.
   def apotheca_url
     url_for(controller: 'items', action: 'show', id: object.id, host: Settings.app_url)
