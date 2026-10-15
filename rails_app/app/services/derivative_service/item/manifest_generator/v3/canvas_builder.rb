@@ -108,7 +108,7 @@ module DerivativeService
             }
           end
 
-          # Constructs the base canvas if for the asset
+          # Constructs the base canvas id for the asset
           #
           # @return [String] base id for the asset
           def base_id
