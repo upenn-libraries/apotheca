@@ -19,6 +19,20 @@ module Resource
       raise NotImplemented
     end
 
+    # Class used to generate derivatives.
+    def derivative_generator_class
+      raise NotImplemented
+    end
+
+    # Default derivative types that should be generated.
+    def derivative_types
+      raise NotImplemented
+    end
+
+    def find_resource(id)
+      Steps::FindResource.new(resource_class).call(id)
+    end
+
     def create_change_set(**attributes)
       Steps::CreateChangeSet.new(resource_class, change_set_class).call(**attributes)
     end
@@ -29,6 +43,10 @@ module Resource
 
     def require_updated_by(*args)
       Steps::RequireAttribute.new(:updated_by).call(*args)
+    end
+
+    def generate_derivatives(*args)
+      Steps::GenerateDerivatives.new(derivative_generator_class, derivative_types).call(*args)
     end
 
     def validate(*args)
