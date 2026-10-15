@@ -30,3 +30,5 @@ solr_custom_env_variables:
   SOLR_ENABLE_AUTHENTICATION: "yes"
   SOLR_HEAP: "2G"
   SOLR_JAVA_MEM: "-Xms2G -Xmx2G"
+  SOLR_OPTS: "-Dsolr.max.booleanClauses=1024"
+
