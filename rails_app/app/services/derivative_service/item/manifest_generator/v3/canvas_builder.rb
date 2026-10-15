@@ -13,7 +13,7 @@ module DerivativeService
 
           # Initializes a new Canvas builder
           #
-          # @param asset [Object] The asset to build a canvas for
+          # @param asset [AssetResource] The asset to build a canvas for
           # @param index [Integer] position/index of the canvas in context
           def initialize(asset, index)
             @asset = asset

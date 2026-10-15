@@ -10,6 +10,7 @@ module DerivativeService
         class ManifestBuilder
           attr_reader :item
 
+          # @param item [ItemResource]
           def initialize(item)
             @item = item.presenter
           end

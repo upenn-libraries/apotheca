@@ -14,6 +14,8 @@ module DerivativeService
           end
 
           # Metadata to display in image viewer. Using V2 metadata builder as a starting point.
+          #
+          # @return [Hash] metadata
           def build
             metadata = V2::MetadataBuilder.new(item).build.map(&:stringify_keys)
 

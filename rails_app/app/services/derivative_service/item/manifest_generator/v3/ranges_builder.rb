@@ -10,6 +10,7 @@ module DerivativeService
         class RangesBuilder
           attr_reader :asset
 
+          # @param asset [AssetResource]
           def initialize(asset)
             @asset = asset
           end
@@ -27,7 +28,7 @@ module DerivativeService
 
           # Build a single range object
           #
-          # @param annotation [Object] annotation object with text
+          # @param annotation [AssetResource::Annotation] annotation object with text
           # @param annotation_index [Integer] 1-based annotation index
           # @return [IIIF::V3::Presentation::Range] configured range object
           def build_range(annotation, annotation_index)

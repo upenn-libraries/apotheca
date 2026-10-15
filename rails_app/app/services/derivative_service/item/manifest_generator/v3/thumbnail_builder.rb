@@ -8,6 +8,7 @@ module DerivativeService
         class ThumbnailBuilder
           attr_reader :asset
 
+          # @param asset [AssetResource]
           def initialize(asset)
             @asset = asset
           end
