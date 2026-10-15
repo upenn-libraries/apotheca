@@ -49,6 +49,6 @@ module Apotheca
     # Devise Issue: https://github.com/heartcombo/devise/pull/5462
     # Rails Issue: https://github.com/rails/rails/issues/39643
     # Related CVE: https://discuss.rubyonrails.org/t/cve-2023-22797-possible-open-redirect-vulnerability-in-action-pack/82120
-    config.action_controller.raise_on_open_redirects = false
+    config.action_controller.action_on_open_redirect = :log
   end
 end
