@@ -40,6 +40,10 @@ class ItemResource
       def self.all
         CONFIG.keys
       end
+
+      def self.each_field(&block)
+        all.each(&block)
+      end
     end
 
     Fields::CONFIG.each do |field, type|
