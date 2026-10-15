@@ -42,6 +42,55 @@ class ItemResourcePresenter < BasePresenter
     )
   end
 
+  # @return [Array<AssetResource]
+  def unarranged_assets
+    @unarranged_assets ||= assets.reject { |a| structural_metadata.arranged_asset_ids.include?(a.id) }
+  end
+
+  # @return [Array<AssetResource>]
+  def arranged_assets
+    @arranged_assets ||= assets.select { |a| structural_metadata.arranged_asset_ids.include?(a.id) }
+                               .sort_by { |a| structural_metadata.arranged_asset_ids.index(a.id) }
+  end
+
+  # @return [Array<AssetResource>]
+  def assets
+    return [] if asset_ids.blank?
+
+    @assets ||= pg_query_service.find_many_by_ids(ids: asset_ids.dup)
+  end
+
+  # Returns thumbnail asset.
+  #
+  # @return [AssetResource]
+  def thumbnail
+    return unless thumbnail_asset_id
+
+    @thumbnail ||= pg_query_service.find_by(id: thumbnail_asset_id)
+  end
+
+  # Returns true if thumbnail asset has a thumbnail image.
+  def thumbnail_image?
+    return false unless thumbnail_asset_id
+
+    thumbnail&.thumbnail.present?
+  end
+
+  # Returns true if all assets have been backed up to preservation-copy. If no assets are present, returns true.
+  def all_assets_backed_up?
+    return true if asset_ids.nil?
+
+    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
+  end
+
+
+  private
+
+  def pg_query_service
+    @pg_query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
+  end
+
+
   # presenter for descriptive metadata
   class DescriptiveMetadataPresenter < BasePresenter
     include ActionView::Helpers::TagHelper

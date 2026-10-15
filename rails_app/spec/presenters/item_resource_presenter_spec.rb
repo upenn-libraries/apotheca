@@ -7,6 +7,17 @@ RSpec.describe ItemResourcePresenter do
 
   let(:item_resource) { persist(:item_resource) }
 
+  describe '#arranged_assets' do
+    let(:item_resource) { persist(:item_resource, :with_assets_some_arranged) }
+    let(:ils_metadata) { nil }
+    let(:expected_arrangement) { %w[page1] }
+
+    it 'returns AssetResource instances in proper order' do
+      expect(presenter.arranged_assets.collect(&:original_filename)).to eq expected_arrangement
+    end
+  end
+
+
   context 'with any ItemResource' do
     let(:ils_metadata) { nil }
 
