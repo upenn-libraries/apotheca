@@ -6,6 +6,7 @@ module DerivativeService
       class V3
         # Builds IIIF Presentation v3 Canvas representing an Asset.
         class CanvasBuilder
+          DEFAULT_RESOURCE_SIZE = '!200,200'
           PLACEHOLDER_WIDTH = 640
 
           attr_reader :asset, :index
@@ -42,7 +43,7 @@ module DerivativeService
           # @param width [Integer] image width
           # @param resource_size [String] image size returned in the IIIF image API links
           # @return [IIIF::V3::Presentation::Canvas] canvas with an image annotation
-          def canvas(id:, height:, width:, resource_size: '!200,200')
+          def canvas(id:, height:, width:, resource_size: DEFAULT_RESOURCE_SIZE)
             IIIF::V3::Presentation::Canvas.new('id' => id).tap do |c|
               c.label = label
               c.height = height
@@ -66,7 +67,7 @@ module DerivativeService
               id: "#{base_id}/canvas/placeholder",
               height: placeholder_height,
               width: PLACEHOLDER_WIDTH,
-              resource_size: '640,'
+              resource_size: "#{PLACEHOLDER_WIDTH},"
             )
           end
 
@@ -83,7 +84,7 @@ module DerivativeService
           # @param width [Integer] image width
           # @param resource_size [String] image size returned in the IIIF image API links
           # @return [IIIF::V3::Presentation::ImageResource] configured image resource
-          def image_resource(height:, width:, resource_size: '!200,200')
+          def image_resource(height:, width:, resource_size: DEFAULT_RESOURCE_SIZE)
             image_resource = IIIF::V3::Presentation::ImageResource.create_image_api_image_resource(
               service_id: iiif_image_url,
               resource_id: "#{iiif_image_url}/full/#{resource_size}/0/default.jpg",
