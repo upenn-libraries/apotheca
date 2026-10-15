@@ -39,16 +39,12 @@ module DerivativeService
 
           private
 
-          # Validate that an asset has required derivatives
+          # Validate that assets has required derivatives.
           #
           # @raise [MissingDerivative] if pyramidal derivatives are missing
           # @return [void]
           def validate_asset_derivatives!
-            item.arranged_assets.select(&:image?).each do |asset|
-              next if asset.iiif_image
-
-              raise MissingDerivative, "Derivatives missing for #{asset.original_filename}"
-            end
+            raise MissingDerivative, "Derivatives Missing." unless item.iiif_images_present?
           end
 
           # Return sequence of canvases. Each canvas contains an Asset.

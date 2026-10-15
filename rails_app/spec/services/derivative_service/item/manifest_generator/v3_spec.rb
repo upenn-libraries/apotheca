@@ -59,7 +59,7 @@ describe DerivativeService::Item::ManifestGenerator::V3 do
       it 'raises an error' do
         expect { iiif_service.manifest }.to raise_error(
           described_class::MissingDerivative,
-          /Derivatives missing for/
+          /Derivatives Missing/
         )
       end
     end
