@@ -17,5 +17,13 @@ describe DerivativeService::Item::ManifestGenerator::V3::ThumbnailBuilder do
         )]
       )
     end
+
+    context 'when asset missing iiif_image derivative' do
+      let(:asset) { persist(:asset_resource, :with_image_file) }
+
+      it 'returns empty hash' do
+        expect(thumbnail).to eql({})
+      end
+    end
   end
 end

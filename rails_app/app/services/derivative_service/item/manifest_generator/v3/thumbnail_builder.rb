@@ -17,6 +17,8 @@ module DerivativeService
           #
           # @return [Hash] IIIF thumbnail structure
           def build
+            return {} unless asset&.iiif_image
+
             {
               'id' => thumbnail_image_url,
               'type' => 'Image',
