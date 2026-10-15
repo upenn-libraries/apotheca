@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-describe ImportService::S3Storage do
+describe WorkingStorage do
   let(:storage) { described_class.new('sceti_digitized') }
 
   describe '#file' do
     context 'when key is valid' do
       let(:file) { storage.file('trade_card/original/front.tif') }
 
-      it 'returns ImportService::S3Storage::File' do
-        expect(file).to be_a ImportService::S3Storage::File
+      it 'returns WorkingStorage::File' do
+        expect(file).to be_a WorkingStorage::File
         expect(file.original_filename).to eql 'front.tif'
       end
     end

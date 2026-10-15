@@ -35,7 +35,7 @@ class FileListingToolController < UIController
   end
 
   def valid_drive?
-    ImportService::S3Storage.valid?(params[:drive])
+    WorkingStorage.valid?(params[:drive])
   end
 
   def filenames
@@ -43,6 +43,6 @@ class FileListingToolController < UIController
   end
 
   def storage
-    @storage ||= ImportService::S3Storage.new(params[:drive]) if valid_drive?
+    @storage ||= WorkingStorage.new(params[:drive]) if valid_drive?
   end
 end
