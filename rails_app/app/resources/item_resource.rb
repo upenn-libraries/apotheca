@@ -6,6 +6,7 @@ class ItemResource < Valkyrie::Resource
 
   include ModificationDetails
   include Lockable
+  include Item::Presentable
 
   # Data about how a ItemResource's assets are organized
   class StructuralMetadata < Valkyrie::Resource
@@ -123,11 +124,6 @@ class ItemResource < Valkyrie::Resource
     end
   end
 
-  # @return [ItemResourcePresenter]
-  def presenter
-    @presenter ||= create_presenter
-  end
-
   # Best title to use when trying to represent an item.
   #
   # @return [String]
@@ -166,12 +162,5 @@ class ItemResource < Valkyrie::Resource
   def language_codes
     languages = Array.wrap(presenter.descriptive_metadata.language)
     languages.pluck(:value).flat_map { |l| ISO_639.find_by_english_name(l)&.first(2) }.compact_blank
-  end
-
-  private
-
-  def create_presenter
-    ils_metadata = bibnumber? ? Query.solr.custom_queries.ils_metadata_for(id: id.to_s) : nil
-    ItemResourcePresenter.new(object: self, ils_metadata: ils_metadata)
   end
 end
