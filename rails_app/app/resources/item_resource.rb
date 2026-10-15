@@ -60,7 +60,7 @@ class ItemResource < Valkyrie::Resource
   def assets
     return [] if asset_ids.blank?
 
-    @assets ||= pg_query_service.find_many_by_ids(ids: asset_ids.dup)
+    @assets ||= Query.postgres.find_many_by_ids(ids: asset_ids.dup)
   end
 
   # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
@@ -115,7 +115,7 @@ class ItemResource < Valkyrie::Resource
 
   # @param [Array<Valkyrie::ID>] asset_ids
   def assets_export(asset_ids)
-    asset_resources = pg_query_service.find_many_by_ids(ids: asset_ids)
+    asset_resources = Query.postgres.find_many_by_ids(ids: asset_ids)
 
     asset_ids.map do |asset_id|
       asset = asset_resources.find { |r| r.id == asset_id }
@@ -141,7 +141,7 @@ class ItemResource < Valkyrie::Resource
   def thumbnail
     return unless thumbnail_asset_id
 
-    @thumbnail ||= pg_query_service.find_by(id: thumbnail_asset_id)
+    @thumbnail ||= Query.postgres.find_by(id: thumbnail_asset_id)
   end
 
   # Returns true if thumbnail asset has a thumbnail image.
@@ -155,7 +155,7 @@ class ItemResource < Valkyrie::Resource
   def all_assets_backed_up?
     return true if asset_ids.nil?
 
-    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
+    Query.postgres.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
   end
 
   # Converts languages found in metadata to a list of ISO 639-2 language codes. We return both
@@ -171,15 +171,7 @@ class ItemResource < Valkyrie::Resource
   private
 
   def create_presenter
-    ils_metadata = bibnumber? ? solr_query_service.custom_queries.ils_metadata_for(id: id.to_s) : nil
+    ils_metadata = bibnumber? ? Query.solr.custom_queries.ils_metadata_for(id: id.to_s) : nil
     ItemResourcePresenter.new(object: self, ils_metadata: ils_metadata)
-  end
-
-  def solr_query_service
-    @solr_query_service ||= Valkyrie::MetadataAdapter.find(:index_solr).query_service
-  end
-
-  def pg_query_service
-    @pg_query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
   end
 end

@@ -64,7 +64,7 @@ class ItemResourcePresenter < BasePresenter
   def assets
     return [] if asset_ids.blank?
 
-    @assets ||= pg_query_service.find_many_by_ids(ids: asset_ids.dup)
+    @assets ||= Query.postgres.find_many_by_ids(ids: asset_ids.dup)
   end
 
   # Returns thumbnail asset.
@@ -73,7 +73,7 @@ class ItemResourcePresenter < BasePresenter
   def thumbnail
     return unless thumbnail_asset_id
 
-    @thumbnail ||= pg_query_service.find_by(id: thumbnail_asset_id)
+    @thumbnail ||= Query.postgres.find_by(id: thumbnail_asset_id)
   end
 
   # Returns true if thumbnail asset has a thumbnail image.
@@ -87,7 +87,7 @@ class ItemResourcePresenter < BasePresenter
   def all_assets_backed_up?
     return true if asset_ids.nil?
 
-    pg_query_service.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
+    Query.postgres.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
   end
 
 
