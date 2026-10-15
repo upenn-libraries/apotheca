@@ -3,6 +3,8 @@
 class ItemResource
   # Descriptive metadata for Item.
   class DescriptiveMetadata < Valkyrie::Resource
+    include Item::Exportable
+
     # Defining descriptive metadata fields for ItemResource.
     module Fields
       TEXT = :text
@@ -43,12 +45,6 @@ class ItemResource
     Fields::CONFIG.each do |field, type|
       klass = "#{name}::#{type.to_s.titlecase}Field".constantize
       attribute field, Valkyrie::Types::Array.of(klass)
-    end
-
-    def to_json_export
-      attributes.slice(*Fields.all)
-                .transform_values { |v| v.map(&:to_json_export) }
-                .compact_blank
     end
   end
 end
