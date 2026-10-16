@@ -7,6 +7,20 @@ RSpec.describe MetadataExtractor::MARC::PennRules::DateField do
     MetadataExtractor::MARC::XMLDocument::ControlField.new(doc.children.first, doc)
   end
 
+  xdescribe '#apply?' do
+    context 'when controlfield indicates no date given or a BC date' do
+      let(:xml) do
+        <<~XML
+          <marc:controlfield tag="008">110617b ua 000 0 egy d</marc:controlfield>
+        XML
+      end # TODO: #attributes not set on this node, making this method spec fail with an error
+
+      it 'returns false' do
+        expect(field_mapping.apply?(controlfield)).to be_false
+      end
+    end
+  end
+
   describe '#mapping' do
     context 'when controlfield contains a singular date' do
       let(:xml) do

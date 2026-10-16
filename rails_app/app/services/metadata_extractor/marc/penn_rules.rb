@@ -24,6 +24,7 @@ module MetadataExtractor
 
       add_rules field: :date do |field|
         field.mapping DateField, tag: '008'
+        field.mapping SpecialCodedDateField, tag: '046'
       end
 
       add_rules field: :description do |field|
