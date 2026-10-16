@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-presenter = @item.is_a?(ChangeSet) ? @item.resource.presenter : @item.presenter
+presenter = @item.presenter
 
 json = {
   id: @item.id.to_s,
@@ -21,7 +21,7 @@ json = {
 }
 
 # Add preview derivative if thumbnail present.
-if (thumbnail = @item.thumbnail&.thumbnail)
+if (thumbnail = presenter.thumbnail&.thumbnail)
   json[:derivatives][:preview] = render('api/resources/derivative',
                                         derivative: thumbnail,
                                         url: api_item_preview_url(@item.id))
