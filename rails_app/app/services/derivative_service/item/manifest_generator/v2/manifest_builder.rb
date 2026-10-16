@@ -44,7 +44,7 @@ module DerivativeService
           # @raise [MissingDerivative] if pyramidal derivatives are missing
           # @return [void]
           def validate_asset_derivatives!
-            raise MissingDerivative, "Derivatives Missing." unless item.iiif_images_present?
+            raise MissingDerivative, 'Derivatives Missing.' unless item.iiif_images_present?
           end
 
           # Return sequence of canvases. Each canvas contains an Asset.

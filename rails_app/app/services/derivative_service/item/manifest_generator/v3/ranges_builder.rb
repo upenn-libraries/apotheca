@@ -12,7 +12,7 @@ module DerivativeService
 
           # Builds IIIF ranges for each asset and combines them.
           def self.build_all(assets)
-            assets.flat_map { |asset| self.new(asset).build }
+            assets.flat_map { |asset| new(asset).build }
           end
 
           # @param asset [AssetResource]
