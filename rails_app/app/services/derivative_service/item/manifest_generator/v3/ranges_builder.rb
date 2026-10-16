@@ -10,6 +10,11 @@ module DerivativeService
         class RangesBuilder
           attr_reader :asset
 
+          # Builds IIIF ranges for each asset and combines them.
+          def self.build_all(assets)
+            assets.flat_map { |asset| self.new(asset).build }
+          end
+
           # @param asset [AssetResource]
           def initialize(asset)
             @asset = asset

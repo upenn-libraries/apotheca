@@ -56,9 +56,7 @@ module DerivativeService
           #
           # @return [Array<IIIF::V3::Presentation::Range>]
           def ranges
-            item.arranged_assets.select(&:image?).flat_map do |asset|
-              RangesBuilder.new(asset).build
-            end
+            RangesBuilder.build_all(item.arranged_assets.select(&:image?))
           end
 
           # Required statement for attribution

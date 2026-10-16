@@ -51,5 +51,9 @@ describe DerivativeService::Item::ManifestGenerator::V3::ManifestBuilder do
     it 'assigns items' do
       expect(manifest.items).to all(be_a(IIIF::V3::Presentation::Canvas))
     end
+
+    it 'assigns structures' do
+      expect(manifest.structures).to all(be_an(IIIF::V3::Presentation::Range))
+    end
   end
 end
