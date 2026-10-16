@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ItemResourcePresenter do
+RSpec.describe ItemPresenter do
   subject(:presenter) do
     described_class.new object: item_resource, ils_metadata: ils_metadata
   end
@@ -17,7 +17,6 @@ RSpec.describe ItemResourcePresenter do
     end
   end
 
-
   context 'with any ItemResource' do
     let(:ils_metadata) { nil }
 
@@ -30,11 +29,11 @@ RSpec.describe ItemResourcePresenter do
     let(:ils_metadata) { nil }
 
     it 'returns a DescriptiveMetadataPresenter' do
-      expect(presenter.descriptive_metadata).to be_an ItemResourcePresenter::DescriptiveMetadataPresenter
+      expect(presenter.descriptive_metadata).to be_an ItemPresenter::DescriptiveMetadataPresenter
     end
 
     it 'delegates descriptive metadata field calls to the Resource' do
-      ItemResource::DescriptiveMetadata::Fields.all.each do |field|
+      ItemResource::DescriptiveMetadata::Fields.each_field do |field|
         expect(
           presenter.descriptive_metadata.public_send(field)
         ).to eq item_resource.descriptive_metadata.public_send(field)
