@@ -19,6 +19,10 @@ module Resource
       raise NotImplemented
     end
 
+    def find_resource(id)
+      Steps::FindResource.new(resource_class).call(id)
+    end
+
     def create_change_set(**attributes)
       Steps::CreateChangeSet.new(resource_class, change_set_class).call(**attributes)
     end

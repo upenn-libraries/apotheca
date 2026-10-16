@@ -3,7 +3,7 @@
 module Item
   module Steps
     # Asynchronously update EZID metadata.
-    class EnqueueArkMetadataUpdate
+    class UpdateArkMetadataLater
       include Dry::Monads[:result]
 
       # Enqueue job to update metadata in EZID record.
