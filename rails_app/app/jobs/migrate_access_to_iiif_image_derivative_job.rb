@@ -12,7 +12,7 @@ class MigrateAccessToIIIFImageDerivativeJob
   def perform(item_id)
     item = query_service.find_by id: item_id
 
-    return if item.assets.none?(&:image?) # Return if none of the assets are image assets
+    return if item.presenter.assets.none?(&:image?) # Return if none of the assets are image assets
 
     generate_iiif_images(item)
     regenerate_iiif_manifests(item)
@@ -23,7 +23,7 @@ class MigrateAccessToIIIFImageDerivativeJob
 
   # Regenerate IIIF images for each asset. Skips any assets that already have an `iiif_image` derivative.
   def generate_iiif_images(item)
-    item.assets.each do |asset|
+    item.presenter.assets.each do |asset|
       next if asset.iiif_image
 
       result = AddIIIFImageDerivative.new.call(id: asset.id.to_s, updated_by: Settings.system_user)

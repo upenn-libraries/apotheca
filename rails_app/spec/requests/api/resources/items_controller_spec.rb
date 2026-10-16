@@ -230,7 +230,8 @@ describe 'Resource Item API' do
 
     context 'when size is not provided' do
       it 'redirects to presigned_url for thumbnail' do
-        url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{item.thumbnail.id}/thumbnail}
+        thumbnail_id = item.thumbnail_asset_id
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{thumbnail_id}/thumbnail}
         expect(response).to redirect_to(url)
         expect(response).to have_http_status(:temporary_redirect)
       end
@@ -240,7 +241,8 @@ describe 'Resource Item API' do
       let(:size) { "#{API::Resources::ItemsController::DEFAULT_SIZE},#{API::Resources::ItemsController::DEFAULT_SIZE}" }
 
       it 'redirects to presigned_url for thumbnail' do
-        url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{item.thumbnail.id}/thumbnail}
+        thumbnail_id = item.thumbnail_asset_id
+        url = %r{\A#{Settings.minio.endpoint}/#{Settings.derivative_storage.bucket}/#{thumbnail_id}/thumbnail}
         expect(response).to redirect_to(url)
         expect(response).to have_http_status(:temporary_redirect)
       end
@@ -250,7 +252,7 @@ describe 'Resource Item API' do
       let(:size) { '400,400' }
 
       it 'redirects to IIIF image server' do
-        url = %r{\A#{Settings.image_server.url}/iiif/3/#{item.thumbnail.id}/full/!#{size}/0/default.jpg}
+        url = %r{\A#{Settings.image_server.url}/iiif/3/#{item.thumbnail_asset_id}/full/!#{size}/0/default.jpg}
         expect(response).to redirect_to(url)
         expect(response).to have_http_status(:temporary_redirect)
       end

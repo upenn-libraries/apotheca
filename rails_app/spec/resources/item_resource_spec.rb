@@ -28,15 +28,6 @@ describe ItemResource do
     end
   end
 
-  describe '#arranged_assets' do
-    let(:resource) { persist(:item_resource, :with_assets_some_arranged) }
-    let(:expected_arrangement) { %w[page1] }
-
-    it 'returns AssetResource instances in proper order' do
-      expect(resource.arranged_assets.collect(&:original_filename)).to eq expected_arrangement
-    end
-  end
-
   describe '#to_json_export' do
     context 'with any resource' do
       subject(:export) { resource.to_json_export }

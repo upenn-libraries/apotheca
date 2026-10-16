@@ -46,33 +46,10 @@ class ItemResource < Valkyrie::Resource
     Array.wrap(asset_ids) - structural_metadata.arranged_asset_ids
   end
 
-  # @return [Array<AssetResource]
-  def unarranged_assets
-    @unarranged_assets ||= assets.reject { |a| structural_metadata.arranged_asset_ids.include?(a.id) }
-  end
-
-  # @return [Array<AssetResource>]
-  def arranged_assets
-    @arranged_assets ||= assets.select { |a| structural_metadata.arranged_asset_ids.include?(a.id) }
-                               .sort_by { |a| structural_metadata.arranged_asset_ids.index(a.id) }
-  end
-
-  # @return [Array<AssetResource>]
-  def assets
-    return [] if asset_ids.blank?
-
-    @assets ||= Query.postgres.find_many_by_ids(ids: asset_ids.dup)
-  end
-
   # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
   # @param [Valkyrie::ID] asset_id
   def thumbnail?(asset_id)
     thumbnail_asset_id == asset_id
-  end
-
-  # @return [TrueClass, FalseClass]
-  def bibnumber?
-    descriptive_metadata&.bibnumber.try(:any?)
   end
 
   # Accessors for derivatives.
@@ -122,36 +99,6 @@ class ItemResource < Valkyrie::Resource
       asset = asset_resources.find { |r| r.id == asset_id }
       { filename: asset.original_filename, label: asset.label, annotations: asset.annotations.map(&:text) }
     end
-  end
-
-  # Best title to use when trying to represent an item.
-  #
-  # @return [String]
-  def display_title
-    human_readable_name
-  end
-
-  # Returns thumbnail asset.
-  #
-  # @return [AssetResource]
-  def thumbnail
-    return unless thumbnail_asset_id
-
-    @thumbnail ||= Query.postgres.find_by(id: thumbnail_asset_id)
-  end
-
-  # Returns true if thumbnail asset has a thumbnail image.
-  def thumbnail_image?
-    return false unless thumbnail_asset_id
-
-    thumbnail&.thumbnail.present?
-  end
-
-  # Returns true if all assets have been backed up to preservation-copy. If no assets are present, returns true.
-  def all_assets_backed_up?
-    return true if asset_ids.nil?
-
-    Query.postgres.custom_queries.number_with_preservation_backup(asset_ids) == asset_count
   end
 
   # Converts languages found in metadata to a list of ISO 639-2 language codes. We return both
