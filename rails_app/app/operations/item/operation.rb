@@ -3,7 +3,7 @@
 module Item
   # Parent class for Item Operations. Includes reuseable steps for Item operations.
   class Operation < Resource::Operation
-    alias_method :find_item, :find_resource
+    alias find_item find_resource
 
     def resource_class
       ItemResource
