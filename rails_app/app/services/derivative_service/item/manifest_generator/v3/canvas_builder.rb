@@ -11,6 +11,16 @@ module DerivativeService
 
           attr_reader :asset, :index
 
+          # Builds IIIF canvases for a set of assets. Maintains the order of the assets.
+          #
+          # @param assets [Array<AssetResource>]
+          # @return [Array<IIIF::V3::Presentation::Canvas>]
+          def self.build_all(assets)
+            assets.map.with_index(1) do |asset, index|
+              CanvasBuilder.new(asset, index).build
+            end
+          end
+
           # Initializes a new Canvas builder
           #
           # @param asset [AssetResource] The asset to build a canvas for

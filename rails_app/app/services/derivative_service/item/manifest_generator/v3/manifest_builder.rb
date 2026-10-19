@@ -46,9 +46,7 @@ module DerivativeService
           #
           # @return [Array<IIIF::V3::Presentation::Canvas>]
           def canvases
-            item.arranged_assets.select(&:image?).map.with_index(1) do |asset, index|
-              CanvasBuilder.new(asset, index).build
-            end
+            CanvasBuilder.build_all(item.arranged_assets.select(&:image?))
           end
 
           # Creating IIIF ranges for Assets. Only creates a range if the Asset has at least
