@@ -7,7 +7,7 @@ describe DerivativeService::Item::PDFGenerator::Cover do
                                                   description_count: 50,
                                                   human_readable_name: 'Line Breaks and Other Mishaps')
   end
-  let(:cover) { described_class.new(ItemPresenter.new(object: item)) }
+  let(:cover) { described_class.new(item.presenter) }
   let(:target) { HexaPDF::Document.new }
 
   before { freeze_time }
