@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::ManifestGenerator::CanvasBuilder::Asset do
+describe DerivativeService::Item::ManifestGenerator::V3::CanvasBuilder do
   describe '#build' do
     let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
     let(:canvas) { described_class.new(asset, 1).build }
@@ -57,8 +57,56 @@ describe DerivativeService::Item::ManifestGenerator::CanvasBuilder::Asset do
     end
 
     context 'with placeholder canvas' do
+      let(:placeholder_canvas) { canvas['placeholderCanvas'] }
+
       it 'builds placeholder canvas' do
-        expect(canvas['placeholderCanvas']).to be_a IIIF::V3::Presentation::Canvas
+        expect(placeholder_canvas).to be_a IIIF::V3::Presentation::Canvas
+      end
+
+      it 'assigns attributes' do
+        expect(placeholder_canvas).to have_attributes('id' => ending_with('canvas/placeholder'),
+                                                      'label' => { 'none' => ['p. 1'] })
+      end
+
+      it 'assigns items' do
+        expect(placeholder_canvas.items.first).to be_a IIIF::V3::Presentation::AnnotationPage
+      end
+
+      it 'assigns annotation-page attributes' do
+        expect(placeholder_canvas.items.first).to have_attributes(
+          'id' => ending_with('canvas/placeholder/annotation-page/1')
+        )
+      end
+
+      it 'assigns annotation-page items' do
+        expect(placeholder_canvas.items.first.items.first).to be_a IIIF::V3::Presentation::Annotation
+      end
+
+      context 'with placeholder canvas annotation' do
+        it 'assigns attributes' do
+          expect(
+            placeholder_canvas.items.first.items.first
+          ).to have_attributes(
+            'id' => end_with('canvas/placeholder/annotation/1'),
+            'motivation' => 'painting',
+            'target' => end_with('canvas/placeholder'),
+            'body' => be_a(IIIF::V3::Presentation::ImageResource)
+          )
+        end
+      end
+
+      context 'with placeholder image resource' do
+        it 'assigns attributes' do
+          expect(placeholder_canvas.items.first.items.first.body).to have_attributes(
+            'id' => end_with('/full/640,/0/default.jpg'),
+            'width' => 640,
+            'height' => 380
+          )
+          expect(placeholder_canvas.items.first.items.first.body.service.first).to have_attributes(
+            'profile' => 'level2',
+            'type' => 'ImageService3'
+          )
+        end
       end
     end
 

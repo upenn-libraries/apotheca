@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::ManifestGenerator::RangesBuilder do
+describe DerivativeService::Item::ManifestGenerator::V3::RangesBuilder do
   describe '#build' do
     let(:asset) { persist(:asset_resource, :with_metadata) }
     let(:ranges) { described_class.new(asset).build }

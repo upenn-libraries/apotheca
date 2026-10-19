@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::ManifestGenerator::ThumbnailBuilder do
+describe DerivativeService::Item::ManifestGenerator::V3::ThumbnailBuilder do
   describe '#build' do
     let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
     let(:thumbnail) { described_class.new(asset).build }
@@ -16,6 +16,14 @@ describe DerivativeService::Item::ManifestGenerator::ThumbnailBuilder do
           'profile' => 'level2'
         )]
       )
+    end
+
+    context 'when asset missing iiif_image derivative' do
+      let(:asset) { persist(:asset_resource, :with_image_file) }
+
+      it 'returns empty hash' do
+        expect(thumbnail).to eql({})
+      end
     end
   end
 end

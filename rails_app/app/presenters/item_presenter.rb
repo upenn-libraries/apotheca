@@ -43,6 +43,13 @@ class ItemPresenter < BasePresenter
     assets.any? { |a| a.access || a.iiif_image }
   end
 
+  # Return true if all image assets have a iiif_image derivative.
+  #
+  # @return [Boolean]
+  def iiif_images_present?
+    arranged_assets.select(&:image?).all?(&:iiif_image)
+  end
+
   # @return [Array<AssetResource>]
   def unarranged_assets
     @unarranged_assets ||= assets.reject { |a| structural_metadata.arranged_asset_ids.include?(a.id) }
