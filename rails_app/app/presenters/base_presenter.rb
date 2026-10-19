@@ -12,7 +12,7 @@ class BasePresenter
   # @todo if this causes issues, route helpers can be changed to call the #id method on a presenter
   delegate :to_param, to: :object
 
-  # @param [ActiveRecord::Base|Valkyrie::Resource] object
+  # @param [ActiveRecord::Base|Valkyrie::Resource|Valkyrie::ChangeSet] object
   def initialize(object:)
     @object = object
   end

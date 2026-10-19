@@ -4,6 +4,7 @@
 class ItemChangeSet < ChangeSet
   include ModificationDetailsChangeSet
   include LockableChangeSet
+  include Item::Presentable
 
   OCR_STRATEGIES = DerivativeService::Asset::Generator::Image::OCR::ALL_ENGINES.freeze
 

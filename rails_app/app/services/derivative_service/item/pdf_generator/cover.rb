@@ -14,7 +14,7 @@ module DerivativeService
 
         attr_reader :item
 
-        # @param item [ItemResource, ItemResourcePresenter]
+        # @param item [ItemPresenter]
         def initialize(item)
           @item = item
         end

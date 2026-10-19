@@ -25,11 +25,12 @@ module API
       # Returns preview image for Item. If requested image size is 200,200 or nil redirects to
       # thumbnail, otherwise redirects to IIIF image service.
       def preview
-        if @width == DEFAULT_SIZE && @height == DEFAULT_SIZE && @item.thumbnail_image?
-          filename = "#{@item.presenter.parameterize}-thumbnail.jpeg"
-          redirect_to_presigned_url @item.thumbnail.thumbnail.file_id, filename
-        elsif @item.thumbnail&.iiif_image
-          redirect_to_iiif_image_server @item.thumbnail, "!#{@width},#{@height}"
+        thumbnail = presenter.thumbnail
+        if @width == DEFAULT_SIZE && @height == DEFAULT_SIZE && presenter.thumbnail_image?
+          filename = "#{presenter.parameterize}-thumbnail.jpeg"
+          redirect_to_presigned_url thumbnail.thumbnail.file_id, filename
+        elsif thumbnail&.iiif_image
+          redirect_to_iiif_image_server thumbnail, "!#{@width},#{@height}"
         else
           raise FileNotFound, I18n.t('api.exceptions.file_not_found')
         end
@@ -40,7 +41,7 @@ module API
 
         raise FileNotFound, I18n.t('api.exceptions.file_not_found') unless pdf_derivative
 
-        filename = "#{@item.presenter.parameterize}.pdf"
+        filename = "#{presenter.parameterize}.pdf"
 
         redirect_to_presigned_url pdf_derivative.file_id, filename
       end
@@ -56,6 +57,11 @@ module API
         @height = size[2].to_i
 
         raise InvalidSize, I18n.t('api.exceptions.invalid_param.size') if @width > MAX_SIZE || @height > MAX_SIZE
+      end
+
+      # @return [ItemPresenter]
+      def presenter
+        @presenter ||= @item.presenter
       end
     end
   end

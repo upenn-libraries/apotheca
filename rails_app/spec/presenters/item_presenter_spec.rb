@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe ItemResourcePresenter do
+RSpec.describe ItemPresenter do
   subject(:presenter) do
     described_class.new object: item_resource, ils_metadata: ils_metadata
   end
 
   let(:item_resource) { persist(:item_resource) }
+
+  describe '#arranged_assets' do
+    let(:item_resource) { persist(:item_resource, :with_assets_some_arranged) }
+    let(:ils_metadata) { nil }
+    let(:expected_arrangement) { %w[page1] }
+
+    it 'returns AssetResource instances in proper order' do
+      expect(presenter.arranged_assets.collect(&:original_filename)).to eq expected_arrangement
+    end
+  end
 
   context 'with any ItemResource' do
     let(:ils_metadata) { nil }
@@ -19,11 +29,11 @@ RSpec.describe ItemResourcePresenter do
     let(:ils_metadata) { nil }
 
     it 'returns a DescriptiveMetadataPresenter' do
-      expect(presenter.descriptive_metadata).to be_an ItemResourcePresenter::DescriptiveMetadataPresenter
+      expect(presenter.descriptive_metadata).to be_an ItemPresenter::DescriptiveMetadataPresenter
     end
 
     it 'delegates descriptive metadata field calls to the Resource' do
-      ItemResource::DescriptiveMetadata::Fields.all.each do |field|
+      ItemResource::DescriptiveMetadata::Fields.each_field do |field|
         expect(
           presenter.descriptive_metadata.public_send(field)
         ).to eq item_resource.descriptive_metadata.public_send(field)
