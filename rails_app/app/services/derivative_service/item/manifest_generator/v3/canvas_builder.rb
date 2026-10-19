@@ -96,8 +96,8 @@ module DerivativeService
           # @return [IIIF::V3::Presentation::ImageResource] configured image resource
           def image_resource(height:, width:, resource_size: DEFAULT_RESOURCE_SIZE)
             image_resource = IIIF::V3::Presentation::ImageResource.create_image_api_image_resource(
-              service_id: iiif_image_url,
-              resource_id: "#{iiif_image_url}/full/#{resource_size}/0/default.jpg",
+              service_id: asset.iiif_api.base_url,
+              resource_id: asset.iiif_api.image_url(size: resource_size),
               width: width,
               height: height,
               profile: 'level2'
@@ -130,15 +130,6 @@ module DerivativeService
           # @return [Hash] A hash with the label in IIIF presentation format
           def label
             { 'none' => [asset.label || "p. #{index}"] }
-          end
-
-          # URL to image in IIIF Image service
-          #
-          # @return [String] IIIF image service URL
-          def iiif_image_url
-            raise "#{asset.original_filename} is missing IIIF image" unless asset.iiif_image
-
-            URI.join(Settings.image_server.url, "iiif/3/#{asset.id}").to_s
           end
         end
       end

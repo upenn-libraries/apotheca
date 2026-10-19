@@ -20,7 +20,7 @@ module DerivativeService
             return {} unless asset&.iiif_image
 
             {
-              'id' => thumbnail_image_url,
+              'id' => iiif_api.image_url(size: '!600,600'),
               'type' => 'Image',
               'format' => 'image/jpeg',
               'service' => [thumbnail_service]
@@ -29,11 +29,8 @@ module DerivativeService
 
           private
 
-          # Get the thumbnail image URL with size constraints
-          #
-          # @return [String] thumbnail image URL
-          def thumbnail_image_url
-            "#{iiif_image_url}/full/!600,600/0/default.jpg"
+          def iiif_api
+            asset.iiif_api
           end
 
           # Build thumbnail service structure
@@ -41,19 +38,10 @@ module DerivativeService
           # @return [Hash] IIIF image service structure
           def thumbnail_service
             {
-              'id' => iiif_image_url,
+              'id' => iiif_api.base_url,
               'type' => 'ImageService3',
               'profile' => 'level2'
             }
-          end
-
-          # URL to image in IIIF Image service
-          #
-          # @return [String] IIIF image service URL
-          def iiif_image_url
-            raise "#{asset.original_filename} is missing IIIF image" unless asset.iiif_image
-
-            URI.join(Settings.image_server.url, "iiif/3/#{asset.id}").to_s
           end
         end
       end

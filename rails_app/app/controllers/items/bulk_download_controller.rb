@@ -59,7 +59,7 @@ module Items
 
     # Adding JPEG from IIIF Image Service to zip.
     def add_iiif_image(zip, asset)
-      uri = URI(asset.iiif_image_url)
+      uri = URI(asset.iiif_api.image_url)
       filename = "#{File.basename(asset.original_filename, '.*')}.jpg"
 
       zip.write_file(filename) do |sink|
