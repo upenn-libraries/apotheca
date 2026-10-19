@@ -43,7 +43,7 @@ class ItemPresenter < BasePresenter
     assets.any? { |a| a.access || a.iiif_image }
   end
 
-  # @return [Array<AssetResource]
+  # @return [Array<AssetResource>]
   def unarranged_assets
     @unarranged_assets ||= assets.reject { |a| structural_metadata.arranged_asset_ids.include?(a.id) }
   end

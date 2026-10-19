@@ -59,6 +59,7 @@ module API
         raise InvalidSize, I18n.t('api.exceptions.invalid_param.size') if @width > MAX_SIZE || @height > MAX_SIZE
       end
 
+      # @return [ItemPresenter]
       def presenter
         @presenter ||= @item.presenter
       end
