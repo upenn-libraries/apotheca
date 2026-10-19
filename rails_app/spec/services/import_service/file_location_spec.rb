@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 describe ImportService::FileLocation do
-  let(:storage) { ImportService::S3Storage.new('sceti_digitized') }
+  let(:storage) { WorkingStorage.new('sceti_digitized') }
   let(:file_location) { described_class.new(storage: storage, path: 'trade_card/original/front.tif') }
 
   describe '#file?' do
     it 'returns file' do
-      expect(file_location.file).to be_a ImportService::S3Storage::File
+      expect(file_location.file).to be_a WorkingStorage::File
     end
   end
 

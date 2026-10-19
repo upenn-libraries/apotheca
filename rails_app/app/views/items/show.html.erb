@@ -6,6 +6,8 @@
 
 <h2><%= @item.human_readable_name %></h2>
 
+<div title="UUID" class="mb-1 text-body-secondary user-select-all"><%= @item.id %></div>
+
 <div class="align-self-center mb-2">
   <% if @item.asset_count.zero? %>
     <span class="badge bg-warning text-dark">No Assets</span>

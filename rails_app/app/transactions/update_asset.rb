@@ -44,7 +44,7 @@ class UpdateAsset
   end
 
   # Verify that file has original_filename that ends with a valid extension
-  # @param [ActionDispatch::Http::UploadedFile|ImportService::S3Storage::File] file
+  # @param [ActionDispatch::Http::UploadedFile|WorkingStorage::File] file
   def validate_file_extension(**attributes)
     file = attributes[:file] || attributes['file']
 
@@ -73,7 +73,7 @@ class UpdateAsset
   # Stores file in preservation storage and adds in the system generated id to the list of
   # attributes passed on to the next step.
   #
-  # @param [ActionDispatch::Http::UploadedFile|ImportService::S3Storage::File] file
+  # @param [ActionDispatch::Http::UploadedFile|WorkingStorage::File] file
   def store_file_in_preservation_storage(**attributes)
     file = attributes.delete(:file) || attributes.delete('file')
 

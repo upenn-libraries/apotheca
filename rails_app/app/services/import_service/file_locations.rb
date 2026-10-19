@@ -18,8 +18,11 @@ module ImportService
     #  validity of the paths.
     def valid?
       @errors << 'asset storage name is blank' if storage_name.blank?
-      @errors << "assets storage invalid: '#{storage_name}'" if storage_name.present? && !S3Storage.valid?(storage_name)
       @errors << 'assets must contain at least one path' if paths.empty?
+
+      if storage_name.present? && !WorkingStorage.valid?(storage_name)
+        @errors << "assets storage invalid: '#{storage_name}'"
+      end
 
       if valid_paths?
         dups = duplicate_filenames
@@ -36,7 +39,7 @@ module ImportService
     end
 
     def storage
-      @storage ||= S3Storage.new(storage_name)
+      @storage ||= WorkingStorage.new(storage_name)
     end
 
     # Checks that the given paths are valid paths.
@@ -44,7 +47,7 @@ module ImportService
     # @return [FalseClass] if there are no assets paths or if one of them is invalid
     # @return [TrueClass] if there are asset paths present and they are all valid
     def valid_paths?
-      return false unless S3Storage.valid?(storage_name)
+      return false unless WorkingStorage.valid?(storage_name)
 
       !paths.empty? && paths.all? { |p| storage.valid_path?(p) }
     end

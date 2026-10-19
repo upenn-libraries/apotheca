@@ -85,8 +85,7 @@ include:
       vault_auth_role: "${VAULT_AUTH_ROLE}"
   - component: $CI_SERVER_FQDN/devops/gitlab/components/sast/trivy@~latest
     inputs:
-      docker_tag_to_scan: "${CI_COMMIT_SHA}-production"
-      job_image_tag: "29-dind"
+      docker_tag_to_scan: "${CI_COMMIT_SHA}"
       needs:
         - "amend_manifest_production"
       stage: "test"
@@ -148,7 +147,6 @@ rspec_app_test:
     DATABASE_USER: "rspec_test"
     FF_NETWORK_PER_BUILD: "true"
     FITS_URL: "http://fits:8080/fits"
-    MINIO_URL: "http://minio:9000"
     RAILS_ENV: "test"
     RAILS_SYSTEM_TESTING_SCREENSHOT_HTML: "1"
     SOLR_TEST_URL: "http://solr:8983/solr/apotheca-test"
