@@ -77,7 +77,7 @@ describe 'Import Show Page' do
       click_button 'Cancel'
       within('div.modal-content') { click_button 'Cancel' }
       expect(page).to have_text("Import #{import.id} cancelled")
-      expect(page).not_to have_button('Cancel')
+      expect(page).to have_no_button('Cancel')
     end
   end
 
@@ -91,7 +91,7 @@ describe 'Import Show Page' do
     end
 
     it 'does not display button to cancel queued import' do
-      expect(page).not_to have_button('Cancel')
+      expect(page).to have_no_button('Cancel')
     end
   end
 
@@ -135,7 +135,7 @@ describe 'Import Show Page' do
       click_button 'Cancel'
       within('div.modal-content') { click_button 'Cancel' }
       expect(page).to have_text("Import #{import.id} cancelled")
-      expect(page).not_to have_button('Cancel')
+      expect(page).to have_no_button('Cancel')
     end
   end
 end

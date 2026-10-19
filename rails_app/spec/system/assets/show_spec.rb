@@ -64,7 +64,7 @@ describe 'Asset Show Page' do
 
   shared_examples_for 'any logged in user who cannot delete Assets' do
     it 'does not show the button to delete Asset' do
-      expect(page).not_to have_button('Delete Asset')
+      expect(page).to have_no_button('Delete Asset')
     end
   end
 
@@ -75,11 +75,11 @@ describe 'Asset Show Page' do
     it_behaves_like 'any logged in user who cannot delete Assets'
 
     it 'does not show link to Edit Asset' do
-      expect(page).not_to have_link('Edit Asset')
+      expect(page).to have_no_link('Edit Asset')
     end
 
     it 'does not show button to regenerate derivatives' do
-      expect(page).not_to have_button('Regenerate Derivatives')
+      expect(page).to have_no_button('Regenerate Derivatives')
     end
   end
 

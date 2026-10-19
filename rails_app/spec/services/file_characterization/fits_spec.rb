@@ -108,7 +108,7 @@ describe FileCharacterization::Fits do
       end
 
       it 'returns size' do
-        expect(metadata.size).to be  480_754
+        expect(metadata.size).to be 480_754
       end
 
       it 'returns width' do

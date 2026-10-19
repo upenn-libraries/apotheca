@@ -58,7 +58,7 @@ describe 'Item Index Page' do
     end
 
     it 'shows resource collection' do
-      expect(page).not_to have_text 'University of Pennsylvania Medical Dissertation Digital Library'
+      expect(page).to have_no_text 'University of Pennsylvania Medical Dissertation Digital Library'
       expect(page).to have_text 'Fake Collection'
     end
   end
@@ -81,7 +81,7 @@ describe 'Item Index Page' do
     end
 
     it 'does not show the link to the system actions page' do
-      expect(page).not_to have_link('System Actions', href: system_actions_path)
+      expect(page).to have_no_link('System Actions', href: system_actions_path)
     end
   end
 
@@ -93,12 +93,11 @@ describe 'Item Index Page' do
     end
 
     it 'does not show link to create an item' do
-      visit items_path
-      expect(page).not_to have_link('Create Item', href: new_item_path)
+      expect(page).to have_no_link('Create Item', href: new_item_path)
     end
 
     it 'does not show the link to the system actions page' do
-      expect(page).not_to have_link('System Actions', href: system_actions_path)
+      expect(page).to have_no_link('System Actions', href: system_actions_path)
     end
   end
 

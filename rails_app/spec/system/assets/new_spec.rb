@@ -13,7 +13,7 @@ describe 'Asset New Page' do
 
   it 'requires a preservation file' do
     click_button 'Save'
-    expect(page).not_to have_text('Successfully created asset')
+    expect(page).to have_no_text('Successfully created asset')
   end
 
   it 'can create a new asset' do
