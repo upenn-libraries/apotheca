@@ -34,6 +34,13 @@ class ItemResourcePresenter < BasePresenter
     object.assets.any? { |a| a.access || a.iiif_image }
   end
 
+  # Return true if all image assets have a iiif_image derivative.
+  #
+  # @return [Boolean]
+  def iiif_images_present?
+    object.arranged_assets.select(&:image?).all?(&:iiif_image)
+  end
+
   # @return [ItemResourcePresenter::DescriptiveMetadataPresenter]
   def descriptive_metadata
     @descriptive_metadata ||= DescriptiveMetadataPresenter.new(

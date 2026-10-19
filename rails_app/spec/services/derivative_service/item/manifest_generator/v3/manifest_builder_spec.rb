@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DerivativeService::Item::ManifestGenerator::ManifestBuilder do
+describe DerivativeService::Item::ManifestGenerator::V3::ManifestBuilder do
   let(:item) do
     persist(:item_resource, :with_full_assets_all_arranged)
   end
@@ -50,6 +50,10 @@ describe DerivativeService::Item::ManifestGenerator::ManifestBuilder do
 
     it 'assigns items' do
       expect(manifest.items).to all(be_a(IIIF::V3::Presentation::Canvas))
+    end
+
+    it 'assigns structures' do
+      expect(manifest.structures).to all(be_an(IIIF::V3::Presentation::Range))
     end
   end
 end
