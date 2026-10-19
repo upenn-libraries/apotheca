@@ -8,7 +8,7 @@ module AssetArrange
     renders_one :unarranged_section, ->(**options) { Section::Component.new(arranged: false, **options) }
     renders_one :arranged_section, ->(**options) { Section::Component.new(arranged: true, **options) }
 
-    # @param [ItemResource|ItemPresenter] item
+    # @param [ItemResource, ItemPresenter] item
     def initialize(item:)
       @item = item
     end

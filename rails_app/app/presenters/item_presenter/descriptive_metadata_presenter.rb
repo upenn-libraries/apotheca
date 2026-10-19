@@ -18,7 +18,7 @@ class ItemPresenter
       end
     end
 
-    # @param [ItemResource::DescriptiveMetadata | ItemChangeSet::DescriptiveMetadata] object
+    # @param [ItemResource::DescriptiveMetadata, ItemChangeSet::DescriptiveMetadata] object
     # @param [Hash, NilClass] ils_metadata
     def initialize(object:, ils_metadata: nil)
       super object: object
