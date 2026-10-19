@@ -14,7 +14,7 @@ module Item
       step validate(change_set)
       resource = step save(change_set)
 
-      enqueue_ark_metadata_update(resource)
+      update_ark_metadata_later(resource)
       record_event(resource)
 
       resource

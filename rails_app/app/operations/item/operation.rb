@@ -3,6 +3,8 @@
 module Item
   # Parent class for Item Operations. Includes reuseable steps for Item operations.
   class Operation < Resource::Operation
+    alias find_item find_resource
+
     def resource_class
       ItemResource
     end
@@ -11,8 +13,8 @@ module Item
       ItemChangeSet
     end
 
-    def enqueue_ark_metadata_update(*args)
-      Steps::EnqueueArkMetadataUpdate.new.call(*args)
+    def update_ark_metadata_later(*args)
+      Steps::UpdateArkMetadataLater.new.call(*args)
     end
 
     def set_thumbnail(*args)
