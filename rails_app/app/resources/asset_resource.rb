@@ -62,17 +62,16 @@ class AssetResource < Valkyrie::Resource
     technical_metadata.mime_type.start_with?('image')
   end
 
-  # Returns url for image in IIIF image service. Defaults to a JPEG image.
+  # Returns IIIF API object that contains helpers to generate iiif image URLs.
   #
-  # @param region [String] See https://iiif.io/api/image/3.0/#41-region for valid regions
-  # @param size [String] See https://iiif.io/api/image/3.0/#42-size for valid sizes
-  # @param rotation [String] See https://iiif.io/api/image/3.0/#43-rotation for valid rotations
-  # @param format [String] See https://iiif.io/api/image/3.0/#45-format for valid formats
-  # @return [String|nil] url to image in IIIF Image service.
-  def iiif_image_url(region: 'full', size: 'max', rotation: '0', format: 'jpg')
-    return unless iiif_image
+  # @see IIIFImageAPI
+  #
+  # @param version [Integer] IIIF image API version
+  # @return [IIIFImageAPI]
+  def iiif_api(version: 3)
+    return nil unless iiif_image
 
-    URI.join(Settings.image_server.url, "iiif/3/#{id}/#{region}/#{size}/#{rotation}/default.#{format}").to_s
+    IIIFImageAPI.new(id.to_s, version: version)
   end
 
   # Best title to use when trying to represent asset. In most cases Assets should
