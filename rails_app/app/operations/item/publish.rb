@@ -3,7 +3,6 @@
 module Item
   # Operation that publishes an item
   class Publish < Operation
-
     # Publishing Item to consumer applications. As part of the publishing process the derivatives are regenerated.
     #
     # @param id [String] item uuid

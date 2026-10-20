@@ -22,17 +22,15 @@ describe Item::Publish do
       end
 
       it 'generated IIIF manifest' do
-        expect(updated_item.iiif_manifest).to have_attributes(
-                                                type: 'iiif_manifest', generated_at: be_a(DateTime), mime_type: 'application/json',
-                                                file_id: be_a(Valkyrie::ID)
-                                              )
+        expect(updated_item.iiif_manifest).to have_attributes(type: 'iiif_manifest',
+                                                              generated_at: be_a(DateTime),
+                                                              mime_type: 'application/json',
+                                                              file_id: be_a(Valkyrie::ID))
       end
 
       it 'generated pdf' do
-        expect(updated_item.pdf).to have_attributes(
-                                      type: 'pdf', generated_at: be_a(DateTime), mime_type: 'application/pdf',
-                                      file_id: be_a(Valkyrie::ID)
-                                    )
+        expect(updated_item.pdf).to have_attributes(type: 'pdf', generated_at: be_a(DateTime),
+                                                    mime_type: 'application/pdf', file_id: be_a(Valkyrie::ID))
       end
 
       it 'publishes item' do
@@ -43,9 +41,8 @@ describe Item::Publish do
       end
 
       it 'adds expected publishing attributes' do
-        expect(updated_item).to have_attributes(
-                                  published: true, first_published_at: be_a(DateTime), last_published_at: be_a(DateTime)
-                                )
+        expect(updated_item).to have_attributes(published: true, first_published_at: be_a(DateTime),
+                                                last_published_at: be_a(DateTime))
       end
     end
 
@@ -82,9 +79,8 @@ describe Item::Publish do
       end
 
       it 'adds expected publishing attributes' do
-        expect(updated_item).to have_attributes(
-                                  published: true, first_published_at: be_a(DateTime), last_published_at: be_a(DateTime)
-                                )
+        expect(updated_item).to have_attributes(published: true, first_published_at: be_a(DateTime),
+                                                last_published_at: be_a(DateTime))
       end
     end
 
