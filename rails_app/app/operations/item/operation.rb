@@ -13,6 +13,14 @@ module Item
       ItemChangeSet
     end
 
+    def derivative_generator_class
+      DerivativeService::Item::Derivatives
+    end
+
+    def all_derivative_types
+      ItemResource::DERIVATIVE_TYPES
+    end
+
     def update_ark_metadata_later(*args)
       Steps::UpdateArkMetadataLater.new.call(*args)
     end
