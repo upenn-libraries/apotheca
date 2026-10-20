@@ -45,11 +45,11 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'does not display delete button' do
-          expect(page).not_to have_button('Delete', count: 1)
+          expect(page).to have_no_button('Delete', count: 1)
         end
 
         it 'does not display regenerate button' do
-          expect(page).not_to have_button('Regenerate')
+          expect(page).to have_no_button('Regenerate')
         end
 
         it 'can be cancelled' do
@@ -73,11 +73,11 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'does not display cancel button' do
-          expect(page).not_to have_button('Cancel')
+          expect(page).to have_no_button('Cancel')
         end
 
         it 'does not display regenerate button' do
-          expect(page).not_to have_button('Regenerate')
+          expect(page).to have_no_button('Regenerate')
         end
 
         it 'can be deleted' do
@@ -97,7 +97,7 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'does not display any buttons' do
-          expect(page).not_to have_button('Export')
+          expect(page).to have_no_button('Export')
         end
       end
 
@@ -119,7 +119,7 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'does not display cancel button' do
-          expect(page).not_to have_button('Cancel')
+          expect(page).to have_no_button('Cancel')
         end
 
         it 'can be deleted' do
@@ -143,7 +143,7 @@ describe 'Bulk Export Index Page' do
         it 'clears the error message when regenerating' do
           within('div.card-body') { click_button 'Regenerate Export' }
           within('div.modal-content') { click_button 'Regenerate' }
-          expect(page).not_to have_text(user_export.process_errors.first)
+          expect(page).to have_no_text(user_export.process_errors.first)
         end
       end
 
@@ -176,7 +176,7 @@ describe 'Bulk Export Index Page' do
         end
 
         it 'does not display cancel button' do
-          expect(page).not_to have_button('Cancel')
+          expect(page).to have_no_button('Cancel')
         end
 
         it 'can be deleted' do
@@ -250,7 +250,7 @@ describe 'Bulk Export Index Page' do
       end
 
       it 'does not display the buttons' do
-        expect(page).not_to have_button('Export')
+        expect(page).to have_no_button('Export')
       end
     end
   end
@@ -268,7 +268,7 @@ describe 'Bulk Export Index Page' do
       end
 
       it 'does not display the buttons' do
-        expect(page).not_to have_button('Export')
+        expect(page).to have_no_button('Export')
       end
     end
   end

@@ -120,11 +120,11 @@ describe 'Bulk Import Show Page' do
       end
 
       it 'does not display a button to cancel all queued imports' do
-        expect(page).not_to have_button('Cancel All Queued Imports')
+        expect(page).to have_no_button('Cancel All Queued Imports')
       end
 
       it 'does not display a cancel button for each queued import' do
-        expect(page).not_to have_button('Cancel', exact: true, count: 1)
+        expect(page).to have_no_button('Cancel', exact: true, count: 1)
       end
     end
   end
@@ -150,7 +150,7 @@ describe 'Bulk Import Show Page' do
         click_button 'Cancel All Queued Imports'
         within('div.modal-content') { click_button 'Cancel' }
         expect(page).to have_text('All queued imports were cancelled')
-        expect(page).not_to have_button('Cancel')
+        expect(page).to have_no_button('Cancel')
       end
 
       it 'can cancel an individual Import' do
@@ -171,11 +171,11 @@ describe 'Bulk Import Show Page' do
       end
 
       it 'does not display a button to cancel all queued imports' do
-        expect(page).not_to have_button('Cancel All Queued Imports')
+        expect(page).to have_no_button('Cancel All Queued Imports')
       end
 
       it 'does not display a button to cancel individual imports' do
-        expect(page).not_to have_button('Cancel', exact: true)
+        expect(page).to have_no_button('Cancel', exact: true)
       end
     end
   end

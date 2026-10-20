@@ -28,7 +28,7 @@ describe 'Report Index Page' do
       within('#reports tbody') do
         rows = all('tr')
         expect(reports.last.updated_at).to be > reports.first.updated_at
-        expect(rows.first).to have_content(reports.last.state.titleize)
+        expect(rows.first).to have_text(reports.last.state.titleize)
       end
     end
 
@@ -36,7 +36,7 @@ describe 'Report Index Page' do
       within('#reports tbody') do
         rows = all('tr')
         expect(reports.first.updated_at).to be < reports.last.updated_at
-        expect(rows.last).to have_content(reports.first.state.titleize)
+        expect(rows.last).to have_text(reports.first.state.titleize)
       end
     end
 
@@ -51,22 +51,22 @@ describe 'Report Index Page' do
     it 'displays the report_type' do
       within('#reports tbody') do
         tr_elements = all('tr')
-        expect(tr_elements.first).to have_content(reports.last.report_type.to_s.titleize)
-        expect(tr_elements.last).to have_content(reports.first.report_type.to_s.titleize)
+        expect(tr_elements.first).to have_text(reports.last.report_type.to_s.titleize)
+        expect(tr_elements.last).to have_text(reports.first.report_type.to_s.titleize)
       end
     end
 
     it 'displays the generated_at date' do
       within('#reports tbody') do
         tr_elements = all('tr')
-        expect(tr_elements.last).to have_content(reports.first.generated_at.to_fs(:display))
+        expect(tr_elements.last).to have_text(reports.first.generated_at.to_fs(:display))
       end
     end
 
     it 'lists the number of errors' do
       within('#reports tbody') do
         tr_elements = all('tr')
-        expect(tr_elements.last).to have_content(reports.last.process_errors.size.to_s)
+        expect(tr_elements.last).to have_text(reports.last.process_errors.size.to_s)
       end
     end
   end

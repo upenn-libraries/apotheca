@@ -70,7 +70,7 @@ describe 'User Index Page' do
       select 'Active', from: 'Status'
       click_button 'Filter'
       expect(page).to have_css '.users-list__user', count: 3
-      expect(page).not_to have_text user4_email
+      expect(page).to have_no_text user4_email
     end
 
     it 'filters by role' do
