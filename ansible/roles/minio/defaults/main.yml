@@ -8,4 +8,4 @@ minio:
   port: 9000
   replicas: 1
   secret_access_key: "minioadmin"
-  server_url: "minio-dev.library.upenn.edu"
+  server_url: "http://minio:9000"

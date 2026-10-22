@@ -3,6 +3,8 @@
 class ItemChangeSet
   # ChangeSet for ItemResource::DescriptiveMetadata nested resource.
   class DescriptiveMetadataChangeSet < ChangeSet
+    include Item::Exportable
+
     ItemResource::DescriptiveMetadata::Fields::CONFIG.each do |field, type|
       klass = "ItemResource::DescriptiveMetadata::#{type.to_s.titlecase}Field".constantize
 

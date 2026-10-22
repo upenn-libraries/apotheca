@@ -33,7 +33,7 @@ describe DerivativeService::Item::PDFGenerator do
       end
 
       it 'contains expected number of pages' do
-        expect(pdf.pages.count).to eql item.arranged_assets.count + 1
+        expect(pdf.pages.count).to eql item.presenter.arranged_assets.count + 1
       end
 
       it 'contains cover page with title' do

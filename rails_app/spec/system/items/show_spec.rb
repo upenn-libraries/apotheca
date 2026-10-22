@@ -105,7 +105,7 @@ describe 'Item Show Page' do
     end
 
     it 'hides value row if no resource or ILS value on descriptive metadata tab' do
-      expect(page).not_to have_text('Abstract')
+      expect(page).to have_no_text('Abstract')
     end
 
     context 'when refreshing ils metadata' do
@@ -134,31 +134,31 @@ describe 'Item Show Page' do
     it_behaves_like 'any logged in user'
 
     it 'does not show link to edit item on descriptive metadata tab' do
-      expect(page).not_to have_link('Edit', href: "#{items_path}/#{item.id}/edit#descriptive")
+      expect(page).to have_no_link('Edit', href: "#{items_path}/#{item.id}/edit#descriptive")
     end
 
     it 'does not show link to edit item on structural metadata tab' do
-      expect(page).not_to have_link('Edit', href: "#{items_path}/#{item.id}/edit#structural")
+      expect(page).to have_no_link('Edit', href: "#{items_path}/#{item.id}/edit#structural")
     end
 
     it 'does not show link to edit item on administrative info tab' do
-      expect(page).not_to have_link('Edit', href: "#{items_path}/#{item.id}/edit#administrative-info")
+      expect(page).to have_no_link('Edit', href: "#{items_path}/#{item.id}/edit#administrative-info")
     end
 
     it 'does not show link to add an asset within assets tab' do
-      expect(page).not_to have_link('Add Asset', href: new_asset_path(item_id: item.id))
+      expect(page).to have_no_link('Add Asset', href: new_asset_path(item_id: item.id))
     end
 
     it 'does not show link to arrange assets within assets tab' do
-      expect(page).not_to have_link('Arrange Assets', href: reorder_assets_item_path(id: item.id))
+      expect(page).to have_no_link('Arrange Assets', href: reorder_assets_item_path(id: item.id))
     end
 
     it 'does not show link to edit an asset within assets tab' do
-      expect(page).not_to have_link('Edit Asset', href: edit_asset_path(item.asset_ids.first))
+      expect(page).to have_no_link('Edit Asset', href: edit_asset_path(item.asset_ids.first))
     end
 
     it 'does not show actions tab' do
-      expect(page).not_to have_css('#actions')
+      expect(page).to have_no_css('#actions')
     end
 
     it 'does not show form input to set item thumbnail' do
@@ -174,11 +174,11 @@ describe 'Item Show Page' do
     end
 
     it 'does not show ILS column on descriptive metadata tab' do
-      expect(page).not_to have_text('From ILS')
+      expect(page).to have_no_text('From ILS')
     end
 
     it 'does not highlight resource values on descriptive metadata tab' do
-      expect(page).not_to have_css('.resource-value.bg-success')
+      expect(page).to have_no_css('.resource-value.bg-success')
     end
   end
 
@@ -196,7 +196,7 @@ describe 'Item Show Page' do
     end
 
     it 'does not show button to delete item' do
-      expect(page).not_to have_button('Delete Item')
+      expect(page).to have_no_button('Delete Item')
     end
   end
 

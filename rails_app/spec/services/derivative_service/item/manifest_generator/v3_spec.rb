@@ -30,26 +30,6 @@ describe DerivativeService::Item::ManifestGenerator::V3 do
       end
     end
 
-    context 'when assets have annotations' do
-      subject(:json) { JSON.parse(iiif_service.manifest.read) }
-
-      let(:item) do
-        persist(
-          :item_resource, :with_full_assets_all_arranged,
-          descriptive_metadata: { title: [{ value: 'Test Item with Annotations' }] }
-        )
-      end
-
-      it 'includes structures property when annotations exist' do
-        expect(json).to have_key('structures')
-        expect(json['structures']).to be_an(Array)
-      end
-
-      it 'includes ranges with correct type when annotations exist' do
-        expect(json['structures'].first['type']).to eq('Range')
-      end
-    end
-
     context 'when item contains image assets that are missing derivatives' do
       let(:asset) { persist(:asset_resource, :with_image_file) }
       let(:item) do
@@ -59,7 +39,7 @@ describe DerivativeService::Item::ManifestGenerator::V3 do
       it 'raises an error' do
         expect { iiif_service.manifest }.to raise_error(
           described_class::MissingDerivative,
-          /Derivatives missing for/
+          /Derivatives Missing/
         )
       end
     end

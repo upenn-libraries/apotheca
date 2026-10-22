@@ -1,7 +1,7 @@
 <%= render(Breadcrumbs::Component.new) do |component| %>
   <% component.with_breadcrumb(href: '/') { 'Home' } %>
   <% component.with_breadcrumb { 'Events' } %>
-  <% if @resource.is_a?(ItemResource) %>
+  <% if @resource.is_a?(ItemPresenter) %>
     <% component.with_breadcrumb(active: true, href: item_path(@resource.id)) { @resource.display_title } %>
   <% else %>
     <% component.with_breadcrumb(active: true, href: asset_path(@resource.id)) { @resource.display_title } %>

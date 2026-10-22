@@ -89,7 +89,7 @@ module SolrQueries
         # Get ILS metadata as a Hash by pulling it out of the Solr doc and parsing it.
         ils_metadata = d[DescriptiveMetadataIndexer::ILS_METADATA_JSON_FIELD.to_s]
         ils_metadata = JSON.parse(ils_metadata) if ils_metadata
-        ItemResourcePresenter.new object: resource, ils_metadata: ils_metadata
+        ItemPresenter.new object: resource, ils_metadata: ils_metadata
       end
     end
   end

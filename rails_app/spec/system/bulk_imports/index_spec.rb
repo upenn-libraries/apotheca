@@ -21,11 +21,11 @@ describe 'Bulk Import Index Page' do
     end
 
     it 'does not show button to create new bulk import' do
-      expect(page).not_to have_link('New Bulk Import', href: new_bulk_import_path)
+      expect(page).to have_no_link('New Bulk Import', href: new_bulk_import_path)
     end
 
     it 'does not show cancel buttons' do
-      expect(page).not_to have_link('Cancel')
+      expect(page).to have_no_link('Cancel')
     end
   end
 
@@ -50,7 +50,7 @@ describe 'Bulk Import Index Page' do
       click_button 'Cancel'
       within('div.modal-content') { click_button 'Cancel' }
       expect(page).to have_text('All queued imports were cancelled')
-      expect(page).not_to have_button('Cancel')
+      expect(page).to have_no_button('Cancel')
     end
   end
 

@@ -1,0 +1,29 @@
+# frozen_string_literal: true
+
+describe DerivativeService::Item::ManifestGenerator::V3::ThumbnailBuilder do
+  describe '#build' do
+    let(:asset) { persist(:asset_resource, :with_image_file, :with_derivatives) }
+    let(:thumbnail) { described_class.new(asset).build }
+
+    it 'assigns top-level attributes' do
+      expect(thumbnail).to include(
+        'id' => ending_with('/full/!600,600/0/default.jpg'),
+        'type' => 'Image',
+        'format' => 'image/jpeg',
+        'service' => [include(
+          'id' => ending_with(asset.id.to_s),
+          'type' => 'ImageService3',
+          'profile' => 'level2'
+        )]
+      )
+    end
+
+    context 'when asset missing iiif_image derivative' do
+      let(:asset) { persist(:asset_resource, :with_image_file) }
+
+      it 'returns empty hash' do
+        expect(thumbnail).to eql({})
+      end
+    end
+  end
+end

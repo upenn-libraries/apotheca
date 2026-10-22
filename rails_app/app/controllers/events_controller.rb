@@ -16,7 +16,8 @@ class EventsController < UIController
   private
 
   def load_resource
-    @resource = pg_query_service.find_by id: params[:resource_id]
+    resource = pg_query_service.find_by id: params[:resource_id]
+    @resource = resource.try(:presenter) || resource
   end
 
   def pg_query_service

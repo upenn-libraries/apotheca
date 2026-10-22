@@ -39,16 +39,12 @@ module DerivativeService
 
           private
 
-          # Validate that an asset has required derivatives
+          # Validate that assets has required derivatives.
           #
           # @raise [MissingDerivative] if pyramidal derivatives are missing
           # @return [void]
           def validate_asset_derivatives!
-            item.arranged_assets.select(&:image?).each do |asset|
-              next if asset.iiif_image
-
-              raise MissingDerivative, "Derivatives missing for #{asset.original_filename}"
-            end
+            raise MissingDerivative, 'Derivatives Missing.' unless item.iiif_images_present?
           end
 
           # Return sequence of canvases. Each canvas contains an Asset.
@@ -80,13 +76,13 @@ module DerivativeService
           def thumbnail
             return {} unless item.thumbnail&.iiif_image
 
-            thumbnail_url = iiif_image_url(item.thumbnail)
+            iiif_api = item.thumbnail.iiif_api(version: 2)
 
             {
-              "@id": "#{thumbnail_url}/full/!600,600/0/default.jpg",
+              "@id": iiif_api.image_url(size: '!600,600'),
               "service": {
                 "@context": 'http://iiif.io/api/image/2/context.json',
-                "@id": thumbnail_url,
+                "@id": iiif_api.base_url,
                 "profile": 'http://iiif.io/api/image/2/level2.json'
               }
             }
@@ -103,13 +99,6 @@ module DerivativeService
               'label' => 'Download PDF',
               'format' => 'application/pdf'
             }
-          end
-
-          # URL to image in IIIF Image service.
-          #
-          # @param [AssetResource] asset
-          def iiif_image_url(asset)
-            URI.join(Settings.image_server.url, "iiif/2/#{asset.id}").to_s
           end
 
           def base_uri

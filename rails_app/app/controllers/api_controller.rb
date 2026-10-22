@@ -63,7 +63,7 @@ class APIController < ApplicationController
     url = signer.presigned_url(:get_object, bucket: shrine.bucket.name, key: key, expires_in: 300,
                                             response_content_disposition: content_disposition)
 
-    redirect_to url, status: :temporary_redirect
+    redirect_to url, status: :temporary_redirect, allow_other_host: true
   end
 
   # Redirects to a JSON file from storage (useful for returning generated IIIF manifests from storage)
@@ -80,7 +80,7 @@ class APIController < ApplicationController
   # @param asset [AssetResource]
   # @param size [String] dimensions of image in valid IIIF format (ex. `w,h`)
   def redirect_to_iiif_image_server(asset, size)
-    redirect_to "#{Settings.image_server.url}/iiif/3/#{asset.id}/full/#{size}/0/default.jpg",
-                status: :temporary_redirect
+    redirect_to asset.iiif_api.image_url(size: size),
+                status: :temporary_redirect, allow_other_host: true
   end
 end
