@@ -50,5 +50,8 @@ module Apotheca
     # Rails Issue: https://github.com/rails/rails/issues/39643
     # Related CVE: https://discuss.rubyonrails.org/t/cve-2023-22797-possible-open-redirect-vulnerability-in-action-pack/82120
     config.action_controller.action_on_open_redirect = :log
+
+    # Disable variant processing.
+    config.active_storage.variant_processor = :disabled
   end
 end
