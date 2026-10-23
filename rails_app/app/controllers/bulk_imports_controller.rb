@@ -42,19 +42,12 @@ class BulkImportsController < UIController
     uploaded_file.tempfile.set_encoding('UTF-8')
     @bulk_import.original_filename = uploaded_file.original_filename
 
-    begin
-      csv = ImportService::CSV.new(uploaded_file.read)
-      assets_csv_files.each do |file|
-        csv.add_assets_csv(file.original_filename, file.read)
-      end
-      csv.valid!
-      @bulk_import.csv_rows = csv
-    rescue CSV::MalformedCSVError, ImportService::CSV::Error => e
-      return redirect_to bulk_imports_path, alert: "Problem creating bulk import: #{e.message}"
-    end
+    result = @bulk_import.process_files(uploaded_file, assets_csv_files)
 
-    if @bulk_import.save
-      @bulk_import.create_imports(safe_queue_name_from(params[:bulk_import][:job_priority].to_s))
+    if result.failure?
+      redirect_to bulk_imports_path, alert: "Problem creating bulk import. #{result.failure[:message]}"
+    elsif @bulk_import.save
+      @bulk_import.create_imports(result.value!, safe_queue_name_from(params[:bulk_import][:job_priority].to_s))
       redirect_to bulk_import_path(@bulk_import), notice: 'Bulk import created'
     else
       redirect_to bulk_imports_path,

@@ -1,0 +1,10 @@
+en:
+  operations:
+    csv_import:
+      process_files:
+        failures:
+          unable_to_process_asset_csv: 'Unable to process Asset CSVs: %{exception_message}'
+          empty_csv: 'CSV has no data.'
+          missing_asset_csv: "Asset CSVs are missing: %{missing}."
+          asset_csv_not_referenced: 'Asset CSV provided, %{file}, not referenced.'
+          malformed_csv: '%{file} is malformed. %{exception_message}'
