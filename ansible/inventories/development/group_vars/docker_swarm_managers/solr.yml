@@ -1,9 +1,15 @@
 ---
 solr_collections:
-  - name: apotheca-prod
+  - name: apotheca-dev
     configset: apotheca
-    replicas: 3
-    shards: 3
+    replicas: 1
+    shards: 1
+  - name: apotheca-test
+    configset: apotheca
+    replicas: 1
+    shards: 1
+
+solr_collection_replicas: 1
 
 solr_configsets:
   - name: "apotheca"
@@ -11,16 +17,17 @@ solr_configsets:
 
 solr_docker_image_tag: 9.3.0
 
-solr_limits_cpu: "4"
-solr_limits_mem: "12G"
+solr_instances: 1
 
-solr_proxy_host: "apothe-prod01.library.upenn.int"
+solr_limits_cpu: "2"
+solr_limits_mem: "3G"
+
+solr_proxy_host: "apotheca-dev.library.upenn.int"
 
 solr_custom_env_variables:
   SOLR_ADMIN_PASSWORD: "{{ apotheca_vault_values.secret.solr_password }}"
   SOLR_ADMIN_USERNAME: "{{ apotheca_vault_values.secret.solr_username }}"
   SOLR_ENABLE_AUTHENTICATION: "yes"
-  SOLR_HEAP: "8G"
-  SOLR_JAVA_MEM: "-Xms10G -Xmx10G"
-  SOLR_OPTS: "-Dsolr.max.booleanClauses=2048"
-
+  SOLR_HEAP: "2G"
+  SOLR_JAVA_MEM: "-Xms2G -Xmx2G"
+  SOLR_OPTS: "-Dsolr.max.booleanClauses=1024"

@@ -7,5 +7,5 @@ production
 [docker_engine:vars]
 ansible_python_interpreter="/usr/bin/python3"
 
-[docker_swarm_manager]
+[docker_swarm_managers]
 swarm-01 swarm_labels='["api", "apotheca", "clamav", "fits", "postgres", "redis", "sidekiq", "solr-1", "solr-2", "solr-3", "traefik" ,"zookeeper-1", "zookeeper-2", "zookeeper-3", "zoonavigator"]'

@@ -81,7 +81,7 @@ services:
 {% endif %}
     volumes:
 {% if is_development == true %}
-      - /apotheca/ansible/roles/apotheca/files/src/:/home/app
+      - /home/app/rails_app/:/home/app
 {% else %}
       - app_storage:/home/app/storage
 {% endif %}

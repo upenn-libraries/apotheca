@@ -3,7 +3,7 @@ collections
 
 roles/apotheca/files/src/*
 roles/api/files/src/*
-roles/atosatto.docker-swarm
+roles/docker-swarm
 roles/hostsfile
 roles/solr
 roles/traefik

@@ -2,7 +2,7 @@
 - name: Create custom docker image using buildkit
   community.docker.docker_image_build:
     name: "{{ apotheca_image_name }}:{{ apotheca_image_tag }}"
-    path: "/apotheca/ansible/roles/apotheca/files/src/"
+    path: "/home/app/rails_app/"
     dockerfile: "Dockerfile"
     target: "development"
     secrets:

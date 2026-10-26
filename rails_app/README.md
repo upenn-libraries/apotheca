@@ -6,7 +6,7 @@ To view end-user documentation, visit our [Confluence documentation](https://upe
 
 ## Local Development Environment
 
-Our local development environment uses vagrant in order to set up a consistent environment with the required services. Please see the [root README for instructions](../README.md#development)  on how to set up this environment.
+Our local development environment uses Taskfile and Docker to set up a consistent environment with the required services. Please see the [root README for instructions](../README.md#development-environment) on how to set up this environment.
 
 The **Rails application** will be available at [https://apotheca-dev.library.upenn.edu](https://apotheca-dev.library.upenn.edu).
 
@@ -18,9 +18,9 @@ The **Solr admin console** for the first instance will be available at [http://a
 
 ### Interacting with the Application
 
-Once your local development environment is set up you can ssh into the vagrant box to interact with the application:
+Once your local development environment is set up you can interact with the application:
 
-1. Enter the Vagrant VM by running `vagrant ssh` in the `/vagrant` directory
+1. From the `.dev` directory, swap the docker context: `task docker:context:use:app`
 2. Start a shell in the `apotheca` container:
 ```
   docker exec -it apotheca_apotheca.1.{whatever} sh
@@ -86,7 +86,7 @@ In order to run the test suite (currently):
 2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
 
 ### Debugging
-We have yet to figure out a way to hook the RubyMine debugger into our Vagrant environment, therefore debugging can be limited. In the meanwhile, we debug while running the test suite by using [byebug](https://github.com/deivid-rodriguez/byebug), [debug](https://github.com/ruby/debug) or similar tools.  
+We have yet to figure out a way to hook the RubyMine debugger into our development environment, therefore debugging can be limited. In the meanwhile, we debug while running the test suite by using [byebug](https://github.com/deivid-rodriguez/byebug), [debug](https://github.com/ruby/debug) or similar tools.  
 
 ## Valkyrie
 Apotheca uses [Valkyrie](https://github.com/samvera/valkyrie)'s interface to store the metadata and files associated for each digital object. The metadata is stored in Solr and Postgres. The Solr index is used for searching and Postgres is used as the canonical metadata source. We use the extension [valkyrie-shrine](https://github.com/samvera-labs/valkyrie-shrine) to store all of our files to cloud storage. Our Valkyrie resources and change sets are located in [app/resources](app/resources/) and [app/change_sets](app/change_sets/), respectively.

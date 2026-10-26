@@ -1,0 +1,18 @@
+version: "3"
+
+includes:
+  app:
+    taskfile: https://gitlab.library.upenn.edu/devops/taskfile/-/raw/main/DevEnvTasks.yml?ref_type=heads
+    flatten: true
+    vars:
+      PROJECT_NAME: "apotheca"
+      DOMAINS:
+        - apotheca-dev
+        - digitalrepository-dev
+        - minio-console-dev
+        - traefik-dev
+      DOCKER_API_TLS_PORT_EXT: 2388
+      DOCKER_NETWORK_SUBNET: 172.16.8.0/24
+      DOCKER_CONTAINER_IP: "172.16.8.10"
+      DOCKER_CONTAINER_NAME: "apotheca"
+      ANSIBLE_REQUIREMENTS_FILE: "requirements.yml"

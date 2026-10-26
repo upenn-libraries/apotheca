@@ -2,87 +2,102 @@
 
 Apotheca is the administrative application that enables the ingestion and management of digital assets. This repository includes the infrastructure and application code that supports Apotheca.
 
-Development occurs within a robust vagrant environment. Setup and initialization of this environment, as well as information about the deployed staging and production environments, is contained here.
-
 Information about the Rails application can be found [here](rails_app/README.md).
 
-## Development
+1. [Development Environment](#development-environment)
+   - [Installing](#installing)
+   - [Starting](#starting)
+   - [Interacting with Environment](#interacting-with-environment)
+   - [Interacting with Application](#interacting-with-application)
+   - [Services](#services)
+   - [Destroying](#destroying)
+2. [Deployment](#deployment)
 
-> Caveat: The vagrant development environment has only been tested in the local environments our developers currently have. This currently includes Linux, Intel-based Macs and M1 Macs.
+---
 
-In order to use the integrated development environment you will need to install [Vagrant](https://www.vagrantup.com/docs/installation) [do *not* use the Vagrant version that may be available for your distro repository - explicitly follow instructions at the Vagrant homepage] and the appropriate virtualization software. If you are running Linux or Mac x86 then install [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads), if you are using a Mac with ARM processors then install [Parallels](https://www.parallels.com/).
+## Development Environment
+The development environment is based on Taskfile and Docker. `task up` creates a Docker-in-Docker container that runs within it the application container and any related services.
 
-You may need to update the VirtualBox configuration for the creation of a host-only network. This can be done by creating a file `/etc/vbox/networks.conf` containing:
+### Installing
+1. Install [Taskfile](https://taskfile.dev/), via one of the supported package managers.
 
-```
-* 10.0.0.0/8
-```
+    **For Linux:** Use [installation instructions](https://taskfile.dev/docs/installation) for your preferred package manager.
+
+    **For Mac**: Install via homebrew, `brew install go-task`.
+
+2. Install Docker.
+
+    **For Mac:** [Install Docker Desktop](https://docs.docker.com/desktop/install/mac-install/). While this is enough to get the application running, you should request membership to the Penn Libraries Docker Team license from [the IT Helpdesk](https://ithelp.library.upenn.edu/support/home) for full functionality.
+
+    **For Linux:** [Install docker engine](https://docs.docker.com/engine/install/).
 
 ### Starting
 
-From the [vagrant](vagrant) directory run:
+1. After installing Docker and Taskfile, move into the `.dev` directory:
+    ```
+    cd .dev
+    ```
 
+2. Then, run a task to start up the environment:
+    ```
+    task up
+    ```
 
-if running with Virtualbox:
+    When you first run a task command it will pull down a series of remote taskfiles, you'll need to answer `Y` to accept the alert/s.
+
+    While the task runs, it will ask you for your computer password to update the `/etc/hosts` file and for your LDAP credentials to pull down secrets from Hashicorp Vault.
+
+3. Once the environment has completed building, you'll be able to confirm the application is running by going to [https://apotheca-dev.library.upenn.edu/](https://apotheca-dev.library.upenn.edu/).
+
+4. Move to the next sections for more details on how to interact with the environment.
+
+### Interacting with Environment
+When the environment is running, you can run the following command to swap the docker context.
 ```
-vagrant up --provision
-```
-
-if running with Parallels:
-```
-vagrant up --provider=parallels --provision
-```
-
-This will run the [vagrant/Vagrantfile](vagrant/Vagrantfile) which will bring up an Ubuntu VM and run the Ansible script which will provision a single node Docker Swarm behind nginx with a self-signed certificate to mimic a load balancer. Your hosts file will be modified; the domain `apotheca-dev.library.upenn.edu` will be added and mapped to the Ubuntu VM. Once the Ansible script has completed and the Docker Swarm is deployed you can access the application by navigating to [https://apotheca-dev.library.upenn.edu](https://apotheca-dev.library.upenn.edu).
-
-### Stopping
-
-To stop the development environment, from the `vagrant` directory run:
-
-```
-vagrant halt
-```
-
-### Destroying
-
-To destroy the development environment, from the `vagrant` directory run:
-
-```
-vagrant destroy -f
+task docker:context:use:app
 ```
 
-### SSH
+After swapping the docker context, you'll be able to interact with the containers locally as if you were within the Docker-in-Docker container. Running commands like `docker ps` will display all the containers currently running in the environment.
 
-You may ssh into the Vagrant VM by running:
-
+When you are done you can change the context back to the default by running:
 ```
-vagrant ssh
+task docker:context:use:default
 ```
 
-### Traefik
+### Interacting with Application
+Once your environment is set up:
+1. Swap the docker context (see [Interacting with Environment](#interacting-with-environment)):
+    ```
+    task docker:context:use:app
+    ```
+2. Start a shell in the `apotheca` app container:
+    ```
+    docker exec -it apotheca_apotheca.1.{whatever} bash
+    ```
 
-When running the development environment you can access the traefik web ui by navigating to: [https://traefik-dev.library.upenn.edu:8080/#](https://traefik-dev.library.upenn.edu:8080/#).
-
-### Rails Application
-For information about the Rails application, see the [README](/rails_app/README.md) in the Rails application root. This includes information about running the test suite, performing harvesting, development styleguide and general application information.
+See application README for more information on [running the test suite](rails_app/README.md) and general application development.
 
 #### Locally build image
-Usually the image for the Rails application is pulled from our gitlab registry. In some instances you may want to force the image to be build locally. In order to do that the `apotheca_build_docker_image` variable in [/ansible/inventories/vagrant/group_vars/docker_swarm_manager/apotheca.yml](ansible/inventories/vagrant/group_vars/docker_swarm_manager/apotheca.yml) must be set to `true`.
+Usually the image for the Rails application is pulled from our gitlab registry. In some instances you may want to force the image to be built locally. In order to do that the `apotheca_build_docker_image` variable in [ansible/inventories/development/group_vars/docker_swarm_managers/apotheca.yml](ansible/inventories/development/group_vars/docker_swarm_managers/apotheca.yml) must be set to `true`.
 
-### Minio
-In development, Minio is used to mimic S3-compatible object storage. In staging/production, the application will use an external services like AWS S3 and Wasabi.
+### Services
+- Rails Application
+    - URL: [https://apotheca-dev.library.upenn.edu/](https://apotheca-dev.library.upenn.edu/)
+- API
+    - URL: [https://digitalrepository-dev.library.upenn.edu/](https://digitalrepository-dev.library.upenn.edu/)
+- Minio (S3-compatible object storage, development only; staging/production use AWS S3 and Wasabi)
+    - Console URL: [http://minio-console-dev.library.upenn.edu/](http://minio-console-dev.library.upenn.edu/)
+    - Username: `minioadmin`
+    - Password: `minioadmin`
+- Solr ([SolrCloud mode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode), managed by Zookeeper)
+    - URL: [http://apotheca-dev.library.upenn.int/solr/#/](http://apotheca-dev.library.upenn.int/solr/#/)
+    - Username and password: `solr_username` and `solr_password` from the `apotheca/vagrant` Vault secret
 
-The Minio API is available at [http://minio-dev.library.upenn.edu](http://minio-dev.library.upenn.edu).
-
-To access the Minio UI, navigate to [http://minio-console-dev.library.upenn.edu/](http://minio-console-dev.library.upenn.edu/) and log-in as the `minioadmin` user with the password `minioadmin`.
-
-### Solr
-Solr is running in [CloudMode](https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-types.html#solrcloud-mode) which uses Apache Zookeeper to provide centralized cluster management. Additionally, [ZooNavigator](https://github.com/elkozmon/zoonavigator) is used to manage the Zookeeper cluster in deployed environments.
-
-To access the Solr Admin UI, navigate to [http://apotheca-dev.library.upenn.int/solr/#/](http://apotheca-dev.library.upenn.int/solr/#/) and log-in as the `admin` user with the password `test`.
-
-### Chrome
-To access browserless Chrome, go to: [http://apotheca-dev.library.upenn.int:3333/](http://apotheca-dev.library.upenn.int:3333/)
+### Destroying
+To destroy the environment and any data associated with it, run:
+```
+task destroy
+```
 
 ## Deployment
 Gitlab automatically deploys to both our staging and production environment under certain conditions.

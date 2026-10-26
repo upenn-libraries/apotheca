@@ -34,7 +34,7 @@ services:
     secrets:
       - sidekiq_pro_credentials
     volumes:
-      - /apotheca/ansible/roles/apotheca/files/src/:/home/app
+      - /home/app/rails_app/:/home/app
 
 secrets:
   sidekiq_pro_credentials:
