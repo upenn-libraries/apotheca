@@ -32,7 +32,7 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def apply?(field)
-          field.controlfield? && field.tag == tag
+          field.controlfield? && field.tag == tag && !bc_date_indicated?(field.document)
         end
 
         private
@@ -84,6 +84,15 @@ module MetadataExtractor
           return if year == UNKNOWN_DATE
 
           year.tr('u', 'X')
+        end
+
+        # Does the 008 pos 7 indicate a "no date" or BC date?
+        # @param [MetadataExtractor::MARC::XMLDocument] record
+        # @return [Boolean]
+        def bc_date_indicated?(record)
+          controlfield = record.controlfields.find { |controlfield| controlfield.tag == '008' }
+
+          controlfield&.values_at(chars: 6) == ['b']
         end
       end
     end

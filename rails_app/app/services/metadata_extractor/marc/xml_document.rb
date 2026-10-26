@@ -141,7 +141,7 @@ module MetadataExtractor
 
         # Return an array of the values at the given locations.
         #
-        # @param chars [Array,String,Range]
+        # @param chars [Array,String,Range,Integer]
         # @return [Array<String>]
         def values_at(chars:)
           chars = Array(chars)

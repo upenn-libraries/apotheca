@@ -11,7 +11,9 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def apply?(field)
-          field.tag == tag && field.subfield_at(:a).in?(%w[i k m q])
+          return false unless bc_date_indicated?(field.document)
+
+          field.tag == tag && field.datafield?
         end
 
         private
@@ -21,12 +23,10 @@ module MetadataExtractor
         # @param field [MetadataExtractor::MARC::XMLDocument::ControlField]
         # @return [String]
         def edtf_date(field)
-          date1 = field.subfield_at :b
-          date2 = field.subfield_at :d
+          date1 = bce_year(field.subfield_at(:b))
+          date2 = bce_year(field.subfield_at(:d))
 
           return unless date1 || date2
-
-          [date1, date2].filter_map { |date| date.prepend '-' }
 
           if range?(field)
             edtf_range(date1, date2)
@@ -35,12 +35,21 @@ module MetadataExtractor
           end
         end
 
+        # Format a BCE year with a hyphen and left-padded zeroes
+        # @param [String, nil] value
+        # @return [String, nil]
+        def bce_year(value)
+          return unless value
+
+          "-#{value.rjust(4, '0')}"
+        end
+
         # Returns whether the date in 046 field is a range. This is based on DtSt value in sf a.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::ControlField]
         # @return [Boolean]
         def range?(field)
-          field.subfield_at(:a) == 'i'
+          field.subfield_at(:a).in?(%w[i k m q])
         end
       end
     end
