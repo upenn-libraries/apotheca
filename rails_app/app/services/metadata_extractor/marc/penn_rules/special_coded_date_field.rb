@@ -18,9 +18,9 @@ module MetadataExtractor
 
         private
 
-        # Extracting EDTF date from 046 controlfield.
+        # Extracting EDTF date from 046 datafield.
         #
-        # @param field [MetadataExtractor::MARC::XMLDocument::ControlField]
+        # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [String]
         def edtf_date(field)
           date1 = bce_year(field.subfield_at(:b))
@@ -36,7 +36,7 @@ module MetadataExtractor
         end
 
         # Format a BCE year with a hyphen and left-padded zeroes.
-        # @param [String, nil] value
+        # @param value [String, nil]
         # @return [String, nil]
         def bce_year(value)
           return unless value
@@ -46,7 +46,7 @@ module MetadataExtractor
 
         # Returns whether the date in 046 field is a range. This is based on DtSt value in sf a.
         #
-        # @param field [MetadataExtractor::MARC::XMLDocument::ControlField]
+        # @param field [MetadataExtractor::MARC::XMLDocument::DataField]
         # @return [Boolean]
         def range?(field)
           field.subfield_at(:a).in?(%w[i k m q])
