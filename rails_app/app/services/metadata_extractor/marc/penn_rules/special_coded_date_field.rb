@@ -4,9 +4,9 @@ module MetadataExtractor
   module MARC
     class PennRules
       # Custom mapping rule to extract BCE date and date ranges from the 046 field.
-      # Converts the date or range to EDTF.
+      # Converts the date or range to EDTF using formatting methods from parent DateField class.
       class SpecialCodedDateField < DateField
-        # Only use this rule on 046 fields where sf a suggests a date or range of the type we want.
+        # Only use this rule on 046 fields where if the 008 controlfield indicates a BC date.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
@@ -35,13 +35,13 @@ module MetadataExtractor
           end
         end
 
-        # Format a BCE year with a hyphen and left-padded zeroes
+        # Format a BCE year with a hyphen and left-padded zeroes.
         # @param [String, nil] value
         # @return [String, nil]
         def bce_year(value)
           return unless value
 
-          "-#{value.rjust(4, '0')}"
+          value.rjust(4, '0').prepend('-')
         end
 
         # Returns whether the date in 046 field is a range. This is based on DtSt value in sf a.
