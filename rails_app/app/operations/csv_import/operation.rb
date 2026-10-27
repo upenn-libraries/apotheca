@@ -7,6 +7,7 @@ module CSVImport
     # the message, the :error key is used to look up a custom message in operations.en.yml. If a message is not found,
     # a generic one is created from the error key. All Failure attributes besides :error and :exception are passed
     # to the locale so messages can be customized.
+    # @param failure [Hash] data within failure monad
     def on_failure(failure)
       failure[:message] = I18n.t(failure[:error],
                                  scope: "operations.csv_import.#{self.class.to_s.demodulize.underscore}.failures",

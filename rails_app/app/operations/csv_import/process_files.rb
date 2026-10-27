@@ -18,6 +18,10 @@ module CSVImport
     end
 
     # Parse CSV file into a Hash.
+    #
+    # @param file [ActionDispatch::Http::UploadedFile]
+    # @return [Dry::Monads::Success] if parsing successful, includes csv data
+    # @return [Dry::Mondas::Failure] if parsing raises error
     def parse_csv(file)
       csv = StructuredCSV.parse(file.read)
 
@@ -52,6 +56,10 @@ module CSVImport
     end
 
     # Validate data extracted before returning.
+    #
+    # @param csv [Array<Hash>] csv data
+    # @return [Dry::Monads::Success] if no validation error found
+    # @return [Dry::Mondas::Failure] if validation error found
     def validate(csv)
       return Failure(error: :empty_csv) if csv.blank? || csv.all?(&:blank?)
 
@@ -62,6 +70,9 @@ module CSVImport
     end
 
     # Transforms data from an assets csv into our specified format based on 'sequence' attribute.
+    #
+    # @param asset_data [Array<Hash>]
+    # @return [Hash]
     def normalize_asset_data(asset_data)
       {
         'arranged' => asset_data.select { |asset| asset['sequence'].present? }
