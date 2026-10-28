@@ -15,4 +15,4 @@ includes:
       DOCKER_NETWORK_SUBNET: 172.16.8.0/24
       DOCKER_CONTAINER_IP: "172.16.8.10"
       DOCKER_CONTAINER_NAME: "apotheca"
-      ANSIBLE_REQUIREMENTS_FILE: "requirements.yml"
+      ANSIBLE_REQUIREMENTS_FILE: "requirements.dev.yml"
