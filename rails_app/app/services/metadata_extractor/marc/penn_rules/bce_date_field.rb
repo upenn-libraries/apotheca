@@ -13,7 +13,7 @@ module MetadataExtractor
         def apply?(field)
           return false unless bc_date?(field.document)
 
-          field.tag == tag && field.datafield?
+          field.datafield? && field.tag == tag
         end
 
         private
