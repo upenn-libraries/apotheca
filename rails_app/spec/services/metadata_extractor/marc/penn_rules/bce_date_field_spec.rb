@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe MetadataExtractor::MARC::PennRules::SpecialCodedDateField do
+RSpec.describe MetadataExtractor::MARC::PennRules::BCEDateField do
   let(:field_mapping) { described_class.new(tag: '046') }
   let(:controlfield) { '110617b ua 000 0 egy d' }
   let(:document) do

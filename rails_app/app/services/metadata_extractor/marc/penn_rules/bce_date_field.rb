@@ -5,13 +5,13 @@ module MetadataExtractor
     class PennRules
       # Custom mapping rule to extract BCE date and date ranges from the 046 field.
       # Converts the date or range to EDTF using formatting methods from parent DateField class.
-      class SpecialCodedDateField < DateField
+      class BCEDateField < DateField
         # Only use this rule on 046 fields where if the 008 controlfield indicates a BC date.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def apply?(field)
-          return false unless bc_date_indicated?(field.document)
+          return false unless bc_date?(field.document)
 
           field.tag == tag && field.datafield?
         end
