@@ -35,6 +35,10 @@ services:
       - sidekiq_pro_credentials
     volumes:
       - /home/app/rails_app/:/home/app
+      - bundle:/home/app/vendor/bundle
+
+volumes:
+  bundle:
 
 secrets:
   sidekiq_pro_credentials:
