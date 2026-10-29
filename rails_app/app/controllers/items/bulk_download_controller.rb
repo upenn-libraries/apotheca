@@ -5,7 +5,9 @@ module Items
   class BulkDownloadController < UIController
     include ItemLoadable
 
+    before_action :load_item
     before_action :authorize_bulk_download
+    before_action :load_item_presenter
 
     # Download the preservation file of each related asset.
     def preservation

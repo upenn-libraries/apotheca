@@ -11,6 +11,10 @@ module ItemLoadable
     head :not_found
   end
 
+  def load_item_presenter
+    @item_presenter = @item.presenter
+  end
+
   # Postgres query service.
   #
   # @return [Valkyrie::MetadataAdapter]
