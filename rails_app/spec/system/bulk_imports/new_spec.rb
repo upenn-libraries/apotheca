@@ -42,7 +42,7 @@ describe 'Bulk Import New Page' do
       bulk_import_csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_expecting_assets_csv.csv')
       attach_file('bulk-import-csv', bulk_import_csv_path)
       click_button 'Create'
-      expect(page).to have_text ' Problem creating bulk import: Missing asset CSV(s): assets.csv'
+      expect(page).to have_text 'Problem creating bulk import. Asset CSVs are missing: assets.csv.'
     end
   end
 
@@ -51,7 +51,7 @@ describe 'Bulk Import New Page' do
       csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_without_item_data.csv')
       attach_file('bulk-import-csv', csv_path)
       click_button 'Create'
-      expect(page).to have_text 'Problem creating bulk import: CSV has no data'
+      expect(page).to have_text 'Problem creating bulk import. CSV has no data.'
     end
   end
 
@@ -60,7 +60,8 @@ describe 'Bulk Import New Page' do
       csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_with_duplicated_headers.csv')
       attach_file('bulk-import-csv', csv_path)
       click_button 'Create'
-      expect(page).to have_text 'Problem creating bulk import: CSV contains duplicated column names'
+      expect(page).to have_text 'Problem creating bulk import. bulk_import_with_duplicated_headers.csv is malformed. ' \
+                                'CSV contains duplicated column names (internal_notes[1]) in line 1'
     end
   end
 
@@ -69,7 +70,8 @@ describe 'Bulk Import New Page' do
       csv_path = Rails.root.join('spec/fixtures/imports/bulk_import_data_with_malformed_csv.csv')
       attach_file('bulk-import-csv', csv_path)
       click_button 'Create'
-      expect(page).to have_text 'Problem creating bulk import: Illegal quoting in line 2'
+      expect(page).to have_text 'Problem creating bulk import. bulk_import_data_with_malformed_csv.csv is malformed. ' \
+                                'Illegal quoting in line 2.'
     end
   end
 end
