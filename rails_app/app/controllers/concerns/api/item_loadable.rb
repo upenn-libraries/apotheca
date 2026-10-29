@@ -8,7 +8,7 @@ module API
     included do
       before_action :load_item
       before_action :authorize_item
-      before_action :load_Item_presenter
+      before_action :load_item_presenter
     end
 
     private

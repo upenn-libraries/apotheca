@@ -9,7 +9,6 @@ module API
       class InvalidSize < InvalidParameterError; end
 
       before_action :parse_size!, only: :preview
-      before_action :load_item_presenter
 
       DEFAULT_SIZE = 200
       MAX_SIZE = 600
