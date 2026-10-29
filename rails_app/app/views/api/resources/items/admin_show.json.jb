@@ -8,7 +8,7 @@ item_json[:human_readable_name] = @item.human_readable_name
 
 item_json[:ocr_strategy] = @item.ocr_strategy
 
-item_json[:descriptive_metadata] = @item.presenter.descriptive_metadata.resource_metadata
+item_json[:descriptive_metadata] = @presenter.descriptive_metadata.resource_metadata
 
 {
   status: 'success',

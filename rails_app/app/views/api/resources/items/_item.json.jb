@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-presenter = @item.presenter
-
 json = {
   id: @item.id.to_s,
   ark: @item.unique_identifier,
   first_published_at: @item.first_published_at.utc.iso8601,
   last_published_at: @item.last_published_at.utc.iso8601,
-  descriptive_metadata: presenter.descriptive_metadata.to_h,
+  descriptive_metadata: @presenter.descriptive_metadata.to_h,
   structural_metadata: {
     viewing_direction: @item.structural_metadata.viewing_direction,
     viewing_hint: @item.structural_metadata.viewing_hint
@@ -21,9 +19,9 @@ json = {
 }
 
 # Add preview derivative if thumbnail present.
-if (thumbnail = presenter.thumbnail&.thumbnail)
+if @presenter.thumbnail_image?
   json[:derivatives][:preview] = render('api/resources/derivative',
-                                        derivative: thumbnail,
+                                        derivative: @presenter.thumbnail&.thumbnail,
                                         url: api_item_preview_url(@item.id))
 end
 
@@ -43,7 +41,7 @@ end
 
 # Add in assets if requested.
 if params[:assets] == 'true'
-  json[:assets] = presenter.arranged_assets.map do |a|
+  json[:assets] = @presenter.arranged_assets.map do |a|
     render 'api/resources/assets/asset', asset: a, item: @item
   end
 end
