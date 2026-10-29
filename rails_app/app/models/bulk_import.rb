@@ -16,8 +16,6 @@ class BulkImport < ApplicationRecord
 
   validates_associated :created_by, :imports
 
-  attr_accessor :csv_rows
-
   validates :original_filename, presence: true
 
   scope :filter_created_by, ->(query) { joins(:created_by).where({ created_by: { email: query } }) }
@@ -46,8 +44,17 @@ class BulkImport < ApplicationRecord
     end
   end
 
-  # @param [String] queue
-  def create_imports(queue = BulkImport::DEFAULT_PRIORITY)
+  # Process CSV files into an array of hashes that can be used to create child Import objects.
+  #
+  # @return [Dry::Monads::Success] if successful, with an array of hashes representing each row
+  # @return [Dry::Monads::Failure] if failed to process CSVs
+  def process_files(csv_files, asset_csv_files)
+    CSVImport::ProcessFiles.new.call(csv_files, asset_csv_files)
+  end
+
+  # @param csv_rows [Array<Hash>] each row in CSV represented as a hash
+  # @param queue [String] sidekiq queue to use when running jobs
+  def create_imports(csv_rows, queue = BulkImport::DEFAULT_PRIORITY)
     import_params = csv_rows.map do |row|
       import = Import.create!(bulk_import: self, import_data: row)
       Array.wrap(import.id)
@@ -59,17 +66,6 @@ class BulkImport < ApplicationRecord
   def csv
     data = imports.map(&:import_data)
     StructuredCSV.generate(data)
-  end
-
-  # A bulk import has an empty_csv if the parsed csv cached in csv_rows contains no item data
-  # @return [Boolean]
-  def empty_csv?
-    return true if csv_rows.blank?
-
-    csv_rows.each do |row|
-      return false if row.present?
-    end
-    true
   end
 
   # @return [Integer]

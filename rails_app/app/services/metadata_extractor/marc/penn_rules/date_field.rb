@@ -27,12 +27,13 @@ module MetadataExtractor
           date.blank? ? [] : [{ value: date }]
         end
 
-        # Only use this rule on control fields.
+        # Only use this rule on control fields and if a BC date is not indicated.
+        # If a BC date is indicated, the date value will be set by the SpecialCodedDate rule.
         #
         # @param field [MetadataExtractor::MARC::XMLDocument::BaseField]
         # @return [Boolean]
         def apply?(field)
-          field.controlfield? && field.tag == tag
+          field.controlfield? && field.tag == tag && !bc_date?(field.document)
         end
 
         private
@@ -84,6 +85,15 @@ module MetadataExtractor
           return if year == UNKNOWN_DATE
 
           year.tr('u', 'X')
+        end
+
+        # Does the 008 pos 7 indicate a "no date" or BC date?
+        # @param record [MetadataExtractor::MARC::XMLDocument]
+        # @return [Boolean]
+        def bc_date?(record)
+          controlfield = record.controlfields.find { |controlfield| controlfield.tag == '008' }
+
+          controlfield&.values_at(chars: 6) == ['b']
         end
       end
     end
