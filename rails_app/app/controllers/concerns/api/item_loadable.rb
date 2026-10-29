@@ -8,6 +8,7 @@ module API
     included do
       before_action :load_item
       before_action :authorize_item
+      before_action :load_Item_presenter
     end
 
     private
@@ -22,6 +23,11 @@ module API
               else
                 raise APIController::MissingIdentifierError, I18n.t('api.exceptions.missing_identifier')
               end
+    end
+
+    # @return [ItemResource]
+    def load_item_presenter
+      @item_presenter = @item.presenter
     end
 
     # @raise [APIController::ResourceMismatchError, APIController::NotPublishedError]
