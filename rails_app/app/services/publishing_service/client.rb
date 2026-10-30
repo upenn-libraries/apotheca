@@ -61,7 +61,7 @@ module PublishingService
       controller = ApplicationController.renderer.with_defaults(http_host: Settings.api_url, https: true)
       rendered_json = controller.render('api/resources/items/_item',
                                         locals: { params: { assets: 'true' } },
-                                        assigns: { item: change_set, item_presenter: change_set.presenter })
+                                        assigns: { item: change_set.presenter })
       JSON.parse(rendered_json)
     end
   end

@@ -71,7 +71,7 @@ module Items
     end
 
     def authorize_bulk_download
-      authorize! :read, @item
+      authorize! :read, @item.object
     end
   end
 end
