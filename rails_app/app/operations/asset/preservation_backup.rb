@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Asset
-  # Operation that stores an additional copy of our preservation files in a separate location. n
+  # Operation that stores an additional copy of our preservation files in a separate location.
   class PreservationBackup < Operation
     # Stores an additional copy of our preservation files in a separate location.
     #
