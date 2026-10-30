@@ -3,6 +3,8 @@
 module Asset
   # Parent class for Asset Operations. Includes reuseable steps for Asset operations.
   class Operation < Resource::Operation
+    alias find_asset find_resource
+
     def resource_class
       AssetResource
     end
