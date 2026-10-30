@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 json = {
-  id: @item.id.to_s,
-  ark: @item.unique_identifier,
-  first_published_at: @item.first_published_at.utc.iso8601,
-  last_published_at: @item.last_published_at.utc.iso8601,
+  id: @item_presenter.id.to_s,
+  ark: @item_presenter.unique_identifier,
+  first_published_at: @item_presenter.first_published_at.utc.iso8601,
+  last_published_at: @item_presenter.last_published_at.utc.iso8601,
   descriptive_metadata: @item_presenter.descriptive_metadata.to_h,
   structural_metadata: {
-    viewing_direction: @item.structural_metadata.viewing_direction,
-    viewing_hint: @item.structural_metadata.viewing_hint
+    viewing_direction: @item_presenter.structural_metadata.viewing_direction,
+    viewing_hint: @item_presenter.structural_metadata.viewing_hint
   },
   # Setting default derivative values.
   derivatives: {
@@ -22,27 +22,27 @@ json = {
 if @item_presenter.thumbnail_image?
   json[:derivatives][:preview] = render('api/resources/derivative',
                                         derivative: @item_presenter.thumbnail&.thumbnail,
-                                        url: api_item_preview_url(@item.id))
+                                        url: api_item_preview_url(@item_presenter.id))
 end
 
 # Add pdf derivative if present.
-if (pdf = @item.pdf)
+if (pdf = @item_presenter.pdf)
   json[:derivatives][:pdf] = render('api/resources/derivative',
                                     derivative: pdf,
-                                    url: api_item_pdf_url(@item.id))
+                                    url: api_item_pdf_url(@item_presenter.id))
 end
 
 # Add iiif_manifest derivative if present.
-if (iiif_manifest = @item.iiif_manifest)
+if (iiif_manifest = @item_presenter.iiif_manifest)
   json[:derivatives][:iiif_manifest] = render('api/resources/derivative',
                                               derivative: iiif_manifest,
-                                              url: iiif_api_item_iiif_manifest_url(@item.id))
+                                              url: iiif_api_item_iiif_manifest_url(@item_presenter.id))
 end
 
 # Add in assets if requested.
 if params[:assets] == 'true'
   json[:assets] = @item_presenter.arranged_assets.map do |a|
-    render 'api/resources/assets/asset', asset: a, item: @item
+    render 'api/resources/assets/asset', asset: a, item: @item_presenter
   end
 end
 
