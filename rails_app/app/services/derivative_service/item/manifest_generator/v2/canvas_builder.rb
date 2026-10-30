@@ -38,7 +38,7 @@ module DerivativeService
             IIIF::Presentation::Annotation.new.tap do |annotation|
               # By providing width, height and profile, we avoid the IIIF gem fetching the data again.
               annotation.resource = IIIF::Presentation::ImageResource.create_image_api_image_resource(
-                service_id: iiif_image_url, width: asset.technical_metadata.width,
+                service_id: iiif_image_base_url, width: asset.technical_metadata.width,
                 height: asset.technical_metadata.height, profile: 'http://iiif.io/api/image/2/level2.json'
               )
               annotation['on'] = canvas_id
@@ -63,8 +63,8 @@ module DerivativeService
           # URL to image in IIIF Image service.
           #
           # @return [String]
-          def iiif_image_url
-            URI.join(Settings.image_server.url, "iiif/2/#{asset.id}").to_s
+          def iiif_image_base_url
+            asset.iiif_api(version: 2).base_url
           end
         end
       end

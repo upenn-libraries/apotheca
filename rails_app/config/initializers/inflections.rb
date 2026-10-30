@@ -28,4 +28,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'API'
   inflect.acronym 'UI'
   inflect.acronym 'XML'
+  inflect.acronym 'BCE'
 end
