@@ -2,13 +2,13 @@
 
 item_json = render('api/resources/items/item')
 
-item_json[:thumbnail_asset_id] = @item_presenter.thumbnail_asset_id.to_s
+item_json[:thumbnail_asset_id] = @item.thumbnail_asset_id.to_s
 
-item_json[:human_readable_name] = @item_presenter.human_readable_name
+item_json[:human_readable_name] = @item.human_readable_name
 
-item_json[:ocr_strategy] = @item_presenter.ocr_strategy
+item_json[:ocr_strategy] = @item.ocr_strategy
 
-item_json[:descriptive_metadata] = @item_presenter.descriptive_metadata.resource_metadata
+item_json[:descriptive_metadata] = @item.descriptive_metadata.resource_metadata
 
 {
   status: 'success',

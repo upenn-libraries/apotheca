@@ -6,13 +6,9 @@ module ItemLoadable
 
   # Load Item
   def load_item
-    @item = pg_query_service.find_by(id: params[:id])
+    @item = pg_query_service.find_by(id: params[:id]).presenter
   rescue Valkyrie::Persistence::ObjectNotFoundError
     head :not_found
-  end
-
-  def load_item_presenter
-    @item_presenter = @item.presenter
   end
 
   # Postgres query service.

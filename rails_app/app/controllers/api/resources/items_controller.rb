@@ -25,9 +25,9 @@ module API
       # Returns preview image for Item. If requested image size is 200,200 or nil redirects to
       # thumbnail, otherwise redirects to IIIF image service.
       def preview
-        thumbnail = @item_presenter.thumbnail
-        if @width == DEFAULT_SIZE && @height == DEFAULT_SIZE && @item_presenter.thumbnail_image?
-          filename = "#{@item_presenter.parameterize}-thumbnail.jpeg"
+        thumbnail = @item.thumbnail
+        if @width == DEFAULT_SIZE && @height == DEFAULT_SIZE && @item.thumbnail_image?
+          filename = "#{@item.parameterize}-thumbnail.jpeg"
           redirect_to_presigned_url thumbnail.thumbnail.file_id, filename
         elsif thumbnail&.iiif_image
           redirect_to_iiif_image_server thumbnail, "!#{@width},#{@height}"
@@ -41,7 +41,7 @@ module API
 
         raise FileNotFound, I18n.t('api.exceptions.file_not_found') unless pdf_derivative
 
-        filename = "#{@item_presenter.parameterize}.pdf"
+        filename = "#{@item.parameterize}.pdf"
 
         redirect_to_presigned_url pdf_derivative.file_id, filename
       end

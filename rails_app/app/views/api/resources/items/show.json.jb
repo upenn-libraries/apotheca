@@ -5,7 +5,7 @@
   data: {
     item: render('api/resources/items/item'),
     related: {
-      assets: api_item_resource_url(@item_presenter.id, assets: true)
+      assets: api_item_resource_url(@item.id, assets: true)
     }
   }
 }

@@ -7,12 +7,11 @@ module Items
 
     before_action :load_item
     before_action :authorize_bulk_download
-    before_action :load_item_presenter
 
     # Download the preservation file of each related asset.
     def preservation
       zip_kit_stream(filename: "#{@item.human_readable_name.parameterize}.zip") do |zip|
-        @item_presenter.assets.each do |asset|
+        @item.assets.each do |asset|
           next if asset.preservation_file_id.blank?
 
           file = Valkyrie::StorageAdapter.find_by id: asset.preservation_file_id
@@ -29,7 +28,7 @@ module Items
     # is fetched from the IIIF serverless service.
     def access
       zip_kit_stream(filename: "#{@item.human_readable_name.parameterize}-access.zip") do |zip|
-        @item_presenter.assets.each do |asset|
+        @item.assets.each do |asset|
           add_access_file(zip, asset)
         end
       rescue StandardError => e
