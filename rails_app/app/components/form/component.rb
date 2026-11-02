@@ -34,7 +34,7 @@ module Form
     #
     # @param [String] name given to form, passed to backend to identify form
     # @param [String] url for request, optional
-    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource] model or changeset for form, optional
+    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource|BasePresenter] model or changeset for form, optional
     # @param [String, TrueClass, FalseClass] disable_with can be a String value for disabled version of submit button,
     # true for default value, or false to prevent disabling the submit button when the form is submitted
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
@@ -77,6 +77,8 @@ module Form
         @model.class.to_s.underscore.delete_suffix('_change_set')
       when Valkyrie::Resource
         @model.class.to_s.underscore.delete_suffix('_resource')
+      when BasePresenter
+        @model.class.to_s.underscore.delete_suffix('_presenter')
       else
         @model.class.to_s.underscore.downcase
       end
@@ -88,7 +90,7 @@ module Form
       case @model
       when Valkyrie::ChangeSet
         @model.resource.new_record
-      when Valkyrie::Resource
+      when Valkyrie::Resource, BasePresenter
         @model.new_record
       else
         @model.new_record?

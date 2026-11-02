@@ -5,7 +5,7 @@ describe 'Asset Requests' do
 
   # Authentication check
   context 'when editing' do
-    let(:item) { persist(:item_resource, :with_full_asset) }
+    let(:item) { persist(:item_resource, :with_full_asset).presenter }
 
     context 'without edit role' do
       let(:user_role) { :viewer }

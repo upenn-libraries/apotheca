@@ -13,8 +13,8 @@ module AssetsList
     renders_one :arranged_nav_section, ->(**options) { NavSection::Component.new(arranged: true, **options) }
     renders_one :unarranged_nav_section, ->(**options) { NavSection::Component.new(arranged: false, **options) }
 
-    # @param [ItemResource|ItemPresenter] item
-    # @param [User] user
+    # @param item [ItemPresenter]
+    # @param user [User]
     def initialize(item:, user:)
       @item = item
       @user = user

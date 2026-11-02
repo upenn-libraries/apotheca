@@ -37,6 +37,6 @@ class ResourcesController < UIController
   #
   # @return [Valkyrie::MetadataAdapter]
   def pg_query_service
-    @pg_query_service ||= Valkyrie::MetadataAdapter.find(:postgres).query_service
+    Query.postgres
   end
 end

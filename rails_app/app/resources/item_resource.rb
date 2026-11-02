@@ -46,12 +46,6 @@ class ItemResource < Valkyrie::Resource
     Array.wrap(asset_ids) - structural_metadata.arranged_asset_ids
   end
 
-  # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
-  # @param [Valkyrie::ID] asset_id
-  def thumbnail?(asset_id)
-    thumbnail_asset_id == asset_id
-  end
-
   # Accessors for derivatives.
   DERIVATIVE_TYPES.each do |symbol|
     define_method symbol do
@@ -59,7 +53,7 @@ class ItemResource < Valkyrie::Resource
     end
   end
 
-  # @param [Boolean] include_assets
+  # @param include_assets [Boolean]
   def to_json_export(include_assets: false)
     bulk_export_hash = {
       unique_identifier: unique_identifier,
@@ -91,7 +85,7 @@ class ItemResource < Valkyrie::Resource
     bulk_export_hash
   end
 
-  # @param [Array<Valkyrie::ID>] asset_ids
+  # @param asset_ids [Array<Valkyrie::ID>]
   def assets_export(asset_ids)
     asset_resources = Query.postgres.find_many_by_ids(ids: asset_ids)
 

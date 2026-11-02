@@ -180,11 +180,12 @@ class AssetsController < ResourcesController
   end
 
   def set_item
-    @item = if params[:item_id]
-              pg_query_service.find_by(id: params[:item_id])
-            else
-              pg_query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
-            end
+    item = if params[:item_id]
+             pg_query_service.find_by(id: params[:item_id])
+           else
+             pg_query_service.find_inverse_references_by(resource: @asset, property: :asset_ids).first
+           end
+    @item = item.presenter
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
     raise ItemNotFound, e
   end
