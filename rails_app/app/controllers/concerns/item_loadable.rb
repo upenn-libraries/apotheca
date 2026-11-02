@@ -5,6 +5,7 @@ module ItemLoadable
   extend ActiveSupport::Concern
 
   # Load Item
+  # @return [ItemPresenter]
   def load_item
     resource = Query.postgres.find_by(id: params[:id])
 
