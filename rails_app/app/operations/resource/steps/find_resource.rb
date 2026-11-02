@@ -16,19 +16,13 @@ module Resource
       #
       # @param id [String] UUID
       def call(id)
-        resource = query_service.find_by id: id
+        resource = Query.postgres.find_by id: id
 
         raise Valkyrie::Persistence::ObjectNotFoundError unless resource.is_a?(resource_class)
 
         Success(resource)
       rescue Valkyrie::Persistence::ObjectNotFoundError => e
         Failure(error: :resource_not_found, exception: e)
-      end
-
-      private
-
-      def query_service
-        Valkyrie::MetadataAdapter.find(:postgres).query_service
       end
     end
   end
