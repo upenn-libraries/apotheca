@@ -34,7 +34,8 @@ module Form
     #
     # @param [String] name given to form, passed to backend to identify form
     # @param [String] url for request, optional
-    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource|BasePresenter] model or changeset for form, optional
+    # @param [ActiveRecord::Base|Valkyrie::ChangeSet|Valkyrie::Resource|BasePresenter]
+    #   model or changeset for form, optional
     # @param [String, TrueClass, FalseClass] disable_with can be a String value for disabled version of submit button,
     # true for default value, or false to prevent disabling the submit button when the form is submitted
     # @param [Hash] options (see ActionView::Helpers::FormTagHelper.form_tag)
