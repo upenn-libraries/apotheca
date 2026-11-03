@@ -46,23 +46,5 @@ describe Item::Update do
         expect(UpdateArkMetadataJob).to have_enqueued_sidekiq_job.with(updated_item.id.to_s)
       end
     end
-
-    context 'when updated_by is not provided' do
-      subject(:result) do
-        operation.call(
-          id: item.id,
-          human_readable_name: 'Updated Item',
-          descriptive_metadata: { subject: [{ label: 'Cataloging' }, { label: 'Animals' }] }
-        )
-      end
-
-      it 'fails' do
-        expect(result.failure?).to be true
-      end
-
-      it 'returns error' do
-        expect(result.failure[:error]).to be :missing_updated_by
-      end
-    end
   end
 end

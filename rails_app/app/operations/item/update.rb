@@ -7,11 +7,10 @@ module Item
     #
     # @param id [String] UUID of Item being updated
     # @param attributes [Hash] Item attributes to set when updating
-    def call(id:, **attributes)
+    def call(id:, updated_by:, **attributes)
       resource = step find_item(id)
-      step require_updated_by(attributes)
 
-      change_set = step create_change_set(resource: resource, **attributes)
+      change_set = step create_change_set(resource: resource, updated_by: updated_by, **attributes)
       step set_thumbnail(change_set)
       step validate(change_set)
 
