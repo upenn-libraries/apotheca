@@ -1,2 +1,11 @@
 # Ignore env credential keys
 config/credentials/*.key
+
+# Ignore logs and tempfiles, keep the tracked directory skeleton
+log/*
+!log/.keep
+tmp/*
+!tmp/.keep
+!tmp/pids/
+tmp/pids/*
+!tmp/pids/.keep
