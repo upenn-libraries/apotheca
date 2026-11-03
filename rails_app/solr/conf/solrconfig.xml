@@ -715,45 +715,55 @@
       <float name="tie">0.01</float>
 
       <str name="qf">
-        id^25000
-        identifier_ssim^20000
-        bibnumber_ssi^20000
-        unique_identifier_ssim^20000
-        human_readable_name_tsim^15000
-        title_tsim^10000
-        collection_tsim^5000
-        description_tsim^2500
-        alt_title_tsim^2500
-        name_tsim^2000
-        name_role_tsim^2000
-        note_tsim^1000
-        internal_notes_tsim^1000
-        location_tsim^1000
-        provenance_tsim^1000
-        subject_tsim^1000
-        physical_location_tsim^250
-        publisher_tsim^250
-        rights_note_tsim^250
+        id^25
+        identifier_ssim^20
+        bibnumber_ssi^20
+        unique_identifier_ssim^20
+        human_readable_name_tsim^10
+        title_tsim^10
+        description_tsim
+        collection_tsim
+        alt_title_tsim
+        name_tsim
+        name_role_tsim
+        note_tsim
+        internal_notes_tsim
+        location_tsim
+        provenance_tsim
+        subject_tsim
+        physical_location_tsim
+        publisher_tsim
+        rights_note_tsim
         admin_search_tmiv
       </str>
       <str name="pf">
-        human_readable_name_tsim^10000
-        title_tsim^10000
-        collection_tsim^5000
-        description_tsim^2500
-        alt_title_tsim^2500
-        name_tsim^2000
-        name_role_tsim^2000
-        note_tsim^1000
-        internal_notes_tsim^1000
-        location_tsim^1000
-        provenance_tsim^1000
-        subject_tsim^1000
-        physical_location_tsim^250
-        publisher_tsim^250
-        rights_note_tsim^250
-        admin_search_tmiv
+        human_readable_name_tsim^10
+        title_tsim^10
+        description_tsim^4
+        alt_title_tsim^3
+        collection_tsim
+        name_tsim
+        name_role_tsim
+        note_tsim
+        location_tsim
+        provenance_tsim
+        subject_tsim
+        publisher_tsim
       </str>
+
+      <str name="pf2">
+        human_readable_name_tsim^2
+        title_tsim^2
+        name_tsim^2
+        description_tsim
+      </str>
+      <str name="ps2">1</str>
+
+      <str name="pf3">
+        human_readable_name_tsim^3
+        title_tsim^3
+      </str>
+      <str name="ps3">0</str>
 
       <str name="fl">
         *,
