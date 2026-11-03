@@ -40,7 +40,7 @@
   </div>
   <div class="col-auto">
     <div class="list-group">
-      <% if user.can?(:update, @item) %>
+      <% if user.can?(:update, @item.object) %>
         <%= set_as_thumbnail %>
       <% end %>
       <%= access_download_link %>
