@@ -9,7 +9,7 @@ describe DetachAsset do
 
     context 'when updated_by is missing' do
       let(:result) { transaction.call(id: item.id, asset_id: asset.id) }
-      let(:item) { persist(:item_resource, :with_asset).presenter }
+      let(:item) { persist(:item_resource, :with_asset) }
       let(:asset) { query_service.find_by id: item.asset_ids.first }
 
       it 'fails' do
@@ -18,7 +18,7 @@ describe DetachAsset do
     end
 
     context 'when asset attached to item' do
-      let(:item) { persist(:item_resource, :with_assets_all_arranged).presenter }
+      let(:item) { persist(:item_resource, :with_assets_all_arranged) }
       let(:asset) { query_service.find_by id: item.asset_ids.second }
 
       include_examples 'creates a resource event', :detach_asset, 'initiator@example.com', true do
@@ -37,7 +37,7 @@ describe DetachAsset do
     end
 
     context 'when asset is thumbnail and other assets are present' do
-      let(:item) { persist(:item_resource, :with_assets_all_arranged).presenter }
+      let(:item) { persist(:item_resource, :with_assets_all_arranged) }
       let(:asset) { query_service.find_by id: item.thumbnail_asset_id }
 
       it 'fails and returns descriptive error' do
@@ -47,7 +47,7 @@ describe DetachAsset do
     end
 
     context 'when asset is thumbnail and no other assets are present' do
-      let(:item) { persist(:item_resource, :with_asset).presenter }
+      let(:item) { persist(:item_resource, :with_asset) }
       let(:asset) { query_service.find_by id: item.thumbnail_asset_id }
 
       it 'is successful' do
