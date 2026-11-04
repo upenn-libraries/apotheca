@@ -5,8 +5,8 @@ module Item
   module Presentable
     # @return [ItemPresenter]
     def presenter
-      ItemPresenter.new(object: self,
-                        ils_metadata: bibnumber? ? Query.solr.custom_queries.ils_metadata_for(id: id.to_s) : nil)
+      @presenter ||= ItemPresenter.new(object: self,
+                                       ils_metadata: bibnumber? ? bibdata_query : nil)
     end
 
     private
@@ -14,6 +14,11 @@ module Item
     # @return [Boolean]
     def bibnumber?
       descriptive_metadata&.bibnumber.try(:any?)
+    end
+
+    # @return [Hash]
+    def bibdata_query
+      Query.solr.custom_queries.ils_metadata_for(id: id.to_s)
     end
   end
 end

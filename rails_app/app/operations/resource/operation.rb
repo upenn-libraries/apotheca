@@ -31,6 +31,14 @@ module Resource
       Steps::SetUpdatedBy.new.call(*args)
     end
 
+    def delete_resource(resource)
+      Steps::DeleteResource.new.call(resource)
+    end
+
+    def delete_derivatives(resource)
+      Steps::DeleteDerivatives.new.call(resource)
+    end
+
     def validate(*args)
       Steps::Validate.new.call(*args)
     end
