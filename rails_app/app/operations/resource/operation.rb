@@ -31,10 +31,6 @@ module Resource
       Steps::SetUpdatedBy.new.call(*args)
     end
 
-    def require_updated_by(*args)
-      Steps::RequireAttribute.new(:updated_by).call(*args)
-    end
-
     def delete_resource(resource)
       Steps::DeleteResource.new.call(resource)
     end
