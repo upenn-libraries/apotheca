@@ -64,7 +64,7 @@ describe RefreshIlsMetadata do
     context 'when the item has not been published' do
       let(:item) { persist(:item_resource, :with_bibnumber) }
 
-      it 'does enqueue a PublishItemJob' do
+      it 'does not enqueue a PublishItemJob' do
         allow(PublishItemJob).to receive(:perform_async)
         result
         expect(PublishItemJob).not_to have_received :perform_async
