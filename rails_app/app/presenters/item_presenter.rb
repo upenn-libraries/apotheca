@@ -5,7 +5,7 @@ class ItemPresenter < BasePresenter
   include Rails.application.routes.url_helpers
 
   # @param [Hash, nil] ils_metadata
-  # @param [ItemResource] object
+  # @param [ItemResource, ItemChangeSet] object
   def initialize(object:, ils_metadata: nil)
     super object: object
     @ils_metadata = ils_metadata
