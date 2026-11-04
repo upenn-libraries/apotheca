@@ -5,10 +5,10 @@ module Solr
   class Reindexer
     INDEXED_RESOURCES = [ItemResource, AssetResource].freeze
 
-    def self.reindex_all(logger: Logger.new($stdout), wipe: false, batch_size: 500, solr_adapter: :index_solr)
+    def self.reindex_all(logger: Logger.new($stdout), wipe: false, batch_size: 100, solr_adapter: :index_solr)
       new(
         solr_adapter: Valkyrie::MetadataAdapter.find(solr_adapter),
-        query_service: Valkyrie::MetadataAdapter.find(:postgres).query_service,
+        query_service: Query.postgres,
         logger: logger,
         wipe: wipe,
         batch_size: batch_size
@@ -17,7 +17,7 @@ module Solr
 
     attr_reader :solr_adapter, :query_service, :logger, :wipe, :batch_size
 
-    def initialize(solr_adapter:, query_service:, logger:, wipe: false, batch_size: 500)
+    def initialize(solr_adapter:, query_service:, logger:, batch_size:, wipe: false)
       @solr_adapter = solr_adapter
       @query_service = query_service
       @logger = logger
@@ -28,8 +28,13 @@ module Solr
     def reindex_all(resources: INDEXED_RESOURCES)
       wipe_records if wipe
       logger.info "Reindexing all records (for resources #{resources.to_sentence})"
-      FilteredIndexer.new(indexer: self, resources: resources).index!
-      logger.info 'Done'
+      indexer = FilteredIndexer.new(indexer: self, resources: resources)
+      indexer.index!
+      if indexer.errors.any?
+        logger.info "Indexing completed with errors: \n#{indexer.errors.join("\n")}"
+      else
+        logger.info 'Indexing completed with no errors'
+      end
     end
 
     def wipe_records
@@ -39,13 +44,14 @@ module Solr
 
     # Indexer class supporting filtering by resource type
     class FilteredIndexer
-      attr_reader :indexer, :resources
+      attr_reader :indexer, :resources, :errors
 
       delegate :solr_adapter, :query_service, :logger, :batch_size, to: :indexer
 
       def initialize(indexer:, resources:)
         @indexer = indexer
         @resources = resources
+        @errors = []
       end
 
       def index!
@@ -53,7 +59,7 @@ module Solr
         all_resources.each do |resources|
           resources.each_slice(batch_size) do |records|
             multi_index_persist(records)
-          rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http
+          rescue StandardError => _e
             index_individually += records
           end
         end
@@ -62,15 +68,16 @@ module Solr
       end
 
       def run_individual_retries(records)
+        return unless records.any?
+
         logger.info "Reindexing #{records.count} individually due to errors during batch indexing"
         records.each { |record| single_index(record) }
       end
 
       def single_index(record)
         single_index_persist(record)
-      rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
-        logger.error("Could not index #{record.id} due to #{e.class}")
-        Honeybadger.notify(e, context: { record_id: record.id })
+      rescue StandardError => e
+        errors << "Could not index #{record.id} due to #{e.class}: #{e.message}"
       end
 
       def multi_index_persist(records)
