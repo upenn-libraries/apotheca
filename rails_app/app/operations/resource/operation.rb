@@ -47,6 +47,14 @@ module Resource
       Steps::GenerateDerivatives.new(derivative_generator_class, all_derivative_types).call(change_set)
     end
 
+    def delete_resource(resource)
+      Steps::DeleteResource.new.call(resource)
+    end
+
+    def delete_derivatives(resource)
+      Steps::DeleteDerivatives.new.call(resource)
+    end
+
     def validate(*args)
       Steps::Validate.new.call(*args)
     end

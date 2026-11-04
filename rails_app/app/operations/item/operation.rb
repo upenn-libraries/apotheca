@@ -4,6 +4,7 @@ module Item
   # Parent class for Item Operations. Includes reuseable steps for Item operations.
   class Operation < Resource::Operation
     alias find_item find_resource
+    alias delete_item delete_resource
 
     def resource_class
       ItemResource
