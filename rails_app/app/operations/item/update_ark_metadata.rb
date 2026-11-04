@@ -7,6 +7,8 @@ module Item
     def call(id:)
       resource = step find_item(id)
       step update_ark_metadata(resource: resource)
+
+      resource
     end
 
     # @param resource [ItemResource]
