@@ -39,10 +39,6 @@ module Resource
       Steps::SetUpdatedBy.new.call(*args)
     end
 
-    def require_updated_by(*args)
-      Steps::RequireAttribute.new(:updated_by).call(*args)
-    end
-
     def generate_derivatives(change_set)
       Steps::GenerateDerivatives.new(derivative_generator_class, all_derivative_types).call(change_set)
     end
