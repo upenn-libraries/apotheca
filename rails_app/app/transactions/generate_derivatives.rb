@@ -25,7 +25,7 @@ class GenerateDerivatives
   def fetch_ocr_properties(change_set)
     return Success(change_set) unless image_mime_type?(change_set)
 
-    item = find_parent_item(change_set.resource)
+    item = step find_parent_item(change_set.resource)
 
     change_set.ocr_strategy = item.ocr_strategy
     change_set.viewing_direction = item.structural_metadata.viewing_direction
@@ -41,13 +41,6 @@ class GenerateDerivatives
   end
 
   private
-
-  # @param resource [AssetResource]
-  # @return [ItemResource]
-  def find_parent_item(resource)
-    Valkyrie::MetadataAdapter.find(:postgres).query_service
-                             .find_inverse_references_by(resource: resource, property: :asset_ids).first
-  end
 
   # @param change_set [AssetChangeSet]
   # @return [TrueClass, FalseClass]
