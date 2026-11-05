@@ -6,7 +6,7 @@ describe Asset::Steps::FindParentItem do
 
   describe '#call' do
     context 'when asset has no item' do
-      it 'returns the asset and nil' do
+      it 'returns nil' do
         expect(result.value!).to be_nil
       end
     end
@@ -14,7 +14,7 @@ describe Asset::Steps::FindParentItem do
     context 'when asset has one parent item' do
       let(:item) { persist(:item_resource, asset_ids: [asset.id]) }
 
-      it 'returns the asset and the item' do
+      it 'returns the item' do
         item_id = item.id # ensure item is instantiated prior to determining result
         expect(result.value!.id).to eq item_id
       end
