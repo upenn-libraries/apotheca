@@ -6,10 +6,10 @@ module AssetsList
     class Component < ViewComponent::Base
       attr_reader :arranged
 
-      # @param [Object] item
-      # @param [Object] user
-      # @param [Object] assets
-      # @param [Object] arranged
+      # @param item [ItemPresenter]
+      # @param user [User]
+      # @param assets [Array<Asset>]
+      # @param arranged [Boolean]
       def initialize(item:, user:, assets:, arranged:)
         @item = item
         @user = user

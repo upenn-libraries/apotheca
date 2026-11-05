@@ -5,10 +5,10 @@ module AssetInfo
   class Component < ViewComponent::Base
     attr_reader :asset, :item, :index, :user
 
-    # @param [AssetResource] asset
-    # @param [ItemResource] item
-    # @param [User] user
-    # @param [Integer] index
+    # @param asset [AssetResource]
+    # @param item [ItemPresenter]
+    # @param user [User]
+    # @param index [Integer]
     def initialize(asset:, item:, user:, index: nil)
       @asset = asset
       @index = index ? index + 1 : nil

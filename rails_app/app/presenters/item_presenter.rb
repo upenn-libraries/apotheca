@@ -77,6 +77,13 @@ class ItemPresenter < BasePresenter
     @thumbnail ||= Query.postgres.find_by(id: thumbnail_asset_id)
   end
 
+  # Is a given Asset ID the designated Asset ID for this Item's thumbnail?
+  # @param asset_id [Valkyrie::ID]
+  # @return [Boolean]
+  def thumbnail?(asset_id)
+    thumbnail_asset_id == asset_id
+  end
+
   # Returns true if thumbnail asset has a thumbnail image.
   # @return [Boolean]
   def thumbnail_image?
