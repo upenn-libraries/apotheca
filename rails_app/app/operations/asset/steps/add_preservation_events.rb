@@ -14,13 +14,13 @@ module Asset
       # TODO: rescue exceptions?
       # @param change_set [Valkyrie::ChangeSet]
       def call(change_set)
-        timestamp = DateTime.current
+        @timestamp = DateTime.current
         events = []
 
-        events += preceding_events(change_set, timestamp)
-        events += preservation_file_events(change_set, timestamp)
-        events << original_filename_event(change_set, timestamp)
-        events << replication_event(change_set, timestamp)
+        events += preceding_events(change_set)
+        events += preservation_file_events(change_set)
+        events << original_filename_event(change_set)
+        events << replication_event(change_set)
 
         change_set.preservation_events += events.compact
 
@@ -31,17 +31,15 @@ module Asset
 
       # Log changes to the preservation file. Determine ingestion event type and then log ingestion and related events.
       # @param change_set [Valkyrie::ChangeSet]
-      # @param timestamp [DateTime]
-      # @return [Array<AssetResource::PreservationEvent>]
-      def preservation_file_events(change_set, timestamp)
+      def preservation_file_events(change_set)
         ingestion_type = ingestion_event_type(change_set)
 
         return [] unless ingestion_type
 
         [
-          ingestion_event(ingestion_type: ingestion_type, change_set: change_set, timestamp: timestamp),
-          checksum_event(change_set, timestamp),
-          preservation_filename_event(ingestion_type: ingestion_type, change_set: change_set, timestamp: timestamp)
+          ingestion_event(ingestion_type, change_set),
+          checksum_event(change_set),
+          preservation_filename_event(ingestion_type, change_set)
         ]
       end
 
@@ -67,11 +65,9 @@ module Asset
       # Set the timestamp on any of these temporary events so that they are consistent with other events in
       # the transaction
       # @param change_set [Valkyrie::ChangeSet]
-      # @param timestamp [DateTime]
-      # @return [Array<AssetResource::PreservationEvent>]
-      def preceding_events(change_set, timestamp)
+      def preceding_events(change_set)
         Array.wrap(change_set.temporary_events).map do |event|
-          event.timestamp = timestamp
+          event.timestamp = @timestamp
           event
         end
       end
@@ -79,9 +75,7 @@ module Asset
       # Returns an Event for the ingestion type - nil if no action on the file is performed
       # @param ingestion_type [Symbol]
       # @param change_set [Valkyrie::ChangeSet]
-      # @param timestamp [DateTime]
-      # @return [AssetResource::PreservationEvent | NilClass]
-      def ingestion_event(ingestion_type:, change_set:, timestamp:)
+      def ingestion_event(ingestion_type, change_set)
         note = case ingestion_type
                when :migration
                  I18n.t('preservation_events.migration.note', from: change_set.migrated_from)
@@ -91,29 +85,26 @@ module Asset
                  I18n.t('preservation_events.reingestion.note', filename: change_set.original_filename)
                else return; end
 
-        EVENT.ingestion implementer: change_set.updated_by, timestamp: timestamp, note: note
+        EVENT.ingestion implementer: change_set.updated_by, timestamp: @timestamp, note: note
       end
 
       # Return a checksum event. This requires that technical metadata be set in a prior transaction step.
       # See AddTechnicalMetadata step.
       # @param change_set [Valkyrie::ChangeSet]
-      # @param timestamp [DateTime]
-      # @return [AssetResource::PreservationEvent]
-      def checksum_event(change_set, timestamp)
+      def checksum_event(change_set)
         # TODO: throws exception if no tech md set, but at this point in the transaction, tech md should always be set
         checksum = change_set.technical_metadata.sha256
         EVENT.checksum(
           note: I18n.t('preservation_events.checksum.note', checksum: checksum),
           implementer: change_set.updated_by,
-          timestamp: timestamp
+          timestamp: @timestamp
         )
       end
 
       # Returns an event for a metadata change in the original_filename field
       # @param change_set [Valkyrie::ChangeSet]
-      # @param timestamp [DateTime]
       # @return [AssetResource::PreservationEvent]
-      def original_filename_event(change_set, timestamp)
+      def original_filename_event(change_set)
         return unless change_set.changed? :original_filename
 
         from = change_set.resource.original_filename || I18n.t('preservation_events.original_filename.nil_placeholder')
@@ -121,7 +112,7 @@ module Asset
         EVENT.change_filename(
           implementer: change_set.updated_by,
           note: I18n.t('preservation_events.original_filename.note', from: from, to: change_set.original_filename),
-          timestamp: timestamp
+          timestamp: @timestamp
         )
       end
 
@@ -129,24 +120,20 @@ module Asset
       # Include appropriate previous and current filename values.
       # @param ingestion_type [Symbol]
       # @param change_set [Valkyrie::ChangeSet]
-      # @param timestamp [DateTime]
-      # @return [AssetResource::PreservationEvent]
-      def preservation_filename_event(ingestion_type:, change_set:, timestamp:)
+      def preservation_filename_event(ingestion_type, change_set)
         previous_filename = previous_preservation_filename(ingestion_type, change_set)
 
         EVENT.change_filename(
           implementer: change_set.updated_by,
           note: I18n.t('preservation_events.preservation_filename.note',
                        from: previous_filename, to: normalized_filename(change_set.preservation_file_id)),
-          timestamp: timestamp
+          timestamp: @timestamp
         )
       end
 
       # Return an event when a preservation file has been backed up (replicated).
       # @param change_set [Valkyrie::ChangeSet]
-      # @param timestamp [DateTime]
-      # @return [AssetResource::PreservationEvent]
-      def replication_event(change_set, timestamp)
+      def replication_event(change_set)
         return unless change_set.preservation_copies_ids.present? && change_set.changed?(:preservation_copies_ids)
 
         filename = normalized_filename(change_set.preservation_copies_ids.first)
@@ -154,7 +141,7 @@ module Asset
         EVENT.replication(
           implementer: change_set.updated_by,
           note: I18n.t('preservation_events.replication.note', filename: filename),
-          timestamp: timestamp
+          timestamp: @timestamp
         )
       end
 
