@@ -6,7 +6,7 @@ module Asset
     class FindParentItem
       include Dry::Monads[:result]
 
-      # @param asset [AssetResource]
+      # @param asset [AssetResource, nil]
       def call(asset)
         items = Query.postgres.find_inverse_references_by(resource: asset, property: :asset_ids)
         return Failure(error: :multiple_parent_items_found) if items.count > 1
