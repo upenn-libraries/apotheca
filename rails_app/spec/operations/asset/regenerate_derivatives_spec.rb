@@ -7,7 +7,7 @@ describe Asset::RegenerateDerivatives do
     let(:operation) { described_class.new }
     let(:asset) { persist(:asset_resource, :with_image_file, :with_metadata) }
     let(:item) { persist(:item_resource, :printed, asset_ids: [asset.id]) }
-    let(:result) { operation.call(id: item.asset_ids.first, updated_by: 'initiator@example.com') }
+    let(:result) { operation.call(item.asset_ids.first, 'initiator@example.com') }
 
     context 'when derivatives not present' do
       include_examples 'creates a resource event', :generate_derivatives, 'initiator@example.com', false do
@@ -23,7 +23,7 @@ describe Asset::RegenerateDerivatives do
     context 'when derivatives already present' do
       before do
         travel_to(1.minute.ago) do
-          operation.call(id: item.asset_ids.first, updated_by: 'initiator@example.com')
+          operation.call(item.asset_ids.first, 'initiator@example.com')
         end
       end
 
