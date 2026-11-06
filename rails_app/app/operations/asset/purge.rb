@@ -7,10 +7,10 @@ module Asset
   # Note: This operation is used to clean up when an asset is being created but an error occurred.
   class Purge < Operation
     # @param id [String] id of asset to purge
-    def call(id:)
+    def call(id)
       asset = step find_asset(id)
       item = step find_parent_item(asset)
-      step parent_item_check(item)
+      step check_for_parent_item(item)
       step delete_derivatives(asset)
       step delete_preservation_files(asset)
       step delete_resource(asset)
@@ -20,7 +20,7 @@ module Asset
     end
 
     # @param item [ItemResource, nil]
-    def parent_item_check(item)
+    def check_for_parent_item(item)
       return Failure(error: :parent_item_found) if item
 
       Success()

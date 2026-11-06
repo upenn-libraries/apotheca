@@ -5,7 +5,7 @@ describe Asset::Purge do
   let(:query_service) { Valkyrie::MetadataAdapter.find(:postgres_solr_persister).query_service }
 
   describe '#call' do
-    let(:result) { operation.call(id: asset.id) }
+    let(:result) { operation.call(asset.id) }
 
     context 'when the asset is not attached' do
       let(:asset) { persist(:asset_resource, :with_image_file, :with_preservation_backup) }
