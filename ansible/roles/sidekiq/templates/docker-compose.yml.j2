@@ -82,6 +82,7 @@ services:
     volumes:
 {% if is_development == true %}
       - /home/app/rails_app/:/home/app
+      - bundle:/home/app/vendor/bundle
 {% else %}
       - app_storage:/home/app/storage
 {% endif %}
@@ -160,4 +161,7 @@ volumes:
   app_storage:
     external: true
     name: app_storage
+{% else %}
+volumes:
+  bundle:
 {% endif %}
