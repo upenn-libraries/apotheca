@@ -1,7 +1,7 @@
 ---
 api_image_name: "apotheca"
 api_image_registry: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
-api_image_tag: "main-development"
+api_image_tag: "{{ apotheca_image_tag }}"
 api_port: 3000
 api_rails_env: "development"
 api_replicas: 1
