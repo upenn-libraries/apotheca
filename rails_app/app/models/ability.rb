@@ -14,9 +14,10 @@ class Ability
 
     if user.viewer?
       can :read, [ItemResource, AssetResource]
+      can :file, ItemResource
     elsif user.editor?
       can %i[read create update], AssetResource
-      can %i[read create update publish unpublish reorder_assets refresh_ils_metadata regenerate_all_derivatives],
+      can %i[read create update file publish unpublish reorder_assets refresh_ils_metadata regenerate_all_derivatives],
           ItemResource
       can %i[read create], BulkImport
       can %i[update cancel], BulkImport, created_by: user
