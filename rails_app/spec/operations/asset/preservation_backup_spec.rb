@@ -5,7 +5,7 @@ describe Asset::PreservationBackup do
     subject(:updated_asset) { result.value! }
 
     let(:operation) { described_class.new }
-    let(:result) { operation.call(id: asset.id, updated_by: 'initiator@example.com') }
+    let(:result) { operation.call(asset.id, 'initiator@example.com') }
 
     context 'when preservation file already backed up' do
       let(:asset) { persist(:asset_resource, :with_image_file, :with_preservation_backup) }

@@ -5,7 +5,7 @@ describe Item::UpdateArkMetadata do
 
   describe '#call' do
     let(:item) { persist(:item_resource) }
-    let(:result) { operation.call(id: item.id) }
+    let(:result) { operation.call(item.id) }
 
     context 'when EZID requests valid' do
       include_context 'with successful Alma request' do
