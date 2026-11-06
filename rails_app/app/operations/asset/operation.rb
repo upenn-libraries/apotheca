@@ -13,6 +13,14 @@ module Asset
       AssetChangeSet
     end
 
+    def derivative_generator_class
+      DerivativeService::Asset::Derivatives
+    end
+
+    def all_derivative_types
+      AssetResource::DERIVATIVE_TYPES
+    end
+
     def add_preservation_events(*args)
       Steps::AddPreservationEvents.new.call(*args)
     end
