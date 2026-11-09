@@ -51,6 +51,10 @@ module Resource
       Steps::DeleteDerivatives.new.call(resource)
     end
 
+    def delete_preservation_files(resource)
+      Steps::DeletePreservationFiles.new.call(resource)
+    end
+
     def validate(*args)
       Steps::Validate.new.call(*args)
     end
