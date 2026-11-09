@@ -7,7 +7,7 @@ class ItemsController < ResourcesController
   before_action :configure_pagination, only: :index
   before_action :store_rows, only: :index
 
-  authorize_resource(*Ability::ITEM_OBJECTS, parent: false)
+  authorize_resource(:item_resource, instance_name: :item, parent: false)
 
   rescue_from 'Valkyrie::Persistence::ObjectNotFoundError', with: :error_redirect
 
