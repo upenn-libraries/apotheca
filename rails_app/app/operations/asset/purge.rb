@@ -16,7 +16,7 @@ module Asset
       step delete_resource(asset)
 
       delete_events(asset)
-      Success(asset)
+      asset
     end
 
     # @param item [ItemResource, nil]
