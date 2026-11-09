@@ -6,6 +6,11 @@ module Asset
     class AddPreservationEvents
       include Dry::Monads[:result]
 
+      # @param timestamp [DateTime]
+      def initialize(timestamp = DateTime.current)
+        @timestamp = timestamp
+      end
+
       EVENT = AssetResource::PreservationEvent
 
       # Add relevant preservation events to the ChangeSet. First by processing any preceding events set by previous
@@ -14,7 +19,6 @@ module Asset
       # TODO: rescue exceptions?
       # @param change_set [Valkyrie::ChangeSet]
       def call(change_set)
-        @timestamp = DateTime.current
         events = []
 
         events += preceding_events(change_set)
