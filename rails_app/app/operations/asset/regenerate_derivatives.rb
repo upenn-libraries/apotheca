@@ -11,7 +11,7 @@ module Asset
     # generation were to fail, we don't want to delete the derivatives that other resources are pointing to.
     #
     # @param id [String] UUID of Asset
-    # @param updated_by [String] email of user updating the Asset
+    # @param updated_by [String] email of user initiating the operation
     def call(id, updated_by)
       @asset = step find_asset(id)
       @change_set = step create_change_set(resource: @asset, updated_by: updated_by)
@@ -21,10 +21,6 @@ module Asset
       @asset = step save(@change_set)
       record_event
       @asset
-    end
-
-    def record_event
-      ResourceEvent.record_event_for(resource: @asset, event_type: :generate_derivatives, json: false)
     end
 
     private
@@ -51,6 +47,10 @@ module Asset
     # @return [Boolean]
     def image_mime_type?
       @change_set.resource.technical_metadata.mime_type.in?(DerivativeService::Asset::Generator::Image::VALID_MIME_TYPES)
+    end
+
+    def record_event
+      ResourceEvent.record_event_for(resource: @asset, event_type: :generate_derivatives, json: false)
     end
   end
 end
