@@ -13,27 +13,28 @@ module Asset
     # @param id [String] UUID of Asset
     # @param updated_by [String] email of user initiating the operation
     def call(id, updated_by)
-      @asset = step find_asset(id)
-      @change_set = step create_change_set(resource: @asset, updated_by: updated_by)
-      step configure_ocr_properties
-      step generate_derivatives(@change_set)
-      step validate(@change_set)
-      @asset = step save(@change_set)
-      record_event
-      @asset
+      asset = step find_asset(id)
+      change_set = step create_change_set(resource: asset, updated_by: updated_by)
+      step configure_ocr_properties(change_set)
+      step generate_derivatives(change_set)
+      step validate(change_set)
+      asset = step save(change_set)
+      record_event(asset)
+      asset
     end
 
     private
 
-    def configure_ocr_properties
-      return Success(@change_set) unless image_mime_type?
+    # @param change_set [AssetChangeSet]
+    def configure_ocr_properties(change_set)
+      return Success(change_set) unless image_mime_type?(change_set)
 
-      parent_item = find_parent_item(@change_set.resource)
-      @change_set.ocr_strategy = parent_item.ocr_strategy
-      @change_set.viewing_direction = parent_item.structural_metadata.viewing_direction
-      @change_set.ocr_language = parent_item.language_codes
+      parent_item = find_parent_item(change_set.resource)
+      change_set.ocr_strategy = parent_item.ocr_strategy
+      change_set.viewing_direction = parent_item.structural_metadata.viewing_direction
+      change_set.ocr_language = parent_item.language_codes
 
-      Success(@change_set)
+      Success(change_set)
     rescue StandardError => e
       Failure(error: :error_generating_derivatives, exception: e)
     end
@@ -45,12 +46,13 @@ module Asset
     end
 
     # @return [Boolean]
-    def image_mime_type?
-      @change_set.resource.technical_metadata.mime_type.in?(DerivativeService::Asset::Generator::Image::VALID_MIME_TYPES)
+    def image_mime_type?(change_set)
+      change_set.resource.technical_metadata.mime_type.in?(DerivativeService::Asset::Generator::Image::VALID_MIME_TYPES)
     end
 
-    def record_event
-      ResourceEvent.record_event_for(resource: @asset, event_type: :generate_derivatives, json: false)
+    # @param asset [AssetResource]
+    def record_event(asset)
+      ResourceEvent.record_event_for(resource: asset, event_type: :generate_derivatives, json: false)
     end
   end
 end
