@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'transaction_job'
-
 describe UpdateArkMetadataJob do
   let(:item) { persist(:item_resource, :with_bibnumber) }
 

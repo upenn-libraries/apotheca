@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'transaction_job'
-
 describe DeleteAssetJob do
   let(:asset) { persist(:asset_resource) }
 

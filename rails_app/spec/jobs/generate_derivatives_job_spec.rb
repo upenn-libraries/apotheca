@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'transaction_job'
-
 describe GenerateDerivativesJob do
   let(:item) { persist(:item_resource, :with_full_asset, :with_bibnumber) }
 
