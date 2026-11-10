@@ -25,12 +25,15 @@ module Item
     end
 
     # Adding asset_id to list of asset_ids within item.
+    # @param change_set [ItemChangeSet]
+    # @param asset_id [String]
     def add_asset(change_set, asset_id)
       change_set.asset_ids = (change_set.asset_ids || []).append(asset_id)
 
       Success(change_set)
     end
 
+    # @param resource [ItemResource]
     def record_event(resource)
       ResourceEvent.record_event_for(resource: resource, event_type: :attach_asset)
     end

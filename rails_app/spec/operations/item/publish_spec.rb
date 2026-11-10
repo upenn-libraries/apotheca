@@ -5,7 +5,7 @@ describe Item::Publish do
     include_context 'with successful publish request'
 
     let(:operation) { described_class.new }
-    let(:result) { operation.call(id: item.id.to_s, updated_by: 'initiator@example.com') }
+    let(:result) { operation.call(item.id.to_s, 'initiator@example.com') }
     let(:updated_item) { result.value! }
 
     context 'when iiif-compatible assets are present' do

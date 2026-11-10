@@ -20,6 +20,7 @@ module Item
       resource
     end
 
+    # @param change_set [ItemChangeSet]
     def set_ark(change_set)
       if change_set.unique_identifier.blank?
         ark = Ezid::Identifier.mint.to_s
@@ -29,6 +30,7 @@ module Item
       Success(change_set)
     end
 
+    # @param resource [ItemResource]
     def record_event(resource)
       ResourceEvent.record_event_for(resource: resource, event_type: :create_item)
     end

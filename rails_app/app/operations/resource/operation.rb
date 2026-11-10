@@ -40,7 +40,8 @@ module Resource
     end
 
     def generate_derivatives(change_set)
-      Steps::GenerateDerivatives.new(derivative_generator_class, all_derivative_types).call(change_set)
+      Steps::GenerateDerivatives.new(derivative_class: derivative_generator_class,
+                                     types: all_derivative_types).call(change_set)
     end
 
     def delete_resource(resource)

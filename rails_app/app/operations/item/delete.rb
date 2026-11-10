@@ -7,7 +7,7 @@ module Item
     #
     # @param id [String] UUID of Item being updated
     # @param deleted_by [String] email of user deleting item
-    def call(id:, deleted_by:)
+    def call(id, deleted_by)
       resource = step find_item(id)
       step unpublish_item(resource)
       step delete_derivatives(resource)
@@ -33,6 +33,8 @@ module Item
       Failure(error: :error_unpublishing_item, exception: e)
     end
 
+    # @param resource [ItemResource]
+    # @param deleted_by [String]
     def record_event(resource, deleted_by)
       ResourceEvent.record_event_for(resource: resource, event_type: :delete_item, json: false,
                                      initiated_by: deleted_by)
