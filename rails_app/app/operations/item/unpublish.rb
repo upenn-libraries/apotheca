@@ -7,7 +7,7 @@ module Item
     #
     # @param id [String] item uuid
     # @param updated_by [String] email of user publishing item
-    def call(id:, updated_by:)
+    def call(id, updated_by)
       resource = step find_item(id)
       change_set = step create_change_set(resource: resource, updated_by: updated_by)
       step unpublish(change_set)
@@ -19,6 +19,7 @@ module Item
       resource
     end
 
+    # @param change_set [ItemChangeSet]
     def unpublish(change_set)
       return Success(change_set) if Settings.publish.skip
 

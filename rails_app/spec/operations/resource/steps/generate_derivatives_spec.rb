@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 describe Resource::Steps::GenerateDerivatives do
-  let(:generate_derivatives_step) { described_class.new(derivative_generator_class, derivative_type) }
+  let(:generate_derivatives_step) do
+    described_class.new(derivative_class: derivative_generator_class, types: derivative_type)
+  end
   let(:derivative_generator_class) { DerivativeService::Item::Derivatives }
   let(:derivative_type) { 'iiif_manifest' }
 
@@ -67,7 +69,7 @@ describe Resource::Steps::GenerateDerivatives do
       end
 
       let(:generate_derivatives_step) do
-        described_class.new(derivative_generator_class, derivative_type, replace_all: false)
+        described_class.new(derivative_class: derivative_generator_class, types: derivative_type, replace_all: false)
       end
       let(:derivative_file) { DerivativeService::DerivativeFile.new(mime_type: 'application/json') }
 

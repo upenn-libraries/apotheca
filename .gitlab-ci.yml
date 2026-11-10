@@ -4,7 +4,7 @@ variables:
   WAIT_FOR_SERVICES_TIMEOUT: "120"
 
 include:
-  - component: gitlab.library.upenn.edu/devops/gitlab/components/sast/secret_scan@2.5.0
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/sast/secret_scan@~latest
   - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_build@~latest
     inputs:
       ci_requirements_file: ".gitlab/ci-requirements.yml"
@@ -12,9 +12,6 @@ include:
       docker_build_secrets: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
       docker_target: "base"
       job_suffix: "_base"
-      matrix:
-        - RUNNER: build
-          DOCKER_BUILD_PLATFORM: "linux/amd64"
       needs_build:
         - secret_detection
       platforms: '["linux/amd64"]'
@@ -27,9 +24,6 @@ include:
       docker_build_secrets: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
       docker_target: "development"
       job_suffix: "_development"
-      matrix:
-        - RUNNER: build
-          DOCKER_BUILD_PLATFORM: "linux/amd64"
       platforms: '["linux/amd64"]'
       stage: "build_development"
   - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_build@~latest
@@ -41,9 +35,6 @@ include:
       docker_build_secrets: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
       docker_target: "production"
       job_suffix: "_production"
-      matrix:
-        - RUNNER: build
-          DOCKER_BUILD_PLATFORM: "linux/amd64"
       platforms: '["linux/amd64"]'
       stage: "build_production"
   - component: gitlab.library.upenn.edu/devops/gitlab/components/general/install_ansible@~latest
@@ -55,12 +46,12 @@ include:
   - component: gitlab.library.upenn.edu/devops/gitlab/components/tests/rubocop@~latest
     inputs:
       app_dir: "rails_app"
-  - component: gitlab.library.upenn.edu/devops/gitlab/components/sast/trivy@2.5.0
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/sast/trivy@~latest
     inputs:
       ci_requirements_file: ".gitlab/ci-requirements.yml"
       docker_tag_to_scan: "${CI_COMMIT_SHA}"
       needs:
-        - "amend_manifest_production"
+        - "build_and_push_docker_images_production"
       stage: "test"
   - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_finalize@~latest
     inputs:
@@ -115,7 +106,7 @@ rspec:
   stage: test
   image: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-development
   needs:
-    - amend_manifest_development
+    - build_and_push_docker_images_development
   services:
     - name: ghcr.io/browserless/chromium:v2.38.2
       alias: chrome
@@ -203,7 +194,7 @@ erb_lint:
   stage: test
   image: ${CI_REGISTRY_IMAGE}/${CI_PIPELINE_ID}:${CI_COMMIT_SHORT_SHA}-development
   needs:
-    - amend_manifest_development
+    - build_and_push_docker_images_development
   script:
     - cd rails_app && bundle exec erb_lint --lint-all
   rules:

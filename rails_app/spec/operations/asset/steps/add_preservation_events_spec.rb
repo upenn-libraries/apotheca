@@ -23,6 +23,12 @@ describe Asset::Steps::AddPreservationEvents do
       it 'sets any preceding events on the change set' do
         expect(preservation_events).to include preceding_event
       end
+
+      it 'sets the timestamp on the preceding event' do
+        timestamp = DateTime.current
+        allow(DateTime).to receive(:current).and_return(timestamp)
+        expect(preceding_event.timestamp).to eq timestamp
+      end
     end
 
     context 'with migration attribute on the change set' do
@@ -89,6 +95,15 @@ describe Asset::Steps::AddPreservationEvents do
                  to: update_attributes[:original_filename])
         )
       end
+
+      it 'sets the timestamp for each event' do
+        timestamp = DateTime.current
+        allow(DateTime).to receive(:current).and_return(timestamp)
+        events = preservation_file_events + [Premis::Events::INGEST, Premis::Events::CHECKSUM].map do |type|
+          find_event_by_type(events: preservation_events, type: type)
+        end
+        events.each { |event| expect(event.timestamp).to eq timestamp }
+      end
     end
 
     context 'with an Asset receiving a new file via an update with the same filename' do
@@ -153,6 +168,13 @@ describe Asset::Steps::AddPreservationEvents do
         event = find_event_by_type events: preservation_events, type: Premis::Events::REPLICATION
         expect(event.outcome_detail_note).to eq I18n.t('preservation_events.replication.note',
                                                        filename: update_attributes[:preservation_copies_ids].first)
+      end
+
+      it 'sets a replication event timestamp' do
+        timestamp = DateTime.current
+        allow(DateTime).to receive(:current).and_return(timestamp)
+        event = find_event_by_type events: preservation_events, type: Premis::Events::REPLICATION
+        expect(event.timestamp).to eq timestamp
       end
     end
 
