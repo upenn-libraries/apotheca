@@ -116,7 +116,7 @@ module Asset
     # Generate derivatives as part of the update task to prevent retrieving the preservation file multiple times. By
     # default this step is skipped and the derivative files are generated asynchronously.
     #
-    # Note: This method is a wrapper around the generate_derivative resource step 
+    # Note: This method is a wrapper around the generate_derivative resource step
     def generate_derivatives(change_set)
       return Success(change_set) if @derivative_generation == :later || change_set.preservation_file_id.blank?
       return Success(change_set) if change_set.derivatives.present? && change_set.derivatives.none?(&:stale)
