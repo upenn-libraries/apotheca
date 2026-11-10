@@ -15,7 +15,8 @@ module Asset
     def call(id, updated_by)
       asset = step find_asset(id)
       change_set = step create_change_set(resource: asset, updated_by: updated_by)
-      step configure_ocr_properties(change_set)
+      parent_item = step find_parent_item(asset)
+      step configure_ocr_properties(change_set, parent_item)
       step generate_derivatives(change_set)
       step validate(change_set)
       asset = step save(change_set)
@@ -26,10 +27,12 @@ module Asset
     private
 
     # @param change_set [AssetChangeSet]
-    def configure_ocr_properties(change_set)
+    # @param parent_item [ItemResource]
+    def configure_ocr_properties(change_set, parent_item)
+      return Failure(error: :asset_has_no_parent_item) unless parent_item
+
       return Success(change_set) unless image_mime_type?(change_set)
 
-      parent_item = find_parent_item(change_set.resource)
       change_set.ocr_strategy = parent_item.ocr_strategy
       change_set.viewing_direction = parent_item.structural_metadata.viewing_direction
       change_set.ocr_language = parent_item.language_codes
@@ -37,12 +40,6 @@ module Asset
       Success(change_set)
     rescue StandardError => e
       Failure(error: :error_generating_derivatives, exception: e)
-    end
-
-    # @param resource [AssetResource]
-    # @return [ItemResource]
-    def find_parent_item(resource)
-      Query.postgres.find_inverse_references_by(resource: resource, property: :asset_ids).first
     end
 
     # @return [Boolean]

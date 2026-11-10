@@ -46,6 +46,15 @@ describe Asset::RegenerateDerivatives do
       end
     end
 
+    context 'when asset has no parent Item' do
+      let(:result) { operation.call(asset.id, 'initiator@example.com') }
+
+      it 'returns a failure' do
+        expect(result).to be_failure
+        expect(result.failure[:error]).to eq(:asset_has_no_parent_item)
+      end
+    end
+
     context 'when item descriptive metadata has a valid language' do
       let(:item) do
         persist(
