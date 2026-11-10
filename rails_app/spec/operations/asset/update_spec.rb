@@ -281,7 +281,7 @@ describe Asset::Update do
     context 'when generating derivatives synchronously' do
       subject(:updated_asset) { result.value! }
 
-      let(:operation) { described_class.new(derivative_generation: :now) }
+      let(:operation) { described_class.new(:now) }
       let(:asset) { persist(:asset_resource) }
       let(:result) do
         operation.call(id: asset.id, file: file, updated_by: 'initiator@example.com')
@@ -330,7 +330,7 @@ describe Asset::Update do
       context 'with ocr_language' do
         subject(:updated_asset) { result.value! }
 
-        let(:operation) { described_class.new(derivative_generation: :now) }
+        let(:operation) { described_class.new(:now) }
         let(:asset) { persist(:asset_resource) }
         let(:result) do
           operation.call(id: asset.id, file: file, updated_by: 'initiator@example.com', ocr_strategy: 'printed',

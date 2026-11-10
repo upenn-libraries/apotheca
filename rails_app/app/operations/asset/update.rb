@@ -4,7 +4,7 @@ module Asset
   # Operation to update an Asset.
   class Update < Operation
     # @param derivative_generation [Symbol] whether derivative generation should be run :now or :later
-    def initialize(derivative_generation: :later)
+    def initialize(derivative_generation = :later)
       @derivative_generation = derivative_generation
     end
 
