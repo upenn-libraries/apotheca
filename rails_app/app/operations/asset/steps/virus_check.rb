@@ -45,7 +45,7 @@ module Asset
       private
 
       # Returns true if file is present and it is under 2 GB
-      # @param [String] file
+      # @param file [String]
       # @return [Boolean]
       def should_scan_file?(file)
         file.size <= Settings.virus_check.size_threshold
@@ -57,7 +57,7 @@ module Asset
       end
 
       # Clamby calls return nil if there is a problem finding the file or using clamscan
-      # @param [String] path
+      # @param path [String]
       def report_clamscan_problem(path)
         Honeybadger.notify("Problem scanning file (#{path}) using clamscan.")
       end

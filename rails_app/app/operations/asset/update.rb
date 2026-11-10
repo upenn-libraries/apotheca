@@ -39,7 +39,7 @@ module Asset
     end
 
     # Verify that file has original_filename that ends with a valid extension
-    # @param [ActionDispatch::Http::UploadedFile, ImportService::S3Storage::File, nil] file
+    # @param file [ActionDispatch::Http::UploadedFile, ImportService::S3Storage::File, nil]
     def validate_file_extension(file)
       return Success(file) if file.blank?
       return Failure(error: :no_original_filename) if file.original_filename.blank?
@@ -116,7 +116,7 @@ module Asset
     # Generate derivatives as part of the update task to prevent retrieving the preservation file multiple times. By
     # default this step is skipped and the derivative files are generated asynchronously.
     #
-    # Note: This method is a wrapper around the generate_derivative step defined in the container.
+    # Note: This method is a wrapper around the generate_derivative resource step 
     def generate_derivatives(change_set)
       return Success(change_set) if @derivative_generation == :later || change_set.preservation_file_id.blank?
       return Success(change_set) if change_set.derivatives.present? && change_set.derivatives.none?(&:stale)
@@ -124,7 +124,7 @@ module Asset
       super(change_set)
     end
 
-    # Wrapping save method in order to delete the old preservation file if a file update is successful.
+    # Wrapping save step in order to delete the old preservation file if a file update is successful.
     def save(change_set)
       # Storing ID for stale preservation backup.
       stale_preservation_backup = if change_set.changed?(:preservation_copies_ids)
@@ -146,7 +146,7 @@ module Asset
     # for mime types where derivatives cannot be generated.
     #
     #
-    # @param [AssetResource] resource
+    # @param resource [AssetResource]
     def generate_derivatives_later(resource)
       return if resource.preservation_file_id.blank?
       return if resource.derivatives.present? && resource.derivatives.none?(&:stale)

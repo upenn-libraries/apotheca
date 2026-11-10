@@ -6,6 +6,7 @@ module Asset
     class AddTechnicalMetadata
       include Dry::Monads[:result]
 
+      # @param change_set [AssetChangeSet]
       def call(change_set)
         return Success(change_set) unless change_set.changed?(:preservation_file_id)
 
