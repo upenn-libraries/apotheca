@@ -2,17 +2,17 @@
 
 module Resource
   module Steps
-    # Deletes derivatives associated with a Resource.
+    # Deletes derivatives in a Resource or Change Set.
     class DeleteDerivatives
       include Dry::Monads[:result]
 
-      # @param resource [Valkyrie::Resource]
-      def call(resource)
-        Array.wrap(resource.derivatives).each do |derivative|
+      # @param object [Valkyrie::Resource, Valkyrie::ChangeSet]
+      def call(object)
+        Array.wrap(object.derivatives).each do |derivative|
           delete_file(derivative.file_id)
         end
 
-        Success(resource)
+        Success(object)
       end
 
       private
