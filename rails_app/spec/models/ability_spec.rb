@@ -9,7 +9,7 @@ describe 'Ability' do
     let(:user) { nil }
 
     it { is_expected.not_to be_able_to(:view, :any) }
-    it { is_expected.not_to be_able_to(:view, ItemResource) }
+    it { is_expected.not_to be_able_to(:view, *Ability::ITEM_OBJECTS) }
     it { is_expected.not_to be_able_to(:view, AssetResource) }
     it { is_expected.not_to be_able_to(:view, Import) }
     it { is_expected.not_to be_able_to(:view, BulkImport) }
@@ -25,11 +25,11 @@ describe 'Ability' do
     it { is_expected.to be_able_to(:read, AssetResource) }
     it { is_expected.not_to be_able_to(:edit, AssetResource) }
 
-    it { is_expected.not_to be_able_to(:edit, ItemResource) }
-    it { is_expected.to be_able_to(:file, ItemResource) }
-    it { is_expected.not_to be_able_to(:reorder_assets, ItemResource) }
-    it { is_expected.not_to be_able_to(:refresh_ils_metadata, ItemResource) }
-    it { is_expected.to be_able_to(:read, ItemResource) }
+    it { is_expected.not_to be_able_to(:edit, *Ability::ITEM_OBJECTS) }
+    it { is_expected.to be_able_to(:file, *Ability::ITEM_OBJECTS) }
+    it { is_expected.not_to be_able_to(:reorder_assets, *Ability::ITEM_OBJECTS) }
+    it { is_expected.not_to be_able_to(:refresh_ils_metadata, *Ability::ITEM_OBJECTS) }
+    it { is_expected.to be_able_to(:read, *Ability::ITEM_OBJECTS) }
 
     it { is_expected.to be_able_to(:read, Import) }
     it { is_expected.not_to be_able_to(:create, Import) }
@@ -68,13 +68,13 @@ describe 'Ability' do
     it { is_expected.to be_able_to(:update, AssetResource) }
     it { is_expected.not_to be_able_to(:destroy, AssetResource) }
 
-    it { is_expected.to be_able_to(:read, ItemResource) }
-    it { is_expected.to be_able_to(:create, ItemResource) }
-    it { is_expected.to be_able_to(:update, ItemResource) }
-    it { is_expected.to be_able_to(:file, ItemResource) }
-    it { is_expected.to be_able_to(:reorder_assets, ItemResource) }
-    it { is_expected.to be_able_to(:refresh_ils_metadata, ItemResource) }
-    it { is_expected.not_to be_able_to(:destroy, ItemResource) }
+    it { is_expected.to be_able_to(:read, *Ability::ITEM_OBJECTS) }
+    it { is_expected.to be_able_to(:create, *Ability::ITEM_OBJECTS) }
+    it { is_expected.to be_able_to(:update, *Ability::ITEM_OBJECTS) }
+    it { is_expected.to be_able_to(:file, *Ability::ITEM_OBJECTS) }
+    it { is_expected.to be_able_to(:reorder_assets, *Ability::ITEM_OBJECTS) }
+    it { is_expected.to be_able_to(:refresh_ils_metadata, *Ability::ITEM_OBJECTS) }
+    it { is_expected.not_to be_able_to(:destroy, *Ability::ITEM_OBJECTS) }
 
     it { is_expected.to be_able_to(:read, Import) }
     it { is_expected.to be_able_to(:update, Import) }

@@ -4,6 +4,8 @@
 class Ability
   include CanCan::Ability
 
+  ITEM_OBJECTS = [ItemResource, ItemPresenter].freeze
+
   def initialize(user)
     return if user.blank?
 
@@ -13,12 +15,12 @@ class Ability
     can [:read], [Import, Report]
 
     if user.viewer?
-      can :read, [ItemResource, AssetResource]
-      can :file, ItemResource
+      can :read, [*ITEM_OBJECTS, AssetResource]
+      can :file, ITEM_OBJECTS
     elsif user.editor?
       can %i[read create update], AssetResource
       can %i[read create update file publish unpublish reorder_assets refresh_ils_metadata regenerate_all_derivatives],
-          ItemResource
+          ITEM_OBJECTS
       can %i[read create], BulkImport
       can %i[update cancel], BulkImport, created_by: user
       can %i[update cancel], Import, bulk_import: { created_by: user }
