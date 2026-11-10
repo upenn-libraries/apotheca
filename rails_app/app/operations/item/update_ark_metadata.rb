@@ -4,15 +4,15 @@ module Item
   # Operation to update ark metadata of an item
   class UpdateArkMetadata < Operation
     # @param id [String] UUID of Item being updated
-    def call(id:)
+    def call(id)
       resource = step find_item(id)
-      step update_ark_metadata(resource: resource)
+      step update_ark_metadata(resource)
 
       resource
     end
 
     # @param resource [ItemResource]
-    def update_ark_metadata(resource:)
+    def update_ark_metadata(resource)
       return Success(resource) if Settings.ezid_metadata_update.skip
 
       # NOTE: EZID library retries requests twice before raising an error.

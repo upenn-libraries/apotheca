@@ -23,6 +23,7 @@ module Item
       resource
     end
 
+    # @param resource [ItemResource]
     def record_event(resource)
       ResourceEvent.record_event_for(resource: resource, event_type: :update_item)
     end

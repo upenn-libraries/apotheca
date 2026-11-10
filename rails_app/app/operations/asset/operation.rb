@@ -32,5 +32,10 @@ module Asset
     def add_technical_metadata(*args)
       Steps::AddTechnicalMetadata.new.call(*args)
     end
+
+    # @param asset [AssetResource]
+    def find_parent_item(asset)
+      Steps::FindParentItem.new.call(asset)
+    end
   end
 end

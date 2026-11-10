@@ -7,7 +7,7 @@ module Item
     #
     # @param id [String] item uuid
     # @param updated_by [String] email of user publishing item
-    def call(id:, updated_by:)
+    def call(id, updated_by)
       resource = step find_item(id)
 
       change_set = step create_change_set(resource: resource, updated_by: updated_by)
@@ -22,6 +22,7 @@ module Item
       resource
     end
 
+    # @param change_set [ItemChangeSet]
     def publish(change_set)
       add_published_values(change_set)
 
@@ -35,12 +36,14 @@ module Item
       Failure(error: :error_publishing_item, exception: e, change_set: change_set)
     end
 
+    # @param resource [ItemResource]
     def record_event(resource)
       ResourceEvent.record_event_for(resource: resource, event_type: :publish_item, json: false)
     end
 
     private
 
+    # @param change_set [ItemChangeSet]
     def add_published_values(change_set)
       publishing_at = DateTime.current
 

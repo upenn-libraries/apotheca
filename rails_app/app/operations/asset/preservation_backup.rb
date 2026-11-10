@@ -10,7 +10,7 @@ module Asset
     #
     # @param id [String] UUID of Asset being updated
     # @param updated_by [String] email of user updating the Asset
-    def call(id:, updated_by:)
+    def call(id, updated_by)
       resource = step find_asset(id)
 
       change_set = step create_change_set(resource: resource, updated_by: updated_by)

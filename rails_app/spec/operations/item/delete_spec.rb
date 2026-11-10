@@ -4,7 +4,7 @@ describe Item::Delete do
   let(:query_service) { Valkyrie::MetadataAdapter.find(:postgres_solr_persister).query_service }
 
   describe '#call' do
-    let(:result) { described_class.new.call(id: item.id, deleted_by: 'initiator@example.com') }
+    let(:result) { described_class.new.call(item.id, 'initiator@example.com') }
     let(:deleted_item) { result.value! }
 
     context 'when the Item has no assets' do

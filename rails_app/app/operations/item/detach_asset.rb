@@ -25,6 +25,8 @@ module Item
     end
 
     # Prevent the detachment of Asset currently designated as a thumbnail with message.
+    # @param resource [ItemResource]
+    # @param asset_id [String]
     def check_thumbnail_id(resource, asset_id)
       if resource.presenter.thumbnail?(asset_id) && resource.asset_ids.count > 1
         Failure(error: :cannot_delete_thumbnail)
@@ -48,6 +50,7 @@ module Item
       Success(change_set)
     end
 
+    # @param resource [ItemResource]
     def record_event(resource)
       ResourceEvent.record_event_for(resource: resource, event_type: :detach_asset)
     end

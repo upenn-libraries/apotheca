@@ -3,7 +3,7 @@
 describe Item::Unpublish do
   describe '#call' do
     let(:operation) { described_class.new }
-    let(:result) { operation.call(id: item.id.to_s, updated_by: 'initiator@example.com') }
+    let(:result) { operation.call(item.id.to_s, 'initiator@example.com') }
     let(:updated_item) { result.value! }
     let(:item) { persist(:item_resource, :published) }
 
