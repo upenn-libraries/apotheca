@@ -37,5 +37,9 @@ module Asset
     def find_parent_item(asset)
       Steps::FindParentItem.new.call(asset)
     end
+
+    def detach_from_item(**args)
+      Item::DetachAsset.new.call(**args)
+    end
   end
 end
