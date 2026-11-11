@@ -23,7 +23,7 @@ module Asset
     end
 
     def detach_from_item(**args)
-      Steps::DetachFromItem.new.call(**args)
+      Item::DetachAsset.new.call(**args)
     end
   end
 end

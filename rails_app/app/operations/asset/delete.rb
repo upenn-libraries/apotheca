@@ -8,7 +8,7 @@ module Asset
     def call(id, deleted_by)
       asset = step find_asset(id)
       item = step find_parent_item(asset)
-      step detach_from_item(resource: asset, item: item, deleted_by: deleted_by)
+      step detach_from_item(id: item.id, asset_id: asset.id, updated_by: deleted_by) if item
       step delete_derivatives(asset)
       step delete_preservation_files(asset)
       step delete_resource(asset)
