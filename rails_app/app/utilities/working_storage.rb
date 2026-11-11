@@ -5,27 +5,43 @@
 class WorkingStorage
   REQUIRED_CONFIG_KEYS = %i[access_key_id secret_access_key region].freeze
 
-  attr_reader :name
+  attr_reader :name, :config
 
   delegate :client, to: :shrine
 
-  # Returns true if the given storage is configured.
-  def self.valid?(storage_name)
-    all.key?(storage_name) && REQUIRED_CONFIG_KEYS.all? { |k| all[storage_name][k].present? }
+  # Find WorkingStorage.
+  #
+  # @param name [String, Symbol]
+  # @return [WorkingStorage] if found configured WorkingStorage
+  # @return [nil] if no configured WorkingStorage was found
+  def self.find(name)
+    all.find { |storage| storage.name == name.to_s }
   end
 
+  # Returns true if the given storage is configured.
+  # TODO: need to remove this and migrate methods that use this to use .find
+  # def self.valid?(storage_name)
+  #   all.key?(storage_name) && REQUIRED_CONFIG_KEYS.all? { |k| all[storage_name][k].present? }
+  # end
+
   # Returns all configured working storage buckets.
+  #
+  # TODO: store all WorkingStorage in a class variable?
+  # TODO: migrate use of this method
+  # @return [Array<WorkingStorage>]
   def self.all
-    Settings.working_storage.to_h.with_indifferent_access
+    Settings.working_storage.map do |name, configuration|
+      new(name: name, **configuration)
+    end
   end
 
   # Initialize working storage from configuration.
-  def initialize(storage_name)
-    @name = storage_name
-  end
-
-  def config
-    @config ||= self.class.all[name].to_h.deep_symbolize_keys
+  #
+  # @param name [Symbol, String] name of storage
+  # @param configuration [Hash] configuration options and credentials used to interact with the S3 storage
+  def initialize(name:, **configuration)
+    @name = name.to_s
+    @config = configuration
   end
 
   def shrine
@@ -129,6 +145,19 @@ class WorkingStorage
         k.delete_prefix(path).include?('/') ||
         k.delete_prefix(path).starts_with?('.')
     end
+  end
+
+  # Return Path object.
+  #
+  # @return [WorkingStorage::Path]
+  def path(p)
+    Path.new(self, p)
+  end
+
+  # @param ps [Array<String>]
+  # @return [WorkingStorage::Paths]
+  def paths(ps)
+    Paths.new(self, ps)
   end
 
   # Represents file retrieved from S3.
