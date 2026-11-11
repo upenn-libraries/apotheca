@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CSVImport::Steps::Validate do
+describe CSVImport::Validate do
   let(:operation) { described_class.new }
 
   describe '#call' do
