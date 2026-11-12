@@ -77,15 +77,12 @@ module ImportService
           asset_ids: all_assets.map(&:id)
         }.merge(item_args)
 
-        CreateItem.new.call(item_attributes) do |result|
-          result.success do |i|
-            publish ? publish_item(i) : Success(i)
-          end
-
-          result.failure do |failure_hash|
-            delete_assets(all_assets)
-            failure(**failure_hash)
-          end
+        case Item::Create.call(item_attributes)
+        in Success[item]
+          publish ? publish_item(item) : Success(item)
+        in Failure[failure]
+          delete_assets(all_assets)
+          failure(**failure)
         end
       rescue StandardError => e
         failure(exception: e)

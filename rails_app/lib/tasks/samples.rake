@@ -36,7 +36,7 @@ namespace :apotheca do
         }
 
         # Create Item
-        CreateItem.new.call(**item_metadata)
+        Item::Create.call(**item_metadata)
       end
     end
 
@@ -172,11 +172,11 @@ namespace :apotheca do
       end
 
       # Create Item
-      CreateItem.new.call(**item_metadata) do |result|
-        result.failure { |data| cleanup.call(item_metadata[:asset_ids], data[:error], :creating_an_item) }
-        result.success do |item|
-          puts "Successfully imported #{id} from #{deployed_env}: #{item.presenter.apotheca_url}."
-        end
+      case Item::Create.call(**item_metadata)
+      in Dry::Monads::Success[item]
+        puts "Successfully imported #{id} from #{deployed_env}: #{item.presenter.apotheca_url}."
+      in Dry::Monads::Failure[error:]
+        cleanup.call(item_metadata[:asset_ids], error, :creating_an_item)
       end
     end
   end

@@ -2,6 +2,8 @@
 
 # controller actions for Item stuff
 class ItemsController < ResourcesController
+  include Dry::Monads[:result]
+
   before_action :load_item_and_change_set, except: :index
   before_action :load_assets, only: %i[show edit reorder_assets]
   before_action :configure_pagination, only: :index
@@ -22,28 +24,22 @@ class ItemsController < ResourcesController
   def edit; end
 
   def create
-    CreateItem.new.call(created_by: current_user.email, **item_params) do |result|
-      result.success do |resource|
-        flash.notice = I18n.t('actions.item.create.success')
-        redirect_to item_path(resource)
-      end
-
-      result.failure do |failure|
-        render_failure(failure, :new)
-      end
+    case Item::Create.call(created_by: current_user.email, **item_params)
+    in Success[resource]
+      flash.notice = I18n.t('actions.item.create.success')
+      redirect_to item_path(resource)
+    in Failure[failure]
+      render_failure(failure, :new)
     end
   end
 
   def update
-    UpdateItem.new.call(id: params[:id], updated_by: current_user.email, **item_params) do |result|
-      result.success do |resource|
-        flash.notice = I18n.t('actions.item.update.success')
-        redirect_to item_path(resource, anchor: params[:form])
-      end
-
-      result.failure do |failure|
-        render_failure(failure, :edit)
-      end
+    case Item::Update.call(id: params[:id], updated_by: current_user.email, **item_params)
+    in Success[resource]
+      flash.notice = I18n.t('actions.item.update.success')
+      redirect_to item_path(resource, anchor: params[:form])
+    in Failure[failure]
+      render_failure(failure, :edit)
     end
   end
 
