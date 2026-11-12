@@ -9,6 +9,7 @@ module CSVImport
     # to the locale so messages can be customized.
     # @param failure [Hash] data within failure monad
     def on_failure(failure)
+      # TODO: return if message is already present to account for instances where operations are being used within operations.
       failure[:message] = I18n.t(failure[:error],
                                  scope: "operations.csv_import.#{self.class.to_s.demodulize.underscore}.failures",
                                  default: failure[:error].to_s.humanize,

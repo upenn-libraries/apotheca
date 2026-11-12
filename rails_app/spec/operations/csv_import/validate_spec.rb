@@ -10,7 +10,6 @@ describe CSVImport::Validate do
       let(:data) { build(:csv_import, :create, imported_by: nil) }
 
       it 'returns failure' do
-        byebug
         expect(result.failure?).to be true
         expect(result.failure[:details]).to include 'imported_by must be a string'
       end

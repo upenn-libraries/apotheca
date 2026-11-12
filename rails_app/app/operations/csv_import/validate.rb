@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CSVImport
-  class Validate < Operation
+  class Validate < Dry::Operation
     skip_prepending
 
     # CSV data validator
