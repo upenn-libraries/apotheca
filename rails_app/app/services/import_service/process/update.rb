@@ -87,25 +87,22 @@ module ImportService
         # Save response before updating item.
         regenerate = regenerate_asset_derivatives?
 
-        UpdateItem.new.call(item_attributes) do |result|
-          result.success do |i|
-            if asset_set.present?
-              update_result = update_existing_assets
-              return update_result unless update_result.success?
-            end
-
-            if regenerate
-              regenerate_result = generate_all_derivatives
-              return regenerate_result unless regenerate_result.success?
-            end
-
-            publish ? publish_item(i) : Success(i)
+        case Item::Update.call(**item_attributes)
+        in Success[item]
+          if asset_set.present?
+            update_result = update_existing_assets
+            return update_result unless update_result.success?
           end
 
-          result.failure do |failure_hash|
-            delete_assets(created_assets)
-            failure(**failure_hash)
+          if regenerate
+            regenerate_result = generate_all_derivatives
+            return regenerate_result unless regenerate_result.success?
           end
+
+          publish ? publish_item(item) : Success(item)
+        in Failure[failure]
+          delete_assets(created_assets)
+          failure(**failure)
         end
       rescue StandardError => e
         failure(exception: e)

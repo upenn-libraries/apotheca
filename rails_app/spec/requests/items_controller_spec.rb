@@ -93,10 +93,10 @@ describe 'Items Requests' do
       end
     end
 
-    context 'when an error is raised in the UpdateItem transaction' do
+    context 'when an error is raised in the Item::Update operation' do
       before do
-        step_double = instance_double(Steps::Validate)
-        allow(Steps::Validate).to receive(:new).and_return(step_double)
+        step_double = instance_double(Resource::Steps::Validate)
+        allow(Resource::Steps::Validate).to receive(:new).and_return(step_double)
         allow(step_double).to receive(:call) { Dry::Monads::Failure.new(error: :step_failed) }
 
         patch item_path(item), params: { form: 'descriptive-metadata', item: { human_readable_name: 'The new name!' } }
