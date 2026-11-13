@@ -5,6 +5,6 @@ class UpdateArkMetadataOperationJob < OperationJob
   sidekiq_options queue: :low
 
   def operation(item_id)
-    Item::UpdateArkMetadata.new.call(id: item_id)
+    Item::UpdateArkMetadata.new.call(item_id)
   end
 end
