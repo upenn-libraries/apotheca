@@ -29,5 +29,9 @@ module Item
     def set_thumbnail(*args)
       Steps::SetThumbnail.new.call(*args)
     end
+
+    def unpublish(*args)
+      Steps::Unpublish.new.call(*args)
+    end
   end
 end

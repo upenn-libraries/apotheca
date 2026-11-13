@@ -87,11 +87,16 @@ describe Item::Publish do
     context 'when publishing endpoint responds with error' do
       include_context 'with unsuccessful publish request'
 
-      let(:item) { persist(:item_resource, :with_full_assets_all_arranged) }
+      let(:item) { persist(:item_resource, :with_full_assets_all_arranged, :with_derivatives) }
 
       it 'fails' do
         expect(result.failure?).to be true
         expect(result.failure[:error]).to be :error_publishing_item
+      end
+
+      it 'cleans up derivatives' do
+        result
+        expect(item.derivatives).to be_empty # stale item I think, no #reload
       end
 
       it 'includes error message in json response' do

@@ -43,6 +43,18 @@ module Item
 
     private
 
+    def on_failure(failure)
+      case failure[:error]
+      when :error_publishing_item
+        # publish step failed (http request) - cleanup item derivatives if item WAS unpublished
+        delete_derivatives(failure[:change_set].resource) unless failure[:change_set].published
+      when :error_saving_resource
+        # save failed, but derivatives were regenerated and publish http call succeeded.
+        delete_derivatives(failure[:change_set].resource)
+        unpublish(failure[:change_set], Settings.system_user)
+      end
+    end
+
     # @param change_set [ItemChangeSet]
     def add_published_values(change_set)
       publishing_at = DateTime.current

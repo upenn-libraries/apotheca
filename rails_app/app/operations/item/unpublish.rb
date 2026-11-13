@@ -19,18 +19,11 @@ module Item
       resource
     end
 
-    # @param change_set [ItemChangeSet]
-    def unpublish(change_set)
-      return Success(change_set) if Settings.publish.skip
+    def on_failure(failure)
+      return unless failure[:error].in?(:validation_failed, :error_saving_resource)
 
-      change_set.published = false
-
-      client = PublishingService::Client.new(PublishingService::Endpoint.digital_collections)
-      client.unpublish(change_set)
-
-      Success(change_set)
-    rescue StandardError => e
-      Failure(error: :error_unpublishing_item, exception: e, change_set: change_set)
+      # republish item if saving or validation failed
+      Item::Publish.new.call(failure[:change_set].id.to_s, Settings.system_user)
     end
 
     def record_event(resource)

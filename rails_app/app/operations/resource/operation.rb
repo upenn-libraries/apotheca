@@ -49,6 +49,7 @@ module Resource
     end
 
     def delete_derivatives(resource)
+      byebug
       Steps::DeleteDerivatives.new.call(resource)
     end
 
