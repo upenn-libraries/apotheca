@@ -1,5 +1,5 @@
 ---
-apotheca_build_docker_image: true
+apotheca_build_docker_image: false
 apotheca_image_name: "apotheca"
 apotheca_image_registry: "gitlab.library.upenn.edu/dld/digital-repository/apotheca"
 apotheca_image_tag: "main-development"
