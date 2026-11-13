@@ -113,7 +113,7 @@ class AssetsController < ResourcesController
     # Add file to asset.
     update_result = UpdateAsset.new.call(id: result.value!.id, updated_by: current_user.email, **file_params)
     if update_result.failure?
-      PurgeAsset.new.call(id: result.value!.id)
+      Asset::Purge.call(result.value!.id)
       return update_result
     end
 
@@ -121,7 +121,7 @@ class AssetsController < ResourcesController
     add_asset_result = AttachAsset.new.call(id: @item.id, asset_id: update_result.value!.id,
                                             updated_by: current_user.email)
     if add_asset_result.failure?
-      PurgeAsset.new.call(id: result.value!.id)
+      Asset::Purge.call(result.value!.id)
       return add_asset_result
     end
 

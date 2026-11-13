@@ -121,7 +121,7 @@ namespace :apotheca do
       }
 
       cleanup = lambda do |asset_ids, error_msg, step|
-        asset_ids.each { |a| PurgeAsset.new.call(id: a.id) }
+        asset_ids.each { |a| Asset::Purge.call(a.id) }
         puts 'Assets purged'
         puts "Something went wrong while #{step.to_s.humanize.downcase}: #{error_msg.to_s.humanize}."
         abort("Aborting import of item #{id} from #{deployed_env}.")
