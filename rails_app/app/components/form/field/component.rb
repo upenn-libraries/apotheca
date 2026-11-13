@@ -83,6 +83,8 @@ module Form
           @model.class.to_s.underscore.delete_suffix('_change_set')
         when Valkyrie::Resource
           @model.class.to_s.underscore.delete_suffix('_resource')
+        when BasePresenter
+          @model.class.to_s.underscore.delete_suffix('_presenter')
         else
           @model.class.to_s.underscore.downcase
         end
