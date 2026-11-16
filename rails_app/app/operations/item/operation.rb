@@ -29,5 +29,9 @@ module Item
     def set_thumbnail(*args)
       Steps::SetThumbnail.new.call(*args)
     end
+
+    def publishing_connection(*args)
+      Steps::CreatePublishingConnection.new.call(*args)
+    end
   end
 end

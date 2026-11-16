@@ -3,6 +3,13 @@
 module Item
   # Operation that publishes an item
   class Publish < Operation
+    PUBLISH = 'publish'
+
+    # @param endpoint [PublishingEndpoint]
+    def initialize(endpoint = PublishingEndpoint.digital_collections)
+      @endpoint = endpoint
+    end
+
     # Publishing Item to consumer applications. As part of the publishing process the derivatives are regenerated.
     #
     # @param id [String] item uuid
@@ -12,7 +19,8 @@ module Item
 
       change_set = step create_change_set(resource: resource, updated_by: updated_by)
       step generate_derivatives(change_set)
-      step publish(change_set)
+      connection = step publishing_connection(PublishingService::Endpoint.digital_collections)
+      step publish(change_set, connection)
       step validate(change_set)
 
       resource = step save(change_set)
@@ -23,13 +31,13 @@ module Item
     end
 
     # @param change_set [ItemChangeSet]
-    def publish(change_set)
+    # @param connection [Faraday::Connection]
+    def publish(change_set, connection)
       add_published_values(change_set)
 
       return Success(change_set) if Settings.publish.skip
 
-      client = PublishingService::Client.new(PublishingService::Endpoint.digital_collections)
-      client.publish(change_set)
+      post_request(change_set, connection)
 
       Success(change_set)
     rescue StandardError => e
@@ -50,6 +58,24 @@ module Item
       change_set.first_published_at = publishing_at if change_set.first_published_at.blank?
       change_set.last_published_at = publishing_at
       change_set.published = true
+    end
+
+    # @param change_set [ItemChangeSet]
+    def serialize(change_set)
+      controller = ApplicationController.renderer.with_defaults(http_host: Settings.api_url, https: true)
+      rendered_json = controller.render('api/resources/items/_item',
+                                        locals: { params: { assets: 'true' } },
+                                        assigns: { item: change_set.presenter })
+      JSON.parse(rendered_json)
+    end
+
+    # @param change_set [ItemChangeSet, ItemResource]
+    # @param connection [Faraday::Connection]
+    def post_request(change_set, connection)
+      connection.post(@endpoint.webhook_path, { event: PUBLISH, data: { item: serialize(change_set) } })
+    rescue Faraday::ClientError, Faraday::ServerError => e # Raising error if publishing request failed
+      message = e.response_body&.dig('message') || e.msg
+      raise Error, "Request to publishing endpoint failed: #{message}"
     end
   end
 end
