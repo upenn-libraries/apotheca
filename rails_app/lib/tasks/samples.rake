@@ -16,8 +16,8 @@ namespace :apotheca do
         )
 
         # Create Asset
-        result = CreateAsset.new.call(created_by: fake_item.created_by, label: 'Front',
-                                      annotation: [{ text: 'Front of Card' }])
+        result = Asset::Create.new.call(created_by: fake_item.created_by, label: 'Front',
+                                        annotation: [{ text: 'Front of Card' }])
         asset_id = result.value!.id
 
         # Update Asset with preservation file
@@ -135,7 +135,7 @@ namespace :apotheca do
                            created_by: Settings.system_user }
         asset_id = nil
 
-        CreateAsset.new.call(**asset_metadata) do |result|
+        Item::Create.new.call(**asset_metadata) do |result|
           result.failure { |data| cleanup.call(item_metadata[:asset_ids], data[:error], :creating_an_asset) }
           result.success { |item| asset_id = item.id }
         end

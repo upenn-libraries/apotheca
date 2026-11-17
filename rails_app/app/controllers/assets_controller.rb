@@ -107,7 +107,7 @@ class AssetsController < ResourcesController
   # an associated preservation file.
   def build_and_attach_asset
     # Create base asset.
-    result = CreateAsset.new.call(**asset_params, created_by: current_user.email)
+    result = Asset::Create.new.call(**asset_params, created_by: current_user.email)
     return result if result.failure?
 
     # Add file to asset.
