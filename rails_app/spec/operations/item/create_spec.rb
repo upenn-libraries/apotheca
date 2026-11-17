@@ -68,7 +68,7 @@ describe Item::Create do
       end
 
       it 'includes errors' do
-        expect(result.failure[:error]).to be :validation_failed
+        expect(result.failure).to include(error: :validation_failed, message: 'Validation failed.')
         expect(
           result.failure[:change_set].errors.messages
         ).to include(created_by: ['can\'t be blank', 'is invalid'], updated_by: ['can\'t be blank', 'is invalid'])

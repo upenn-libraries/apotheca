@@ -180,7 +180,8 @@ describe Asset::Update do
 
       it 'fails' do
         expect(result.failure?).to be true
-        expect(result.failure[:error]).to be :invalid_file_extension
+        expect(result.failure).to include(error: :invalid_file_extension,
+                                          message: 'File has an invalid extension.')
       end
     end
 

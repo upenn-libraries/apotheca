@@ -56,9 +56,11 @@ module Asset
     def on_failure(failure)
       change_set = failure.fetch(:change_set, nil)
 
-      return unless change_set&.changed?(:preservation_copies_ids) && change_set.preservation_copies_ids.present?
+      if change_set&.changed?(:preservation_copies_ids) && change_set.preservation_copies_ids.present?
+        Valkyrie::StorageAdapter.delete(id: change_set.preservation_copies_ids.first)
+      end
 
-      Valkyrie::StorageAdapter.delete(id: change_set.preservation_copies_ids.first)
+      super(failure)
     end
 
     private

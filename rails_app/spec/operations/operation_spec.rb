@@ -1,19 +1,27 @@
 # frozen_string_literal: true
 
-describe CSVImport::Operation do
+describe Operation do
   describe '#on_failure' do
-    let(:operation) { described_class.new }
     let(:failure) { { error: :generic_error } }
+
+    let(:operation) do
+      baking_operation = stub_const('Baking::Operation', Class.new(::Operation))
+      banana_bread_operation = stub_const('Baking::BananaBread::Operation', Class.new(baking_operation))
+      banana_bread_operation.new
+    end
 
     context 'when i18n translation is available' do
       before do
         I18n.backend.store_translations :en, operations: {
-          csv_import: {
-            operation: {
-              failures: {
+          baking: {
+            failure: {
+              oven_power: 'Oven won\'t turn on'
+            },
+            banana_bread: {
+              failure: {
                 generic_error: 'Error',
                 unexpected_error: 'Unexpected error: %{exception_message}',
-                missing_keys: 'Missing the following keys, %{keys}'
+                missing_ingredients: 'Missing the following ingredients, %{ingredients}'
               }
             }
           }
@@ -35,18 +43,26 @@ describe CSVImport::Operation do
       end
 
       context 'when translation includes additional attributes' do
-        let(:failure) { { error: :missing_keys, keys: 'first_name, last_name' } }
+        let(:failure) { { error: :missing_ingredients, ingredients: 'bananas, flour' } }
 
         it 'adds in expected message' do
-          expect(failure[:message]).to eql 'Missing the following keys, first_name, last_name'
+          expect(failure[:message]).to eql 'Missing the following ingredients, bananas, flour'
         end
       end
 
       context 'when translation includes exception message' do
-        let(:failure) { { error: :unexpected_error, exception: StandardError.new('Random Issue') } }
+        let(:failure) { { error: :unexpected_error, exception: StandardError.new('Stuck to pan') } }
 
         it 'adds in expected message' do
-          expect(failure[:message]).to eql 'Unexpected error: Random Issue'
+          expect(failure[:message]).to eql 'Unexpected error: Stuck to pan'
+        end
+      end
+
+      context 'when translation provided provided via superclass' do
+        let(:failure) { { error: :oven_power } }
+
+        it 'adds in expected message' do
+          expect(failure[:message]).to eql 'Oven won\'t turn on'
         end
       end
     end

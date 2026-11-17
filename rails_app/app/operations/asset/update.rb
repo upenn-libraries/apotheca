@@ -182,6 +182,8 @@ module Asset
       # Only delete derivatives if originally no derivatives were present. We don't want to delete the derivatives if
       # they were already present because external systems depend on them.
       delete_derivatives(change_set) if change_set && change_set.resource&.derivatives.blank?
+
+      super(failure)
     end
 
     private

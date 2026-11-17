@@ -161,7 +161,9 @@ module ImportService
       # @param [Valkyrie::ChangeSet] change_set containing validation errors
       # @param [Exception] exception
       # @param [String] prepend message to prefix main error message
-      def failure(error: nil, details: [], change_set: nil, exception: nil, prepend: nil)
+      # @param _args [Hash] options provided from operations (like `message`); ignoring for now
+      # rubocop:disable Metrics/ParameterLists
+      def failure(error: nil, details: [], change_set: nil, exception: nil, prepend: nil, **_args)
         error = error.to_s.humanize if error.is_a? Symbol
         error = "#{prepend}: #{error}" if prepend
         validation_errors = change_set.try(:errors).try(:full_messages)
@@ -176,6 +178,7 @@ module ImportService
 
         Failure.new(error: :import_failed, details: details, exception: exception)
       end
+      # rubocop:enable Metrics/ParameterLists
 
       # Queries EZID to check if a given ark already exists.
       #

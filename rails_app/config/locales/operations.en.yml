@@ -1,8 +1,15 @@
 en:
   operations:
+    resource:
+      failure:
+        validation_failed: 'Validation failed.'
+    asset:
+      update:
+       failure:
+         invalid_file_extension: 'File has an invalid extension.'
     csv_import:
       process_files:
-        failures:
+        failure:
           unable_to_process_asset_csv: 'Unable to process Asset CSVs: %{exception_message}'
           empty_csv: 'CSV has no data.'
           missing_asset_csv: "Asset CSVs are missing: %{missing}."

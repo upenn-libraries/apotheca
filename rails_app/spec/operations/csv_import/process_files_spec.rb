@@ -41,7 +41,9 @@ describe CSVImport::ProcessFiles do
 
       it 'returns failure' do
         expect(result.failure?).to be true
-        expect(result.failure[:error]).to be :asset_csv_not_referenced
+        expect(result.failure).to include(error: :asset_csv_not_referenced,
+                                          file: 'assets.csv',
+                                          message: 'Asset CSV provided, assets.csv, not referenced.')
       end
     end
 
@@ -59,7 +61,11 @@ describe CSVImport::ProcessFiles do
 
       it 'returns failure' do
         expect(result.failure?).to be true
-        expect(result.failure).to include(error: :malformed_csv, file: 'bulk_import_data_with_malformed_csv.csv')
+        expect(result.failure).to include(
+          error: :malformed_csv,
+          file: 'bulk_import_data_with_malformed_csv.csv',
+          message: 'bulk_import_data_with_malformed_csv.csv is malformed. Illegal quoting in line 2.'
+        )
       end
     end
   end
