@@ -2,6 +2,7 @@
 
 # actions for Assets
 class AssetsController < ResourcesController
+  include Dry::Monads[:result]
   class FileNotFound < StandardError; end
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
@@ -68,14 +69,12 @@ class AssetsController < ResourcesController
   def destroy
     authorize! :delete, @asset
 
-    DeleteAsset.new.call(id: @asset.id, deleted_by: current_user.email) do |result|
-      result.success do
-        flash.notice = I18n.t('actions.asset.delete.success')
-        redirect_to item_path @item, anchor: 'assets'
-      end
-      result.failure do |failure|
-        render_failure(failure, :show)
-      end
+    case Asset::Delete.new.call(@asset.id, current_user.email)
+    in Success[resource]
+      flash.notice = I18n.t('actions.asset.delete.success')
+      redirect_to item_path @item, anchor: 'assets'
+    in Failure[failure]
+      render_failure(failure, :show)
     end
   end
 
