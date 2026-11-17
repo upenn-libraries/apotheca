@@ -135,9 +135,11 @@ namespace :apotheca do
                            created_by: Settings.system_user }
         asset_id = nil
 
-        Item::Create.new.call(**asset_metadata) do |result|
-          result.failure { |data| cleanup.call(item_metadata[:asset_ids], data[:error], :creating_an_asset) }
-          result.success { |item| asset_id = item.id }
+        case Asset::Create.new.call(**asset_metadata)
+        in Dry::Monads::Success[resource]
+          asset_id = resource.id
+        in Dry::Monads::Failure[error:]
+          cleanup.call(item_metadata[:asset_ids], error, :creating_an_asset)
         end
 
         # Push asset id to item asset_ids and arranged_asset_ids array
