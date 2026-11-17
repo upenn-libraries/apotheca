@@ -19,8 +19,7 @@ module Item
 
       change_set = step create_change_set(resource: resource, updated_by: updated_by)
       step generate_derivatives(change_set)
-      connection = step publishing_connection(PublishingService::Endpoint.digital_collections)
-      step publish(change_set, connection)
+      step publish(change_set)
       step validate(change_set)
 
       resource = step save(change_set)
@@ -31,13 +30,12 @@ module Item
     end
 
     # @param change_set [ItemChangeSet]
-    # @param connection [Faraday::Connection]
-    def publish(change_set, connection)
+    def publish(change_set)
       add_published_values(change_set)
 
       return Success(change_set) if Settings.publish.skip
 
-      post_request(change_set, connection)
+      send_publish_request(change_set)
 
       Success(change_set)
     rescue StandardError => e
@@ -70,9 +68,9 @@ module Item
     end
 
     # @param change_set [ItemChangeSet, ItemResource]
-    # @param connection [Faraday::Connection]
-    def post_request(change_set, connection)
-      connection.post(@endpoint.webhook_path, { event: PUBLISH, data: { item: serialize(change_set) } })
+    def send_publish_request(change_set)
+      publishing_connection(@endpoint)
+        .post(@endpoint.webhook_path, { event: PUBLISH, data: { item: serialize(change_set) } })
     rescue Faraday::ClientError, Faraday::ServerError => e # Raising error if publishing request failed
       message = e.response_body&.dig('message') || e.msg
       raise Error, "Request to publishing endpoint failed: #{message}"
