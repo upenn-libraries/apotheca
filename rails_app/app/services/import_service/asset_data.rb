@@ -29,14 +29,14 @@ module ImportService
     # while creating or updating the asset, any necessary clean up is done and then failure is returned.
     def create_asset(imported_by:, created_by: nil, **additional_attrs)
       case Asset::Create.new.call(**resource_attributes, **additional_attrs, created_by: created_by || imported_by)
-      in Success[resource]
+      in Success[asset]
         update_transaction.call(
-          id: resource.id, file: file, expected_checksum: @expected_checksum, updated_by: imported_by,
+          id: asset.id, file: file, expected_checksum: @expected_checksum, updated_by: imported_by,
           ocr_strategy: additional_attrs[:ocr_strategy], ocr_language: additional_attrs[:ocr_language],
           viewing_direction: additional_attrs[:viewing_direction]
         ).tap do |update_result|
           # Delete asset if update failed, then return update_result value
-          PurgeAsset.new.call(id: resource.id) if update_result.failure?
+          PurgeAsset.new.call(id: asset.id) if update_result.failure?
         end
       in Failure[failure]
         Failure(failure)
