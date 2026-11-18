@@ -17,7 +17,7 @@ namespace :apotheca do
 
         # Create Asset
         result = Asset::Create.call(created_by: fake_item.created_by, label: 'Front',
-                                        annotation: [{ text: 'Front of Card' }])
+                                    annotation: [{ text: 'Front of Card' }])
         asset_id = result.value!.id
 
         # Update Asset with preservation file
