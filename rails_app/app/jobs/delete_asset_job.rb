@@ -8,6 +8,6 @@ class DeleteAssetJob < OperationJob
   # @param asset_id [Valkyrie::ID, String]
   # @param deleted_by [String]
   def operation(asset_id, deleted_by)
-    Asset::Delete.new.call(Valkyrie::ID.new(asset_id), deleted_by)
+    Asset::Delete.call(asset_id, deleted_by)
   end
 end
