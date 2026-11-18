@@ -3,7 +3,7 @@
 describe DeleteAssetJob do
   let(:asset) { persist(:asset_resource) }
 
-  it_behaves_like 'TransactionJob' do
+  it_behaves_like 'OperationJob' do
     let(:args) { [asset.id.to_s, asset.updated_by] }
   end
 end
