@@ -16,7 +16,7 @@ namespace :apotheca do
         )
 
         # Create Asset
-        result = Asset::Create.new.call(created_by: fake_item.created_by, label: 'Front',
+        result = Asset::Create.call(created_by: fake_item.created_by, label: 'Front',
                                         annotation: [{ text: 'Front of Card' }])
         asset_id = result.value!.id
 
@@ -135,7 +135,7 @@ namespace :apotheca do
                            created_by: Settings.system_user }
         asset_id = nil
 
-        case Asset::Create.new.call(**asset_metadata)
+        case Asset::Create.call(**asset_metadata)
         in Dry::Monads::Success[resource]
           asset_id = resource.id
         in Dry::Monads::Failure[error:]

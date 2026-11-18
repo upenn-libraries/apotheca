@@ -28,7 +28,7 @@ module ImportService
     # created without a file and then the asset is updated to add in the file. If an error occurs
     # while creating or updating the asset, any necessary clean up is done and then failure is returned.
     def create_asset(imported_by:, created_by: nil, **additional_attrs)
-      case Asset::Create.new.call(**resource_attributes, **additional_attrs, created_by: created_by || imported_by)
+      case Asset::Create.call(**resource_attributes, **additional_attrs, created_by: created_by || imported_by)
       in Success[asset]
         update_transaction.call(
           id: asset.id, file: file, expected_checksum: @expected_checksum, updated_by: imported_by,
