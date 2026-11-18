@@ -22,19 +22,6 @@ module Item
       ItemResource::DERIVATIVE_TYPES
     end
 
-    # @param endpoint [PublishingEndpoint]
-    # @return [Faraday::Connection]
-    def publishing_connection(endpoint)
-      Faraday.new(endpoint.host, request: { timeout: 120 }) do |conn|
-        conn.request :authorization, 'Token', "token=#{endpoint.token}"
-        conn.request :json
-        conn.request :retry, exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed],
-                             methods: %i[get post patch delete], interval: 10, max: 5
-        conn.response :raise_error, include_request: true
-        conn.response :json
-      end
-    end
-
     def update_ark_metadata_later(*args)
       Steps::UpdateArkMetadataLater.new.call(*args)
     end
@@ -44,7 +31,11 @@ module Item
     end
 
     def send_unpublish_request(*args)
-      Steps::SendUnpublishRequest.new.call(*args)
+      Steps::PublishingRequests.new.unpublish(*args)
+    end
+
+    def send_publish_request(*args)
+      Steps::PublishingRequests.new.publish(*args)
     end
   end
 end

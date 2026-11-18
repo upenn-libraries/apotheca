@@ -35,9 +35,7 @@ module Item
 
       return Success(change_set) if Settings.publish.skip
 
-      send_publish_request(change_set)
-
-      Success(change_set)
+      send_publish_request(change_set, @endpoint)
     rescue StandardError => e
       Failure(error: :error_publishing_item, exception: e, change_set: change_set)
     end
@@ -56,24 +54,6 @@ module Item
       change_set.first_published_at = publishing_at if change_set.first_published_at.blank?
       change_set.last_published_at = publishing_at
       change_set.published = true
-    end
-
-    # @param change_set [ItemChangeSet]
-    def serialize(change_set)
-      controller = ApplicationController.renderer.with_defaults(http_host: Settings.api_url, https: true)
-      rendered_json = controller.render('api/resources/items/_item',
-                                        locals: { params: { assets: 'true' } },
-                                        assigns: { item: change_set.presenter })
-      JSON.parse(rendered_json)
-    end
-
-    # @param change_set [ItemChangeSet, ItemResource]
-    def send_publish_request(change_set)
-      publishing_connection(@endpoint)
-        .post(@endpoint.webhook_path, { event: PUBLISH, data: { item: serialize(change_set) } })
-    rescue Faraday::ClientError, Faraday::ServerError => e # Raising error if publishing request failed
-      message = e.response_body&.dig('message') || e.msg
-      raise Error, "Request to publishing endpoint failed: #{message}"
     end
   end
 end
