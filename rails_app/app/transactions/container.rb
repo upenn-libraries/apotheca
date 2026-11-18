@@ -99,10 +99,6 @@ class Container
       Steps::DeletePreservationFiles.new
     end
 
-    register 'detach_from_item' do
-      Steps::DetachFromItem.new
-    end
-
     register 'add_preservation_events' do
       Steps::AddPreservationEvents.new
     end
