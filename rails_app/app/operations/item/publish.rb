@@ -3,6 +3,11 @@
 module Item
   # Operation that publishes an item
   class Publish < Operation
+    # @param endpoint [PublishingEndpoint]
+    def initialize(endpoint = PublishingEndpoint.digital_collections)
+      @endpoint = endpoint
+    end
+
     # Publishing Item to consumer applications. As part of the publishing process the derivatives are regenerated.
     #
     # @param id [String] item uuid
@@ -28,10 +33,7 @@ module Item
 
       return Success(change_set) if Settings.publish.skip
 
-      client = PublishingService::Client.new(PublishingService::Endpoint.digital_collections)
-      client.publish(change_set)
-
-      Success(change_set)
+      send_publish_request(change_set, @endpoint)
     rescue StandardError => e
       Failure(error: :error_publishing_item, exception: e, change_set: change_set)
     end

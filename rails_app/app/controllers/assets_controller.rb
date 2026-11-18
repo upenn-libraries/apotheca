@@ -2,6 +2,7 @@
 
 # actions for Assets
 class AssetsController < ResourcesController
+  include Dry::Monads[:result]
   class FileNotFound < StandardError; end
   class ItemNotFound < StandardError; end
   class UnsupportedFileType < StandardError; end
@@ -68,14 +69,12 @@ class AssetsController < ResourcesController
   def destroy
     authorize! :delete, @asset
 
-    DeleteAsset.new.call(id: @asset.id, deleted_by: current_user.email) do |result|
-      result.success do
-        flash.notice = I18n.t('actions.asset.delete.success')
-        redirect_to item_path @item, anchor: 'assets'
-      end
-      result.failure do |failure|
-        render_failure(failure, :show)
-      end
+    case Asset::Delete.call(@asset.id, current_user.email)
+    in Success[resource]
+      flash.notice = I18n.t('actions.asset.delete.success')
+      redirect_to item_path @item, anchor: 'assets'
+    in Failure[failure]
+      render_failure(failure, :show)
     end
   end
 
@@ -107,7 +106,7 @@ class AssetsController < ResourcesController
   # an associated preservation file.
   def build_and_attach_asset
     # Create base asset.
-    result = CreateAsset.new.call(**asset_params, created_by: current_user.email)
+    result = Asset::Create.call(**asset_params, created_by: current_user.email)
     return result if result.failure?
 
     # Add file to asset.
@@ -117,12 +116,12 @@ class AssetsController < ResourcesController
       return update_result
     end
 
-    # Add Asset to Item.
-    add_asset_result = AttachAsset.new.call(id: @item.id, asset_id: update_result.value!.id,
-                                            updated_by: current_user.email)
-    if add_asset_result.failure?
+    # Attach Asset to Item.
+    attach_asset_result = Item::AttachAsset.call(id: @item.id, asset_id: update_result.value!.id,
+                                                 updated_by: current_user.email)
+    if attach_asset_result.failure?
       Asset::Purge.call(result.value!.id)
-      return add_asset_result
+      return attach_asset_result
     end
 
     update_result

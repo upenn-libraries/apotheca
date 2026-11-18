@@ -54,7 +54,7 @@ describe 'Items Requests' do
       end
     end
 
-    context 'when an error is raised in CreateAsset transaction' do
+    context 'when an error is raised in Asset::Create operation' do
       before do
         # Don't include Title in request, validation will fail
         post items_path, params: { item: { human_readable_name: 'The Readable Name',

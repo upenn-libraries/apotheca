@@ -39,7 +39,7 @@ describe Item::Unpublish do
       end
 
       it 'includes error message in json response' do
-        expect(result.failure[:exception].message).to include 'Crazy Solr error'
+        expect(result.failure[:message]).to include 'Crazy Solr error'
       end
     end
   end

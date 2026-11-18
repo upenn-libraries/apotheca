@@ -16,8 +16,8 @@ namespace :apotheca do
         )
 
         # Create Asset
-        result = CreateAsset.new.call(created_by: fake_item.created_by, label: 'Front',
-                                      annotation: [{ text: 'Front of Card' }])
+        result = Asset::Create.call(created_by: fake_item.created_by, label: 'Front',
+                                    annotation: [{ text: 'Front of Card' }])
         asset_id = result.value!.id
 
         # Update Asset with preservation file
@@ -135,9 +135,11 @@ namespace :apotheca do
                            created_by: Settings.system_user }
         asset_id = nil
 
-        CreateAsset.new.call(**asset_metadata) do |result|
-          result.failure { |data| cleanup.call(item_metadata[:asset_ids], data[:error], :creating_an_asset) }
-          result.success { |item| asset_id = item.id }
+        case Asset::Create.call(**asset_metadata)
+        in Dry::Monads::Success[resource]
+          asset_id = resource.id
+        in Dry::Monads::Failure[error:]
+          cleanup.call(item_metadata[:asset_ids], error, :creating_an_asset)
         end
 
         # Push asset id to item asset_ids and arranged_asset_ids array
