@@ -69,7 +69,7 @@ class AssetsController < ResourcesController
   def destroy
     authorize! :delete, @asset
 
-    case Asset::Delete.new.call(@asset.id, current_user.email)
+    case Asset::Delete.call(@asset.id, current_user.email)
     in Success[resource]
       flash.notice = I18n.t('actions.asset.delete.success')
       redirect_to item_path @item, anchor: 'assets'
