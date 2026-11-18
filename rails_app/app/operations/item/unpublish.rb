@@ -3,6 +3,11 @@
 module Item
   # Operation to unpublish an item
   class Unpublish < Operation
+    # @param endpoint [PublishingEndpoint]
+    def initialize(endpoint = PublishingEndpoint.digital_collections)
+      @endpoint = endpoint
+    end
+
     # Unpublishing item from consumer applications.
     #
     # @param id [String] item uuid
@@ -24,11 +29,7 @@ module Item
       return Success(change_set) if Settings.publish.skip
 
       change_set.published = false
-
-      client = PublishingService::Client.new(PublishingService::Endpoint.digital_collections)
-      client.unpublish(change_set)
-
-      Success(change_set)
+      send_unpublish_request(change_set, @endpoint)
     rescue StandardError => e
       Failure(error: :error_unpublishing_item, exception: e, change_set: change_set)
     end
