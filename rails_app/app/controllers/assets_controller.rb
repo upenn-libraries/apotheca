@@ -116,12 +116,12 @@ class AssetsController < ResourcesController
       return update_result
     end
 
-    # Add Asset to Item.
-    add_asset_result = AttachAsset.new.call(id: @item.id, asset_id: update_result.value!.id,
-                                            updated_by: current_user.email)
-    if add_asset_result.failure?
+    # Attach Asset to Item.
+    attach_asset_result = Item::AttachAsset.call(id: @item.id, asset_id: update_result.value!.id,
+                                                 updated_by: current_user.email)
+    if attach_asset_result.failure?
       PurgeAsset.new.call(id: result.value!.id)
-      return add_asset_result
+      return attach_asset_result
     end
 
     update_result
