@@ -3,8 +3,6 @@
 module Item
   # Operation that publishes an item
   class Publish < Operation
-    PUBLISH = 'publish'
-
     # @param endpoint [PublishingEndpoint]
     def initialize(endpoint = PublishingEndpoint.digital_collections)
       @endpoint = endpoint
