@@ -228,10 +228,10 @@ describe 'Asset Requests' do
       end
     end
 
-    context 'when an error is raised in the DeleteAsset transaction' do
+    context 'when an error is raised in the DeleteAsset operation' do
       before do
-        step_double = instance_double(Steps::DeleteResource)
-        allow(Steps::DeleteResource).to receive(:new).and_return(step_double)
+        step_double = instance_double(Resource::Steps::DeleteResource)
+        allow(Resource::Steps::DeleteResource).to receive(:new).and_return(step_double)
         allow(step_double).to receive(:call) { Dry::Monads::Failure.new(error: :delete_failed) }
 
         delete asset_path(item.asset_ids.last), params: { form: 'delete_asset' }
