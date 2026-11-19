@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # Job to update EZID Ark identifier with an Item's metadata.
-class UpdateArkMetadataJob < TransactionJob
+class UpdateArkMetadataJob < OperationJob
   sidekiq_options queue: :low
 
-  def transaction(item_id)
-    UpdateArkMetadata.new.call(id: item_id)
+  def operation(item_id)
+    Item::UpdateArkMetadata.call(item_id)
   end
 end
