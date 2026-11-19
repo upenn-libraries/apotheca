@@ -54,15 +54,12 @@ class AssetsController < ResourcesController
   def update
     authorize! :update, @asset
 
-    UpdateAsset.new.call(id: @asset.id, updated_by: current_user.email, **asset_params, **file_params) do |result|
-      result.success do |resource|
-        flash.notice = I18n.t('actions.asset.update.success')
-        redirect_to asset_path(resource)
-      end
-
-      result.failure do |failure|
-        render_failure(failure, :edit)
-      end
+    case Asset::Update.call(id: @asset.id, updated_by: current_user.email, **asset_params, **file_params.to_h.symbolize_keys)
+    in Success[resource]
+      flash.notice = I18n.t('actions.asset.update.success')
+      redirect_to asset_path(resource)
+    in Failure[failure]
+      render_failure(failure, :edit)
     end
   end
 
@@ -110,7 +107,7 @@ class AssetsController < ResourcesController
     return result if result.failure?
 
     # Add file to asset.
-    update_result = UpdateAsset.new.call(id: result.value!.id, updated_by: current_user.email, **file_params)
+    update_result = Asset::Update.call(id: result.value!.id, updated_by: current_user.email, **file_params)
     if update_result.failure?
       PurgeAsset.new.call(id: result.value!.id)
       return update_result
@@ -154,10 +151,11 @@ class AssetsController < ResourcesController
 
   def asset_params
     params.require(:asset).permit(:label, annotations: [:text], transcriptions: %i[contents mime_type])
+          .to_h.symbolize_keys
   end
 
   def file_params
-    params.require(:asset).permit(:file).tap do |p|
+    params.require(:asset).permit(:file).to_h.symbolize_keys.tap do |p|
       p[:original_filename] = p[:file].original_filename if p[:file].is_a? ActionDispatch::Http::UploadedFile
     end
   end

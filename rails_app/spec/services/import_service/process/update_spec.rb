@@ -231,7 +231,7 @@ describe ImportService::Process::Update do
     end
 
     context 'when updating existing assets and there\'s an error' do
-      # Triggering an error from the UpdateAsset transaction
+      # Triggering an error from the Asset::Update operation
       before do
         allow(
           process.asset_set.first
@@ -311,9 +311,9 @@ describe ImportService::Process::Update do
     context 'when updating an item with additional asset and there\'s an error' do
       # Returning a virus check failure when updating the newly created asset.
       before do
-        step_double = instance_double(Steps::VirusCheck)
-        allow(Steps::VirusCheck).to receive(:new).and_return(step_double)
-        allow(step_double).to receive(:call).with(hash_including(file: a_value)) do
+        step_double = instance_double(Asset::Steps::VirusCheck)
+        allow(Asset::Steps::VirusCheck).to receive(:new).and_return(step_double)
+        allow(step_double).to receive(:call).with(instance_of(AssetChangeSet), duck_type(:read)) do
           Dry::Monads::Failure.new(error: :virus_detected)
         end
       end
