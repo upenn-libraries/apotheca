@@ -36,7 +36,7 @@ module ImportService
           viewing_direction: additional_attrs[:viewing_direction]
         ).tap do |update_result|
           # Delete asset if update failed, then return update_result value
-          PurgeAsset.new.call(id: asset.id) if update_result.failure?
+          Asset::Purge.call(asset.id) if update_result.failure?
         end
       in Failure[failure]
         Failure(failure)
