@@ -6,7 +6,7 @@ module Item
     # Executes this operation
     # @param id [String] UUID of Item to refresh
     # @param updated_by [String] email of user who initiated this operation
-    def call(id:, updated_by:)
+    def call(id, updated_by)
       resource = step find_item(id)
       step validate_bibnumber(resource)
       step solr_save(resource)
