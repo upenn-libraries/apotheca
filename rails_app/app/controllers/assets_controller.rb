@@ -54,7 +54,7 @@ class AssetsController < ResourcesController
   def update
     authorize! :update, @asset
 
-    case Asset::Update.call(id: @asset.id, updated_by: current_user.email, **asset_params, **file_params.to_h.symbolize_keys)
+    case Asset::Update.call(id: @asset.id, updated_by: current_user.email, **asset_params, **file_params)
     in Success[resource]
       flash.notice = I18n.t('actions.asset.update.success')
       redirect_to asset_path(resource)

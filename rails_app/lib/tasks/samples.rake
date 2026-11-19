@@ -166,7 +166,7 @@ namespace :apotheca do
         # Update asset with preservation file
         case Asset::Update.call(id: asset_id, updated_by: item_metadata[:created_by], file: uploaded_file)
         in Dry::Monads::Success[updated_asset]
-          "Asset #{updated_asset.id} updated with preservation file."
+          puts "Asset #{updated_asset.id} updated with preservation file."
         in Dry::Monads::Failure[error:]
           cleanup.call(item_metadata[:asset_ids], error, :updating_an_asset)
         end
