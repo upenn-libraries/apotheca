@@ -45,7 +45,7 @@ class ItemsController < ResourcesController
 
   def destroy
     case Item::Delete.call(params[:id], current_user.email)
-    in Success[item]
+    in Success
       flash.notice = I18n.t('actions.item.delete.success')
       redirect_to items_path
     in Failure[failure]
