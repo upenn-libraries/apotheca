@@ -44,14 +44,12 @@ class ItemsController < ResourcesController
   end
 
   def destroy
-    DeleteItem.new.call(id: params[:id], deleted_by: current_user.email) do |result|
-      result.success do
-        flash.notice = I18n.t('actions.item.delete.success')
-        redirect_to items_path
-      end
-      result.failure do |failure|
-        render_failure(failure, :show)
-      end
+    case Item::Delete.call(params[:id], current_user.email)
+    in Success
+      flash.notice = I18n.t('actions.item.delete.success')
+      redirect_to items_path
+    in Failure[failure]
+      render_failure(failure, :show)
     end
   end
 
