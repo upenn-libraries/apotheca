@@ -79,10 +79,6 @@ class Container
       Steps::CreateChangeSet.new(AssetResource, AssetChangeSet)
     end
 
-    register 'add_technical_metadata' do
-      Steps::AddTechnicalMetadata.new
-    end
-
     register 'cleanup' do
       Around::AssetCleanup.new
     end
@@ -101,10 +97,6 @@ class Container
 
     register 'add_preservation_events' do
       Steps::AddPreservationEvents.new
-    end
-
-    register 'virus_check' do
-      Steps::VirusCheck.new
     end
 
     register 'generate_derivatives' do

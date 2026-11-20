@@ -48,7 +48,7 @@ module Asset
       end
 
       # Determine ingestion event type based on the change being made to the associated preservation file, which occurs
-      # prior in the transaction (see add_preservation_file method in UpdateAsset transaction). If no file change is
+      # prior in the transaction (see add_preservation_file method in Asset::Update operation). If no file change is
       # detected, return nil.
       # @param change_set [Valkyrie::ChangeSet]
       # @return [Symbol, nil]
