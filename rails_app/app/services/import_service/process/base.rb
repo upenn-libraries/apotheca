@@ -137,10 +137,11 @@ module ImportService
         case Item::Publish.call(resource.id, imported_by)
         in Success[published_item]
           Success(published_item)
-        in Failure[failure_hash]
+        in Failure[error:, message:]
           failure(
+            error: error,
             prepend: 'Item was successfully created/updated. Please retry publishing. Publishing failed with the following error',
-            **failure_hash
+            details: Array.wrap(message)
           )
         end
       end
@@ -161,8 +162,8 @@ module ImportService
       # @param change_set [Valkyrie::ChangeSet] containing validation errors
       # @param exception[Exception] exception
       # @param prepend [String] message to prefix main error message
-      # @param message [String, nil] in operation failure hash
-      def failure(error: nil, details: [], change_set: nil, exception: nil, prepend: nil, message: nil)
+      # @param _message [String, nil] in operation failure hash, is used as the default message if error is a symbol
+      def failure(error: nil, details: [], change_set: nil, exception: nil, prepend: nil, _message: nil)
         error = error.to_s.humanize if error.is_a? Symbol
         error = "#{prepend}: #{error}" if prepend
         validation_errors = change_set.try(:errors).try(:full_messages)
@@ -175,7 +176,7 @@ module ImportService
           details = details.map { |d| "\t#{d}" }.prepend(error)
         end
 
-        Failure.new(error: :import_failed, details: details, exception: exception, message: message)
+        Failure.new(error: :import_failed, details: details, exception: exception)
       end
 
       # Queries EZID to check if a given ark already exists.
