@@ -30,7 +30,7 @@ module ImportService
     def create_asset(imported_by:, created_by: nil, **additional_attrs)
       case Asset::Create.call(**resource_attributes, **additional_attrs, created_by: created_by || imported_by)
       in Success[asset]
-        update_transaction.call(
+        update_operation.call(
           id: asset.id, file: file, expected_checksum: @expected_checksum, updated_by: imported_by,
           ocr_strategy: additional_attrs[:ocr_strategy], ocr_language: additional_attrs[:ocr_language],
           viewing_direction: additional_attrs[:viewing_direction]
@@ -53,7 +53,7 @@ module ImportService
 
       return Success(asset) if attributes.empty? # Don't process an update if not necessary.
 
-      update_transaction.call(
+      update_operation.call(
         id: asset.id,
         updated_by: imported_by,
         optimistic_lock_token: asset.optimistic_lock_token,
@@ -64,7 +64,7 @@ module ImportService
 
     private
 
-    # Returns attributes hash to be used in the update transaction. Only returns attributes that have changed.
+    # Returns attributes hash to be used in the update operation. Only returns attributes that have changed.
     def update_attrs(asset)
       attributes = {}
 
@@ -81,11 +81,11 @@ module ImportService
       attributes
     end
 
-    def update_transaction
+    def update_operation
       Asset::Update.new(:now)
     end
 
-    # Make hash representation to send to the resource transactions.
+    # Make hash representation to send to the resource operations.
     #
     # @return [Hash]
     def resource_attributes
