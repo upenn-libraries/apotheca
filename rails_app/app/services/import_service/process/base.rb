@@ -156,11 +156,12 @@ module ImportService
       # and exception. The details array can contain some plain text formatting for display purposes. An
       # exception or change_set may not always be present.
       #
-      # @param [String|Symbol] error main error message
-      # @param [Array<String>] details list of more detailed error messages
-      # @param [Valkyrie::ChangeSet] change_set containing validation errors
-      # @param [Exception] exception
-      # @param [String] prepend message to prefix main error message
+      # @param error [String|Symbol] main error message
+      # @param details [Array<String>] list of more detailed error messages
+      # @param change_set [Valkyrie::ChangeSet] containing validation errors
+      # @param exception[Exception] exception
+      # @param prepend [String] message to prefix main error message
+      # @param message [String, nil] in operation failure hash
       def failure(error: nil, details: [], change_set: nil, exception: nil, prepend: nil, message: nil)
         error = error.to_s.humanize if error.is_a? Symbol
         error = "#{prepend}: #{error}" if prepend
