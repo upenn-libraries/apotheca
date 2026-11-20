@@ -9,12 +9,12 @@ class Operation < Dry::Operation
 
   # Shared `on_failure` logic that adds in an error message to the failure object from translations.
   def on_failure(failure)
-    add_error_message(failure)
+    failure[:message] = error_message(failure)
   end
 
   private
 
-  # If a failure occurs, a human-readable error message is added to the Failure.
+  # Generate human-readable error message based on the Failure monad provided.
   #
   # To generate the message, the :error key is used to look up a custom message in operations.en.yml. First, the
   # namespace of the class is checked, if none is found the namespace of the parent classes are checked. If a message
@@ -22,17 +22,16 @@ class Operation < Dry::Operation
   # are passed to the locale so messages can be customized.
   #
   # @param failure [Hash] data within failure monad
-  def add_error_message(failure)
+  def error_message(failure)
     translation_keys = failure_translation_keys(failure[:error])
 
     key = translation_keys.shift
     defaults = translation_keys + [failure[:error].to_s.humanize]
 
-    failure[:message] = I18n.t(key,
-                               scope: :operations,
-                               default: defaults,
-                               exception_message: failure[:exception]&.message,
-                               **failure.except(:exception, :error))
+    I18n.t(key, scope: :operations,
+                default: defaults,
+                exception_message: failure[:exception]&.message,
+                **failure.except(:exception, :error))
   end
 
   # Returns list of translation keys where error messages could be provided. List is in order of precedence.
