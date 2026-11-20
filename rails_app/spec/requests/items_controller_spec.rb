@@ -241,7 +241,7 @@ describe 'Items Requests' do
       end
     end
 
-    context 'when an error is raised in the UnpublishItem transaction' do
+    context 'when an error is raised in the Item::Unpublish operation' do
       include_context 'with unsuccessful unpublish request'
 
       before { post unpublish_item_path(item), params: { form: 'unpublish_item' } }

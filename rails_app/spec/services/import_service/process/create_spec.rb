@@ -134,9 +134,10 @@ describe ImportService::Process::Create do
         expect(result.failure[:error]).to be :import_failed
         expect(result.failure[:details]).to contain_exactly(
           'Item was successfully created/updated. Please retry publishing. Publishing failed with the following error: Error publishing item',
-          "\tRequest to publishing endpoint failed: Crazy Solr error"
+          "\tRequest to publishing endpoint failed: Crazy Solr error",
+          "\tthe server responded with status 500 for POST https://digitalcollections.library.upenn.edu/listen"
         )
-        expect(result.failure[:exception]).to be_a PublishingService::Client::Error
+        expect(result.failure[:exception]).to be_a Faraday::ServerError
       end
     end
 

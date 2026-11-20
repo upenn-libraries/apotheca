@@ -4,7 +4,7 @@ module Form
   module ErrorMessage
     # Component for displaying error messages.
     class Component < ViewComponent::Base
-      attr_reader :error, :validation_errors, :exception
+      attr_reader :error, :validation_errors, :exception, :message
 
       # This component renders error messages. It requires an `error` hash that can include the following keys:
       #   - :error
@@ -24,6 +24,7 @@ module Form
         error_args ||= {}
 
         @error = error_args[:error]
+        @message = error_args[:message]
         @exception = error_args[:exception]
         @change_set = error_args[:change_set]
         @options = options

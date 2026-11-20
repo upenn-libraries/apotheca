@@ -134,14 +134,14 @@ module ImportService
 
       # Publishing an item.
       def publish_item(resource)
-        PublishItem.new.call(id: resource.id, updated_by: imported_by) do |publish_result|
-          publish_result.success { |published_item| Success(published_item) }
-          publish_result.failure do |failure_hash|
-            failure(
-              prepend: 'Item was successfully created/updated. Please retry publishing. Publishing failed with the following error',
-              **failure_hash
-            )
-          end
+        case Item::Publish.call(resource.id, imported_by)
+        in Success[published_item]
+          Success(published_item)
+        in Failure[failure_hash]
+          failure(
+            prepend: 'Item was successfully created/updated. Please retry publishing. Publishing failed with the following error',
+            **failure_hash
+          )
         end
       end
 
@@ -161,11 +161,12 @@ module ImportService
       # @param [Valkyrie::ChangeSet] change_set containing validation errors
       # @param [Exception] exception
       # @param [String] prepend message to prefix main error message
-      def failure(error: nil, details: [], change_set: nil, exception: nil, prepend: nil)
+      def failure(error: nil, details: [], change_set: nil, exception: nil, prepend: nil, message: nil)
         error = error.to_s.humanize if error.is_a? Symbol
         error = "#{prepend}: #{error}" if prepend
         validation_errors = change_set.try(:errors).try(:full_messages)
 
+        details.push(message) if message.present?
         details.push(exception&.message) if exception
         details.concat(validation_errors) if validation_errors.present?
 
