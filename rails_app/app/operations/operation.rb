@@ -42,7 +42,7 @@ class Operation < Dry::Operation
   #   operations.asset.failure.{error}
   #   operations.resource.failure.{error}
   #
-  # @param [Symbol] error
+  # @param error [Symbol]
   # @return [Array<Symbol>] translation keys where messages could be defined
   def failure_translation_keys(error)
     superclasses = self.class.ancestors.select { |a| a.is_a? Class }.take_while { |c| c != Operation }
