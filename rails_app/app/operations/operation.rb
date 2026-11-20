@@ -32,15 +32,15 @@ class Operation < Dry::Operation
                                scope: :operations,
                                default: defaults,
                                exception_message: failure[:exception]&.message,
-                               **failure.except(:exceptions, :error))
+                               **failure.except(:exception, :error))
   end
 
   # Returns list of translation keys where error messages could be provided. List is in order of precedence.
   #
   # For example, for a failure in the Asset::Create operation the following keys will be returned:
-  #   operations.asset.create.failure.{error}
-  #   operations.asset.failure.{error}
-  #   operations.resource.failure.{error}
+  #   asset.create.failure.{error}
+  #   asset.failure.{error}
+  #   resource.failure.{error}
   #
   # @param error [Symbol]
   # @return [Array<Symbol>] translation keys where messages could be defined
