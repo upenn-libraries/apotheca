@@ -130,13 +130,22 @@ describe ImportService::Process::Create do
         expect(result).to be_a Dry::Monads::Failure
       end
 
-      it 'return expected failure object' do
+      it 'returns expected error in failure' do
         expect(result.failure[:error]).to be :import_failed
+      end
+
+      it 'returns expected details in failure' do
         expect(result.failure[:details]).to contain_exactly(
           'Item was successfully created/updated. Please retry publishing. Publishing failed with the following error: Error publishing item',
-          "\tRequest to publishing endpoint failed: Crazy Solr error",
           "\tthe server responded with status 500 for POST https://digitalcollections.library.upenn.edu/listen"
         )
+      end
+
+      it 'return expected message in failure' do
+        expect(result.failure[:message]).to eq 'Request to publishing endpoint failed: Crazy Solr error'
+      end
+
+      it 'returns expected exception in failure' do
         expect(result.failure[:exception]).to be_a Faraday::ServerError
       end
     end

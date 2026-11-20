@@ -167,7 +167,6 @@ module ImportService
         error = "#{prepend}: #{error}" if prepend
         validation_errors = change_set.try(:errors).try(:full_messages)
 
-        details.push(message) if message.present?
         details.push(exception&.message) if exception
         details.concat(validation_errors) if validation_errors.present?
 
@@ -176,7 +175,7 @@ module ImportService
           details = details.map { |d| "\t#{d}" }.prepend(error)
         end
 
-        Failure.new(error: :import_failed, details: details, exception: exception)
+        Failure.new(error: :import_failed, details: details, exception: exception, message: message)
       end
 
       # Queries EZID to check if a given ark already exists.
